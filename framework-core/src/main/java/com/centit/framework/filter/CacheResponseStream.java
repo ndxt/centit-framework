@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
 
 public class CacheResponseStream extends ServletOutputStream {
@@ -75,4 +76,34 @@ public class CacheResponseStream extends ServletOutputStream {
     }
 
 
+    /**
+     * This method can be used to determine if data can be written without blocking.
+     *
+     * @return <code>true</code> if a write to this <code>ServletOutputStream</code>
+     * will succeed, otherwise returns <code>false</code>.
+     * @since Servlet 3.1
+     */
+    @Override
+    public boolean isReady() {
+        return ! this.closed;
+    }
+
+    /**
+     * Instructs the <code>ServletOutputStream</code> to invoke the provided
+     * {@link WriteListener} when it is possible to write
+     *
+     * @param writeListener the {@link WriteListener} that should be notified
+     *                      when it's possible to write
+     * @throws IllegalStateException if one of the following conditions is true
+     *                               <ul>
+     *                               <li>the associated request is neither upgraded nor the async started
+     *                               <li>setWriteListener is called more than once within the scope of the same request.
+     *                               </ul>
+     * @throws NullPointerException  if writeListener is null
+     * @since Servlet 3.1
+     */
+    @Override
+    public void setWriteListener(WriteListener writeListener) {
+
+    }
 }
