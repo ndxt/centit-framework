@@ -1,18 +1,10 @@
 package com.centit.framework.model.adapter;
 
-import java.sql.SQLException;
+import com.centit.framework.model.basedata.*;
+import com.centit.framework.security.model.CentitUserDetails;
+
 import java.util.List;
 import java.util.Map;
-
-import com.centit.framework.model.basedata.IDataCatalog;
-import com.centit.framework.model.basedata.IDataDictionary;
-import com.centit.framework.model.basedata.IOptInfo;
-import com.centit.framework.model.basedata.IOptMethod;
-import com.centit.framework.model.basedata.IRoleInfo;
-import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.framework.model.basedata.IUserInfo;
-import com.centit.framework.model.basedata.IUserUnit;
-import com.centit.framework.security.model.CentitUserDetails;
 
 public interface PlatformEnvironment {
 
