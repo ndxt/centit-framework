@@ -8,17 +8,15 @@
  */
 package com.centit.framework.filter;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class CacheResponseStream extends ServletOutputStream {
     protected boolean closed = false;
     protected HttpServletResponse response = null;
-    protected ServletOutputStream output = null;
     protected OutputStream cache = null;
 
     public CacheResponseStream(HttpServletResponse response,
