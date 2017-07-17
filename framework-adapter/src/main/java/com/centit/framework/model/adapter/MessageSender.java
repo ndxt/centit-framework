@@ -2,12 +2,12 @@ package com.centit.framework.model.adapter;
 /**
  * 系统消息发送接口
  * 系统的内置的两个发送消息的实现,可以通过以下代码引入  
-        @ Resource(name = "InnerMessageManager")
-        @ NotNull
+        Resource(name = "innerMessageManager")
+        NotNull
         private MessageSender innerMessageSender;
         
-        @ Resource(name = "emailMessageSender")
-        @ NotNull
+        Resource(name = "emailMessageSender")
+        NotNull
         private MessageSender emailMessageSender;
          注意：去掉@后的空格
  * @author ljy
