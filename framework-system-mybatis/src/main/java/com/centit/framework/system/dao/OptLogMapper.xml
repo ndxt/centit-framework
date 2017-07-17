@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.centit.framework.system.dao.OptLogDao">
+	<resultMap type="com.centit.framework.system.po.OptLog" id="OptLog">
+       <result property="logId" column="LOGID" />
+       <result property="logLevel" column="LOGLEVEL" />
+       <result property="userCode" column="USERCODE" />
+		<result property="optTime" column="OPTTIME" />
+		<result property="optId" column="OPTID" />
+		<result property="optTag" column="OPTTAG" />
+		<result property="optMethod" column="OPTMETHOD" />
+		<result property="optContent" column="OPTCONTENT" />
+		<result property="newValue" column="NEWVALUE" />
+		<result property="oldValue" column="OLDVALUE" />
+	</resultMap>
+
+	<!-- 查询条件 -->
+	<sql id="condition">
+		<if test="logId != null  and logId != ''  ">
+			  and u.LOGID = #{logId}
+		</if>
+		<if test="logLevel != null  and logLevel != ''  ">
+			  and u.LOGLEVEL like '%'|| #{logLevel}||'%' 
+		</if>
+		 <if test="userCode != null  and userCode != ''  ">
+			  and u.USERCODE =#{userCode}
+	   </if>
+		<if test="optTimeBegin != null  and optTimeBegin != ''   ">
+			  and u.OPTTIME >= to_date(#{optTimeBegin},'yyyy-mm-dd')
+		</if>
+		<if test="optTimeEnd != null  and optTimeEnd != ''  ">
+			  and u.OPTTIME  <![CDATA[<= ]]> to_date(#{optTimeEnd},'yyyy-mm-dd')
+		</if>
+		
+		<if test="optId != null  and optId != ''  ">
+			  and u.OPTID like '%'|| #{optId}||'%' 
+		</if>
+		<if test="optCode != null  and optCode != ''   ">
+			  and u.OPTCODE like '%'|| #{optCode}||'%' 
+		</if>
+		<if test="optContent != null  and optContent != ''  ">
+			  and u.OPTCONTENT like '%'|| #{optContent}||'%' 
+		</if>
+		<if test="oldValue != null  and oldValue != ''   ">
+			  and u.OLDVALUE like '%'|| #{oldValue}||'%' 
+		</if>
+		<if test="optMethod != null  and optMethod != ''   ">
+			  and u.OPTMETHOD like '%'|| #{optMethod}||'%' 
+		</if>
+		<if test="optId != null  and optId != '' ">
+			  and u.OPTID =#{optId}
+		</if>
+	</sql>
+	
+	<!-- 查询核心SQL -->
+	<sql id="coreSql">
+		<![CDATA[ 
+			select 
+			        u.LOGID,
+					u.LOGLEVEL,
+					u.USERCODE,
+					u.OPTTIME,
+					u.OPTID,
+					u.OPTTAG,
+					u.OPTMETHOD,
+					u.OPTCONTENT,
+					u.NEWVALUE,
+					u.OLDVALUE
+		      from F_OPT_LOG u
+	  ]]>
+	</sql>
+	
+	<!--分页计数 -->
+	<select id="pageCount" parameterType="map" resultType="int">
+ 	 <![CDATA[
+	   select count(0) cnt 
+	     from 
+             F_OPT_LOG u
+       ]]>
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<!--分页查询 -->
+	<select id="pageQuery" parameterType="map" resultMap="OptLog">
+	   <include refid="com.centit.framework.system.dao.BaseDao.pageBegin" />
+		<include refid="coreSql" />
+		<where>
+			<include refid="condition" />
+		</where>
+		<if test="pageDesc != null ">
+			order by ${pageDesc}
+		</if>
+		<include refid="com.centit.framework.system.dao.BaseDao.pageEnd" />
+	</select>
+	<!--分页查询结束 -->
+
+
+   <!--查询单条记录ById -->
+	<select id="getObjectById" parameterType="Long" resultMap="OptLog">
+		<include refid="coreSql" />
+		<where>
+         <![CDATA[ 
+	                u.LOGID=#{logId} 
+           ]]>
+		</where>
+	</select>
+	<!--查询单条记录 结束 -->
+	
+	
+    <!--插入新单据 start -->
+    <sql id="insertSql">
+		   (
+		    LOGID,
+			LOGLEVEL,
+			USERCODE,
+			OPTTIME,
+			OPTID,
+			OPTTAG,
+			OPTMETHOD,
+			OPTCONTENT,
+			NEWVALUE,
+			OLDVALUE
+			)values(
+			#{logId},
+			#{logLevel},
+			#{userCode},
+			#{optTime},
+			#{optId},
+			#{optTag,jdbcType=VARCHAR},
+			#{optMethod,jdbcType=VARCHAR},
+			#{optContent,jdbcType=VARCHAR},
+			#{newValue,jdbcType=VARCHAR},
+			#{oldValue,jdbcType=VARCHAR}
+			)
+	</sql>
+	
+    <insert id="saveNewObject" parameterType="com.centit.framework.system.po.OptLog">
+        insert into F_OPT_LOG
+       <include refid="insertSql" />
+	</insert>
+	<!--更新单据 start -->
+   <sql id="updSql">
+      <set>
+			<if test="logLevel !=null ">
+				LOGLEVEL = #{logLevel},
+			</if>
+			<if test="userCode !=null ">
+				USERCODE = #{userCode},
+			</if>
+			<if test="optTime !=null ">
+				OPTTIME = #{optTime},
+			</if>
+			<if test="optId !=null ">
+				OPTID = #{optId},
+			</if>
+			<if test="optTag !=null ">
+				OPTTAG = #{optTag},
+			</if>
+			<if test="optMethod !=null ">
+				OPTMETHOD = #{optMethod},
+			</if>
+			<if test="optContent !=null ">
+				OPTCONTENT = #{optContent},
+			</if>
+			<if test="isInToolbar!=null ">
+				ISINTOOLBAR = #{isInToolbar},
+			</if>
+			<if test="newValue !=null ">
+				NEWVALUE = #{newValue},
+			</if>
+			<if test="oldValue !=null ">
+				OLDVALUE = #{oldValue},
+			</if>
+		</set>
+	</sql>
+	<update id="update" parameterType="com.centit.framework.system.po.OptLog" timeout="2000">
+	     update F_OPT_LOG
+	     <include refid="updSql" />
+	     where LOGID=#{logId} 
+	</update>
+	<!--更新单据 end -->
+   
+   <!--Merge单据 start -->
+	<update id="mergeObject" parameterType="com.centit.framework.system.po.OptLog" timeout="2000">
+	      merge into F_OPT_LOG t  
+		    using ( select #{logId} as LOGID  from dual) t1  
+		    on(t.LOGID = t1.LOGID)  
+		 when not matched then
+		   insert
+		   <include refid="insertSql" />
+		 when matched then 
+		 update
+		   <include refid="updSql" />   
+		    where LOGID=#{logId} 
+	</update>
+	<!--Merge单据 end -->
+   <!--插入新单据 end -->
+   
+	<!--删除记录  -->
+	<delete id="deleteObjectById" parameterType="Long" timeout="2000">
+    <![CDATA[ 
+       delete from F_OPT_LOG where LOGID=#{logId} 
+     ]]>
+	</delete>
+	<delete id="delete" parameterType="map" timeout="2000">
+			<![CDATA[ 
+		       delete from F_OPT_LOG where OPTTIME > to_date(#{beginDate},'YYYY-MM-DD HH24:MI:SS') and OPTTIME<to_date(#{endDate},'YYYY-MM-DD HH24:MI:SS')
+		     ]]>
+	</delete>
+	<!--删除记录 结束 -->
+	
+	<select id="createNewLogId"  resultType="Long">
+		SELECT S_SYS_LOG.nextval from dual
+	</select>
+	
+	<select id="listOptIds" resultType="String">
+		select DISTINCT f.OPTID from F_OPT_LOG f
+	</select>
+</mapper>

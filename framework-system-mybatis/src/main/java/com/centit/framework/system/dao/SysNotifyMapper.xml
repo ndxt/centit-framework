@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.centit.framework.system.dao.SysNotifyDao">
+	<resultMap type="com.centit.framework.system.po.SysNotify" id="SysNotify">
+       <result property="notifyId" column="NOTIFYID" />
+       <result property="notifySender" column="NOTIFYSENDER" />
+       <result property="notifyReceiver" column="NOTIFYRECEIVER" />
+		<result property="msgSubject" column="MSGSUBJECT" />
+		<result property="msgContent" column="MSGCONTENT" />
+		<result property="notifyType" column="NOTIFYTYPE" />
+		<result property="notifyState" column="NOTIFYSTATE" />
+		<result property="errorMsg" column="ERRORMSG" />
+		<result property="optId" column="OPTID" />
+		<result property="optMethod" column="OPTMETHOD" />
+		<result property="optTag" column="OPTTAG" />
+		<result property="notifyTime" column="NOTIFYTIME" />
+	</resultMap>
+
+	<!-- 查询条件 -->
+	<sql id="condition">
+	</sql>
+	
+	<!-- 查询核心SQL -->
+	<sql id="coreSql">
+		<![CDATA[ 
+			select 
+			        u.NOTIFYID,
+					u.NOTIFYSENDER,
+					u.NOTIFYRECEIVER,
+					u.MSGSUBJECT,
+					u.MSGCONTENT,
+					u.NOTIFYTYPE,
+					u.NOTIFYSTATE,
+					u.ERRORMSG,
+					u.OPTID,
+					u.OPTMETHOD,
+					u.OPTTAG,
+					u.NOTIFYTIME
+		      from F_SYS_NOTIFY u
+	  ]]>
+	</sql>
+	
+	<!--分页计数 -->
+	<select id="pageCount" parameterType="map" resultType="int">
+ 	 <![CDATA[
+	   select count(0) cnt 
+	     from 
+             F_SYS_NOTIFY u
+       ]]>
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<!--分页查询 -->
+	<select id="pageQuery" parameterType="map" resultMap="SysNotify">
+	   <include refid="com.centit.framework.system.dao.BaseDao.pageBegin" />
+		<include refid="coreSql" />
+		<where>
+			<include refid="condition" />
+		</where>
+		<if test="pageDesc != null ">
+			order by ${pageDesc}
+		</if>
+		<include refid="com.centit.framework.system.dao.BaseDao.pageEnd" />
+	</select>
+	<!--分页查询结束 -->
+
+	
+    <!--插入新单据 start -->
+    <sql id="insertSql">
+		   (
+			NOTIFYID,
+			NOTIFYSENDER,
+			NOTIFYRECEIVER,
+			MSGSUBJECT,
+			MSGCONTENT,
+			NOTIFYTYPE,
+			NOTIFYSTATE,
+			ERRORMSG,
+			OPTID,
+			OPTMETHOD,
+			OPTTAG,
+			NOTIFYTIME
+			)values(
+			#{notifyId},
+			#{notifySender},
+			#{notifyReceiver},
+			#{msgSubject},
+			#{msgContent},
+			#{notifyType},
+			#{notifyState},
+			#{errorMsg},
+			#{optId},
+			#{optMethod},
+			#{optTag},
+			#{notifyTime}
+			)
+	</sql>
+	
+	<!--更新单据 start -->
+   <sql id="updSql">
+      <set>
+			<if test="notifySender !=null ">
+				NOTIFYSENDER = #{notifySender},
+			</if>
+			<if test="notifyReceiver !=null ">
+				NOTIFYRECEIVER = #{notifyReceiver},
+			</if>
+			<if test="msgSubject !=null ">
+				MSGSUBJECT = #{msgSubject},
+			</if>
+			<if test="msgContent !=null ">
+				MSGCONTENT = #{msgContent},
+			</if>
+			<if test="notifyType !=null ">
+				NOTIFYTYPE = #{notifyType},
+			</if>
+			<if test="notifyState !=null ">
+				NOTIFYSTATE = #{notifyState},
+			</if>
+			<if test="errorMsg !=null ">
+				ERRORMSG = #{errorMsg},
+			</if>
+			<if test="optId !=null ">
+				OPTID = #{optId},
+			</if>
+			<if test="optMethod !=null ">
+				OPTMETHOD = #{optMethod},
+			</if>
+			<if test="optTag !=null ">
+				OPTTAG = #{optTag},
+			</if>
+			<if test="notifyTime !=null ">
+				NOTIFYTIME = #{notifyTime},
+			</if>
+		</set>
+	</sql>
+	<update id="update" parameterType="com.centit.framework.system.po.RolePower" timeout="2000">
+	     update F_SYS_NOTIFY
+	     <include refid="updSql" />
+	     where NOTIFYID=#{notifyId} 
+	</update>
+	<!--更新单据 end -->
+   
+   <!--Merge单据 start -->
+	<update id="mergeObject" parameterType="com.centit.framework.system.po.RolePower" timeout="2000">
+	      merge into F_SYS_NOTIFY t  
+		    using ( select #{notifyId} as NOTIFYID  from dual) t1  
+		    on(t.NOTIFYID = t1.NOTIFYID)  
+		 when not matched then
+		   insert
+		   <include refid="insertSql" />
+		 when matched then 
+		 update
+		   <include refid="updSql" />   
+		    where NOTIFYID=#{notifyId} 
+	</update>
+	<!--Merge单据 end -->
+   <!--插入新单据 end -->
+</mapper>

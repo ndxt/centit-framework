@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.centit.framework.system.dao.OptDataScopeDao">
+	<resultMap type="com.centit.framework.system.po.OptDataScope" id="OptDataScope">
+       <result property="optScopeCode" column="OPTSCOPECODE" />
+       <result property="scopeName" column="SCOPENAME" />
+       <result property="optId" column="OPTID" />
+		<result property="filterCondition" column="FILTERCONDITION" />
+		<result property="scopeMemo" column="SCOPEMEMO" />
+	</resultMap>
+
+	<!-- 查询条件 -->
+	<sql id="condition">
+		<if test="OPTID != null  and OPTID != ''   ">
+			  and u.OPTID = #{OPTID}
+		</if>
+		<if test="OPTSCOPECODE != null  and OPTSCOPECODE != ''  ">
+			  and u.OPTSCOPECODE = #{OPTSCOPECODE}
+		</if>
+		 <if test="SCOPENAME != null  and SCOPENAME != ''  ">
+			  and u.SCOPENAME like '%'|| #{SCOPENAME}||'%'
+	   </if>
+	</sql>
+	
+	<!-- 查询核心SQL -->
+	<sql id="coreSql">
+		<![CDATA[ 
+			select 
+			       u.OPTSCOPECODE,
+					u.SCOPENAME,
+					u.OPTID,
+					u.FILTERCONDITION,
+					u.SCOPEMEMO
+		      from F_OPTDATASCOPE u
+	  ]]>
+	</sql>
+	
+	<!--分页计数 -->
+	<select id="pageCount" parameterType="map" resultType="int">
+ 	 <![CDATA[
+	   select count(0) cnt 
+	     from 
+             F_OPTDATASCOPE u
+       ]]>
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<!--分页查询 -->
+	<select id="pageQuery" parameterType="map" resultMap="OptDataScope">
+	    <include refid="com.centit.framework.system.dao.BaseDao.pageBegin" />
+		<include refid="coreSql" />
+		<where>
+			<include refid="condition" />
+		</where>
+		<if test="pageDesc != null ">
+			order by ${ORDER BY}
+		</if>
+		<include refid="com.centit.framework.system.dao.BaseDao.pageEnd" />
+	</select>
+	<!--分页查询结束 -->
+
+
+   <!--查询单条记录ById -->
+	<select id="getObjectById" parameterType="String" resultMap="OptDataScope">
+		<include refid="coreSql" />
+		<where>
+         <![CDATA[ 
+	                u.OPTSCOPECODE=#{optScopeCode} 
+           ]]>
+		</where>
+	</select>
+	<!--查询单条记录 结束 -->
+	
+	
+    <!--插入新单据 start -->
+    <sql id="insertSql">
+		   (
+		    OPTSCOPECODE,
+			SCOPENAME,
+			OPTID,
+			FILTERCONDITION,
+			SCOPEMEMO
+			)values(
+			#{optScopeCode,jdbcType=VARCHAR},
+			#{scopeName,jdbcType=VARCHAR},
+			#{optId,jdbcType=VARCHAR},
+			#{filterCondition,jdbcType=VARCHAR},
+			#{scopeMemo,jdbcType=VARCHAR}
+			)
+			
+	</sql>
+	
+    <insert id="saveNewObject" parameterType="com.centit.framework.system.po.OptDataScope">
+        insert into F_OPTDATASCOPE
+       <include refid="insertSql" />
+	</insert>
+	
+	 <insert id="saveObject" parameterType="com.centit.framework.system.po.OptDataScope">
+        insert into F_OPTDATASCOPE
+       <include refid="insertSql" />
+	</insert>
+	
+   <!--插入新单据 end -->
+   
+   <!--更新单据 start -->
+   <sql id="updSql">
+      <set>
+			<if test="scopeName!=null ">
+				SCOPENAME = #{scopeName,jdbcType=VARCHAR},
+			</if>
+			<if test="optId!=null ">
+				OPTID = #{optId,jdbcType=VARCHAR},
+			</if>
+			<if test="filterCondition!=null ">
+				FILTERCONDITION = #{filterCondition,jdbcType=VARCHAR},
+			</if>
+			<if test="scopeMemo!=null ">
+				SCOPEMEMO = #{scopeMemo,jdbcType=VARCHAR},
+			</if>
+		</set>
+	</sql>
+	<update id="update" parameterType="com.centit.framework.system.po.OptDataScope" >
+	     update F_OPTDATASCOPE
+	     <include refid="updSql" />
+	     where  OPTSCOPECODE=#{optScopeCode} 
+	</update>
+	<!--更新单据 end -->
+	
+	
+	<!--Merge单据 start -->
+	<update id="mergeObject" parameterType="com.centit.framework.system.po.OptDataScope" >
+	      merge into F_OPTDATASCOPE t  
+		    using ( select #{optScopeCode} as OPTSCOPECODE  from dual) t1  
+		    on(t.OPTSCOPECODE = t1.OPTSCOPECODE)  
+		 when not matched then
+		   insert
+		   <include refid="insertSql" />
+		 when matched then 
+		 update
+		   <include refid="updSql" />   
+		    where OPTSCOPECODE=#{optScopeCode}
+	</update>
+	<!--Merge单据 end -->
+	
+	
+	<!--删除记录  -->
+	<delete id="deleteObjectById" parameterType="String" timeout="2000">
+    <![CDATA[ 
+       delete from F_OPTDATASCOPE where OPTSCOPECODE=#{optScopeCode}
+     ]]>
+	</delete>
+	
+	<delete id="deleteObject" parameterType="com.centit.framework.system.po.OptDataScope" >
+    <![CDATA[ 
+       delete from F_OPTDATASCOPE where OPTSCOPECODE=#{optScopeCode}
+     ]]>
+	</delete>
+	<!--删除记录 结束 -->
+	
+	<select id="getDataScopeByOptID"  resultMap="OptDataScope" parameterType="String">
+		 <include refid="coreSql" />
+		 where OPTID =#{sOptID}
+	</select>
+	
+	<select id="getOptDataScopeSumByOptID" resultType="int" parameterType="String" >
+		SELECT count(OPTSCOPECODE) FROM F_OPTDATASCOPE WHERE OPTID =#{sOptID}
+	</select>
+	
+	<delete id="deleteDataScopeOfOptID"  timeout="2000" parameterType="String">
+		 DELETE FROM F_OPTDATASCOPE WHERE OPTID =#{sOptID}
+	</delete>
+	
+	<select id="getNextOptCode"  resultType="String">
+			select S_OPTDEFCODE.nextval from dual
+	</select>
+	
+	<select id="listDataFiltersByIds" parameterType="map"  resultType="String" >
+		 select 
+			       u.FILTERCONDITION
+		      from F_OPTDATASCOPE u
+		 where 
+				<foreach item="scope" collection="scopes" separator=","
+				open=" u.OPTSCOPECODE in (" close=")" index="">
+				#{scope, jdbcType=VARCHAR}
+			  </foreach>
+	</select>
+</mapper>

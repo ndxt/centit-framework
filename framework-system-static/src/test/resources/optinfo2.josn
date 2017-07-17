@@ -1,0 +1,953 @@
+{
+	"DatabaseInfo":{
+		"text":"数据库定义",
+		"optId":"DatabaseInfo",
+		"preOptId":"MF_MDFORMMGR",
+		"pid":"MF_MDFORMMGR",
+		"optUrl":"service/sys/databaseinfo",
+		"url":"modules/sys/databaseinfo/databaseinfo.html",
+		"updateDate":"2016-07-29 16:46:48",
+		"id":"DatabaseInfo",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"modules/sys/databaseinfo/databaseinfo.html",
+		"optName":"数据库定义",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-07-29 16:46:48",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"ORGMAG":{
+		"icon":"icon-base icon-base-user",
+		"text":"组织管理",
+		"optId":"ORGMAG",
+		"updator":"u0000000",
+		"preOptId":"0",
+		"pid":"0",
+		"optUrl":"...",
+		"url":"...",
+		"updateDate":"2016-01-31 15:55:53",
+		"creator":"u0000000",
+		"pageType":"I",
+		"id":"ORGMAG",
+		"optType":"O",
+		"orderInd":3,
+		"optRoute":"...",
+		"optName":"组织管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-01-31 15:55:53",
+		"attributes":{
+			"external":true
+		},
+		"optMethods":[
+			
+		]
+	},
+	"DEPTPOW":{
+		"icon":"icon-base icon-base-user",
+		"text":"下属部门管理",
+		"optId":"DEPTPOW",
+		"updator":"u0000000",
+		"preOptId":"DEPTMAG",
+		"pid":"DEPTMAG",
+		"optUrl":"/system/deptManager",
+		"url":"modules/sys/deptpow/deptpow.html",
+		"updateDate":"2016-05-27 15:19:33",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"DEPTPOW",
+		"optType":"O",
+		"orderInd":1,
+		"optRoute":"modules/sys/deptpow/deptpow.html",
+		"optName":"下属部门管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-05-27 15:19:33",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"MDTABLE":{
+		"text":"表元数据",
+		"optId":"MDTABLE",
+		"preOptId":"MF_MDFORMMGR",
+		"pid":"MF_MDFORMMGR",
+		"optUrl":"service/metaform/mdtable",
+		"url":"modules/metaform/mdtable/mdtable.html",
+		"updateDate":"2016-07-29 16:47:22",
+		"id":"MDTABLE",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"modules/metaform/mdtable/mdtable.html",
+		"optName":"表元数据",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-07-29 16:47:22",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"USER_SETTING":{
+		"text":"设置中心",
+		"optId":"USER_SETTING",
+		"updator":"u0000000",
+		"preOptId":"SYS_CONFIG",
+		"pid":"SYS_CONFIG",
+		"optUrl":"/system/usersetting",
+		"url":"/modules/sys/usersetting.html",
+		"updateDate":"2014-12-23 16:52:40",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"USER_SETTING",
+		"optType":"N",
+		"optRoute":"/modules/sys/usersetting.html",
+		"optName":"设置中心",
+		"isInToolbar":"N",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2014-12-23 16:52:40",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		],
+		"createDate":"2014-12-23 16:52:40"
+	},
+	"DICTSET_M":{
+		"text":"数据字典",
+		"optId":"DICTSET_M",
+		"updator":"u0000000",
+		"preOptId":"SYS_CONFIG",
+		"pid":"SYS_CONFIG",
+		"optUrl":"/system/dictionary",
+		"url":"modules/sys/dictionary/dictionary.html",
+		"updateDate":"2016-01-30 19:53:38",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"DICTSET_M",
+		"optType":"O",
+		"optRoute":"modules/sys/dictionary/dictionary.html",
+		"optName":"数据字典",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-01-30 19:53:38",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		],
+		"createDate":"2014-12-23 14:04:59"
+	},
+	"OPTLOG":{
+		"text":"系统日志",
+		"optId":"OPTLOG",
+		"updator":"u0000000",
+		"preOptId":"SYSCONF",
+		"pid":"SYSCONF",
+		"optUrl":"/system/optlog",
+		"url":"modules/sys/loginfo/loginfo.admin.html",
+		"creator":"u0000000",
+		"id":"OPTLOG",
+		"optType":"S",
+		"pageType":"D",
+		"optRoute":"modules/sys/loginfo/loginfo.admin.html",
+		"optName":"系统日志",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"SYS_CONFIG":{
+		"icon":"icon-base icon-base-gear",
+		"text":"系统配置",
+		"optId":"SYS_CONFIG",
+		"updator":"u0000000",
+		"preOptId":"0",
+		"pid":"0",
+		"optUrl":"...",
+		"url":"...",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"SYS_CONFIG",
+		"optType":"O",
+		"optRoute":"...",
+		"optName":"系统配置",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"DICTSET":{
+		"icon":"icon-base icon-base-gear",
+		"text":"数据字典管理",
+		"optId":"DICTSET",
+		"updator":"u0000000",
+		"preOptId":"SYSCONF",
+		"pid":"SYSCONF",
+		"optUrl":"/system/dictionary",
+		"url":"modules/sys/dictionary/dictionary.admin.html",
+		"updateDate":"2016-02-18 17:48:18",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"DICTSET",
+		"optType":"S",
+		"orderInd":0,
+		"optRoute":"modules/sys/dictionary/dictionary.admin.html",
+		"optName":"数据字典管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-02-18 17:48:18",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"OPTINFO":{
+		"text":"系统业务",
+		"optId":"OPTINFO",
+		"updator":"u0000000",
+		"preOptId":"SYSCONF",
+		"pid":"SYSCONF",
+		"optUrl":"/system/optinfo",
+		"url":"modules/sys/optinfo/optinfo.html",
+		"updateDate":"2016-01-30 19:50:37",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"OPTINFO",
+		"optType":"S",
+		"orderInd":4,
+		"optRoute":"modules/sys/optinfo/optinfo.html",
+		"optName":"系统业务",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-01-30 19:50:37",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"USERUNIT":{
+		"text":"用户机构",
+		"optId":"USERUNIT",
+		"updator":"u0000000",
+		"preOptId":"ORGMAG",
+		"pid":"ORGMAG",
+		"optUrl":"/system/userunit",
+		"url":"/modules/sys/userunit.html",
+		"creator":"u0000000",
+		"id":"USERUNIT",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"/modules/sys/userunit.html",
+		"optName":"用户机构",
+		"isInToolbar":"N",
+		"dataScopes":[
+			
+		],
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"FLOWMGR":{
+		"text":"流程实例管理",
+		"optId":"FLOWMGR",
+		"preOptId":"WORKFLOW",
+		"pid":"WORKFLOW",
+		"optUrl":"service/flow/useroptmgr",
+		"url":"modules/sys/flowmanager/flowmanager.html",
+		"updateDate":"2016-04-20 11:02:19",
+		"id":"FLOWMGR",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"modules/sys/flowmanager/flowmanager.html",
+		"optName":"流程实例管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-04-20 11:02:19",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"FLOWOPT":{
+		"text":"流程业务",
+		"optId":"FLOWOPT",
+		"preOptId":"0",
+		"pid":"0",
+		"optUrl":"...",
+		"url":"...",
+		"updateDate":"2016-04-20 13:47:28",
+		"id":"FLOWOPT",
+		"optType":"W",
+		"pageType":"D",
+		"optRoute":"...",
+		"optName":"流程业务",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-04-20 13:47:28",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"FORMCHANGELOG":{
+		"text":"元数据更改记录",
+		"optId":"FORMCHANGELOG",
+		"preOptId":"MF_MDFORMMGR",
+		"pid":"MF_MDFORMMGR",
+		"optUrl":"service/metaform/mdchanglog",
+		"url":"modules/metaform/mdchanglog/mdchanglog.html",
+		"updateDate":"2016-07-29 16:48:17",
+		"id":"FORMCHANGELOG",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"modules/metaform/mdchanglog/mdchanglog.html",
+		"optName":"元数据更改记录",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-07-29 16:48:17",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"MF_OPTNMANU":{
+		"text":"业务菜单",
+		"optId":"MF_OPTNMANU",
+		"preOptId":"METAFORM",
+		"pid":"METAFORM",
+		"optUrl":"...",
+		"url":"...",
+		"updateDate":"2016-07-29 16:40:34",
+		"id":"MF_OPTNMANU",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"...",
+		"optName":"业务菜单",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-07-29 16:40:34",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"DEPTMAG":{
+		"icon":"icon-base icon-base-computer",
+		"text":"部门管理",
+		"optId":"DEPTMAG",
+		"updator":"u0000000",
+		"preOptId":"0",
+		"pid":"0",
+		"optUrl":"...",
+		"url":"...",
+		"updateDate":"2016-01-12 17:04:01",
+		"creator":"u0000000",
+		"pageType":"I",
+		"id":"DEPTMAG",
+		"optType":"O",
+		"optRoute":"...",
+		"optName":"部门管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-01-12 17:04:01",
+		"attributes":{
+			"external":true
+		},
+		"optMethods":[
+			
+		]
+	},
+	"DEPLOY":{
+		"icon":"444",
+		"text":"实施菜单",
+		"optId":"DEPLOY",
+		"updator":"u0000000",
+		"preOptId":"0",
+		"pid":"0",
+		"optUrl":"...",
+		"url":"...",
+		"updateDate":"2014-12-15 14:10:08",
+		"creator":"u0000000",
+		"pageType":"I",
+		"optType":"S",
+		"id":"DEPLOY",
+		"optRoute":"...",
+		"optName":"实施菜单",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2014-12-15 14:10:08",
+		"attributes":{
+			"external":true
+		},
+		"optMethods":[
+			
+		],
+		"createDate":"2014-12-15 14:10:08"
+	},
+	"SYSCONF":{
+		"icon":"icon-base icon-base-gear",
+		"text":"系统配置",
+		"optId":"SYSCONF",
+		"updator":"u0000000",
+		"preOptId":"DEPLOY",
+		"pid":"DEPLOY",
+		"optUrl":"...",
+		"url":"...",
+		"creator":"u0000000",
+		"pageType":"I",
+		"id":"SYSCONF",
+		"optType":"O",
+		"optRoute":"...",
+		"optName":"系统配置",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"attributes":{
+			"external":true
+		},
+		"optMethods":[
+			
+		]
+	},
+	"DEPTROLE":{
+		"icon":"icon-base icon-base-gear",
+		"text":"部门角色定义",
+		"optId":"DEPTROLE",
+		"updator":"u0000000",
+		"preOptId":"DEPTMAG",
+		"pid":"DEPTMAG",
+		"optUrl":"/system/deptManager!",
+		"url":"modules/sys/deptrole/deptrole.html",
+		"updateDate":"2016-05-27 15:19:37",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"DEPTROLE",
+		"optType":"O",
+		"orderInd":2,
+		"optRoute":"modules/sys/deptrole/deptrole.html",
+		"optName":"部门角色定义",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-05-27 15:19:37",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"METAFORM":{
+		"text":"元数据表单系统",
+		"optId":"METAFORM",
+		"preOptId":"0",
+		"pid":"0",
+		"optUrl":"...",
+		"url":"...",
+		"updateDate":"2016-07-29 16:39:09",
+		"pageType":"D",
+		"id":"METAFORM",
+		"optType":"O",
+		"orderInd":5,
+		"optRoute":"...",
+		"optName":"元数据表单系统",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-07-29 16:39:09",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"METAFORMMODEL":{
+		"text":"通用模块管理",
+		"optId":"METAFORMMODEL",
+		"preOptId":"MF_MDFORMMGR",
+		"pid":"MF_MDFORMMGR",
+		"optUrl":"service/metaform/metaformmodel",
+		"url":"modules/metaform/metaformmodel/metaformmodel.html",
+		"updateDate":"2016-07-29 16:48:29",
+		"id":"METAFORMMODEL",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"modules/metaform/metaformmodel/metaformmodel.html",
+		"optName":"通用模块管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-07-29 16:48:29",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"DEPTUSERINFO":{
+		"text":"部门用户管理",
+		"optId":"DEPTUSERINFO",
+		"updator":"u0000000",
+		"preOptId":"DEPTMAG",
+		"pid":"DEPTMAG",
+		"optUrl":"/system/userDef",
+		"url":"modules/sys/deptuserinfo/deptuserinfo.html",
+		"updateDate":"2016-05-27 15:19:20",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"DEPTUSERINFO",
+		"optType":"O",
+		"orderInd":0,
+		"optRoute":"modules/sys/deptuserinfo/deptuserinfo.html",
+		"optName":"部门用户管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-05-27 15:19:20",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"OsInfo":{
+		"text":"系统业务管理",
+		"optId":"OsInfo",
+		"preOptId":"MF_MDFORMMGR",
+		"pid":"MF_MDFORMMGR",
+		"optUrl":"service/sys/osinfo",
+		"url":"modules/sys/osinfo/osinfo.html",
+		"updateDate":"2016-07-29 16:48:25",
+		"id":"OsInfo",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"modules/sys/osinfo/osinfo.html",
+		"optName":"系统业务管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-07-29 16:48:25",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"EXPENCE":{
+		"text":"报销流程",
+		"optId":"EXPENCE",
+		"preOptId":"FLOWOPT",
+		"pid":"FLOWOPT",
+		"optUrl":"/expense",
+		"url":"/expense",
+		"updateDate":"2016-05-13 17:04:26",
+		"id":"EXPENCE",
+		"optType":"W",
+		"pageType":"D",
+		"optRoute":"/expense",
+		"optName":"报销流程",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-05-13 17:04:26",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"USERMAG":{
+		"text":"用户管理",
+		"optId":"USERMAG",
+		"updator":"u0000000",
+		"preOptId":"ORGMAG",
+		"pid":"ORGMAG",
+		"optUrl":"/system/userinfo",
+		"url":"modules/sys/userinfo/userinfo.html",
+		"updateDate":"2016-02-18 17:46:43",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"USERMAG",
+		"optType":"O",
+		"optRoute":"modules/sys/userinfo/userinfo.html",
+		"optName":"用户管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-02-18 17:46:43",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"OPT_LOG_QUERY":{
+		"text":"系统日志",
+		"optId":"OPT_LOG_QUERY",
+		"updator":"u0000000",
+		"preOptId":"SYS_CONFIG",
+		"pid":"SYS_CONFIG",
+		"optUrl":"/system/optlog",
+		"url":"modules/sys/loginfo/loginfo.html",
+		"updateDate":"2015-11-27 11:19:09",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"OPT_LOG_QUERY",
+		"optType":"O",
+		"optRoute":"modules/sys/loginfo/loginfo.html",
+		"optName":"系统日志",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2015-11-27 11:19:09",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"MF_OPT_FIRST":{
+		"text":"前期事务",
+		"optId":"MF_OPT_FIRST",
+		"preOptId":"MF_OPTNMANU",
+		"pid":"MF_OPTNMANU",
+		"optUrl":"/firstpage",
+		"url":"form.access.list({modelCode:",
+		"updateDate":"2016-07-29 16:46:16",
+		"id":"MF_OPT_FIRST",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"form.access.list({modelCode:",
+		"optName":"前期事务",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-07-29 16:46:16",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"USERFLOW":{
+		"text":"用户流程任务管理",
+		"optId":"USERFLOW",
+		"preOptId":"WORKFLOW",
+		"pid":"WORKFLOW",
+		"optUrl":"service/flow/manager",
+		"url":"modules/sys/useroptmgr/useroptmanager.html",
+		"updateDate":"2016-04-20 11:01:58",
+		"id":"USERFLOW",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"modules/sys/useroptmgr/useroptmanager.html",
+		"optName":"用户流程任务管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-04-20 11:01:58",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"FLOWDEF":{
+		"text":"流程定义",
+		"optId":"FLOWDEF",
+		"preOptId":"WORKFLOW",
+		"pid":"WORKFLOW",
+		"optUrl":"service/flow/define",
+		"url":"modules/sys/flowdefine/flowdefine.html",
+		"updateDate":"2016-04-20 11:01:03",
+		"id":"FLOWDEF",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"modules/sys/flowdefine/flowdefine.html",
+		"optName":"流程定义",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-04-20 11:01:03",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"CALENDAR":{
+		"icon":"icon-base icon-base-calendar",
+		"text":"日历",
+		"optId":"CALENDAR",
+		"updator":"u0000000",
+		"preOptId":"SYS_CONFIG",
+		"pid":"SYS_CONFIG",
+		"optUrl":"/system/calendar",
+		"url":"/modules/sys/schedule/schedule.html",
+		"updateDate":"2015-03-04 09:55:31",
+		"creator":"u0000000",
+		"pageType":"D",
+		"optType":"O",
+		"id":"CALENDAR",
+		"optRoute":"/modules/sys/schedule/schedule.html",
+		"optName":"日历",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2015-03-04 09:55:31",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		],
+		"createDate":"2015-03-04 09:55:31"
+	},
+	"UNITMAG":{
+		"text":"机构管理",
+		"optId":"UNITMAG",
+		"updator":"u0000000",
+		"preOptId":"ORGMAG",
+		"pid":"ORGMAG",
+		"optUrl":"/system/unitinfo",
+		"url":"modules/sys/unitinfo/unitinfo.html",
+		"updateDate":"2016-03-14 14:41:07",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"UNITMAG",
+		"optType":"O",
+		"orderInd":2,
+		"optRoute":"modules/sys/unitinfo/unitinfo.html",
+		"optName":"机构管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-03-14 14:41:07",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"MF_MDFORMMGR":{
+		"text":"表单管理",
+		"optId":"MF_MDFORMMGR",
+		"preOptId":"METAFORM",
+		"pid":"METAFORM",
+		"optUrl":"...",
+		"url":"...",
+		"updateDate":"2016-07-29 16:41:03",
+		"id":"MF_MDFORMMGR",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"...",
+		"optName":"表单管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-07-29 16:41:03",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"WORKFLOW":{
+		"text":"流程管理",
+		"optId":"WORKFLOW",
+		"preOptId":"0",
+		"pid":"0",
+		"optUrl":"...",
+		"url":"...",
+		"updateDate":"2016-04-20 13:47:46",
+		"id":"WORKFLOW",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"...",
+		"optName":"流程管理",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-04-20 13:47:46",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"ROLEMAG":{
+		"text":"角色定义",
+		"optId":"ROLEMAG",
+		"updator":"u0000000",
+		"preOptId":"ORGMAG",
+		"pid":"ORGMAG",
+		"optUrl":"/system/roleinfo",
+		"url":"modules/sys/roleinfo/roleinfo.html",
+		"creator":"u0000000",
+		"id":"ROLEMAG",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"modules/sys/roleinfo/roleinfo.html",
+		"optName":"角色定义",
+		"isInToolbar":"Y",
+		"dataScopes":[
+			
+		],
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"LOGINCAS":{
+		"text":"CAS登录入口",
+		"optId":"LOGINCAS",
+		"updator":"u0000000",
+		"preOptId":"0",
+		"pid":"0",
+		"optUrl":"/system/mainframe",
+		"url":"/system/mainframe/logincas",
+		"updateDate":"2016-04-07 15:06:08",
+		"creator":"u0000000",
+		"pageType":"D",
+		"id":"LOGINCAS",
+		"optType":"O",
+		"optRoute":"/system/mainframe/logincas",
+		"optName":"CAS登录入口",
+		"isInToolbar":"N",
+		"dataScopes":[
+			
+		],
+		"lastModifyDate":"2016-04-07 15:06:08",
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	},
+	"USERROLE":{
+		"text":"用户角色",
+		"optId":"USERROLE",
+		"updator":"u0000000",
+		"preOptId":"ORGMAG",
+		"pid":"ORGMAG",
+		"optUrl":"/system/userrole",
+		"url":"/modules/sys/userrole.html",
+		"creator":"u0000000",
+		"id":"USERROLE",
+		"optType":"O",
+		"pageType":"D",
+		"optRoute":"/modules/sys/userrole.html",
+		"optName":"用户角色",
+		"isInToolbar":"N",
+		"dataScopes":[
+			
+		],
+		"attributes":{
+			"external":false
+		},
+		"optMethods":[
+			
+		]
+	}
+}

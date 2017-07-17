@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.centit.framework.system.dao.UserRoleDao">
+	<resultMap type="com.centit.framework.system.po.UserRole" id="UserRole">
+			<result property="userCode" column="USERCODE" />
+			<result property="roleCode" column="ROLECODE" />
+			<result property="obtainDate" column="OBTAINDATE" />
+			<result property="changeDesc" column="CHANGEDESC" />
+			<result property="createDate" column="CREATEDATE" />
+			<result property="creator" column="CREATOR" />
+			<result property="updator" column="UPDATOR" />
+			<result property="updateDate" column="UPDATEDATE" />
+	</resultMap>
+	<resultMap type="com.centit.framework.system.po.FVUserRoles" id="FvuserRole">
+			<result property="userCode" column="USERCODE" />
+			<result property="roleCode" column="ROLECODE" />
+			<result property="roleName" column="ROLENAME" />
+			<result property="isValid" column="ISVALID" />
+			<result property="roleDesc" column="ROLEDESC" />
+	</resultMap>
+	
+
+	<!-- 查询条件 -->
+	<sql id="condition">
+		<if test="roleCode != null  and roleCode != '' ">
+			  and u.ROLECODE =#{roleCode}
+		</if>
+		<if test="userCode != null  and userCode != '' ">
+			  and u.USERCODE =#{userCode}
+		</if>
+		<if test="roleName != null  and roleName != '' ">
+			  and u.ROLENAME  like '%'|| #{roleName}||'%'
+		</if>
+		<if test="NP_unitRoleType != null  and NP_unitRoleType != '' ">
+			  and u.ROLECODE in (select ROLECODE from F_ROLEINFO where UNITCODE is not null)
+		</if>
+		<if test="NP_userRoleType != null  and NP_userRoleType != '' ">
+			 and u.ROLECODE not in (select ROLECODE from F_ROLEINFO where UNITCODE is not null)
+		</if>
+		<if test="USERCODE_ISVALID != null  and USERCODE_ISVALID != '' ">
+			 and u.USERCODE in (select USERCODE from F_ROLEINFO where ISVALID =#{USERCODE_ISVALID})
+		</if>
+	</sql>
+	
+	<!-- 查询核心SQL -->
+	<sql id="coreSql">
+		<![CDATA[ 
+			select 
+				u.USERCODE,
+				u.ROLECODE,
+				u.OBTAINDATE,
+				u.CHANGEDESC,
+				u.CREATEDATE,
+				u.CREATOR,
+				u.UPDATOR,
+				u.UPDATEDATE
+		      from F_USERROLE u
+	  ]]>
+	</sql>
+	
+	<!--分页计数 -->
+	<select id="pageCount" parameterType="map" resultType="int">
+ 	 <![CDATA[
+	   select count(0) cnt 
+	     from 
+             F_USERROLE u
+       ]]>
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<!--分页查询 -->
+	<select id="pageQuery" parameterType="map" resultMap="UserRole">
+	    <include refid="com.centit.framework.system.dao.BaseDao.pageBegin" />
+		<include refid="coreSql" />
+		<where>
+			<include refid="condition" />
+		</where>
+		<if test="pageDesc != null ">
+			order by ${pageDesc}
+		</if>
+		<include refid="com.centit.framework.system.dao.BaseDao.pageEnd" />
+	</select>
+	<!--分页查询结束 -->
+<!--查询单条记录ById -->
+	<select id="getObjectById" parameterType="com.centit.framework.system.po.UserRoleId" resultMap="UserRole">
+		<include refid="coreSql" />
+		<where>
+         <![CDATA[ 
+	                u.USERCODE=#{userCode}  and u.ROLECODE=#{roleCode}
+           ]]>
+		</where>
+	</select>
+	<!--查询单条记录 结束 -->
+	
+    <!--插入新单据 start -->
+    <sql id="insertSql">
+		   (
+			USERCODE,
+			ROLECODE,
+			OBTAINDATE,
+			CHANGEDESC,
+			CREATEDATE,
+			CREATOR,
+			UPDATOR,
+			UPDATEDATE
+			)values(
+			#{userCode,jdbcType=VARCHAR},
+			#{roleCode,jdbcType=VARCHAR},
+			#{obtainDate,jdbcType=DATE},
+			#{changeDesc,jdbcType=VARCHAR},
+			#{createDate,jdbcType=DATE},
+			#{creator,jdbcType=VARCHAR},
+			#{updator,jdbcType=VARCHAR},
+			#{updateDate,jdbcType=DATE}
+			)
+	</sql>
+	<insert id="saveNewObject" parameterType="com.centit.framework.system.po.UserRole">
+        insert into F_USERROLE
+       <include refid="insertSql" />
+	</insert>
+	<!--更新单据 start -->
+   <sql id="updSql">
+      <set>
+<!-- 			<if test="userCode !=null ">  -->
+<!-- 					USERCODE  =  #{userCode},  -->
+<!-- 			</if>  -->
+<!-- 			<if test="roleCode !=null ">  -->
+<!-- 					ROLECODE  =  #{roleCode},  -->
+<!-- 			</if>  -->
+			<if test="obtainDate !=null "> 
+					OBTAINDATE  =  #{obtainDate}, 
+			</if> 
+			<if test="changeDesc !=null "> 
+					CHANGEDESC  =  #{changeDesc}, 
+			</if> 
+			<if test="createDate !=null "> 
+					CREATEDATE  =  #{createDate}, 
+			</if> 
+			<if test="creator !=null "> 
+					CREATOR  =  #{creator}, 
+			</if> 
+			<if test="updator !=null "> 
+					UPDATOR  =  #{updator}, 
+			</if> 
+			<if test="updateDate !=null "> 
+					UPDATEDATE  =  #{updateDate}, 
+			</if> 
+		</set>
+	</sql>
+	<update id="update" parameterType="com.centit.framework.system.po.UserRole" timeout="2000">
+	     update F_USERROLE
+	     <include refid="updSql" />
+	     where   USERCODE=#{userCode}  and ROLECODE=#{roleCode}
+	</update>
+	<!--更新单据 end -->
+   
+   <!--Merge单据 start -->
+	<update id="mergeObject" parameterType="com.centit.framework.system.po.UserRole" timeout="2000">
+	      merge into F_USERROLE t  
+		    using ( select #{userCode} as USERCODE ,  #{roleCode} as ROLECODE     from dual) t1  
+		    on(t.USERCODE = t1.USERCODE and t.ROLECODE=t1.ROLECODE)  
+		 when not matched then
+		   insert
+		   <include refid="insertSql" />
+		 when matched then 
+		 update
+		   <include refid="updSql" />   
+		    where USERCODE=#{userCode}  and ROLECODE=#{roleCode}
+	</update>
+	<!--Merge单据 end -->
+   <!--插入新单据 end -->
+   
+	<!--删除记录  -->
+	<delete id="deleteObject" parameterType="com.centit.framework.system.po.UserRole" timeout="2000">
+    <![CDATA[ 
+       delete from F_USERROLE where USERCODE=#{userCode}  and ROLECODE=#{roleCode}
+     ]]>
+	</delete>
+	<delete id="deleteObjectById" parameterType="com.centit.framework.system.po.UserRoleId" timeout="2000">
+    <![CDATA[ 
+       delete from F_USERROLE where USERCODE=#{userCode}  and ROLECODE=#{roleCode}
+     ]]>
+	</delete>
+	<!--删除记录 结束 -->
+	
+	<select id="getNextKey" resultType="Long">
+		SELECT S_FILTER_NO.nextval from dual
+	</select>
+	<select id="listObjectsAll"  resultMap="UserRole">
+		 <include refid="coreSql" />
+	</select>
+	<delete id="deleteByRoleId" parameterType="String" timeout="2000">
+		delete from F_USERROLE WHERE ROLECODE = #{roid}
+	</delete>
+	<delete id="deleteByUserId" parameterType="String" timeout="2000">
+		delete from F_USERROLE WHERE USERCODE = #{usid}
+	</delete>
+	<delete id="deleteByRoleCodeAndUserCode" parameterType="map"  timeout="2000">
+		delete from F_USERROLE WHERE USERCODE = #{userCode} and ROLECODE= #{roleCode}
+	</delete>
+	<select id="getUserRolesByUserId" parameterType="map" resultMap="UserRole">
+		<include refid="coreSql" />
+		<![CDATA[
+		where USERCODE = #{usid} and ROLECODE like #{rolePrefix}||'%'
+		and OBTAINDATE <= sysdate and (SECEDEDATE is null or SECEDEDATE >sysdate)
+		ORDER BY OBTAINDATE,SECEDEDATE
+		]]>
+	</select>
+	<select id="getAllUserRolesByUserId" parameterType="String" resultMap="UserRole">
+		<include refid="coreSql" />
+		<![CDATA[
+			where USERCODE = #{usid} and ROLECODE like #{rolePrefix}||'%'
+			ORDER BY OBTAINDATE,SECEDEDATE
+		]]>
+	</select>
+	<select id="getValidUserRole" parameterType="map" resultMap="UserRole">
+		<include refid="coreSql" />
+		where USERCODE = #{userCode} and ROLECODE =#{rolecode}
+		ORDER BY OBTAINDATE,SECEDEDATE
+	</select>
+	
+	
+	<select id="getSysRolesByUserId" parameterType="String" resultMap="FvuserRole">
+		select  ROLECODE,ROLENAME,ISVALID,ROLEDESC from F_V_USERROLES 
+		where USERCODE = #{userCode} 
+	</select>
+	
+	
+	
+</mapper>

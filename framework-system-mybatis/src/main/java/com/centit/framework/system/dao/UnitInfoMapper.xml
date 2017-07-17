@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.centit.framework.system.dao.UnitInfoDao">
+	<resultMap type="com.centit.framework.system.po.UnitInfo" id="UnitInfo">
+       <result property="unitCode" column="UNITCODE" />
+       <result property="parentUnit" column="PARENTUNIT" />
+       <result property="unitType" column="UNITTYPE" />
+		<result property="isValid" column="ISVALID" />
+		<result property="unitName" column="UNITNAME" />
+		<result property="englishName" column="ENGLISHNAME" />
+		<result property="unitShortName" column="UNITSHORTNAME" />
+		<result property="unitWord" column="UNITWORD" />
+       <result property="unitTag" column="UNITTAG" />
+       <result property="unitDesc" column="UNITDESC" />
+		<result property="addrbookId" column="ADDRBOOKID" />
+		<result property="unitOrder" column="UNITORDER" />
+		<result property="unitGrade" column="UNITGRADE" />
+		<result property="depNo" column="DEPNO" />
+		<result property="unitPath" column="UNITPATH" />
+       <result property="unitManager" column="UNITMANAGER" />
+       <result property="createDate" column="CREATEDATE" />
+		<result property="creator" column="CREATOR" />
+		<result property="updator" column="UPDATOR" />
+		<result property="updateDate" column="UPDATEDATE" />
+	</resultMap>
+
+	<!-- 查询条件 -->
+	<sql id="condition">
+		<if test="unitCode != null  and unitCode != '' ">
+			  and u.UNITCODE = #{unitCode}
+		</if>
+		<if test="unitName != null  and unitName != ''  ">
+			  and u.UNITNAME like '%'|| #{unitName}||'%'
+		</if>
+		<if test="isValid != null  and isValid != ''   ">
+			  and u.ISVALID = #{isValid}
+		</if>
+		<if test="unitTag != null  and unitTag != ''   ">
+			  and u.UNITTAG = #{unitTag}
+		</if>
+		<if test="unitWord != null and unitWord != ''  ">
+			  and u.UNITWORD = #{unitWord}
+		</if>
+		<if test="PARENTUNIT != null  and PARENTUNIT != ''  ">
+			  and u.PARENTUNIT = #{PARENTUNIT}
+		</if>
+		<if test="NP_TOPUnit != null  and NP_TOPUnit != '' ">
+			  and (u.PARENTUNIT is null or PARENTUNIT='0')
+		</if>
+	</sql>
+	
+	<!-- 查询核心SQL -->
+	<sql id="coreSql">
+		<![CDATA[ 
+			select 
+			        u.UNITCODE,
+					u.PARENTUNIT,
+					u.UNITTYPE,
+					u.ISVALID,
+					u.UNITNAME,
+					u.ENGLISHNAME,
+					u.UNITSHORTNAME,
+					u.UNITWORD,
+					u.UNITTAG,
+					u.UNITDESC,
+					u.ADDRBOOKID,
+					u.UNITORDER,
+					u.UNITGRADE,
+					u.DEPNO,
+					u.UNITPATH,
+					u.UNITMANAGER,
+					u.CREATEDATE,
+					u.CREATOR,
+					u.UPDATOR,
+					u.UPDATEDATE
+		      from F_UNITINFO u
+	  ]]>
+	</sql>
+	
+	<!--分页计数 -->
+	<select id="pageCount" parameterType="map" resultType="int">
+ 	 <![CDATA[
+	   select count(0) cnt 
+	     from 
+             F_UNITINFO u
+       ]]>
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<!--分页查询 -->
+	<select id="pageQuery" parameterType="map" resultMap="UnitInfo">
+	    <include refid="com.centit.framework.system.dao.BaseDao.pageBegin" />
+		<include refid="coreSql" />
+		<where>
+			<include refid="condition" />
+		</where>
+		<if test="pageDesc != null ">
+			order by ${pageDesc}
+		</if>
+		<include refid="com.centit.framework.system.dao.BaseDao.pageEnd" />
+	</select>
+	<!--分页查询结束 -->
+<!--查询单条记录ById -->
+	<select id="getObjectById" parameterType="String" resultMap="UnitInfo">
+		<include refid="coreSql" />
+		<where>
+         <![CDATA[ 
+	                u.UNITCODE=#{unitCode} 
+           ]]>
+		</where>
+	</select>
+	<!--查询单条记录 结束 -->
+	
+    <!--插入新单据 start -->
+    <sql id="insertSql">
+		   (
+			UNITCODE,
+			PARENTUNIT,
+			UNITTYPE,
+			ISVALID,
+			UNITNAME,
+			ENGLISHNAME,
+			UNITSHORTNAME,
+			UNITWORD,
+			UNITTAG,
+			UNITDESC,
+			ADDRBOOKID,
+			UNITORDER,
+			UNITGRADE,
+			DEPNO,
+			UNITPATH,
+			UNITMANAGER,
+			CREATEDATE,
+			CREATOR,
+			UPDATOR,
+			UPDATEDATE
+			)values(
+			#{unitCode,jdbcType=VARCHAR},
+			#{parentUnit,jdbcType=VARCHAR},
+			#{unitType,jdbcType=VARCHAR},
+			#{isValid,jdbcType=VARCHAR},
+			#{unitName,jdbcType=VARCHAR},
+			#{englishName,jdbcType=VARCHAR},
+			#{unitShortName,jdbcType=VARCHAR},
+			#{unitWord,jdbcType=VARCHAR},
+			#{unitTag,jdbcType=VARCHAR},
+			#{unitDesc,jdbcType=VARCHAR},
+			#{addrbookId,jdbcType=BIGINT},
+			#{unitOrder,jdbcType=BIGINT},
+			#{unitGrade,jdbcType=BIGINT},
+			#{depNo,jdbcType=VARCHAR},
+			#{unitPath,jdbcType=VARCHAR},
+			#{unitManager,jdbcType=VARCHAR},
+			#{createDate,jdbcType=DATE},
+			#{creator,jdbcType=VARCHAR},
+			#{updator,jdbcType=VARCHAR},
+			#{updateDate,jdbcType=DATE}
+			)
+	</sql>
+	<insert id="saveNewObject" parameterType="com.centit.framework.system.po.UnitInfo">
+        insert into F_UNITINFO
+       <include refid="insertSql" />
+	</insert>
+	<!--更新单据 start -->
+   <sql id="updSql">
+      <set>
+<!-- 			<if test="unitCode !=null ">  -->
+<!-- 				UNITCODE  =  #{unitCode},  -->
+<!-- 			</if>  -->
+			<if test="parentUnit !=null "> 
+				PARENTUNIT  =  #{parentUnit}, 
+			</if> 
+			<if test="unitType !=null "> 
+				UNITTYPE  =  #{unitType}, 
+			</if> 
+			<if test="isValid !=null "> 
+				ISVALID  =  #{isValid}, 
+			</if> 
+			<if test="unitName !=null "> 
+				UNITNAME  =  #{unitName}, 
+			</if> 
+			<if test="englishName !=null "> 
+				ENGLISHNAME  =  #{englishName}, 
+			</if> 
+			<if test="unitShortName !=null "> 
+				UNITSHORTNAME  =  #{unitShortName}, 
+			</if> 
+			<if test="unitWord !=null "> 
+				UNITWORD  =  #{unitWord}, 
+			</if> 
+			<if test="unitTag !=null "> 
+				UNITTAG  =  #{unitTag}, 
+			</if> 
+			<if test="unitDesc !=null "> 
+				UNITDESC  =  #{unitDesc}, 
+			</if> 
+			<if test="addrbookId !=null "> 
+				ADDRBOOKID  =  #{addrbookId}, 
+			</if> 
+			<if test="unitOrder !=null "> 
+				UNITORDER  =  #{unitOrder}, 
+			</if> 
+			<if test="unitGrade !=null "> 
+				UNITGRADE  =  #{unitGrade}, 
+			</if> 
+			<if test="depNo !=null "> 
+				DEPNO  =  #{depNo}, 
+			</if> 
+			<if test="unitPath !=null "> 
+				UNITPATH  =  #{unitPath}, 
+			</if> 
+			<if test="unitManager !=null "> 
+				UNITMANAGER  =  #{unitManager}, 
+			</if> 
+			<if test="createDate !=null "> 
+				CREATEDATE  =  #{createDate}, 
+			</if> 
+			<if test="creator !=null "> 
+				CREATOR  =  #{creator}, 
+			</if> 
+			<if test="updator !=null "> 
+				UPDATOR  =  #{updator}, 
+			</if> 
+			<if test="updateDate !=null "> 
+				UPDATEDATE  =  #{updateDate}, 
+			</if> 
+		</set>
+	</sql>
+	<update id="update" parameterType="com.centit.framework.system.po.UnitInfo" timeout="2000">
+	     update F_UNITINFO
+	     <include refid="updSql" />
+	     where UNITCODE=#{unitCode} 
+	</update>
+	<!--更新单据 end -->
+   
+   <!--Merge单据 start -->
+	<update id="mergeObject" parameterType="com.centit.framework.system.po.UnitInfo" timeout="2000">
+	      merge into F_UNITINFO t  
+		    using ( select #{unitCode} as UNITCODE  from dual) t1  
+		    on(t.UNITCODE = t1.UNITCODE)  
+		 when not matched then
+		   insert
+		   <include refid="insertSql" />
+		 when matched then 
+		 update
+		   <include refid="updSql" />   
+		    where UNITCODE=#{unitCode} 
+	</update>
+	<!--Merge单据 end -->
+   <!--插入新单据 end -->
+   
+	<!--删除记录  -->
+	<delete id="deleteObjectById" parameterType="String" timeout="2000">
+    <![CDATA[ 
+       delete from F_UNITINFO where UNITCODE=#{unitCode} 
+     ]]>
+	</delete>
+	<!--删除记录 结束 -->
+	<select id="listObjects"  resultMap="UnitInfo" parameterType="map">
+		 <include refid="coreSql" />
+		 <where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<select id="listObjectsAll"  resultMap="UnitInfo">
+		 <include refid="coreSql" />
+	</select>
+	<select id="getNextKey" resultType="String">
+		SELECT S_UNITCODE.nextval from dual
+	</select>
+	<select id="getUnitCode" resultType="String" parameterType="String">
+		<include refid="coreSql" />
+		 where DEPNO=#{depno}
+	</select>
+	<select id="listUnitUsers" resultMap="UnitInfo" parameterType="String">
+		select a.*
+		from f_Userinfo a join f_userunit b on(a.userCode=b.userCode)
+		where b.unitcode =#{unitCode}
+	</select>
+	<select id="listRelationUsers" resultMap="UnitInfo" parameterType="String">
+			select * FROM F_Userinfo ui where ui.userCode in
+			(select userCode from f_userunit where unitcode=#{unitCode}) or
+			ui.userCode in (select userCode from f_userrole where rolecode like #{unitCode}||'-%'
+	</select>
+	<select id="getUnitNameOfCode" parameterType="String" resultType="String">
+		select unitname from f_unitinfo where unitcode=#{unitcode}
+	</select>
+	<select id="getUnitByName" parameterType="String" resultMap="UnitInfo">
+		<include refid="coreSql" />
+		where unitName = #{name} or unitShortName =#{name}
+		order by unitOrder asc
+	</select>
+	<select id="getUnitByTag" parameterType="String" resultMap="UnitInfo">
+		<include refid="coreSql" />
+		where UNITTAG=#{unitTag}
+	</select>
+	<select id="getUnitByWord" parameterType="String" resultMap="UnitInfo">
+		<include refid="coreSql" />
+		where UNITWORD=#{unitWord}
+	</select>
+	<select id="listSubUnits"  parameterType="String" resultMap="UnitInfo">
+		<include refid="coreSql" />
+		where PARENTUNIT=#{unitCode}
+	</select>
+	<select id="listSubUnitinfoByParentUnitcodes"  parameterType="String" resultMap="UnitInfo">
+		<include refid="coreSql" />
+		 <if test="parentunitcodes != null ">
+		<foreach item="parentUnit" collection="parentunitcodes" 
+			open="  and   u.PARENTUNIT in (" close=")" index="">
+			#{parentUnit, jdbcType=String}
+		</foreach>
+	  </if>
+	</select>
+	
+	<select id="listAllSubUnits" parameterType="String"   resultMap="UnitInfo">
+	    <include refid="coreSql" />
+	     where   u.PARENTUNIT=#{primaryUnit}
+	</select>
+	
+	<select id="listSubUnitsByUnitPaht" parameterType="String" resultMap="UnitInfo">
+			<include refid="coreSql" />
+			where unitPath like #{unitPath}||'/%'
+	</select>
+	<select id="listUnitinfoByUnitcodes">
+		<include refid="coreSql" />
+		 <if test="unitcodes != null ">
+		<foreach item="unitCode" collection="unitcodes" 
+			open="  and   u.UNITCODE in (" close=")" index="">
+			#{unitCode, jdbcType=String}
+		</foreach>
+	  </if>
+	</select>
+	
+	<select id="countChildrenSum" parameterType="String" resultType="int">
+			select count(1) from f_unitinfo where parentunit =#{unitCode}
+	</select>
+
+	<select id="getAllParentUnit"  resultType="String">
+			select distinct t.parentunit from f_unitinfo t
+	</select>
+	
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.centit.framework.system.dao.OptFlowNoPoolDao">
+	<resultMap type="com.centit.framework.system.po.OptFlowNoPool" id="OptFlowNoPool">
+       <result property="ownerCode" column="OWNERCODE" />
+       <result property="codeDate" column="CODEDATE" />
+       <result property="codeCode" column="CODECODE" />
+		<result property="curNo" column="CURNO" />
+		<result property="createDate" column="CREATEDATE" />
+		<result property="lastModifyDate" column="LASTMODIFYDATE" />
+	</resultMap>
+
+	<!-- 查询条件 -->
+	<sql id="condition">
+		<if test="ownerCode != null  and ownerCode != ''    ">
+			  and u.OWNERCODE = #{ownerCode}
+		</if>
+		<if test="codeDate != null and codeDate != ''   ">
+			  and u.CODEDATE =#{codeDate}
+		</if>
+		 <if test="codeCode != null  and codeCode != ''  ">
+			  and u.CODECODE=#{codeCode}
+	   </if>
+		<if test="curNo != null  and curNo != ''   ">
+			  and u.CURNO  like '%'|| #{curNo}||'%' 
+		</if>
+	</sql>
+	
+	<!-- 查询核心SQL -->
+	<sql id="coreSql">
+		<![CDATA[ 
+			select 
+			        u.OWNERCODE,
+					u.CODEDATE,
+					u.CODECODE,
+					u.CURNO,
+					u.CREATEDATE,
+					u.LASTMODIFYDATE
+		      from F_OPTFLOWNOPOOL u
+	  ]]>
+	</sql>
+	
+	<!--分页计数 -->
+	<select id="pageCount" parameterType="map" resultType="int">
+ 	 <![CDATA[
+	   select count(0) cnt 
+	     from 
+             F_OPTFLOWNOPOOL u
+       ]]>
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<!--分页查询 -->
+	<select id="pageQuery" parameterType="map" resultMap="OptFlowNoPool">
+	    <include refid="com.centit.framework.system.dao.BaseDao.pageBegin" />
+		<include refid="coreSql" />
+		<where>
+			<include refid="condition" />
+		</where>
+		<if test="pageDesc != null ">
+			order by ${pageDesc}
+		</if>
+		<include refid="com.centit.framework.system.dao.BaseDao.pageEnd" />
+	</select>
+	<!--分页查询结束 -->
+
+
+   <!--查询单条记录ById -->
+	<select id="getObjectById" parameterType="com.centit.framework.system.po.OptFlowNoPoolId" resultMap="OptFlowNoPool">
+		<include refid="coreSql" />
+		<where>
+         <![CDATA[ 
+	                u.OWNERCODE=#{ownerCode} 
+	                and u.CODEDATE=#{codeDate}
+	                and u.CODECODE=#{codeCode}
+	                and u.CURNO=#{curNo}    
+           ]]>
+		</where>
+	</select>
+	<!--查询单条记录 结束 -->
+	
+	
+    <!--插入新单据 start -->
+    <sql id="insertSql">
+		   (
+		    OWNERCODE,
+			CODEDATE,
+			CODECODE,
+			CURNO,
+			CREATEDATE,
+			LASTMODIFYDATE
+			)values(
+			#{ownerCode},
+			#{codeDate},
+			#{codeCode},
+			#{curNo},
+			#{createDate},
+			#{lastModifyDate }
+			)
+	</sql>
+	
+	 <insert id="saveObject" parameterType="com.centit.framework.system.po.OptFlowNoPool">
+        insert into F_OPTFLOWNOPOOL
+       <include refid="insertSql" />
+	</insert>
+	
+   <!--插入新单据 end -->
+	
+	<!--删除记录  -->
+	<delete id="deleteObjectById" parameterType="com.centit.framework.system.po.OptFlowNoPoolId" >
+    <![CDATA[ 
+       delete from F_OPTFLOWNOPOOL u where  u.OWNERCODE=#{ownerCode} 
+	                and u.CODEDATE=#{codeDate}
+	                and u.CODECODE=#{codeCode}
+	                and u.CURNO=#{curNo}    
+     ]]>
+	</delete>
+	
+	<delete id="deleteObject" parameterType="com.centit.framework.system.po.OptFlowNoPool" >
+    <![CDATA[ 
+       delete from F_OPTFLOWNOPOOL u where  u.OWNERCODE=#{ownerCode} 
+	                and u.CODEDATE=#{codeDate}
+	                and u.CODECODE=#{codeCode}
+	                and u.CURNO=#{curNo}    
+     ]]>
+	</delete>
+	<!--删除记录 结束 -->
+	
+	<select id="listObjects" parameterType="map"  resultMap="OptFlowNoPool">
+		 <include refid="coreSql" />
+		 <where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<select id="fetchFirstLsh" parameterType="map" resultType="int">
+		select min(CurNo) as MinNo from F_OptFlowNoPool 
+		where OwnerCode =#{ownerCode} and CodeCode=#{ownerCode} and CodeDate=to_date(#{codeBaseDate},'YYYY-MM-DD HH:MI:SS')
+	</select>
+</mapper>

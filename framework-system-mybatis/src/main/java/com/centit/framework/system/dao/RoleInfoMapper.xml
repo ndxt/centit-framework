@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.centit.framework.system.dao.RoleInfoDao">
+	<resultMap type="com.centit.framework.system.po.RoleInfo" id="RoleInfo">
+       <result property="roleCode" column="ROLECODE" />
+       <result property="roleName" column="ROLENAME" />
+       <result property="isValid" column="ISVALID" />
+		<result property="roleType" column="ROLETYPE" />
+		<result property="unitCode" column="UNITCODE" />
+		<result property="roleDesc" column="ROLEDESC" />
+		<result property="createDate" column="CREATEDATE" />
+		<result property="creator" column="CREATOR" />
+		<result property="updator" column="UPDATOR" />
+		<result property="updateDate" column="UPDATEDATE" />
+	</resultMap>
+    
+    <resultMap type="com.centit.framework.system.po.VOptTree" id="VoptTree">
+       <result property="menu_id" column="MENU_ID" />
+       <result property="parent_id" column="PARENT_ID" />
+       <result property="menu_name" column="MENU_NAME" />
+		<result property="orderInd" column="ORDERIND" />
+	</resultMap>
+	
+    
+	<!-- 查询条件 -->
+	<sql id="condition">
+		<if test="roleCode != null  and roleCode != ''  ">
+			  and u.ROLECODE like '%'|| #{roleCode}||'%' 
+		</if>
+		<if test="unitRole != null  and unitRole != ''  ">
+			  and (u.ROLECODE like #{unitRole} or u.ROLECODE like 'P-%' )
+		</if>
+		 <if test="NP_GLOBAL != null   and NP_GLOBAL != ''  ">
+			  and (u.ROLECODE like 'G-%' or u.ROLECODE like 'P-%')
+	   </if>
+		<if test="roleName != null  and roleName != ''   ">
+			  and u.ROLENAME like '%'|| #{roleName}||'%'
+		</if>
+		<if test="roleDesc != null  and roleDesc != ''  ">
+			  and u.ROLEDESC like '%'|| #{roleDesc}||'%'
+		</if>
+		<if test="isValid != null  and isValid != ''  ">
+			  and u.ISVALID = #{isValid}
+		</if>
+		<if test="roleType != null  and roleType != ''  ">
+			  and u.ROLETYPE = #{roleType}
+		</if>
+		<if test="unitCode != null  and unitCode != ''  ">
+			  and u.UNITCODE=#{unitCode}
+		</if>
+		<if test="NP_unitCode != null  and NP_unitCode != ''   ">
+			  and u.UNITCODE is null
+		</if>
+	</sql>
+	
+	<!-- 查询核心SQL -->
+	<sql id="coreSql">
+		<![CDATA[ 
+			select 
+				u.ROLECODE,
+				u.ROLENAME,
+				u.ISVALID,
+				u.ROLETYPE,
+				u.UNITCODE,
+				u.ROLEDESC,
+				u.CREATEDATE,
+				u.CREATOR,
+				u.UPDATOR,
+				u.UPDATEDATE
+		      from F_ROLEINFO u
+	  ]]>
+	</sql>
+	
+	<!--分页计数 -->
+	<select id="pageCount" parameterType="map" resultType="int">
+ 	 <![CDATA[
+	   select count(0) cnt 
+	     from 
+             F_ROLEINFO u
+       ]]>
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<!--分页查询 -->
+	<select id="pageQuery" parameterType="map" resultMap="RoleInfo">
+	    <include refid="com.centit.framework.system.dao.BaseDao.pageBegin" />
+		<include refid="coreSql" />
+		<where>
+			<include refid="condition" />
+		</where>
+		<if test="pageDesc != null ">
+			order by ${pageDesc}
+		</if>
+		<include refid="com.centit.framework.system.dao.BaseDao.pageEnd" />
+	</select>
+	<!--分页查询结束 -->
+
+
+   <!--查询单条记录ById -->
+	<select id="getObjectById" parameterType="String" resultMap="RoleInfo">
+		<include refid="coreSql" />
+		<where>
+         <![CDATA[ 
+	                u.ROLECODE=#{roleCode} 
+           ]]>
+		</where>
+	</select>
+	<!--查询单条记录 结束 -->
+	
+	
+    <!--插入新单据 start -->
+    <sql id="insertSql">
+		   (
+			ROLECODE,
+			ROLENAME,
+			ISVALID,
+			ROLETYPE,
+			UNITCODE,
+			ROLEDESC,
+			CREATEDATE,
+			CREATOR,
+			UPDATOR,
+			UPDATEDATE
+			)values(
+			#{roleCode,jdbcType=VARCHAR},
+			#{roleName,jdbcType=VARCHAR},
+			#{isValid,jdbcType=VARCHAR},
+			#{roleType,jdbcType=VARCHAR},
+			#{unitCode,jdbcType=VARCHAR},
+			#{roleDesc,jdbcType=VARCHAR},
+			#{createDate,jdbcType=VARCHAR},
+			#{creator,jdbcType=VARCHAR},
+			#{updator,jdbcType=VARCHAR},
+			#{updateDate,jdbcType=DATE}
+			)
+	</sql>
+	
+    <insert id="saveNewObject" parameterType="com.centit.framework.system.po.RoleInfo">
+        insert into F_ROLEINFO
+       <include refid="insertSql" />
+    </insert>
+	<!--更新单据 start -->
+   <sql id="updSql">
+      <set>
+<!-- 			<if test="roleCode !=null "> -->
+<!-- 				ROLECODE = #{roleCode}, -->
+<!-- 			</if> -->
+			<if test="roleName !=null ">
+				ROLENAME = #{roleName},
+			</if>
+			<if test="isValid !=null ">
+				ISVALID = #{isValid},
+			</if>
+			<if test="roleType !=null ">
+				ROLETYPE = #{roleType},
+			</if>
+			<if test="unitCode !=null ">
+				UNITCODE = #{unitCode},
+			</if>
+			<if test="roleDesc !=null ">
+				ROLEDESC = #{roleDesc},
+			</if>
+			<if test="updator !=null ">
+				UPDATOR = #{updator},
+			</if>
+			<if test="updateDate !=null ">
+				UPDATEDATE = #{updateDate},
+			</if>
+		</set>
+	</sql>
+	<update id="update" parameterType="com.centit.framework.system.po.RoleInfo" timeout="2000">
+	     update F_ROLEINFO
+	     <include refid="updSql" />
+	     where ROLECODE=#{roleCode} 
+	</update>
+	<!--更新单据 end -->
+   
+   <!--Merge单据 start -->
+	<update id="mergeObject" parameterType="com.centit.framework.system.po.RoleInfo" timeout="2000">
+	      merge into F_ROLEINFO t  
+		    using ( select #{roleCode} as ROLECODE  from dual) t1  
+		    on(t.ROLECODE = t1.ROLECODE)  
+		 when not matched then
+		   insert
+		   <include refid="insertSql" />
+		 when matched then 
+		 update
+		   <include refid="updSql" />   
+		    where ROLECODE=#{roleCode} 
+	</update>
+	<!--Merge单据 end -->
+   <!--插入新单据 end -->
+   
+	<!--删除记录  -->
+	<delete id="deleteObjectById" parameterType="String" timeout="2000">
+    <![CDATA[ 
+       delete from F_ROLEINFO where ROLECODE=#{roleCode} 
+     ]]>
+	</delete>
+	<!--删除记录 结束 -->
+	
+	<select id="getNextKey" resultType="Long">
+		SELECT S_FILTER_NO.nextval from dual
+	</select>
+	<select id="listObjects" parameterType="map" resultMap="RoleInfo">
+		 <include refid="coreSql" />
+		 <where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<select id="listObjectsAll"  resultMap="RoleInfo">
+		 <include refid="coreSql" />
+	</select>
+	<select id="getVOptTreeList"   resultMap="VoptTree">
+		select MENU_ID,PARENT_ID,MENU_NAME,ORDERIND from V_OPT_TREE
+	</select>
+	<select id="listRoleOptMethods" resultType="java.util.HashMap" parameterType="String">
+		select def.OPTNAME as def_optname, def.OPTCODE as def_optcode
+		from F_OPTDEF def, F_ROLEPOWER pow where def.OPTCODE = pow.OPTCODE and pow.ROLECODE = #{roleCode}
+	</select>
+	<select id="countRoleUserSum" parameterType="String"  resultType="int">
+		select count(1) from f_userrole where rolecode=#{roleCode}
+	</select>
+</mapper>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.centit.framework.system.dao.UserSettingDao">
+	<resultMap type="com.centit.framework.system.po.UserSetting" id="UserSetting">
+			<result property="userCode" column="USERCODE" />
+			<result property="paramCode" column="PARAMCODE" />
+			<result property="paramValue" column="PARAMVALUE" />
+			<result property="optId" column="OPTID" />
+			<result property="paramName" column="PARAMNAME" />
+			<result property="createDate" column="CREATEDATE" />
+	</resultMap>
+
+	<!-- 查询条件 -->
+	<sql id="condition">
+		<if test="userCode != null  and userCode != '' ">
+			  and u.USERCODE =#{userCode}
+		</if>
+		<if test="paramCode != null  and paramCode != '' ">
+			  and u.PARAMCODE =#{paramCode}
+		</if>
+		<if test="paramValue != null  and paramValue != '' ">
+			  and u.PARAMVALUE  like '%'|| #{paramValue}||'%'
+		</if>
+		<if test="paramClass != null  and paramClass != '' ">
+			  and u.PARAMCLASS  like '%'|| #{paramClass}||'%'
+		</if>
+		<if test="paramName != null   and paramName != '' ">
+			  and u.PARAMNAME  like '%'|| #{paramName}||'%'
+		</if>
+		<if test="createDate != null  and createDate != '' ">
+			  and u.CREATEDATE  like '%'|| #{createDate}||'%'
+		</if>
+	</sql>
+	
+	<!-- 查询核心SQL -->
+	<sql id="coreSql">
+		<![CDATA[ 
+			select 
+				u.USERCODE,
+				u.PARAMCODE,
+				u.PARAMVALUE,
+				u.OPTID,
+				u.PARAMNAME,
+				u.CREATEDATE
+		      from F_USERSETTING u
+	  ]]>
+	</sql>
+	
+	<!--分页计数 -->
+	<select id="pageCount" parameterType="map" resultType="int">
+ 	 <![CDATA[
+	   select count(0) cnt 
+	     from 
+             F_USERSETTING u
+       ]]>
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<!--分页查询 -->
+	<select id="pageQuery" parameterType="map" resultMap="UserSetting">
+	    <include refid="com.centit.framework.system.dao.BaseDao.pageBegin" />
+		<include refid="coreSql" />
+		<where>
+			<include refid="condition" />
+		</where>
+		<if test="pageDesc != null ">
+			order by ${pageDesc}
+		</if>
+		<include refid="com.centit.framework.system.dao.BaseDao.pageEnd" />
+	</select>
+	<!--分页查询结束 -->
+<!--查询单条记录ById -->
+	<select id="getObjectById" parameterType="com.centit.framework.system.po.UserSettingId" resultMap="UserSetting">
+		<include refid="coreSql" />
+		<where>
+         <![CDATA[ 
+	                u.USERCODE=#{userCode}  and u.PARAMCODE=#{paramCode}
+           ]]>
+		</where>
+	</select>
+	<!--查询单条记录 结束 -->
+	
+    <!--插入新单据 start -->
+    <sql id="insertSql">
+		   (
+			USERCODE,
+			PARAMCODE,
+			PARAMVALUE,
+			OPTID,
+			PARAMNAME,
+			CREATEDATE
+			)values(
+			#{userCode},
+			#{paramCode},
+			#{paramValue},
+			#{optId},
+			#{paramName},
+			#{createDate}
+			)
+	</sql>
+	<insert id="saveUserSetting" parameterType="com.centit.framework.system.po.UserSetting">
+        insert into F_USERSETTING
+       <include refid="insertSql" />
+	</insert>
+	<!--更新单据 start -->
+   <sql id="updSql">
+      <set>
+			<if test="userCode !=null "> 
+					USERCODE  =  #{userCode}, 
+			</if> 
+			<if test="paramCode !=null "> 
+					PARAMCODE  =  #{paramCode}, 
+			</if> 
+			<if test="paramValue !=null "> 
+					PARAMVALUE  =  #{paramValue}, 
+			</if> 
+			<if test="optId !=null "> 
+					OPTID  =  #{optId}, 
+			</if> 
+			<if test="paramName !=null "> 
+					PARAMNAME  =  #{paramName}, 
+			</if> 
+			<if test="createDate !=null "> 
+					CREATEDATE  =  #{createDate}, 
+			</if> 
+		</set>
+	</sql>
+	<update id="update" parameterType="com.centit.framework.system.po.UserSetting" timeout="2000">
+	     update F_USERSETTING
+	     <include refid="updSql" />
+	     where   USERCODE=#{userCode}  and PARAMCODE=#{paramCode}
+	</update>
+	<!--更新单据 end -->
+   
+   <!--Merge单据 start -->
+	<update id="mergeObject" parameterType="com.centit.framework.system.po.UserSetting" timeout="2000">
+	      merge into F_USERSETTING t  
+		    using ( select #{userCode} as USERCODE ,  #{paramCode} as PARAMCODE     from dual) t1  
+		    on(t.USERCODE = t1.USERCODE and t.PARAMCODE=t1.PARAMCODE)  
+		 when not matched then
+		   insert
+		   <include refid="insertSql" />
+		 when matched then 
+		 update
+		   <include refid="updSql" />   
+		    where USERCODE=#{userCode}  and PARAMCODE=#{paramCode}
+	</update>
+	<!--Merge单据 end -->
+   <!--插入新单据 end -->
+   
+	<!--删除记录  -->
+	<delete id="deleteObject" parameterType="com.centit.framework.system.po.UserSetting" timeout="2000">
+    <![CDATA[ 
+       delete from F_USERSETTING where USERCODE=#{userCode}  and ROLECODE=#{roleCode}
+     ]]>
+	</delete>
+	<delete id="deleteObjectById" parameterType="com.centit.framework.system.po.UserSettingId" timeout="2000">
+    <![CDATA[ 
+       delete from F_USERSETTING where USERCODE=#{userCode}  and ROLECODE=#{roleCode}
+     ]]>
+	</delete>
+	<!--删除记录 结束 -->
+	
+	<select id="getUserSettingsByCode" parameterType="String" resultMap="UserSetting">
+		<include refid="coreSql" />
+		<![CDATA[
+			where USERCODE=#{userCode}
+		]]>
+	</select>
+	<select id="getUserSettings" parameterType="map" resultMap="UserSetting">
+		<include refid="coreSql" />
+		<![CDATA[
+			where USERCODE=#{userCode} and OPTID=#{optID}
+		]]>
+	</select>
+</mapper>

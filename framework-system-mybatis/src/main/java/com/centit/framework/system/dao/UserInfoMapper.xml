@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.centit.framework.system.dao.UserInfoDao">
+	<resultMap type="com.centit.framework.system.po.UserInfo" id="UserInfo">
+       <result property="userCode" column="USERCODE" />
+		<result property="userPin" column="USERPIN" />
+		<result property="isValid" column="ISVALID" />
+		<result property="userType" column="USERTYPE" />
+		<result property="loginName" column="LOGINNAME" />
+		<result property="userName" column="USERNAME" />
+		<result property="englishName" column="ENGLISHNAME" />
+		<result property="userDesc" column="USERDESC" />
+		<result property="loginTimes" column="LOGINTIMES" />
+		<result property="activeTime" column="ACTIVETIME" />
+		<result property="pwdExpiredTime" column="PWDEXPIREDTIME" />
+		<result property="loginIp" column="LOGINIP" />
+		<result property="addrbookId" column="ADDRBOOKID" />
+		<result property="regEmail" column="REGEMAIL" />
+		<result property="userPwd" column="USERPWD" />
+		<result property="regCellPhone" column="REGCELLPHONE" />
+		<result property="userWord" column="USERWORD" />
+		<result property="userTag" column="USERTAG" />
+		<result property="userOrder" column="USERORDER" />
+		<result property="primaryUnit" column="PRIMARYUNIT" />
+		<result property="createDate" column="CREATEDATE" />
+		<result property="creator" column="CREATOR" />
+		<result property="updator" column="UPDATOR" />
+		<result property="updateDate" column="UPDATEDATE" />
+	</resultMap>
+   
+   <resultMap type="com.centit.framework.system.po.FVUserOptList" id="FvuserOpt">
+       <result property="userCode" column="USERCODE" />
+		<result property="optcode" column="OPTCODE" />
+		<result property="optName" column="OPTNAME" />
+		<result property="optId" column="OPTID" />
+		<result property="optMethod" column="OPTMETHOD" />
+	</resultMap>
+	
+
+
+	<!-- 查询条件 -->
+	<sql id="condition">
+		<if test="userCode != null  and userCode != ''  ">
+			  and u.USERCODE like '%'|| #{userCode}||'%'
+		</if>
+		<if test="userName != null  and userName != '' ">
+			  and u.USERNAME like '%'|| #{userName}||'%'
+		</if>
+		<if test="isValid != null  and isValid != '' ">
+			  and u.ISVALID = #{isValid}
+		</if>
+		<if test="loginName != null  and loginName != ''   ">
+			  and u.LOGINNAME like '%'|| #{loginName}||'%'
+		</if>
+		<if test="userState != null  and userState != '' ">
+			  and u.USERSTATE = #{userState}
+		</if>
+		<if test="userOrder != null  and userOrder != '' ">
+			  and u.USERORDER = #{userOrder}
+		</if>
+		<if test="userTag != null  and userTag != '' ">
+			  and u.USERTAG=#{userTag}
+		</if>
+		<if test="userWord != null  and userWord != '' ">
+			  and u.USERWORD=#{userWord}
+		</if>
+		<if test="byUnderUnit != null  and byUnderUnit != '' ">
+			  and u.USERCODE in ( select  id.USERCODE from F_USERUNIT id where id.UNITCODE = #{byUnderUnit} )
+		</if>
+		<if test="queryByUnit != null  and queryByUnit != '' ">
+			  and u.USERCODE in ( select  id.USERCODE from F_USERUNIT id where id.UNITCODE = #{queryByUnit} )
+		</if>
+		<if test="queryByGW != null  and queryByGW != '' ">
+			  and u.USERCODE in ( select  id.USERCODE from F_USERUNIT id where id.USERSTATION = #{queryByGW} )
+		</if>
+		<if test="queryByXZ != null  and queryByXZ != '' ">
+			  and u.USERCODE in ( select  id.USERCODE from F_USERUNIT id where id.USERRANK = #{queryByXZ} )
+		</if>
+		<if test="queryByRole != null  and queryByRole != '' ">
+			  and u.USERCODE in (select r.USERCODE from F_USERROLE r, F_ROLEINFO i where r.ROLECODE = #{queryByRole} and r.ROLECODE = i.ROLECODE and i.ISVALID = 'T')
+		</if>
+	</sql>
+	
+	<!-- 查询核心SQL -->
+	<sql id="coreSql">
+		<![CDATA[ 
+			select 
+			        u.USERCODE,
+					u.USERPIN,
+					u.ISVALID,
+					u.USERTYPE,
+					u.LOGINNAME,
+					u.USERNAME,
+					u.ENGLISHNAME,
+					u.USERDESC,
+					u.LOGINTIMES,
+					u.ACTIVETIME,
+					u.PWDEXPIREDTIME,
+					u.LOGINIP,
+					u.ADDRBOOKID,
+					u.REGEMAIL,
+					u.USERPWD,
+					u.REGCELLPHONE,
+					u.USERWORD,
+					u.USERTAG,
+					u.USERORDER,
+					u.PRIMARYUNIT,
+					u.CREATEDATE,
+					u.CREATOR,
+					u.UPDATOR,
+					u.UPDATEDATE
+		      from F_USERINFO u
+	  ]]>
+	</sql>
+	
+	<!--分页计数 -->
+	<select id="pageCount" parameterType="map" resultType="int">
+ 	 <![CDATA[
+	   select count(0) cnt 
+	     from 
+             F_USERINFO u
+       ]]>
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<!--分页查询 -->
+	<select id="pageQuery" parameterType="map" resultMap="UserInfo">
+	    <include refid="com.centit.framework.system.dao.BaseDao.pageBegin" />
+		<include refid="coreSql" />
+		<where>
+			<include refid="condition" />
+		</where>
+		<if test="pageDesc != null ">
+			order by ${pageDesc}
+		</if>
+		<include refid="com.centit.framework.system.dao.BaseDao.pageEnd" />
+	</select>
+	<!--分页查询结束 -->
+<!--查询单条记录ById -->
+	<select id="getObjectById" parameterType="String" resultMap="UserInfo">
+		<include refid="coreSql" />
+		<where>
+         <![CDATA[ 
+	                u.USERCODE=#{userCode} 
+           ]]>
+		</where>
+	</select>
+	<!--查询单条记录 结束 -->
+	
+    <!--插入新单据 start -->
+    <sql id="insertSql">
+		   (
+			USERCODE,
+			USERPIN,
+			ISVALID,
+			USERTYPE,
+			LOGINNAME,
+			USERNAME,
+			ENGLISHNAME,
+			USERDESC,
+			LOGINTIMES,
+			ACTIVETIME,
+			PWDEXPIREDTIME,
+			LOGINIP,
+			ADDRBOOKID,
+			REGEMAIL,
+			USERPWD,
+			REGCELLPHONE,
+			USERWORD,
+			USERTAG,
+			USERORDER,
+			PRIMARYUNIT,
+			CREATEDATE,
+			CREATOR,
+			UPDATOR,
+			UPDATEDATE
+			)values(
+			
+			#{userCode,jdbcType=VARCHAR},
+			#{userPin,jdbcType=VARCHAR},
+			#{isValid,jdbcType=VARCHAR},
+			#{userType,jdbcType=VARCHAR},
+			#{loginName,jdbcType=VARCHAR},
+			#{userName,jdbcType=VARCHAR},
+			#{englishName,jdbcType=VARCHAR},
+			#{userDesc,jdbcType=VARCHAR},
+			#{loginTimes,jdbcType=BIGINT},
+			#{activeTime,jdbcType=DATE},
+			#{pwdExpiredTime,jdbcType=DATE},
+			#{loginIp,jdbcType=VARCHAR},
+			#{addrbookId,jdbcType=BIGINT},
+			#{regEmail,jdbcType=VARCHAR},
+			#{userPwd,jdbcType=VARCHAR},
+			#{regCellPhone,jdbcType=VARCHAR},
+			#{userWord,jdbcType=VARCHAR},
+			#{userTag,jdbcType=VARCHAR},
+			#{userOrder,jdbcType=BIGINT},
+			#{primaryUnit,jdbcType=VARCHAR},
+			#{createDate,jdbcType=DATE},
+			#{creator,jdbcType=VARCHAR},
+			#{updator,jdbcType=VARCHAR},
+			#{updateDate,jdbcType=DATE}
+			)
+	</sql>
+	<insert id="saveNewObject" parameterType="com.centit.framework.system.po.UserInfo">
+        insert into F_USERINFO
+       <include refid="insertSql" />
+	</insert>
+	<insert id="saveObject" parameterType="com.centit.framework.system.po.UserInfo">
+        insert into F_USERINFO
+       <include refid="insertSql" />
+	</insert>
+	<!--更新单据 start -->
+   <sql id="updSql">
+      <set>
+<!-- 			<if test="userCode !=null ">  -->
+<!-- 					USERCODE  =  #{userCode},  -->
+<!-- 			</if>  -->
+			<if test="userPin !=null "> 
+					USERPIN  =  #{userPin}, 
+			</if> 
+			<if test="isValid !=null "> 
+					ISVALID  =  #{isValid}, 
+			</if> 
+			<if test="userType !=null "> 
+					USERTYPE  =  #{userType}, 
+			</if> 
+			<if test="loginName !=null "> 
+					LOGINNAME  =  #{loginName}, 
+			</if> 
+			<if test="userName !=null "> 
+					USERNAME  =  #{userName}, 
+			</if> 
+			<if test="englishName !=null "> 
+					ENGLISHNAME  =  #{englishName}, 
+			</if> 
+			<if test="userDesc !=null "> 
+					USERDESC  =  #{userDesc}, 
+			</if> 
+			<if test="loginTimes !=null "> 
+					LOGINTIMES  =  #{loginTimes}, 
+			</if> 
+			<if test="activeTime !=null "> 
+					ACTIVETIME  =  #{activeTime}, 
+			</if> 
+			<if test="pwdExpiredTime !=null "> 
+					PWDEXPIREDTIME  =  #{pwdExpiredTime}, 
+			</if> 
+			<if test="loginIp !=null "> 
+					LOGINIP  =  #{loginIp}, 
+			</if> 
+			<if test="addrbookId !=null "> 
+					ADDRBOOKID  =  #{addrbookId}, 
+			</if> 
+			<if test="regEmail !=null "> 
+					REGEMAIL  =  #{regEmail}, 
+			</if> 
+			<if test="userPwd !=null "> 
+					USERPWD  =  #{userPwd}, 
+			</if> 
+			<if test="regCellPhone !=null "> 
+					REGCELLPHONE  =  #{regCellPhone}, 
+			</if> 
+			<if test="userWord !=null "> 
+					USERWORD  =  #{userWord}, 
+			</if> 
+			<if test="userTag !=null "> 
+					USERTAG  =  #{userTag}, 
+			</if> 
+			<if test="userOrder !=null "> 
+					USERORDER  =  #{userOrder}, 
+			</if> 
+			<if test="primaryUnit !=null "> 
+					PRIMARYUNIT  =  #{primaryUnit}, 
+			</if> 
+			<if test="createDate !=null "> 
+					CREATEDATE  =  #{createDate}, 
+			</if> 
+			<if test="creator !=null "> 
+					CREATOR  =  #{creator}, 
+			</if> 
+			<if test="updator !=null "> 
+					UPDATOR  =  #{updator}, 
+			</if> 
+			<if test="updateDate !=null "> 
+					UPDATEDATE  =  #{updateDate}, 
+			</if> 
+		</set>
+	</sql>
+	<update id="update" parameterType="com.centit.framework.system.po.UserInfo" timeout="2000">
+	     update F_USERINFO
+	     <include refid="updSql" />
+	     where USERCODE=#{userCode} 
+	</update>
+	
+	<update id="restPwd" parameterType="com.centit.framework.system.po.UserInfo" timeout="2000">
+	     update F_USERINFO  set  USERPIN  =  #{userPin}
+	     where USERCODE=#{userCode} 
+	</update>
+	
+	<!--更新单据 end -->
+   
+   <!--Merge单据 start -->
+	<update id="mergeObject" parameterType="com.centit.framework.system.po.UserInfo" timeout="2000">
+	      merge into F_USERINFO t  
+		    using ( select #{userCode} as USERCODE  from dual) t1  
+		    on(t.USERCODE = t1.USERCODE)  
+		 when not matched then
+		   insert
+		   <include refid="insertSql" />
+		 when matched then 
+		 update
+		   <include refid="updSql" />   
+		    where USERCODE=#{userCode} 
+	</update>
+	<!--Merge单据 end -->
+   <!--插入新单据 end -->
+   
+	<!--删除记录  -->
+	<delete id="deleteObjectById" parameterType="String" timeout="2000">
+    <![CDATA[ 
+       delete from F_USERINFO where USERCODE=#{userCode} 
+     ]]>
+	</delete>
+	<!--删除记录 结束 -->
+	<select id="listObjects" parameterType="map" resultMap="UserInfo">
+		 <include refid="coreSql" />
+		 <where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<select id="listObjectsAll"  resultMap="UserInfo">
+		 <include refid="coreSql" />
+	</select>
+	<select id="getNextKey" resultType="String">
+		SELECT S_USERCODE.nextval from dual
+	</select>
+	<select id="getAllOptMethodByUser" parameterType="String" resultMap="FvuserOpt">
+			select USERCODE,OPTCODE,OPTNAME,OPTID,OPTMETHOD from F_V_USEROPTLIST  urv where urv.USERCODE=#{userCode}
+	</select>
+	<select id="listUnderUnit" parameterType="map" resultMap="UserInfo">
+		 <include refid="coreSql" />
+		 <where>
+			<include refid="condition" />
+		</where>
+	</select>
+	<select id="getUserByLoginName" parameterType="String" resultMap="UserInfo">
+		 <include refid="coreSql" />
+		 where LOGINNAME=#{loginName}
+	</select>
+	<select id="getUserByRegEmail" parameterType="String" resultMap="UserInfo">
+		 <include refid="coreSql" />
+		 where REGEMAIL=#{regEmail}
+	</select>
+	<select id="getUserByRegCellPhone" parameterType="String" resultMap="UserInfo">
+		 <include refid="coreSql" />
+		 where REGCELLPHONE=#{regCellPhone}
+	</select>
+	<select id="getUserByTag" parameterType="String" resultMap="UserInfo">
+		 <include refid="coreSql" />
+		 where USERTAG=#{userTag}
+	</select>
+	<select id="getUserByWord" parameterType="String" resultMap="UserInfo">
+		 <include refid="coreSql" />
+		 where USERWORD=#{userWord}
+	</select>
+	<select id="listUserinfoByUsercodes">
+		<include refid="coreSql" />
+		 <if test="userCodes != null ">
+		<foreach item="userCode" collection="userCodes" 
+			open="  and   u.USERCODE in (" close=")" index="">
+			#{userCode, jdbcType=String}
+		</foreach>
+		<foreach item="userCode" collection="userCodes" 
+			open="  or   u.LOGINNAME in (" close=")" index="">
+			#{userCode, jdbcType=String}
+		</foreach>
+	  </if>
+	</select>
+	<select id="listUserinfoByLoginname">
+		<include refid="coreSql" />
+		 <if test="userCodes != null ">
+		<foreach item="userCode" collection="userCodes" 
+			open="  and   u.LOGINNAME in (" close=")" index="">
+			#{userCode, jdbcType=String}
+		</foreach>
+	  </if>
+	</select>
+	<select id="checkIfUserExists" parameterType="map" resultType="Long">
+		select count(1) from userinfo  where userCode != #{userCode} and
+		(loginName=#{loginName} or REGCELLPHONE=#{regCellPhone} or REGEMAIL=#{regEmail})
+	</select>
+</mapper>
