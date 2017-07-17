@@ -75,7 +75,7 @@ public class DataSourceConfig implements EnvironmentAware {
         sessionFactory.setDataSource(dataSource);
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sessionFactory.setConfigLocation(resolver.getResource("classpath:mybatis/mybatis-config.xml"));
-        sessionFactory.setMapperLocations(resolver.getResources( env.getProperty("mybatis.map,xml.filematch")));
+        sessionFactory.setMapperLocations(resolver.getResources( env.getProperty("mybatis.map.xml.filematch")));
         return  sessionFactory;
     }
 
