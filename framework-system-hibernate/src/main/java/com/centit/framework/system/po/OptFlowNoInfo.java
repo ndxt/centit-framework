@@ -34,7 +34,9 @@ public class OptFlowNoInfo implements java.io.Serializable {
     }
 
     /**
-     * minimal constructor
+     *
+     * @param id OptFlowNoInfoId
+     * @param curNo Long
      */
     public OptFlowNoInfo(OptFlowNoInfoId id
 
@@ -45,7 +47,10 @@ public class OptFlowNoInfo implements java.io.Serializable {
     }
 
     /**
-     * full constructor
+     *
+     * @param id OptFlowNoInfoId
+     * @param curNo Long
+     * @param lastCodeDate Date
      */
     public OptFlowNoInfo(OptFlowNoInfoId id
 

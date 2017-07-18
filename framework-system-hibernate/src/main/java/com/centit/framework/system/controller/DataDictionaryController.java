@@ -58,9 +58,9 @@ public class DataDictionaryController extends BaseController {
      * 查询所有数据目录列表
      *
      * @param field    只需要的属性名
+     * @param pageDesc  分页信息
      * @param request  {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
-     * @return {data:[]}
      */
     @RequestMapping(method = RequestMethod.GET)
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
@@ -94,7 +94,6 @@ public class DataDictionaryController extends BaseController {
      *
      * @param catalogCode DataCatalog主键
      * @param response    {@link HttpServletResponse}
-     * @return {data:{}}
      */
     @RequestMapping(value = "/{catalogCode}", method = {RequestMethod.GET})
     public void getCatalog(@PathVariable String catalogCode, HttpServletResponse response) {
@@ -107,8 +106,9 @@ public class DataDictionaryController extends BaseController {
     /**
      * catalogCode是否已存在
      *
-     * @param catalogCode
-     * @param response
+     * @param catalogCode catalogCode
+     * @param response {@link HttpServletResponse}
+     * @throws IOException IOException
      */
     @RequestMapping(value = "/notexists/{catalogCode}", method = {RequestMethod.GET})
     public void isNotExistsCatalogCode(@PathVariable String catalogCode, HttpServletResponse response) throws IOException {
@@ -119,9 +119,10 @@ public class DataDictionaryController extends BaseController {
     /**
      * dataCode是否已存在
      *
-     * @param catalogCode
-     * @param dataCode
-     * @param response
+     * @param catalogCode catalogCode
+     * @param dataCode dataCode
+     * @param response {@link HttpServletResponse}
+     * @throws IOException IOException
      */
     @RequestMapping(value = "/notexists/dictionary/{catalogCode}/{dataCode}", method = {RequestMethod.GET})
     public void isNotExistsDataCode(@PathVariable String catalogCode, @PathVariable String dataCode, HttpServletResponse response) throws IOException {
@@ -137,7 +138,6 @@ public class DataDictionaryController extends BaseController {
      * @param catalogCode DataCatalog主键
      * @param dataCode    DataDictionary主键
      * @param response    {@link HttpServletResponse}
-     * @return {data:{}}
      */
     @RequestMapping(value = "/dictionary/{catalogCode}/{dataCode}", method = {RequestMethod.GET})
     public void getDictionary(@PathVariable String catalogCode, @PathVariable String dataCode,
@@ -151,8 +151,9 @@ public class DataDictionaryController extends BaseController {
     /**
      * 新增数据目录
      *
-     * @param dataCatalog DataCatalog
-     * @return
+     * @param dataCatalog {@link DataCatalog}
+     * @param request {@link HttpServletRequest}
+     * @param response {@link HttpServletResponse}
      */
     @RequestMapping(method = {RequestMethod.POST})
     public void createCatalog(@Valid DataCatalog dataCatalog,
@@ -168,6 +169,7 @@ public class DataDictionaryController extends BaseController {
      *
      * @param catalogCode DataCatalog主键
      * @param dataCatalog {@link DataCatalog}
+     * @param request    {@link HttpServletRequest}
      * @param response    {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{catalogCode}", method = {RequestMethod.PUT})
@@ -206,7 +208,8 @@ public class DataDictionaryController extends BaseController {
     /**
      * 数据目录的新增权限进行业务数据判断
      *
-     * @param dataCatalog
+     * @param dataCatalog {@link DataCatalog}
+     * @param request {@link HttpServletRequest}
      */
     protected void catalogPrInsertHander(DataCatalog dataCatalog,HttpServletRequest request) {
     	
@@ -224,8 +227,8 @@ public class DataDictionaryController extends BaseController {
 
     /**
      * 数据目录的编辑权限进行业务数据判断
-     *
-     * @param dataCatalog
+     * @param dataCatalog {@link DataCatalog}
+     * @param dbDataCatalog {@link DataCatalog}
      */
     protected void catalogPrUpdateHander(DataCatalog dataCatalog, DataCatalog dbDataCatalog) {
         //如果业务异常
@@ -250,7 +253,7 @@ public class DataDictionaryController extends BaseController {
      * @param catalogCode    DataCatalog主键
      * @param dataCode       DataDictionary主键
      * @param dataDictionary {@link DataDictionary}
-     * @param dataDictionary {@link DataDictionary}
+     * @param request        {@link HttpServletRequest}
      * @param response       {@link HttpServletResponse}
      */
     @RequestMapping(value = "/dictionary/{catalogCode}/{dataCode}", 
@@ -281,8 +284,8 @@ public class DataDictionaryController extends BaseController {
 
   /**
      * 数据字典公共验证
-     *
-     * @param dataDictionary
+   * @param dataCatalog {@link DataCatalog}
+   * @param dataDictionary {@link DataDictionary}
      */
     protected void dictionaryPreHander(DataCatalog dataCatalog, DataDictionary dataDictionary) {
         //附加代码 EXTRACODE  字段
@@ -310,6 +313,7 @@ public class DataDictionaryController extends BaseController {
      *
      * @param dataCatalog    DataCatalog
      * @param dataDictionary DataDictionary
+     * @param request HttpServletRequest
      */
     protected void dictionaryPreInsertHander(DataCatalog dataCatalog, DataDictionary dataDictionary,
     		HttpServletRequest request) {
@@ -333,6 +337,7 @@ public class DataDictionaryController extends BaseController {
      *
      * @param dataCatalog    DataCatalog
      * @param dataDictionary DataDictionary
+     * @param request HttpServletRequest
      */
     protected void dictionaryPreDeleteHander(DataCatalog dataCatalog, DataDictionary dataDictionary,
     		HttpServletRequest request) {    	
@@ -354,6 +359,7 @@ public class DataDictionaryController extends BaseController {
      *
      * @param dataCatalog    DataCatalog
      * @param dataDictionary DataDictionary
+     * @param request HttpServletRequest
      */
     protected void dictionaryPreUpdateHander(DataCatalog dataCatalog, DataDictionary dataDictionary,
     		HttpServletRequest request) {
@@ -396,6 +402,8 @@ public class DataDictionaryController extends BaseController {
      * 删除数据目录
      *
      * @param catalogCode DataCatalog主键
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{catalogCode}", method = RequestMethod.DELETE)
     public void deleteCatalog(@PathVariable String catalogCode,
@@ -411,6 +419,9 @@ public class DataDictionaryController extends BaseController {
      * 删除数据字典
      *
      * @param catalogCode DataCatalog主键
+     * @param dataCode dataCode
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/dictionary/{catalogCode}/{dataCode}", method = RequestMethod.DELETE)
     public void deleteDictionary(@PathVariable String catalogCode, @PathVariable String dataCode,

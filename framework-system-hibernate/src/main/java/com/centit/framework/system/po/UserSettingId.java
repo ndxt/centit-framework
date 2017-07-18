@@ -37,6 +37,8 @@ public class UserSettingId implements java.io.Serializable {
 
     /**
      * full constructor
+     * @param userCode String
+     * @param paramCode String
      */
     public UserSettingId(String userCode, String paramCode) {
 

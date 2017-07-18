@@ -44,6 +44,8 @@ public class FVUserOptList implements java.io.Serializable {
 
     /**
      * full constructor
+     *
+     * @param id FVUserOptListId
      */
     public FVUserOptList(FVUserOptListId id) {
         this.id = id;
@@ -51,6 +53,11 @@ public class FVUserOptList implements java.io.Serializable {
 
     /**
      * full constructor
+     *
+     * @param id FVUserOptListId
+     * @param optname String
+     * @param optid String
+     * @param optmethod String
      */
     public FVUserOptList(FVUserOptListId id, String optname,
                          String optid, String optmethod) {

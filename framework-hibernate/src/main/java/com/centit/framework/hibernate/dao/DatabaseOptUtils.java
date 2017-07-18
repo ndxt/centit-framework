@@ -49,6 +49,9 @@ public class DatabaseOptUtils {
 
     /**
      * 保存任意对象，hibernate 托管的对象
+     * @param baseDao BaseDaoImpl
+     * @param objects Collection objects
+     * @return 保存任意对象，hibernate 托管的对象
      */
     public final static int saveBatchObjects(BaseDaoImpl<?, ?> baseDao,
             Collection<? extends Object> objects) {	
@@ -77,6 +80,7 @@ public class DatabaseOptUtils {
      * 
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param objects 这个Collection中的对象必须都是Po对象，但并要求是同个类型。
+     * @return  数量
      */
     public static final int mergeBatchObjects(BaseDaoImpl<?, ?> baseDao,
             Collection<? extends Object> objects) {		
@@ -102,6 +106,9 @@ public class DatabaseOptUtils {
 
     /**
      * 批量删除任意对象，hibernate 托管的对象
+     * @param baseDao BaseDaoImpl
+     * @param objects Collection objects
+     * @return 数量
      */
     public final static int deleteBatchObject(BaseDaoImpl<?, ?> baseDao,
     		Collection<? extends Object> objects) {
@@ -126,8 +133,10 @@ public class DatabaseOptUtils {
     }
 
     /**
-     * 直接运行 HQL,update delete insert
-
+     *  直接运行 HQL,update delete insert
+     * @param baseDao BaseDaoImpl
+     * @param shql shql
+     * @return 数量
      */
     public final static int doExecuteHql(BaseDaoImpl<?, ?> baseDao, String shql) {
         return baseDao.getCurrentSession().createQuery(shql).executeUpdate();
@@ -135,6 +144,10 @@ public class DatabaseOptUtils {
     
     /**
      * 直接运行带参数的 HQL,update delete insert
+     * @param baseDao BaseDaoImpl
+     * @param shql shql
+     * @param value Object
+     * @return  数量
      */
     public final static int doExecuteHql(BaseDaoImpl<?, ?> baseDao, String shql,
             Object value) {
@@ -144,8 +157,11 @@ public class DatabaseOptUtils {
     }
 
     /**
-     * 直接运行带参数的 HQL,update delete insert
-     * @param values
+     *直接运行带参数的 HQL,update delete insert
+     * @param baseDao BaseDaoImpl
+     * @param shql shql
+     * @param values Object
+     * @return  数量
      */
     public final static int doExecuteHql(BaseDaoImpl<?, ?> baseDao, String shql,
             Object[] values) {
@@ -155,9 +171,10 @@ public class DatabaseOptUtils {
     }
 
     /**
-     * 直接运行SQL,update delete insert
-     * 
-     * @param sSql
+     *直接运行SQL,update delete insert
+     * @param baseDao BaseDaoImpl
+     * @param sSql shql
+     * @return 数量
      */
     public final static int doExecuteSql(BaseDaoImpl<?, ?> baseDao, String sSql) {
         NativeQuery q = baseDao.getCurrentSession().createNativeQuery(sSql);
@@ -166,9 +183,12 @@ public class DatabaseOptUtils {
 
     /**
      * 直接运行行带参数的 SQL,update delete insert
-     * 
-     * @param sSql
+     * @param baseDao BaseDaoImpl
+     * @param sSql shql
+     * @param values Object
+     * @return  数量
      */
+
     public final static int doExecuteSql(BaseDaoImpl<?, ?> baseDao, String sSql,
             Object[] values) {
         NativeQuery q = baseDao.getCurrentSession().createNativeQuery(sSql);
@@ -196,8 +216,10 @@ public class DatabaseOptUtils {
     
     /**
      * 直接运行行带参数的 HQL,update delete insert
-     * 
-     * @param sSql
+     * @param baseDao BaseDaoImpl
+     * @param sSql shql
+     * @param values Object
+     * @return  数量
      */
     public final static int doExecuteHql(BaseDaoImpl<?, ?> baseDao, String sSql,
             Map<String,Object> values) {
@@ -208,8 +230,10 @@ public class DatabaseOptUtils {
     
     /**
      * 直接运行行带参数的 SQL,update delete insert
-     * 
-     * @param sSql
+     * @param baseDao BaseDaoImpl
+     * @param sSql shql
+     * @param values Object
+     * @return  数量
      */
     public final static int doExecuteSql(BaseDaoImpl<?, ?> baseDao, String sSql,
             Map<String,Object> values) {
@@ -220,9 +244,11 @@ public class DatabaseOptUtils {
     
     /**
      * 获取某个表某个字段的最大数值，一定是数字
-     * 
-     * @param fieldName
-     * @return
+     *
+     * @param baseDao BaseDaoImpl
+     * @param fieldName fieldName
+     * @param sObjectName sObjectName
+     * @return  某个表某个字段的最大数值，一定是数字
      */
     public final String getNextKeyByMaxInteger(BaseDaoImpl<?, ?> baseDao,
             String fieldName, String sObjectName) {
@@ -239,12 +265,11 @@ public class DatabaseOptUtils {
 
     /**
      * 获取一个表中最大值作为主键生成主键的基础，这样的主键生成方式不建议在平凡操作的业务中使用。 可以在一些系统维护的业务中使用
-     * 
-     * @param fieldName
-     *            字段名
-     *            hibernate查询语句
-     * @param codeLen
-     *            代码长度，左侧补零 ，如果 codeLen 为0 则不补零
+     *
+     * @param baseDao BaseDaoImpl
+     * @param fieldName 字段名 hibernate查询语句
+     * @param sObjectName sObjectName
+     * @param codeLen 代码长度，左侧补零 ，如果 codeLen 为0 则不补零
      * @return 编码从 1 开始
      */
     public final static String getNextKeyByHqlStrOfMax(BaseDaoImpl<?, ?> baseDao,
@@ -259,9 +284,10 @@ public class DatabaseOptUtils {
 
     /**
      * 获取一个表中最大值作为主键生成主键的基础 ，这样的主键生成方式不建议在平凡操作的业务中使用。 可以在一些系统维护的业务中使用
-     * 
-     * @param fieldName 字段名
-     *            hibernate查询语句
+     *
+     * @param baseDao BaseDaoImpl
+     * @param fieldName 字段名 hibernate查询语句
+     * @param sObjectName sObjectName
      * @return 编码从 1 开始
      */
     public final static String getNextKeyByHqlStrOfMax(BaseDaoImpl<?, ?> baseDao,
@@ -274,7 +300,7 @@ public class DatabaseOptUtils {
     }
     /**
      * 获取数据类型
-     * @return
+     * @return 数据类型
      */
     public final static String getDialectName() {
     	if(StringUtils.isBlank(dialectName))
@@ -284,9 +310,9 @@ public class DatabaseOptUtils {
 
     /**
      * 获取sequence的当前值 只有oracle DB2支持
-     * 
-     * @param sequenceName
-     * @return
+     * @param baseDao  BaseDaoImpl
+     * @param sequenceName sequenceName
+     * @return sequence的当前值
      */
     public final static String getCurrValueOfSequence(
             BaseDaoImpl<?, ?> baseDao, String sequenceName) {
@@ -298,11 +324,10 @@ public class DatabaseOptUtils {
 
     /**
      * 获取sequence的下一个新值 只有oracle DB2支持
-     * 
-     * @param sequenceName
-     * @param codeLen
-     *            代码长度，左侧补零 ，如果 codeLen 为0 则不补零
-     * @return
+     * @param baseDao BaseDaoImpl
+     * @param sequenceName sequenceName
+     * @param codeLen 代码长度，左侧补零 ，如果 codeLen 为0 则不补零
+     * @return sequence的下一个新值
      */
     public final static String getNextKeyBySequence(BaseDaoImpl<?, ?> baseDao,
             String sequenceName, int codeLen) {
@@ -317,7 +342,12 @@ public class DatabaseOptUtils {
 	 * create table sequence_table 
 	 * (sequence_Name varchar(100) not null primary key, 
 	 * current_value integer);
-	 */
+     * @param baseDao BaseDaoImpl
+     * @param sequenceName sequenceName
+     * @return  SequenceNextValueUseTable
+     * @throws SQLException SQLException
+     * @throws IOException IOException
+     */
 	public static Long getSequenceNextValueUseTable(final BaseDaoImpl<?, ?> baseDao,final String sequenceName) throws SQLException, IOException {
 		Object object = getSingleObjectBySql(
                 baseDao,
@@ -347,9 +377,9 @@ public class DatabaseOptUtils {
     
     /**
      * 获取sequence的下一个新值 只有oracle DB2支持
-     * 
-     * @param sequenceName
-     * @return
+     * @param baseDao BaseDaoImpl
+     * @param sequenceName sequenceName
+     * @return sequence的下一个新值
      */
     public final static Long getNextLongSequence(BaseDaoImpl<?, ?> baseDao,
             String sequenceName) {
@@ -380,9 +410,10 @@ public class DatabaseOptUtils {
 
     /**
      * 获取sequence的下一个新值 只有oracle DB2支持
-     * 
-     * @param sequenceName
-     * @return
+     *
+     * @param baseDao BaseDaoImpl
+     * @param sequenceName sequenceName
+     * @return sequence的下一个新值
      */
     public final static String getNextValueOfSequence(
             BaseDaoImpl<?, ?> baseDao, String sequenceName) {
@@ -395,10 +426,10 @@ public class DatabaseOptUtils {
 
     /**
      * 从只返回一条记录的语句中获取对象
-     * 
-     * @param baseDao
-     * @param sHql
-     * @return
+     *
+     * @param baseDao BaseDaoImpl
+     * @param sHql sHql
+     * @return 一条记录的语句中获取对象
      */
     public final static Object getSingleObjectByHql(BaseDaoImpl<?, ?> baseDao,
             final String sHql) {
@@ -493,6 +524,10 @@ public class DatabaseOptUtils {
     
     /**
      * 获取唯一的一个整形数据的HQL
+     *
+     * @param baseDao BaseDaoImpl
+     * @param hql hql
+     * @return 唯一的一个整形数据的HQL
      */
     public final static long getSingleIntByHql(BaseDaoImpl<?, ?> baseDao,
             final String hql) {
@@ -516,6 +551,10 @@ public class DatabaseOptUtils {
     
     /**
      * 获取唯一的一个整形数据的SQL
+     *
+     * @param baseDao BaseDaoImpl
+     * @param sSql sSql
+     * @return 唯一的一个整形数据的SQL
      */
     public final static long getSingleIntBySql(BaseDaoImpl<?, ?> baseDao,
             final String sSql) {
@@ -550,6 +589,10 @@ public class DatabaseOptUtils {
     
     /**
      * 获取唯一的一个字符串数据的HQL
+     *
+     * @param baseDao BaseDaoImpl
+     * @param hql hql
+     * @return 唯一的一个字符串数据的HQL
      */
     public final static String getSingleStringByHql(BaseDaoImpl<?, ?> baseDao,
             final String hql) {
@@ -566,6 +609,10 @@ public class DatabaseOptUtils {
     
     /**
      * 获取唯一的一个字符串数据的SQL
+     *
+     * @param baseDao BaseDaoImpl
+     * @param sSql sSql
+     * @return 唯一的一个字符串数据的SQL
      */
     public final static String getSingleStringBySql(BaseDaoImpl<?, ?> baseDao,
             final String sSql) {
@@ -592,10 +639,11 @@ public class DatabaseOptUtils {
     
     /**
      * 执行一个Oracle存储过程 返回一个数据集，这个数据集是一个out的游标,这个参数必需为存储过程的最后一个参数
-     * 
-     * @param procName
-     * @param paramObjs
-     * @return
+     * @param conn Connection
+     * @param procName procName
+     * @param paramObjs Object
+     * @return 数据集，这个数据集是一个out的游标,这个参数必需为存储过程的最后一个参数
+     * @throws SQLException SQLException
      */
     public final static ResultSet callProcedureOutRS(Connection conn,
             String procName, Object... paramObjs) throws SQLException {
@@ -646,7 +694,7 @@ public class DatabaseOptUtils {
      * @param shql hql语句，这个语句中的参数用？作为占位符
      * @param values hql语句中的变量值
      * @param pageDesc  分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
-     * @return
+     * @return  List
      */
     public final static List<?> findObjectsByHql(BaseDaoImpl<?, ?> baseDao, String shql,
             Object[] values, PageDesc pageDesc) {
@@ -687,7 +735,7 @@ public class DatabaseOptUtils {
      * @param shql sql语句，这个语句必须用命名参数
      * @param values	命名参数对应的变量
      * @param pageDesc 分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
-     * @return
+     * @return List
      */
     public final static List<?> findObjectsByHql(BaseDaoImpl<?, ?> baseDao, String shql,
             Map<String, Object> values, PageDesc pageDesc) {
@@ -724,7 +772,7 @@ public class DatabaseOptUtils {
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param shql sql语句，这个语句必须用命名参数
      * @param values	命名参数对应的变量
-     * @return
+     * @return List
      */
     public final static List<?> findObjectsByHql(BaseDaoImpl<?, ?> baseDao, String shql,
             Map<String, Object> values) {
@@ -739,7 +787,7 @@ public class DatabaseOptUtils {
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param shql hql语句，这个语句中的参数用？作为占位符
      * @param values hql语句中的变量值
-     * @return
+     * @return List
      */
     public final static List<?> findObjectsByHql(BaseDaoImpl<?, ?> baseDao,
             String shql, Object[] values) {
@@ -753,7 +801,7 @@ public class DatabaseOptUtils {
   	 *
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param shql hql语句
-     * @return
+     * @return  List
      */
     public final static List<?> findObjectsByHql(BaseDaoImpl<?, ?> baseDao, String shql) {
         try {
@@ -767,8 +815,10 @@ public class DatabaseOptUtils {
 
 
     /**
-     * 执行原生的SQL查询语句，返回的类型为 List<Object[]>
-     * @return List<Object[]>
+     * 执行原生的SQL查询语句，返回的类型为 List
+     * @return List
+     * @param baseDao BaseDaoImpl
+     * @param ssql ssql
      */
     public final static List<?> findObjectsBySql(BaseDaoImpl<?, ?> baseDao, String ssql) {
         try {
@@ -788,9 +838,10 @@ public class DatabaseOptUtils {
 
     /**
      * 用原生SQL 查询数据库 objectType 如果没有的话可以为NULL
-     * @param objectType
-     *            制定返回的结构类型
-     * @return
+     * @param objectType 制定返回的结构类型
+     * @return List
+     * @param baseDao BaseDaoImpl
+     * @param ssql ssql
      */
     public final static List<?> findObjectsBySql(BaseDaoImpl<?, ?> baseDao,
             String ssql, Class<?> objectType) {
@@ -857,7 +908,7 @@ public class DatabaseOptUtils {
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param shql  hql语句，这个语句中的参数用？作为占位符
      * @param values 参数对应的变量
-     * @return
+     * @return 符合条件的记录数量
      */
     public final static int getHqlReturnObjectCounts(BaseDaoImpl<?, ?> baseDao, String shql,
             Object[] values) {
@@ -871,7 +922,7 @@ public class DatabaseOptUtils {
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param shql sql语句，这个语句必须用命名参数
      * @param values	命名参数对应的变量
-     * @return
+     * @return  符合条件的记录数量
      */
     public final static int getHqlReturnObjectCounts(BaseDaoImpl<?, ?> baseDao, String shql,
             Map<String, Object> values) {
@@ -886,7 +937,7 @@ public class DatabaseOptUtils {
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param ssql  sql语句，这个语句中的参数用？作为占位符
      * @param values 参数对应的变量
-     * @return
+     * @return 符合条件的记录数量
      */
     public final static int getSqlReturnObjectCounts(BaseDaoImpl<?, ?> baseDao, String ssql,
             Object[] values) { 
@@ -900,7 +951,7 @@ public class DatabaseOptUtils {
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param sSql sql语句，这个语句必须用命名参数
      * @param values	命名参数对应的变量
-     * @return
+     * @return 符合条件的记录数量
      */    
     public final static int getSqlReturnObjectCounts(BaseDaoImpl<?, ?> baseDao, String sSql,
             Map<String, Object> values) {
@@ -912,13 +963,13 @@ public class DatabaseOptUtils {
     // -----------------------------------------------------------------------------------
 
     /**
-     * 返回的类型为 List<objectType>
+     * 返回的类型为 List
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param ssql sql语句，这个语句必须用命名参数
      * @param values  命名参数对应的变量
      * @param pageDesc 分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
      * @param objectType 是一个Po类型，将查询结果封装成对象，要求查询返回的字段和Po中的字段定义一致。
-     * @return List<objectType>
+     * @return List
      */
     public final static List<?> findObjectsBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
             Map<String, Object> values, PageDesc pageDesc,Class<?> objectType) {
@@ -956,12 +1007,12 @@ public class DatabaseOptUtils {
     
 
     /**
-     * 返回的类型为 List<Object[]>
+     * 返回的类型为 List
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param ssql sql语句，这个语句必须用命名参数
      * @param values  命名参数对应的变量
      * @param pageDesc 分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
-     * @return List<Object[]>
+     * @return List
      */
     public final static List<?> findObjectsBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
             Map<String, Object> values, PageDesc pageDesc) {        
@@ -978,11 +1029,11 @@ public class DatabaseOptUtils {
    
     /**
      * 用原带参数的SQL 查询数据库 objectType 如果没有的话可以为NULL
-     * @param values
-     *            参数
-     * @param objectType
-     *            制定返回的结构类型
-     * @return
+     * @param values 参数
+     * @param objectType 制定返回的结构类型
+     * @return  List
+     * @param baseDao BaseDaoImpl
+     * @param ssql ssql
      */
     public final static List<?> findObjectsBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
             Object[] values, Class<?> objectType) {
@@ -1085,7 +1136,7 @@ public class DatabaseOptUtils {
      * @param values 命名参数对应的变量
      * @param pageDesc 获取记录其实位置 和 maxSize 一起完成分页操作
               返回的最大记录数
-     * @return JSONArray实现了List<JSONObject>接口，JSONObject实现了Map<String, Object>接口。所以可以直接转换为List<Map<String,Object>>
+     * @return JSONArray实现了List接口，JSONObject实现了Map接口。所以可以直接转换为List
      */
     public final static JSONArray findObjectsAsJSonBySql(BaseDaoImpl<?, ?> baseDao, String ssql, 
             String [] fieldnames, Object[] values, PageDesc pageDesc) {
@@ -1128,7 +1179,7 @@ public class DatabaseOptUtils {
      * @param values 命名参数对应的变量
      * @param pageDesc 获取记录其实位置 和 maxSize 一起完成分页操作
          返回的最大记录数
-     * @return JSONArray实现了List<JSONObject>接口，JSONObject实现了Map<String, Object>接口。所以可以直接转换为List<Map<String,Object>>
+     * @return JSONArray实现了List接口，JSONObject实现了Map接口。所以可以直接转换为List
      */
     public final static JSONArray findObjectsAsJSonBySql(BaseDaoImpl<?, ?> baseDao, String ssql, 
             String [] fieldnames, Map<String,Object> values, PageDesc pageDesc) {
@@ -1191,8 +1242,7 @@ public class DatabaseOptUtils {
     /**
      * 刷新Session缓存中的数据进行强制提交
      * 
-     * @param dbSession
-     *            HibernateDaoSupport
+     * @param dbSession HibernateDaoSupport
      */
     public final static void flush(Session dbSession) {
         dbSession.flush();

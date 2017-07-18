@@ -107,6 +107,7 @@ public class UserRole implements IUserRole, EntityWithTimestamp, java.io.Seriali
     
     /**
      * minimal constructor
+     * @param id UserRoleId
      */
     public UserRole(UserRoleId id) {
         this.id = id;
@@ -114,6 +115,10 @@ public class UserRole implements IUserRole, EntityWithTimestamp, java.io.Seriali
 
     /**
      * full constructor
+     *
+     * @param id UserRoleId
+     * @param obtainDate Date
+     * @param changedesc String
      */
     public UserRole(UserRoleId id, Date obtainDate, String changedesc) {
         this.id = id;

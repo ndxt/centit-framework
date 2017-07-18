@@ -91,6 +91,8 @@ public class DataDictionary implements IDataDictionary,EntityWithTimestamp, java
 
     /**
      * minimal constructor
+     *
+     * @param id DataDictionaryId
      */
     public DataDictionary(DataDictionaryId id) {
         this.id = id;
@@ -99,6 +101,13 @@ public class DataDictionary implements IDataDictionary,EntityWithTimestamp, java
 
     /**
      * full constructor
+     * @param id DataDictionaryId
+     * @param extracode String
+     * @param extracode2  String
+     * @param datatag String
+     * @param datavalue String
+     * @param datastyle String
+     * @param datadesc String
      */
     public DataDictionary(DataDictionaryId id, String extracode,
                           String extracode2, String datatag, String datavalue,

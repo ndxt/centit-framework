@@ -92,6 +92,7 @@ public class UserUnitController extends BaseController {
      * @param unitCode 机构代码
      *                 参数 s_isPaimary 是否为主机构，是T F否，为空不限定
      * @param pageDesc PageDesc
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/unitusers/{unitCode}", method = RequestMethod.GET)
@@ -110,6 +111,7 @@ public class UserUnitController extends BaseController {
      * @param userCode 用户代码
      *                 参数 s_isPaimary 是否为主机构，是T F否，为空不限定
      * @param pageDesc PageDesc
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/userunits/{userCode}", method = RequestMethod.GET)
@@ -134,10 +136,7 @@ public class UserUnitController extends BaseController {
     /**
      * 返回一条用户机构关联信息
      *
-     * @param unitCode    机构代码
-     * @param userCode    用户代码
-     * @param userStation 岗位，数据字典 StationType
-     * @param userRank    职务，数据字典 RankType
+     * @param userunitid    userunitid
      * @param response    HttpServletResponse
      */
     @RequestMapping(value = "/{userunitid}", method = RequestMethod.GET)
@@ -157,8 +156,6 @@ public class UserUnitController extends BaseController {
      *
      * @param unitCode    机构代码
      * @param userCode    用户代码
-     * @param userStation 岗位，数据字典 StationType
-     * @param userRank    职务，数据字典 RankType
      * @param response    HttpServletResponse
      */
     @RequestMapping(value = "/{unitCode}/{userCode}", method = RequestMethod.GET)
@@ -177,6 +174,7 @@ public class UserUnitController extends BaseController {
      * 创建用户机构关联信息
      *
      * @param userUnit UserUnit
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(method = RequestMethod.POST)
@@ -195,11 +193,9 @@ public class UserUnitController extends BaseController {
     /**
      * 更新用户机构关联信息
      *
-     * @param unitCode       机构代码
-     * @param userCode       用户代码
+     * @param userunitid       userunitid
+     * @param request       HttpServletRequest
      * @param userUnit       UserUnit
-     * @param oldUserStation 原先的岗位
-     * @param oldUserRank    原先的职务
      * @param response       HttpServletResponse
      */
     @RequestMapping(value = "/{userunitid}", method = RequestMethod.PUT)
@@ -228,10 +224,8 @@ public class UserUnitController extends BaseController {
     /**
      * 删除用户机构关联信息
      *
-     * @param unitCode    机构代码
-     * @param userCode    用户代码
-     * @param userStation 岗位，数据字典 StationType
-     * @param userRank    职务，数据字典 RankType
+     * @param userunitid    userunitid
+     * @param request    HttpServletRequest
      * @param response    HttpServletResponse
      */
     @RequestMapping(value = "/{userunitid}", method = RequestMethod.DELETE)

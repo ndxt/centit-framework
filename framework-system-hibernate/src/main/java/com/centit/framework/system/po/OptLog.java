@@ -75,7 +75,6 @@ public class OptLog implements java.io.Serializable {
     /**
      * 操作方法
      * 方法，或者字段
-     * <p/>
      * 方法使用 P_OPT_LOG_METHOD... 常量表示
      */
     @Column(name = "OPTMETHOD")
@@ -137,9 +136,6 @@ public class OptLog implements java.io.Serializable {
         this.oldValue = oldvalue;
     }
 
-    /**
-     * full constructor
-     */
     public OptLog(Long logid, String loglevel, String userCode, Date opttime, String optid, String optmethod,
                   String optcontent, String oldvalue) {
 

@@ -11,7 +11,7 @@ public interface OptInfoManager extends BaseEntityManager<OptInfo, String> {
     public boolean hasChildren(String optId);
     /**
      * 获取角色菜单中需要权限控制的业务菜单
-     * @return
+     * @return  List OptInfo
      */
      
     public List<OptInfo> listItemPowerOpts();
@@ -23,7 +23,7 @@ public interface OptInfoManager extends BaseEntityManager<OptInfo, String> {
 
     /**
      * 获取用户数据权限过滤器
-     * @param sUserCode
+     * @param sUserCode sUserCode
      * @param sOptid 业务名称
      * @param sOptMethod 对应的方法名称
      * @return 过滤条件列表，null或者空位不过来
@@ -32,14 +32,14 @@ public interface OptInfoManager extends BaseEntityManager<OptInfo, String> {
     /**
      * 将数据转换为树形结构
      *
-     * @param optInfos
-     * @return
+     * @param optInfos optInfos
+     * @return List OptInfo
      */
     public List<OptInfo> listObjectFormatTree(List<OptInfo> optInfos,boolean fillDefAndScope);
     /**
      * 获取某一个机构的权限列表供定义机构角色使用
-     * @param sUnitCode
-     * @return
+     * @param sUnitCode sUnitCode
+     * @return List OptInfo
      */
     public List<OptInfo> listOptWithPowerUnderUnit(String sUnitCode);
     

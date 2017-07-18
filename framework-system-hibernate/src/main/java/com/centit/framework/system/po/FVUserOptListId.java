@@ -34,6 +34,8 @@ public class FVUserOptListId implements java.io.Serializable {
 
     /**
      * minimal constructor
+     * @param userCode String
+     * @param optcode String
      */
     public FVUserOptListId(String userCode, String optcode) {
         this.userCode = userCode;

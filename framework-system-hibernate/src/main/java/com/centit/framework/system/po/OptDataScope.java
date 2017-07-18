@@ -65,9 +65,6 @@ public class OptDataScope implements IOptDataScope,Serializable{
     public OptDataScope() {
     }
 
-    /**
-     * minimal constructor
-     */
     public OptDataScope(String scopeCode, String optid) {
 
         this.optScopeCode = scopeCode;
@@ -75,9 +72,6 @@ public class OptDataScope implements IOptDataScope,Serializable{
 
     }
 
-    /**
-     * full constructor
-     */
     public OptDataScope(String scopeCode, String scopeName, String optid, String optmethod, String optdesc) {
 
         this.optScopeCode = scopeCode;

@@ -65,13 +65,13 @@ public class ObjectSerializeUserType implements UserType, Serializable {
      * (此方法要求对克能出现null值进行处理)
      * names中包含了当前自定义类型的映射字段名称
      *
-     * @param rs
-     * @param names
-     * @param session
-     * @param owner
-     * @return
-     * @throws HibernateException
-     * @throws SQLException
+     * @param rs ResultSet
+     * @param names String[]
+     * @param session SharedSessionContractImplementor
+     * @param owner Object
+     * @return nullSafe
+     * @throws HibernateException HibernateException
+     * @throws SQLException SQLException
      */
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names,
@@ -95,6 +95,12 @@ public class ObjectSerializeUserType implements UserType, Serializable {
     /**
      * 本方法将在Hibernate进行数据保存时被调用
      * 我们可以通过PreparedStateme将自定义数据写入到对应的数据库表字段
+     * @param st PreparedStatement
+     * @param value Object
+     * @param index int
+     * @param session SharedSessionContractImplementor
+     * @throws HibernateException HibernateException
+     * @throws SQLException SQLException
      */
     @Override
     public void nullSafeSet(PreparedStatement st, Object value, int index,
@@ -134,9 +140,9 @@ public class ObjectSerializeUserType implements UserType, Serializable {
      * 稍后的脏数据检查依据；Hibernate将在脏数据检查过程中将两个版本的数据进行对比（通过调用
      * equals方法），如果数据发生了变化（equals方法返回false），则执行对应的持久化操作
      *
-     * @param o
-     * @return
-     * @throws HibernateException
+     * @param o Object
+     * @return  deepCopy
+     * @throws HibernateException HibernateException
      */
     @Override
     public Object deepCopy(Object o) throws HibernateException {
@@ -149,7 +155,7 @@ public class ObjectSerializeUserType implements UserType, Serializable {
     /**
      * 本类型实例是否可变
      *
-     * @return
+     * @return 本类型实例是否可变
      */
     @Override
     public boolean isMutable() {

@@ -75,7 +75,7 @@ public class DBPlatformEnvironment implements PlatformEnvironment {
     /**
      * 刷新数据字典
      *
-     * @return
+     * @return  刷新数据字典
      */
     @Override
     public boolean reloadDictionary() {
@@ -85,7 +85,7 @@ public class DBPlatformEnvironment implements PlatformEnvironment {
     /**
      * 刷新权限相关的元数据
      *
-     * @return
+     * @return 刷新权限相关的元数据
      */
     @Override
     public boolean reloadSecurityMetadata() {
@@ -192,8 +192,8 @@ public class DBPlatformEnvironment implements PlatformEnvironment {
     /**
      * 根据用户代码获取用户信息，
      *
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return 用户信息
      */
     @Override
     public IUnitInfo getUnitInfoByUnitCode(String unitCode) {

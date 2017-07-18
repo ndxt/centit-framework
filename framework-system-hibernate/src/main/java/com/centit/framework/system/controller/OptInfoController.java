@@ -52,6 +52,7 @@ public class OptInfoController extends BaseController {
      *
      * @param field    需要显示的字段
      * @param id       父id
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/sub", method = RequestMethod.GET)
@@ -80,6 +81,7 @@ public class OptInfoController extends BaseController {
      *
      * @param field    需要显示的字段
      * @param struct   True根据父子节点排序的树形结构，False，排序的列表结构
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(method = RequestMethod.GET)
@@ -136,7 +138,8 @@ public class OptInfoController extends BaseController {
     
     /**
      * 查询某个部门权限的业务
-     *
+     * @param unitCode unitCode
+     * @param field String[]
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/unitpoweropts/{unitCode}",method = RequestMethod.GET)
@@ -155,7 +158,8 @@ public class OptInfoController extends BaseController {
      * 新增业务
      *
      * @param optInfo OptInfo
-     * @return
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(method = {RequestMethod.POST})
     public void createOptInfo(@Valid OptInfo optInfo, HttpServletRequest request, HttpServletResponse response) {
@@ -186,8 +190,9 @@ public class OptInfoController extends BaseController {
     /**
      * optId是否已存在
      *
-     * @param optId
-     * @param response
+     * @param optId optId
+     * @param response HttpServletResponse
+     * @throws IOException IOException
      */
     @RequestMapping(value = "/notexists/{optId}", method = {RequestMethod.GET})
     public void isNotExists(@PathVariable String optId, HttpServletResponse response) throws IOException {
@@ -200,6 +205,7 @@ public class OptInfoController extends BaseController {
      *
      * @param optId    主键
      * @param optInfo  OptInfo
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{optId}", method = {RequestMethod.PUT})
@@ -246,8 +252,9 @@ public class OptInfoController extends BaseController {
      /**
      * 删除系统业务
      *
-     * @param optId
-     * @param response
+      * @param optId    主键
+      * @param request  HttpServletRequest
+      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{optId}", method = {RequestMethod.DELETE})
     public void delete(@PathVariable String optId, HttpServletRequest request, HttpServletResponse response) {
@@ -267,8 +274,8 @@ public class OptInfoController extends BaseController {
     /**
      * 查询单条数据
      *
-     * @param optId
-     * @param response
+     * @param optId    主键
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{optId}", method = {RequestMethod.GET})
     public void getOptInfoById(@PathVariable String optId, HttpServletResponse response) {
@@ -280,7 +287,7 @@ public class OptInfoController extends BaseController {
     /**
      * 新增页面时获取OptDef主键
      *
-     * @param response
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/nextOptCode", method = RequestMethod.GET)
     public void getNextOptCode(HttpServletResponse response) {
@@ -294,10 +301,10 @@ public class OptInfoController extends BaseController {
 
     /**
      * 新建或更新业务操作
-     * @param optId
-     * @param optCode
-     * @param optDef
-     * @param response
+     * @param optId    主键
+     * @param optCode  optCode
+     * @param optDef  OptMethod
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{optId}/{optCode}", method = {RequestMethod.POST, RequestMethod.PUT})
     public void optDefEdit(@PathVariable String optId, @PathVariable String optCode, @Valid OptMethod optDef,

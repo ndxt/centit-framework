@@ -315,12 +315,12 @@ public class DataPowerFilter {
 
 	/**
 	 * 
-	 * @param queryStatement
-	 * @param filters
+	 * @param queryStatement queryStatement
+	 * @param filters Collection
 	 * @param toSql	是否为sql语句，否：表示hql ，是：表示 sql
 	 * @param jointSql 变量内嵌在语句中，不用参数
 	 * @param isUnion 多个过滤之间是否是并集 
-	 * @return
+	 * @return translateQuery
 	 */
 	public QueryAndNamedParams translateQuery(String queryStatement,Collection<String> filters,
 			boolean toSql,boolean jointSql, boolean isUnion){
@@ -331,9 +331,9 @@ public class DataPowerFilter {
 	
 	/**
 	 * 权限查询，不同的条件取并集
-	 * @param queryStatement
-	 * @param filters
-	 * @return
+	 * @param queryStatement queryStatement
+	 * @param filters filters
+	 * @return 权限查询，不同的条件取并集
 	 */
 	public QueryAndNamedParams translateHqlQuery
 			(String queryStatement,Collection<String> filters){
@@ -343,9 +343,9 @@ public class DataPowerFilter {
 	
 	/**
 	 * 权限查询，不同的条件取并集
-	 * @param queryStatement
-	 * @param filters
-	 * @return
+	 * @param queryStatement queryStatement
+	 * @param filters Collection
+	 * @return 权限查询，不同的条件取并集
 	 */
 	public QueryAndNamedParams translateSqlQuery
 			(String queryStatement,Collection<String> filters){
@@ -355,9 +355,9 @@ public class DataPowerFilter {
 	
 	/**
 	 * 视图过滤条件查询，不同的过滤条件取交接
-	 * @param queryStatement
-	 * @param filters
-	 * @return
+	 * @param queryStatement queryStatement
+	 * @param filters Collection
+	 * @return 视图过滤条件查询，不同的过滤条件取交接
 	 */
 	public QueryAndNamedParams translateSqlFilterQuery
 			(String queryStatement,Collection<String> filters){

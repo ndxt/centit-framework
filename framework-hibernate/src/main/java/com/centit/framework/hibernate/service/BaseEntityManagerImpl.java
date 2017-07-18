@@ -16,11 +16,10 @@ import com.centit.support.algorithm.ReflectionOpt;
 
 /**
  * 数据库的基本操作工具类
- * <p/>
  * 基本上是对Dao进行再一次简单的封装 注解Manager，添加默认事务
  *
  * @author codefan
- * @create 2012-2-16
+ * 2012-2-16
  */
 public abstract class BaseEntityManagerImpl<T extends Serializable, 
  		PK extends Serializable, D extends BaseDaoImpl<T, PK>> implements
@@ -61,7 +60,8 @@ public abstract class BaseEntityManagerImpl<T extends Serializable,
     /**
      * 保存泛型参数对象
      *
-     * @param o
+     * @param o T
+     * @return  泛型参数对象
      */
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
@@ -72,7 +72,7 @@ public abstract class BaseEntityManagerImpl<T extends Serializable,
     /**
      * 更新泛型参数对象
      *
-     * @param o
+     * @param o T
      */
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
@@ -90,6 +90,7 @@ public abstract class BaseEntityManagerImpl<T extends Serializable,
     
     /**
      * 修改之前check一下版本号，不一致抛异常
+     * @param o T
      */
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
@@ -142,9 +143,9 @@ public abstract class BaseEntityManagerImpl<T extends Serializable,
     }
 
     /**
-     * @param shql
+     * @param shql shql
      * @param filterMap 过滤条件
-     * @return
+     * @return  listObjects
      */
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
@@ -154,7 +155,7 @@ public abstract class BaseEntityManagerImpl<T extends Serializable,
 
     /**
      * @param filterMap 过滤条件
-     * @return
+     * @return listObjects
      */
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
@@ -164,6 +165,11 @@ public abstract class BaseEntityManagerImpl<T extends Serializable,
     
     /**
      * 查询数据库并且对查询结果分页
+     *
+     * @param shql sql,hql语句
+     * @param filterMap 过滤条件
+     * @param pageDesc  分页属性
+     * @return listObjects
      */
     @Override
     @Transactional(propagation=Propagation.REQUIRED)

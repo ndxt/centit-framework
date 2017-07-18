@@ -200,9 +200,6 @@ public class OptInfo implements IOptInfo, EntityWithTimestamp, java.io.Serializa
     public OptInfo() {
     }
 
-    /**
-     * minimal constructor
-     */
     public OptInfo(String optid, String optname) {
 
         this.optId = optid;
@@ -210,9 +207,6 @@ public class OptInfo implements IOptInfo, EntityWithTimestamp, java.io.Serializa
         this.optName = optname;
     }
 
-    /**
-     * full constructor
-     */
     public OptInfo(String optid, String preoptid, String optname,
             String formcode, String opturl, Long msgno, String msgprm,
             String isintoolbar, Long imgindex, String topoptid, String opttype,
@@ -337,7 +331,7 @@ public class OptInfo implements IOptInfo, EntityWithTimestamp, java.io.Serializa
 
     /**
      * S:实施业务, O:普通业务, W:流程业务, I:项目业务
-     * @return
+     * @return OptType
      */
     public String getOptType() {
         return this.optType;
@@ -345,7 +339,7 @@ public class OptInfo implements IOptInfo, EntityWithTimestamp, java.io.Serializa
 
     /**
      * S:实施业务, O:普通业务, W:流程业务, I:项目业务
-     * @param opttype
+     * @param opttype  opttype
      */
     public void setOptType(String opttype) {
         this.optType = opttype;
@@ -370,7 +364,7 @@ public class OptInfo implements IOptInfo, EntityWithTimestamp, java.io.Serializa
     /**
      * 页面打开方式 D: DIV I： iFrame
      * 
-     * @return
+     * @return PageType
      */
     public String getPageType() {
         return pageType;
@@ -379,7 +373,7 @@ public class OptInfo implements IOptInfo, EntityWithTimestamp, java.io.Serializa
     /**
      * 页面打开方式 D: DIV I： iFrame
      * 
-     * @param pageType
+     * @param pageType pageType
      */
     public void setPageType(String pageType) {
         this.pageType = pageType;

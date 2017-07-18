@@ -172,7 +172,7 @@ public class UserInfoDao extends BaseDaoImpl<UserInfo, String> {
     /**
      * 批量添加或更新
      *
-     * @param userinfos
+     * @param userinfos List
      */
     @Transactional
     public void batchSave(List<UserInfo> userinfos) {

@@ -105,6 +105,12 @@ public class DataCatalog implements EntityWithTimestamp,IDataCatalog, java.io.Se
     /** default constructor */
     /**
      * minimal constructor
+     *
+     * @param catalogcode catalogcode
+     * @param catalogname catalogname
+     * @param catalogstyle catalogstyle
+     * @param catalogtype catalogtype
+     * @param isupload isupload
      */
     public DataCatalog(String catalogcode, String catalogname, String catalogstyle, String catalogtype, String isupload) {
 
@@ -118,6 +124,14 @@ public class DataCatalog implements EntityWithTimestamp,IDataCatalog, java.io.Se
 
     /**
      * full constructor
+     * @param catalogcode String
+     * @param catalogname String
+     * @param catalogstyle String
+     * @param catalogtype String
+     * @param catalogdesc String
+     * @param isupload String
+     * @param needCache String
+     * @param fielddesc String
      */
     public DataCatalog(String catalogcode, String catalogname, String catalogstyle, String catalogtype,
                        String catalogdesc, String isupload, String needCache, String fielddesc) {

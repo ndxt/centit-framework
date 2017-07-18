@@ -121,10 +121,10 @@ public class UserUnitDao extends BaseDaoImpl<UserUnit, String> {
     /**
      * unitcode不为null就是某个处室的某个角色，为NULL就是所有处室的某个角色
      *
-     * @param roleType
-     * @param roleCode
-     * @param unitCode
-     * @return
+     * @param roleType roleType
+     * @param roleCode roleCode
+     * @param unitCode unitCode
+     * @return List
      */
 
     @Transactional
@@ -169,7 +169,7 @@ public class UserUnitDao extends BaseDaoImpl<UserUnit, String> {
     /**
      * 批量添加或更新
      *
-     * @param userunits
+     * @param userunits List
      */
     @Transactional
     public void batchSave(List<UserUnit> userunits) {

@@ -9,8 +9,7 @@ import org.hibernate.internal.SessionFactoryImpl;
  * 代替Hibernate中的配置
  * 
  * @author codefan@sina.com
- * @create 2015年2月4日
- * @version
+ * 2015年2月4日
  */
 //@Component
 public class HibernateEventWiring {

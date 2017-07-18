@@ -55,6 +55,7 @@ public class UserRoleController extends BaseController {
      *
      * @param roleCode 角色代码
      * @param pageDesc PageDesc
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/roleusers/{roleCode}", method = RequestMethod.GET)
@@ -79,6 +80,7 @@ public class UserRoleController extends BaseController {
      *
      * @param userCode 用户代码
      * @param pageDesc PageDesc
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/userroles/{userCode}", method = RequestMethod.GET)
@@ -122,7 +124,6 @@ public class UserRoleController extends BaseController {
      * 返回一条用户角色关联信息
      * @param roleCode 角色代码
      * @param userCode 用户代码
-     * @param obtainDate 获取时间
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{roleCode}/{userCode}", method = RequestMethod.GET)
@@ -145,6 +146,8 @@ public class UserRoleController extends BaseController {
     /**
      * 创建用户角色关联信息
      * @param userRole UserRole
+     * @param userCode userCode[]
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(method = RequestMethod.POST)
@@ -174,7 +177,7 @@ public class UserRoleController extends BaseController {
      * @param roleCode 角色代码
      * @param userCode 用户代码
      * @param userRole UserRole
-     * @param obtainDate 获取时间
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{roleCode}/{userCode}", method = RequestMethod.PUT)
@@ -203,8 +206,8 @@ public class UserRoleController extends BaseController {
     /**
      * 删除用户角色关联信息
      * @param roleCode 角色代码
-     * @param userCode 用户代码
-     * @param obtainDate 获取时间
+     * @param userCodes userCodes
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{roleCode}/{userCodes}", method = RequestMethod.DELETE)
@@ -231,7 +234,6 @@ public class UserRoleController extends BaseController {
      * 删除用户角色关联信息
      * @param roleCode 角色代码
      * @param userCode 用户代码
-     * @param obtainDate 获取时间
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/ban/{roleCode}/{userCode}", method = RequestMethod.PUT)

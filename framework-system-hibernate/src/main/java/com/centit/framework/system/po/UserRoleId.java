@@ -38,6 +38,8 @@ public class UserRoleId implements java.io.Serializable {
 
     /**
      * full constructor
+     * @param userCode String
+     * @param rolecode String
      */
     public UserRoleId(String userCode, String rolecode) {
         this.userCode = userCode;

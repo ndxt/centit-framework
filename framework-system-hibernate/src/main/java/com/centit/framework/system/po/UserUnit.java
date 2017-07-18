@@ -121,6 +121,8 @@ public class UserUnit implements IUserUnit, EntityWithTimestamp, java.io.Seriali
     
     /**
      * minimal constructor
+     * @param id String
+     * @param isprimary String
      */
     public UserUnit(String id, String isprimary) {
         this.userUnitId = id;
@@ -129,6 +131,10 @@ public class UserUnit implements IUserUnit, EntityWithTimestamp, java.io.Seriali
 
     /**
      * full constructor
+     * @param id String
+     * @param userstation String
+     * @param userrank String
+     * @param isprimary String
      */
     public UserUnit(String id, String userstation, String userrank,
                     String isprimary) {
@@ -185,7 +191,7 @@ public class UserUnit implements IUserUnit, EntityWithTimestamp, java.io.Seriali
 
     /**
      * T:主机构 F：辅机构
-     * @return
+     * @return  IsPrimary
      */
     public String getIsPrimary() {
         return this.isPrimary;

@@ -110,7 +110,6 @@ public class QueryFilterCondition implements java.io.Serializable {
 	/** default constructor */
 	public QueryFilterCondition() {
 	}
-	/** minimal constructor */
 	public QueryFilterCondition(
 		Long conditionNo		
 		,String  tableClassName,String  paramName,String  paramLabel,String  selectDataType) {
@@ -124,7 +123,6 @@ public class QueryFilterCondition implements java.io.Serializable {
 		this.selectDataType= selectDataType; 		
 	}
 
-/** full constructor */
 	public QueryFilterCondition(
 	 Long conditionNo		
 	,String  tableClassName,String  paramName,String  paramLabel,String  paramType,String  defaultValue,String  filterSql,String  selectDataType,String  selectDataCatalog,String  selectSql,String  selectJson) {

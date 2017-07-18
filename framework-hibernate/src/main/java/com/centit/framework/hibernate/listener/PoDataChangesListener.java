@@ -33,7 +33,7 @@ import com.centit.framework.security.model.CentitUserDetails;
  * 对数据库CUD操作进行监听并对感兴趣的表进行数据更改的日志记录
  *
  * @author sx
- * @create 2014-10-14
+ * 2014-10-14
  */
 
 /**
@@ -41,8 +41,7 @@ import com.centit.framework.security.model.CentitUserDetails;
  * 这个类已经废弃了，不需要了
  * 
  * @author codefan
- * @create 2015年10月16日
- * @version
+ * 2015年10月16日
  */
 //@Transactional
 //@Component

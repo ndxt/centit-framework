@@ -41,14 +41,12 @@ public class OptFlowNoPool implements EntityWithTimestamp, java.io.Serializable 
 
     /**
      * minimal constructor
+     * @param id OptFlowNoPoolId
      */
     public OptFlowNoPool(OptFlowNoPoolId id) {
         this.cid = id;
     }
 
-    /**
-     * full constructor
-     */
     public OptFlowNoPool(OptFlowNoPoolId id
             , java.util.Date lastCodeDate) {
         this.cid = id;

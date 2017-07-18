@@ -35,6 +35,8 @@ public class OptLogController extends BaseController {
      * 查询系统日志
      *
      * @param field    需要显示的字段
+     * @param pageDesc  分页信息
+     * @param request    HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping
@@ -69,8 +71,8 @@ public class OptLogController extends BaseController {
     /**
      * 查询单条日志
      *
-     * @param logId
-     * @param response
+     * @param logId logId
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{logId}", method = {RequestMethod.GET})
     public void getOptLogById(@PathVariable Long logId, HttpServletResponse response) {
@@ -84,8 +86,8 @@ public class OptLogController extends BaseController {
     /**
      * 删除单条系统日志
      *
-     * @param logId
-     * @param response
+     * @param logId logId
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{logId}", method = {RequestMethod.DELETE})
     public void deleteOne(@PathVariable Long logId, HttpServletResponse response) {
@@ -95,8 +97,8 @@ public class OptLogController extends BaseController {
 
     /**
      * 删除多条系统日志
-     * @param logIds
-     * @param response
+     * @param logIds logId[]
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/deleteMany", method = RequestMethod.DELETE)
     public void deleteMany(Long[] logIds, HttpServletResponse response) {
@@ -107,9 +109,9 @@ public class OptLogController extends BaseController {
     /**
      * 删除某时段之前的系统日志
      *
-     * @param begin
-     * @param end
-     * @param response
+     * @param begin Date
+     * @param end Date
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/delete", method = {RequestMethod.DELETE})
     public void deleteByTime(Date begin, Date end, HttpServletResponse response) {

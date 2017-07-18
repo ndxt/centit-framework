@@ -11,32 +11,33 @@ import com.centit.framework.system.po.VOptTree;
 
 public interface SysRoleManager extends BaseEntityManager<RoleInfo, String> {
 
-    public List<RolePower> getRolePowers(String rolecode); // 角色操作权限
+     List<RolePower> getRolePowers(String rolecode); // 角色操作权限
 
     List<RolePower> getRolePowersByDefCode(String optCode);
 
-    public List<VOptTree> getVOptTreeList();// 获取菜单TREE
+     List<VOptTree> getVOptTreeList();// 获取菜单TREE
 
-    public void loadRoleSecurityMetadata();
+     void loadRoleSecurityMetadata();
 
-    public Serializable saveNewRoleInfo(RoleInfo o);
+     Serializable saveNewRoleInfo(RoleInfo o);
 
-    public void updateRoleInfo(RoleInfo o);
+     void updateRoleInfo(RoleInfo o);
     
-    public void deleteRoleInfo(String roleCode);
+     void deleteRoleInfo(String roleCode);
     
-    public RoleInfo getRoleInfo(String roleCode);
+     RoleInfo getRoleInfo(String roleCode);
     
-    public List<RolePower> listAllRolePowers();
+     List<RolePower> listAllRolePowers();
 
-    public List<OptMethod> listAllOptMethods();
+     List<OptMethod> listAllOptMethods();
     /**
      * 对角色信息进行模糊搜索，适用于带搜索条件的下拉框。
      *
      * @param key      搜索条件
      * @param field    需要搜索的字段，如为空，默认，roleCode,roleName
+     * @return   List RoleInfo
      */
-    public List<RoleInfo> search(String key, String[] field);
+     List<RoleInfo> search(String key, String[] field);
 
-    public int countRoleUserSum(String roleCode);
+     int countRoleUserSum(String roleCode);
 }

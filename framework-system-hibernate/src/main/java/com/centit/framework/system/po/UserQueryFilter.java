@@ -76,7 +76,6 @@ public class UserQueryFilter implements java.io.Serializable {
 	/** default constructor */
 	public UserQueryFilter() {
 	}
-	/** minimal constructor */
 	public UserQueryFilter(
 		Long filterNo	,String  userCode	
 		,String  modleCode,String  filterName,String  filterValue) {
@@ -129,14 +128,14 @@ public class UserQueryFilter implements java.io.Serializable {
 	}
 	/**
 	 * T : 最新查看， F： 其他
-	 * @return
+	 * @return  IsDefault
 	 */
 	public String getIsDefault() {
 		return this.isDefault;
 	}
 	/**
 	 * T : 最新查看， F： 其他
-	 * @param isDefault
+	 * @param isDefault isDefaults
 	 */
 	public void setIsDefault(String isDefault) {
 		this.isDefault = isDefault;

@@ -35,6 +35,7 @@ public class OptMethodUrlMap implements java.io.Serializable {
 
     /**
      * minimal constructor
+     * @param optcode String
      */
     public OptMethodUrlMap(String optcode) {
         this.optCode = optcode;

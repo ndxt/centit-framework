@@ -85,7 +85,7 @@ public class UnitInfoDao extends BaseDaoImpl<UnitInfo, String> {
     /**
      * 批量添加或更新
      *
-     * @param unitinfos
+     * @param unitinfos List
      */
     @Transactional
     public void batchSave(List<UnitInfo> unitinfos) {

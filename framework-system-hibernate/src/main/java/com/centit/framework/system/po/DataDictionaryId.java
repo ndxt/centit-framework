@@ -34,6 +34,8 @@ public class DataDictionaryId implements java.io.Serializable {
 
     /**
      * full constructor
+     * @param catalogcode String
+     * @param datacode String
      */
     public DataDictionaryId(String catalogcode, String datacode) {
         this.catalogCode = catalogcode;

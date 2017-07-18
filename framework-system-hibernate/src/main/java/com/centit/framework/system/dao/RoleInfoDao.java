@@ -61,6 +61,7 @@ public class RoleInfoDao extends BaseDaoImpl<RoleInfo, String> {
      *
      * @param key      搜索条件
      * @param field    需要搜索的字段，如为空，默认，roleCode,roleName
+     * @return List
      */
     @Transactional
     public List<RoleInfo> search(String key, String[] field) {

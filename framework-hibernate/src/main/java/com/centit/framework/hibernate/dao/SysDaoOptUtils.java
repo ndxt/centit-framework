@@ -57,8 +57,8 @@ public class SysDaoOptUtils {
     
     /**
      * 将一个Po对象转换为JSONObject 同时检查对象上面的的属性是否有DictionaryMap注解，如果有转换数据字典
-     * @param obj
-     * @return
+     * @param obj Object
+     * @return Po对象转换为JSONObject
      */
     public final static JSONObject objectToJSON(Object obj){
     	if(obj==null)
@@ -80,8 +80,8 @@ public class SysDaoOptUtils {
     
     /**
      * 将一个Po对象数组转换为JSONArray 同时检查对象上面的的属性是否有DictionaryMap注解，如果有转换数据字典
-     * @param objs
-     * @return
+     * @param objs Object[]
+     * @return  Po对象数组转换为JSONArray
      */
     public final static JSONArray objectsToJSONArray(Object[] objs){
     	JSONArray ja = new JSONArray();
@@ -106,8 +106,8 @@ public class SysDaoOptUtils {
     
     /**
      * 将一个Po对象列表转换为JSONArray 同时检查对象上面的的属性是否有DictionaryMap注解，如果有转换数据字典
-     * @param objs
-     * @return
+     * @param objs Collection Object
+     * @return Po对象列表转换为JSONArray
      */
     public final static JSONArray objectsToJSONArray(Collection<? extends Object> objs){
     	JSONArray ja = new JSONArray();
@@ -183,8 +183,8 @@ public class SysDaoOptUtils {
      * 				 查询语句可以是通过数据权限过滤自动生成的语句，或者是开发人员自己编写的内置语句
      * @param filterMap 查询变量 和baseDao中的listObject是中的查询变量一样
      * @param pageDesc 分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
-     * @return JSONArray实现了List<JSONObject>接口，JSONObject实现了
-     * 		Map<String, Object>接口。所以可以直接转换为List<Map<String,Object>>
+     * @return JSONArray实现了List接口，JSONObject实现了
+     * 		Map接口。所以可以直接转换为List
      */
     @Transactional
     public final static JSONArray listObjectsAsJson(BaseDaoImpl<?, ?> baseDao ,
@@ -246,8 +246,8 @@ public class SysDaoOptUtils {
      * @param objType po对象类型，和上面的Dao对应
      * @param filterMap 查询变量 和baseDao中的listObject是中的查询变量一样
      * @param pageDesc 分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
-     * @return JSONArray实现了List<JSONObject>接口，JSONObject实现了
-     * 		Map<String, Object>接口。所以可以直接转换为List<Map<String,Object>>
+     * @return JSONArray实现了List接口，JSONObject实现了
+     * 		Map接口。所以可以直接转换为List
      */
     @Transactional
     public final static JSONArray listObjectsAsJson(BaseDaoImpl<?, ?> baseDao ,
@@ -266,8 +266,8 @@ public class SysDaoOptUtils {
      * @param fields fields 字段，是po中的熟悉名，不是数据库表中的字段名
      * @param objType po对象类型，和上面的Dao对应
      * @param filterMap 查询变量 和baseDao中的listObject是中的查询变量一样
-     * @return JSONObject实现了Map<String, Object>接口。
-     * 			所以可以直接转换为Map<String,Object>
+     * @return JSONObject实现了Map接口。
+     * 			所以可以直接转换为Map
      */
     @Transactional
     public final static JSONObject getObjectAsJson(BaseDaoImpl<?, ?> baseDao ,
@@ -324,8 +324,8 @@ public class SysDaoOptUtils {
      * 				value是一个 KeyValuePair，value的key为新的字段名称可以为任意值但不要和field中的字段重名
      * 									   value的value为数据字典代码
      * @param pageDesc 分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
-     * @return JSONArray实现了List<JSONObject>接口，JSONObject实现了
-     * 		Map<String, Object>接口。所以可以直接转换为List<Map<String,Object>>
+     * @return JSONArray实现了List接口，JSONObject实现了
+     * 		Map接口。所以可以直接转换为List
      */
     @Transactional
     public final static JSONArray
@@ -411,8 +411,8 @@ public class SysDaoOptUtils {
      * 				value是一个 KeyValuePair，value的key为新的字段名称可以为任意值但不要和field中的字段重名
      * 									   value的value为数据字典代码
      * @param pageDesc 分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
-     * @return JSONArray实现了List<JSONObject>接口，JSONObject实现了
-     * 		Map<String, Object>接口。所以可以直接转换为List<Map<String,Object>>
+     * @return JSONArray实现了List接口，JSONObject实现了
+     * 		Map接口。所以可以直接转换为List
      */
     @Transactional
     public final static JSONArray
@@ -478,7 +478,7 @@ public class SysDaoOptUtils {
     	 * @param codeField 需要数据字典转换的字段名
     	 * @param valueField 转换后值存放的字段名
     	 * @param dictCatalog	数据字典类别代码
-    	 * @return
+    	 * @return  DictionaryMapBuilder
     	 */
     	public DictionaryMapBuilder addDictionaryDesc(
     			String codeField,String valueField,String dictCatalog){
@@ -488,8 +488,8 @@ public class SysDaoOptUtils {
     	}
     	
     	/**
-    	 * 直接返回内置的 Map<String,KeyValuePair<String,String>> 类型变量
-    	 * @return
+    	 * 直接返回内置的 Map 类型变量
+    	 * @return 直接返回内置的 Map 类型变量
     	 */
     	public  Map<String,KeyValuePair<String,String>> create(){
     		return dictionaryMap;
@@ -497,7 +497,7 @@ public class SysDaoOptUtils {
     }
     
     /**
-     * 创建 DictionaryMap的辅助类，这样就可以用一下代码创建一个 Map<String,KeyValuePair<String,String>>
+     * 创建 DictionaryMap的辅助类，这样就可以用一下代码创建一个 Map
      * 类型的参数放到  listObjectsBy?qlAsJson 函数的 dictionaryMap 变量中
      * 	 SysDaoOptUtils.createDictionaryMapBuilder("F1", "V1", "D1")
 			.addDictionaryDesc("F2", "V2", "D2")
@@ -505,7 +505,7 @@ public class SysDaoOptUtils {
      * @param codeField 需要数据字典转换的字段名
      * @param valueField 转换后值存放的字段名
      * @param dictCatalog	数据字典类别代码
-     * @return
+     * @return DictionaryMapBuilder
      */
     public static DictionaryMapBuilder createDictionaryMapBuilder(
 			String codeField,String valueField,String dictCatalog){

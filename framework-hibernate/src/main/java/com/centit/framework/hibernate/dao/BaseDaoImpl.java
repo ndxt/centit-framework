@@ -48,7 +48,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
     
     /**
      * 获取当前事务上下文环境 session
-     * @return
+     * @return  当前事务上下文环境 session
      */
     @Transactional(propagation=Propagation.MANDATORY)  
     public Session getCurrentSession(){
@@ -105,7 +105,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
     
     /**
      * 获取泛型参数对象的主键类型
-     * @return
+     * @return 泛型参数对象的主键类型
      */
     public final Class<?> getPkClass() {
         ParameterizedType genType = (ParameterizedType) getClass()
@@ -116,7 +116,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
     
     /**
      * 获取泛型参数对象全称 
-     * @return
+     * @return 泛型参数对象全称
      */
     public final String getClassTName() {
         return getPoClass().getName();
@@ -124,7 +124,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
 
     /**
      * 获取泛型参数对象名称
-     * @return
+     * @return 泛型参数对象名称
      */
     public final String getClassTShortName() {
         return getPoClass().getSimpleName();
@@ -290,7 +290,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
     
     /**
      * 修改之前check一下版本号，不一致抛异常
-     * @param o
+     * @param o T
      */
     @SuppressWarnings("unchecked")
     @Transactional(propagation=Propagation.MANDATORY) 
@@ -420,8 +420,8 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
     
     /**
      *  通过注解 @Id 或者  @EmbeddedId 获得主键
-     * @param poObj
-     * @return
+     * @param poObj Object
+     * @return 主键
      */
     public static Object getPoObjectId(Object poObj) {
     	Field[] objFields = poObj.getClass().getDeclaredFields();       
@@ -444,6 +444,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
      * @param dbObjects 数据库中旧的对象列表
      * @param newObjects 新的对象列表
      * @param checkTimestamp 更新的记录是否检查更改时间戳
+     * @return  新的子表对象
      */
     @SuppressWarnings("unchecked")
 	@Transactional(propagation=Propagation.MANDATORY) 
@@ -541,6 +542,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
      * @param newObjects 新的对象列表
      * @param propertyName 外键关联字段
      * @param propertyValue 外键值（主表的主键）
+     * @return  新的子表对象
      */
     @Transactional(propagation=Propagation.MANDATORY) 
     public List<PK> replaceObjectsAsTabulation(Collection<T> newObjects,
@@ -555,6 +557,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
      *  通过复合主键查询数据库中的旧的类别
      * @param newObjects 新的对象列表
      * @param properties 复合外键字段属性 和对应额值
+     * @return  新的子表对象
      */
     @Transactional(propagation=Propagation.MANDATORY) 
     public List<PK> replaceObjectsAsTabulation(Collection<T> newObjects,
@@ -569,6 +572,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
      * @param newObjects 新的对象列表
      * @param propertyName 外键关联字段
      * @param propertyValue 外键值（主表的主键）
+     * @return  新的子表对象
      */
     @Transactional(propagation=Propagation.MANDATORY) 
     public List<PK> replaceObjectsAsTabulationCheckTimestamp(Collection<T> newObjects,
@@ -582,6 +586,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
      *  通过复合主键查询数据库中的旧的类别
      * @param newObjects 新的对象列表
      * @param properties 复合外键字段属性 和对应额值
+     * @return  新的子表对象
      */
     @Transactional(propagation=Propagation.MANDATORY) 
     public List<PK> replaceObjectsAsTabulationCheckTimestamp(Collection<T> newObjects,
@@ -662,9 +667,12 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
         }
     }
 
-    /**
-     * 用命名参数代替这个
-     */
+     /**
+      * 用命名参数代替这个
+      * @param shql shql
+      * @param filterDesc Map filterDesc
+      * @return 命名参数
+      */
     @Deprecated
     public QueryAndParams builderHqlAndParams(String shql,
             Map<String, Object> filterDesc) {
@@ -726,9 +734,10 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
     }
     /**
      * 创建一个查询语句 和 条件
-     * @param shql
-     * @param filterDesc
-     * @return
+     * @param shql shql
+     * @param filterDesc filterDesc
+     * @param filterFieldDesc filterFieldDesc
+     * @return  查询语句 和 条件
      */
     public static QueryAndNamedParams builderHqlAndNamedParams(String shql,
             Map<String, Object> filterDesc ,Map<String, String> filterFieldDesc ) {
@@ -814,9 +823,9 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
     }
     /**
      * 创建一个 统计分析语句的 From 和 where 部分 不能包括 order by
-     * @param shql
-     * @param filterDesc
-     * @return
+     * @param shql shql
+     * @param filterDesc filterDesc
+     * @return 统计分析语句的 From 和 where 部分 不能包括 order by
      */
     public QueryAndNamedParams builderStatHqlAndNamedParams(String shql,
             Map<String, Object> filterDesc) {
@@ -876,9 +885,12 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
         return new QueryAndNamedParams(hql.toString(), params);
     }
 
-    /**
-     * 此方法有SQL注入危险
-     */
+     /**
+      * 此方法有SQL注入危险
+      * @param shql shql
+      * @param filterDesc filterDesc
+      * @return builderHql
+      */
     @Deprecated
     public String builderHql(String shql, Map<String, String> filterDesc) {
         StringBuffer hql = new StringBuffer(shql);

@@ -19,8 +19,8 @@ public interface OptLogManager extends BaseEntityManager<OptLog, Long> {
     /**
      * 清理此日期之间的日志信息
      *
-     * @param begin
-     * @param end
+     * @param begin begin
+     * @param end end
      */
     void delete(Date begin, Date end);
 

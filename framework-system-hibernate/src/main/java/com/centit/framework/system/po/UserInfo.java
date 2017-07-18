@@ -194,7 +194,7 @@ public class UserInfo implements IUserInfo, EntityWithTimestamp, java.io.Seriali
 
     /**
      * 密码失效时间
-     * @return
+     * @return  PwdExpiredTime
      */
     public Date getPwdExpiredTime() {
 		return pwdExpiredTime;
@@ -217,6 +217,10 @@ public class UserInfo implements IUserInfo, EntityWithTimestamp, java.io.Seriali
 
     /**
      * minimal constructor
+     * @param userCode String
+     * @param userstate String
+     * @param loginname String
+     * @param username String
      */
     public UserInfo(String userCode, String userstate, String loginname,
                     String username) {
@@ -249,9 +253,6 @@ public class UserInfo implements IUserInfo, EntityWithTimestamp, java.io.Seriali
 			}
 
     
-    /**
-     * full constructor
-     */
     public UserInfo(String userCode, String userpin,String usertype, String userstate,
                     String loginname, String username, String userdesc,
                     String usertag, String englishname,
@@ -310,7 +311,7 @@ public class UserInfo implements IUserInfo, EntityWithTimestamp, java.io.Seriali
 	/**
      * T:生效 F:无效
      *
-     * @return
+     * @return  IsValid
      */
     public String getIsValid() {
         return this.isValid;
@@ -603,7 +604,7 @@ public class UserInfo implements IUserInfo, EntityWithTimestamp, java.io.Seriali
     }
     /**
      * 替换子类对象数组，这个函数主要是考虑hibernate中的对象的状态，以避免对象状态不一致的问题
-     * 
+     * @param userRoles Collection UserRole
      */
     public void replaceUserRoles(Collection<UserRole> userRoles) {
         //必须不稳null，如果为null 请直接调用删除
@@ -654,6 +655,7 @@ public class UserInfo implements IUserInfo, EntityWithTimestamp, java.io.Seriali
      /**
      * 替换子类对象数组，这个函数主要是考虑hibernate中的对象的状态，以避免对象状态不一致的问题
      * 
+     * @param userUnits Collection UserUnit
      */
     public void replaceUserUnits(Collection<UserUnit> userUnits) {
         if(userUnits==null)
