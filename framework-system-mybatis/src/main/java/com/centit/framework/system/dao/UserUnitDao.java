@@ -10,49 +10,49 @@ import com.centit.framework.system.po.UserUnit;
 @Repository
 public interface UserUnitDao{
  
-	public List<UserUnit> listObjects(Map<String, Object> filterMap);
+	 List<UserUnit> listObjects(Map<String, Object> filterMap);
 	
 	
-    public int  pageCount(Map<String, Object> filterDescMap);
-    public List<UserUnit>  pageQuery(Map<String, Object> pageQureyMap);
+     int  pageCount(Map<String, Object> filterDescMap);
+     List<UserUnit>  pageQuery(Map<String, Object> pageQureyMap);
 	
 	
-	public List<UserUnit> listObjectsAll();
+	 List<UserUnit> listObjectsAll();
 	
-	public UserUnit getObjectById(String userUnitId);
+	 UserUnit getObjectById(String userUnitId);
 	
-	public void saveNewObject(UserUnit object);
+	 void saveNewObject(UserUnit object);
 	
-	public void updateObject(UserUnit object);
+	 void updateObject(UserUnit object);
 	
-	public void deleteObjectById(String userUnitId);
+	 void deleteObjectById(String userUnitId);
 	
-	public void deleteObject(UserUnit object);
+	 void deleteObject(UserUnit object);
 	
 	//"FROM UserUnit where userCode=?", userId
-    public List<UserUnit> listUserUnitsByUserCode(String userId);
+     List<UserUnit> listUserUnitsByUserCode(String userId);
     
     //"FROM UserUnit where userCode=? and unitCode=?",new Object[]{userCode,unitCode});
     //参数 String userCode,String unitCode
-    public List<UserUnit> listObjectByUserUnit(Map map);
+     List<UserUnit> listObjectByUserUnit(Map map);
     
     // return "s"+ DatabaseOptUtils.getNextKeyBySequence(this, "S_USER_UNIT_ID", 9);
-    public Long getNextKey();
+     Long getNextKey();
     
     //"update UserUnit set isPrimary='F',lastModifyDate= ?  where userCode = ? and (unitCode <> ? or userStation <> ? or userRank <> ?) and isPrimary='T'",
-    public void deleteOtherPrimaryUnit(UserUnit object);
+     void deleteOtherPrimaryUnit(UserUnit object);
     
     // "delete UserUnit  where userCode = ? ",userCode
-    public void deleteUserUnitByUser(String userCode);
+     void deleteUserUnitByUser(String userCode);
 
     // "delete UserUnit  where unitCode = ? ",unitCode
-    public void deleteUserUnitByUnit(String unitCode);
+     void deleteUserUnitByUnit(String unitCode);
     
     //"FROM UserUnit where userCode=? and isPrimary='T'", userId
-    public UserUnit getPrimaryUnitByUserId(String userId);
+     UserUnit getPrimaryUnitByUserId(String userId);
     
     //"FROM UserUnit where unitCode=?", unitCode
-    public List<UserUnit> listUnitUsersByUnitCode(String unitCode);
+     List<UserUnit> listUnitUsersByUnitCode(String unitCode);
 
     /**
      * unitcode不为null就是某个处室的某个角色，为NULL就是所有处室的某个角色
@@ -71,17 +71,17 @@ public interface UserUnitDao{
                 ls = listObjectsAll("FROM UserUnit where userRank=? ",
                                 roleCode);
         }
-     * @param roleType
-     * @param roleCode
-     * @param unitCode
-     * @return
+     * @param roleType String
+     * @param roleCode String
+     * @param unitCode String
+     * @return List UserUnit
      * 分页
      */
-    public List<UserUnit> listUserUnitsByRoleAndUnitFilterPagination(String roleType,
+     List<UserUnit> listUserUnitsByRoleAndUnitFilterPagination(String roleType,
                                                    String roleCode, String unitCode);
     //"FROM UserUnit where unitCode=? "  hql.append("order by " + filterMap.get("ORDER_BY"));
     //分页
-//    public List<UserUnit> listUnitUsersByUnitCodeAndFilterPagination(String unitCode, PageDesc pageDesc,
+//     List<UserUnit> listUnitUsersByUnitCodeAndFilterPagination(String unitCode, PageDesc pageDesc,
 //            Map<String, Object> filterMap);
 
 
@@ -89,7 +89,7 @@ public interface UserUnitDao{
     /**
      * 批量添加或更新
      * super.saveObject(userunits.get(i));
-     * @param userunits
+     * @param userunits UserUnit
      */
-    public void mergeObject(UserUnit userunits); 
+     void mergeObject(UserUnit userunits); 
 }

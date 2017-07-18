@@ -50,10 +50,10 @@ public class UserSettingController extends BaseController {
     /**
      * 查询当前用户所有的用户参数设置信息
      *
-     * @param field
-     * @param pageDesc
-     * @param request
-     * @param response
+     * @param field field[]
+     * @param pageDesc pageDesc
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
@@ -96,8 +96,9 @@ public class UserSettingController extends BaseController {
     /**
      * 获取当前用户设置的参数
      *
-     * @param paramCode
-     * @param response
+     * @param paramCode paramCode
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{paramCode}", method = RequestMethod.GET)
     public void getUserSetting(@PathVariable String paramCode, HttpServletRequest request, HttpServletResponse response) {
@@ -117,7 +118,8 @@ public class UserSettingController extends BaseController {
      * @param paramCode     参数代码
      * @param userSetting   UserSetting
      * @param bindingResult BindingResult
-     * @param response      HttpServletResponse
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{paramCode}", method = {RequestMethod.POST, RequestMethod.PUT})
     public void editUserSetting(@PathVariable String paramCode, @Valid UserSetting userSetting, 
@@ -150,8 +152,9 @@ public class UserSettingController extends BaseController {
     /**
      * 删除当前用户设置参数
      *
-     * @param paramCode
-     * @param response
+     * @param paramCode paramCode
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{paramCode}", method = {RequestMethod.DELETE})
     public void deleteUserSetting(@PathVariable String paramCode, HttpServletRequest request,

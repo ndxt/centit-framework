@@ -61,7 +61,7 @@ public class RoleInfoController extends BaseController {
 
     /**
      * 查询所有系统角色
-     *
+     * @param field field[]
      * @param pageDesc PageDesc
      * @param request  HttpServletRequest
      * @param response HttpServletResponse
@@ -85,7 +85,8 @@ public class RoleInfoController extends BaseController {
 
     /**
      * 查询所有某部门部门角色
-     *
+     * @param field field[]
+     * @param unitCode unitCode
      * @param pageDesc PageDesc
      * @param request  HttpServletRequest
      * @param response HttpServletResponse
@@ -109,7 +110,7 @@ public class RoleInfoController extends BaseController {
     
     /**
      * 查询所有某部门部门角色
-     *
+     * @param field field[]
      * @param pageDesc PageDesc
      * @param request  HttpServletRequest
      * @param response HttpServletResponse
@@ -192,6 +193,7 @@ public class RoleInfoController extends BaseController {
      * 新增系统角色
      *
      * @param roleInfo RoleInfo
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/global", method = RequestMethod.POST)
@@ -274,9 +276,10 @@ public class RoleInfoController extends BaseController {
     
     /**
      * 将权限付给部门
-     * @param unitcode
-     * @param request
-     * @param response
+     * @param unitcode unitcode
+     * @param optCodes optCodes
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/unit/saveopts/{unitcode}",method = RequestMethod.POST)
     public void setUnitPowers(@PathVariable String unitcode,
@@ -321,6 +324,7 @@ public class RoleInfoController extends BaseController {
      * 从操作定义反向添加角色代码
      * @param roleCode 角色代码
      * @param optCode 操作定义
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/addopt/{roleCode}/{optCode}", method = RequestMethod.PUT)
@@ -357,6 +361,7 @@ public class RoleInfoController extends BaseController {
      * 从操作定义反向删除角色代码
      * @param roleCode 角色代码
      * @param optCode 操作定义
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/delopt/{roleCode}/{optCode}", method = RequestMethod.DELETE)
@@ -392,6 +397,7 @@ public class RoleInfoController extends BaseController {
      * @param roleCode 角色代码
      * @param roleInfo RoleInfo
      * @param optCodes 操作定义代码，用逗号连接
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{roleCode}", method = RequestMethod.PUT)
@@ -451,6 +457,7 @@ public class RoleInfoController extends BaseController {
      *
      * @param roleCode 角色代码
      * @param roleInfo rolePower roleCode dataScopes
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/power/{roleCode}", method = RequestMethod.PUT)
@@ -509,6 +516,7 @@ public class RoleInfoController extends BaseController {
     /**
      * 从操作定义反向删除角色代码
      * @param roleCode 角色代码
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{roleCode}", method = RequestMethod.DELETE)
@@ -564,7 +572,9 @@ public class RoleInfoController extends BaseController {
 
     /**
      * 对角色信息进行模糊搜索，适用于带搜索条件的下拉框。
+     * @param type type
      * @param field    需要搜索的字段，如为空，默认，roleCode,roleName
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/listRoles/{type}", method = RequestMethod.GET)

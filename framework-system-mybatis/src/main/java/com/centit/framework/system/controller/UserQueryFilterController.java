@@ -49,9 +49,9 @@ public class UserQueryFilterController  extends BaseController {
      * 查询所有   用户自定义过滤条件表  列表
      *
      * @param field    json中只保存需要的属性名
+     * @param pageDesc    pageDesc
      * @param request  {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
-     * @return {data:[]}
      */
     @RequestMapping(method = RequestMethod.GET)
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
@@ -77,8 +77,8 @@ public class UserQueryFilterController  extends BaseController {
     /**
      * 查找用户某个模块的所有过滤器
      * @param modelCode 按照模块列出用户所有的过滤器
-     * @param request
-     * @param response
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/list/{modelCode}", method = {RequestMethod.GET})
     public void listUserQueryFilter(@PathVariable String modelCode, HttpServletRequest request, HttpServletResponse response) {
@@ -93,10 +93,7 @@ public class UserQueryFilterController  extends BaseController {
      * 查询单个  用户自定义过滤条件表 
 	
 	 * @param filterNo  FILTER_NO
-     * @param catalogCode 主键
-     * 
      * @param response    {@link HttpServletResponse}
-     * @return {data:{}}
      */
     @RequestMapping(value = "/{filterNo}", method = {RequestMethod.GET})
     public void getUserQueryFilter(@PathVariable Long filterNo, HttpServletResponse response) {
@@ -111,6 +108,8 @@ public class UserQueryFilterController  extends BaseController {
      * 新增 用户自定义过滤条件表
      *
      * @param userQueryFilter  {@link UserQueryFilter}
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      * @return
      */
     @RequestMapping(method = {RequestMethod.POST})
@@ -131,8 +130,10 @@ public class UserQueryFilterController  extends BaseController {
     /**
     * 保存用户最新查看筛选器
     *
+    * @param modelCode  modelCode
     * @param userQueryFilter  {@link UserQueryFilter}
-    * @return
+    * @param request  {@link HttpServletRequest}
+    * @param response  {@link HttpServletResponse}
     */
    @RequestMapping(value = "/default/{modelCode}", method = {RequestMethod.POST,RequestMethod.PUT})
    public void createUserDefaultFilter(@PathVariable String modelCode,
@@ -152,8 +153,9 @@ public class UserQueryFilterController  extends BaseController {
    /**
     * 保存用户最新查看筛选器
     *
-    * @param userQueryFilter  {@link UserQueryFilter}
-    * @return
+    * @param modelCode  modelCode
+    * @param request  {@link HttpServletRequest}
+    * @param response  {@link HttpServletResponse}
     */
    @RequestMapping(value = "/default/{modelCode}", method = {RequestMethod.GET})
    public void getUserDefaultFilter(@PathVariable String modelCode,
@@ -169,6 +171,7 @@ public class UserQueryFilterController  extends BaseController {
      * 删除单个  用户自定义过滤条件表 
 	
 	 * @param filterNo  FILTER_NO
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{filterNo}", method = {RequestMethod.DELETE})
     public void deleteUserQueryFilter(@PathVariable Long filterNo, HttpServletResponse response) {

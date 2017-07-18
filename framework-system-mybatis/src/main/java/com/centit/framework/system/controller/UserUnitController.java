@@ -92,7 +92,8 @@ public class UserUnitController extends BaseController {
      * @param unitCode 机构代码
      *                 参数 s_isPaimary 是否为主机构，是T F否，为空不限定
      * @param pageDesc PageDesc
-     * @param response HttpServletResponse
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/unitusers/{unitCode}", method = RequestMethod.GET)
     public void listUsersByUnit(@PathVariable String unitCode, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
@@ -110,7 +111,8 @@ public class UserUnitController extends BaseController {
      * @param userCode 用户代码
      *                 参数 s_isPaimary 是否为主机构，是T F否，为空不限定
      * @param pageDesc PageDesc
-     * @param response HttpServletResponse
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/userunits/{userCode}", method = RequestMethod.GET)
     public void listUnitsByUser(@PathVariable String userCode, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
@@ -134,10 +136,7 @@ public class UserUnitController extends BaseController {
     /**
      * 返回一条用户机构关联信息
      *
-     * @param unitCode    机构代码
-     * @param userCode    用户代码
-     * @param userStation 岗位，数据字典 StationType
-     * @param userRank    职务，数据字典 RankType
+     * @param userunitid    userunitid
      * @param response    HttpServletResponse
      */
     @RequestMapping(value = "/{userunitid}", method = RequestMethod.GET)
@@ -157,8 +156,6 @@ public class UserUnitController extends BaseController {
      *
      * @param unitCode    机构代码
      * @param userCode    用户代码
-     * @param userStation 岗位，数据字典 StationType
-     * @param userRank    职务，数据字典 RankType
      * @param response    HttpServletResponse
      */
     @RequestMapping(value = "/{unitCode}/{userCode}", method = RequestMethod.GET)
@@ -177,7 +174,8 @@ public class UserUnitController extends BaseController {
      * 创建用户机构关联信息
      *
      * @param userUnit UserUnit
-     * @param response HttpServletResponse
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(method = RequestMethod.POST)
     public void create(@Valid UserUnit userUnit,HttpServletRequest request, HttpServletResponse response) {
@@ -195,12 +193,10 @@ public class UserUnitController extends BaseController {
     /**
      * 更新用户机构关联信息
      *
-     * @param unitCode       机构代码
-     * @param userCode       用户代码
+     * @param userunitid     userunitid
      * @param userUnit       UserUnit
-     * @param oldUserStation 原先的岗位
-     * @param oldUserRank    原先的职务
-     * @param response       HttpServletResponse
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{userunitid}", method = RequestMethod.PUT)
     public void edit(@PathVariable String userunitid, @Valid UserUnit userUnit,
@@ -228,11 +224,9 @@ public class UserUnitController extends BaseController {
     /**
      * 删除用户机构关联信息
      *
-     * @param unitCode    机构代码
-     * @param userCode    用户代码
-     * @param userStation 岗位，数据字典 StationType
-     * @param userRank    职务，数据字典 RankType
-     * @param response    HttpServletResponse
+     * @param userunitid  userunitid
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{userunitid}", method = RequestMethod.DELETE)
     public void delete(@PathVariable String userunitid,

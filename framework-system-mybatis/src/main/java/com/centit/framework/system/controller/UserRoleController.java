@@ -54,7 +54,8 @@ public class UserRoleController extends BaseController {
      *
      * @param roleCode 角色代码
      * @param pageDesc PageDesc
-     * @param response HttpServletResponse
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/roleusers/{roleCode}", method = RequestMethod.GET)
     public void listUsersByRole(@PathVariable String roleCode, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
@@ -68,7 +69,8 @@ public class UserRoleController extends BaseController {
      *
      * @param userCode 用户代码
      * @param pageDesc PageDesc
-     * @param response HttpServletResponse
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/userroles/{userCode}", method = RequestMethod.GET)
     public void listRolesByUser(@PathVariable String userCode, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
@@ -112,7 +114,6 @@ public class UserRoleController extends BaseController {
      * 返回一条用户角色关联信息
      * @param roleCode 角色代码
      * @param userCode 用户代码
-     * @param obtainDate 获取时间
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{roleCode}/{userCode}", method = RequestMethod.GET)
@@ -137,7 +138,9 @@ public class UserRoleController extends BaseController {
     /**
      * 创建用户角色关联信息
      * @param userRole UserRole
-     * @param response HttpServletResponse
+     * @param userCode  userCode
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(method = RequestMethod.POST)
     public void create(@Valid UserRole userRole,@Valid String[] userCode, HttpServletRequest request, HttpServletResponse response) {
@@ -166,8 +169,8 @@ public class UserRoleController extends BaseController {
      * @param roleCode 角色代码
      * @param userCode 用户代码
      * @param userRole UserRole
-     * @param obtainDate 获取时间
-     * @param response HttpServletResponse
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{roleCode}/{userCode}", method = RequestMethod.PUT)
     public void edit(@PathVariable String roleCode, @PathVariable String userCode, @Valid UserRole userRole,
@@ -196,8 +199,8 @@ public class UserRoleController extends BaseController {
      * 删除用户角色关联信息
      * @param roleCode 角色代码
      * @param userCode 用户代码
-     * @param obtainDate 获取时间
-     * @param response HttpServletResponse
+     * @param request  {@link HttpServletRequest}
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{roleCode}/{userCode}", method = RequestMethod.DELETE)
     public void delete(@PathVariable String roleCode, @PathVariable String userCode,
@@ -217,8 +220,7 @@ public class UserRoleController extends BaseController {
      * 删除用户角色关联信息
      * @param roleCode 角色代码
      * @param userCode 用户代码
-     * @param obtainDate 获取时间
-     * @param response HttpServletResponse
+     * @param response  {@link HttpServletResponse}
      */
     @RequestMapping(value = "/ban/{roleCode}/{userCode}", method = RequestMethod.PUT)
     public void ban(@PathVariable String roleCode, @PathVariable String userCode,

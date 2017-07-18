@@ -35,8 +35,8 @@ public interface UserInfoDao{
      * 			" AND userCode <> " + QueryUtils.buildStringForQuery(user.getUserCode());
      * 
      *  放到impl中去了
-     * @param map
-     * @return
+     * @param map map
+     * @return int
      */
     //boolean checkIfUserExists(UserInfo user);
     

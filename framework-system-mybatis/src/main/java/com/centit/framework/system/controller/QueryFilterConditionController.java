@@ -45,9 +45,9 @@ public class QueryFilterConditionController  extends BaseController {
      * 查询所有   系统内置查询方式  列表
      *
      * @param field    json中只保存需要的属性名
+     * @param pageDesc    pageDesc
      * @param request  {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
-     * @return {data:[]}
      */
     @RequestMapping(method = RequestMethod.GET)
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
@@ -71,10 +71,7 @@ public class QueryFilterConditionController  extends BaseController {
      * 查询单个  系统内置查询方式 
 	
 	 * @param conditionNo  CONDITION_NO
-     * @param catalogCode 主键
-     * 
-     * @param response    {@link HttpServletResponse}
-     * @return {data:{}}
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{conditionNo}", method = {RequestMethod.GET})
     public void getQueryFilterCondition(@PathVariable Long conditionNo, HttpServletResponse response) {
@@ -89,7 +86,7 @@ public class QueryFilterConditionController  extends BaseController {
      * 新增 系统内置查询方式
      *
      * @param queryFilterCondition  {@link QueryFilterCondition}
-     * @return
+     * @param response HttpServletResponse
      */
     @RequestMapping(method = {RequestMethod.POST})
     public void createQueryFilterCondition(@Valid QueryFilterCondition queryFilterCondition, HttpServletResponse response) {
@@ -101,6 +98,7 @@ public class QueryFilterConditionController  extends BaseController {
      * 删除单个  系统内置查询方式 
 	
 	 * @param conditionNo  CONDITION_NO
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{conditionNo}", method = {RequestMethod.DELETE})
     public void deleteQueryFilterCondition(@PathVariable Long conditionNo, HttpServletResponse response) {

@@ -69,6 +69,8 @@ public class UnitInfoController extends BaseController {
      * 查询所有机构信息
      *
      * @param field    需要显示的字段
+     * @param struct    boolean
+     * @param id    id
      * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
@@ -133,6 +135,7 @@ public class UnitInfoController extends BaseController {
      * 查询所有子机构信息
      *
      * @param field    需要显示的字段
+     * @param struct    boolean
      * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
@@ -190,8 +193,9 @@ public class UnitInfoController extends BaseController {
     /**
      * 删除机构
      *
-     * @param unitCode
-     * @param response
+     * @param unitCode unitCode
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{unitCode}", method = {RequestMethod.DELETE})
     public void delete(@PathVariable String unitCode,HttpServletRequest request, HttpServletResponse response) {
@@ -215,6 +219,7 @@ public class UnitInfoController extends BaseController {
      * 新建机构
      *
      * @param unitInfo UnitInfo
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(method = RequestMethod.POST)
@@ -238,6 +243,7 @@ public class UnitInfoController extends BaseController {
      *
      * @param unitCode 机构代码
      * @param unitInfo UnitInfo
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{unitCode}", method = RequestMethod.PUT)
@@ -270,6 +276,7 @@ public class UnitInfoController extends BaseController {
      *
      * @param unitCode    机构代码
      * @param statusValue 状态码 T 或 F
+     * @param request HttpServletRequest
      * @param response    HttpServletResponse
      */
     @RequestMapping(value = "/{unitCode}/status/{statusValue}", method = RequestMethod.PUT)
@@ -336,6 +343,7 @@ public class UnitInfoController extends BaseController {
      * @param field    UserInfo需要显示的字段
      * @param unitCode 机构代码
      * @param primary  是否为主机构，可为空
+     * @param pageDesc pageDesc
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{unitCode}/users", method = RequestMethod.GET)
@@ -361,7 +369,8 @@ public class UnitInfoController extends BaseController {
 
     /**
      * 当前机构下用户
-     *
+     * @param userunitid userunitid
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/unitusers/{userunitid}", method = RequestMethod.GET)
     public void getUnitUser(@PathVariable String userunitid,  HttpServletResponse response) {

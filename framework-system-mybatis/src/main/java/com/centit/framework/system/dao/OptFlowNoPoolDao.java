@@ -10,17 +10,17 @@ import com.centit.framework.system.po.OptFlowNoPoolId;
 
 @Repository
 public interface OptFlowNoPoolDao {
-	public OptFlowNoPool getObjectById(OptFlowNoPoolId cid);
+	 OptFlowNoPool getObjectById(OptFlowNoPoolId cid);
 	
-	public void deleteObject(OptFlowNoPool optFlowNoPool);
+	 void deleteObject(OptFlowNoPool optFlowNoPool);
 	
-	public void deleteObjectById(OptFlowNoPoolId cid);
+	 void deleteObjectById(OptFlowNoPoolId cid);
 	
-	public void saveObject(OptFlowNoPool optMethod);
+	 void saveObject(OptFlowNoPool optMethod);
 	
 	
-    public int  pageCount(Map<String, Object> filterDescMap);
-    public List<OptFlowNoPool>  pageQuery(Map<String, Object> pageQureyMap);
+     int  pageCount(Map<String, Object> filterDescMap);
+     List<OptFlowNoPool>  pageQuery(Map<String, Object> pageQureyMap);
 	
 	
     /**
@@ -30,10 +30,8 @@ public interface OptFlowNoPoolDao {
                 " and CodeDate = to_date(" + QueryUtils.buildStringForQuery(
                 DatetimeOpt.convertDatetimeToString(codeBaseDate))
                 + ",'YYYY-MM-DD HH:MI:SS')");
-     * @param ownerCode
-     * @param codeCode
-     * @param codeBaseDate
-     * @return
+     * @param map
+     * @return long
      */
-    public long fetchFirstLsh(Map map);
+     long fetchFirstLsh(Map map);
 }

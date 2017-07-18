@@ -123,6 +123,7 @@ public class InnerMsgRecipientController extends BaseController {
     
     /**
      * 是否有发公告权限
+     * @param msgCode   msgCode
      * @param response   HttpServletResponse
      */
     @RequestMapping(value = "/{msgCode}", method = { RequestMethod.GET })
@@ -154,10 +155,11 @@ public class InnerMsgRecipientController extends BaseController {
 
     /**
      * 按部门发公告，会匹配该部门以及所有子部门的用户，群发消息
-     * @param msg
-     * @param request
-     * @param response
-     * @throws Exception 
+     * @param unitCode unitCode
+     * @param innerMsg InnerMsg
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws Exception  Exception
      */
     @RequestMapping(value = "/notify/{unitCode}", method = { RequestMethod.POST })
     public void noticeByUnit(@PathVariable String unitCode,@Valid InnerMsg innerMsg,HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -176,8 +178,9 @@ public class InnerMsgRecipientController extends BaseController {
     
     /**
      * 发送或群发消息，recipient必须包含mInnerMsg对象属性，recipient.receive传入是由userCode拼接成的字符串，以逗号隔开
-     * @param recipient
-     * @param response
+     * @param recipient InnerMsgRecipient
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/sendMsg", method = { RequestMethod.POST })
     public void sendMsg(@Valid InnerMsgRecipient recipient,HttpServletRequest request,
@@ -255,6 +258,7 @@ public class InnerMsgRecipientController extends BaseController {
     /**
      * 删除接受者信息,并没有删除该条记录，而是把msgState字段标记为D
      * @param id 接受者信息编号
+     * @param request  HttpServletRequest
      * @param response  HttpServletResponse
      */
     @RequestMapping(value = "/recipient/{id}", method = { RequestMethod.DELETE })
@@ -275,6 +279,7 @@ public class InnerMsgRecipientController extends BaseController {
      * 往来消息列表
      * @param sender 用户1
      * @param receiver 用户2
+     * @param response  HttpServletResponse
      */
     @RequestMapping(value = "/{sender}/{receiver}", method = { RequestMethod.GET })
     public void getMsgExchanges(@PathVariable String sender,
