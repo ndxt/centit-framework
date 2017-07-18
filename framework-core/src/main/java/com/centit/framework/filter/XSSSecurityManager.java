@@ -16,8 +16,7 @@ import org.dom4j.io.SAXReader;
 
 /**
  * @author hx
- * @date 
- * @describe 安全过滤配置管理类，由XSSSecurityManger修改
+ * 安全过滤配置管理类，由XSSSecurityManger修改
  */
 public class XSSSecurityManager {
 	
@@ -47,8 +46,8 @@ public class XSSSecurityManager {
      * 读取安全审核配置文件xss_security_config.xml
      * 设置XSSSecurityConfig配置信息
      * @param path 配置文件地址 eg C:/apache-tomcat-6.0.33/webapps/security_filter/WebRoot/config/xss/xss_security_config.xml
-     * @return 
-     * @throws DocumentException
+     * @return initConfig
+     * @throws DocumentException DocumentException
      */
 	@SuppressWarnings("unchecked")
 	public static boolean initConfig(String path) throws DocumentException {
@@ -108,8 +107,8 @@ public class XSSSecurityManager {
 	
     /**
      * 对非法字符进行替换
-     * @param text
-     * @return
+     * @param text String
+     * @return 对非法字符进行替换
      */
     public static String securityReplace(String text){
     	if(isNullStr(text)){
@@ -122,8 +121,8 @@ public class XSSSecurityManager {
     
     /**
      * 匹配字符是否含特殊字符
-     * @param text
-     * @return
+     * @param text String
+     * @return 匹配字符是否含特殊字符
      */
     public static boolean matches(String text){
     	if(text==null){
@@ -145,8 +144,8 @@ public class XSSSecurityManager {
     
     /**
      * 判断是否为空串，建议放到某个工具类中
-     * @param value
-     * @return
+     * @param value 匹配字符是否含特殊字符
+     * @return 判断是否为空串
      */
     public static boolean isNullStr(String value){
     	return value == null || value.trim().equals("");

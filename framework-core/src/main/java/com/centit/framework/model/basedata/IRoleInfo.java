@@ -9,23 +9,23 @@ import java.util.List;
 public interface IRoleInfo{
 	/**
 	 * 角色代码
-	 * @return
+	 * @return 角色代码
 	 */
-	public String getRoleCode();
+	 String getRoleCode();
 	/**
 	 * 角色名称
-	 * @return
+	 * @return 角色名称
 	 */
-	public String getRoleName();
+	 String getRoleName();
 	
 	/**
 	 * 是否有效 T有效 F无效
-	 * @return
+	 * @return 是否有效 T有效 F无效
 	 */
-	public String getIsValid();
+	 String getIsValid();
 	/**
 	 * 角色所有操作权限
-	 * @return
+	 * @return 角色所有操作权限
 	 */
-	public List<? extends IRolePower> getRolePowers();
+	 List<? extends IRolePower> getRolePowers();
 }

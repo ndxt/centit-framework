@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * 将HttpServletRequest请求与本地线程绑定，方便在非Controller层获取HttpServletRequest实例
  *
  * @author sx
- * @create 2014-10-14
+ * 2014-10-14
  */
 public class RequestThreadLocalFilter implements Filter {
 

@@ -50,8 +50,9 @@ public class ValidatorUtils {
     
     /**
      * 调用Hibernate注解进行验证
-     * @param po
-     * @return
+     * @param <Po> 持久对象
+     * @param po 持久对象
+     * @return Map 错误信息
      */
     public static <Po>  Map<String,String> validatorEntityPo(Po po) {    	
         Validator validator = getDefaultValidator(); 

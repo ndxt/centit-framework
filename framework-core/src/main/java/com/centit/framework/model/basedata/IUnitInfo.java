@@ -10,62 +10,62 @@ import java.util.List;
 public interface IUnitInfo{
 	/**
 	 * 机构代码 是机构的主键
-	 * @return
+	 * @return 机构代码 是机构的主键
 	 */
-	public String getUnitCode();
+	 String getUnitCode();
 	
 	
 	/**
 	 * 机构自编代码
-	 * @return
+	 * @return 机构自编代码
 	 */
-	public String getDepNo();
+	 String getDepNo();
 	
 	/**
 	 * 机构名称
-	 * @return
+	 * @return 机构名称
 	 */
-	public String getUnitName();
+	 String getUnitName();
 	/**
 	 * 上级机构代码
-	 * @return
+	 * @return 上级机构代码
 	 */
-	public String getParentUnit();
+	 String getParentUnit();
 	/**
 	 * 机构类别 
-	 * @return
+	 * @return 机构类别
 	 */
-	public String getUnitType();
+	 String getUnitType();
 	/**
 	 * 机构是否有效 T/F/A  T 正常 ， F 禁用,A为新建可以删除
-	 * @return
+	 * @return 机构是否有效 T/F/A  T 正常 ， F 禁用,A为新建可以删除
 	 */
-	public String getIsValid();
+	 String getIsValid();
 	/**
 	 * 机构路径
-	 * @return
+	 * @return 机构路径
 	 */
-	public String getUnitPath();
+	 String getUnitPath();
 	/**
 	 * 机构排序
-	 * @return
+	 * @return 机构排序
 	 */
-	public Long getUnitOrder();
+	 Long getUnitOrder();
 	
 	/**
 	 * 分管领导（机构管理员）
-	 * @return
+	 * @return 分管领导（机构管理员）
 	 */
-	public String getUnitManager();
+	 String getUnitManager();
 	/**
 	 * 获取下级机构
-	 * @return
+	 * @return 获取下级机构
 	 */
-	public List<? extends IUnitInfo> getSubUnits();
+	 List<? extends IUnitInfo> getSubUnits();
 	
 	/**
 	 * 获取机构用户下属用户关系
-	 * @return
+	 * @return 获取机构用户下属用户关系
 	 */
-	public List<? extends IUserUnit> getUnitUsers();
+	 List<? extends IUserUnit> getUnitUsers();
 }

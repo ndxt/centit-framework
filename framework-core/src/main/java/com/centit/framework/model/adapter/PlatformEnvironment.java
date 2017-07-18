@@ -10,104 +10,109 @@ public interface PlatformEnvironment {
 
 	/**
 	 * 刷新数据字典
-	 * @return
+	 * @return 是否刷新
 	 */
 	boolean reloadDictionary();
 	/**
 	 * 刷新权限相关的元数据 
-	 * @return
+	 * @return 是否刷新
 	 */
 	boolean reloadSecurityMetadata();	
 	/**
 	 * 获取系统配置参数
-	 * @param paramCode
-	 * @return
+	 * @param paramCode paramCode
+	 * @return  系统配置参数
 	 */
 	String getSystemParameter(String paramCode);
 	/**
 	 * 获得用户设置参数
-	 * @param userCode
-	 * @param paramCode
-	 * @return
+	 * @param userCode userCode
+	 * @param paramCode paramCode
+	 * @return 用户设置参数
 	 */
 	String getUserSetting(String userCode,String paramCode);
 	
 	/**
 	 * 获取用户所有菜单功能
-	 * @param userCode
+	 * @param userCode userCode
 	 * @param asAdmin 是否是作为管理员
-	 * @return
+	 * @return  List 用户所有菜单功能
 	 */
 	List<? extends IOptInfo> listUserMenuOptInfos(String userCode,boolean asAdmin);
 	
 	/**
 	 * 获取用户所有菜单功能
-	 * @param userCode
+	 * @param userCode userCode
+	 * @param superOptId superOptId
 	 * @param asAdmin 是否是作为管理员
-	 * @return
+	 * @return List 用户所有菜单功能
 	 */
 	List<? extends IOptInfo> listUserMenuOptInfosUnderSuperOptId(
 			String userCode,String superOptId,boolean asAdmin);
 	
 	/**
 	 * 根据用户代码获取用户信息，
-	 * @return
+	 * @param userCode userCode
+	 * @return 用户信息
 	 */
 	IUserInfo getUserInfoByUserCode(String userCode);
 	
 	/**
 	 * 根据登录名获取用户信息，
-	 * @return
+	 * @param  loginName loginName
+	 * @return 登录名获取用户信息
 	 */
 	IUserInfo getUserInfoByLoginName(String loginName);
 
 	/**
 	 * 根据用户代码获取用户信息，
-	 * @return
+	 * @param unitCode unitCode
+	 * @return 用户信息
 	 */
 	IUnitInfo getUnitInfoByUnitCode(String unitCode);
 	/**
 	 * 修改用户密码
-	 * @param userCode
-	 * @param userPassword
+	 * @param userCode userCode
+	 * @param userPassword userPassword
 	 */
 	void changeUserPassword(String userCode,String userPassword);
 	
 	/**
 	 * 验证用户密码
-	 * @param userCode
-	 * @param userPassword
+	 * @param userCode userCode
+	 * @param userPassword userPassword
+	 * @return 验证结果
 	 */
 	boolean checkUserPassword(String userCode,String userPassword);
 	/**
 	 * 获取所有用户，
-	 * @return
+	 * @return List 所有用户
 	 */
 	List<? extends IUserInfo> listAllUsers();
 	
 	/**
 	 * 获取所有机构 
-	 * @return
+	 * @return List 所有机构
 	 */
 	List<? extends IUnitInfo> listAllUnits();
 	
 	/**
 	 * 获取所有用户和机构关联关系
-	 * @return
+	 * @return List 所有用户和机构关联关系
 	 */
 	List<? extends IUserUnit> listAllUserUnits();
 	
 	/**
 	 * 根据用户代码获得 用户所有的机构信息
-	 * @param userCode
-	 * @return
+	 * @param userCode userCode
+	 * @return List 用户所有的机构信息
 	 */
 	List<? extends IUserUnit> listUserUnits(String userCode);
 	
     /**
      * 根据机构代码获得 机构所有用户信息
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return  List 机构所有用户信息
      */
     List<? extends IUserUnit> listUnitUsers(String unitCode);
     /*---------------------------------------------------------------
@@ -115,82 +120,83 @@ public interface PlatformEnvironment {
 	--------------------------------------------------------------*/
     /**
      * 获取机构代码映射表
-     * @return
+     * @return Map 机构代码映射表
      */
     Map<String, ? extends IUnitInfo> getUnitRepo();
     
     /**
      * 获取部门编码映射表
-     * @return
+     * @return map 部门编码映射表
      */
     Map<String, ? extends IUserInfo> getUserRepo();
     
     /**
      * 获取机构代码映射表
-     * @return
+     * @return Map 机构代码映射表
      */
     Map<String, ? extends IUserInfo> getLoginNameRepo();
     
     /**
      * 获取部门编码映射表
-     * @return
+     * @return Map 部门编码映射表
      */
     Map<String, ? extends IUnitInfo> getDepNoRepo();
 	/**
 	 * 获取所有角色信息
-	 * @return
+	 * @return Map 所有角色信息
 	 */
 	 Map<String, ? extends IRoleInfo> getRoleRepo();
 	
 
 	/**
 	 * 获取业务信息
-	 * @return
+	 * @return Map 业务信息
 	 */
 	Map<String, ? extends IOptInfo> getOptInfoRepo();
 	
 	/**
 	 * 获取操作方法信息
-	 * @return
+	 * @return Map 操作方法信息
 	 */
 	Map<String, ? extends IOptMethod> getOptMethodRepo();
 	
 	/**
 	 * 获取所有数据字典类别信息
-	 * @return
+	 * @return List 所有数据字典类别信息
 	 */
 	List<? extends IDataCatalog> listAllDataCatalogs();
 	
 	
 	/**
 	 * 获取所有数据字典类别信息
-	 * @return
+	 * @param catalogCode catalogCode
+	 * @return List 所有数据字典类别信息
 	 */
 	List<? extends IDataDictionary> listDataDictionaries(String catalogCode);
 	
 	
 	/**
 	 * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
-	 * @param loginName
-	 * @return
+	 * @param loginName loginName
+	 * @return 用户基本信息，用户机构信息，用户权限信息等等
 	 */
 	CentitUserDetails loadUserDetailsByLoginName(String loginName);
 	/**
 	 * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
-	 * @param userCode
-	 * @return
+	 * @param userCode userCode
+	 * @return 用户基本信息，用户机构信息，用户权限信息等等
 	 */
 	CentitUserDetails loadUserDetailsByUserCode(String userCode);
 	/**
 	 * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
-	 * @param regEmail
-	 * @return
+	 * @param regEmail regEmail
+	 * @return 用户基本信息，用户机构信息，用户权限信息等等
 	 */
 	CentitUserDetails loadUserDetailsByRegEmail(String regEmail);
 	/**
 	 * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
-	 * @param regCellPhone
-	 * @return
+	 * @param regCellPhone regCellPhone
+	 * @return 用户基本信息，用户机构信息，用户权限信息等等
 	 */
 	CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone);
 }

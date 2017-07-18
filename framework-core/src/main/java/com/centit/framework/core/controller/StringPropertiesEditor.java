@@ -4,7 +4,7 @@ import org.springframework.beans.propertyeditors.PropertiesEditor;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 /**
- * 调用htmlEscape 转换属性中的  > < " ' 等等html 标签 防止XSS攻击
+ * 调用htmlEscape 转换属性中的  &lt;&gt;" ;' 等等html 标签 防止XSS攻击
  * @author codefan
  *
  */

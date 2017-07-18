@@ -18,8 +18,7 @@ import org.springframework.security.web.FilterInvocation;
  * 这个过滤器仅对请求的IP进行过滤，对符合条件的IP的所有请求放行
  * 
  * @author codefan
- * @create 2015年11月30日
- * @version
+ * 2015年11月30日
  */
 //@Component("hostIpFilterDecisionManagerBean")
 public class HostIpFilterDecisionManager implements AccessDecisionManager {

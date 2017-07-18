@@ -23,7 +23,6 @@ import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
  * @author codefan@sina.com 代码全部重写
  * @version fastjson文档地址：https://github.com/alibaba/fastjson/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98
  *          fastJson,jackJson,Gson性能比较 http://chenyanxi.blog.51cto.com/4599355/1543445
- * @create 2014-9-16
  */
 public class JsonResultUtils {
 
@@ -214,7 +213,10 @@ public class JsonResultUtils {
 		.sis	application/vnd.symbian.install	.sisx	application/vnd.symbian.install
 		.x_t	application/x-x_t		.ipa	application/vnd.iphone
 		.apk	application/vnd.android.package-archive	.xap	application/x-silverlight-app
-     * @param response
+     *  @param <T> 类型通配符
+	 *  @param contentType String 类型类别
+	 *  @param objValue T
+	 *  @param response HttpServletResponse
      */
     public static <T> void writeOriginalResponse(String contentType, T objValue,
     		HttpServletResponse response) {
@@ -235,8 +237,8 @@ public class JsonResultUtils {
 
     /**
      * 格式化Json数据输出
-     *
-     * @param response
+     *@param json JSON格式
+     * @param response HttpServletResponse
      */
     public static void writeOriginalJson(JSON json, HttpServletResponse response) {
     	writeOriginalResponse("application/json; charset=utf-8",
@@ -245,8 +247,8 @@ public class JsonResultUtils {
     
     /**
      * 格式化Json数据输出
-     *
-     * @param response
+     *@param jsonValue String类型
+     * @param response HttpServletResponse
      */
     public static void writeOriginalJson(String jsonValue, HttpServletResponse response) {
     	writeOriginalResponse("application/json; charset=utf-8",
@@ -255,8 +257,9 @@ public class JsonResultUtils {
     
     /**
      * 直接文本数据输出
-     *
-     * @param response
+     * @param <T> 类型通配符
+	 * @param objValue T
+     * @param response HttpServletResponse
      */
     public static <T> void writeOriginalObject(T objValue, HttpServletResponse response) {
     	writeOriginalResponse("text/plain; charset=utf-8",
@@ -266,8 +269,9 @@ public class JsonResultUtils {
     
     /**
      * 直接文本数据输出
-     *
-     * @param response
+     * @param <T> 类型通配符
+	 * @param objValue T
+     * @param response HttpServletResponse
      */
     public static <T> void writeOriginalHtml(T objValue, HttpServletResponse response) {
     	writeOriginalResponse("text/html; charset=utf-8",
@@ -275,8 +279,8 @@ public class JsonResultUtils {
     }
     /**
      * javascript脚本输出
-     *
-     * @param response
+     * @param scriptValue javascript脚本 String类型
+     * @param response HttpServletResponse
      */
     public static void writeJavaScript(String scriptValue, HttpServletResponse response) {
        	writeOriginalResponse("application/javascript; charset=utf-8",
@@ -284,8 +288,11 @@ public class JsonResultUtils {
      }
     /**
      * 格式化Json数据输出
-     *
-     * @param response
+     * @param code 返回码
+	 * @param message 返回提示信息
+	 * @param objValue 返回数据对象
+     * @param response HttpServletResponse
+	 * @param simplePropertyPreFilter PropertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
      */
     public static void writeSingleDataJson(int code,String message, Object objValue, HttpServletResponse response,
                                            PropertyPreFilter simplePropertyPreFilter) {      
@@ -304,8 +311,8 @@ public class JsonResultUtils {
    
     /**
      * 格式化Json数据输出
-     *
-     * @param response
+     * @param resData ResponseData
+     * @param response HttpServletResponse
      * @param propertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
      */
     public static void writeResponseDataAsJson(ResponseData resData, HttpServletResponse response,
@@ -316,8 +323,8 @@ public class JsonResultUtils {
     
     /**
      * 格式化Json数据输出
-     *
-     * @param response
+     * @param resData ResponseData http响应信息
+     * @param response HttpServletResponse
      */
     public static void writeResponseDataAsJson(ResponseData resData, HttpServletResponse response) {
         writeSingleDataJson(resData.getCode(),resData.getMessage(),
@@ -327,8 +334,9 @@ public class JsonResultUtils {
     
     /**
      * 格式化Json数据输出
-     * 请使用 writeResponseDataAsJson 
-     * @param response
+     * 请使用 writeResponseDataAsJson
+	 * @param resData ResponseData http响应信息
+     * @param response HttpServletResponse
      * @param propertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
      */
     @Deprecated
@@ -340,8 +348,9 @@ public class JsonResultUtils {
     
     /**
      * 格式化Json数据输出
-     * 请使用 writeResponseDataAsJson 
-     * @param response
+     * 请使用 writeResponseDataAsJson
+	 * @param resData ResponseData http响应信息
+     * @param response HttpServletResponse
      */
     @Deprecated
     public static void writeMapDataJson(ResponseData resData, HttpServletResponse response) {
@@ -352,8 +361,9 @@ public class JsonResultUtils {
     
     /**
      * Ajax 请求失败，http的状态码设置为 code
-     *
-     * @param response
+     * @param errorCode  错误返回码
+	 * @param errorMessage 错误返回信息
+	 * @param response HttpServletResponse
      */
     public static void writeAjaxErrorMessage(int errorCode, String errorMessage, HttpServletResponse response) {
         try {
@@ -367,8 +377,9 @@ public class JsonResultUtils {
     }
     /**
      * 格式化Json数据输出 , 输出 业务提示的错误信息，http的状态仍然是 200 OK
-     *
-     * @param response
+	 * @param errorCode  错误返回码
+	 * @param errorMessage 错误返回信息
+     * @param response HttpServletResponse
      */
     public static void writeErrorMessageJson(int errorCode, String errorMessage, HttpServletResponse response) {
         writeSingleDataJson(errorCode,errorMessage, 
@@ -377,8 +388,9 @@ public class JsonResultUtils {
 
     /**
      * 格式化Json数据输出 , 输出 业务提示的错误信息，http的状态仍然是 200 OK
-     *
-     * @param response
+	 * @param errorCode  错误返回码
+	 * @param errorMessage 错误返回信息
+     * @param response HttpServletResponse
      */
     public static void writeCodeAndMessageJson(int errorCode, String errorMessage, HttpServletResponse response) {
         writeSingleDataJson(errorCode,errorMessage, 
@@ -387,8 +399,8 @@ public class JsonResultUtils {
  
     /**
      * 格式化Json数据输出
-     *
-     * @param response
+     * @param message String
+     * @param response HttpServletResponse
      */
     public static void writeMessageJson(String message, HttpServletResponse response) {
         writeSingleDataJson(0,message, 
@@ -397,8 +409,9 @@ public class JsonResultUtils {
     
     /**
      * 格式化Json数据输出
-     *
-     * @param response
+	 * @param message String
+	 * @param objValue Object
+	 * @param response HttpServletResponse
      */
     public static void writeMessageAndData(String message, Object objValue,
     		HttpServletResponse response) {
@@ -407,8 +420,8 @@ public class JsonResultUtils {
     }
     /**
      * 格式化Json数据输出
-     *
-     * @param response
+     * @param errorMessage 错误信息
+     * @param response HttpServletResponse
      */
     public static void writeErrorMessageJson(String errorMessage, HttpServletResponse response) {
         writeSingleDataJson(500,errorMessage, 
@@ -418,23 +431,28 @@ public class JsonResultUtils {
     /**
      * 格式化Json数据输出
      *
-     * @param response
+     * @param response HttpServletResponse
      */
     public static void writeBlankJson(HttpServletResponse response) {
         writeSingleDataJson(0,"OK", 
                 null, response, null);
     }
 
-    
 
+	/**
+	 *
+	 * @param objValue Object
+	 * @param response HttpServletResponse
+	 * @param simplePropertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
+	 */
     public static void writeSingleDataJson(Object objValue, HttpServletResponse response,
             PropertyPreFilter simplePropertyPreFilter) {
         writeSingleDataJson(0,"OK",objValue,response,simplePropertyPreFilter);
     }
     /**
      * 格式化Json数据输出
-     *
-     * @param response
+     * @param objValue Object
+     * @param response HttpServletResponse
      */
     public static void writeSingleDataJson(Object objValue, HttpServletResponse response) {
         writeSingleDataJson(0,"OK",objValue, response, null);
@@ -442,8 +460,10 @@ public class JsonResultUtils {
 
     /**
      * 格式化Json数据输出
-     *
-     * @param response
+	 * @param errorCode  错误返回码
+	 * @param errorMessage 错误返回信息
+	 * @param objValue Object
+	 * @param response HttpServletResponse
      */
     public static void writeSingleErrorDataJson(int errorCode, String errorMessage,  Object objValue,
                                                 HttpServletResponse response) {
@@ -453,12 +473,12 @@ public class JsonResultUtils {
     /**
      * 格式化Json数据输出
      *
-     * @param response
+     * @param response HttpServletResponse
      */
     public static void writeSuccessJson(HttpServletResponse response) {
         writeBlankJson(response);
     }
-    
+
     public static <T> T getDataAsObject(String jsonResult,String key, Class<T> clazz) {
         JSONObject jobj = JSON.parseObject(jsonResult);
         JSONObject dataObj = (JSONObject)jobj.get("data");

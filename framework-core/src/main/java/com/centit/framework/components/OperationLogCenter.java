@@ -30,6 +30,7 @@ public class OperationLogCenter {
     
     /**
      * 设置默认的写入器，如果用户调用  registerOperationLogWriter 则不执行
+     * @param optLogWriter optLogWriter
      */
     public static void initOperationLogWriter(OperationLogWriter optLogWriter){ 
         if(logWriter == null)
@@ -38,7 +39,7 @@ public class OperationLogCenter {
     
     /**
      * 个用户设置自己的日志写入器
-     * @param optLogWriter
+     * @param optLogWriter optLogWriter
      */
     public static void registerOperationLogWriter(OperationLogWriter optLogWriter){        
         logWriter = optLogWriter;
@@ -88,7 +89,7 @@ public class OperationLogCenter {
     * @param loglevel 操作日志还是错误提示
     * @param userCode 操作人员
     * @param optId    业务代码（类别）
-    * @param optTag   对象主键，如果是联合主键请用url的方式编写，比如a=1&b=2
+    * @param optTag   对象主键，如果是联合主键请用url的方式编写，比如a=1;b=2
     * @param optMethod 操作方法
     * @param optContent 操作内容描述
     * @param newValue 新增json(或者操作参数明细，比如查询操作可以记录查询参数)

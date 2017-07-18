@@ -8,32 +8,32 @@ package com.centit.framework.model.basedata;
 public interface IUserUnit{
 	/**
 	 * 关联关系主键
-	 * @return
+	 * @return 关联关系主键
 	 */
-	public String getUserUnitId();
+	 String getUserUnitId();
 	/**
 	 * 用户编码，是用户的主键
-	 * @return
+	 * @return 用户编码，是用户的主键
 	 */
-    public String getUserCode();
+     String getUserCode();
     /**
 	 * 机构代码 是机构的主键
-	 * @return
+	 * @return 机构代码 是机构的主键
 	 */
-	public String getUnitCode();
+	 String getUnitCode();
 	/**
      * 是否为主机构 T:主机构 F：辅机构
-     * @return
+     * @return 是否为主机构 T:主机构 F：辅机构
      */
-    public String getIsPrimary();
+     String getIsPrimary();
     /**
      * 用户在本机构的岗位
-     * @return
+     * @return 用户在本机构的岗位
      */
-    public String getUserStation();
+     String getUserStation();
     /**
      * 用户在本机构的行政职务
-     * @return
+     * @return 用户在本机构的行政职务
      */
-    public String getUserRank();
+     String getUserRank();
 }

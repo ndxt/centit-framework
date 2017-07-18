@@ -29,7 +29,7 @@ import java.util.Map;
 
 /**
  * @author sx
- * @create 2013年12月30日
+ * 2013年12月30日
  */
 
 @Controller
@@ -93,8 +93,9 @@ public class BaseController {
      * 前端统一异常处理，
      *
      * @param ex {@link BindException}
-     * @return
-     * @throws IOException
+     * @param request request
+     * @param response response
+     * @throws IOException IOException
      */
     //(value = {BindException.class,MethodArgumentNotValidException.class})
     @ExceptionHandler
@@ -137,8 +138,8 @@ public class BaseController {
 
     /**
      * 获取当前用户信息
-     * @param request
-     * @return
+     * @param request request
+     * @return 当前用户信息
      */
     protected CentitUserDetails getLoginUser(HttpServletRequest request) {
         return WebOptUtils.getLoginUser(request);
@@ -150,7 +151,12 @@ public class BaseController {
             return null;
         return ud.getUsername();
     }
-    
+
+    /**
+     *
+     * @param request request
+     * @return 登录用户code
+     */
     protected String getLoginUserCode(HttpServletRequest request) {
         CentitUserDetails ud = getLoginUser(request);
         if(ud==null)
@@ -160,8 +166,8 @@ public class BaseController {
 
     /**
      * 将查询条件转换为Dao中hql语句的参数变量
-     * @param request
-     * @return
+     * @param request request
+     * @return map 将查询条件转换为Dao中hql语句的参数变量
      */
     public static Map<String, Object> convertSearchColumn(HttpServletRequest request) {
         // log.error("规则化前参数表：" + paramMap.toString());
@@ -228,7 +234,8 @@ public class BaseController {
     }
     /**
      * 将参数变量转换为查询条件
-     * @return
+     * @param request request
+     * @return Map 参数变量转换为查询条件
      */
     public static Map<String, Object> collectRequestParameters(HttpServletRequest request) {
         Map<String, String[]> parameterMap = request.getParameterMap();
@@ -247,6 +254,11 @@ public class BaseController {
         return map;
     }
 
+    /**
+     *
+     * @param filterMap Map 过滤条件
+     * @param request request
+     */
     public static void setbackSearchColumn(Map<String, Object> filterMap, HttpServletRequest request) {
         if (filterMap == null || filterMap.size() < 1) {
             return;

@@ -10,40 +10,40 @@ public interface IDataCatalog{
  
 	/**
 	 * 类别代码
-	 * @return
+	 * @return 类别代码
 	 */
-    public String getCatalogCode();
+     String getCatalogCode();
     /**
      * 类别名称
-     * @return
+     * @return 类别名称
      */
-    public String getCatalogName();
+     String getCatalogName();
     /**
      * 所属业务ID
-     * @return
+     * @return 所属业务ID
      */
-    public String getOptId();
+     String getOptId();
 
     /**
      * 类别形式  L 列表 T 为 树
-     * @return
+     * @return 类别形式 L 列表 T 为 树
      */
-    public String getCatalogType();
+     String getCatalogType();
 
     /**
      * 字典描述
-     * @return
+     * @return 字典描述
      */
-    public String getCatalogDesc();
+     String getCatalogDesc();
     /**
      * 字典明细字段描述
-     * @return
+     * @return 字典明细字段描述
      */
-    public String getFieldDesc();
+     String getFieldDesc();
     
     /**
      * 获取字典条目明细
-     * @return
+     * @return List 获取字典条目明细
      */
-    public List<? extends IDataDictionary> getDataDictionaries();
+     List<? extends IDataDictionary> getDataDictionaries();
 }

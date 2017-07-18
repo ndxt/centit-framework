@@ -10,14 +10,14 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
     /**
      * 查找表中的所有 isValid = 'T' 的记录 必需isValid这个字段才可以使用，或者重载这个函数
      *
-     * @return
+     * @return 表中的所有 isValid = 'T' 的记录
      */
     public List<T> listValidObjects();
 
     /**
      * 查找表中的所有记录， 包括禁用的 isValid = 'F' 的记录, 如果没有isValid这个字段也可以使用
      *
-     * @return
+     * @return 表中的所有记录， 包括禁用的 isValid = 'F' 的记录, 如果没有isValid这个字段也可以使用
      */
     public List<T> listObjects();
 
@@ -31,15 +31,15 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
     /**
      * 根据对象的主键 获得数据库中对应的对象信息
      *
-     * @param id
-     * @return
+     * @param id PK
+     * @return 数据库中对应的对象信息
      */
     public T getObjectById(PK id);
 
     /**
      * 保存泛型参数对象
      *
-     * @param o
+     * @param o T
      */
     public void saveObject(T o);
 
@@ -47,65 +47,66 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
     /**
      * 保存泛型参数对象
      *
-     * @param o
+     * @param o T
+     * @return Serializable
      */
     public Serializable saveNewObject(T o);
     
     /**
      * 更新泛型参数对象
      *
-     * @param o
+     * @param o T
      */
     public void updateObject(T o);
     
     /**
      * 保存泛型参数对象
      *
-     * @param o
+     * @param o T
      */
     public void mergeObject(T o);
     
     
     /**
      * 修改之前check一下版本号，不一致抛异常
-     * @param o
+     * @param o T
      */
     public void updateObjectCheckTimestamp(T o);
 
     /**
      * 删除泛型参数对象
      *
-     * @param o
+     * @param o T
      */
     public void deleteObject(T o);
 
     /**
      * 根据主键删除泛型参数对象
      *
-     * @param id
+     * @param id PK
      */
     public void deleteObjectById(PK id);
 
     /**
-     * @param shql
+     * @param shql sql,hql语句
      * @param filterMap 过滤条件
-     * @return
+     * @return listObjects
      */
     public List<T> listObjects(String shql, Map<String, Object> filterMap);
 
     /**
      * @param filterMap 过滤条件
-     * @return
+     * @return listObjects
      */
     public List<T> listObjects(Map<String, Object> filterMap);
 
     /**
      * 配合 EC Table 设计的一个查询语句
      *
-     * @param shql
+     * @param shql sql,hql语句
      * @param filterMap 过滤条件
      * @param pageDesc  分页属性
-     * @return
+     * @return listObjects
      */
     public List<T> listObjects(String shql, Map<String, Object> filterMap, PageDesc pageDesc);
 
@@ -114,24 +115,24 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      *
      * @param filterMap 过滤条件
      * @param pageDesc  分页属性
-     * @return
+     * @return listObjects
      */
     public List<T> listObjects(Map<String, Object> filterMap, PageDesc pageDesc);
 
     /**
      * 根据唯一属性值返回对象
      *
-     * @param propertyName
-     * @param propertyValue
-     * @return
+     * @param propertyName 字段名
+     * @param propertyValue 值
+     * @return 唯一属性值返回对象
      */
     T getObjectByProperty(final String propertyName, final Object propertyValue);
 
     /**
      * 根据多个属性返回唯一对象
      *
-     * @param properties
-     * @return
+     * @param properties map 字段
+     * @return 多个属性返回唯一对象
      */
     T getObjectByProperties(Map<String, Object> properties);
 
@@ -139,7 +140,8 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      * 通过反射调用泛型对象 des 的 copyNotNullProperty("F") 函数，参数为 sou， 要求对象必须有
      * copyNotNullProperty这个函数，脚手架的反向工程自动生成这个函数 子类可以重写这个函数
      *
-     * @param o
+     * @param des  T
+     * @param sou  T
      */
     public void copyObjectNotNullProperty(T des, T sou);
 
@@ -147,7 +149,8 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      * 通过反射调用泛型对象 des 的 copy("F") 函数，参数为 sou， 要求对象必须有
      * copyNotNullProperty这个函数，脚手架的反向工程自动生成这个函数 子类可以重写这个函数
      *
-     * @param o
+     * @param des  T
+     * @param sou  T
      */
     public void copyObject(T des, T sou);
 
@@ -155,7 +158,7 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      * 通过反射调用泛型对象 clearProperties 函数，清楚对象的所有非主键属性的值， 要求对象必须有
      * clearProperties这个函数，脚手架的反向工程自动生成这个函数 子类可以重写这个函数
      *
-     * @param o
+     * @param des  T
      */
     public void clearObjectProperties(T des);
 
