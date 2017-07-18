@@ -25,7 +25,7 @@ public class ServiceConfig {
 
     @Bean
     @Lazy(value = false)
-    public OperationLogWriter optLogManager() {
+    public OperationLogWriter operationLogWriter() {
         TextOperationLogWriterImpl  operationLog =  new TextOperationLogWriterImpl();
         operationLog.init();
         return operationLog;
