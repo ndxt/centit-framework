@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <artifactId>framework-parent</artifactId>
+    <groupId>com.centit.framework</groupId>
+    <version>4.0.0-SNAPSHOT</version>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>framework-web-demo</artifactId>
+    <packaging>war</packaging>
+    <name>com.centit.framework:framework-web-dem</name>
+    <description>基于框架开发的应用示例，根据项目的需要
+        ramework-system-hibernate、framework-system-mybatis、framework-system-static
+        这三个基础包选择一个， 选择 framework-system-static 需要 framework-base-view-easyui和其搭配，
+        其他的两个选择 framework-sys-view-easyui
+    </description>
+
+    <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <jdk.version>1.8</jdk.version>
+    <centit.framework.version>4.0.0-SNAPSHOT</centit.framework.version>
+    <centit.commons.version>2.2.1-SNAPSHOT</centit.commons.version>
+    <centit.ui.version>3.0.1-SNAPSHOT</centit.ui.version>
+    <ojdbc6.version>11.2.0.4</ojdbc6.version>
+    <junit.version>4.12</junit.version>
+    <mysql.version>5.1.9</mysql.version>
+    <servlet-api.version>3.1.0</servlet-api.version>
+    </properties>
+
+    <dependencies>
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>${mysql.version}</version>
+        <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.oracle</groupId>
+        <artifactId>ojdbc6</artifactId>
+        <version>${ojdbc6.version}</version>
+        <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.centit.framework</groupId>
+        <!--<artifactId>framework-base-view-easyui</artifactId>-->
+            <artifactId>framework-sys-view-easyui</artifactId>
+            <version>${centit.ui.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.centit.framework</groupId>
+            <artifactId>framework-system-hibernate</artifactId>
+            <!--<artifactId>framework-system-mybatis</artifactId>-->
+            <!--<artifactId>framework-system-static</artifactId>-->
+            <version>${centit.framework.version}</version>
+        </dependency>
+
+        <!-- server runtime library -->
+        <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>tools</artifactId>
+            <version>${jdk.version}</version>
+            <systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+     </dependencies>
+
+</project>
