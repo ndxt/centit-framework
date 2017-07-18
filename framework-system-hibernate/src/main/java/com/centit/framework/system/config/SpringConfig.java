@@ -1,15 +1,12 @@
 package com.centit.framework.system.config;
 
-import com.centit.framework.components.impl.NotificationCenterImpl;
 import com.centit.framework.config.H2Config;
 import com.centit.framework.config.RedisConfig;
 import com.centit.framework.hibernate.config.DataSourceConfig;
 import com.centit.framework.listener.InitialWebRuntimeEnvironment;
-import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.security.model.CentitPasswordEncoderImpl;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.MemorySessionRegistryImpl;
-import com.centit.framework.system.listener.InstantiationTracingBeanPostProcessor;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
@@ -71,14 +68,6 @@ public class SpringConfig implements EnvironmentAware {
     }
 
     @Bean
-    public NotificationCenter notificationCenter() {
-        NotificationCenterImpl notificationCenter = new NotificationCenterImpl();
-        notificationCenter.initMsgSenders();
-        //notificationCenter.registerMessageSender("innerMsg",innerMessageManager);
-        return notificationCenter;
-    }
-
-    @Bean
     public CentitPasswordEncoderImpl passwordEncoder() {
         return  new CentitPasswordEncoderImpl();
     }
@@ -93,10 +82,6 @@ public class SpringConfig implements EnvironmentAware {
         return new MemorySessionRegistryImpl();
     }
 
-    @Bean
-    public InstantiationTracingBeanPostProcessor instantiationTracingBeanPostProcessor() {
-        return new InstantiationTracingBeanPostProcessor();
-    }
 
 
 }
