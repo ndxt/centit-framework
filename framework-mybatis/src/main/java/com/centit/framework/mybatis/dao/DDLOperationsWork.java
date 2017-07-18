@@ -34,7 +34,7 @@ public class DDLOperationsWork implements DDLOperations {
 	
 	/**
 	 * 没有传入连接信息，只能用于 语句的生产，不能执行DDL操作
-	 * @return
+	 * @return  语句的生产
 	 */
 	public static DDLOperations createDDLOpt(){
 		String dialectName = SysParametersUtils.getStringValue("jdbc.dialect");
@@ -51,8 +51,8 @@ public class DDLOperationsWork implements DDLOperations {
 	
 	/**
 	 * 可以执行DDL操作	
-	 * @param connection
-	 * @return
+	 * @param connection Connection
+	 * @return 可以执行DDL操作
 	 */
 	public static DDLOperations createDDLOpt(Connection connection){
 		String dialectName = SysParametersUtils.getStringValue("jdbc.dialect");

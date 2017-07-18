@@ -116,7 +116,7 @@ public class JsonObjectWork implements JsonObjectDao {
 	 * 更改部分属性
 	 *
 	 * @param fields 更改部分属性 属性名 集合，应为有的Map 不允许 值为null，这样这些属性 用map就无法修改为 null
-	 * @param object
+	 * @param object Map object
 	 */
 	@Override
 	public int updateObject(Collection<String> fields, Map<String, Object> object) throws SQLException {
@@ -132,7 +132,7 @@ public class JsonObjectWork implements JsonObjectDao {
 	 * 更改部分属性
 	 *
 	 * @param fields 更改部分属性 属性名 集合，应为有的Map 不允许 值为null，这样这些属性 用map就无法修改为 null
-	 * @param object
+	 * @param object Map object
 	 */
 	@Override
 	public int mergeObject(Collection<String> fields, Map<String, Object> object)
@@ -156,9 +156,10 @@ public class JsonObjectWork implements JsonObjectDao {
 	 * 根据条件批量更新 对象
 	 *
 	 * @param fields      更改部分属性 属性名 集合，应为有的Map 不允许 值为null，这样这些属性 用map就无法修改为 null
-	 * @param fieldValues
-	 * @param properties
-	 * @throws SQLException
+	 * @param fieldValues Map fieldValues
+	 * @param properties Map properties
+	 * @throws SQLException SQLException
+	 * @return 批量更新数量
 	 */
 	@Override
 	public int updateObjectsByProperties(Collection<String> fields,

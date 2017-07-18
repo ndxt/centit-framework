@@ -88,8 +88,8 @@ public class DataPowerFilter {
 		
 	/**
 	 * 获取表达式敌营的值；这个地方需要根据业务的类型多样性和具体需求不断的完善
-	 * @param expression
-	 * @return
+	 * @param expression String
+	 * @return 表达式对应的值
 	 */
 	private Object attainExpressionValue(String expression){
 		return ReflectionOpt.attainExpressionValue(sourceData, expression);
@@ -193,12 +193,12 @@ public class DataPowerFilter {
 	
 	/**
 	 * 
-	 * @param queryStatement
-	 * @param filters
+	 * @param queryStatement queryStatement
+	 * @param filters Collection filters
 	 * @param toSql	是否为sql语句，否：表示hql ，是：表示 sql
 	 * @param jointSql 变量内嵌在语句中，不用参数
 	 * @param isUnion 多个过滤之间是否是并集 
-	 * @return
+	 * @return translateQuery
 	 */
 	public QueryAndNamedParams translateQuery(String queryStatement,Collection<String> filters,
 			boolean toSql,boolean jointSql, boolean isUnion){
@@ -210,9 +210,9 @@ public class DataPowerFilter {
 	
 	/**
 	 * 权限查询，不同的条件取并集
-	 * @param queryStatement
-	 * @param filters
-	 * @return
+	 * @param queryStatement queryStatement
+	 * @param filters Collection filters
+	 * @return translateSqlQuery
 	 */
 	public QueryAndNamedParams translateSqlQuery
 			(String queryStatement,Collection<String> filters){
@@ -222,9 +222,9 @@ public class DataPowerFilter {
 	
 	/**
 	 * 视图过滤条件查询，不同的过滤条件取交接
-	 * @param queryStatement
-	 * @param filters
-	 * @return
+	 * @param queryStatement queryStatement
+	 * @param filters Collection filters
+	 * @return translateSqlFilterQuery
 	 */
 	public QueryAndNamedParams translateSqlFilterQuery
 			(String queryStatement,Collection<String> filters){

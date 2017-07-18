@@ -13,7 +13,7 @@ public abstract class BaseDaoSupport extends SqlSessionDaoSupport {
 	 * 调用 getSqlSession().getConfiguration().getEnvironment().getDataSource().getConnection()
 	 * 返回的是一个新建的Connection这样和当前的SQLSession不在统一事务中（也不在统一个session中）。
 	 * 
-	 * @return
+	 * @return 一个新建的Connection这样和当前的SQLSession不在统一事务中（也不在统一个session中）
 	 */
 	public SqlSession getSqlSessionWithOpenedConnection() {
 		

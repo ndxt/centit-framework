@@ -10,11 +10,10 @@ import com.centit.support.algorithm.ReflectionOpt;
 
 /**
  * 数据库的基本操作工具类
- * <p/>
  * 基本上是对Dao进行再一次简单的封装 注解Manager，添加默认事务
  *
  * @author codefan
- * @create 2012-2-16
+ * 2012-2-16
  */
 public abstract class BaseEntityManagerImpl<T extends Serializable, 
  		PK extends Serializable> implements

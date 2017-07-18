@@ -46,7 +46,11 @@ public class DatabaseOptUtils {
     }
 
     /**
-     * 处理翻页参数 
+     * 处理翻页参数
+     * @param pageQureyMap pageQureyMap
+     * @param pageDesc pageDesc
+     * @param total total
+     * @return Map类型
      */
     public final static  Map<String, Object> prepPageParmers(Map<String, Object> pageQureyMap,PageDesc pageDesc,int total) {
 
@@ -67,9 +71,9 @@ public class DatabaseOptUtils {
     }
     /**
      * 直接运行SQL,update delete insert
-     * 
-     * @param sSql
-     * @throws SQLException 
+     * @param sqlSession sqlSession
+     * @param sSql sSql
+     * @throws SQLException SQLException
      */
     public final static void doExecuteSql(SqlSession sqlSession, String sSql) throws SQLException {
     	DatabaseAccess.doExecuteSql(sqlSession.getConnection(), sSql);
@@ -77,9 +81,10 @@ public class DatabaseOptUtils {
 
     /**
      * 直接运行行带参数的 SQL,update delete insert
-     * 
-     * @param sSql
-     * @throws SQLException 
+     * @param sqlSession sqlSession
+     * @param sSql sSql
+     * @param values values
+     * @throws SQLException SQLException
      */
     public final static void doExecuteSql(SqlSession sqlSession, String sSql,
             Object[] values) throws SQLException {
@@ -89,9 +94,11 @@ public class DatabaseOptUtils {
 
     /**
      * 直接运行行带参数的 SQL,update delete insert
-     * 
-     * @param sSql
-     * @throws SQLException 
+     *
+     * @param sqlSession sqlSession
+     * @param sSql sSql
+     * @param values values
+     * @throws SQLException SQLException
      */
     public final static void doExecuteSql(SqlSession sqlSession, String sSql,
             Map<String,Object> values) throws SQLException {
@@ -103,7 +110,7 @@ public class DatabaseOptUtils {
     }
     /**
      * 获取数据类型
-     * @return
+     * @return 数据类型
      */
     public final static String getDialectName() {
     	if(StringUtils.isBlank(dialectName))
@@ -113,10 +120,10 @@ public class DatabaseOptUtils {
 
     /**
      * 获取分页语句
-     * @param sql
-     * @param offset
+     * @param sql sql
+     * @param offset offset
      * @param maxsize 等同于 pageSize
-     * @return
+     * @return 获取分页语句
      */
     public final static String buildLimitQuerySQL(String sql,int offset,int maxsize){
     	DBType dbType = DBType.mapDialectToDBType(getDialectName());
@@ -135,11 +142,11 @@ public class DatabaseOptUtils {
     }
     /**
      * 获取sequence的当前值 只有oracle DB2支持
-     * 
-     * @param sequenceName
-     * @return
-     * @throws IOException 
-     * @throws SQLException 
+     * @param sqlSession sqlSession
+     * @param sequenceName sequenceName
+     * @return sequence的当前值
+     * @throws IOException IOException
+     * @throws SQLException SQLException
      */
     public final static String getCurrValueOfSequence(
             SqlSession sqlSession, String sequenceName) throws SQLException, IOException {
@@ -151,13 +158,12 @@ public class DatabaseOptUtils {
 
     /**
      * 获取sequence的下一个新值 只有oracle DB2支持
-     * 
-     * @param sequenceName
-     * @param codeLen
-     *            代码长度，左侧补零 ，如果 codeLen 为0 则不补零
-     * @return
-     * @throws IOException 
-     * @throws SQLException 
+     * @param sqlSession sqlSession
+     * @param sequenceName sequenceName
+     * @param codeLen 代码长度，左侧补零 ，如果 codeLen 为0 则不补零
+     * @return sequence的下一个新值
+     * @throws IOException  IOException
+     * @throws SQLException SQLException
      */
     public final static String getNextKeyBySequence(SqlSession sqlSession,
             String sequenceName, int codeLen) throws SQLException, IOException {
@@ -172,7 +178,12 @@ public class DatabaseOptUtils {
 	 * create table sequence_table 
 	 * (sequence_Name varchar(100) not null primary key, 
 	 * current_value integer);
-	 */
+     * @param sqlSession sqlSession
+     * @param sequenceName sequenceName
+     * @throws IOException  IOException
+     * @throws SQLException SQLException
+     * @return 结果集数量
+     */
 	public static Long getSequenceNextValueUseTable(final SqlSession sqlSession,final String sequenceName) throws SQLException, IOException {
 		Object object = getSingleObjectBySql(
                 sqlSession,
@@ -202,11 +213,12 @@ public class DatabaseOptUtils {
     
     /**
      * 获取sequence的下一个新值 只有oracle DB2支持
-     * 
-     * @param sequenceName
-     * @return
-     * @throws IOException 
-     * @throws SQLException 
+     *
+     * @param sqlSession sqlSession
+     * @param sequenceName sequenceName
+     * @return sequence的下一个新值
+     * @throws IOException IOException
+     * @throws SQLException SQLException
      */
     public final static Long getNextLongSequence(SqlSession sqlSession,
             String sequenceName) throws SQLException, IOException {
@@ -238,11 +250,12 @@ public class DatabaseOptUtils {
 
     /**
      * 获取sequence的下一个新值 只有oracle DB2支持
-     * 
-     * @param sequenceName
-     * @return
-     * @throws IOException 
-     * @throws SQLException 
+     *
+     * @param sqlSession sqlSession
+     * @param sequenceName sequenceName
+     * @return sequence的下一个新值
+     * @throws IOException IOException
+     * @throws SQLException SQLException
      */
     public final static String getNextValueOfSequence(
             SqlSession sqlSession, String sequenceName) throws SQLException, IOException {
@@ -286,8 +299,11 @@ public class DatabaseOptUtils {
     
     /**
      * 获取唯一的一个整形数据的SQL
-     * @throws IOException 
-     * @throws SQLException 
+     * @param sqlSession sqlSession
+     * @param sSql sSql
+     * @return long
+     * @throws IOException IOException
+     * @throws SQLException SQLException
      */
     public final static long getSingleIntBySql(SqlSession sqlSession,
             final String sSql) throws SQLException, IOException {
@@ -322,6 +338,11 @@ public class DatabaseOptUtils {
     
     /**
      * 获取唯一的一个字符串数据的SQL
+     * @param sqlSession sqlSession
+     * @param sSql sSql
+     * @return 唯一的一个字符串数据的SQL
+     * @throws IOException IOException
+     * @throws SQLException SQLException
      */
     public final static String getSingleStringBySql(SqlSession sqlSession,
             final String sSql) throws SQLException, IOException {
@@ -344,10 +365,11 @@ public class DatabaseOptUtils {
     
     /**
      * 执行一个Oracle存储过程 返回一个数据集，这个数据集是一个out的游标,这个参数必需为存储过程的最后一个参数
-     * 
-     * @param procName
-     * @param paramObjs
-     * @return
+     * @param conn conn
+     * @param procName procName
+     * @param paramObjs paramObjs
+     * @return 一个数据集，这个数据集是一个out的游标,这个参数必需为存储过程的最后一个参数
+     * @throws SQLException SQLException
      */
     public final static ResultSet callProcedureOutRS(Connection conn,
             String procName, Object... paramObjs) throws SQLException {
@@ -389,12 +411,13 @@ public class DatabaseOptUtils {
  
 
     /**
-     * 执行原生的SQL查询语句，返回的类型为 List<Object[]>
+     * 执行原生的SQL查询语句，返回的类型为 List
      * 
-     * @param sSql
-     * @return List<Object[]>
-     * @throws IOException 
-     * @throws SQLException 
+     * @param sSql sSql
+     * @param sqlSession sqlSession
+     * @return List
+     * @throws IOException  IOException
+     * @throws SQLException  SQLException
      */
     public final static List<Object[]> findObjectsBySql(SqlSession sqlSession, String sSql) throws SQLException, IOException {
     	return DatabaseAccess.findObjectsBySql(sqlSession.getConnection(), sSql);
@@ -403,11 +426,11 @@ public class DatabaseOptUtils {
   
     /**
      * 用原生SQL 查询数据库 objectType 如果没有的话可以为NULL
-     * @param sqlSession
-     * @param ssql
-     * @param objectType
-     *            制定返回的结构类型
-     * @return
+     * @param <T> T
+     * @param sqlSession sqlSession
+     * @param ssql ssql
+     * @param objectType 制定返回的结构类型
+     * @return 用原生SQL 查询数据库 objectType 如果没有的话可以为NULL
      */
     public final static <T> List<T> findObjectsBySql(SqlSession sqlSession,
             String ssql, Class<T> objectType) {    	
@@ -423,9 +446,9 @@ public class DatabaseOptUtils {
      * @param sqlSession 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param sSql  sql语句，这个语句中的参数用？作为占位符
      * @param values 参数对应的变量
-     * @return
-     * @throws IOException 
-     * @throws SQLException 
+     * @return 符合条件的记录数量
+     * @throws IOException  IOException
+     * @throws SQLException SQLException
      */
     public final static int getSqlReturnObjectCounts(SqlSession sqlSession, String sSql,
             Object[] values) throws SQLException, IOException { 
@@ -438,9 +461,9 @@ public class DatabaseOptUtils {
      * @param sqlSession 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param sSql sql语句，这个语句必须用命名参数
      * @param values	命名参数对应的变量
-     * @return
-     * @throws IOException 
-     * @throws SQLException 
+     * @return 符合条件的记录数量
+     * @throws IOException IOException
+     * @throws SQLException SQLException
      */    
     public final static int getSqlReturnObjectCounts(SqlSession sqlSession, String sSql,
             Map<String, Object> values) throws SQLException, IOException {
@@ -450,13 +473,13 @@ public class DatabaseOptUtils {
     // -----------------------------------------------------------------------------------
 
     /**
-     * 返回的类型为 List<objectType>
+     * 返回的类型为 List
      * @param sqlSession 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param ssql sql语句，这个语句必须用命名参数
      * @param values  命名参数对应的变量
      * @param pageDesc 分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
      * @param objectType 是一个Po类型，将查询结果封装成对象，要求查询返回的字段和Po中的字段定义一致。
-     * @return List<objectType>
+     * @return List
      */
     public final static List<?> findObjectsBySql(SqlSession sqlSession, String ssql,
             Map<String, Object> values, PageDesc pageDesc,Class<?> objectType) {
@@ -496,12 +519,12 @@ public class DatabaseOptUtils {
     
 
     /**
-     * 返回的类型为 List<Object[]>
+     * 返回的类型为 List
      * @param sqlSession 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param ssql sql语句，这个语句必须用命名参数
      * @param values  命名参数对应的变量
      * @param pageDesc 分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
-     * @return List<Object[]>
+     * @return List
      */
     public final static List<?> findObjectsBySql(SqlSession sqlSession, String ssql,
             Map<String, Object> values, PageDesc pageDesc) {        
@@ -525,7 +548,7 @@ public class DatabaseOptUtils {
      * @param values 命名参数对应的变量
      * @param pageDesc 获取记录其实位置 和 maxSize 一起完成分页操作
      *               返回的最大记录数
-     * @return JSONArray实现了List<JSONObject>接口，JSONObject实现了Map<String, Object>接口。所以可以直接转换为List<Map<String,Object>>
+     * @return JSONArray实现了List接口，JSONObject实现了Map接口。所以可以直接转换为List
      */
     public final static JSONArray findObjectsAsJSonBySql(SqlSession sqlSession, String ssql, 
             String [] fieldnames, Map<String,Object> values, PageDesc pageDesc) {
@@ -582,8 +605,8 @@ public class DatabaseOptUtils {
     /**
      * 刷新Session缓存中的数据进行强制提交
      * 
-     * @param dbSession
-     *            HibernateDaoSupport
+     * @param dbSession HibernateDaoSupport
+     *
      */
     public final static void flush(SqlSession dbSession) {
         dbSession.clearCache();
