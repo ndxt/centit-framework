@@ -58,17 +58,17 @@ public interface UserUnitDao{
      * unitcode不为null就是某个处室的某个角色，为NULL就是所有处室的某个角色
      *if (unitCode != null && !"".equals(unitCode)) {
             if ("gw".equals(roleType))
-                ls =listObjects("FROM UserUnit where unitCode=? and userStation=? ",
+                ls =listObjectsAll("FROM UserUnit where unitCode=? and userStation=? ",
                                new Object[]{ unitCode, roleCode});
             else if ("xz".equals(roleType))
-                ls = listObjects("FROM UserUnit where unitCode=? and userRank=? ",
+                ls = listObjectsAll("FROM UserUnit where unitCode=? and userRank=? ",
                         new Object[]{ unitCode, roleCode});
         } else {
             if ("gw".equals(roleType))
-                ls = listObjects("FROM UserUnit where userStation=? ",
+                ls = listObjectsAll("FROM UserUnit where userStation=? ",
                                 roleCode);
             else if ("xz".equals(roleType))
-                ls = listObjects("FROM UserUnit where userRank=? ",
+                ls = listObjectsAll("FROM UserUnit where userRank=? ",
                                 roleCode);
         }
      * @param roleType

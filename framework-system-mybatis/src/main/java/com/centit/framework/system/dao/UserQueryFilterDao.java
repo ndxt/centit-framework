@@ -35,12 +35,12 @@ public interface UserQueryFilterDao{
 	// 参数 String userCode,String modelCode
 	public List<UserQueryFilter> listUserQueryFilterByModle(Map map);
 	
-	//super.listObjects("From UserQueryFilter where userCode = ? and modleCode = ? "
+	//super.listObjectsAll("From UserQueryFilter where userCode = ? and modleCode = ? "
 		//+ "and isDefault = 'T' order by isDefault desc , createDate desc",
 	//参数 String userCode,String modelCode
 	public List<UserQueryFilter> listUserDefaultFilterByModle(Map map);
 	
-	//= super.listObjects("From UserQueryFilter where userCode = ? and modleCode = ? "
+	//= super.listObjectsAll("From UserQueryFilter where userCode = ? and modleCode = ? "
 		//+ "and isDefault = 'T' order by isDefault desc , createDate desc",
 		//new Object[]{userCode,modelCode});
 	//public UserQueryFilter getUserDefaultFilterByModle(String userCode,String modelCode);

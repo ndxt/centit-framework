@@ -1,18 +1,5 @@
 package com.centit.framework.system.controller;
 
-import java.util.Date;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
@@ -21,6 +8,17 @@ import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.system.po.OptLog;
 import com.centit.framework.system.service.OptLogManager;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/optlog")
@@ -40,12 +38,12 @@ public class OptLogController extends BaseController {
     @RequestMapping
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
-        /*List<OptLog> listObjects = null;
+        /*List<OptLog> listObjectsAll = null;
         if (null == pageDesc) {
         	
-            listObjects = optLogManager.listObjects(searchColumn);
+            listObjectsAll = optLogManager.listObjectsAll(searchColumn);
         } else
-            listObjects = optLogManager.listObjects(searchColumn, pageDesc);
+            listObjectsAll = optLogManager.listObjectsAll(searchColumn, pageDesc);
 
         SimplePropertyPreFilter simplePropertyPreFilter = null;
         if (ArrayUtils.isNotEmpty(field)) {
@@ -53,7 +51,7 @@ public class OptLogController extends BaseController {
         }
 
         if (null == pageDesc) {
-            JsonResultUtils.writeSingleDataJson(listObjects, response, simplePropertyPreFilter);
+            JsonResultUtils.writeSingleDataJson(listObjectsAll, response, simplePropertyPreFilter);
             return;
         }*/
         

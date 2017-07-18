@@ -19,12 +19,6 @@
 
         <dependency>
             <groupId>com.centit.framework</groupId>
-            <artifactId>framework-base-view-easyui</artifactId>
-            <version>${centit.ui.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.centit.framework</groupId>
             <artifactId>framework-core</artifactId>
             <version>${centit.framework.version}</version>
         </dependency>

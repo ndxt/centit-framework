@@ -33,7 +33,7 @@ public interface UnitInfoDao{
 	// DatabaseOptUtils.getNextKeyBySequence(this, "S_UNITCODE", 6);
     public String getNextKey();
 
-    //listObjects("FROM UnitInfo where depNo=?", depno);
+    //listObjectsAll("FROM UnitInfo where depNo=?", depno);
     public String getUnitCode(String depno);
 
     /**

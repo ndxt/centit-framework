@@ -1,15 +1,15 @@
 package com.centit.framework.system.service.impl;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-
+import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.mybatis.dao.DatabaseOptUtils;
+import com.centit.framework.security.model.CentitSecurityMetadata;
+import com.centit.framework.security.model.OptTreeNode;
+import com.centit.framework.system.dao.OptInfoDao;
+import com.centit.framework.system.dao.OptMethodDao;
+import com.centit.framework.system.dao.RoleInfoDao;
+import com.centit.framework.system.dao.RolePowerDao;
+import com.centit.framework.system.po.*;
+import com.centit.framework.system.service.SysRoleManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,21 +19,14 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.mybatis.dao.DatabaseOptUtils;
-import com.centit.framework.security.model.CentitSecurityMetadata;
-import com.centit.framework.security.model.OptTreeNode;
-import com.centit.framework.system.dao.OptInfoDao;
-import com.centit.framework.system.dao.OptMethodDao;
-import com.centit.framework.system.dao.RoleInfoDao;
-import com.centit.framework.system.dao.RolePowerDao;
-import com.centit.framework.system.po.OptMethod;
-import com.centit.framework.system.po.OptMethodUrlMap;
-import com.centit.framework.system.po.RoleInfo;
-import com.centit.framework.system.po.RolePower;
-import com.centit.framework.system.po.VOptTree;
-import com.centit.framework.system.service.SysRoleManager;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("sysRoleManager")
 public class SysRoleManagerImpl implements SysRoleManager
@@ -126,7 +119,7 @@ public class SysRoleManagerImpl implements SysRoleManager
 
     @Transactional
     public List<RolePower> listAllRolePowers() { 
-        return rolePowerDao.listObjects();
+        return rolePowerDao.listObjectsAll();
     }
 
     @Transactional

@@ -19,10 +19,10 @@ public interface UserSettingDao{
 	 */
 	public void mergeObject(UserSetting userSetting);
 
-    // return listObjects("From UserSetting where cid.userCode=?",userCode);
+    // return listObjectsAll("From UserSetting where cid.userCode=?",userCode);
     public List<UserSetting> getUserSettingsByCode(String userCode);
     
-    // listObjects("From UserSetting where cid.userCode=? and optId= ?",
+    // listObjectsAll("From UserSetting where cid.userCode=? and optId= ?",
     	//new Object[]{userCode,optID});
     //参数String userCode,String optID
     public List<UserSetting> getUserSettings(Map map);

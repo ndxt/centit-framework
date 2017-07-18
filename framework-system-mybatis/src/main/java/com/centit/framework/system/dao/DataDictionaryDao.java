@@ -21,10 +21,10 @@ public interface DataDictionaryDao {
 	public void deleteObjectById(DataDictionaryId dd);
 	
 	public void mergeObject(DataDictionary dataDictionary);
-	//listObjects("FROM DataDictionary ORDER BY id.catalogCode, dataOrder");
+	//listObjectsAll("FROM DataDictionary ORDER BY id.catalogCode, dataOrder");
     public List<DataDictionary> getWholeDictionary();
     
-    //listObjects("FROM DataDictionary WHERE id.catalogCode = ? ORDER BY dataOrder", catalogCode);
+    //listObjectsAll("FROM DataDictionary WHERE id.catalogCode = ? ORDER BY dataOrder", catalogCode);
     public List<DataDictionary> listDataDictionary(String catalogCode);
     
     //用序列生成

@@ -31,12 +31,6 @@
 
         <dependency>
             <groupId>com.centit.framework</groupId>
-            <artifactId>framework-sys-view-easyui</artifactId>
-            <version>${centit.ui.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.centit.framework</groupId>
             <artifactId>framework-mybatis</artifactId>
             <version>${centit.framework.version}</version>
         </dependency>
@@ -64,4 +58,15 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>

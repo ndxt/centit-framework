@@ -19,13 +19,13 @@ public interface DataCatalogDao{
 	public void mergeObject(DataCatalog dataCatalog);
 	
 	public void deleteObjectById(String catalogCode);
-	//listObjects("FROM DataCatalog WHERE catalogStyle='F'");
+	//listObjectsAll("FROM DataCatalog WHERE catalogStyle='F'");
     public List<DataCatalog> listFixCatalog();
 
-    //listObjects("FROM DataCatalog WHERE catalogStyle='U'");
+    //listObjectsAll("FROM DataCatalog WHERE catalogStyle='U'");
     public List<DataCatalog> listUserCatalog();
 
-    //listObjects("FROM DataCatalog WHERE catalogStyle='S'");
+    //listObjectsAll("FROM DataCatalog WHERE catalogStyle='S'");
     public List<DataCatalog> listSysCatalog();
     
     //分页  //startRow  startRow

@@ -15,7 +15,7 @@ public interface OptDataScopeDao {
 	
 	public void deleteObject(OptDataScope optDataScope);
 	
-    //return listObjects("FROM OptDataScope WHERE optId =?", sOptID);
+    //return listObjectsAll("FROM OptDataScope WHERE optId =?", sOptID);
     public List<OptDataScope> getDataScopeByOptID(String sOptID) ;
 
     //"SELECT count(optScopeCode) FROM OptDataScope WHERE optId = ?", sOptID)));
@@ -30,6 +30,6 @@ public interface OptDataScopeDao {
     public String getNextOptCode();
 
     
-   	// listObjects("FROM OptDataScope WHERE optId in ?", scopeCodes)
+   	// listObjectsAll("FROM OptDataScope WHERE optId in ?", scopeCodes)
     public List<String> listDataFiltersByIds(Map  map);
 }

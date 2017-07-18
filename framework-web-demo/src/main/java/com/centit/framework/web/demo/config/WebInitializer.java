@@ -1,8 +1,9 @@
-package com.centit.framework.system.config;
+package com.centit.framework.web.demo.config;
 
 import com.centit.framework.config.SystemSpringMvcConfig;
 import com.centit.framework.filter.RequestThreadLocalFilter;
 import com.centit.framework.filter.ResponseCorsFilter;
+import com.centit.framework.system.config.SpringConfig;
 import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.file.PropertiesReader;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
@@ -22,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
 import java.util.EnumSet;
 
+
 /**
  * Created by zou_wy on 2017/3/29.
  */
@@ -32,11 +34,7 @@ public class WebInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
 
-        if(StringRegularOpt.isTrue(
-                PropertiesReader.getClassPathProperties(
-                        "/system.properties", "sys.runas.systemhibernate"))) {
-            initializeSpringConfig(servletContext);
-        }
+        initializeSpringConfig(servletContext);
 
         initializeSpringMvcConfig(servletContext);
 
@@ -57,6 +55,10 @@ public class WebInitializer implements WebApplicationInitializer {
         registerSpringSecurityFilter(servletContext);
     }
 
+    /**
+     *
+     * @param servletContext ServletContext
+     */
     private void initializeSpringConfig(ServletContext servletContext){
         AnnotationConfigWebApplicationContext springContext = new AnnotationConfigWebApplicationContext();
         springContext.register(SpringConfig.class);
