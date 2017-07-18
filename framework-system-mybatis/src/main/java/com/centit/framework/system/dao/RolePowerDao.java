@@ -18,21 +18,21 @@ import com.centit.framework.system.po.RolePower;
 @Repository
 public interface RolePowerDao{
 
-	public List<RolePower> listObjects();	
+	List<RolePower> listObjects();
 	
-	public void mergeObject(RolePower rolePowers);
+	void mergeObject(RolePower rolePowers);
 	
-	public void deleteObject(RolePower rolePowers);
+	void deleteObject(RolePower rolePowers);
 	
-	public List<RolePower> listObjects(Map<String, Object> filterMap);
+	List<RolePower> listObjects(Map<String, Object> filterMap);
 	
 	//"DELETE FROM RolePower rp where rp.id.roleCode=?", rolecode
-    public void deleteRolePowersByRoleCode(String rolecode);
+    void deleteRolePowersByRoleCode(String rolecode);
     
     //"DELETE FROM RolePower rp where rp.id.optCode=?", optecode
-    public void deleteRolePowersByOptCode(String optecode);
+    void deleteRolePowersByOptCode(String optecode);
     
     //"FROM RolePower rp where rp.id.roleCode=?", rolecode
-    public List<RolePower> listRolePowersByRoleCode(String roleCode);
+    List<RolePower> listRolePowersByRoleCode(String roleCode);
     
 }

@@ -10,7 +10,7 @@
 
     <artifactId>framework-web-demo</artifactId>
     <packaging>war</packaging>
-    <name>com.centit.framework:framework-web-dem</name>
+    <name>com.centit.framework:framework-web-demo</name>
     <description>基于框架开发的应用示例，根据项目的需要
         ramework-system-hibernate、framework-system-mybatis、framework-system-static
         这三个基础包选择一个， 选择 framework-system-static 需要 framework-base-view-easyui和其搭配，
@@ -54,8 +54,8 @@
 
         <dependency>
             <groupId>com.centit.framework</groupId>
-            <artifactId>framework-system-hibernate</artifactId>
-            <!--<artifactId>framework-system-mybatis</artifactId>-->
+            <!--<artifactId>framework-system-hibernate</artifactId>-->
+            <artifactId>framework-system-mybatis</artifactId>
             <!--<artifactId>framework-system-static</artifactId>-->
             <version>${centit.framework.version}</version>
         </dependency>
