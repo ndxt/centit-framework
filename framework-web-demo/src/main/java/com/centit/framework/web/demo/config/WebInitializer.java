@@ -56,7 +56,7 @@ public class WebInitializer implements WebApplicationInitializer {
     }
 
     /**
-     *
+     * 加载Spring 配置
      * @param servletContext ServletContext
      */
     private void initializeSpringConfig(ServletContext servletContext){
@@ -65,6 +65,10 @@ public class WebInitializer implements WebApplicationInitializer {
         servletContext.addListener(new ContextLoaderListener(springContext));
     }
 
+    /**
+     * 加载Servlet 配置
+     * @param servletContext ServletContext
+     */
     private void initializeSpringMvcConfig(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(SystemSpringMvcConfig.class);
@@ -74,10 +78,18 @@ public class WebInitializer implements WebApplicationInitializer {
         system.setAsyncSupported(true);
     }
 
+    /**
+     * 注册RequestContextListener监听器 （增加request、session和global session作用域）
+     * @param servletContext ServletContext
+     */
     private void registerRequestContextListener(ServletContext servletContext) {
         servletContext.addListener(RequestContextListener.class);
     }
 
+    /**
+     * 注册SingleSignOutHttpSessionListener监听器 （单点登录统一登出）
+     * @param servletContext ServletContext
+     */
     private void registerSingleSignOutHttpSessionListener(ServletContext servletContext) {
         if( StringRegularOpt.isTrue(
                 PropertiesReader.getClassPathProperties(
@@ -86,12 +98,20 @@ public class WebInitializer implements WebApplicationInitializer {
         }
     }
 
+    /**
+     * 注册ResponseCorsFilter过滤器 （允许跨站脚本访问过滤器）
+     * @param servletContext ServletContext
+     */
     private void registerResponseCorsFilter(ServletContext servletContext) {
         javax.servlet.FilterRegistration.Dynamic corsFilter
                 = servletContext.addFilter("corsFilter", ResponseCorsFilter.class);
         corsFilter.addMappingForUrlPatterns(null, false, "/service/*");
     }
 
+    /**
+     * 注册CharacterEncodingFilter过滤器 （设置字符集）
+     * @param servletContext ServletContext
+     */
     private void registerCharacterEncodingFilter(ServletContext servletContext) {
         javax.servlet.FilterRegistration.Dynamic encodingFilter
                 = servletContext.addFilter("encodingFilter", CharacterEncodingFilter.class);
@@ -101,6 +121,10 @@ public class WebInitializer implements WebApplicationInitializer {
         encodingFilter.setInitParameter("forceEncoding", "true");
     }
 
+    /**
+     * 注册HttpPutFormContentFilter过滤器 （让put也可以想post一样接收form表单中的数据）
+     * @param servletContext ServletContext
+     */
     private void registerHttpPutFormContentFilter(ServletContext servletContext) {
         javax.servlet.FilterRegistration.Dynamic httpPutFormContentFilter
                 = servletContext.addFilter("httpPutFormContentFilter", HttpPutFormContentFilter.class);
@@ -108,6 +132,10 @@ public class WebInitializer implements WebApplicationInitializer {
         httpPutFormContentFilter.setAsyncSupported(true);
     }
 
+    /**
+     * 注册HiddenHttpMethodFilter过滤器 （过滤请求方式）
+     * @param servletContext ServletContext
+     */
     private void registerHiddenHttpMethodFilter(ServletContext servletContext) {
         javax.servlet.FilterRegistration.Dynamic hiddenHttpMethodFilter
                 = servletContext.addFilter("hiddenHttpMethodFilter", HiddenHttpMethodFilter.class);
@@ -116,6 +144,11 @@ public class WebInitializer implements WebApplicationInitializer {
         hiddenHttpMethodFilter.setAsyncSupported(true);
     }
 
+    /**
+     * 注册RequestThreadLocalFilter过滤器
+*                  (将HttpServletRequest请求与本地线程绑定，方便在非Controller层获取HttpServletRequest实例)
+     * @param servletContext ServletContext
+     */
     private void registerRequestThreadLocalFilter(ServletContext servletContext) {
         javax.servlet.FilterRegistration.Dynamic requestThreadLocalFilter
                 = servletContext.addFilter("requestThreadLocalFilter", RequestThreadLocalFilter.class);
@@ -123,6 +156,10 @@ public class WebInitializer implements WebApplicationInitializer {
         requestThreadLocalFilter.setAsyncSupported(true);
     }
 
+    /**
+     * 注册springSecurityFilterChain过滤器 （使用spring security 授权与验证）
+     * @param servletContext ServletContext
+     */
     private void registerSpringSecurityFilter(ServletContext servletContext) {
         javax.servlet.FilterRegistration.Dynamic springSecurityFilterChain
                 = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
