@@ -178,13 +178,13 @@ public class UserSettingController extends BaseController {
         Map<String, Object> searchColumn = new HashMap<>();
         searchColumn.put(CodeRepositoryUtil.USER_CODE, userInfo.getUserCode());
 
-        List<UserSetting> listObjects = userSettingManager.listObjects(searchColumn);
+        List<UserSetting> listObjectsAll = userSettingManager.listObjectsAll(searchColumn);
 
         String[] header = new String[]{"参数中文名称", "参数代码", "参数值", "创建时间"};
         String[] property = new String[]{"paramName", "paramCode", "paramValue", "createDate"};
 
 
-        InputStream generateExcel = ExportExcelUtil.generateExcel(listObjects, header, property);
+        InputStream generateExcel = ExportExcelUtil.generateExcel(listObjectsAll, header, property);
 
         try {
             WebOptUtils.download(generateExcel, "用户参数信息.xls", response);

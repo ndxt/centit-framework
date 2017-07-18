@@ -35,7 +35,7 @@ public interface InnerMsgRecipientDao {
      * 两人间来往消息列表
      *         String queryString ="From InnerMsgRecipient where( (msgCode in (Select msgCode from InnerMsg where sender= ? and (mailType='I' or mailType='O')) and Receive= ?) " +
         		"or (msgCode in(Select msgCode from InnerMsg where sender= ? and (mailType='I' or mailType='O')) and Receive=? )) order by msgCode desc";
-        List<InnerMsgRecipient> l = listObjects(queryString, new Object[]{sender,receiver,receiver,sender});
+        List<InnerMsgRecipient> l = listObjectsAll(queryString, new Object[]{sender,receiver,receiver,sender});
         String sender, String receiver
      */
     public  List<InnerMsgRecipient> getExchangeMsgs(Map<String, String> map);

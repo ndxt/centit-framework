@@ -1,11 +1,10 @@
 package com.centit.framework.system.dao;
 
-import java.util.List;
-import java.util.Map;
-
+import com.centit.framework.system.po.RolePower;
 import org.springframework.stereotype.Repository;
 
-import com.centit.framework.system.po.RolePower;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +17,7 @@ import com.centit.framework.system.po.RolePower;
 @Repository
 public interface RolePowerDao{
 
-	List<RolePower> listObjects();
+	List<RolePower> listObjectsAll();
 	
 	void mergeObject(RolePower rolePowers);
 	

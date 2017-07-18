@@ -57,10 +57,10 @@ public interface UserInfoDao{
 	 * userName, password }).get(0); }
 	 */
    
-    //return this.listObjects(filterMap);
+    //return this.listObjectsAll(filterMap);
     List<UserInfo> listUnderUnit(Map<String, Object> filterMap);
 
-    // return this.listObjects(filterMap, pageDesc);
+    // return this.listObjectsAll(filterMap, pageDesc);
     //List<UserInfo> listUnderUnit(Map<String, Object> filterMap, PageDesc pageDesc);
     
     //return getObjectById(userCode);

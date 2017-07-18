@@ -98,7 +98,7 @@ public class DBPlatformEnvironment implements PlatformEnvironment {
 	@Transactional(readOnly=true)
 	public boolean reloadSecurityMetadata() {
 		CentitSecurityMetadata.optMethodRoleMap.clear();
-		List<RolePower> rplist = rolePowerDao.listObjects();
+		List<RolePower> rplist = rolePowerDao.listObjectsAll();
 		if(rplist==null || rplist.size()==0)
 			return false;
 		for(RolePower rp: rplist ){

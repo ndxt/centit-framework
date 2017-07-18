@@ -131,22 +131,27 @@
        delete from F_ROLEPOWER where ROLECODE=#{roleCode} 
      ]]>
 	</delete>
-	<!--删除记录 结束 -->
-	<select id="listObjects"  resultMap="RolePower" parameterType="map"> 
-		 <include refid="coreSql" />
-		 <where>
-			<include refid="condition" />
-		</where>
-	</select>
-	<select id="listObjectsAll"  resultMap="RolePower">
-		 <include refid="coreSql" />
-	</select>
+
+
 	<delete id="deleteRolePowersByRoleCode" parameterType="String">
 		delete from F_ROLEPOWER rp where rp.ROLECODE=#{roleCode}
 	</delete>
 	<delete id="deleteRolePowersByOptCode" parameterType="String">
 		delete from F_ROLEPOWER rp where rp.OPTCODE=#{optecode}
 	</delete>
+
+	<!--删除记录 结束 -->
+	<select id="listObjects"  resultMap="RolePower" parameterType="map">
+		<include refid="coreSql" />
+		<where>
+			<include refid="condition" />
+		</where>
+	</select>
+
+	<select id="listObjectsAll"  resultMap="RolePower">
+		<include refid="coreSql" />
+	</select>
+
 	<select id="listRolePowersByRoleCode" parameterType="String" resultMap="RolePower">
 		<include refid="coreSql" />
 		where ROLECODE=#{roleCode}

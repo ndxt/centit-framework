@@ -22,11 +22,11 @@ public interface OptMethodDao{
 	public void saveNewObject(OptMethod optMethod);
 		
 	
-    //return listObjects("FROM OptMethod WHERE optId =?", sOptID);
+    //return listObjectsAll("FROM OptMethod WHERE optId =?", sOptID);
     public List<OptMethod> listOptMethodByOptID(String sOptID);
 
     /**
-     *  listObjects("FROM OptMethod WHERE optCode in "
+     *  listObjectsAll("FROM OptMethod WHERE optCode in "
         		+ "(select id.optCode from RolePower where id.roleCode = ?)"
         		+ " order by optId", roleCode);
      * @param roleCode
