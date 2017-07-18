@@ -9,7 +9,7 @@ import com.centit.framework.mybatis.config.DataSourceConfig;
 import com.centit.framework.security.model.CentitPasswordEncoderImpl;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.MemorySessionRegistryImpl;
-import com.centit.framework.system.listener.InstantiationTracingBeanPostProcessor;
+import com.centit.framework.system.listener.InstantiationSystemServiceBeanPostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.context.EnvironmentAware;
@@ -84,9 +84,8 @@ public class SpringConfig implements EnvironmentAware {
     }
 
     @Bean
-    public InstantiationTracingBeanPostProcessor instantiationTracingBeanPostProcessor() {
-        return new InstantiationTracingBeanPostProcessor();
+    public InstantiationSystemServiceBeanPostProcessor instantiationTracingBeanPostProcessor() {
+        return new InstantiationSystemServiceBeanPostProcessor();
     }
-
 
 }

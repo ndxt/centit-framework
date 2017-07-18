@@ -11,7 +11,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 /**
  * Created by codefan on 17-7-6.
  */
-public class InstantiationTracingBeanPostProcessor implements ApplicationListener<ContextRefreshedEvent>
+public class InstantiationSystemServiceBeanPostProcessor implements ApplicationListener<ContextRefreshedEvent>
 {
 
     @Autowired
