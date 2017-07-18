@@ -26,7 +26,6 @@ public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
 	/**
 	 * 封装http请求
 	 * @param request request
-	 * @return 封装http请求
 	 */
 	public XSSHttpRequestWrapper(HttpServletRequest request) {
 		super(request);

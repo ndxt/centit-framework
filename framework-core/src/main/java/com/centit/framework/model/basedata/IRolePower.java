@@ -8,17 +8,17 @@ package com.centit.framework.model.basedata;
 public interface IRolePower{
 	/**
 	 * 角色代码
-	 * @return
+	 * @return 角色代码
 	 */
-	public String getRoleCode();
+	 String getRoleCode();
 	/**
 	 * 业务操作代码（OptMethod）的主键
-	 * @return
+	 * @return 业务操作代码（OptMethod）的主键
 	 */
-	public String getOptCode();
+	 String getOptCode();
 	/**
 	 * 业务操作范围代码 集合
-	 * @return
+	 * @return 业务操作范围代码 集合
 	 */
-	public String[] getOptScopeCodeSet();
+	 String[] getOptScopeCodeSet();
 }

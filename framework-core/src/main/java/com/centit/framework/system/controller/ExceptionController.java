@@ -18,7 +18,7 @@ import java.io.IOException;
  * 通用的处理控制器，主要用于处理异常情况，
  *
  * @author codefan
- * @create 2014年10月24日
+ * 2014年10月24日
  */
 @Controller
 @RequestMapping("/exception")
@@ -28,9 +28,9 @@ public class ExceptionController extends BaseController {
     
     /**
      * 访问当前无权限URL请求后返回地址
-     *
-     * @param response
-     * @throws IOException
+     * @param request request
+     * @param response response
+     * @return 访问当前无权限URL请求后返回地址
      */
     @RequestMapping(value = "/accessDenied")
     public String accessDenied(HttpServletRequest request, HttpServletResponse response) {
@@ -43,9 +43,10 @@ public class ExceptionController extends BaseController {
      * web.xml中捕捉的异常不能得到异常的具体内容，CentitMappingExceptionResolver可以将异常信息传递过来
      *
      * @param code     错误码
-     * @param request
-     * @param response
-     * @throws IOException
+     * @param request request
+     * @param response response
+     * @throws IOException IOException
+     * @return 异常页面
      */
     @RequestMapping(value = "/error/{code}")
     public String errorPage(@PathVariable int code, HttpServletRequest request, HttpServletResponse response)

@@ -43,6 +43,7 @@ public interface PlatformEnvironment {
 	/**
 	 * 获取用户所有菜单功能
 	 * @param userCode userCode
+	 * @param superOptId superOptId
 	 * @param asAdmin 是否是作为管理员
 	 * @return List 用户所有菜单功能
 	 */
@@ -168,6 +169,7 @@ public interface PlatformEnvironment {
 	
 	/**
 	 * 获取所有数据字典类别信息
+	 * @param catalogCode catalogCode
 	 * @return List 所有数据字典类别信息
 	 */
 	List<? extends IDataDictionary> listDataDictionaries(String catalogCode);

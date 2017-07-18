@@ -39,9 +39,9 @@ public class CentitSecurityMetadata {
     }
     /**
      * C D R  U  :  POST DELETE GET PUT
-     * @param sOptDefUrl
-     * @param sMethod
-     * @return
+     * @param sOptDefUrl sOptDefUrl
+     * @param sMethod sMethod
+     * @return List parseUrl
      */
     public static List<List<String>> parseUrl(String sOptDefUrl,String sMethod){
         

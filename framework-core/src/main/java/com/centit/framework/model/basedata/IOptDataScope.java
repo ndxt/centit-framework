@@ -9,20 +9,20 @@ public interface IOptDataScope {
 	 * 数据范围过滤主键
 	 * @return 数据范围过滤主键
 	 */
-    public String getOptScopeCode(); 
+     String getOptScopeCode(); 
     /**
      * 所属业务ID
      * @return optId
      */
-    public String getOptId();
+     String getOptId();
     /**
      * 数据范围过滤名称
      * @return 数据范围过滤名称
      */
-	public String getScopeName();
+	 String getScopeName();
 	/**
 	 * 数据范围过滤条件
 	 * @return 数据范围过滤条件
 	 */
-	public String getFilterCondition();
+	 String getFilterCondition();
 }

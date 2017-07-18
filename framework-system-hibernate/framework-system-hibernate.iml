@@ -22,7 +22,7 @@
     <orderEntry type="module" module-name="framework-adapter" />
     <orderEntry type="library" name="Maven: com.centit.support:centit-utils:2.2" level="project" />
     <orderEntry type="library" name="Maven: org.mnode.ical4j:ical4j:2.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.6" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy-all:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: biz.aQute.bnd:bndlib:2.3.0" level="project" />
@@ -135,7 +135,7 @@
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.6.6" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:4.3.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator:5.4.1.Final" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.ehcache:ehcache:2.8.3" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.ehcache:ehcache:2.10.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
   </component>
 </module>

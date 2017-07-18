@@ -24,23 +24,6 @@ import com.centit.framework.common.WebOptUtils;
 /**
  * @author hx
  * 安全信息审核类
- * <!--   解决xss漏洞   (新) beg-->
- *	<filter>
- *		<filter-name>XSSFiler</filter-name>
- *		<filter-class>com.centit.framework.filter.XSSSecurityFilter</filter-class>
- *		<init-param>
- *			<param-name>securityconfig</param-name>
- *			<param-value>
- *			    /securityconfig/xss_security_config.xml
- *			</param-value>
- *		</init-param>
- *	</filter>
- *	<filter-mapping>
- *		<filter-name>XSSFiler</filter-name>
- *		<url-pattern>/*</url-pattern>
- *	</filter-mapping>
- *   <!--   解决xss漏洞   (新) end-->
- *
  */
 public class XSSSecurityFilter implements Filter{
 

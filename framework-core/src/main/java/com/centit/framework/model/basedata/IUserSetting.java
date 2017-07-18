@@ -8,28 +8,28 @@ package com.centit.framework.model.basedata;
 public interface IUserSetting {
 	/**
 	 * 用户代码（用户主键）
-	 * @return
+	 * @return 用户代码（用户主键）
 	 */
-	public String getUserCode();
+	 String getUserCode();
 	/**
 	 * 参数代码（参数主键）
-	 * @return
+	 * @return 参数代码（参数主键）
 	 */
-	public String getParamCode();
+	 String getParamCode();
 	/**
 	 * 参数值
-	 * @return
+	 * @return 参数值
 	 */
-	public String getParamValue();
+	 String getParamValue();
 	/**
 	 * 参数对应的业务Id，system 表示系统参数
-	 * @return
+	 * @return 参数对应的业务Id，system 表示系统参数
 	 */
-	public String getOptId();
+	 String getOptId();
 	/**
 	 * 参数名称或者参数说明，可选
-	 * @return
+	 * @return 参数名称或者参数说明，可选
 	 */
-	public String getParamName();
+	 String getParamName();
 
 }

@@ -61,6 +61,9 @@ public class MainFrameController extends BaseController {
    
     /**
      * 登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置
+     * @param request request
+     * @param session session
+     * @return 登录首页链接
      */
     @RequestMapping(value = "/index")
     public String index(HttpServletRequest request, HttpSession session) {
@@ -68,6 +71,12 @@ public class MainFrameController extends BaseController {
         return "sys/index";//"redirect:"+ firstpage;//
     }
 
+    /**
+     *
+     * @param request request
+     * @param session session
+     * @return 登录后首页URL
+     */
     @RequestMapping(value = "/logincas")
     public String logincas(HttpServletRequest request, HttpSession session) {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
@@ -76,7 +85,7 @@ public class MainFrameController extends BaseController {
 
     /**
      * 登录界面入口
-     *
+     * @param session session
      * @return 登录界面
      */
     @RequestMapping("/login")
@@ -90,7 +99,12 @@ public class MainFrameController extends BaseController {
 	    	 return "sys/login";
 	     }       
     }
-    
+
+    /**
+     *
+     * @param session session
+     * @return 登录界面
+     */
     @RequestMapping("/loginasadmin")
     public String loginAsAdmin(HttpSession session) {
         if (deploy) {
@@ -102,8 +116,12 @@ public class MainFrameController extends BaseController {
         else    
             return "sys/login";
     }
-    
 
+    /**
+     *
+     * @param session session
+     * @return 登录界面
+     */
     @RequestMapping("/login/error")
     public String loginError(HttpSession session) {
         //在系统中设定Spring Security 相关的错误信息
@@ -115,7 +133,12 @@ public class MainFrameController extends BaseController {
         //重新登录
         return login(session);
     }
-    
+
+    /**
+     *
+     * @param session session
+     * @return 登出页面
+     */
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
         session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
@@ -128,7 +151,14 @@ public class MainFrameController extends BaseController {
         else
             return "redirect:/logout";//j_spring_security_logout
     }
-    
+
+    /**
+     *
+     * @param password password
+     * @param newPassword newPassword
+     * @param request request
+     * @param response response
+     */
     @RequestMapping(value ="/changepwd",method = RequestMethod.PUT)
     public void changepassword(String password, String newPassword,
             HttpServletRequest request,HttpServletResponse response) {
@@ -145,7 +175,13 @@ public class MainFrameController extends BaseController {
 	    	}
     	}
     }
-    
+
+    /**
+     *
+     * @param password password
+     * @param request request
+     * @param response response
+     */
     @RequestMapping(value ="/checkpwd",method = RequestMethod.POST)
     public void checkpassword(String password, 
             HttpServletRequest request,HttpServletResponse response) {
@@ -160,8 +196,8 @@ public class MainFrameController extends BaseController {
     
     /**
      * 这个方法是个内部通讯的客户端程序使用的，客户端程序通过用户代码（注意不是用户名）和密码登录，这个密码建议随机生成
-     * @param request
-     * @param response
+     * @param request request
+     * @param response response
      */
     @RequestMapping(value="/loginasclient",method = RequestMethod.POST)
     public void loginAsClient(HttpServletRequest request,HttpServletResponse response) {
@@ -187,7 +223,12 @@ public class MainFrameController extends BaseController {
 		JsonResultUtils.writeResponseDataAsJson(resData, response);
 
     }
-    
+
+    /**
+     *
+     * @param request request
+     * @param response response
+     */
     @RequestMapping(value = "/login/csrf",method = RequestMethod.GET)
     public void getLoginCsrfToken(HttpServletRequest request,HttpServletResponse response) {
     	if(csrfTokenRepository!=null){
@@ -208,11 +249,21 @@ public class MainFrameController extends BaseController {
     	}
     }
 
+    /**
+     *
+     * @param request request
+     * @param response response
+     */
     @RequestMapping(value = "/csrf",method = RequestMethod.GET)
     public void getCsrfToken(HttpServletRequest request,HttpServletResponse response) {
         getLoginCsrfToken(request, response);
     }
 
+    /**
+     *
+     * @param request request
+     * @param response response
+     */
     @RequestMapping(value = "/captchaimage",method = RequestMethod.GET)
     public void captchaImage( HttpServletRequest request, HttpServletResponse response) {
   
@@ -234,13 +285,23 @@ public class MainFrameController extends BaseController {
             e.printStackTrace();
         }
     }
-    
-    
+
+    /**
+     *
+     * @param request request
+     * @param response response
+     */
     @RequestMapping(value = "/login/captchaimage",method = RequestMethod.GET)
     public void loginCaptchaImage( HttpServletRequest request, HttpServletResponse response) {  
     	captchaImage(  request,  response);
     }
-    
+
+    /**
+     *
+     * @param checkcode checkcode
+     * @param request request
+     * @param response response
+     */
     @RequestMapping(value = "/checkcaptcha/{checkcode}",method = RequestMethod.GET)
     public void checkCaptchaImage(@PathVariable String checkcode, HttpServletRequest request, HttpServletResponse response) {
   
@@ -250,7 +311,11 @@ public class MainFrameController extends BaseController {
         
         JsonResultUtils.writeOriginalObject(StringUtils.equals(checkcode, sessionCode), response);
     }
-    
+
+    /**
+     * @param request request
+     * @param response response
+     */
     @RequestMapping("/currentuser")
     public void getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
     	CentitUserDetails ud = WebOptUtils.getLoginUser(request);

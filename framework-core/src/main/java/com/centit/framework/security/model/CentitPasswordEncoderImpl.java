@@ -52,7 +52,8 @@ public class CentitPasswordEncoderImpl
      * Encode the raw password. Generally, a good encoding algorithm applies a SHA-1 or
      * greater hash combined with an 8-byte or greater randomly generated salt.
      *
-     * @param rawPassword
+     * @param rawPassword  rawPassword
+     * @return encode
      */
     @Override
     public String encode(CharSequence rawPassword) {

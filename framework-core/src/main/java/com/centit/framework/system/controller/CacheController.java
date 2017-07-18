@@ -154,7 +154,10 @@ public class CacheController {
      * 获取数据字典
      *
      * @param catalog  数据目录代码
+     * @param extraCode  extraCode
+     * @param request  request
      * @param response HttpServletResponse
+     *
      */
     @RequestMapping(value = "/dictionary/{catalog}", method = RequestMethod.GET)
     public void dictionary(@PathVariable String catalog, String extraCode,
@@ -181,6 +184,7 @@ public class CacheController {
      * 获取数据字典 ，忽略 tag 为 'D'的条目 【delete】
      *
      * @param catalog  数据目录代码
+     * @param request  request
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/dictionaryd/{catalog}", method = RequestMethod.GET)
@@ -253,6 +257,8 @@ public class CacheController {
      * 获取所有符合状态标记的用户，
      *
      * @param unitfilter 机构代码
+     * @param varMap varMap
+     * @param request request
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/unitfilter/{unitfilter}", method = RequestMethod.GET)
@@ -287,6 +293,8 @@ public class CacheController {
      * 获取所有符合状态标记的用户，
      *
      * @param userfilter 机构代码
+     * @param varMap varMap
+     * @param request request
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/userfilter/{userfilter}", method = RequestMethod.GET)
@@ -372,6 +380,7 @@ public class CacheController {
      * 获取系统设置的值
      *
      * @param paramCode 用户设置的参数
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/sysconfig/{paramCode}", method = RequestMethod.GET)
     public void getSysConfigValue(@PathVariable String paramCode,
@@ -382,6 +391,7 @@ public class CacheController {
     
     /**
      * 获取用户信息
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/userdetails", method = RequestMethod.GET)
     public void getUserDetails(
@@ -396,6 +406,7 @@ public class CacheController {
      * 获取用户当前设置值
      *
      * @param paramCode 用户设置的参数
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/usersetting/{paramCode}", method = RequestMethod.GET)
     public void getUserSettingValue(@PathVariable String paramCode,
@@ -406,14 +417,20 @@ public class CacheController {
     
     /**
      * 获取用户所有设置
-     * @param response
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/usersettings", method = RequestMethod.GET)
     public void getUserAllSettings(HttpServletResponse response) {
         JsonResultUtils.writeSingleDataJson(
         		CodeRepositoryUtil.getUserAllSettings(), response);
     }
-    
+
+    /**
+     *
+     * @param optId optId
+     * @param method method
+     * @param response response
+     */
     @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = { RequestMethod.GET })
     public void checkUserOptPower(@PathVariable String optId,
     		@PathVariable String method, HttpServletResponse response) {
@@ -425,7 +442,7 @@ public class CacheController {
     /**
      * 获取用户所有的 操作方法
      * 返回一个map，key为optid+‘-’+method value 为 'T'
-     * @param response
+     * @param response response
      */
     @RequestMapping(value = "/userallpowers", method = { RequestMethod.GET })
     public void getUserAllPowers( HttpServletResponse response) {
@@ -435,7 +452,7 @@ public class CacheController {
     
     /**
      * 重新load Sql ExtendedMap
-     * @param response
+     * @param response response
      */
     @RequestMapping(value = "/reloadextendedsqlmap", method = { RequestMethod.GET })
     public void reloadExtendedSqlMap( HttpServletResponse response) {

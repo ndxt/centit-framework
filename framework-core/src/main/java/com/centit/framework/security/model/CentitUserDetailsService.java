@@ -6,53 +6,53 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collection;
 
-public interface CentitUserDetailsService 
+public interface CentitUserDetailsService
 		extends UserDetailsService
 				/*AuthenticationUserDetailsService<Authentication>*/{
 	/**
 	 * 获取用户 权限，角色名数组
-	 * @param loginname
-	 * @return
-	 * @throws UsernameNotFoundException
+	 * @param loginname loginname
+	 * @return 用户 权限，角色名数组
+	 * @throws UsernameNotFoundException UsernameNotFoundException
 	 */
-	public Collection<? extends GrantedAuthority> loadUserAuthorities(String loginname) throws UsernameNotFoundException;
+	 Collection<? extends GrantedAuthority> loadUserAuthorities(String loginname) throws UsernameNotFoundException;
 	
 	/**
 	 * 获取用户信息 by loginname，用户的登录名
-	 * @param loginname
-	 * @return
+	 * @param loginname loginname
+	 * @return  用户信息
 	 */
-    public CentitUserDetails loadDetailsByLoginName(String loginname);
+     CentitUserDetails loadDetailsByLoginName(String loginname);
     
     /**
      * 获取用户信息 by userCode，用户的主键
-     * @param userCode
-     * @return
+     * @param userCode userCode
+     * @return 用户信息
      */
-    public CentitUserDetails loadDetailsByUserCode(String userCode);
+     CentitUserDetails loadDetailsByUserCode(String userCode);
     
     /**
      * 获取用户信息 by RegEmail，用户的主键
-     * @param regEmail
-     * @return
-     */
-    public CentitUserDetails loadDetailsByRegEmail(String regEmail);
+     * @param regEmail regEmail
+     * @return 用户信息
+	 */
+     CentitUserDetails loadDetailsByRegEmail(String regEmail);
 
     /**
      * 获取用户信息 by RegCellPhone，用户的主键
-     * @param regCellPhone
-     * @return
+     * @param regCellPhone regCellPhone
+     * @return 用户信息
      */
-    public CentitUserDetails loadDetailsByRegCellPhone(String regCellPhone);
+     CentitUserDetails loadDetailsByRegCellPhone(String regCellPhone);
     /**
      * 设置用户参数 （用户登录时 回写表单中的附加信息，比如用户选择的站点、语言等等信息）
-     * @param userCode
-     * @param paramCode
-     * @param paramValue
-     * @param paramClass
-     * @param paramName
+     * @param userCode userCode
+     * @param paramCode paramCode
+     * @param paramValue paramValue
+     * @param paramClass paramClass
+     * @param paramName paramName
      */
-    public void saveUserSetting(String userCode, String paramCode,String paramValue,
+     void saveUserSetting(String userCode, String paramCode,String paramValue,
 			String paramClass, String paramName);
 
 }

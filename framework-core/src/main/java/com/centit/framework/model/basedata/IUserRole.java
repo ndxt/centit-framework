@@ -8,12 +8,12 @@ package com.centit.framework.model.basedata;
 public interface IUserRole{
 	/**
 	 * 用户代码
-	 * @return
+	 * @return 用户代码
 	 */
-	public String getUserCode();
+	 String getUserCode();
 	/**
 	 * 角色代码
-	 * @return
+	 * @return 角色代码
 	 */
-    public String getRoleCode();
+     String getRoleCode();
 }
