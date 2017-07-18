@@ -1,4 +1,4 @@
-package com.centit.framework.system.listener;
+package com.centit.framework.web.demo.listener;
 
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.model.adapter.MessageSender;
@@ -11,7 +11,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 /**
  * Created by codefan on 17-7-6.
  */
-public class InstantiationSystemServiceBeanPostProcessor implements ApplicationListener<ContextRefreshedEvent>
+public class InstantiationServiceBeanPostProcessor implements ApplicationListener<ContextRefreshedEvent>
 {
 
     @Autowired
@@ -27,8 +27,10 @@ public class InstantiationSystemServiceBeanPostProcessor implements ApplicationL
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event)
     {
-        notificationCenter.registerMessageSender("innerMsg", innerMessageManager);
-        OperationLogCenter.registerOperationLogWriter(optLogManager);
+        if(innerMessageManager!=null)
+            notificationCenter.registerMessageSender("innerMsg", innerMessageManager);
+        if(optLogManager!=null)
+            OperationLogCenter.registerOperationLogWriter(optLogManager);
     }
 
 }

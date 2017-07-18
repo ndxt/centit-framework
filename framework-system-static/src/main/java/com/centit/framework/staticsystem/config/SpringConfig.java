@@ -57,17 +57,6 @@ public class SpringConfig implements EnvironmentAware {
         return new InitialWebRuntimeEnvironment();
     }
 
-    @Bean(initMethod = "init")
-    @Lazy(value = false)
-    public OperationLogWriter operationLogWriter() {
-        return new TextOperationLogWriterImpl();
-    }
-
-    @Bean(initMethod = "initMsgSenders")
-    public NotificationCenterImpl notificationCenter() {
-        return new NotificationCenterImpl();
-    }
-
     @Bean
     public CentitPasswordEncoderImpl passwordEncoder() {
         return  new CentitPasswordEncoderImpl();
@@ -80,7 +69,6 @@ public class SpringConfig implements EnvironmentAware {
 
         Boolean ipEnable = env.getProperty("centit.ip.enable",Boolean.class);// = false
         PlatformEnvironment staticPlatformEnvironment=null;
-
 
         Boolean jdbcEnable = env.getProperty("centit.jdbcplatform.enable", Boolean.class);// = false
         if (jdbcEnable != null && jdbcEnable) {
