@@ -9,35 +9,35 @@ public interface IOptMethod{
 	 * 操作方法主键
 	 * @return
 	 */
-    public String getOptCode(); 
+    String getOptCode(); 
     /**
      * 所属业务ID
      * @return
      */
-    public String getOptId();
+    String getOptId();
     /**
      * 操作名称
      * @return
      */
-    public String getOptName();
+    String getOptName();
     /**
      * 操作方法
      * @return
      */
-    public String getOptMethod();
+    String getOptMethod();
     /**
      * 操作URL
      * @return
      */
-    public String getOptUrl();
+    String getOptUrl();
     /**
      * 操作url请求方法 CRUD 
      * @return
      */
-    public String getOptReq();
+    String getOptReq();
     /**
      * 操作方法排序
      * @return
      */
-    public Integer getOptOrder();
+    Integer getOptOrder();
 }

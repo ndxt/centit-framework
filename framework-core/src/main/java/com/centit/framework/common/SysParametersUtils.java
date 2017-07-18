@@ -16,7 +16,7 @@ import com.centit.support.algorithm.StringRegularOpt;
  * 系统外置目录路径工具类
  *
  * @author sx
- * @create 2012-12-7
+ * date 2012-12-7
  */
 public class SysParametersUtils {
 
@@ -28,7 +28,7 @@ public class SysParametersUtils {
      * 常用参数在此添加对应枚举，并在下面添加对应静态方法
      *
      * @author sx
-     * @create 2012-12-7
+     * date 2012-12-7
      */
     public static enum Parameter {
         APP_HOME("app.home"), LOG_HOME("dir.log"), 
@@ -49,7 +49,7 @@ public class SysParametersUtils {
     /**
      * 获取应用的根目录
      *
-     * @return
+     * @return String 根目录
      */
     public static String getAppHome() {
         return FilenameUtils.normalize(getParameters(Parameter.APP_HOME)) ;
@@ -59,7 +59,7 @@ public class SysParametersUtils {
     /**
      *  获取应用的临时目录
      *
-     * @return
+     * @return String 应用的临时目录
      */
     public static String getTempHome() {
         return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) 
@@ -69,7 +69,7 @@ public class SysParametersUtils {
     /**
      * 获取上传文件临时目录
      *
-     * @return
+     * @return String 上传文件临时目录
      */
     public static String getUploadTempHome() {
         return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) + getParameters(Parameter.UPLOAD_HOME)
@@ -79,7 +79,7 @@ public class SysParametersUtils {
     /**
      * 获取配置目录
      *
-     * @return
+     * @return String 配置目录
      */
     public static String getConfigHome() {
         return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) +"/config");
@@ -88,7 +88,7 @@ public class SysParametersUtils {
     /**
      * 获取日志目录
      *
-     * @return
+     * @return String 日志目录
      */
     public static String getLogHome() {
         return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) + getParameters(Parameter.LOG_HOME));
@@ -97,7 +97,7 @@ public class SysParametersUtils {
     /**
      * 获取上传文件目录
      *
-     * @return
+     * @return String 上传文件目录
      */
     public static String getUploadHome() {
         return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) + getParameters(Parameter.UPLOAD_HOME));
@@ -106,7 +106,7 @@ public class SysParametersUtils {
     /**
      * 获取索引文件目录
      *
-     * @return
+     * @return String 索引文件目录
      */
     public static String getIndexHome() {
         return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) + getParameters(Parameter.INDEX_HOME));
@@ -115,7 +115,7 @@ public class SysParametersUtils {
     /**
      * 公共文件夹
      *
-     * @return
+     * @return String 公共文件夹
      */
     public static String getPublicFileHome() {
         return FilenameUtils.normalize(getUploadHome() + getParameters(Parameter.PUBLIC_FILE));
@@ -160,6 +160,11 @@ public class SysParametersUtils {
         return loadProperties(false);
     }
 
+    /**
+     *读取配置文件信息
+     * @param forceReload 是否强制加载
+     * @return Properties 配置文件信息
+     */
     public static Properties loadProperties(boolean forceReload) {
         if (forceReload || null == prop) {
             prop = new Properties();

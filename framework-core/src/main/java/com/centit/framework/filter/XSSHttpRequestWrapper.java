@@ -17,8 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * @author hx
- * @date 
- * @describe request信息封装类，用于判断、处理request请求中特殊字符
+ * request信息封装类，用于判断、处理request请求中特殊字符
  */
 public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
     private final String [] ignoreUrls = new String[]{
@@ -26,7 +25,8 @@ public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
     		"download","listSelectOrg","selectList"};
 	/**
 	 * 封装http请求
-	 * @param request
+	 * @param request request
+	 * @return 封装http请求
 	 */
 	public XSSHttpRequestWrapper(HttpServletRequest request) {
 		super(request);
@@ -141,10 +141,10 @@ public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
     /**
      * 没有违规的数据，就返回false;
      * 若存在违规数据，根据配置信息判断是否跳转到错误页面
-     * @param response
-     * @return
-     * @throws IOException 
-     * @throws ServletException 
+     * @param response response
+     * @return 是否有违规的数据
+     * @throws IOException  IOException
+     * @throws ServletException  ServletException
      */
     public boolean validateParameter(HttpServletResponse response) throws ServletException, IOException{
     	XSSSecurityConfig cfg = XSSSecurityConfig.getConfig();

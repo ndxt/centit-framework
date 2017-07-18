@@ -7,22 +7,22 @@ package com.centit.framework.model.basedata;
 public interface IOptDataScope {
 	/**
 	 * 数据范围过滤主键
-	 * @return
+	 * @return 数据范围过滤主键
 	 */
     public String getOptScopeCode(); 
     /**
      * 所属业务ID
-     * @return
+     * @return optId
      */
     public String getOptId();
     /**
      * 数据范围过滤名称
-     * @return
+     * @return 数据范围过滤名称
      */
 	public String getScopeName();
 	/**
 	 * 数据范围过滤条件
-	 * @return
+	 * @return 数据范围过滤条件
 	 */
 	public String getFilterCondition();
 }

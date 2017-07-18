@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
  * 在ThreadLocal中封装请求响应
  *
  * @author sx
- * @create 2014-10-20
+ * 2014-10-20
  */
 public class HttpThreadWrapper implements Serializable {
     /**

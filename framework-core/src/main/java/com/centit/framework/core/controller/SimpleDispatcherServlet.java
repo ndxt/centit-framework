@@ -15,7 +15,7 @@ import com.centit.framework.core.common.ResponseData;
  * 重写404
  *
  * @author sx
- * @create 2014-10-22
+ * 2014-10-22
  */
 public class SimpleDispatcherServlet extends DispatcherServlet {
 

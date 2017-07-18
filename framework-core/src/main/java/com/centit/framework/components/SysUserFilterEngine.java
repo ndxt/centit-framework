@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * @author codefan
  * @version 2.0
- * @create 2012-2-3
+ * 2012-2-3
  */
 public class SysUserFilterEngine implements Serializable {
     /**
@@ -709,10 +709,10 @@ public class SysUserFilterEngine implements Serializable {
     }
 
     /**
-     * itemExp ([||itemExp][&& itemExp][! itemExp])*
+     * itemExp ([或  itemExp][与 itemExp][非 itemExp])*
      *
-     * @param ecc
-     * @return
+     * @param ecc UserUnitFilterCalcContext
+     * @return calcRolesExp
      */
     public static Set<String> calcRolesExp(UserUnitFilterCalcContext ecc) {
         Set<String> users = calcItemExp(ecc);

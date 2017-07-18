@@ -10,12 +10,12 @@ import java.util.Date;
 public interface EntityWithTimestamp{
     /**
      * 获取最后更新时间戳
-     * @return
+     * @return 最后更新时间戳
      */
     public Date getLastModifyDate();
     /**
      * 设置最后更新时间戳
-     * @param lastModifyDate
+     * @param lastModifyDate Date
      */
     public void setLastModifyDate(Date lastModifyDate);
 

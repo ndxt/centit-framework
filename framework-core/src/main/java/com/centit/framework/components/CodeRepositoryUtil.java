@@ -32,7 +32,7 @@ import java.util.*;
  * cp标签实现类，并可以通过静态方法直接调用系统缓存
  *
  * @author codefan@sina.com
- * @create 2015-11-3
+ * 2015-11-3
  */
 public final class CodeRepositoryUtil {    
     
@@ -131,7 +131,7 @@ public final class CodeRepositoryUtil {
     /**
      * 获取操作定义（权限的控制单位）
      *
-     * @return
+     * @return Map 操作定义（权限的控制单位）
      */
     public static Map<String,? extends IOptMethod> getPowerRepo() {
     	return getPlatformEnvironment().getOptMethodRepo();
@@ -140,7 +140,7 @@ public final class CodeRepositoryUtil {
     /**
      * 获取所有数据字典类别
      *
-     * @return
+     * @return Map 所有数据字典类别
      */
     protected static final Map<String,String> getDataCatalogMap() {
     	Map<String, String> dataCatalogMap = new HashMap<String, String>();
@@ -156,8 +156,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获取数据字典
      *
-     * @param sCatalog
-     * @return
+     * @param sCatalog 字典类别代码
+     * @return List 数据字典
      */
     public static final List<? extends IDataDictionary> getDictionary(String sCatalog) {
         return getPlatformEnvironment().listDataDictionaries(sCatalog);
@@ -196,7 +196,7 @@ public final class CodeRepositoryUtil {
      * 		userCode 用户信息 unitCode机构信息 
      * 		roleCode 角色信息 optId 业务信息
      * @param sKey     字典代码
-     * @return
+     * @return  数据字典对应的值
      */
     public static final String getValue(String sCatalog, String sKey) {
     	return getValue(sCatalog,sKey,WebOptUtils.getCurrentLang(getLocalThreadWrapperRequest()));
@@ -206,7 +206,8 @@ public final class CodeRepositoryUtil {
      *
      * @param sCatalog 字典类别代码
      * @param sKey     字典代码
-     * @return
+     * @param localLang String类型
+     * @return 数据字典对应的值
      */
     public static final String getValue(String sCatalog, String sKey,String localLang) {
         try {
@@ -288,7 +289,7 @@ public final class CodeRepositoryUtil {
      *
      * @param sCatalog 数据字典代码
      * @param sValue   数据字典值
-     * @return
+     * @return 部门编码映射key值
      */
     public static final String getCode(String sCatalog, String sValue) {
         if (StringUtils.isBlank(sValue)) {
@@ -359,7 +360,7 @@ public final class CodeRepositoryUtil {
      *
      * @param sCatalog    数据字典代码
      * @param sExpression 表达式
-     * @return
+     * @return 达式中的字典代码 转换为 数据字典值
      */
     public static final String transExpression(String sCatalog, String sExpression) {
         StringBuilder sb = new StringBuilder();
@@ -383,7 +384,7 @@ public final class CodeRepositoryUtil {
      *
      * @param sCatalog 字典类别代码
      * @param sKey     字典代码
-     * @return
+     * @return 数据字典条目的状态
      */
     public static final String getItemState(String sCatalog, String sKey) {
         try {
@@ -417,7 +418,7 @@ public final class CodeRepositoryUtil {
      * 按类别获取 业务定义信息
      *
      * @param sOptType  S:实施业务, O:普通业务, W:流程业务, I:项目业务  , M:菜单   A: 为所有
-     * @return
+     * @return List 业务定义信息
      */
     public static final List<IOptInfo> getOptinfoList(String sOptType) {
         List<IOptInfo> optList = new ArrayList<IOptInfo>();
@@ -452,8 +453,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获得一个业务下面的操作定义
      *
-     * @param sOptID
-     * @return
+     * @param sOptID optId
+     * @return List 一个业务下面的操作定义
      */
     public static final List<? extends IOptMethod> getOptMethodByOptID(String sOptID) {
         List<IOptMethod> optList = new ArrayList<IOptMethod>();
@@ -470,8 +471,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获取角色信息，根据前缀获取，系统中的角色的前缀可以区分 角色的类别。
      *
-     * @param sPrefix
-     * @return
+     * @param sPrefix 角色的前缀
+     * @return List 角色信息
      */
     public static final List<IRoleInfo> getRoleinfoList(String sPrefix) {
         List<IRoleInfo> roleList = new ArrayList<IRoleInfo>();
@@ -488,7 +489,7 @@ public final class CodeRepositoryUtil {
      * 获取所有符合状态标记的用户，
      *
      * @param sState 用户状态， A 表示所有状态
-     * @return
+     * @return List 所有符合状态标记的用户
      */
     public static final List<IUserInfo> getAllUsers(String sState) {
     	List<? extends IUserInfo> allusers = getPlatformEnvironment().listAllUsers();
@@ -510,8 +511,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获取一个机构下面的所有以这个机构为主机构的用户，并且根据排序号排序
      *
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return List 一个机构下面的所有以这个机构为主机构的用户
      */
     public static final List<IUserInfo> getSortedPrimaryUnitUsers(String unitCode) {
         List<? extends IUserUnit> unitUsers = listUnitUsers(unitCode);
@@ -549,8 +550,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获取一个机构下面的所有用户，并且根据排序号排序
      *
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return List 一个机构下面的所有用户
      */
     public static final List<IUserInfo> getSortedUnitUsers(String unitCode) {
         List<? extends IUserUnit> unitUsers = listUnitUsers(unitCode);
@@ -585,9 +586,9 @@ public final class CodeRepositoryUtil {
     /**
      * 获取机构下面的所有下级机构，并且排序
      *
-     * @param unitCode
-     * @param unitType
-     * @return
+     * @param unitCode unitCode
+     * @param unitType unitType
+     * @return List 机构下面的所有下级机构
      */
     public static final List<IUnitInfo> getSortedSubUnits(String unitCode, String unitType) {
         List<IUnitInfo> units = new ArrayList<IUnitInfo>();
@@ -617,8 +618,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获取一个机构所有用户，没有排序
      *
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return Set 一个机构所有用户
      */
     public static final Set<IUserInfo> getUnitUsers(String unitCode) {
         
@@ -638,8 +639,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获取一个用户所有机构，没有排序
      *
-     * @param userCode
-     * @return
+     * @param userCode userCode
+     * @return Set 一个用户所有机构
      */
     public static final Set<IUnitInfo> getUserUnits(String userCode) {
         
@@ -661,8 +662,8 @@ public final class CodeRepositoryUtil {
     /**
      * 根据用户号获得用户信息
      *
-     * @param userCode
-     * @return
+     * @param userCode userCode
+     * @return  用户信息
      */
     public static final IUserInfo getUserInfoByCode(String userCode) {
         return getUserRepo().get(userCode);
@@ -698,9 +699,9 @@ public final class CodeRepositoryUtil {
     /**
      * 获取用户行政角色
      *
-     * @param userCode
+     * @param userCode userCode
      * @param unitCode 机构代码如果是 null 系统会默认的找用户的主机构
-     * @return
+     * @return 用户行政角色
      */
     public static final Integer getUserUnitXzRank(String userCode, String unitCode) {
         if (userCode == null) {
@@ -729,8 +730,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获得已知机构 下级的所有有效机构并返回map
      *
-     * @param sParentUnit
-     * @return
+     * @param sParentUnit sParentUnit
+     * @return Map 已知机构下级的所有有效机构
      */
     public static final Map<String, IUnitInfo> getUnitMapByParaent(String sParentUnit) {
         Map<String, IUnitInfo> units = new HashMap<String, IUnitInfo>();
@@ -747,8 +748,8 @@ public final class CodeRepositoryUtil {
     /**
      * 根据机构代码获取机构信息
      *
-     * @param sUnit
-     * @return
+     * @param sUnit sUnit 机构代码
+     * @return 机构信息
      */
     public static final IUnitInfo getUnitInfoByCode(String sUnit) {
         return getUnitRepo().get(sUnit);
@@ -758,7 +759,7 @@ public final class CodeRepositoryUtil {
      * 根据状态获取所有机构信息，
      *
      * @param sState A表示所有状态
-     * @return
+     * @return List 所有机构信息
      */
     public static final List<IUnitInfo> getAllUnits(String sState) {
         
@@ -780,8 +781,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获得已知机构 下级的所有机构并返回map，包括失效的机构
      *
-     * @param sParentUnit
-     * @return
+     * @param sParentUnit sParentUnit
+     * @return Map 已知机构下级的所有机构，包括失效的机构
      */
     public static final Map<String, IUnitInfo> getAllUnitMapByParaent(String sParentUnit) {
         Map<String, IUnitInfo> units = new HashMap<String, IUnitInfo>();
@@ -798,8 +799,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获得已知机构 下级的所有有效机构并返回map，包括下级机构的下级机构
      *
-     * @param sParentUnit
-     * @return
+     * @param sParentUnit sParentUnit
+     * @return Map 已知机构下级的所有有效机构，包括下级机构的下级机构
      */
     public static final Map<String, IUnitInfo> getUnitMapBuyParaentRecurse(String sParentUnit) {
         Map<String, IUnitInfo> units = new HashMap<String, IUnitInfo>();
@@ -831,8 +832,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获取数据字典，并整理为json机构
      *
-     * @param sCatalog
-     * @return
+     * @param sCatalog 数据字典类别，或者系统内置的类别
+     * @return 数据字典，整理为json机构
      */
     public static final String getDictionaryAsJson(String sCatalog) {
         List<? extends IDataDictionary> lsDictionary = getDictionary(sCatalog);
@@ -855,8 +856,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获取数据字典 ，忽略 tag 为 'D'的条目 【delete】
      *
-     * @param sCatalog
-     * @return
+     * @param sCatalog 数据字典类别，或者系统内置的类别
+     * @return 数据字典,忽略 tag 为 'D'的条目
      */
     public static final List<IDataDictionary> getDictionaryIgnoreD(String sCatalog) {    					
         List<IDataDictionary> dcRetMap = new ArrayList<IDataDictionary>();
@@ -878,7 +879,7 @@ public final class CodeRepositoryUtil {
      * @param sCatalog 数据字典类别，或者系统内置的类别
      * 		userCode 用户信息 unitCode机构信息 
      * 		roleCode 角色信息 optId 业务信息
-     * @return
+     * @return Map  数据字典
      */
     public static final Map<String,String> getAllLabelValueMap(String sCatalog){
     	return getAllLabelValueMap(sCatalog,WebOptUtils.getCurrentLang(
@@ -888,7 +889,8 @@ public final class CodeRepositoryUtil {
      * 获取 数据字典 key value
      *
      * @param sCatalog 数据字典类别，或者系统内置的类别
-     * @return
+     * @param localLang localLang
+     * @return Map  数据字典
      */
     public static final Map<String,String> getAllLabelValueMap(String sCatalog, String localLang) {
         Map<String,String> lbvs = new HashMap<String,String>();
@@ -977,7 +979,7 @@ public final class CodeRepositoryUtil {
      * @param sCatalog 数据字典类别，或者系统内置的类别
      * 		userCode 用户信息 unitCode机构信息 
      * 		roleCode 角色信息 optId 业务信息
-     * @return
+     * @return  数据字典,忽略禁用的条目
      */
     public static final Map<String,String> getLabelValueMap(String sCatalog){
     	return getLabelValueMap(sCatalog,WebOptUtils.getCurrentLang(getLocalThreadWrapperRequest()));
@@ -986,7 +988,8 @@ public final class CodeRepositoryUtil {
      * 获取 数据字典 key value 对， 忽略 禁用的 条目
      *
      * @param sCatalog 数据字典类别，或者系统内置的类别
-     * @return
+     * @param localLang localLang
+     * @return 数据字典,忽略禁用的条目
      */
     public static final Map<String,String> getLabelValueMap(String sCatalog, String localLang) {
         Map<String,String> lbvs = new HashMap<String,String>();
@@ -1073,7 +1076,8 @@ public final class CodeRepositoryUtil {
      * 获取 数据字典 key value 对， 忽略 禁用的 条目
      *
      * @param sCatalog 数据字典类别，或者系统内置的类别
-     * @return
+     * @param localLang localLang
+     * @return 数据字典,忽略禁用的条目
      */
     public static final List<OptionItem> getOptionForSelect(String sCatalog, String localLang) {
     	 List<OptionItem> lbvs = new ArrayList<OptionItem>();
@@ -1170,7 +1174,7 @@ public final class CodeRepositoryUtil {
      *
      * @param sCatalog 字典类别代码
      * @param sKey     字典代码
-     * @return
+     * @return 字典条目
      */
     public static final IDataDictionary getDataPiece(String sCatalog, String sKey) {
         
@@ -1193,7 +1197,7 @@ public final class CodeRepositoryUtil {
      *
      * @param sCatalog 字典类别代码
      * @param sValue   字典值
-     * @return
+     * @return 字典条目
      */
     public static final IDataDictionary getDataPieceByValue(String sCatalog, String sValue) {
         List<? extends IDataDictionary> dcList = getDictionary(sCatalog);
@@ -1211,8 +1215,8 @@ public final class CodeRepositoryUtil {
     /**
      * 根据机构代码获取机构名称
      *
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return 机构名称
      */
     public static final String getUnitName(String unitCode) {
         IUnitInfo unitInfo = getUnitRepo().get(unitCode);
@@ -1225,8 +1229,9 @@ public final class CodeRepositoryUtil {
     /**
      * 获取机构的下级机构
      *
-     * @param allunits
-     * @return
+     * @param allunits List allunits
+     * @param parentUnitCode parentUnitCode
+     * @return 机构的下级机构
      */
     private static List<IUnitInfo> fetchSubUnits(List<? extends IUnitInfo> allunits,
     		String parentUnitCode) {
@@ -1246,8 +1251,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获取机构的下级机构
      *
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return 机构的下级机构
      */
     public static final List<IUnitInfo> getSubUnits(String unitCode) {
 		
@@ -1258,8 +1263,8 @@ public final class CodeRepositoryUtil {
     /**
      * 获取机构的下级机构，并按照树形排列
      *
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return 机构的下级机构,并按照树形排列
      */
     public static final List<IUnitInfo> getAllSubUnits(String unitCode) {
 		if(StringUtils.isBlank(unitCode))
@@ -1291,7 +1296,7 @@ public final class CodeRepositoryUtil {
     /**
      * 获取所有机构信息，并返回json格式。
      *
-     * @return
+     * @return 所有机构信息，json格式
      */
     public static final String getUnitsJson() {
 
@@ -1315,9 +1320,9 @@ public final class CodeRepositoryUtil {
     /**
      * 验证当前用户是否有某个操作方法的权限
      *
-     * @param optId
-     * @param IOptMethod
-     * @return
+     * @param optId optId
+     * @param IOptMethod IOptMethod
+     * @return 操作方法的权限
      */
     public static final Boolean checkUserOptPower(String optId, String IOptMethod) {
         CentitUserDetails userDetails = (CentitUserDetails) WebOptUtils.getLoginUser(
@@ -1348,7 +1353,7 @@ public final class CodeRepositoryUtil {
      * 获取用户参数设置
      *
      * @param paramCode 参数代码
-     * @return
+     * @return 用户参数设置
      */
     public static final String getUserSettingValue(String paramCode) {
     	CentitUserDetails userDetails = (CentitUserDetails) WebOptUtils.getLoginUser(
@@ -1374,8 +1379,8 @@ public final class CodeRepositoryUtil {
     }
     /**
      * 获取System.properties文件属性值
-     * @param key
-     * @return
+     * @param key 配置信息key值
+     * @return System.properties文件属性值
      */
     public static final String getSysConfigValue(String key) {
         return SysParametersUtils.getStringValue(key);
@@ -1383,8 +1388,9 @@ public final class CodeRepositoryUtil {
 
     /**
      * 从文件中读取SQL MAP 文件
-     * @param extendedSqlXmlFile
-     * @return
+     * @param extendedSqlXmlFile extendedSqlXmlFile
+     * @throws DocumentException DocumentException
+     * @throws IOException IOException
      */
     public static final void loadExtendedSqlMap(String extendedSqlXmlFile)
     	throws DocumentException,IOException{

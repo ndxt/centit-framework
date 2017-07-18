@@ -11,7 +11,6 @@ package com.centit.framework.model.adapter;
         private MessageSender emailMessageSender;
          注意：去掉@后的空格
  * @author ljy
- * @create 2012-2-22
  */
 public interface MessageSender {
 
@@ -38,7 +37,7 @@ public interface MessageSender {
      * @param msgContent 消息内容
      * @param optId 关联的业务编号
      * @param optMethod 管理的操作
-     * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1&b=v2
+     * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
      * @return "OK" 表示成功，其他的为错误信息
      */
     String sendMessage(String sender, String receiver, String msgSubject, String msgContent,

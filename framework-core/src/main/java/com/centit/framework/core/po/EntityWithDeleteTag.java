@@ -11,11 +11,13 @@ public interface EntityWithDeleteTag  {
  
 	/**
 	 * 判断是否为已删除
+	 * @return 是否为已删除
 	 */
 	public boolean isDeleted();
 
 	/**
 	 * 设置删除标志
+	 * @param isDeleted 删除标志
 	 */
 	public void setDeleted(boolean isDeleted);
 }

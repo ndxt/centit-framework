@@ -52,7 +52,7 @@ public class OperationLog implements java.io.Serializable {
      */
     private String optMethod;
     /**
-     * 业务对象组件，复合主键用&连接格式与url参数类似
+     * 业务对象组件，复合主键用&amp;连接格式与url参数类似
      */
     private String optTag;
     /**

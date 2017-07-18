@@ -29,7 +29,10 @@ public class SysUnitFilterEngine implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(SysUnitFilterEngine.class);
 
     /**
-     * D(null+1) =>D1,D2
+     * D(null+1)    D1,D2
+     * @param ecc UserUnitFilterCalcContext
+     * @param nTiers int
+     * @return Set nullSubUnits
      */
     public static Set<String> nullSubUnits(UserUnitFilterCalcContext ecc, int nTiers) {
         Set<String> units = new HashSet<>();
@@ -46,7 +49,10 @@ public class SysUnitFilterEngine implements Serializable {
     }
 
     /**
-     * D(null-1) =>D1111，D1112,D112,D12,D2
+     * D(null-1)   D1111，D1112,D112,D12,D2
+     * @param ecc UserUnitFilterCalcContext
+     * @param nTiers int
+     * @return Set nullSubUnits
      */
     public static Set<String> nullParentUnits(UserUnitFilterCalcContext ecc, int nTiers) {
         Set<String> units = new HashSet<String>();
@@ -64,9 +70,9 @@ public class SysUnitFilterEngine implements Serializable {
 
     /**
      * 查找有共同最上层机构的所有子机构
-     *
-     * @param units
-     * @return
+     ** @param ecc UserUnitFilterCalcContext
+     * @param units int
+     * @return Set allSeriesUnits
      */
     public static Set<String> allSeriesUnits(UserUnitFilterCalcContext ecc, Set<String> units) {
         if (units == null || units.size() == 0)
@@ -85,9 +91,9 @@ public class SysUnitFilterEngine implements Serializable {
 
     /**
      * 查找所有的下层机构
-     *
-     * @param units
-     * @return
+     *@param ecc UserUnitFilterCalcContext
+     *@param units Set units
+     *@return 所有的下层机构
      */
     public static Set<String> allSubUnits(UserUnitFilterCalcContext ecc, Set<String> units) {
         if (units == null || units.size() == 0)
@@ -110,8 +116,9 @@ public class SysUnitFilterEngine implements Serializable {
     /**
      * D(U--)
      *
-     * @param units
-     * @return
+     *@param ecc UserUnitFilterCalcContext
+     *@param units Set units
+     *@return allParentUnits 所有上层机构
      */
     public static Set<String> allParentUnits(UserUnitFilterCalcContext ecc, Set<String> units) {
         if (units == null || units.size() == 0)
@@ -140,9 +147,10 @@ public class SysUnitFilterEngine implements Serializable {
     /**
      * D(U+5)
      *
-     * @param units
-     * @param nTiers
-     * @return
+     * @param ecc UserUnitFilterCalcContext
+     * @param units Set units
+     * @param nTiers int
+     * @return subUnits 下层机构
      */
     public static Set<String> subUnits(UserUnitFilterCalcContext ecc, Set<String> units, int nTiers) {
         if (nTiers < 1 || units == null || units.size() == 0)
@@ -164,9 +172,10 @@ public class SysUnitFilterEngine implements Serializable {
     /**
      * D(U-5)
      *
-     * @param units
-     * @param nTiers
-     * @return
+     * @param ecc UserUnitFilterCalcContext
+     * @param units Set units
+     * @param nTiers int
+     * @return parentUnits Set 上层机构
      */
     public static Set<String> parentUnits(UserUnitFilterCalcContext ecc, Set<String> units, int nTiers) {
         if (nTiers < 1 || units == null || units.size() == 0)
@@ -189,9 +198,9 @@ public class SysUnitFilterEngine implements Serializable {
 
     /**
      * D(U*1)
-     *
-     * @param unitCode
-     * @return
+     * @param ecc UserUnitFilterCalcContext
+     * @param unitCode unitCode
+     * @return topUnit 最上层机构
      */
     public static String topUnit(UserUnitFilterCalcContext ecc, String unitCode) {
         String topUnit = null;
@@ -210,10 +219,10 @@ public class SysUnitFilterEngine implements Serializable {
 
     /**
      * D(U*5)
-     *
-     * @param units
-     * @param nTiers
-     * @return
+     * @param ecc UserUnitFilterCalcContext
+     * @param units Set units
+     * @param nTiers int
+     * @return Set 最上层机构
      */
     public static Set<String> topUnits(UserUnitFilterCalcContext ecc, Set<String> units, int nTiers) {
         if (nTiers < 1)
@@ -229,10 +238,10 @@ public class SysUnitFilterEngine implements Serializable {
 
     /**
      * 所有同一系列最上面几层节点
-     * @param ecc
-     * @param units
-     * @param nTiers
-     * @return
+     * @param ecc UserUnitFilterCalcContext
+     * @param units Set units
+     * @param nTiers int
+     * @return 同一系列最上面几层节点
      */
     public static Set<String> seriesUnits(UserUnitFilterCalcContext ecc, Set<String> units, int nTiers) {
         
@@ -269,7 +278,8 @@ public class SysUnitFilterEngine implements Serializable {
      * =>D12 D(null+1) =>D1,D2 D(all+1) => D11,D12,D111,D112,D1111,D1112 D(A) =>
      * D111 D(U+1) => D1111,D1112 D(U-1) => D11 D(P-1+1) => D111,D112 D(W*1) =>
      * D1
-     * @return
+     * @param ecc UserUnitFilterCalcContext
+     * @return calcSimpleExp
      */
     private static Set<String> calcSimpleExp(UserUnitFilterCalcContext ecc) {
         Set<String> units = new HashSet<String>();
@@ -392,8 +402,8 @@ public class SysUnitFilterEngine implements Serializable {
     /**
      * S(unitExp[,unitExp]* )
      *
-     * @param ecc
-     * @return
+     * @param ecc UserUnitFilterCalcContext
+     * @return Set calcSingleExp
      */
     private static Set<String> calcSingleExp(UserUnitFilterCalcContext ecc) {
         String w = ecc.getAWord();
@@ -424,8 +434,8 @@ public class SysUnitFilterEngine implements Serializable {
     /**
      * (unitExp) | S(singleExp) | SimpleExp
      *
-     * @param ecc
-     * @return
+     * @param ecc UserUnitFilterCalcContext
+     * @return Set calcItemExp
      */
     private static Set<String> calcItemExp(UserUnitFilterCalcContext ecc) {
         String w = ecc.getAWord();
@@ -453,10 +463,10 @@ public class SysUnitFilterEngine implements Serializable {
     }
 
     /**
-     * itemExp ([||itemExp][&& itemExp][! itemExp])*
+     * itemExp ([或 itemExp][与 itemExp][非 itemExp])*
      *
-     * @param ecc
-     * @return
+     * @param ecc UserUnitFilterCalcContext
+     * @return Set calcUnitsExp
      */
     public static Set<String> calcUnitsExp(UserUnitFilterCalcContext ecc) {
         Set<String> units = calcItemExp(ecc);
@@ -494,6 +504,13 @@ public class SysUnitFilterEngine implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param unitExp unitExp
+     * @param unitParams Map unitParams
+     * @param varTrans UserUnitVariableTranslate
+     * @return calcSystemUnitsByExp
+     */
     public static Set<String> calcSystemUnitsByExp(String unitExp,
                                              Map<String, Set<String>> unitParams,
                                              UserUnitVariableTranslate varTrans) {
@@ -511,6 +528,11 @@ public class SysUnitFilterEngine implements Serializable {
         return untis;
     }
 
+    /**
+     *
+     * @param ecc UserUnitFilterCalcContext
+     * @return calcSingleUnitByExp
+     */
     public static String calcSingleUnitByExp(UserUnitFilterCalcContext ecc) {
         Set<String> untis = calcUnitsExp(ecc);
         if (untis == null || untis.size() == 0)
@@ -519,7 +541,6 @@ public class SysUnitFilterEngine implements Serializable {
             logger.error(ecc.getLastErrMsg());
         return untis.iterator().next();
     }
-
 
     public static String calcSingleSystemUnitByExp(String unitExp,Map<String, Set<String>> unitParams , UserUnitVariableTranslate varTrans) {
         if (unitExp == null)

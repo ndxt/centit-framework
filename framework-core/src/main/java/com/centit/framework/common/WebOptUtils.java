@@ -25,7 +25,7 @@ import com.centit.framework.security.model.CentitUserDetails;
  * 系统Web常用工具类可以和spring WebUtils配合使用
  *
  * @author codefan
- * @create 2014年10月24日
+ * date 2014年10月24日
  */
 public class WebOptUtils {
 	public static final String LOCAL_LANGUAGE_LABLE="LOCAL_LANG"; 
@@ -188,7 +188,7 @@ public class WebOptUtils {
      * @param downloadFile 下载文件流
      * @param downloadName 下载文件名
      * @param response HttpServletResponse
-     * @throws IOException
+     * @throws IOException IO异常
      */
     public static void download(InputStream downloadFile, String downloadName, HttpServletResponse response) throws IOException {
         downloadName = new String(downloadName.getBytes("GBK"), "ISO8859-1");

@@ -62,8 +62,9 @@ public class ResponseJSON {
     }
     /**
      * ScalarObject 标量对象，只系统的内置的 Integer、long、String、float、double、Date等标量
-     * @param clazz
-     * @return
+     * @param <T> 类型通配符
+     * @param clazz Class
+     * @return 转化结果
      */
     @SuppressWarnings("unchecked")
 	public <T> T getDataAsScalarObject( Class<T> clazz) {

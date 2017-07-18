@@ -15,8 +15,7 @@ import com.centit.framework.model.basedata.IUserInfo;
 /**
  * 
  * @author ljy codefan
- * @create 2012-2-22
- * @version 
+ * 2012-2-22
  */
 public class EmailMessageSenderImpl implements MessageSender {
 

@@ -25,7 +25,7 @@ public class UserUnitMapTranslate implements UserUnitVariableTranslate {
      * 返回权限表达式中的自定义变量对应的用户组
      *
      * @param varName 自定义变量
-     * @return
+     * @return 权限表达式中的自定义变量对应的用户组
      */
     public Set<String> getUsersVariable(String varName){
         if(varMap==null)
@@ -46,18 +46,19 @@ public class UserUnitMapTranslate implements UserUnitVariableTranslate {
      * 返回机构表达式中的自定义变量对应的机构组
      *
      * @param varName 自定义变量
-     * @return
+     * @return 机构表达式中的自定义变量对应的机构组
      */
     public Set<String> getUnitsVariable(String varName){
         return getUsersVariable(varName);
     }
 
     /**
-     * 变量名->变量值的转变
+     * 变量名--变量值的转变
      * 变量 是用 ${变量名}
      * 如果这个变量不存在，返回空字符串 "''"
      *
-     * @param varName
+     * @param varName varName
+     * @return  变量值的转变
      */
     @Override
     public String getGeneralVariable(String varName) {

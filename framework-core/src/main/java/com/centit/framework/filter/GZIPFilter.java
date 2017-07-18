@@ -27,8 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  *  
  * 
  * @author hx
- * @create 2015-8-4
- * @version
+ * 2015-8-4
  */
 public class GZIPFilter implements Filter {
 
