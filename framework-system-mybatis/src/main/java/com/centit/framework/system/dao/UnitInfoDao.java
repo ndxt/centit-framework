@@ -11,90 +11,85 @@ import com.centit.framework.system.po.UserInfo;
 @Repository
 public interface UnitInfoDao{
 	
-	public String saveNewObject(UnitInfo unitInfo);
+	 String saveNewObject(UnitInfo unitInfo);
 	
-	public void mergeObject(UnitInfo unitInfo);
+	 void mergeObject(UnitInfo unitInfo);
 	
-	public void deleteObjectById(String unitCode);
+	 void deleteObjectById(String unitCode);
 	
-	public List<UnitInfo> listObjects(Map<String, Object> filterMap);
+	 List<UnitInfo> listObjects(Map<String, Object> filterMap);
 	
 	
-    public int  pageCount(Map<String, Object> filterDescMap);
-    public List<UnitInfo>  pageQuery(Map<String, Object> pageQureyMap);
+     int  pageCount(Map<String, Object> filterDescMap);
+     List<UnitInfo>  pageQuery(Map<String, Object> pageQureyMap);
     
     
-	public int countChildrenSum(String unitCode);
+	 int countChildrenSum(String unitCode);
 	
-	public List<UnitInfo> listObjects();
+	 List<UnitInfo> listObjects();
 	
-	public UnitInfo getObjectById(String unitCode);
+	 UnitInfo getObjectById(String unitCode);
 	
 	// DatabaseOptUtils.getNextKeyBySequence(this, "S_UNITCODE", 6);
-    public String getNextKey();
+     String getNextKey();
 
     //listObjectsAll("FROM UnitInfo where depNo=?", depno);
-    public String getUnitCode(String depno);
+     String getUnitCode(String depno);
 
     /**
      * "select a.* " +
                 "from f_Userinfo a join f_userunit b on(a.userCode=b.userCode) " +
                 "where b.unitcode =?"
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return List UserInfo
      */
-    public List<UserInfo> listUnitUsers(String unitCode);
+     List<UserInfo> listUnitUsers(String unitCode);
 
     /**
      * "select * FROM F_Userinfo ui where ui.userCode in " +
                 "(select userCode from f_userunit where unitcode='" + unitCode + "') or " +
                 "ui.userCode in (select userCode from f_userrole where rolecode like ? "
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return List UserInfo
      */
-    public List<UserInfo> listRelationUsers(String unitCode);
+     List<UserInfo> listRelationUsers(String unitCode);
 
     // "select unitname from f_unitinfo where unitcode=?", unitcode ));
-    public String getUnitNameOfCode(String unitcode);
+     String getUnitNameOfCode(String unitcode);
     
 
-    public List<UnitInfo> listUnitinfoByUnitcodes(List<String> unitcodes);
-    /**
-     * 批量添加或更新
-     *
-     * @param unitinfos
-     */
+     List<UnitInfo> listUnitinfoByUnitcodes(List<String> unitcodes);
 
     /**
      * "from UnitInfo where unitName = ? or unitShortName = ?"
             			+ " order by unitOrder asc";
-     * @param name
-     * @return
+     * @param name name
+     * @return UnitInfo
      */
-    public UnitInfo getUnitByName(String name);
+     UnitInfo getUnitByName(String name);
     
     //return super.getObjectByProperty("unitTag", unitTag);
-    public UnitInfo getUnitByTag(String unitTag);
+     UnitInfo getUnitByTag(String unitTag);
     
     //return super.getObjectByProperty("unitWord", unitWord);
-    public UnitInfo getUnitByWord(String unitWord);
+     UnitInfo getUnitByWord(String unitWord);
     
     //return super.listObjectByProperty("parentUnit", unitCode);
-    public List<UnitInfo> listSubUnits(String unitCode);
+     List<UnitInfo> listSubUnits(String unitCode);
     
     /**
-     * @param parentunitcodes
-     * @return
+     * @param parentunitcodes List
+     * @return List UnitInfo
      */
-    public List<UnitInfo> listSubUnitinfoByParentUnitcodes(List<String> parentunitcodes);
+     List<UnitInfo> listSubUnitinfoByParentUnitcodes(List<String> parentunitcodes);
     
     /**
      * 这个方法应该转移到ManagerImpl类中
-     * @param primaryUnit
-     * @return
+     * @param primaryUnit primaryUnit
+     * @return List UnitInfo
      */
-    public List<UnitInfo> listAllSubUnits(String primaryUnit);
-    /*public List<UnitInfo> listAllSubUnits(String unitCode){
+     List<UnitInfo> listAllSubUnits(String primaryUnit);
+    /* List<UnitInfo> listAllSubUnits(String unitCode){
     	
     	List<UnitInfo> subUnits = listSubUnits(unitCode);
     	List<UnitInfo> allSubUnits = new ArrayList<UnitInfo>();
@@ -116,7 +111,7 @@ public interface UnitInfoDao{
     }*/
     
     //String hql = "from UnitInfo where unitPath like ?";{unitPath+"/%"});
-    public List<UnitInfo> listSubUnitsByUnitPaht(String unitPath);
+     List<UnitInfo> listSubUnitsByUnitPaht(String unitPath);
 
-    public List<String> getAllParentUnit();
+     List<String> getAllParentUnit();
 }

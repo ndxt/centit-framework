@@ -46,10 +46,6 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
     private List<DataDictionary> dataDictionaries;
 
     // Constructors
-    /** default constructor */
-    /**
-     * minimal constructor
-     */
     public DataCatalog(String catalogcode, String catalogname, String catalogstyle, String catalogtype, String isupload) {
 
         this.catalogCode = catalogcode;
@@ -60,9 +56,6 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
         this.needCache = "1";
     }
 
-    /**
-     * full constructor
-     */
     public DataCatalog(String catalogcode, String catalogname, String catalogstyle, String catalogtype,
                        String catalogdesc, String isupload, String needCache, String fielddesc) {
 

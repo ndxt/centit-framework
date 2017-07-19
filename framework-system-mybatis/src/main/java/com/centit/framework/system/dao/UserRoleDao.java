@@ -39,7 +39,7 @@ public interface UserRoleDao{
      void deleteByRoleCodeAndUserCode(Map map);
     
     /**
-     * List<RoleInfo> roleInfos = new ArrayList<>();
+     * List roleInfos = new ArrayList();
         //所有的用户 都要添加这个角色
         roleInfos.add(new RoleInfo("G-", "general ","G",
         		"G","T", "general "));        
@@ -57,7 +57,7 @@ public interface UserRoleDao{
     
     /**
      *  "FROM UserRole ur where ur.id.userCode = ? and ur.id.roleCode like ?"
-                + "and ur.id.obtainDate <= ? and (ur.secedeDate is null or ur.secedeDate > ?) "
+                + "and ur.id.obtainDate &lt;= ? and (ur.secedeDate is null or ur.secedeDate &gt; ?) "
                 + "ORDER BY obtainDate,secedeDate";
      * @param map map
      * @return List UserRole

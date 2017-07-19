@@ -9,24 +9,25 @@ import com.centit.framework.system.po.InnerMsg;
 @Repository
 public interface InnerMsgDao{
     
-	public InnerMsg getObjectById(String msgCode);
+	 InnerMsg getObjectById(String msgCode);
 	
-	public void mergeObject(InnerMsg innerMsg);
+	 void mergeObject(InnerMsg innerMsg);
 	
-	public void deleteObject(InnerMsg innerMsg);
+	 void deleteObject(InnerMsg innerMsg);
 			
-	public void saveObject(InnerMsg innerMsg);
+	 void saveObject(InnerMsg innerMsg);
     /** 新建
-     * 
+     * @param o InnerMsg
+     * @return String
      */
     // String msgCode = DatabaseOptUtils.getNextKeyBySequence(this, "S_MSGCODE",16);
-    public String saveNewObject(InnerMsg o);
+     String saveNewObject(InnerMsg o);
     
-	public List<InnerMsg> listObjects(Map<String, Object> filterMap);
+	 List<InnerMsg> listObjects(Map<String, Object> filterMap);
 	
 	
     //分页  //startRow  startRow
-    public int  pageCount(Map<String, Object> filterDescMap);
-    public List<InnerMsg>  pageQuery(Map<String, Object> pageQureyMap);
+     int  pageCount(Map<String, Object> filterDescMap);
+     List<InnerMsg>  pageQuery(Map<String, Object> pageQureyMap);
     
 }

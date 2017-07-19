@@ -100,6 +100,8 @@ public class OptMethod implements IOptMethod,EntityWithTimestamp, java.io.Serial
 
     /**
      * minimal constructor
+     * @param optcode String
+     * @param optid String
      */
     public OptMethod(String optcode, String optid) {
 
@@ -108,9 +110,6 @@ public class OptMethod implements IOptMethod,EntityWithTimestamp, java.io.Serial
 
     }
 
-    /**
-     * full constructor
-     */
     public OptMethod(String optcode, String optname, String optid, String optmethod, String optdesc) {
 
         this.optCode = optcode;

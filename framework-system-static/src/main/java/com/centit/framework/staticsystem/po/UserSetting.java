@@ -49,10 +49,7 @@ public class UserSetting implements IUserSetting, java.io.Serializable {
     public UserSetting() {
     }
 
-    /**
-     * minimal constructor
-     */
-   
+
     public UserSetting(String userCode, String paramCode,String paramValue, String paramName) {
     	this.userCode = userCode;
         this.paramCode = paramCode;
@@ -62,9 +59,6 @@ public class UserSetting implements IUserSetting, java.io.Serializable {
 	    this.createDate = DatetimeOpt.currentUtilDate();
 	}
 
-    /**
-     * full constructor
-     */
     public UserSetting(String userCode, String paramCode,
     		String paramValue, String paramClass, String paramName, Date createDate) {
     	this.userCode = userCode;

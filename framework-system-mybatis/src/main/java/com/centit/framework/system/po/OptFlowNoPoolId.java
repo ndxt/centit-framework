@@ -46,9 +46,6 @@ public class OptFlowNoPoolId implements java.io.Serializable {
     public OptFlowNoPoolId() {
     }
 
-    /**
-     * full constructor
-     */
     public OptFlowNoPoolId(String ownerCode, Date codeDate, String codeCode, Long curNo) {
 
         this.ownerCode = ownerCode;

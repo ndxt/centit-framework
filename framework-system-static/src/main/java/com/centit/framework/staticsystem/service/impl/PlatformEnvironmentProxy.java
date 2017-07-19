@@ -25,7 +25,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 刷新数据字典
      *
-     * @return
+     * @return boolean 刷新数据字典
      */
     @Override
     public boolean reloadDictionary() {
@@ -40,7 +40,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 刷新权限相关的元数据
      *
-     * @return
+     * @return boolean 刷新权限相关的元数据
      */
     @Override
     public boolean reloadSecurityMetadata() {
@@ -56,8 +56,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取系统配置参数
      *
-     * @param paramCode
-     * @return
+     * @param paramCode paramCode
+     * @return 系统配置参数
      */
     @Override
     public String getSystemParameter(String paramCode) {
@@ -72,9 +72,9 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获得用户设置参数
      *
-     * @param userCode
-     * @param paramCode
-     * @return
+     * @param userCode userCode
+     * @param paramCode paramCode
+     * @return 用户设置参数
      */
     @Override
     public String getUserSetting(String userCode, String paramCode) {
@@ -89,9 +89,9 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取用户所有菜单功能
      *
-     * @param userCode
+     * @param userCode userCode
      * @param asAdmin  是否是作为管理员
-     * @return
+     * @return 用户所有菜单功能
      */
     @Override
     public List<? extends IOptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin) {
@@ -106,9 +106,10 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取用户所有菜单功能
      *
-     * @param userCode
-     * @param superOptId
-     * @param asAdmin    是否是作为管理员  @return
+     * @param userCode userCode
+     * @param superOptId superOptId
+     * @param asAdmin    是否是作为管理员
+     * @return 用户所有菜单功能
      */
     @Override
     public List<? extends IOptInfo> listUserMenuOptInfosUnderSuperOptId(
@@ -125,8 +126,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 根据用户代码获取用户信息，
      *
-     * @param userCode
-     * @return
+     * @param userCode userCode
+     * @return 用户信息，
      */
     @Override
     public IUserInfo getUserInfoByUserCode(String userCode) {
@@ -150,8 +151,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 根据登录名获取用户信息，
      *
-     * @param loginName
-     * @return
+     * @param loginName loginName
+     * @return 用户信息，
      */
     @Override
     public IUserInfo getUserInfoByLoginName(String loginName) {
@@ -166,8 +167,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 修改用户密码
      *
-     * @param userCode
-     * @param userPassword
+     * @param userCode userCode
+     * @param userPassword userPassword
      */
     @Override
     public void changeUserPassword(String userCode, String userPassword) {
@@ -179,8 +180,9 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 验证用户密码
      *
-     * @param userCode
-     * @param userPassword
+     * @param userCode userCode
+     * @param userPassword userPassword
+     * @return boolean 验证用户密码
      */
     @Override
     public boolean checkUserPassword(String userCode, String userPassword) {
@@ -194,7 +196,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取所有用户，
      *
-     * @return
+     * @return 所有用户，
      */
     @Override
     public List<? extends IUserInfo> listAllUsers() {
@@ -209,7 +211,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取所有机构
      *
-     * @return
+     * @return 所有机构
      */
     @Override
     public List<? extends IUnitInfo> listAllUnits() {
@@ -224,7 +226,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取所有用户和机构关联关系
      *
-     * @return
+     * @return 所有用户和机构关联关系
      */
     @Override
     public List<? extends IUserUnit> listAllUserUnits() {
@@ -239,8 +241,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 根据用户代码获得 用户所有的机构信息
      *
-     * @param userCode
-     * @return
+     * @param userCode userCode
+     * @return 用户所有的机构信息
      */
     @Override
     public List<? extends IUserUnit> listUserUnits(String userCode) {
@@ -255,8 +257,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 根据机构代码获得 机构所有用户信息
      *
-     * @param unitCode
-     * @return
+     * @param unitCode unitCode
+     * @return 机构所有用户信息
      */
     @Override
     public List<? extends IUserUnit> listUnitUsers(String unitCode) {
@@ -271,7 +273,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取机构代码映射表
      *
-     * @return
+     * @return 机构代码映射表
      */
     @Override
     public Map<String, ? extends IUnitInfo> getUnitRepo() {
@@ -286,7 +288,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取部门编码映射表
      *
-     * @return
+     * @return 部门编码映射表
      */
     @Override
     public Map<String, ? extends IUserInfo> getUserRepo() {
@@ -301,7 +303,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取机构代码映射表
      *
-     * @return
+     * @return 机构代码映射表
      */
     @Override
     public Map<String, ? extends IUserInfo> getLoginNameRepo() {
@@ -316,7 +318,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取部门编码映射表
      *
-     * @return
+     * @return 部门编码映射表
      */
     @Override
     public Map<String, ? extends IUnitInfo> getDepNoRepo() {
@@ -331,7 +333,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取所有角色信息
      *
-     * @return
+     * @return 所有角色信息
      */
     @Override
     public Map<String, ? extends IRoleInfo> getRoleRepo() {
@@ -346,7 +348,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取业务信息
      *
-     * @return
+     * @return 业务信息
      */
     @Override
     public Map<String, ? extends IOptInfo> getOptInfoRepo() {
@@ -361,7 +363,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取操作方法信息
      *
-     * @return
+     * @return 操作方法信息
      */
     @Override
     public Map<String, ? extends IOptMethod> getOptMethodRepo() {
@@ -376,7 +378,7 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取所有数据字典类别信息
      *
-     * @return
+     * @return 所有数据字典类别信息
      */
     @Override
     public List<? extends IDataCatalog> listAllDataCatalogs() {
@@ -391,8 +393,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取所有数据字典类别信息
      *
-     * @param catalogCode
-     * @return
+     * @param catalogCode catalogCode
+     * @return 所有数据字典类别信息
      */
     @Override
     public List<? extends IDataDictionary> listDataDictionaries(String catalogCode) {
@@ -407,8 +409,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      *
-     * @param loginName
-     * @return
+     * @param loginName loginName
+     * @return 用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      */
     @Override
     public CentitUserDetails loadUserDetailsByLoginName(String loginName) {
@@ -423,7 +425,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      *
-     * @param userCode@return
+     * @param userCode userCode
+     * @return 用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      */
     @Override
     public CentitUserDetails loadUserDetailsByUserCode(String userCode) {
@@ -438,7 +441,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      *
-     * @param regEmail@return
+     * @param regEmail regEmail
+     * @return 用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      */
     @Override
     public CentitUserDetails loadUserDetailsByRegEmail(String regEmail) {
@@ -453,7 +457,8 @@ public class PlatformEnvironmentProxy implements PlatformEnvironment
     /**
      * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      *
-     * @param regCellPhone@return
+     * @param regCellPhone regCellPhone
+     * @return 用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      */
     @Override
     public CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone) {

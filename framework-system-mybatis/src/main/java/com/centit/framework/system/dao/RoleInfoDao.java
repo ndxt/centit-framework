@@ -11,40 +11,40 @@ import com.centit.framework.system.po.VOptTree;
 @Repository
 public interface RoleInfoDao{
 	
-	public List<RoleInfo> listObjects(Map<String, Object> filterMap);
+	 List<RoleInfo> listObjects(Map<String, Object> filterMap);
 	
 	
-    public int  pageCount(Map<String, Object> filterDescMap);
-    public List<RoleInfo>  pageQuery(Map<String, Object> pageQureyMap);
+     int  pageCount(Map<String, Object> filterDescMap);
+     List<RoleInfo>  pageQuery(Map<String, Object> pageQureyMap);
 
-	public List<RoleInfo> listObjectsAll();
+	 List<RoleInfo> listObjectsAll();
 	
-	public void saveNewObject(RoleInfo o);
+	 void saveNewObject(RoleInfo o);
 
-	public void deleteObjectById(String roleCode);
+	 void deleteObjectById(String roleCode);
 	
-	public void mergeObject(RoleInfo o);
+	 void mergeObject(RoleInfo o);
 	
 	
-	public RoleInfo getObjectById(String roleCode);
+	 RoleInfo getObjectById(String roleCode);
 	
     //DatabaseOptUtils.findObjectsByHql(this,"FROM VOptTree");
-    public List<VOptTree> getVOptTreeList();
+     List<VOptTree> getVOptTreeList();
     
     /**
      *         String hql = "select new map(def.optName as def_optname, def.optCode as def_optcode) "
                 + "from OptMethod def, RolePower pow where def.optCode = pow.id.optCode and pow.id.roleCode = ?";
 
-     * @param rolecode
-     * @return
+     * @param rolecode rolecode
+     * @return List
      */
-    public List<Object> listRoleOptMethods(String rolecode);
+     List<Object> listRoleOptMethods(String rolecode);
 
     /**
      * select count(1) from f_userrole where rolecode=?
-     * @param roleCode
-     * @return
+     * @param roleCode roleCode
+     * @return int
      */
-    public int countRoleUserSum(String roleCode);
+     int countRoleUserSum(String roleCode);
     
 }

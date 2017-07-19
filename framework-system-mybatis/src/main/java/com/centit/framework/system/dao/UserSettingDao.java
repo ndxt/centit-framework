@@ -11,23 +11,23 @@ import com.centit.framework.system.po.UserSettingId;
 @Repository
 public interface UserSettingDao{
 	
-	public UserSetting getObjectById(UserSettingId userSettingId);
+	 UserSetting getObjectById(UserSettingId userSettingId);
 	
 	/**
 	 * update or insert
-	 * @param userSetting
+	 * @param userSetting userSetting
 	 */
-	public void mergeObject(UserSetting userSetting);
+	 void mergeObject(UserSetting userSetting);
 
     // return listObjectsAll("From UserSetting where cid.userCode=?",userCode);
-    public List<UserSetting> getUserSettingsByCode(String userCode);
+     List<UserSetting> getUserSettingsByCode(String userCode);
     
     // listObjectsAll("From UserSetting where cid.userCode=? and optId= ?",
     	//new Object[]{userCode,optID});
     //参数String userCode,String optID
-    public List<UserSetting> getUserSettings(Map map);
+     List<UserSetting> getUserSettings(Map map);
     
     //UserSetting us = new UserSetting(userCode,  paramCode, paramValue,
 	 	//paramClass,  paramName);
-    public void saveUserSetting(UserSetting userSetting);
+     void saveUserSetting(UserSetting userSetting);
 }

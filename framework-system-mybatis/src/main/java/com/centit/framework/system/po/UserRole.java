@@ -106,14 +106,12 @@ public class UserRole implements IUserRole, EntityWithTimestamp, java.io.Seriali
     
     /**
      * minimal constructor
+     * @param id UserRoleId
      */
     public UserRole(UserRoleId id) {
         this.id = id;
     }
 
-    /**
-     * full constructor
-     */
     public UserRole(UserRoleId id, Date secededate, String changedesc) {
         this.id = id;
         this.obtainDate = secededate;

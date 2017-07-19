@@ -110,7 +110,6 @@ public class UserQueryFilterController  extends BaseController {
      * @param userQueryFilter  {@link UserQueryFilter}
      * @param request  {@link HttpServletRequest}
      * @param response  {@link HttpServletResponse}
-     * @return
      */
     @RequestMapping(method = {RequestMethod.POST})
     public void createUserQueryFilter(

@@ -9,38 +9,38 @@ import com.centit.framework.system.po.OptMethod;
 @Repository
 public interface OptMethodDao{
 
-	public List<OptMethod> listObjects();
+	 List<OptMethod> listObjects();
 	
-	public OptMethod getObjectById(String optCode);	
+	 OptMethod getObjectById(String optCode);	
 	
-	public void mergeObject(OptMethod optMethod);
+	 void mergeObject(OptMethod optMethod);
 	
-	public void deleteObject(OptMethod optMethod);
+	 void deleteObject(OptMethod optMethod);
 	
-	public void deleteObjectById(String optCode);
+	 void deleteObjectById(String optCode);
 			
-	public void saveNewObject(OptMethod optMethod);
+	 void saveNewObject(OptMethod optMethod);
 		
 	
     //return listObjectsAll("FROM OptMethod WHERE optId =?", sOptID);
-    public List<OptMethod> listOptMethodByOptID(String sOptID);
+     List<OptMethod> listOptMethodByOptID(String sOptID);
 
     /**
      *  listObjectsAll("FROM OptMethod WHERE optCode in "
         		+ "(select id.optCode from RolePower where id.roleCode = ?)"
         		+ " order by optId", roleCode);
-     * @param roleCode
-     * @return
+     * @param roleCode roleCode
+     * @return List OptMethod
      */
-    public List<OptMethod> listOptMethodByRoleCode(String roleCode);
+     List<OptMethod> listOptMethodByRoleCode(String roleCode);
     
     // "SELECT count(optcode) FROM OptMethod WHERE optId = ?", sOptID)));
-    public int getOptMethodSumByOptID(String sOptID);
+     int getOptMethodSumByOptID(String sOptID);
 
     //DatabaseOptUtils.doExecuteHql(this, "DELETE FROM OptMethod WHERE optId = ?", sOptID);
-    public void deleteOptMethodsByOptID(String sOptID);  
+     void deleteOptMethodsByOptID(String sOptID);  
    
     //return DatabaseOptUtils.getNextValueOfSequence(this, "S_OPTDEFCODE");
-    public String getNextOptCode();
+     String getNextOptCode();
 
 }

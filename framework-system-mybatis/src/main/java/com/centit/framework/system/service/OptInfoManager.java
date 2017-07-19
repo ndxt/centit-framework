@@ -7,61 +7,62 @@ import com.centit.framework.system.po.OptInfo;
 
 public interface OptInfoManager{
 
-	public List<OptInfo> listObjects();
+	 List<OptInfo> listObjects();
 	
-	public List<OptInfo> listObjects(Map<String, Object> filterMap);
+	 List<OptInfo> listObjects(Map<String, Object> filterMap);
 	
-	public OptInfo getObjectById(String optId);
+	 OptInfo getObjectById(String optId);
 	
-    public boolean hasChildren(String optId);
+     boolean hasChildren(String optId);
     /**
      * 获取角色菜单中需要权限控制的业务菜单
-     * @return
+     * @return 角色菜单中需要权限控制的业务菜单
      */
      
-    public List<OptInfo> listItemPowerOpts();
+     List<OptInfo> listItemPowerOpts();
    
-    public List<OptInfo> listSysAndOptPowerOpts();
+     List<OptInfo> listSysAndOptPowerOpts();
 
 
-    public Map<String, OptInfo> listObjectToOptRepo();
+     Map<String, OptInfo> listObjectToOptRepo();
 
     /**
      * 获取用户数据权限过滤器
-     * @param sUserCode
+     * @param sUserCode sUserCode
      * @param sOptid 业务名称
      * @param sOptMethod 对应的方法名称
      * @return 过滤条件列表，null或者空位不过来
      */
-    public List<String> listUserDataFiltersByOptIDAndMethod(String sUserCode, String sOptid, String sOptMethod);
+     List<String> listUserDataFiltersByOptIDAndMethod(String sUserCode, String sOptid, String sOptMethod);
     /**
      * 将数据转换为树形结构
      *
-     * @param optInfos
-     * @return
+     * @param optInfos optInfos
+     * @param  fillDefAndScope boolean
+     * @return 将数据转换为树形结构
      */
-    public List<OptInfo> listObjectFormatTree(List<OptInfo> optInfos,boolean fillDefAndScope);
+     List<OptInfo> listObjectFormatTree(List<OptInfo> optInfos,boolean fillDefAndScope);
     /**
      * 获取某一个机构的权限列表供定义机构角色使用
-     * @param sUnitCode
-     * @return
+     * @param sUnitCode sUnitCode
+     * @return 某一个机构的权限列表供定义机构角色使用
      */
-    public List<OptInfo> listOptWithPowerUnderUnit(String sUnitCode);
+     List<OptInfo> listOptWithPowerUnderUnit(String sUnitCode);
     
-    public void saveNewOptInfo(OptInfo optinfo);
+     void saveNewOptInfo(OptInfo optinfo);
     
-    public void updateOptInfoProperties(OptInfo optinfo);
+     void updateOptInfoProperties(OptInfo optinfo);
     
-    public void updateOptInfo(OptInfo optinfo);
+     void updateOptInfo(OptInfo optinfo);
     
-    public void deleteOptInfo(OptInfo optinfo);
+     void deleteOptInfo(OptInfo optinfo);
     
-    public void deleteOptInfoById(String optId);
+     void deleteOptInfoById(String optId);
     
-    //public void deleteOptInfoByIdCascade(String optId);
+    // void deleteOptInfoByIdCascade(String optId);
     
-    public OptInfo getOptInfoById(String optId);
+     OptInfo getOptInfoById(String optId);
 
-	public List<OptInfo> getFunctionsByRoleCode(String roleCode);
+	 List<OptInfo> getFunctionsByRoleCode(String roleCode);
     
 }

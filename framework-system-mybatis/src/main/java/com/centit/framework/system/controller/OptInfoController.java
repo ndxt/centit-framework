@@ -192,6 +192,7 @@ public class OptInfoController extends BaseController {
      *
      * @param optId optId
      * @param response HttpServletResponse
+     * @throws  IOException IOException
      */
     @RequestMapping(value = "/notexists/{optId}", method = {RequestMethod.GET})
     public void isNotExists(@PathVariable String optId, HttpServletResponse response) throws IOException {

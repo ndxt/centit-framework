@@ -13,7 +13,7 @@ public interface OptLogManager extends BaseEntityManager<OptLog, Long> {
     /**
      * 批量保存
      *
-     * @param optLogs
+     * @param optLogs List OptLog
      */
     void saveBatchObjects(List<OptLog> optLogs);
     /**

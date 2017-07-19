@@ -34,7 +34,7 @@ import java.util.Map;
  * 用户设置
  *
  * @author sx
- * @create 2014年10月14日
+ * 2014年10月14日
  */
 @Controller
 @RequestMapping("/usersetting")

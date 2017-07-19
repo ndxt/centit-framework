@@ -61,8 +61,8 @@ public interface OptFlowNoInfoManager{
      * 这个只根据 类别代码来编号，他类似于序列，sql server中没有序列可以用这个来模拟
      *
      * @param ownerCode 根据 拥有者
-     * @param codeCode
-     * @return
+     * @param codeCode codeCode
+     * @return long
      */
      long newNextLsh(String ownerCode, String codeCode);
 
@@ -78,6 +78,10 @@ public interface OptFlowNoInfoManager{
      * view 这一组方法和上面一样，则是这一组并没有记录当前获取的值，如果反复调用则会得到相同的值，
      * 调用这组方法后再调用下面对应的record方法会获得和上面create相对应的函数的效果
      * 这组方法的用处是为了避免编码跳号，但是带来的另一个副作用就是会获得相同的编码，使用要注意处理相应的异常。
+     * @param ownerCode ownerCode
+     * @param codeCode  codeCode
+     * @param codeBaseDate codeBaseDate
+     * @return long
      */
 
      long viewNextLsh(String ownerCode, String codeCode, Date codeBaseDate);
@@ -95,6 +99,10 @@ public interface OptFlowNoInfoManager{
     /**
      * 配合view对应的方法使用。 或者配合 池中的流水号 listLshInPool
      * 作用是 记录某个流水号已经被使用
+     * @param ownerCode ownerCode
+     * @param codeCode codeCode
+     * @param codeBaseDate codeBaseDate
+     * @param currCode currCode
      */
      void recordNextLsh(String ownerCode, String codeCode, Date codeBaseDate, long currCode);
 

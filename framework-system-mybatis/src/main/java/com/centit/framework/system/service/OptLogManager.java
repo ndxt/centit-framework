@@ -10,21 +10,21 @@ import com.centit.framework.system.po.OptLog;
 
 public interface OptLogManager {
 	
-	public OptLog getObjectById(Long logId);
+	 OptLog getObjectById(Long logId);
 	
 	
-	public void deleteObjectById(Long logId);
+	 void deleteObjectById(Long logId);
     /**
      * 批量保存
      *
-     * @param optLogs
+     * @param optLogs List OptLog
      */
     void saveBatchObjects(List<OptLog> optLogs);
     /**
      * 清理此日期之间的日志信息
      *
-     * @param begin
-     * @param end
+     * @param begin Date
+     * @param end Date
      */
     void delete(Date begin, Date end);
 
@@ -32,7 +32,7 @@ public interface OptLogManager {
 
     void deleteMany(Long[] logIds);
     
-    public JSONArray listObjectsAsJson(
+     JSONArray listObjectsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc);
 }

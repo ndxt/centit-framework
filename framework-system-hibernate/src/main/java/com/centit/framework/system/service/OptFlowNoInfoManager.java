@@ -83,6 +83,13 @@ public interface OptFlowNoInfoManager extends BaseEntityManager<OptFlowNoInfo, O
      * 这组方法的用处是为了避免编码跳号，但是带来的另一个副作用就是会获得相同的编码，使用要注意处理相应的异常。
      */
 
+    /**
+     *
+     * @param ownerCode ownerCode
+     * @param codeCode codeCode
+     * @param codeBaseDate codeBaseDate
+     * @return long
+     */
      long viewNextLsh(String ownerCode, String codeCode, Date codeBaseDate);
 
      long viewNextLshBaseDay(String ownerCode, String codeCode, Date codeBaseDate);

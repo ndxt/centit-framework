@@ -60,6 +60,7 @@ public class UserInfoController extends BaseController {
      *
      * @param field    显示结果中只需要显示的字段
      * @param pageDesc PageDesc
+     * @param _search _search
      * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
@@ -96,6 +97,7 @@ public class UserInfoController extends BaseController {
      * 新增用户
      *
      * @param userInfo UserInfo
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(method = RequestMethod.POST)
@@ -137,6 +139,8 @@ public class UserInfoController extends BaseController {
      *
      * @param userCode 用户代码
      * @param userInfo UserInfo
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/state/{userCode}", method = RequestMethod.PUT)
     public void changeState(@PathVariable String userCode, UserInfo userInfo, 
@@ -169,10 +173,10 @@ public class UserInfoController extends BaseController {
     
     /**
      * 更新用户信息
-     * @param userCode
-     * @param userInfo
-     * @param request
-     * @param response
+     * @param userCode userCode
+     * @param userInfo userInfo
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/{userCode}", method = RequestMethod.PUT)
     public void edit(@PathVariable String userCode, UserInfo userInfo,
@@ -251,7 +255,9 @@ public class UserInfoController extends BaseController {
 
     /**
      * 当前登录名是否已存在
-     * @param response  HttpServletResponse
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws IOException IOException
      */
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
     public void isAnyExist(HttpServletRequest request,HttpServletResponse response) throws IOException {
@@ -269,7 +275,9 @@ public class UserInfoController extends BaseController {
      * 当前登录名是否已存在
      *
      * @param loginName 登录名
-     * @param response  HttpServletResponse
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws IOException IOException
      */
     @RequestMapping(value = "/exists/{loginName}", method = RequestMethod.GET)
     public void isExists(@PathVariable String loginName, 
@@ -285,7 +293,8 @@ public class UserInfoController extends BaseController {
      * @param userCode    用户代码
      * @param password    旧密码
      * @param newPassword 新密码
-     * @param response    HttpServletResponse
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/change/{userCode}", method = RequestMethod.PUT)
     public void changePwd(@PathVariable String userCode, String password, String newPassword,
@@ -327,7 +336,8 @@ public class UserInfoController extends BaseController {
      * 批量重置密码
      *
      * @param userCodes 用户代码集合
-     * @param response  HttpServletResponse
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/reset", method = RequestMethod.PUT)
     public void resetBatchPwd(String[] userCodes,HttpServletRequest request, HttpServletResponse response) {
@@ -349,6 +359,7 @@ public class UserInfoController extends BaseController {
      * 重置用户密码
      *
      * @param userCode 用户代码
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/reset/{userCode}", method = RequestMethod.PUT)

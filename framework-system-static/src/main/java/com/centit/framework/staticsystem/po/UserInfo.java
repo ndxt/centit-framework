@@ -117,7 +117,7 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
 
     /**
      * 密码失效时间
-     * @return
+     * @return  Date
      */
     public Date getPwdExpiredTime() {
 		return pwdExpiredTime;
@@ -137,6 +137,10 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
 
     /**
      * minimal constructor
+     * @param userCode String
+     * @param userstate String
+     * @param loginname String
+     * @param username String
      */
     public UserInfo(String userCode, String userstate, String loginname,
                     String username) {
@@ -167,9 +171,6 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
 			}
 
     
-    /**
-     * full constructor
-     */
     public UserInfo(String userCode, String userpin,String usertype, String userstate,
                     String loginname, String username, String userdesc,
                     String usertag, String englishname,
@@ -227,7 +228,7 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
 	/**
      * T:生效 F:无效
      *
-     * @return
+     * @return T:生效 F:无效
      */
     public String getIsValid() {
         return this.isValid;

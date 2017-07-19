@@ -33,6 +33,8 @@ public class RolePowerId implements java.io.Serializable {
 
     /**
      * full constructor
+     * @param rolecode String
+     * @param optcode String
      */
     public RolePowerId(String rolecode, String optcode) {
         this.roleCode = rolecode;
