@@ -30,7 +30,7 @@ public interface OptFlowNoPoolDao {
                 " and CodeDate = to_date(" + QueryUtils.buildStringForQuery(
                 DatetimeOpt.convertDatetimeToString(codeBaseDate))
                 + ",'YYYY-MM-DD HH:MI:SS')");
-     * @param map
+     * @param map Map
      * @return long
      */
      long fetchFirstLsh(Map map);

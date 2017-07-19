@@ -100,6 +100,8 @@ public class RoleInfo implements IRoleInfo,EntityWithTimestamp, java.io.Serializ
 
     /**
      * minimal constructor
+     * @param rolecode String
+     * @param isvalid String
      */
     public RoleInfo(String rolecode, String isvalid) {
         this.roleCode = rolecode;
@@ -107,9 +109,6 @@ public class RoleInfo implements IRoleInfo,EntityWithTimestamp, java.io.Serializ
         this.roleType = "S";
     }
 
-    /**
-     * full constructor
-     */
     public RoleInfo(String rolecode, String rolename,String roleType,
     		String unitCode,String isvalid, String roledesc) {
         this.roleCode = rolecode;
@@ -167,6 +166,7 @@ public class RoleInfo implements IRoleInfo,EntityWithTimestamp, java.io.Serializ
 
     /**
      * S为系统角色 I为项目角色 W工作量角色
+     * @return  S为系统角色 I为项目角色 W工作量角色
      */
 	public String getRoleType() {
 		return roleType;
@@ -174,6 +174,7 @@ public class RoleInfo implements IRoleInfo,EntityWithTimestamp, java.io.Serializ
 
 	/**
      * S为系统角色 I为项目角色  D 部门权限  W工作量角色
+     * @param  roleType roleType
      */
 	public void setRoleType(String roleType) {
 		this.roleType = roleType;

@@ -99,7 +99,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment
 	/**
 	 * 刷新数据字典
 	 *
-	 * @return
+	 * @return  boolean 刷新数据字典
 	 */
 	@Override
 	public boolean reloadDictionary() {
@@ -127,8 +127,8 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment
 	/**
 	 * 修改用户密码
 	 *
-	 * @param userCode
-	 * @param userPassword
+	 * @param userCode userCode
+	 * @param userPassword userPassword
 	 */
 	@Override
 	public void changeUserPassword(String userCode, String userPassword) {

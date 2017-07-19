@@ -56,7 +56,7 @@ public interface UserUnitDao{
 
     /**
      * unitcode不为null就是某个处室的某个角色，为NULL就是所有处室的某个角色
-     *if (unitCode != null && !"".equals(unitCode)) {
+     *if (unitCode != null &amp;&amp; !"".equals(unitCode)) {
             if ("gw".equals(roleType))
                 ls =listObjectsAll("FROM UserUnit where unitCode=? and userStation=? ",
                                new Object[]{ unitCode, roleCode});

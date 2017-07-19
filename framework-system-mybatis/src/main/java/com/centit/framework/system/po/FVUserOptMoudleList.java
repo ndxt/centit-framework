@@ -93,18 +93,12 @@ public class FVUserOptMoudleList implements java.io.Serializable {
     public FVUserOptMoudleList() {
     }
 
-    /**
-     * minimal constructor
-     */
     public FVUserOptMoudleList(String userCode, String optid, String optname) {
         this.userCode = userCode;
         this.optid = optid;
         this.optname = optname;
     }
 
-    /**
-     * full constructor
-     */
     public FVUserOptMoudleList(String userCode, String optid, String optname,
                                String preoptid, String formcode, String opturl, Long msgno,
                                String msgprm, String isintoolbar, Long imgindex, String topoptid,
@@ -242,7 +236,7 @@ public class FVUserOptMoudleList implements java.io.Serializable {
     /**
      * 页面打开方式 D: DIV I： iFrame
      *
-     * @return
+     * @return PageType
      */
     public String getPageType() {
         return pageType;
@@ -251,7 +245,7 @@ public class FVUserOptMoudleList implements java.io.Serializable {
     /**
      * 页面打开方式 D: DIV I： iFrame
      *
-     * @param pageType
+     * @param pageType pageType
      */
     public void setPageType(String pageType) {
         this.pageType = pageType;

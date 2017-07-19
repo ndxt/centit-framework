@@ -48,9 +48,6 @@ public class DataDictionary implements IDataDictionary, java.io.Serializable {
     }
 
   
-    /**
-     * full constructor
-     */
     public DataDictionary(String catalogcode, String datacode, String extracode,
                           String extracode2, String datatag, String datavalue,
                           String datastyle, String datadesc) {

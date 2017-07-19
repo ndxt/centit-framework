@@ -33,6 +33,7 @@ public interface OptInfoManager extends BaseEntityManager<OptInfo, String> {
      * 将数据转换为树形结构
      *
      * @param optInfos optInfos
+     * @param  fillDefAndScope  boolean
      * @return List OptInfo
      */
     public List<OptInfo> listObjectFormatTree(List<OptInfo> optInfos,boolean fillDefAndScope);

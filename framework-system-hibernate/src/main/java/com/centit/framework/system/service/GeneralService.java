@@ -18,8 +18,8 @@ public interface GeneralService {
 
 	/**
 	 * 获取用户某个模块的查询过滤器类别，这个类别不需要开发人员维护，框架统一维护。
-	 * @param userCode
-	 * @param modelCode
+	 * @param userCode userCode
+	 * @param modelCode modelCode
 	 * @return  UserQueryFilter
 	 */
 	 UserQueryFilter getUserDefaultFilter(String userCode,String modelCode);

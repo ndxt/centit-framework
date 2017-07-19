@@ -72,6 +72,7 @@ public class CentitUserDetailsImpl
     }
     /**
      * default constructor
+     * @param user UserInfo
      */
     public CentitUserDetailsImpl(UserInfo user) {
         super(user.getUserCode(), user.getUserPin(),user.getUserType(),
@@ -85,17 +86,11 @@ public class CentitUserDetailsImpl
         arrayAuths = null;
     }
 
-    /**
-     * minimal constructor
-     */
     public CentitUserDetailsImpl(String userCode, String userstate, String loginname, String username) {
         super(userCode, userstate, loginname, username);
         arrayAuths = null;
     }
 
-    /**
-     * full constructor
-     */
     public CentitUserDetailsImpl(String userCode, String userpin,  String usertype,String userstate, String loginname, String username,
                                  String userdesc, Long logintimes, Date activeime, String loginip, Long addrbookid) {
         super(userCode, userpin,usertype, userstate, loginname, username, userdesc, logintimes, activeime, loginip, addrbookid);
@@ -138,7 +133,7 @@ public class CentitUserDetailsImpl
     }
     
     /**
-     * @return
+     * @return  List UserRoleCodes
      */
     @Override
     public List<String> getUserRoleCodes(){

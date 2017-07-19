@@ -25,7 +25,7 @@ public interface GeneralService {
 	 UserQueryFilter getUserDefaultFilter(String userCode,String modelCode);
 	/**
 	 * 获取用户某个模块默认查询过滤器
-	 * @param filterNo
+	 * @param filterNo filterNo
 	 * @return 用户某个模块默认查询过滤器
 	 */
 	 UserQueryFilter getUserQueryFilter(Long filterNo);

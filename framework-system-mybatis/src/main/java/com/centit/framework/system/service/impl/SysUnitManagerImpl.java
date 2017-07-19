@@ -66,6 +66,8 @@ public class SysUnitManagerImpl implements SysUnitManager {
 
     /**
      * 查找对象，如果没有新建一个空对象，并附一个默认的编码
+     * @param  object UnitInfo
+     * @return UnitInfo
      */
     public UnitInfo getObject(UnitInfo object) {
         UnitInfo newObj = unitInfoDao.getObjectById(object.getUnitCode());

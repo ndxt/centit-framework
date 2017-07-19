@@ -23,9 +23,6 @@ public class OsInfo implements java.io.Serializable {
     public OsInfo() {
     }
 
-    /**
-     * minimal constructor
-     */
     public OsInfo(
             String osId
             , String osName) {
@@ -33,9 +30,6 @@ public class OsInfo implements java.io.Serializable {
         this.osName = osName;
     }
 
-    /**
-     * full constructor
-     */
     public OsInfo(
             String osId
             , String osName, 

@@ -43,6 +43,10 @@ public class OptFlowNoInfoId implements java.io.Serializable {
 
     /**
      * full constructor
+     *
+     * @param ownerCode String
+     * @param codeDate Date
+     * @param codeCode String
      */
     public OptFlowNoInfoId(String ownerCode, Date codeDate, String codeCode) {
 

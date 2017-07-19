@@ -67,11 +67,9 @@ public  class GeneralServiceImpl implements GeneralService {
 	/**
 	 * 获取用户数据权限过滤器
 	 * 
-	 * @param sUserCode
-	 * @param sOptid
-	 *            业务名称
-	 * @param sOptMethod
-	 *            对应的方法名称
+	 * @param sUserCode sUserCode
+	 * @param sOptid 业务名称
+	 * @param sOptMethod 对应的方法名称
 	 * @return 过滤条件列表，null或者空位不过来
 	 */
 	@Override
@@ -107,6 +105,7 @@ public  class GeneralServiceImpl implements GeneralService {
 	}
 	/**
 	 * 创建用户数据范围过滤器
+	 * @return  DataPowerFilter
 	 */
 	@Override
 	@Transactional

@@ -28,17 +28,11 @@ public class DatabaseInfo implements  Serializable {
     public DatabaseInfo() {
     }
 
-    /**
-     * minimal constructor
-     */
     public DatabaseInfo(String databaseCode,String databaseName) {
     	this.databaseCode = databaseCode;
         this.databaseName = databaseName;
     }
 
-    /**
-     * full constructor
-     */
     public DatabaseInfo(String databaseCode, String databaseName, String databaseUrl,
     		String username, String password,
                         String dataDesc) {
@@ -142,6 +136,7 @@ public class DatabaseInfo implements  Serializable {
 
     /**
      * 替换子类对象数组，这个函数主要是考虑hibernate中的对象的状态，以避免对象状态不一致的问题
+     * @param  other DatabaseInfo
      */
 
     public void copy(DatabaseInfo other) {

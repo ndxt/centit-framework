@@ -82,7 +82,7 @@ public class DBPlatformEnvironment implements PlatformEnvironment {
 	/**
 	 * 刷新数据字典
 	 *
-	 * @return
+	 * @return  boolean 刷新数据字典
 	 */
 	@Override
 	public boolean reloadDictionary() {
@@ -92,7 +92,7 @@ public class DBPlatformEnvironment implements PlatformEnvironment {
 	/**
 	 * 刷新权限相关的元数据
 	 *
-	 * @return
+	 * @return boolean 刷新权限相关的元数据
 	 */
 	@Override
 	@Transactional(readOnly=true)

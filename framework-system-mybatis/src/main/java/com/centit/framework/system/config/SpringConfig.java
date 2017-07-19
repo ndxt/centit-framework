@@ -40,6 +40,7 @@ public class SpringConfig implements EnvironmentAware {
 
     /**
      * 配置事务异常封装
+     * @return PersistenceExceptionTranslationPostProcessor
      */
     @Bean
     public PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslationPostProcessor() {

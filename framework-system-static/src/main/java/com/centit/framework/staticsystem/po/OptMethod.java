@@ -45,9 +45,6 @@ public class OptMethod implements IOptMethod, java.io.Serializable{
     public OptMethod() {
     }
 
-    /**
-     * minimal constructor
-     */
     public OptMethod(String optcode, String optid) {
 
         this.optCode = optcode;
@@ -55,9 +52,6 @@ public class OptMethod implements IOptMethod, java.io.Serializable{
 
     }
 
-    /**
-     * full constructor
-     */
     public OptMethod(String optcode, String optname, String optid, String optmethod, String optdesc) {
 
         this.optCode = optcode;

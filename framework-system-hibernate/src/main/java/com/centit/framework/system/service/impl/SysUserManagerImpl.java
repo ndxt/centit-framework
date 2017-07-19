@@ -91,7 +91,7 @@ public class SysUserManagerImpl extends
     }
     /**
      * 用户修改密码
-     * @param userCode
+     * @param userCode userCode
      * @param oldPassword 旧密码，前段已经处理过
      * @param newPassword   新密码 前段也已经处理过
      */
@@ -110,8 +110,8 @@ public class SysUserManagerImpl extends
 
     /**
      * f服务端强制设置用户密码，密码没有在前段处理过
-     * @param userCode
-     * @param newPassword
+     * @param userCode userCode
+     * @param newPassword newPassword
      */
     @Override
     public void forceSetPassword(String userCode, String newPassword){

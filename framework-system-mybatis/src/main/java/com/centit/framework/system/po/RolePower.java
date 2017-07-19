@@ -109,7 +109,8 @@ public class RolePower implements IRolePower, EntityWithTimestamp, java.io.Seria
 
 	/**
      * full constructor
-     */
+	 * @param id RolePowerId
+	 */
     public RolePower(RolePowerId id) {
         this.id = id;
         this.createDate = DatetimeOpt.currentUtilDate();

@@ -500,6 +500,7 @@ public class RoleInfoController extends BaseController {
      *
      * @param roleCode 角色代码
      * @param response HttpServletResponse
+     * @throws IOException IOException
      */
     @RequestMapping(value = "/notexists/{roleCode}", method = RequestMethod.GET)
     public void isNotExists(@PathVariable String roleCode, HttpServletResponse response) throws IOException {

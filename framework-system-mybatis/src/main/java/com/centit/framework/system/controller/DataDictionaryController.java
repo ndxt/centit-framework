@@ -315,6 +315,7 @@ public class DataDictionaryController extends BaseController {
      *
      * @param dataCatalog    DataCatalog
      * @param dataDictionary DataDictionary
+     * @param request HttpServletRequest
      */
     protected void dictionaryPreInsertHander(DataCatalog dataCatalog, DataDictionary dataDictionary,
     		HttpServletRequest request) {

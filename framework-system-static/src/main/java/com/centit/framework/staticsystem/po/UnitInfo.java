@@ -76,6 +76,9 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
 
     /**
      * minimal constructor
+     * @param unitcode String
+     * @param unitstate String
+     * @param unitname String
      */
     public UnitInfo(String unitcode, String unitstate, String unitname) {
         this.unitCode = unitcode;
@@ -103,9 +106,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.depNo = depno;
     }
 
-    /**
-     * full constructor
-     */
     public UnitInfo(String unitcode, String parentunit, String unittype,
                     String unitstate, String unitname, String unitdesc,
                     Long addrbookid, String unitshortname, String depno, 
