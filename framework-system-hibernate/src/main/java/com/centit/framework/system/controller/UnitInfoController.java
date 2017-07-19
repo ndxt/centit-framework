@@ -155,10 +155,16 @@ public class UnitInfoController extends BaseController {
         listObjects = sysUnitManager.listAllSubObjects(user.getPrimaryUnit());
         Collections.sort(listObjects, new Comparator<UnitInfo>() {
             public int compare(UnitInfo o1, UnitInfo o2) {
-                if (o2.getUnitOrder() == null) {
+                if (o2.getUnitOrder() == null && o1.getUnitOrder() == null) {
                     return 0;
                 }
+                if (o2.getUnitOrder() == null) {
+                    return 1;
+                }
                 if (o1.getUnitOrder() == null) {
+                    return -1;
+                }
+                if (o1.getUnitOrder() == o2.getUnitOrder()) {
                     return 0;
                 }
                 if (o1.getUnitOrder() > o2.getUnitOrder()) {

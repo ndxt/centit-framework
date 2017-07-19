@@ -107,7 +107,7 @@ public class OptLogManagerImpl extends BaseEntityManagerImpl<OptLog, Long, OptLo
     
     @Override
     @Transactional(propagation=Propagation.REQUIRED) 
-    public final JSONArray listObjectsAsJson(
+    public JSONArray listObjectsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
     	return SysDaoOptUtils.listObjectsAsJson(baseDao, fields, OptLog.class,

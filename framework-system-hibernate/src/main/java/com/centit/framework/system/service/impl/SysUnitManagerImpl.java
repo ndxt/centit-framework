@@ -178,6 +178,8 @@ public class SysUnitManagerImpl extends BaseEntityManagerImpl<UnitInfo, String, 
 
     @Override
 	public List<UnitInfo> listAllSubObjects(String primaryUnit) {
+        if(StringUtils.isBlank(primaryUnit))
+            return null;
 		return baseDao.listAllSubUnits(primaryUnit);
     }
     
