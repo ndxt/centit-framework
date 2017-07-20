@@ -1,16 +1,15 @@
 package com.centit.framework.system.dao;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
-
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.system.po.OptFlowNoInfo;
 import com.centit.framework.system.po.OptFlowNoInfoId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 public class OptFlowNoInfoDao extends BaseDaoImpl<OptFlowNoInfo, OptFlowNoInfoId> {
@@ -21,11 +20,11 @@ public class OptFlowNoInfoDao extends BaseDaoImpl<OptFlowNoInfo, OptFlowNoInfoId
         if (filterField == null) {
             filterField = new HashMap<String, String>();
 
-            filterField.put("ownerCode", "cid.ownerCode=?");
+            filterField.put("ownerCode", "cid.ownerCode = :ownerCode");
 
             filterField.put("codeDate", CodeBook.EQUAL_HQL_ID);
 
-            filterField.put("codeCode", "cid.codeCode=?");
+            filterField.put("codeCode", "cid.codeCode = :codeCode");
 
             filterField.put("curNo", CodeBook.LIKE_HQL_ID);
 

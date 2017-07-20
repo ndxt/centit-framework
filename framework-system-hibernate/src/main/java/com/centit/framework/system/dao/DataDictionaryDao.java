@@ -1,18 +1,17 @@
 package com.centit.framework.system.dao;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.system.po.DataDictionary;
 import com.centit.framework.system.po.DataDictionaryId;
 import com.centit.support.algorithm.StringBaseOpt;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class DataDictionaryDao extends BaseDaoImpl<DataDictionary, DataDictionaryId> {
@@ -22,9 +21,9 @@ public class DataDictionaryDao extends BaseDaoImpl<DataDictionary, DataDictionar
     public Map<String, String> getFilterField() {
         if (filterField == null) {
             filterField = new HashMap<String, String>();
-            filterField.put("datacode", "id.dataCode=?");
-            filterField.put("catalogcode", "id.catalogCode=?");
-            filterField.put("NP_system", "dataStyle='S'");
+            filterField.put("datacode", "id.dataCode = :datacode");
+            filterField.put("catalogcode", "id.catalogCode = :catalogcode");
+            filterField.put("NP_system", "dataStyle = 'S'");
             filterField.put("dataValue", CodeBook.LIKE_HQL_ID);
             filterField.put(CodeBook.ORDER_BY_HQL_ID, "dataOrder");
         }

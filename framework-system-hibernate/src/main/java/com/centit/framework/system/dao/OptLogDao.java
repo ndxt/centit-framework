@@ -1,21 +1,16 @@
 package com.centit.framework.system.dao;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.system.po.OptLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Repository
 public class OptLogDao extends BaseDaoImpl<OptLog, Long> {
@@ -24,7 +19,7 @@ public class OptLogDao extends BaseDaoImpl<OptLog, Long> {
 
     public Map<String, String> getFilterField() {
         if (filterField == null) {
-            filterField = new HashMap<String, String>();
+            filterField = new HashMap<>();
 
             filterField.put("logId", CodeBook.EQUAL_HQL_ID);
 
@@ -32,9 +27,9 @@ public class OptLogDao extends BaseDaoImpl<OptLog, Long> {
 
             filterField.put(CodeRepositoryUtil.USER_CODE, CodeBook.EQUAL_HQL_ID);
 
-            filterField.put("optTimeBegin", "opttime >= to_date(?,'yyyy-mm-dd')");
+            filterField.put("(date)optTimeBegin", "opttime >= :optTimeBegin ");
 
-            filterField.put("optTimeEnd", "opttime <= (to_date(?,'yyyy-mm-dd')+1)");
+            filterField.put("(date)optTimeEnd", "opttime <= :optTimeEnd");
 
             filterField.put("optId", CodeBook.LIKE_HQL_ID);
 

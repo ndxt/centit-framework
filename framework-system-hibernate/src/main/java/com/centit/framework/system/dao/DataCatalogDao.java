@@ -1,15 +1,14 @@
 package com.centit.framework.system.dao;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.system.po.DataCatalog;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class DataCatalogDao extends BaseDaoImpl<DataCatalog, String> {
@@ -35,7 +34,7 @@ public class DataCatalogDao extends BaseDaoImpl<DataCatalog, String> {
     @Override
     public Map<String, String> getFilterField() {
         if (filterField == null) {
-            filterField = new HashMap<String, String>();
+            filterField = new HashMap<>();
             filterField.put("catalogCode", CodeBook.LIKE_HQL_ID);
             filterField.put("catalogName", CodeBook.LIKE_HQL_ID);
             filterField.put("catalogStyle", CodeBook.EQUAL_HQL_ID);

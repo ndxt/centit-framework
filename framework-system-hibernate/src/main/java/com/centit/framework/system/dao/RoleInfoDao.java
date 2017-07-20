@@ -1,18 +1,17 @@
 package com.centit.framework.system.dao;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.system.po.RoleInfo;
 import com.centit.framework.system.po.VOptTree;
 import com.centit.support.database.QueryUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class RoleInfoDao extends BaseDaoImpl<RoleInfo, String> {
@@ -28,7 +27,7 @@ public class RoleInfoDao extends BaseDaoImpl<RoleInfo, String> {
         if (filterField == null) {
             filterField = new HashMap<String, String>();
             filterField.put("ROLECODE", CodeBook.LIKE_HQL_ID);
-            filterField.put("UNITROLE", "(roleCode like ? or roleCode like 'P-%')");
+            filterField.put("UNITROLE", "(roleCode like :UNITROLE or roleCode like 'P-%')");
             filterField.put("NP_GLOBAL", "(roleCode like 'G-%' or roleCode like 'P-%')");
             filterField.put("ROLENAME", CodeBook.LIKE_HQL_ID);
             filterField.put("ROLEDESC", CodeBook.LIKE_HQL_ID);

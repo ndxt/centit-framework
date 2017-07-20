@@ -1,17 +1,16 @@
 package com.centit.framework.system.dao;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.system.po.InnerMsgRecipient;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class InnerMsgRecipientDao extends BaseDaoImpl<InnerMsgRecipient, String> {
@@ -20,17 +19,17 @@ public class InnerMsgRecipientDao extends BaseDaoImpl<InnerMsgRecipient, String>
     public Map<String, String> getFilterField() {
         if (filterField == null) {
             filterField = new HashMap<String, String>();
-            filterField.put("RECEIVE", "receive = ?");
-            filterField.put("sender", "msgCode in ( select  msgCode from InnerMsg where sender = ? )");
-            filterField.put("msgContent", "msgCode in ( select  msgCode from InnerMsg where msgContent LIKE ? )");
-            filterField.put("msgTitle", "msgCode in ( select  msgCode from InnerMsg where msgTitle LIKE ? )");
-            filterField.put("mailType", "msgCode in ( select  msgCode from InnerMsg where mailType = ? )");
-            filterField.put("mailTypeNot", "msgCode in ( select  msgCode from InnerMsg where mailType != ? )");
-            filterField.put("msgStateNot", "msgState != ?");
-            filterField.put("innerMsgStateNot", "msgCode in ( select  msgCode from InnerMsg where msgState != ? )");
+            filterField.put("RECEIVE", "receive = :RECEIVE");
+            filterField.put("sender", "msgCode in ( select  msgCode from InnerMsg where sender = :sender )");
+            filterField.put("msgContent", "msgCode in ( select  msgCode from InnerMsg where msgContent LIKE :msgContent )");
+            filterField.put("msgTitle", "msgCode in ( select  msgCode from InnerMsg where msgTitle LIKE :msgTitle )");
+            filterField.put("mailType", "msgCode in ( select  msgCode from InnerMsg where mailType = :mailType )");
+            filterField.put("mailTypeNot", "msgCode in ( select  msgCode from InnerMsg where mailType != :mailTypeNot )");
+            filterField.put("msgStateNot", "msgState != :msgStateNot");
+            filterField.put("innerMsgStateNot", "msgCode in ( select  msgCode from InnerMsg where msgState != :innerMsgStateNot )");
             filterField.put("isRecycled", CodeBook.EQUAL_HQL_ID);
             filterField.put("MSGSTATE", CodeBook.EQUAL_HQL_ID);
-            filterField.put("msgType", "msgCode in ( select  msgCode from InnerMsg where msgType = ? )");
+            filterField.put("msgType", "msgCode in ( select  msgCode from InnerMsg where msgType = :msgType )");
             filterField.put(CodeBook.ORDER_BY_HQL_ID, "msgCode desc");
         }
         return filterField;
