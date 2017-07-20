@@ -14,6 +14,9 @@ import com.centit.support.database.QueryAndNamedParams;
 import com.centit.support.database.QueryAndParams;
 import com.centit.support.database.QueryUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -33,7 +36,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializable> 
- {
+{
     @Resource(name="sessionFactory")
     protected SessionFactory sessionFactory;
     
@@ -67,29 +70,31 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
     // getSession()).getFactory().getDialect().getClass().getName();
     private Class<?> poClass = null;
 
-    /*
-    
-    private static String dialectClassName = null;
-    @Transactional
-    public final String getDialectName() {
-        if (BaseDaoImpl.dialectClassName == null) {  
-            //sessionFactory.getSessionFactoryOptions().getInterceptor().
-            SessionFactoryImpl sesionFactoryimpl= (SessionFactoryImpl) sessionFactory;            
-            String dbName = sesionFactoryimpl.getDialect().getClass().getName();
-            int p = dbName.lastIndexOf('.');
-            if (p >= 0)
-                dbName = dbName.substring(p + 1);
-            BaseDaoImpl.dialectClassName = dbName;
-        }
-        return BaseDaoImpl.dialectClassName;
-    }*/
-
-    public void setFilterField(Map<String, String> ffd) {
-        filterField = ffd;
-    }
-
     public Map<String, String> getFilterField() {
         return filterField;
+    }
+
+    public static Map<String,Pair<String,String[]>>
+        getFilterFieldWithPretreatment( Map<String, String> fieldMap) {
+        if(fieldMap==null)
+            return null;
+        Map<String,Pair<String,String[]>> filterFieldWithPretreatment =
+                new HashMap<>(fieldMap.size()*2) ;
+
+        if(fieldMap==null)
+            return filterFieldWithPretreatment;
+
+        for (Map.Entry<String, String> ent : fieldMap.entrySet()) {
+            ImmutableTriple<String,String,String> paramMeta =
+                    QueryUtils.parseParameter(ent.getKey());
+            String [] pretreatment = null;
+            if(StringUtils.isNotBlank( paramMeta.getRight())) {
+                pretreatment = paramMeta.getRight().split(",");
+            }
+            filterFieldWithPretreatment.put(paramMeta.middle,
+                    new ImmutablePair<>( ent.getValue(),pretreatment ));
+        }
+        return filterFieldWithPretreatment;
     }
 
     public final Class<?> getPoClass() {
@@ -213,7 +218,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
    	@Transactional(propagation=Propagation.MANDATORY) 
     public List<PK> saveNewObjects(T[] os) {
            try {
-           	List<PK> pks = new ArrayList<PK>();           	
+           	List<PK> pks = new ArrayList<>();
            	for(T o : os){
    	            if(o instanceof EntityWithTimestamp){
    	                EntityWithTimestamp ewto = (EntityWithTimestamp) o;
@@ -667,71 +672,59 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
         }
     }
 
-     /**
-      * 用命名参数代替这个
-      * @param shql shql
-      * @param filterDesc Map filterDesc
-      * @return 命名参数
-      */
-    @Deprecated
-    public QueryAndParams builderHqlAndParams(String shql,
-            Map<String, Object> filterDesc) {
+    /**
+     *
+     * @param filterFieldDesc  Map<String,Pair<String,String[]>>  getFilterFieldWithPretreatment()
+     * @param skey 变量
+     * @param objValue 值
+     * @return null 为没有对应的过滤条件 语句 变量（null 为 没有变量） 值
+     */
+    private static ImmutableTriple<String,String,Object> makeSubQueryStmt(
+            Map<String,Pair<String,String[]>> filterFieldDesc, String skey, Object objValue ){
 
-        StringBuffer hql = new StringBuffer(shql);
-        List<Object> params = new ArrayList<Object>();
-        Map<String, String> filterFieldDesc = getFilterField();
-        String sOrderby = null;
+        if(filterFieldDesc == null || objValue == null || StringUtils.isBlank(objValue.toString()))
+            return null;
 
-        for (Map.Entry<String, Object> ent : filterDesc.entrySet()) {
-            String skey = ent.getKey();
-            String sSqlFormat = null;
-            if (filterFieldDesc != null) {
-                sSqlFormat = filterFieldDesc.get(skey);
-                if (sSqlFormat == null)
-                    sSqlFormat = filterFieldDesc.get(skey.toUpperCase());
-            }
-            if (sSqlFormat != null) {
-                Object sValue = ent.getValue();
+        Pair<String,String[]> sqlPair = filterFieldDesc.get(skey);
+        if (sqlPair == null)
+            sqlPair = filterFieldDesc.get(skey.toUpperCase());
 
-                if ((null == sValue)
-                        || ((sValue instanceof String) && !StringUtils
-                                .isNotBlank(sValue.toString()))) {
-                    continue;
+        if(sqlPair==null || StringUtils.isBlank(sqlPair.getLeft()))
+            return null;
+
+        String sSqlFormat = sqlPair.getLeft();
+        if (skey.startsWith(CodeBook.NO_PARAM_FIX)) {
+            return new ImmutableTriple<> (sSqlFormat, null, null);
+        }
+        String [] pretreats = sqlPair.getRight();
+        Object paramObj = objValue;
+        if(pretreats!=null) {
+            for (String p : pretreats) {
+                if (QueryUtils.SQL_PRETREAT_NO_PARAM.equalsIgnoreCase(p)) {
+                    return new ImmutableTriple<>(sSqlFormat, null, null);
                 }
-
-                if (skey.startsWith(CodeBook.NO_PARAM_FIX)) {
-                    if (StringRegularOpt.isTrue(sValue.toString()))
-                        hql.append(" and ").append(sSqlFormat);
-                } else {
-                    if (sSqlFormat.equalsIgnoreCase(CodeBook.LIKE_HQL_ID)) {
-                        sValue = QueryUtils.getMatchString(sValue.toString());
-                        hql.append(String.format(" and %s like ? ", skey));
-                    } else if (sSqlFormat
-                            .equalsIgnoreCase(CodeBook.EQUAL_HQL_ID)) {
-                        hql.append(String.format(" and %s = ? ", skey));
-                    }  else if (sSqlFormat
-                            .equalsIgnoreCase(CodeBook.IN_HQL_ID)) {
-                        hql.append(String.format(" and %s in ? ", skey));
-                    }else {
-                        hql.append(" and ").append(sSqlFormat);
-                    }
-                    params.add(sValue);
-                }
-
-            } else if (CodeBook.SELF_ORDER_BY.equalsIgnoreCase(skey)) {
-                // if(sOrderby==null)
-                sOrderby = QueryUtils.trimSqlOrderByField(ent.getValue().toString());
-                // else
-                // sOrderby += ", "+ ent.getValue();
+                paramObj = QueryUtils.onePretreatParameter(p, paramObj);
             }
         }
-        if (sOrderby == null && filterFieldDesc != null)
-            sOrderby = filterFieldDesc.get(CodeBook.ORDER_BY_HQL_ID);
-        if (!StringBaseOpt.isNvl(sOrderby))
-            hql.append(" order by ").append(sOrderby);
 
-        return new QueryAndParams(hql.toString(), params.toArray());
+        if (sSqlFormat.equalsIgnoreCase(CodeBook.LIKE_HQL_ID)) {
+            paramObj = QueryUtils.getMatchString(StringBaseOpt.objectToString(paramObj));
+            sSqlFormat = skey + " like :" + skey + " ";
+        } else if (sSqlFormat
+                .equalsIgnoreCase(CodeBook.EQUAL_HQL_ID)) {
+            sSqlFormat = skey + " = :"+ skey + " ";
+        } else if (sSqlFormat.equalsIgnoreCase(CodeBook.IN_HQL_ID)) {
+            sSqlFormat = skey + " in (:"+ skey + ") ";
+            String sValue = StringBaseOpt.objectToString(objValue);
+            if(sValue!=null) {
+                paramObj = sValue.split(",");
+            }
+        }
+
+        return new ImmutableTriple<> (sSqlFormat, skey, paramObj);
     }
+
+
     /**
      * 创建一个查询语句 和 条件
      * @param shql shql
@@ -748,9 +741,14 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
         String sOrderby = null;
         String sOrderFiled = null;
         String sOrder = "asc";
+        Map<String,Pair<String,String[]>> filterFieldWtihPretreatment =
+                getFilterFieldWithPretreatment(filterFieldDesc);
         if(filterDesc!=null){
 	        for (Map.Entry<String, Object> ent : filterDesc.entrySet()) {
-	            String skey = ent.getKey();
+
+                if(ent.getValue()==null)
+                    continue;
+                String skey = ent.getKey();
 	            // 从请求参数带入的排序字段
 	            if (CodeBook.SELF_ORDER_BY.equalsIgnoreCase(skey)) {
 	                sOrderby = QueryUtils.trimSqlOrderByField(ent.getValue().toString());
@@ -762,43 +760,15 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
 	                String stemp = ent.getValue().toString();
 	                if("asc".equalsIgnoreCase(stemp) || "desc".equalsIgnoreCase(stemp))
 	                     sOrder = stemp;
-	            }else{            
-	                String sSqlFormat = null;
-	                if (filterFieldDesc != null) {
-	                    sSqlFormat = filterFieldDesc.get(skey);
-	                    if (sSqlFormat == null)
-	                        sSqlFormat = filterFieldDesc.get(skey.toUpperCase());
-	                }
-	                if (sSqlFormat != null) {
-	                    Object sValue = ent.getValue();
-	                    
-	                    if ((null == sValue)
-	                            || ((sValue instanceof String) && !StringUtils
-	                                    .isNotBlank(sValue.toString()))) {
-	                        continue;
-	                    }
-	                    if (skey.startsWith(CodeBook.NO_PARAM_FIX)) {
-	                        if (StringRegularOpt.isTrue(sValue.toString()))
-	                            hql.append(" and ").append(sSqlFormat);
-	                    } else {
-	                        if (sSqlFormat.equalsIgnoreCase(CodeBook.LIKE_HQL_ID)) {
-	                            sValue = QueryUtils.getMatchString(sValue.toString());
-	                            hql.append(" and " + skey + " like :" + skey + " ");
-	                        } else if (sSqlFormat
-	                                .equalsIgnoreCase(CodeBook.EQUAL_HQL_ID)) {
-	                            hql.append(String.format("  and " + skey + " = :"
-	                                    + skey + " "));
-	                        } else if (sSqlFormat.equalsIgnoreCase(CodeBook.IN_HQL_ID)) {
-	                            hql.append(String.format("  and " + skey + " in :"
-	                                    + skey + " "));
-	                        }
-	                        else {
-	                            hql.append(" and ").append(
-	                                    sSqlFormat.replace("?", ":" + skey));
-	                        }
-	                        params.put(skey, sValue);
-	                    }
-	                } 
+	            }else{
+                    ImmutableTriple<String,String,Object> sqlPiece =
+                            makeSubQueryStmt(filterFieldWtihPretreatment,skey,ent.getValue());
+                    if(sqlPiece!=null) {
+                        hql.append(" and ").append(sqlPiece.getLeft());
+                        if(sqlPiece.getMiddle() != null) {
+                            params.put(sqlPiece.getMiddle(), sqlPiece.getRight());
+                        }
+                    }
 	            }
 	        }
         }
@@ -832,7 +802,9 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
 
         StringBuffer hql = new StringBuffer(shql);
         Map<String, Object> params = new HashMap<>();
-        Map<String, String> filterFieldDesc = getFilterField();
+
+        Map<String,Pair<String,String[]>> filterFieldWtihPretreatment =
+                getFilterFieldWithPretreatment(getFilterField());
 
         for (Map.Entry<String, Object> ent : filterDesc.entrySet()) {
             String skey = ent.getKey();
@@ -841,107 +813,18 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
                    && ! CodeBook.TABLE_SORT_FIELD.equalsIgnoreCase(skey) 
                    && ! CodeBook.TABLE_SORT_ORDER.equalsIgnoreCase(skey)) {
 
-                //从请求参数带入的排序字段                       
-                String sSqlFormat = null;
-                if (filterFieldDesc != null) {
-                    sSqlFormat = filterFieldDesc.get(skey);
-                    if (sSqlFormat == null)
-                        sSqlFormat = filterFieldDesc.get(skey.toUpperCase());
-                }
-                
-                if (sSqlFormat != null) {
-                    Object sValue = ent.getValue();
-                    
-                    if ((null == sValue)
-                            || ((sValue instanceof String) && !StringUtils
-                                    .isNotBlank(sValue.toString()))) {
-                        continue;
-                    }
-                    if (skey.startsWith(CodeBook.NO_PARAM_FIX)) {
-                        if (StringRegularOpt.isTrue(sValue.toString()))
-                            hql.append(" and ").append(sSqlFormat);
-                    } else {
-                        if (sSqlFormat.equalsIgnoreCase(CodeBook.LIKE_HQL_ID)) {
-                            sValue = QueryUtils.getMatchString(sValue.toString());
-                            hql.append(" and " + skey + " like :" + skey + " ");
-                        } else if (sSqlFormat
-                                .equalsIgnoreCase(CodeBook.EQUAL_HQL_ID)) {
-                            hql.append(String.format("  and " + skey + " = :"
-                                    + skey + " "));
-                        } else if (sSqlFormat.equalsIgnoreCase(CodeBook.IN_HQL_ID)) {
-                            hql.append(String.format("  and " + skey + " in :"
-                                    + skey + " "));
-                        }
-                        else {
-                            hql.append(" and ").append(
-                                    sSqlFormat.replace("?", ":" + skey));
-                        }
-                        params.put(skey, sValue);
+                ImmutableTriple<String,String,Object> sqlPiece =
+                        makeSubQueryStmt(filterFieldWtihPretreatment,skey,ent.getValue());
+                if(sqlPiece!=null) {
+                    hql.append(" and ").append(sqlPiece.getLeft());
+                    if(sqlPiece.getMiddle() != null) {
+                        params.put(sqlPiece.getMiddle(), sqlPiece.getRight());
                     }
                 }
             }
         }
         
         return new QueryAndNamedParams(hql.toString(), params);
-    }
-
-     /**
-      * 此方法有SQL注入危险
-      * @param shql shql
-      * @param filterDesc filterDesc
-      * @return builderHql
-      */
-    @Deprecated
-    public String builderHql(String shql, Map<String, String> filterDesc) {
-        StringBuffer hql = new StringBuffer(shql);
-        Map<String, String> filterFieldDesc = getFilterField();
-        String sOrderby = null;
-
-        for (Map.Entry<String, String> ent : filterDesc.entrySet()) {
-            String skey = ent.getKey();
-            String sSqlFormat = null;
-            if (filterFieldDesc != null) {
-                sSqlFormat = filterFieldDesc.get(skey);
-                if (sSqlFormat == null)
-                    sSqlFormat = filterFieldDesc.get(skey.toUpperCase());
-            }
-
-            if (sSqlFormat != null) {
-                String sValue = ent.getValue();// .toString();
-
-                if (sValue != null && !sValue.equals("")) {
-                    if (sSqlFormat.startsWith(CodeBook.NO_PARAM_FIX)) {
-                        if (StringRegularOpt.isTrue(ent.getValue()))
-                            hql.append(" and ").append(sSqlFormat);
-                    } else if (sSqlFormat
-                            .equalsIgnoreCase(CodeBook.LIKE_HQL_ID)) {
-                        sValue = QueryUtils.getMatchString(sValue);
-                        hql.append(String.format(" and %s like %s ", skey,
-                                QueryUtils.buildStringForQuery(sValue)));
-                    } else if (sSqlFormat
-                            .equalsIgnoreCase(CodeBook.EQUAL_HQL_ID)) {
-                        hql.append(String.format(" and %s = %s ", skey,
-                                QueryUtils.buildStringForQuery(sValue)));
-                    } else {
-                        hql.append(" and ").append(
-                                String.format(sSqlFormat,
-                                        QueryUtils.buildStringForQuery(sValue)));
-                    }
-                }
-            } else if (CodeBook.SELF_ORDER_BY.equalsIgnoreCase(skey)) {
-                if (sOrderby == null)
-                    sOrderby = QueryUtils.trimSqlOrderByField(ent.getValue().toString());
-                else
-                    sOrderby += ", " + ent.getValue();
-            }
-        }
-
-        if (sOrderby == null && filterFieldDesc != null)
-            sOrderby = filterFieldDesc.get(CodeBook.ORDER_BY_HQL_ID);
-        if (!StringBaseOpt.isNvl(sOrderby))
-            hql.append(" order by ").append(sOrderby);
-
-        return hql.toString();
     }
 
     @Transactional
