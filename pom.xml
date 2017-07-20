@@ -125,21 +125,19 @@
 
 
     <!-- mvn deploy -DpomFile=pom.xml -->
-    <!--
 
-        <distributionManagement>
-           <repository>
-               <id>ossrh</id>
-               <name>sonatype-releases</name>
-               <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-           </repository>
-           <snapshotRepository>
-               <id>ossrh</id>
-               <name>sonatype-snapshots</name>
-               <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-           </snapshotRepository>
-       </distributionManagement>
-    -->
+        <!--<distributionManagement>-->
+           <!--<repository>-->
+               <!--<id>ossrh</id>-->
+               <!--<name>sonatype-releases</name>-->
+               <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>-->
+           <!--</repository>-->
+           <!--<snapshotRepository>-->
+               <!--<id>ossrh</id>-->
+               <!--<name>sonatype-snapshots</name>-->
+               <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+           <!--</snapshotRepository>-->
+       <!--</distributionManagement>-->
 
     <distributionManagement>
         <repository>
@@ -186,51 +184,51 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+                <!--<version>2.10.4</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>attach-javadocs</id>-->
+                        <!--<goals>-->
+                            <!--<goal>jar</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
             <!-- GPG自动签名的插件 -->
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-gpg-plugin</artifactId>-->
+                <!--<version>1.6</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>sign-artifacts</id>-->
+                        <!--<phase>verify</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>sign</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
             <!-- sonatype release :
                 mvn nexus-staging:release -->
 
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.sonatype.plugins</groupId>-->
+                <!--<artifactId>nexus-staging-maven-plugin</artifactId>-->
+                <!--<version>1.6.8</version>-->
+                <!--<extensions>true</extensions>-->
+                <!--<configuration>-->
+                    <!--<serverId>ossrh</serverId>-->
+                    <!--<nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
+                    <!--<autoReleaseAfterClose>true</autoReleaseAfterClose>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
 
         </plugins>
     </build>

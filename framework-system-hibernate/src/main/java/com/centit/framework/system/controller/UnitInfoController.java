@@ -1,24 +1,5 @@
 package com.centit.framework.system.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
@@ -37,6 +18,18 @@ import com.centit.framework.system.service.SysUserManager;
 import com.centit.framework.system.service.SysUserUnitManager;
 import com.centit.support.algorithm.ListOpt;
 import com.centit.support.json.JsonPropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -79,36 +72,13 @@ public class UnitInfoController extends BaseController {
     public void list(String[] field, boolean struct, String id,HttpServletRequest request, HttpServletResponse response) {
     	 Map<String, Object> searchColumn = convertSearchColumn(request);
          String unitName = (String)searchColumn.get("unitName");
-         Map<String,Object> filterMap = new HashMap<String,Object>();
-         List<UnitInfo> listObjects= null;
-         List<UnitInfo> listObjects2 = null;
-     	if(StringUtils.isNotBlank(unitName)&&StringUtils.isBlank(id)){
-     		filterMap.put("NP_TOPUnit", "true");
-     		listObjects= sysUnitManager.listObjects(filterMap);
-     		listObjects2= sysUnitManager.listObjects(searchColumn);
-     		sysUnitManager.checkState(listObjects2);
-     		/*for(UnitInfo u :listObjects2){
- 				u.setState(sysUnitManager.hasChildren(u.getUnitCode())?
- 		                  "closed":"open");
-     		}*/
-     		listObjects.addAll(listObjects2);
-     		if(listObjects2!=null && listObjects2.size()>0){
-     			for(UnitInfo u :listObjects2){
-     				UnitInfo unit = u;
-     				//加载父节点
-     				while(unit!=null && unit.getParentUnit()!=null && !"0".equals(unit.getParentUnit())){
-     					unit = (UnitInfo)CodeRepositoryUtil.getUnitInfoByCode(unit.getParentUnit());
-     					if(unit!=null && !listObjects.contains(unit)&& !"0".equals(unit.getParentUnit()))
-     						listObjects.add(unit);
-     					else break;
-     				}
-     			}
-     		}else{
-     			listObjects=new ArrayList<UnitInfo>();
-     		}
+
+     	if(StringUtils.isNotBlank(unitName) && StringUtils.isBlank(id)){
+
+            List<UnitInfo> listObjects= sysUnitManager.listObjects(searchColumn);
      		JSONArray ja = SysDaoOptUtils.objectsToJSONArray(listObjects);
              if(struct){
-             	ja = ListOpt.srotAsTreeAndToJSON(ja, 
+             	ja = ListOpt.srotAsTreeAndToJSON(ja,
          				new ListOpt.ParentChild<Object>(){
      						@Override
      						public boolean parentAndChild(Object p, Object c) {
@@ -123,12 +93,13 @@ public class UnitInfoController extends BaseController {
              		ja,
              		response, JsonPropertyUtils.getIncludePropPreFilter(JSONObject.class, field));
      	}else{
-     		if (StringUtils.isNotBlank(id)) {        
+            Map<String,Object> filterMap = new HashMap<String,Object>();
+     		if (StringUtils.isNotBlank(id)) {
      			filterMap.put("PARENTUNIT", id);
      		}else{
      			filterMap.put("NP_TOPUnit", "true");
      		}
-     		listObjects= sysUnitManager.listObjects(filterMap);
+            List<UnitInfo>  listObjects= sysUnitManager.listObjects(filterMap);
      		sysUnitManager.checkState(listObjects);
      		/*for (UnitInfo unit : listObjects) {
             	 unit.setState(sysUnitManager.hasChildren(unit.getUnitCode())?
@@ -153,6 +124,10 @@ public class UnitInfoController extends BaseController {
         UserInfo user=sysUserMag.getObjectById(this.getLoginUser(request).getUserCode());
         List<UnitInfo> listObjects = null;
         listObjects = sysUnitManager.listAllSubObjects(user.getPrimaryUnit());
+        if(listObjects == null){
+            JsonResultUtils.writeSuccessJson(response);
+            return;
+        }
         Collections.sort(listObjects, new Comparator<UnitInfo>() {
             public int compare(UnitInfo o1, UnitInfo o2) {
                 if (o2.getUnitOrder() == null && o1.getUnitOrder() == null) {
@@ -290,7 +265,6 @@ public class UnitInfoController extends BaseController {
      *
      * @param unitCode    机构代码
      * @param statusValue 状态码 T 或 F
-     * @param request HttpServletRequest
      * @param response    HttpServletResponse
      */
     @RequestMapping(value = "/{unitCode}/status/{statusValue}", method = RequestMethod.PUT)

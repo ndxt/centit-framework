@@ -65,6 +65,7 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .httpBasic()
                 .authenticationEntryPoint(authenticationEntryPoint());
+        http.headers().frameOptions().sameOrigin();
 
         CentitUserDetailsService centitUserDetailsService = centitUserDetailsService();
 
