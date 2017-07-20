@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@ComponentScan(basePackages = "com.centit",
-    excludeFilters = @ComponentScan.Filter(value=org.springframework.stereotype.Controller.class))
 @PropertySource("classpath:system.properties")
 @Import({RedisConfig.class, H2Config.class, SpringSecurityDaoConfig.class, SpringSecurityCasConfig.class})
 @EnableAspectJAutoProxy(proxyTargetClass = true)

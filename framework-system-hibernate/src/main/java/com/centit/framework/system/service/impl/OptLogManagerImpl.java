@@ -1,7 +1,6 @@
 package com.centit.framework.system.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
-import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.hibernate.dao.SysDaoOptUtils;
@@ -17,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.context.ContextLoaderListener;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;

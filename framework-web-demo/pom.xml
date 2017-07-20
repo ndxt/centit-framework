@@ -52,9 +52,10 @@
         </dependency>
 
         <dependency>
+
             <groupId>com.centit.framework</groupId>
-            <!--<artifactId>framework-system-hibernate</artifactId>-->
-            <artifactId>framework-system-mybatis</artifactId>
+            <artifactId>framework-system-hibernate</artifactId>
+            <!--<artifactId>framework-system-mybatis</artifactId>-->
             <!--<artifactId>framework-system-static</artifactId>-->
             <version>${centit.framework.version}</version>
         </dependency>
