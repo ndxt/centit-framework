@@ -24,7 +24,7 @@
 
 	<!-- 分页后面包装部分 mysql -->
 	<sql id="pageEnd" databaseId="mysql" >
-		<![CDATA[  limit #{startRow}, #{endRow} - #{startRow}]]>
+		<![CDATA[  limit #{startRow}, #{maxSize}]]>
 	</sql>
 
 

@@ -79,7 +79,9 @@ public class DataSourceConfig implements EnvironmentAware {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+
         sessionFactory.setConfigLocation(resolver.getResource("classpath:mybatis/mybatis-config.xml"));
+
         String fileMatch = env.getProperty("mybatis.map.xml.filematch");
         String[] fileMatchs =  fileMatch.split(",");
         ArrayList<Resource> fileMatchList = new ArrayList<>(256);

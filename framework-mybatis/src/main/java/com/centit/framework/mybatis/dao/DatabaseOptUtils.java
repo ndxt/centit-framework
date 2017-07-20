@@ -64,6 +64,7 @@ public class DatabaseOptUtils {
         int end = pageNo * pageSize;
         pageQureyMap.put("startRow", new Integer(start));
         pageQureyMap.put("endRow", new Integer(end));
+        pageQureyMap.put("maxSize", new Integer(pageSize));
         //回写总数量
         pageDesc.setTotalRows(total);
         //System.err.println("pageQureyMap========"+JSON.toJSONString(pageQureyMap));

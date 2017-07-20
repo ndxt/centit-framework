@@ -61,8 +61,8 @@
 
 	<databaseIdProvider type="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
 		<property name="DB2" value="db2" />
-		<property name="Oracle" value="oracle" />
-		<property name="Adaptive Server Enterprise" value="sybase" />
+		<property name="Oracle" value="oracle"/>
+		<!--<property name="Adaptive Server Enterprise" value="sybase" />-->
 		<property name="MySQL" value="mysql" />
 		<property name="SQL Server" value="sqlserver" />
 	</databaseIdProvider>
