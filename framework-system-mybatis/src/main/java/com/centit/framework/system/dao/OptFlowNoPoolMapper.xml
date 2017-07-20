@@ -137,6 +137,6 @@
 	</select>
 	<select id="fetchFirstLsh" parameterType="map" resultType="int">
 		select min(CurNo) as MinNo from F_OptFlowNoPool 
-		where OwnerCode =#{ownerCode} and CodeCode=#{ownerCode} and CodeDate=to_date(#{codeBaseDate},'YYYY-MM-DD HH:MI:SS')
+		where OwnerCode =#{ownerCode} and CodeCode=#{ownerCode} and CodeDate=(date)(#{codeBaseDate})
 	</select>
 </mapper>

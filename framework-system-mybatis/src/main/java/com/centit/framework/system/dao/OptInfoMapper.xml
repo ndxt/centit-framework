@@ -388,7 +388,8 @@
 		and OPTTYPE = #{optType}
 		order by ORDERIND
 	</select>
-	<select id="getFunctionsByUserAndSuperFunctionId" parameterType="map" resultType="OptInfo">
+	<select id="getFunctionsByUserAndSuperFunctionId" parameterType="map"
+			resultType="com.centit.framework.system.po.OptInfo">
 		select
 		OPTID,
 		PREOPTID,

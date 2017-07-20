@@ -4,6 +4,8 @@ import com.centit.framework.config.FlywayDisableCondition;
 import com.centit.framework.config.FlywayEnableCondition;
 import com.centit.support.algorithm.ListOpt;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.ibatis.mapping.DatabaseIdProvider;
+import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
 import org.flywaydb.core.Flyway;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
@@ -22,7 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)//启用注解事物管理
@@ -77,11 +79,31 @@ public class DataSourceConfig implements EnvironmentAware {
     @Bean(name="sqlSessionFactory")
     public SqlSessionFactoryBean sqlSessionFactoryBean(BasicDataSource dataSource) throws IOException {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setLazyLoadingEnabled(true);
+        configuration.setSafeRowBoundsEnabled(false);
+        configuration.setMapUnderscoreToCamelCase(true);
+        configuration.setAggressiveLazyLoading(false);
+
+        Properties properties = new Properties();
+        properties.setProperty("Oracle","oracle");
+        properties.setProperty("DB2","db2");
+        properties.setProperty("MySQL","mysql");
+        properties.setProperty("SQL Server","sqlserver");
+
+        /*PropertiesFactoryBean propertiesFactory = new PropertiesFactoryBean();
+        propertiesFactory.setProperties(properties);*/
+
+        DatabaseIdProvider databaseIdProvider = new VendorDatabaseIdProvider();
+        databaseIdProvider.setProperties(properties);
+
         sessionFactory.setDataSource(dataSource);
+        sessionFactory.setConfiguration(configuration);
+
+        sessionFactory.setDatabaseIdProvider(databaseIdProvider);
+
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-
-        sessionFactory.setConfigLocation(resolver.getResource("classpath:mybatis/mybatis-config.xml"));
-
+//      sessionFactory.setConfigLocation(resolver.getResource("classpath:mybatis/mybatis-config.xml"));
         String fileMatch = env.getProperty("mybatis.map.xml.filematch");
         String[] fileMatchs =  fileMatch.split(",");
         ArrayList<Resource> fileMatchList = new ArrayList<>(256);

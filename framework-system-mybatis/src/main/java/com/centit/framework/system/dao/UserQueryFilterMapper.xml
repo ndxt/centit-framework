@@ -167,12 +167,14 @@
 	</delete>
 	<!--删除记录 结束 -->
 	
-	<select id="listUserQueryFilterByModle" parameterType="map" resultType="UserQueryFilter" >
+	<select id="listUserQueryFilterByModle" parameterType="map"
+			resultType="com.centit.framework.system.po.UserQueryFilter" >
 			<include refid="coreSql" />
 			where USERCODE=#{userCode} and MODLECODE=#{modleCode} 
 			order by ISDEFAULT desc , CREATEDATE desc
 	</select>
-	<select id="listUserDefaultFilterByModle" parameterType="map" resultType="UserQueryFilter" >
+	<select id="listUserDefaultFilterByModle" parameterType="map"
+			resultType="com.centit.framework.system.po.UserQueryFilter" >
 			<include refid="coreSql" />
 			where USERCODE=#{userCode} and MODLECODE=#modleCode#  and ISDEFAULT = 'T'
 			order by ISDEFAULT desc , CREATEDATE desc
