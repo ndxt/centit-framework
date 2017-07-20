@@ -1,16 +1,15 @@
 package com.centit.framework.system.dao;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.system.po.RolePower;
 import com.centit.framework.system.po.RolePowerId;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,8 +26,8 @@ public class RolePowerDao extends BaseDaoImpl<RolePower, RolePowerId> {
     public Map<String, String> getFilterField() {
         if (filterField == null) {
             filterField = new HashMap<>();
-            filterField.put("optCode", "id.optCode = ?");
-            filterField.put("roleCode", "id.roleCode = ?");
+            filterField.put("optCode", "id.optCode = :optCode");
+            filterField.put("roleCode", "id.roleCode = :roleCode");
 
         }
         return filterField;

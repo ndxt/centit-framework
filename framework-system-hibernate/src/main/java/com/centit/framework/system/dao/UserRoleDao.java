@@ -1,16 +1,5 @@
 package com.centit.framework.system.dao;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
@@ -18,6 +7,12 @@ import com.centit.framework.system.po.FVUserRoles;
 import com.centit.framework.system.po.RoleInfo;
 import com.centit.framework.system.po.UserRole;
 import com.centit.framework.system.po.UserRoleId;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.*;
 
 @Repository
 public class UserRoleDao extends BaseDaoImpl<UserRole, UserRoleId> {
@@ -26,16 +21,16 @@ public class UserRoleDao extends BaseDaoImpl<UserRole, UserRoleId> {
         if (filterField == null) {
             filterField = new HashMap<>();
 
-            filterField.put("roleCode", "id.roleCode = ?");
+            filterField.put("roleCode", "id.roleCode = :roleCode");
 
-            filterField.put("userCode", "id.userCode = ?");
+            filterField.put("userCode", "id.userCode = :userCode");
           
             filterField.put("roleName", CodeBook.LIKE_HQL_ID);
             
             filterField.put("NP_unitRoleType", "roleCode in (select roleCode from RoleInfo where unitCode is not null)");
             filterField.put("NP_userRoleType", "roleCode not in (select roleCode from RoleInfo where unitCode is not null)");
 
-            filterField.put("USERCODE_ISVALID", "userCode in (select userCode from UserInfo where isValid =?)");
+            filterField.put("USERCODE_ISVALID", "userCode in (select userCode from UserInfo where isValid = :USERCODE_ISVALID)");
             
             filterField.put(CodeBook.ORDER_BY_HQL_ID, " id.userCode ");
 

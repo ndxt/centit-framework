@@ -1,19 +1,17 @@
 package com.centit.framework.system.dao;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.system.po.UserUnit;
 import com.centit.support.algorithm.DatetimeOpt;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class UserUnitDao extends BaseDaoImpl<UserUnit, String> {
@@ -21,11 +19,11 @@ public class UserUnitDao extends BaseDaoImpl<UserUnit, String> {
     public Map<String, String> getFilterField() {
         if (filterField == null) {
             filterField = new HashMap<>();
-            filterField.put("USERCODE_ISVALID", "userCode in (select userCode from UserInfo where isValid =?)");
-            filterField.put("unitCode", "unitCode = ?");
-            filterField.put("userStation", "userStation = ?");
-            filterField.put("unitRank", "userRank = ?");
-            filterField.put("userCode", "userCode = ?");
+            filterField.put("USERCODE_ISVALID", "userCode in (select userCode from UserInfo where isValid = :USERCODE_ISVALID)");
+            filterField.put("unitCode", "unitCode = :unitCode");
+            filterField.put("userStation", "userStation = :userStation");
+            filterField.put("unitRank", "userRank = :unitRank");
+            filterField.put("userCode", "userCode = :userCode");
             filterField.put("isPrimary", CodeBook.EQUAL_HQL_ID);
             filterField.put("unitName", CodeBook.LIKE_HQL_ID);
 
