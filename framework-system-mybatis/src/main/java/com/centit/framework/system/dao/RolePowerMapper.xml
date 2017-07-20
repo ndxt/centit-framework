@@ -51,7 +51,7 @@
 	</select>
 	<!--分页查询 -->
 	<select id="pageQuery" parameterType="map" resultMap="RolePower">
-	   <include refid="com.centit.framework.system.dao.BaseDao.pageBegin" />
+	   <include refid="com.centit.framework.mybatis.dao.BaseDao.pageBegin" />
 		<include refid="coreSql" />
 		<where>
 			<include refid="condition" />
@@ -59,7 +59,7 @@
 		<if test="pageDesc != null ">
 			order by ${ORDER BY}
 		</if>
-		<include refid="com.centit.framework.system.dao.BaseDao.pageEnd" />
+		<include refid="com.centit.framework.mybatis.dao.BaseDao.pageEnd" />
 	</select>
 	<!--分页查询结束 -->
 

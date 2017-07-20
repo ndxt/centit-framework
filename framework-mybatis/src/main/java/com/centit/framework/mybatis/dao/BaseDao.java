@@ -1,4 +1,4 @@
-package com.centit.framework.system.dao;
+package com.centit.framework.mybatis.dao;
 
 import org.springframework.stereotype.Repository;
 
