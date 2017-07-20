@@ -29,7 +29,7 @@
 
 
 	<!-- 分页前面包装部分 sqlserver -->
-	<sql id="pageBegin" databaseId="sqlserver" >
+	<sql id="pageBegin" databaseId="sqlserver"  >
 		<![CDATA[ WITH query AS (
     	    		 SELECT inner_query.* , ROW_NUMBER() OVER (ORDER BY CURRENT_TIMESTAMP) as __row_nr__
     	    		  FROM ( ]]>

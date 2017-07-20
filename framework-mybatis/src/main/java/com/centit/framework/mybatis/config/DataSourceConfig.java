@@ -2,6 +2,7 @@ package com.centit.framework.mybatis.config;
 
 import com.centit.framework.config.FlywayDisableCondition;
 import com.centit.framework.config.FlywayEnableCondition;
+import com.centit.support.algorithm.ListOpt;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.flywaydb.core.Flyway;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostP
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)//启用注解事物管理
@@ -58,7 +62,8 @@ public class DataSourceConfig implements EnvironmentAware {
         Flyway flywayMigration = new Flyway();
         flywayMigration.setDataSource(dataSource);
         flywayMigration.setBaselineOnMigrate(true);
-        flywayMigration.setLocations(env.getProperty("flyway.sql.dir"), "com.centit.framework.system.update");
+        flywayMigration.setLocations(env.getProperty("flyway.sql.dir"),
+                "com.centit.framework.system.update");
         return flywayMigration;
     }
 
@@ -75,7 +80,17 @@ public class DataSourceConfig implements EnvironmentAware {
         sessionFactory.setDataSource(dataSource);
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sessionFactory.setConfigLocation(resolver.getResource("classpath:mybatis/mybatis-config.xml"));
-        sessionFactory.setMapperLocations(resolver.getResources( env.getProperty("mybatis.map.xml.filematch")));
+        String fileMatch = env.getProperty("mybatis.map.xml.filematch");
+        String[] fileMatchs =  fileMatch.split(",");
+        ArrayList<Resource> fileMatchList = new ArrayList<>(256);
+        for(String fm : fileMatchs){
+            Resource [] resources = resolver.getResources(fm);
+            if(resources!=null) {
+                for (Resource obj : resources)
+                    fileMatchList.add(obj);
+            }
+        }
+        sessionFactory.setMapperLocations(ListOpt.listToArray(fileMatchList));
         return  sessionFactory;
     }
 

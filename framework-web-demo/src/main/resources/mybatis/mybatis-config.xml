@@ -59,11 +59,7 @@
 
 	</settings>
 
-	<typeAliases>
-		<package name="com.centit.framework.system.po" />
-	</typeAliases>
-
-	<databaseIdProvider type="DB_VENDOR">
+	<databaseIdProvider type="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
 		<property name="DB2" value="db2" />
 		<property name="Oracle" value="oracle" />
 		<property name="Adaptive Server Enterprise" value="sybase" />

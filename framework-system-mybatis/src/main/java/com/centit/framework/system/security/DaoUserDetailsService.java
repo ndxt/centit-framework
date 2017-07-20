@@ -32,9 +32,9 @@ import com.centit.framework.system.po.UserInfo;
 import com.centit.framework.system.po.UserSetting;
 import com.centit.framework.system.po.UserUnit;
 
-@Service("userDetailsService")
+@Service("centitUserDetailsService")
 public class DaoUserDetailsService 
-	implements CentitUserDetailsService,UserDetailsService, 
+	implements CentitUserDetailsService,UserDetailsService,
 		AuthenticationUserDetailsService<Authentication> {
 
     @Resource
