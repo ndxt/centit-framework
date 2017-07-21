@@ -1,21 +1,19 @@
 package com.centit.framework.components;
 
+import com.alibaba.fastjson.JSON;
+import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.model.adapter.OperationLogWriter;
+import com.centit.framework.model.basedata.OperationLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSON;
-import com.centit.framework.common.WebOptUtils;
-import com.centit.framework.model.adapter.OperationLogWriter;
-import com.centit.framework.model.basedata.OperationLog;
 
 public class OperationLogCenter {
     
@@ -54,9 +52,7 @@ public class OperationLogCenter {
      */
 	static {
        executor.scheduleWithFixedDelay(
-           new Runnable() {
-               @Override
-               public void run() {
+          () -> {
                   if(logWriter == null)
                        return;
                   while(!waitingForWriteLogs.isEmpty()) { //true){//
@@ -68,9 +64,7 @@ public class OperationLogCenter {
                     	   logger.error(e.getMessage(),e);
                        }
                    }
-                 
-               }
-           }, 30, 10, TimeUnit.SECONDS);
+               }, 30, 10, TimeUnit.SECONDS);
        //默认执行时间间隔为10秒
    }
 

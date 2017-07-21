@@ -78,19 +78,13 @@ public class UnitInfoController extends BaseController {
             List<UnitInfo> listObjects= sysUnitManager.listObjects(searchColumn);
      		JSONArray ja = SysDaoOptUtils.objectsToJSONArray(listObjects);
              if(struct){
-             	ja = ListOpt.srotAsTreeAndToJSON(ja,
-         				new ListOpt.ParentChild<Object>(){
-     						@Override
-     						public boolean parentAndChild(Object p, Object c) {
-     							return StringUtils.equals(
+             	ja = ListOpt.srotAsTreeAndToJSON(ja, (p, c) ->
+                            StringUtils.equals(
      									((JSONObject)p).getString("unitCode"),
-     									((JSONObject)c).getString("parentUnit"));
-     						}
-
-             			}, "children");
+     									((JSONObject)c).getString("parentUnit")),
+     						"children");
              }
-             JsonResultUtils.writeSingleDataJson(
-             		ja,
+             JsonResultUtils.writeSingleDataJson(ja,
              		response, JsonPropertyUtils.getIncludePropPreFilter(JSONObject.class, field));
      	}else{
             Map<String,Object> filterMap = new HashMap<String,Object>();
@@ -150,19 +144,13 @@ public class UnitInfoController extends BaseController {
         });
         JSONArray ja = SysDaoOptUtils.objectsToJSONArray(listObjects);
         if(struct){
-        	ja = ListOpt.srotAsTreeAndToJSON(ja, 
-    				new ListOpt.ParentChild<Object>(){
-						@Override
-						public boolean parentAndChild(Object p, Object c) {
-							return StringUtils.equals(
+        	ja = ListOpt.srotAsTreeAndToJSON(ja, (p, c) ->
+    				StringUtils.equals(
 									((JSONObject)p).getString("unitCode"),
-									((JSONObject)c).getString("parentUnit"));
-						}
-
-        			}, "children");
+									((JSONObject)c).getString("parentUnit")),
+                    "children");
         }
-        JsonResultUtils.writeSingleDataJson(
-        		ja,
+        JsonResultUtils.writeSingleDataJson(ja,
         		response, JsonPropertyUtils.getIncludePropPreFilter(JSONObject.class, field));
       }
     

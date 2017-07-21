@@ -4,22 +4,21 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.common.WebOptUtils;
-import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.filter.HttpThreadWrapper;
+import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.ListOpt;
-import com.centit.support.algorithm.ListOpt.ParentChild;
 import com.centit.support.compiler.Lexer;
 import com.centit.support.xml.IgnoreDTDEntityResolver;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
@@ -89,12 +88,7 @@ public final class CodeRepositoryUtil {
       
     public static List<? extends IUnitInfo> getUnitAsTree() {
     	List<? extends IUnitInfo> units = getPlatformEnvironment().listAllUnits();
-    	ListOpt.sortAsTree(units, new ListOpt.ParentChild<IUnitInfo>() {
-			@Override
-			public boolean parentAndChild(IUnitInfo p, IUnitInfo c) {				
-				return StringUtils.equals(p.getUnitCode(),c.getParentUnit());
-			}    		
-		});
+    	ListOpt.sortAsTree( units,( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
     	return units;
     }
 
@@ -110,7 +104,7 @@ public final class CodeRepositoryUtil {
     }
    
     public static Map<String, IUnitInfo> getDepNo() {
-    	Map<String, IUnitInfo> unitRepo = new HashMap<String, IUnitInfo>();
+    	Map<String, IUnitInfo> unitRepo = new HashMap<>();
     	List<? extends IUnitInfo> units = getPlatformEnvironment().listAllUnits();
     	if(units==null)
     		return unitRepo;
@@ -430,21 +424,12 @@ public final class CodeRepositoryUtil {
             }
         }
 
-        Collections.sort(optList, new Comparator<IOptInfo>() {
-            public int compare(IOptInfo o1, IOptInfo o2) {
-                if (o2.getOrderInd() == null) {
-                    return 1;
-                }
-                if (o1.getOrderInd() == null) {
-                    return 0;
-                }
-                if (o1.getOrderInd() > o2.getOrderInd()) {
-                    return 1;
-                }
-                return 0;
-            }
-        });
-
+        Collections.sort(optList, (o1,o2) -> // Long.compare(o1.getOrderInd() , o2.getOrderInd())) ;
+                ( o2.getOrderInd() == null && o1.getOrderInd() == null)? 0 :
+                    ( (o2.getOrderInd() == null)? 1 :
+                            (( o1.getOrderInd() == null)? -1 :
+                                    ((o1.getOrderInd() > o2.getOrderInd())? 1:(
+                                            o1.getOrderInd() < o2.getOrderInd()?-1:0 ) ))));
         return optList;
     }
 
@@ -457,7 +442,7 @@ public final class CodeRepositoryUtil {
      * @return List 一个业务下面的操作定义
      */
     public static final List<? extends IOptMethod> getOptMethodByOptID(String sOptID) {
-        List<IOptMethod> optList = new ArrayList<IOptMethod>();
+        List<IOptMethod> optList = new ArrayList<>();
         for (Map.Entry<String,? extends IOptMethod> ent : getPowerRepo().entrySet()) {
             IOptMethod value = ent.getValue();
             if (sOptID.equals(value.getOptId())) {
@@ -475,7 +460,7 @@ public final class CodeRepositoryUtil {
      * @return List 角色信息
      */
     public static final List<IRoleInfo> getRoleinfoList(String sPrefix) {
-        List<IRoleInfo> roleList = new ArrayList<IRoleInfo>();
+        List<IRoleInfo> roleList = new ArrayList<>();
         for (Map.Entry<String,? extends IRoleInfo> ent : getRoleRepo().entrySet()) {
             IRoleInfo value = ent.getValue();
             if (value.getRoleCode().startsWith(sPrefix) && CodeRepositoryUtil.T.equals(value.getIsValid())) {
@@ -493,7 +478,7 @@ public final class CodeRepositoryUtil {
      */
     public static final List<IUserInfo> getAllUsers(String sState) {
     	List<? extends IUserInfo> allusers = getPlatformEnvironment().listAllUsers();
-        List<IUserInfo> users = new ArrayList<IUserInfo>();
+        List<IUserInfo> users = new ArrayList<>();
 
         if("A".equals(sState)){
         	users.addAll(allusers);
@@ -520,7 +505,7 @@ public final class CodeRepositoryUtil {
             return null;
         }
         
-        List<IUserInfo> users = new ArrayList<IUserInfo>();
+        List<IUserInfo> users = new ArrayList<>();
         for (IUserUnit uu :unitUsers) {
             if (!CodeRepositoryUtil.T.equals(uu.getIsPrimary())) {
                 continue;
@@ -535,14 +520,12 @@ public final class CodeRepositoryUtil {
             }
         }
 
-        Collections.sort(users, new Comparator<IUserInfo>() {
-            public int compare(IUserInfo o1, IUserInfo o2) {
-                if (o1.getUserOrder() > o2.getUserOrder()) {
-                    return 1;
-                }
-                return 0;
-            }
-        });
+        Collections.sort(users, (o1, o2) ->
+            (o1.getUserOrder() == null && o2.getUserOrder() == null) ? 0 :
+                ((o1.getUserOrder() == null) ? 1 :
+                    ((o2.getUserOrder() == null) ? -1 :
+                        ((o1.getUserOrder() > o2.getUserOrder()) ? 1 :
+                                ((o1.getUserOrder() < o2.getUserOrder()) ? -1 : 0)))));
 
         return users;
     }
@@ -559,7 +542,7 @@ public final class CodeRepositoryUtil {
             return null;
         }
  
-        List<IUserInfo> users = new ArrayList<IUserInfo>();
+        List<IUserInfo> users = new ArrayList<>();
         for (IUserUnit uu :unitUsers) {
             IUserInfo user = getUserRepo().get(uu.getUserCode());
             if (user != null) {
@@ -571,15 +554,12 @@ public final class CodeRepositoryUtil {
             }
         }
 
-        Collections.sort(users, new Comparator<IUserInfo>() {
-            public int compare(IUserInfo o1, IUserInfo o2) {
-                if (o1.getUserOrder() > o2.getUserOrder()) {
-                    return 1;
-                }
-                return 0;
-            }
-        });
-
+        Collections.sort(users, (o1, o2) ->
+            (o1.getUserOrder() == null && o2.getUserOrder() == null) ? 0 :
+                (o1.getUserOrder() == null ? 1 :
+                    (o2.getUserOrder() == null ? -1 :
+                        (o1.getUserOrder() > o2.getUserOrder() ? 1 :
+                            (o1.getUserOrder() < o2.getUserOrder() ? -1 : 0)))));
         return users;
     }
 
@@ -591,7 +571,7 @@ public final class CodeRepositoryUtil {
      * @return List 机构下面的所有下级机构
      */
     public static final List<IUnitInfo> getSortedSubUnits(String unitCode, String unitType) {
-        List<IUnitInfo> units = new ArrayList<IUnitInfo>();
+        List<IUnitInfo> units = new ArrayList<>();
 
         IUnitInfo ui = getUnitRepo().get(unitCode);
         for (IUnitInfo unit : ui.getSubUnits()) {
@@ -604,14 +584,12 @@ public final class CodeRepositoryUtil {
             }
         }
 
-        Collections.sort(units, new Comparator<IUnitInfo>() {
-            public int compare(IUnitInfo o1, IUnitInfo o2) {
-                if (o1.getUnitOrder() > o2.getUnitOrder()) {
-                    return 1;
-                }
-                return 0;
-            }
-        });
+        Collections.sort(units, (o1, o2) ->
+            (o1.getUnitOrder() == null && o2.getUnitOrder() == null) ? 0 :
+                (o1.getUnitOrder() == null ? 1 :
+                    (o2.getUnitOrder() == null ? -1 :
+                        (o1.getUnitOrder() > o2.getUnitOrder() ? 1 :
+                            (o1.getUnitOrder() < o2.getUnitOrder() ? -1 :0)))));
         return units;
     }
 
@@ -624,7 +602,7 @@ public final class CodeRepositoryUtil {
     public static final Set<IUserInfo> getUnitUsers(String unitCode) {
         
     	List<? extends IUserUnit> uus = listUnitUsers(unitCode);        
-        Set<IUserInfo> users = new HashSet<IUserInfo>();
+        Set<IUserInfo> users = new HashSet<>();
         for (IUserUnit uu : uus) {
             IUserInfo user = getUserRepo().get(uu.getUserCode());
             if (user != null) {
@@ -734,7 +712,7 @@ public final class CodeRepositoryUtil {
      * @return Map 已知机构下级的所有有效机构
      */
     public static final Map<String, IUnitInfo> getUnitMapByParaent(String sParentUnit) {
-        Map<String, IUnitInfo> units = new HashMap<String, IUnitInfo>();
+        Map<String, IUnitInfo> units = new HashMap<>();
 
         for (Map.Entry<String, IUnitInfo> ent : getUnitRepo().entrySet()) {
             IUnitInfo value = ent.getValue();
@@ -764,7 +742,7 @@ public final class CodeRepositoryUtil {
     public static final List<IUnitInfo> getAllUnits(String sState) {
         
         List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits();
-        List<IUnitInfo> units = new ArrayList<IUnitInfo>();
+        List<IUnitInfo> units = new ArrayList<>();
         if("A".equals(sState)){
         	units.addAll(allunits);
         	return units;
@@ -785,7 +763,7 @@ public final class CodeRepositoryUtil {
      * @return Map 已知机构下级的所有机构，包括失效的机构
      */
     public static final Map<String, IUnitInfo> getAllUnitMapByParaent(String sParentUnit) {
-        Map<String, IUnitInfo> units = new HashMap<String, IUnitInfo>();
+        Map<String, IUnitInfo> units = new HashMap<>();
 
         for (Map.Entry<String, IUnitInfo> ent : getUnitRepo().entrySet()) {
             IUnitInfo value = ent.getValue();
@@ -803,9 +781,9 @@ public final class CodeRepositoryUtil {
      * @return Map 已知机构下级的所有有效机构，包括下级机构的下级机构
      */
     public static final Map<String, IUnitInfo> getUnitMapBuyParaentRecurse(String sParentUnit) {
-        Map<String, IUnitInfo> units = new HashMap<String, IUnitInfo>();
-        List<String> sParentUnits = new ArrayList<String>();
-        List<String> sNewUnits = new ArrayList<String>();
+        Map<String, IUnitInfo> units = new HashMap<>();
+        List<String> sParentUnits = new ArrayList<>();
+        List<String> sNewUnits = new ArrayList<>();
         sParentUnits.add(sParentUnit);
 
         while (sParentUnits.size() > 0) {
@@ -860,7 +838,7 @@ public final class CodeRepositoryUtil {
      * @return 数据字典,忽略 tag 为 'D'的条目
      */
     public static final List<IDataDictionary> getDictionaryIgnoreD(String sCatalog) {    					
-        List<IDataDictionary> dcRetMap = new ArrayList<IDataDictionary>();
+        List<IDataDictionary> dcRetMap = new ArrayList<>();
         List<? extends IDataDictionary> dcMap = getDictionary(sCatalog);
         if (dcMap != null) {
             for (IDataDictionary value : dcMap) {
@@ -893,7 +871,7 @@ public final class CodeRepositoryUtil {
      * @return Map  数据字典
      */
     public static final Map<String,String> getAllLabelValueMap(String sCatalog, String localLang) {
-        Map<String,String> lbvs = new HashMap<String,String>();
+        Map<String,String> lbvs = new HashMap<>();
 
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.USER_CODE)) {
             for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
@@ -1283,13 +1261,8 @@ public final class CodeRepositoryUtil {
 			}
 			subunits = subunits1;
 		}
-        
-        ParentChild<IUnitInfo> c = new ListOpt.ParentChild<IUnitInfo>() {
-            public boolean parentAndChild(IUnitInfo p, IUnitInfo c) {
-                return StringUtils.equals(p.getUnitCode(),c.getParentUnit());
-            }
-        };	
-        ListOpt.sortAsTree(units, c);
+
+        ListOpt.sortAsTree(units, (p,c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()));
         return units;     
     }
 
