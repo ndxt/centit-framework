@@ -268,8 +268,11 @@
 	<select id="listObjectsAll"  resultMap="UnitInfo">
 		 <include refid="coreSql" />
 	</select>
-	<select id="getNextKey" resultType="String">
+	<select id="getNextKey" databaseId="oracle" resultType="String">
 		SELECT S_UNITCODE.nextval from dual
+	</select>
+	<select id="getNextKey" databaseId="mysql" resultType="String">
+		SELECT sequence_nextval('S_UNITCODE')
 	</select>
 	<select id="getUnitCode" resultType="String" parameterType="String">
 		<include refid="coreSql" />

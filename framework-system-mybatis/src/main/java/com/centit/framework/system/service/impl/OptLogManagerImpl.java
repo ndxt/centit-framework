@@ -56,15 +56,15 @@ public class OptLogManagerImpl implements OptLogManager,OperationLogWriter {
         }
         for (OptLog optLog : optLogs) {
             //if (null == optLog.getLogId()) {
-            try {
-                optLog.setLogId( DatabaseOptUtils.getNextLongSequence(
+//            try {
+                optLog.setLogId( /*DatabaseOptUtils.getNextLongSequence(
                         baseDaoSupport.getSqlSessionWithOpenedConnection(),
-                        "S_SYS_LOG")
-                        /*optLogDao.createNewLogId()*/);
+                        "S_SYS_LOG")*/
+                        optLogDao.createNewLogId());
                 optLogDao.saveNewObject(optLog);
-            } catch (SQLException | IOException e) {
-                e.printStackTrace();
-            }
+//            } catch (SQLException | IOException e) {
+//                e.printStackTrace();
+//            }
             //}
         }
 

@@ -335,8 +335,11 @@
 	<select id="listObjectsAll"  resultMap="UserInfo">
 		 <include refid="coreSql" />
 	</select>
-	<select id="getNextKey" resultType="String">
+	<select id="getNextKey" databaseId="oracle" resultType="String">
 		SELECT S_USERCODE.nextval from dual
+	</select>
+	<select id="getNextKey" databaseId="mysql" resultType="String">
+		SELECT sequence_nextval('S_USERCODE')
 	</select>
 	<select id="getAllOptMethodByUser" parameterType="String" resultMap="FvuserOpt">
 			select USERCODE,OPTCODE,OPTNAME,OPTID,OPTMETHOD from F_V_USEROPTLIST  urv where urv.USERCODE=#{userCode}

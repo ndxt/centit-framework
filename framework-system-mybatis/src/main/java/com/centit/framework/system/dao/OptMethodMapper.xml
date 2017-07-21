@@ -223,7 +223,11 @@
 	<delete id="deleteOptMethodsByOptID" parameterType="String">
 		delete from F_OPTDEF WHERE OPTID =#{sOptID}
 	</delete>
-	<select id="getNextOptCode" resultType="String">
+	<select id="getNextOptCode" databaseId="oracle" resultType="String">
 		SELECT S_OPTDEFCODE.nextval from dual
+	</select>
+
+	<select id="getNextOptCode" databaseId="mysql" resultType="String">
+		SELECT sequence_nextval('S_OPTDEFCODE')
 	</select>
 </mapper>

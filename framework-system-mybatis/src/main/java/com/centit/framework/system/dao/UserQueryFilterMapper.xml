@@ -179,7 +179,10 @@
 			where USERCODE=#{userCode} and MODLECODE=#modleCode#  and ISDEFAULT = 'T'
 			order by ISDEFAULT desc , CREATEDATE desc
 	</select>
-	<select id="getNextKey" resultType="Long">
+	<select id="getNextKey" databaseId="oracle" resultType="Long">
 		SELECT S_FILTER_NO.nextval from dual
+	</select>
+	<select id="getNextKey" databaseId="mysql" resultType="Long">
+		SELECT sequence_nextval('S_FILTER_NO')
 	</select>
 </mapper>
