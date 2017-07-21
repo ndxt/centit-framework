@@ -122,8 +122,7 @@ public class UnitInfoController extends BaseController {
             JsonResultUtils.writeSuccessJson(response);
             return;
         }
-        Collections.sort(listObjects, new Comparator<UnitInfo>() {
-            public int compare(UnitInfo o1, UnitInfo o2) {
+        Collections.sort(listObjects, (o1, o2) ->{
                 if (o2.getUnitOrder() == null && o1.getUnitOrder() == null) {
                     return 0;
                 }
@@ -140,8 +139,7 @@ public class UnitInfoController extends BaseController {
                     return 1;
                 }
                 return -1;
-            }
-        });
+            });
         JSONArray ja = SysDaoOptUtils.objectsToJSONArray(listObjects);
         if(struct){
         	ja = ListOpt.srotAsTreeAndToJSON(ja, (p, c) ->

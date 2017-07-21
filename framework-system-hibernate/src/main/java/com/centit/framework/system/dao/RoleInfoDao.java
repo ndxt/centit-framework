@@ -36,11 +36,11 @@ public class RoleInfoDao extends BaseDaoImpl<RoleInfo, String> {
             filterField.put("unitCode", CodeBook.EQUAL_HQL_ID); 
             filterField.put("NP_unitCode", "unitCode is null"); 
             
-            filterField.put("createDateBeg",
-                    " createDate>= to_date(?, 'yyyy-MM-dd hh24:mi:ss') ");
+            filterField.put("(date)createDateBeg",
+                    " createDate>= :createDateBeg ");
             
-			filterField.put("createDateEnd",
-                    " createDate< to_date(?, 'yyyy-MM-dd hh24:mi:ss')+1 ");
+			filterField.put("(date)createDateEnd",
+                    " createDate< :createDateEnd ");
         }
         return filterField;
     }
