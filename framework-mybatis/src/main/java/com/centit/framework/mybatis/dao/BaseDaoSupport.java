@@ -5,7 +5,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.SqlSessionUtils;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 
-public abstract class BaseDaoSupport extends SqlSessionDaoSupport {
+@SuppressWarnings("unused")
+public class BaseDaoSupport extends SqlSessionDaoSupport {
 
 	/**
 	 * 直接调用 getSqlSession().getConnection() 有时返回为空；

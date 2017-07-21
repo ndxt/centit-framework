@@ -2,10 +2,12 @@ package com.centit.framework.mybatis.config;
 
 import com.centit.framework.config.FlywayDisableCondition;
 import com.centit.framework.config.FlywayEnableCondition;
+import com.centit.framework.mybatis.dao.BaseDaoSupport;
 import com.centit.support.algorithm.ListOpt;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.flywaydb.core.Flyway;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
@@ -76,8 +78,8 @@ public class DataSourceConfig implements EnvironmentAware {
         return null;
     }
 
-    @Bean(name="sqlSessionFactory")
-    public SqlSessionFactoryBean sqlSessionFactoryBean(BasicDataSource dataSource) throws IOException {
+    @Bean
+    public SqlSessionFactoryBean sqlSessionFactory(BasicDataSource dataSource) throws IOException {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setLazyLoadingEnabled(true);
@@ -145,4 +147,10 @@ public class DataSourceConfig implements EnvironmentAware {
         return new AutowiredAnnotationBeanPostProcessor();
     }
 
+    @Bean
+    public BaseDaoSupport baseDaoSupport (@Autowired SqlSessionFactory sqlSessionFactory){
+        BaseDaoSupport baseDaoSupport = new BaseDaoSupport();
+        baseDaoSupport.setSqlSessionFactory(sqlSessionFactory);
+        return baseDaoSupport;
+    }
 }

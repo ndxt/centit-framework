@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
+import org.h2.util.New;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -72,6 +73,19 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
         return filterField;
     }
 
+    private static ImmutablePair<String,String>
+            parseParameter(String sParameter){
+        int e = sParameter.indexOf(')');
+        if(e>0){
+            int b = sParameter.indexOf('(') + 1;
+            /* b =  b<0 ? 0 :  b+1;*/
+            String paramPretreatment = sParameter.substring(b, e).trim();
+            String paramAlias =  sParameter.substring(e+1).trim();
+            return new ImmutablePair<>(paramAlias,paramPretreatment);
+        }else
+            return new ImmutablePair<>(sParameter,null);
+    }
+
     public static Map<String,Pair<String,String[]>>
         getFilterFieldWithPretreatment( Map<String, String> fieldMap) {
         if(fieldMap==null)
@@ -83,13 +97,13 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
             return filterFieldWithPretreatment;
 
         for (Map.Entry<String, String> ent : fieldMap.entrySet()) {
-            ImmutableTriple<String,String,String> paramMeta =
-                    QueryUtils.parseParameter(ent.getKey());
+            ImmutablePair<String,String> paramMeta =
+                    parseParameter(ent.getKey());
             String [] pretreatment = null;
             if(StringUtils.isNotBlank( paramMeta.getRight())) {
                 pretreatment = paramMeta.getRight().split(",");
             }
-            filterFieldWithPretreatment.put(paramMeta.middle,
+            filterFieldWithPretreatment.put(paramMeta.left,
                     new ImmutablePair<>( ent.getValue(),pretreatment ));
         }
         return filterFieldWithPretreatment;

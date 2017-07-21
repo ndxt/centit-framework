@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.basedata.OperationLog;
+import com.centit.framework.mybatis.dao.BaseDaoSupport;
 import com.centit.framework.mybatis.dao.DatabaseOptUtils;
 import com.centit.framework.mybatis.dao.SysDaoOptUtils;
 import com.centit.framework.system.dao.OptLogDao;
@@ -11,6 +12,7 @@ import com.centit.framework.system.po.OptLog;
 import com.centit.framework.system.service.OptLogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,8 @@ import org.springframework.web.context.ContextLoaderListener;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 @Service("optLogManager")
@@ -29,9 +33,10 @@ public class OptLogManagerImpl implements OptLogManager,OperationLogWriter {
     @Resource
     @NotNull
     protected OptLogDao optLogDao;
-    
-    
-    
+
+
+    @Autowired
+    private BaseDaoSupport baseDaoSupport;
     
 //    @PostConstruct
 //    public void init() {
@@ -51,8 +56,15 @@ public class OptLogManagerImpl implements OptLogManager,OperationLogWriter {
         }
         for (OptLog optLog : optLogs) {
             //if (null == optLog.getLogId()) {
-                optLog.setLogId(optLogDao.createNewLogId());
+            try {
+                optLog.setLogId( DatabaseOptUtils.getNextLongSequence(
+                        baseDaoSupport.getSqlSessionWithOpenedConnection(),
+                        "S_SYS_LOG")
+                        /*optLogDao.createNewLogId()*/);
                 optLogDao.saveNewObject(optLog);
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+            }
             //}
         }
 
@@ -86,8 +98,15 @@ public class OptLogManagerImpl implements OptLogManager,OperationLogWriter {
     public void save(final OperationLog optLog) {        
         OptLog optlog = new OptLog();
         optlog.copy(optLog);
-        optlog.setLogId(optLogDao.createNewLogId());
-        optLogDao.saveNewObject(optlog);
+        try {
+            optlog.setLogId( DatabaseOptUtils.getNextLongSequence(
+                    baseDaoSupport.getSqlSessionWithOpenedConnection(),
+                    "S_SYS_LOG")
+                        /*optLogDao.createNewLogId()*/);
+            optLogDao.saveNewObject(optlog);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

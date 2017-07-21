@@ -1,5 +1,7 @@
 package com.centit.framework.system.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,7 @@ public interface OptLogManager {
      *
      * @param optLogs List OptLog
      */
-    void saveBatchObjects(List<OptLog> optLogs);
+    void saveBatchObjects(List<OptLog> optLogs) throws IOException, SQLException;
     /**
      * 清理此日期之间的日志信息
      *
