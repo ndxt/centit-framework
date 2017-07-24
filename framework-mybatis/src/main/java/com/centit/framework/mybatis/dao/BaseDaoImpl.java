@@ -21,7 +21,7 @@ import org.apache.ibatis.session.SqlSession;
  * @author liuzh
  * @since 2015-03-10
  */
-public class SqlMapper {
+public class BaseDaoImpl {
 	private final MSUtils msUtils;
 	private final SqlSession sqlSession;
 
@@ -30,7 +30,7 @@ public class SqlMapper {
 	 *
 	 * @param sqlSession sqlSession
 	 */
-	public SqlMapper(SqlSession sqlSession) {
+	public BaseDaoImpl(SqlSession sqlSession) {
 		this.sqlSession = sqlSession;
 		this.msUtils = new MSUtils(sqlSession.getConfiguration());
 	}

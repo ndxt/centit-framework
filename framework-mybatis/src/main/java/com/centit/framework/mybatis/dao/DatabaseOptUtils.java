@@ -435,7 +435,7 @@ public class DatabaseOptUtils {
      */
     public final static <T> List<T> findObjectsBySql(SqlSession sqlSession,
             String ssql, Class<T> objectType) {    	
-    	 SqlMapper mapper = new SqlMapper(sqlSession);         
+    	 BaseDaoImpl mapper = new BaseDaoImpl(sqlSession);
          return  mapper.selectList(ssql,objectType);
     }
    
@@ -496,7 +496,7 @@ public class DatabaseOptUtils {
         	pageSql = ssql;
         }
         
-        SqlMapper mapper = new SqlMapper(sqlSession);
+        BaseDaoImpl mapper = new BaseDaoImpl(sqlSession);
         List<?> listT = null;
         if(objectType==null){
         	listT = mapper.selectList(pageSql,values);

@@ -8,7 +8,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <centit.framework.version>4.0.0-SNAPSHOT</centit.framework.version>
         <jdk.version>1.8</jdk.version>
-        <centit.commons.version>2.2.1-SNAPSHOT</centit.commons.version>
+        <centit.commons.version>2.2.1</centit.commons.version>
         <centit.ui.version>3.0.1-SNAPSHOT</centit.ui.version>
         <servlet-api.version>3.1.0</servlet-api.version>
 
