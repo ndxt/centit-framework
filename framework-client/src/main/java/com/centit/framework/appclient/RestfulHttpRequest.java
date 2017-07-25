@@ -1,19 +1,20 @@
 package com.centit.framework.appclient;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import com.centit.framework.core.common.ResponseJSON;
 import com.centit.support.network.HttpExecutor;
-
+@SuppressWarnings("unused")
 public class RestfulHttpRequest {
 
 	public static ResponseJSON getResponseData(String httpGetUrl) {        
-		CloseableHttpClient httpclient = HttpExecutor.createHttpClient();
-		ResponseJSON resJson = getResponseData(httpclient,httpGetUrl);
+		CloseableHttpClient httpClient = HttpExecutor.createHttpClient();
+		ResponseJSON resJson = getResponseData(httpClient,httpGetUrl);
 		try {
-			httpclient.close();
+			httpClient.close();
 		} catch (IOException e) {
 		}
 		return resJson;
@@ -28,4 +29,89 @@ public class RestfulHttpRequest {
 		}
         return resJson;
     }
+
+	public static <T> List<T>  getResponseObjectList(CloseableHttpClient httpClient,
+											   String httpGetUrl,Class<T> clazz ) {
+		try {
+			ResponseJSON resJson = RestfulHttpRequest.getResponseData(
+					httpClient,httpGetUrl);
+
+			if(resJson==null)
+				return null;
+			return resJson.getDataAsArray(clazz);
+
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static <T> T  getResponseObject(CloseableHttpClient httpClient,
+											   String httpGetUrl,Class<T> clazz ) {
+		try {
+			ResponseJSON resJson = RestfulHttpRequest.getResponseData(
+					httpClient,httpGetUrl);
+
+			if(resJson==null)
+				return null;
+			return resJson.getDataAsObject(clazz);
+
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static <T> List<T>  getResponseObjectList(AppSession appSession,
+													 String httpGetUrl,Class<T> clazz ) {
+
+		CloseableHttpClient httpClient = null;
+		try {
+			httpClient = appSession.getHttpClient();
+			return getResponseObjectList(
+					httpClient,
+					appSession.completeQueryUrl(httpGetUrl),clazz);
+
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if(httpClient!=null)
+				appSession.releaseHttpClient(httpClient);
+		}
+
+	}
+
+	public static <T> T  getResponseObject(AppSession appSession,
+										   String httpGetUrl,Class<T> clazz ) {
+
+		CloseableHttpClient httpClient = null;
+		try {
+			httpClient = appSession.getHttpClient();
+			return getResponseObject(
+					httpClient,
+					appSession.completeQueryUrl(httpGetUrl),clazz);
+
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if(httpClient!=null)
+				appSession.releaseHttpClient(httpClient);
+		}
+	}
+
+	public static ResponseJSON  getResponseData (AppSession appSession,
+												 String httpGetUrl) {
+
+		CloseableHttpClient httpClient = null;
+		try {
+			httpClient = appSession.getHttpClient();
+			return getResponseData(
+					httpClient,
+					appSession.completeQueryUrl(httpGetUrl));
+
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if(httpClient!=null)
+				appSession.releaseHttpClient(httpClient);
+		}
+	}
 }

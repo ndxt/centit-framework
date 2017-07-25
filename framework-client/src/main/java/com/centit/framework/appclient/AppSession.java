@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class AppSession {
 
 	public final static String SECURITY_CONTEXT_TOKENNAME = "accessToken";
@@ -51,8 +52,11 @@ public class AppSession {
 		this(null,false,null,null);
 	}
 	
-	public boolean checkAccessToken(CloseableHttpClient httpclient) 
+	public boolean checkAccessToken(CloseableHttpClient httpclient)
 			throws ClientProtocolException, ObjectException, IOException{
+		if(!needAuthenticated){
+			return true;
+		}
 		boolean alive= this.tokenCheckTime != null && DatetimeOpt.currentUtilDate().before(
 				DatetimeOpt.addMinutes(this.tokenCheckTime, 110));
 		if(alive)
@@ -76,7 +80,7 @@ public class AppSession {
 	}
 	
 	public String completeQueryUrl(String queryUrl){
-		
+
 		return needAuthenticated
 				?appServerUrl+queryUrl+
 					(queryUrl.indexOf('?')>=0 ? "&":"?")+

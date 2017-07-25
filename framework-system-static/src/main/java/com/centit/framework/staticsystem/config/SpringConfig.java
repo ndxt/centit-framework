@@ -63,10 +63,7 @@ public class SpringConfig implements EnvironmentAware {
     @Bean
     @Lazy(value = false)
     public PlatformEnvironment platformEnvironment(
-            CentitPasswordEncoder passwordEncoder) {
-
-        Boolean ipEnable = env.getProperty("centit.ip.enable",Boolean.class);// = false
-        PlatformEnvironment staticPlatformEnvironment=null;
+            @Autowired CentitPasswordEncoder passwordEncoder) {
 
         Boolean jdbcEnable = env.getProperty("centit.jdbcplatform.enable", Boolean.class);// = false
         if (jdbcEnable != null && jdbcEnable) {
@@ -78,59 +75,35 @@ public class SpringConfig implements EnvironmentAware {
             );
             jdbcPlatformEnvironment.setPasswordEncoder(passwordEncoder);
             jdbcPlatformEnvironment.init();
-            if(ipEnable==null || !ipEnable) {
-                return jdbcPlatformEnvironment;
-            }else {
-                staticPlatformEnvironment = jdbcPlatformEnvironment;
-            }
+            return jdbcPlatformEnvironment;
         } else{
             StaticPlatformEnvironment jsonPlatformEnvironment = new StaticPlatformEnvironment();
             jsonPlatformEnvironment.setPasswordEncoder(passwordEncoder);
             jsonPlatformEnvironment.init();
-            if(ipEnable==null || !ipEnable) {
-                return jsonPlatformEnvironment;
-            }else {
-                staticPlatformEnvironment = jsonPlatformEnvironment;
-            }
+            return jsonPlatformEnvironment;
         }
-
-        IPClientPlatformEnvironment ipPlatformEnvironment = new IPClientPlatformEnvironment();
-        ipPlatformEnvironment.setTopOptId(env.getProperty("centit.ip.topoptid"));
-        ipPlatformEnvironment.setPlatServerUrl(env.getProperty("centit.ip.home"));
-        ipPlatformEnvironment.init();
-
-        List<PlatformEnvironment> evrnMangers = new ArrayList<>();
-        evrnMangers.add(ipPlatformEnvironment);
-        evrnMangers.add(staticPlatformEnvironment);
-
-        PlatformEnvironmentProxy platformEnvironment = new PlatformEnvironmentProxy();
-        platformEnvironment.setEvrnMangers(evrnMangers);
-
-        return platformEnvironment;
     }
 
     @Bean
     @Lazy(value = false)
     public IntegrationEnvironment integrationEnvironment() {
 
-        Boolean ipEnable = env.getProperty("centit.ip.enable",Boolean.class);// = false
-        IntegrationEnvironment jsonIntegrationEnvironment = new StaticIntegrationEnvironment();
-        jsonIntegrationEnvironment.reloadIPEnvironmen();
-        if(ipEnable==null || !ipEnable)
+        Boolean jdbcEnable = env.getProperty("centit.jdbcplatform.enable", Boolean.class);// = false
+        if (jdbcEnable != null && jdbcEnable) {
+            JdbcIntegrationEnvironment jdbcIntegrationEnvironment = new JdbcIntegrationEnvironment();
+            jdbcIntegrationEnvironment.setDataBaseConnectInfo(
+                    env.getProperty("centit.jdbcplatform.url"),
+                    env.getProperty("centit.jdbcplatform.username"),
+                    env.getProperty("centit.jdbcplatform.password")
+            );
+            jdbcIntegrationEnvironment.reloadIPEnvironmen();
+            return jdbcIntegrationEnvironment;
+        } else{
+            IntegrationEnvironment jsonIntegrationEnvironment = new StaticIntegrationEnvironment();
+            jsonIntegrationEnvironment.reloadIPEnvironmen();
             return jsonIntegrationEnvironment;
+        }
 
-        IPClientIntegrationEnvironment ipIntegrationEnvironment = new IPClientIntegrationEnvironment();
-        ipIntegrationEnvironment.setPlatServerUrl(env.getProperty("centit.ip.home"));
-        //ipPlatformEnvironment.init();
-
-        List<IntegrationEnvironment> evrnMangers = new ArrayList<>();
-        evrnMangers.add(ipIntegrationEnvironment);
-        evrnMangers.add(jsonIntegrationEnvironment);
-
-        IntegrationEnvironmentProxy integrationEnvironment = new IntegrationEnvironmentProxy();
-        integrationEnvironment.setEvrnMangers(evrnMangers);
-
-        return integrationEnvironment;
     }
 
     @Bean
