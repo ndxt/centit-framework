@@ -1,18 +1,18 @@
 package com.centit.framework.staticsystem.config;
 
-import com.centit.framework.components.impl.NotificationCenterImpl;
-import com.centit.framework.components.impl.TextOperationLogWriterImpl;
 import com.centit.framework.config.H2Config;
 import com.centit.framework.config.RedisConfig;
 import com.centit.framework.listener.InitialWebRuntimeEnvironment;
-import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitPasswordEncoderImpl;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.MemorySessionRegistryImpl;
 import com.centit.framework.staticsystem.service.IntegrationEnvironment;
-import com.centit.framework.staticsystem.service.impl.*;
+import com.centit.framework.staticsystem.service.impl.JdbcIntegrationEnvironment;
+import com.centit.framework.staticsystem.service.impl.JdbcPlatformEnvironment;
+import com.centit.framework.staticsystem.service.impl.StaticIntegrationEnvironment;
+import com.centit.framework.staticsystem.service.impl.StaticPlatformEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.context.EnvironmentAware;
@@ -20,9 +20,6 @@ import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @PropertySource("classpath:system.properties")
