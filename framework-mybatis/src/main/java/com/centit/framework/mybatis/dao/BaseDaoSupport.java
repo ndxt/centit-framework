@@ -29,6 +29,5 @@ public class BaseDaoSupport extends SqlSessionDaoSupport {
 		BaseDaoImpl  baseDao = new BaseDaoImpl(getSqlSessionWithOpenedConnection());
 		return baseDao;
 	}
-
-
+	
 }

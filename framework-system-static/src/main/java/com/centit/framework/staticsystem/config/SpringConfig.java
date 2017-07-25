@@ -114,8 +114,8 @@ public class SpringConfig implements EnvironmentAware {
     public IntegrationEnvironment integrationEnvironment() {
 
         Boolean ipEnable = env.getProperty("centit.ip.enable",Boolean.class);// = false
-        StaticIntegrationEnvironment jsonIntegrationEnvironment = new StaticIntegrationEnvironment();
-        jsonIntegrationEnvironment.init();
+        IntegrationEnvironment jsonIntegrationEnvironment = new StaticIntegrationEnvironment();
+        jsonIntegrationEnvironment.reloadIPEnvironmen();
         if(ipEnable==null || !ipEnable)
             return jsonIntegrationEnvironment;
 

@@ -6,6 +6,9 @@ import com.alibaba.fastjson.serializer.PropertyPreFilter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 响应 http 请求 返回的单个数据
+ */
 public class ResponseSingleData {
 
     /**

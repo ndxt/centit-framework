@@ -12,6 +12,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 
+/**
+ * 获取http请求 返回的数据
+ */
 public class ResponseJSON {
 	private static final Logger logger = LoggerFactory.getLogger(ResponseJSON.class);
     public static final String RES_CODE_FILED = ResponseData.RES_CODE_FILED;
@@ -60,34 +63,39 @@ public class ResponseJSON {
         Object dataObj = ((JSONObject)data).get(skey);         
         return  StringBaseOpt.objectToString(dataObj);
     }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T stringToScalarData(String sdata, Class<T> clazz) {
+        if(clazz == java.lang.Integer.class){
+            return (T)java.lang.Integer.valueOf(sdata);
+        }else if(clazz == java.lang.Long.class){
+            return (T)java.lang.Long.valueOf(sdata);
+        }else if(clazz == java.lang.Double.class){
+            return (T)java.lang.Double.valueOf(sdata);
+        }else if(clazz == java.lang.Boolean.class){
+            return (T)java.lang.Boolean.valueOf(sdata);
+        }else if(clazz == java.lang.Float.class){
+            return (T)java.lang.Float.valueOf(sdata);
+        }else if(clazz == java.lang.String.class){
+            return (T)sdata;
+        }else if(clazz == java.util.Date.class){
+            return (T)DatetimeOpt.smartPraseDate(sdata);
+        }else if(clazz == java.util.UUID.class){
+            return (T)java.util.UUID.fromString(sdata);
+        }else
+            return null;
+    }
+
     /**
      * ScalarObject 标量对象，只系统的内置的 Integer、long、String、float、double、Date等标量
      * @param <T> 类型通配符
      * @param clazz Class
      * @return 转化结果
      */
-    @SuppressWarnings("unchecked")
 	public <T> T getDataAsScalarObject( Class<T> clazz) {
     	try{
 	        String sdata = String.valueOf(getData());
-	        if(clazz == java.lang.Integer.class){
-	        	return (T)java.lang.Integer.valueOf(sdata);
-	        }else if(clazz == java.lang.Long.class){
-	        	return (T)java.lang.Long.valueOf(sdata);
-	        }else if(clazz == java.lang.Double.class){
-	        	return (T)java.lang.Double.valueOf(sdata);
-	        }else if(clazz == java.lang.Boolean.class){
-	        	return (T)java.lang.Boolean.valueOf(sdata);
-	        }else if(clazz == java.lang.Float.class){
-	        	return (T)java.lang.Float.valueOf(sdata);
-	        }else if(clazz == java.lang.String.class){
-	        	return (T)sdata;
-	        }else if(clazz == java.util.Date.class){
-	        	return (T)DatetimeOpt.smartPraseDate(sdata);
-	        }else if(clazz == java.util.UUID.class){
-	        	return (T)java.util.UUID.fromString(sdata);
-	        }else        
-	        	return null;
+            return stringToScalarData(sdata,clazz);
     	}catch(Exception e){
     		logger.error("获取标量出错！",e);//e.printStackTrace();
     		return null;
@@ -102,7 +110,7 @@ public class ResponseJSON {
         return JSON.parseObject(data.toString(), clazz);        
     }
 
-    @SuppressWarnings("unchecked")
+
 	public <T> T getDataAsScalarObject(String skey, Class<T> clazz) {
     	Object data = getData();
         if(data==null || !(data instanceof JSONObject))
@@ -111,24 +119,7 @@ public class ResponseJSON {
         
     	try{
 	        String sdata = StringBaseOpt.objectToString(dataObj);
-	        if(clazz == java.lang.Integer.class){
-	        	return (T)java.lang.Integer.valueOf(sdata);
-	        }else if(clazz == java.lang.Long.class){
-	        	return (T)java.lang.Long.valueOf(sdata);
-	        }else if(clazz == java.lang.Double.class){
-	        	return (T)java.lang.Double.valueOf(sdata);
-	        }else if(clazz == java.lang.Boolean.class){
-	        	return (T)java.lang.Boolean.valueOf(sdata);
-	        }else if(clazz == java.lang.Float.class){
-	        	return (T)java.lang.Float.valueOf(sdata);
-	        }else if(clazz == java.lang.String.class){
-	        	return (T)sdata;
-	        }else if(clazz == java.util.Date.class){
-	        	return (T)DatetimeOpt.smartPraseDate(sdata);
-	        }else if(clazz == java.util.UUID.class){
-	        	return (T)java.util.UUID.fromString(sdata);
-	        }else        
-	        	return null;
+            return stringToScalarData(sdata,clazz);
     	}catch(Exception e){
     		logger.error("获取标量出错！",e);// e.printStackTrace();
     		return null;

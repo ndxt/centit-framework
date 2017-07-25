@@ -1,10 +1,13 @@
 package com.centit.framework.staticsystem.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.staticsystem.po.DatabaseInfo;
 import com.centit.framework.staticsystem.po.OsInfo;
+import org.dom4j.DocumentException;
 
 public interface IntegrationEnvironment {
 

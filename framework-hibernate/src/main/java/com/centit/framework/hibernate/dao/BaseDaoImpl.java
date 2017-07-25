@@ -34,6 +34,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
+@SuppressWarnings("unused")
 public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializable> 
 {
     @Resource(name="sessionFactory")
@@ -670,6 +671,11 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
         return shql;
     }
 
+
+    @Transactional
+    public List<T> listObjectsAll() {
+       return listObjects();
+    }
 
     @SuppressWarnings("unchecked")   
     @Transactional

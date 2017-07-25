@@ -25,10 +25,6 @@ public class StaticIntegrationEnvironment implements IntegrationEnvironment {
     private List<DatabaseInfo> databaseInfos;
     private List<UserAccessToken> accessTokens;
 
-    public void init(){
-        reloadIPEnvironmen();
-    }
-
     @Override
     public boolean reloadIPEnvironmen() {
         try {
