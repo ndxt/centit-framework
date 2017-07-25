@@ -1,26 +1,24 @@
 package com.centit.framework.system.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.mybatis.dao.DatabaseOptUtils;
+import com.centit.framework.core.dao.QueryParameterPrepare;
 import com.centit.framework.mybatis.dao.SysDaoOptUtils;
 import com.centit.framework.system.dao.QueryFilterConditionDao;
 import com.centit.framework.system.po.QueryFilterCondition;
 import com.centit.framework.system.service.QueryFilterConditionManager;
 import com.centit.support.common.KeyValuePair;
+import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Map;
 
 /**
  * QueryFilterCondition  Service.
@@ -61,7 +59,7 @@ public class QueryFilterConditionManagerImpl implements QueryFilterConditionMana
 	@Override
 	@Transactional
 	public List<QueryFilterCondition> listObjects(Map<String, Object> filterMap, PageDesc pageDesc) {
-		return queryFilterConditionDao.pageQuery(DatabaseOptUtils.prepPageParmers(filterMap,pageDesc,queryFilterConditionDao.pageCount(filterMap)));
+		return queryFilterConditionDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterMap,pageDesc,queryFilterConditionDao.pageCount(filterMap)));
 	}
 	
 	

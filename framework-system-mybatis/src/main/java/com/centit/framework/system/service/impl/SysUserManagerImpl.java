@@ -1,38 +1,30 @@
 package com.centit.framework.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-
+import com.centit.framework.core.common.ObjectException;
+import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.core.dao.QueryParameterPrepare;
 import com.centit.framework.security.model.CentitPasswordEncoder;
+import com.centit.framework.system.dao.UnitInfoDao;
+import com.centit.framework.system.dao.UserInfoDao;
+import com.centit.framework.system.dao.UserRoleDao;
+import com.centit.framework.system.dao.UserUnitDao;
+import com.centit.framework.system.po.*;
+import com.centit.framework.system.service.SysUserManager;
+import com.centit.support.algorithm.StringBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.centit.framework.core.common.ObjectException;
-import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.mybatis.dao.DatabaseOptUtils;
-import com.centit.framework.system.dao.UnitInfoDao;
-import com.centit.framework.system.dao.UserInfoDao;
-import com.centit.framework.system.dao.UserRoleDao;
-import com.centit.framework.system.dao.UserUnitDao;
-import com.centit.framework.system.po.FVUserOptList;
-import com.centit.framework.system.po.FVUserRoles;
-import com.centit.framework.system.po.RoleInfo;
-import com.centit.framework.system.po.UserInfo;
-import com.centit.framework.system.po.UserRole;
-import com.centit.framework.system.po.UserUnit;
-import com.centit.framework.system.service.SysUserManager;
-import com.centit.support.algorithm.StringBaseOpt;
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("sysUserManager")
 public class SysUserManagerImpl implements SysUserManager {
@@ -320,7 +312,7 @@ public class SysUserManagerImpl implements SysUserManager {
 	@Override
 	@Transactional
 	public List<UserInfo> listObjects(Map<String, Object> filterMap, PageDesc pageDesc) {
-		return userInfoDao.pageQuery(DatabaseOptUtils.prepPageParmers(filterMap,pageDesc,userInfoDao.pageCount(filterMap)));
+		return userInfoDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterMap,pageDesc,userInfoDao.pageCount(filterMap)));
 	}
 
 	@Override

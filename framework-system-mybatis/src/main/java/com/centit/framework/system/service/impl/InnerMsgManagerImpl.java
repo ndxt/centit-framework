@@ -1,6 +1,7 @@
 package com.centit.framework.system.service.impl;
 
 import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.core.dao.QueryParameterPrepare;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.mybatis.dao.DatabaseOptUtils;
 import com.centit.framework.system.dao.InnerMsgDao;
@@ -99,7 +100,7 @@ public class InnerMsgManagerImpl implements InnerMsgManager, MessageSender{
 
 	@Override
 	public List<InnerMsg> listObjects(Map<String, Object> filterMap, PageDesc pageDesc) {
-		return innerMsgDao.pageQuery(DatabaseOptUtils.prepPageParmers(filterMap,pageDesc,innerMsgDao.pageCount(filterMap)));
+		return innerMsgDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterMap,pageDesc,innerMsgDao.pageCount(filterMap)));
 	}
 
 	@Override

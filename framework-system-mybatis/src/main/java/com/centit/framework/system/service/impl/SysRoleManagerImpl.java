@@ -1,6 +1,7 @@
 package com.centit.framework.system.service.impl;
 
 import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.core.dao.QueryParameterPrepare;
 import com.centit.framework.mybatis.dao.DatabaseOptUtils;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.OptTreeNode;
@@ -187,7 +188,7 @@ public class SysRoleManagerImpl implements SysRoleManager
 	@Override
 	@Transactional
 	public List<RoleInfo> listObjects(Map<String, Object> filterMap, PageDesc pageDesc) {
-		return roleInfoDao.pageQuery(DatabaseOptUtils.prepPageParmers(filterMap,pageDesc,roleInfoDao.pageCount(filterMap)));
+		return roleInfoDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterMap,pageDesc,roleInfoDao.pageCount(filterMap)));
 	}
 
 	@Override

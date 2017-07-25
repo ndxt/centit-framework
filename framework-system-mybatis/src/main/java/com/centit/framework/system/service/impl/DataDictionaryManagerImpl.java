@@ -1,12 +1,14 @@
 package com.centit.framework.system.service.impl;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-
+import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.core.dao.QueryParameterPrepare;
+import com.centit.framework.system.dao.DataCatalogDao;
+import com.centit.framework.system.dao.DataDictionaryDao;
+import com.centit.framework.system.po.DataCatalog;
+import com.centit.framework.system.po.DataDictionary;
+import com.centit.framework.system.po.DataDictionaryId;
+import com.centit.framework.system.service.DataDictionaryManager;
+import com.centit.support.algorithm.ListOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -17,15 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.mybatis.dao.DatabaseOptUtils;
-import com.centit.framework.system.dao.DataCatalogDao;
-import com.centit.framework.system.dao.DataDictionaryDao;
-import com.centit.framework.system.po.DataCatalog;
-import com.centit.framework.system.po.DataDictionary;
-import com.centit.framework.system.po.DataDictionaryId;
-import com.centit.framework.system.service.DataDictionaryManager;
-import com.centit.support.algorithm.ListOpt;
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 @Service("dataDictionaryManager")
 public class DataDictionaryManagerImpl implements
@@ -210,7 +208,7 @@ public class DataDictionaryManagerImpl implements
 	@Override
 	@Transactional
 	public List<DataCatalog> listObjects(Map<String, Object> filterDescMap, PageDesc pageDesc) {
-		  return dataCatalogDao.pageQuery(DatabaseOptUtils.prepPageParmers(filterDescMap, pageDesc,dataCatalogDao.pageCount(filterDescMap)));
+		  return dataCatalogDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterDescMap, pageDesc,dataCatalogDao.pageCount(filterDescMap)));
 	}
 
         

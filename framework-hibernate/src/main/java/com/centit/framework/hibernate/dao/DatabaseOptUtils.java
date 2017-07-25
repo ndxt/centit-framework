@@ -36,8 +36,8 @@ import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.database.DatabaseAccess;
 import com.centit.support.database.QueryUtils;
-@Transactional
-public class DatabaseOptUtils {
+@SuppressWarnings("unused")
+public abstract class DatabaseOptUtils {
 	
     protected static Logger logger = LoggerFactory.getLogger(DatabaseOptUtils.class);
     
