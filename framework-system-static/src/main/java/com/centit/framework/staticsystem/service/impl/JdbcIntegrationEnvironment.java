@@ -1,27 +1,16 @@
 package com.centit.framework.staticsystem.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.core.common.ResponseJSON;
-import com.centit.framework.staticsystem.common.RestfulHttpRequest;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.framework.staticsystem.service.IntegrationEnvironment;
 import com.centit.support.database.DBConnect;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.DatabaseAccess;
 import com.centit.support.database.DbcpConnectPools;
-import com.centit.support.file.FileIOOpt;
-import com.centit.support.file.FileSystemOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentException;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;

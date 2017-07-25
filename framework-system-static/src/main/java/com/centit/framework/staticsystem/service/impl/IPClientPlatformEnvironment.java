@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.centit.framework.appclient.RestfulHttpRequest;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -20,20 +21,15 @@ import com.centit.framework.core.common.ResponseJSON;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.OptTreeNode;
-import com.centit.framework.staticsystem.common.RestfulHttpRequest;
 import com.centit.framework.staticsystem.po.DataCatalog;
 import com.centit.framework.staticsystem.po.DataDictionary;
-import com.centit.framework.staticsystem.po.DatabaseInfo;
 import com.centit.framework.staticsystem.po.OptInfo;
 import com.centit.framework.staticsystem.po.OptMethod;
-import com.centit.framework.staticsystem.po.OsInfo;
 import com.centit.framework.staticsystem.po.RoleInfo;
 import com.centit.framework.staticsystem.po.RolePower;
 import com.centit.framework.staticsystem.po.UnitInfo;
-import com.centit.framework.staticsystem.po.UserAccessToken;
 import com.centit.framework.staticsystem.po.UserInfo;
 import com.centit.framework.staticsystem.po.UserUnit;
-import com.centit.framework.staticsystem.service.IntegrationEnvironment;
 import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.network.HttpExecutor;
 

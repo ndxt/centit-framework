@@ -1,4 +1,4 @@
-package com.centit.framework.staticsystem.common;
+package com.centit.framework.appclient;
 
 import java.io.IOException;
 

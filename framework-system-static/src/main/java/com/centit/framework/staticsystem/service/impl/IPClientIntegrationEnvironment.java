@@ -1,7 +1,7 @@
 package com.centit.framework.staticsystem.service.impl;
 
+import com.centit.framework.appclient.RestfulHttpRequest;
 import com.centit.framework.core.common.ResponseJSON;
-import com.centit.framework.staticsystem.common.RestfulHttpRequest;
 import com.centit.framework.staticsystem.po.DatabaseInfo;
 import com.centit.framework.staticsystem.po.OsInfo;
 import com.centit.framework.staticsystem.po.UserAccessToken;

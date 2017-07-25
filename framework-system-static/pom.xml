@@ -24,6 +24,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.centit.framework</groupId>
+            <artifactId>framework-client</artifactId>
+            <version>${centit.framework.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.centit.support</groupId>
             <artifactId>centit-database</artifactId>
             <version>${centit.commons.version}</version>
