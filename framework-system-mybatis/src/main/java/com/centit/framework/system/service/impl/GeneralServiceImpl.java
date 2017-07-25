@@ -9,12 +9,12 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 
+import com.centit.framework.core.dao.DataPowerFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.mybatis.dao.DataPowerFilter;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.system.dao.OptDataScopeDao;
 import com.centit.framework.system.dao.OptInfoDao;

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
-import com.centit.framework.hibernate.dao.DataPowerFilter;
+import com.centit.framework.hibernate.dao.HibernatePowerFilter;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.system.service.OptInfoManager;
@@ -29,8 +29,8 @@ public abstract class EntityManagerWithDataPowerImpl<T extends Serializable, PK 
   extends  BaseEntityManagerImpl<T , PK , D>
   implements EntityManagerWithDataPower<T, PK> {
 
-	public DataPowerFilter createDataPowerFilter(String userCode){
-		DataPowerFilter dpf = new DataPowerFilter();
+	public HibernatePowerFilter createDataPowerFilter(String userCode){
+		HibernatePowerFilter dpf = new HibernatePowerFilter();
 		IUserInfo currUser = CodeRepositoryUtil.getUserInfoByCode(userCode);
 		dpf.addSourceData( currUser );
 		dpf.addSourceData("PrimaryUnit",CodeRepositoryUtil.getUnitInfoByCode(currUser.getPrimaryUnit()) );
@@ -43,7 +43,7 @@ public abstract class EntityManagerWithDataPowerImpl<T extends Serializable, PK 
 	private OptInfoManager optInfoManager;
 	public List<T> listObjecesDemo(String userCode,String optid,String method){
 		List<String> filters = optInfoManager.listUserDataFiltersByOptIDAndMethod(userCode, optid, method);
-		DataPowerFilter dpf = createDataPowerFilter(userCode);
+		HibernatePowerFilter dpf = createDataPowerFilter(userCode);
 		//dpf.setSourceDatas(sourceData);
 		QueryAndNamedParams hql = dpf.makeHQL("T className" , filters, false);
 		return baseDao.listObjects(hql.getHql(),hql.getParams());
