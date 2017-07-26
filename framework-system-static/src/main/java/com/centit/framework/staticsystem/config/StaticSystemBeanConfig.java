@@ -9,7 +9,7 @@ import com.centit.framework.security.model.CentitPasswordEncoderImpl;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.MemorySessionRegistryImpl;
 import com.centit.framework.staticsystem.service.impl.JdbcPlatformEnvironment;
-import com.centit.framework.staticsystem.service.impl.StaticPlatformEnvironment;
+import com.centit.framework.staticsystem.service.impl.JsonPlatformEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.context.EnvironmentAware;
@@ -71,7 +71,7 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
             jdbcPlatformEnvironment.init();
             return jdbcPlatformEnvironment;
         } else{
-            StaticPlatformEnvironment jsonPlatformEnvironment = new StaticPlatformEnvironment();
+            JsonPlatformEnvironment jsonPlatformEnvironment = new JsonPlatformEnvironment();
             jsonPlatformEnvironment.setPasswordEncoder(passwordEncoder);
             jsonPlatformEnvironment.init();
             return jsonPlatformEnvironment;
