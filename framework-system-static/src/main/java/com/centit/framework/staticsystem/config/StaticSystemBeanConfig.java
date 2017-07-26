@@ -8,10 +8,7 @@ import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitPasswordEncoderImpl;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.MemorySessionRegistryImpl;
-import com.centit.framework.staticsystem.service.IntegrationEnvironment;
-import com.centit.framework.staticsystem.service.impl.JdbcIntegrationEnvironment;
 import com.centit.framework.staticsystem.service.impl.JdbcPlatformEnvironment;
-import com.centit.framework.staticsystem.service.impl.StaticIntegrationEnvironment;
 import com.centit.framework.staticsystem.service.impl.StaticPlatformEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
@@ -26,7 +23,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @Import({RedisConfig.class, H2Config.class, SpringSecurityDaoConfig.class, SpringSecurityCasConfig.class})
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @Lazy
-public class SpringConfig implements EnvironmentAware {
+public class StaticSystemBeanConfig implements EnvironmentAware {
 
     @Autowired
     private Environment env;
@@ -79,28 +76,6 @@ public class SpringConfig implements EnvironmentAware {
             jsonPlatformEnvironment.init();
             return jsonPlatformEnvironment;
         }
-    }
-
-    @Bean
-    @Lazy(value = false)
-    public IntegrationEnvironment integrationEnvironment() {
-
-        Boolean jdbcEnable = env.getProperty("centit.jdbcplatform.enable", Boolean.class);// = false
-        if (jdbcEnable != null && jdbcEnable) {
-            JdbcIntegrationEnvironment jdbcIntegrationEnvironment = new JdbcIntegrationEnvironment();
-            jdbcIntegrationEnvironment.setDataBaseConnectInfo(
-                    env.getProperty("centit.jdbcplatform.url"),
-                    env.getProperty("centit.jdbcplatform.username"),
-                    env.getProperty("centit.jdbcplatform.password")
-            );
-            jdbcIntegrationEnvironment.reloadIPEnvironmen();
-            return jdbcIntegrationEnvironment;
-        } else{
-            IntegrationEnvironment jsonIntegrationEnvironment = new StaticIntegrationEnvironment();
-            jsonIntegrationEnvironment.reloadIPEnvironmen();
-            return jsonIntegrationEnvironment;
-        }
-
     }
 
     @Bean

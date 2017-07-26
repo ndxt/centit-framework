@@ -28,7 +28,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
         )
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableAsync
-public class SpringConfig implements EnvironmentAware {
+public class SystemBeanConfig implements EnvironmentAware {
 
     @Autowired
     Environment env;
