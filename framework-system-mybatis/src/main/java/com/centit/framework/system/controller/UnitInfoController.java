@@ -27,7 +27,7 @@ import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.model.basedata.OperationLog;
-import com.centit.framework.mybatis.dao.SysDaoOptUtils;
+import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.system.po.UnitInfo;
 import com.centit.framework.system.po.UserInfo;
 import com.centit.framework.system.po.UserUnit;
@@ -102,7 +102,7 @@ public class UnitInfoController extends BaseController {
      					else break;
      				}
      			}
-     		JSONArray ja = SysDaoOptUtils.objectsToJSONArray(listObjects);
+     		JSONArray ja = DictionaryMapUtils.objectsToJSONArray(listObjects);
              if(struct){
              	ja = ListOpt.srotAsTreeAndToJSON(ja, 
          				new ListOpt.ParentChild<Object>(){
@@ -168,7 +168,7 @@ public class UnitInfoController extends BaseController {
                 return -1;
             }
         });
-        JSONArray ja = SysDaoOptUtils.objectsToJSONArray(listObjects);
+        JSONArray ja = DictionaryMapUtils.objectsToJSONArray(listObjects);
         if(struct){
         	ja = ListOpt.srotAsTreeAndToJSON(ja, 
     				new ListOpt.ParentChild<Object>(){

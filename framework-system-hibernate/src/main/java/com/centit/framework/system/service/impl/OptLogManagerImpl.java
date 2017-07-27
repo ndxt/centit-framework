@@ -1,9 +1,9 @@
 package com.centit.framework.system.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
-import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.basedata.OperationLog;
@@ -107,8 +107,7 @@ public class OptLogManagerImpl extends BaseEntityManagerImpl<OptLog, Long, OptLo
     public JSONArray listObjectsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
-    	return SysDaoOptUtils.listObjectsAsJson(baseDao, fields, OptLog.class,
-    			filterMap, pageDesc);
+    	return DictionaryMapUtils.objectsToJSONArray( baseDao.listObjects(filterMap, pageDesc), fields);
     }
 
 }

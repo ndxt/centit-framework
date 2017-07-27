@@ -7,7 +7,7 @@ import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.framework.mybatis.dao.BaseDaoSupport;
 import com.centit.framework.mybatis.dao.DatabaseOptUtils;
-import com.centit.framework.mybatis.dao.SysDaoOptUtils;
+import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.system.dao.OptLogDao;
 import com.centit.framework.system.po.OptLog;
 import com.centit.framework.system.service.OptLogManager;
@@ -139,7 +139,7 @@ public class OptLogManagerImpl implements OptLogManager,OperationLogWriter {
  			
  		}	
     	List<OptLog> rst=optLogDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterMap, pageDesc,optLogDao.pageCount(filterMap)));
-		return  SysDaoOptUtils.objectsToJSONArray(rst);
+		return  DictionaryMapUtils.objectsToJSONArray(rst);
 		
 //		return SysDaoOptUtils.listObjectsBySqlAsJson(sqlSession,"sql",filterMap, fields,
 //    			(Map<String,KeyValuePair<String,String>> )null, pageDesc);

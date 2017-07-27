@@ -20,7 +20,7 @@ public @interface DictionaryMap {
      * 对应的数据字典的目录代码。
      * @return String  value
      */
-    public String value() default "";
+    String value() default "";
     
     /**
      * (Must be assigned) The name of the Field Name.
@@ -28,5 +28,5 @@ public @interface DictionaryMap {
      * 数字字典值对应的字段名
      * @return String fieldName
      */
-    public String fieldName() default "";
+     String fieldName() default "";
 }

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.centit.framework.core.dao.DictionaryMapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,6 @@ import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.OperationLog;
@@ -126,7 +126,7 @@ public class UserUnitController extends BaseController {
         List<UserUnit> listObjects = sysUserUnitManager.listObjects(filterMap, pageDesc);
 
         ResponseData resData = new ResponseData();
-        resData.addResponseData(OBJLIST, SysDaoOptUtils.objectsToJSONArray(listObjects));
+        resData.addResponseData(OBJLIST, DictionaryMapUtils.objectsToJSONArray(listObjects));
         resData.addResponseData(PAGE_DESC, pageDesc);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);
@@ -148,7 +148,7 @@ public class UserUnitController extends BaseController {
             JsonResultUtils.writeErrorMessageJson("当前机构中无此用户", response);
             return;
         }
-        JsonResultUtils.writeSingleDataJson(SysDaoOptUtils.objectToJSON(userUnit), response);
+        JsonResultUtils.writeSingleDataJson(DictionaryMapUtils.objectToJSON(userUnit), response);
     }
 
     /**
@@ -166,7 +166,7 @@ public class UserUnitController extends BaseController {
             JsonResultUtils.writeErrorMessageJson("当前机构中无此用户", response);
             return;
         }
-        JsonResultUtils.writeSingleDataJson(SysDaoOptUtils.objectsToJSONArray(userUnits), response);
+        JsonResultUtils.writeSingleDataJson(DictionaryMapUtils.objectsToJSONArray(userUnits), response);
     }
 
 

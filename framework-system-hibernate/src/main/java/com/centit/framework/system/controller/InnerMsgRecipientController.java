@@ -6,8 +6,8 @@ import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.framework.system.po.InnerMsg;
 import com.centit.framework.system.po.InnerMsgRecipient;
@@ -69,7 +69,7 @@ public class InnerMsgRecipientController extends BaseController {
         else
             listObjects = innerMsgRecipientManager.listObjects(searchColumn,pageDesc);
         ResponseData resData = new ResponseData();
-        resData.addResponseData(OBJLIST,SysDaoOptUtils.objectsToJSONArray(listObjects));
+        resData.addResponseData(OBJLIST, DictionaryMapUtils.objectsToJSONArray(listObjects));
         resData.addResponseData(PAGE_DESC, pageDesc);
         JsonResultUtils.writeResponseDataAsJson(resData, response, JsonPropertyUtils.getIncludePropPreFilter(InnerMsgRecipient.class, field));
     }
@@ -103,7 +103,7 @@ public class InnerMsgRecipientController extends BaseController {
         else
             listObjects = innerMsgManager.listObjects(searchColumn,pageDesc);
         ResponseData resData = new ResponseData();
-        resData.addResponseData(OBJLIST, SysDaoOptUtils.objectsToJSONArray(listObjects));
+        resData.addResponseData(OBJLIST, DictionaryMapUtils.objectsToJSONArray(listObjects));
         resData.addResponseData(PAGE_DESC, pageDesc);
         JsonResultUtils.writeResponseDataAsJson(resData, response, JsonPropertyUtils.getIncludePropPreFilter(InnerMsgRecipient.class, field));
     }
@@ -145,7 +145,7 @@ public class InnerMsgRecipientController extends BaseController {
         searchColumn.put("msgType", "A");
         List<InnerMsg> listObjects = innerMsgManager.listObjects(searchColumn,pageDesc);
         ResponseData resData = new ResponseData();
-        resData.addResponseData(OBJLIST, SysDaoOptUtils.objectsToJSONArray(listObjects));
+        resData.addResponseData(OBJLIST, DictionaryMapUtils.objectsToJSONArray(listObjects));
         resData.addResponseData(PAGE_DESC, pageDesc);
         JsonResultUtils.writeResponseDataAsJson(resData, response, JsonPropertyUtils
                 .getIncludePropPreFilter(InnerMsg.class, field));

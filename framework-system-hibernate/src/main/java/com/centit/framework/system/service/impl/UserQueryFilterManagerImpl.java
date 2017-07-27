@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 
+import com.centit.framework.core.dao.DictionaryMapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.framework.system.dao.UserQueryFilterDao;
 import com.centit.framework.system.po.UserQueryFilter;
@@ -59,8 +59,8 @@ public class UserQueryFilterManagerImpl
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
 			
-		return SysDaoOptUtils.listObjectsAsJson(baseDao, fields, UserQueryFilter.class,
-    			filterMap, pageDesc);
+		return DictionaryMapUtils.objectsToJSONArray(baseDao.listObjects(filterMap, pageDesc),
+				fields);
 	}
 	
 	@Override
