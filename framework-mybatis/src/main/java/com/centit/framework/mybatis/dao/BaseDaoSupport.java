@@ -24,4 +24,10 @@ public class BaseDaoSupport extends SqlSessionDaoSupport {
                 st.getSqlSessionFactory(), st.getExecutorType(),
                 st.getPersistenceExceptionTranslator());//.getConnection();
 	}
+
+	public BaseDaoImpl createBaseDao(){
+		BaseDaoImpl  baseDao = new BaseDaoImpl(getSqlSessionWithOpenedConnection());
+		return baseDao;
+	}
+	
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 
+import com.centit.framework.core.dao.QueryParameterPrepare;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +41,7 @@ public class SysUserRoleManagerImpl implements SysUserRoleManager {
 
 	@Override
 	public List<UserRole> listObjects(Map<String, Object> filterMap, PageDesc pageDesc) {
-		return userRoleDao.pageQuery(DatabaseOptUtils.prepPageParmers(filterMap,pageDesc,userRoleDao.pageCount(filterMap)));
+		return userRoleDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterMap,pageDesc,userRoleDao.pageCount(filterMap)));
 	}
 
 	@Override

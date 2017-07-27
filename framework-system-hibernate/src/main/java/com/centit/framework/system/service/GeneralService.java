@@ -2,7 +2,7 @@ package com.centit.framework.system.service;
 
 import java.util.List;
 
-import com.centit.framework.hibernate.dao.DataPowerFilter;
+import com.centit.framework.hibernate.dao.HibernatePowerFilter;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.system.po.UserQueryFilter;
 
@@ -43,5 +43,5 @@ public interface GeneralService {
 	 * @param userDetails CentitUserDetails
 	 * @return DataPowerFilter
 	 */
-	 DataPowerFilter createUserDataPowerFilter(CentitUserDetails userDetails);
+	 HibernatePowerFilter createUserDataPowerFilter(CentitUserDetails userDetails);
 }

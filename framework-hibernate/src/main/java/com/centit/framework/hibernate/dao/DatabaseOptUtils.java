@@ -1,5 +1,32 @@
 package com.centit.framework.hibernate.dao;
 
+import java.io.IOException;
+
+/**
+ * 意图将BaseDao中公共的部分独立出来，减少类的函数数量，
+ * 因为每一个继承BaseDaoImpl的类都有这些函数，而这些行数基本上都是一样的
+ */
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.query.NativeQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.hibernate.query.Query;
+import org.hibernate.Session;
+import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.SysParametersUtils;
@@ -9,29 +36,8 @@ import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.database.DatabaseAccess;
 import com.centit.support.database.QueryUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-/**
- * 意图将BaseDao中公共的部分独立出来，减少类的函数数量，
- * 因为每一个继承BaseDaoImpl的类都有这些函数，而这些行数基本上都是一样的
- */
-@Transactional
-public class DatabaseOptUtils {
+@SuppressWarnings("unused")
+public abstract class DatabaseOptUtils {
 	
     protected static Logger logger = LoggerFactory.getLogger(DatabaseOptUtils.class);
     

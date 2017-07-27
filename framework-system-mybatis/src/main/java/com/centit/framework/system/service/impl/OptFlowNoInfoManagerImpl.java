@@ -1,20 +1,7 @@
 package com.centit.framework.system.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.mybatis.dao.DatabaseOptUtils;
+import com.centit.framework.core.dao.QueryParameterPrepare;
 import com.centit.framework.system.dao.OptFlowNoInfoDao;
 import com.centit.framework.system.dao.OptFlowNoPoolDao;
 import com.centit.framework.system.po.OptFlowNoInfo;
@@ -23,6 +10,17 @@ import com.centit.framework.system.po.OptFlowNoPool;
 import com.centit.framework.system.po.OptFlowNoPoolId;
 import com.centit.framework.system.service.OptFlowNoInfoManager;
 import com.centit.support.algorithm.DatetimeOpt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -286,7 +284,7 @@ public class OptFlowNoInfoManagerImpl implements OptFlowNoInfoManager {
         filterMap.put("codeDate", codeBaseDate);
         filterMap.put("codeCode", codeCode);
         
-        return optFlowNoPoolDao.pageQuery(DatabaseOptUtils.prepPageParmers(filterMap,pageDesc,optFlowNoPoolDao.pageCount(filterMap)));
+        return optFlowNoPoolDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterMap,pageDesc,optFlowNoPoolDao.pageCount(filterMap)));
     }
 
     public List<OptFlowNoPool> listLshBaseDayInPool(String ownerCode, String codeCode, Date codeBaseDate, PageDesc pageDesc) {

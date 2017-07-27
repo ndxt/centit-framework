@@ -7,6 +7,9 @@ import java.util.Map;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
 
+/**
+ * 响应 http 请求 返回的数据，可以用Map返回多个数据
+ */
 public class ResponseData {
     /**
      * HTTP协议状态码详解（HTTP Status Code）

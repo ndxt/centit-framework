@@ -3,10 +3,10 @@ package com.centit.framework.system.service.impl;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.common.ObjectException;
 import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.core.dao.QueryParameterPrepare;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
-import com.centit.framework.mybatis.dao.DatabaseOptUtils;
 import com.centit.framework.system.dao.InnerMsgDao;
 import com.centit.framework.system.dao.InnerMsgRecipientDao;
 import com.centit.framework.system.po.InnerMsg;
@@ -203,7 +203,7 @@ public class InnerMsgRecipientManagerImpl implements InnerMsgRecipientManager, M
 
     @Override
     public List<InnerMsgRecipient> listObjects(Map<String, Object> filterMap, PageDesc pageDesc) {
-        return innerMsgRecipientDao.pageQuery(DatabaseOptUtils.prepPageParmers(filterMap, pageDesc, innerMsgRecipientDao.pageCount(filterMap)));
+        return innerMsgRecipientDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterMap, pageDesc, innerMsgRecipientDao.pageCount(filterMap)));
     }
 
     @Override

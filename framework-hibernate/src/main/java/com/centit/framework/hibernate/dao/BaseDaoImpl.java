@@ -3,9 +3,11 @@ package com.centit.framework.hibernate.dao;
 import com.centit.framework.core.common.ObjectException;
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.core.dao.QueryParameterPrepare;
 import com.centit.framework.core.po.EntityWithDeleteTag;
 import com.centit.framework.core.po.EntityWithTimestamp;
 import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.KeyValuePair;
@@ -34,6 +36,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
+@SuppressWarnings("unused")
 public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializable> 
 {
     @Resource(name="sessionFactory")
@@ -671,6 +674,11 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
     }
 
 
+    @Transactional
+    public List<T> listObjectsAll() {
+       return listObjects();
+    }
+
     @SuppressWarnings("unchecked")   
     @Transactional
     public List<T> listObjects() {
@@ -974,9 +982,56 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
         }
         return listObjs;
     }
-    
-    
-    
+
+    /**
+     * 为了和 myBatis 兼容
+     * @param sHql
+     * @param filterMap
+     * @return
+     */
+    @Transactional
+    public int pageCount(String sHql , Map<String, Object> filterMap) {
+
+        QueryAndNamedParams hql = builderHqlAndNamedParams(sHql, filterMap);
+        //QueryUtils.buildGetCountHQL()
+        Query q =  getCurrentSession().createQuery("SELECT COUNT(1) "
+                + QueryUtils.removeOrderBy(hql.getHql()));
+
+        Map<String, Object> params = hql.getParams();
+        DatabaseOptUtils.setQueryParameters(q,params);
+        Integer total = NumberBaseOpt.castObjectToInteger(q.uniqueResult());
+        return total==null?0:total;
+    }
+
+    @Transactional
+    public int pageCount(Map<String, Object> filterMap) {
+        String sHql = "From " + getClassTShortName() + " where 1=1 ";
+        return pageCount(sHql, filterMap);
+    }
+
+    @Transactional
+    public List<T> pageQuery(String sHql , Map<String, Object> filterMap) {
+
+        int startPos = 0;
+        int maxSize = 0;
+        if(filterMap!=null){
+            startPos = NumberBaseOpt.castObjectToInteger(filterMap.get("startRow"));
+            maxSize = NumberBaseOpt.castObjectToInteger(filterMap.get("maxSize"));
+        }
+
+        QueryAndNamedParams hql = builderHqlAndNamedParams(sHql, filterMap);
+        List<T> listObjs = listObjectsByNamedHql(hql.getHql(), hql.getParams(),
+                startPos, maxSize);
+
+        return listObjs;
+    }
+
+    @Transactional
+    public List<T> pageQuery(Map<String, Object> filterMap) {
+        String sHql = "From " + getClassTShortName() + " where 1=1 ";
+        return pageQuery(sHql, filterMap);
+    }
+
 
     @Transactional
     public List<T> listObjects(Map<String, Object> filterMap, PageDesc pageDesc) {

@@ -14,7 +14,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 
-import com.centit.framework.mybatis.dao.SqlMapper;
+import com.centit.framework.mybatis.dao.BaseDaoImpl;
 import com.centit.support.database.DatabaseAccess;
 import com.centit.support.database.QueryUtils;
 
@@ -95,7 +95,7 @@ public class TestMybatis {
             //用sqlSessionFactory创建sqlSession  
             sqlSession = sqlSessionFactory.openSession();  
             
-            SqlMapper mapper = new SqlMapper(sqlSession);
+            BaseDaoImpl mapper = new BaseDaoImpl(sqlSession);
             
             /*List<ParameterMapping> params = new ArrayList<>();
             params.add(new ParameterMapping.Builder(sqlSession.getConfiguration(),

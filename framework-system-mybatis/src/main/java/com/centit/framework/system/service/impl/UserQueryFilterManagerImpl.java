@@ -1,19 +1,8 @@
 package com.centit.framework.system.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.mybatis.dao.DatabaseOptUtils;
+import com.centit.framework.core.dao.QueryParameterPrepare;
 import com.centit.framework.mybatis.dao.SysDaoOptUtils;
 import com.centit.framework.system.dao.UserQueryFilterDao;
 import com.centit.framework.system.po.UserQueryFilter;
@@ -21,6 +10,16 @@ import com.centit.framework.system.service.UserQueryFilterManager;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.KeyValuePair;
+import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * UserQueryFilter  Service.
@@ -150,7 +149,7 @@ public class UserQueryFilterManagerImpl implements UserQueryFilterManager{
 
 	@Override
 	public List<UserQueryFilter> listObjects(Map<String, Object> filterMap, PageDesc pageDesc) {
-		return userQueryFilterDao.pageQuery(DatabaseOptUtils.prepPageParmers(filterMap,pageDesc,userQueryFilterDao.pageCount(filterMap)));
+		return userQueryFilterDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterMap,pageDesc,userQueryFilterDao.pageCount(filterMap)));
 	}
 }
 

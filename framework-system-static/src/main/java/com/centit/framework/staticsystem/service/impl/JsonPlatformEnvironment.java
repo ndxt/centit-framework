@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class StaticPlatformEnvironment extends AbstractStaticPlatformEnvironment
+public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
 	implements PlatformEnvironment {
 
 	public void init(){

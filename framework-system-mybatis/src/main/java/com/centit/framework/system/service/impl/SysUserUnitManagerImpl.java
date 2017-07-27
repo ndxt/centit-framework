@@ -1,20 +1,9 @@
 package com.centit.framework.system.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.core.dao.QueryParameterPrepare;
 import com.centit.framework.model.basedata.IDataDictionary;
-import com.centit.framework.mybatis.dao.DatabaseOptUtils;
 import com.centit.framework.system.dao.UserInfoDao;
 import com.centit.framework.system.dao.UserUnitDao;
 import com.centit.framework.system.po.UserInfo;
@@ -22,6 +11,15 @@ import com.centit.framework.system.po.UserUnit;
 import com.centit.framework.system.service.SysUserUnitManager;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -149,6 +147,6 @@ public class SysUserUnitManagerImpl
 
 	@Override
 	public List<UserUnit> listObjects(Map<String, Object> filterMap, PageDesc pageDesc) {
-		return userUnitDao.pageQuery(DatabaseOptUtils.prepPageParmers(filterMap,pageDesc,userUnitDao.pageCount(filterMap)));
+		return userUnitDao.pageQuery(QueryParameterPrepare.prepPageParmers(filterMap,pageDesc,userUnitDao.pageCount(filterMap)));
 	}
 }

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.hibernate.dao.DataPowerFilter;
+import com.centit.framework.hibernate.dao.HibernatePowerFilter;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.system.dao.OptDataScopeDao;
 import com.centit.framework.system.dao.OptInfoDao;
@@ -93,9 +93,9 @@ public abstract class GeneralServiceImpl implements GeneralService {
 	 */
 	@Override
 	@Transactional
-	public DataPowerFilter createUserDataPowerFilter(
+	public HibernatePowerFilter createUserDataPowerFilter(
 			CentitUserDetails userDetails) {
-		DataPowerFilter dpf = new DataPowerFilter();
+		HibernatePowerFilter dpf = new HibernatePowerFilter();
 		//当前用户信息
 		dpf.addSourceData("currentUser", userDetails);
 		//当前用户主机构信息

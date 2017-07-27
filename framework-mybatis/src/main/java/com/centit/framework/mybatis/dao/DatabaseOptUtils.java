@@ -32,8 +32,9 @@ import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.database.DBType;
 import com.centit.support.database.DatabaseAccess;
 import com.centit.support.database.QueryUtils;
-@Transactional
-public class DatabaseOptUtils {
+
+@SuppressWarnings("unused")
+public abstract class DatabaseOptUtils {
 	
 	public static final int ORACLE_TYPES_CURSOR = -10; // oracle.jdbc.OracleTypes.CURSOR
 	
@@ -45,31 +46,6 @@ public class DatabaseOptUtils {
 
     }
 
-    /**
-     * 处理翻页参数
-     * @param pageQureyMap pageQureyMap
-     * @param pageDesc pageDesc
-     * @param total total
-     * @return Map类型
-     */
-    public final static  Map<String, Object> prepPageParmers(Map<String, Object> pageQureyMap,PageDesc pageDesc,int total) {
-
-        int pageNo=pageDesc.getPageNo() ;
-        int pageSize=pageDesc.getPageSize();
-        int _pageNo = (total - 1) / pageSize + 1;
-        if (_pageNo < pageNo) {
-            pageNo = _pageNo;// 页码校验
-        }
-        int start = (pageNo - 1) * pageSize;
-        int end = pageNo * pageSize;
-        pageQureyMap.put("startRow", new Integer(start));
-        pageQureyMap.put("endRow", new Integer(end));
-        pageQureyMap.put("maxSize", new Integer(pageSize));
-        //回写总数量
-        pageDesc.setTotalRows(total);
-        //System.err.println("pageQureyMap========"+JSON.toJSONString(pageQureyMap));
-        return pageQureyMap;
-    }
     /**
      * 直接运行SQL,update delete insert
      * @param sqlSession sqlSession
@@ -435,7 +411,7 @@ public class DatabaseOptUtils {
      */
     public final static <T> List<T> findObjectsBySql(SqlSession sqlSession,
             String ssql, Class<T> objectType) {    	
-    	 SqlMapper mapper = new SqlMapper(sqlSession);         
+    	 BaseDaoImpl mapper = new BaseDaoImpl(sqlSession);
          return  mapper.selectList(ssql,objectType);
     }
    
@@ -496,7 +472,7 @@ public class DatabaseOptUtils {
         	pageSql = ssql;
         }
         
-        SqlMapper mapper = new SqlMapper(sqlSession);
+        BaseDaoImpl mapper = new BaseDaoImpl(sqlSession);
         List<?> listT = null;
         if(objectType==null){
         	listT = mapper.selectList(pageSql,values);
