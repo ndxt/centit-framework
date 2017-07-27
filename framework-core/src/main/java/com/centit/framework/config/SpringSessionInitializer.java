@@ -9,6 +9,7 @@ import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.util.EnumSet;
+import java.util.Properties;
 
 /**
  * Created by zou_wy on 2017/6/16.
@@ -26,7 +27,8 @@ public class SpringSessionInitializer implements WebApplicationInitializer {
     }
 
     protected boolean isEnablePersistSession(){
+        Properties properties = PropertiesReader.getClassPathProperties("/system.properties");
         return StringRegularOpt.isTrue(
-                PropertiesReader.getClassPathProperties("/system.properties", "session.persistence.enable"));
+                properties.getProperty("session.persistence.enable"));
     }
 }

@@ -104,9 +104,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
      * @param servletContext ServletContext
      */
     public static void registerSingleSignOutHttpSessionListener(ServletContext servletContext) {
+        Properties properties = PropertiesReader.getClassPathProperties("/system.properties");
         if( StringRegularOpt.isTrue(
-                PropertiesReader.getClassPathProperties(
-                        "/system.properties", "cas.sso"))) {
+                properties.getProperty("cas.sso"))) {
             servletContext.addListener(SingleSignOutHttpSessionListener.class);
         }
     }

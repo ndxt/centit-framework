@@ -1,6 +1,7 @@
 package com.centit.framework.config;
 
 import com.centit.support.algorithm.StringRegularOpt;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.Environment;
@@ -20,6 +21,6 @@ public class H2Condition implements Condition {
         if(enable == null || type == null) {
             return false;
         }
-        return StringRegularOpt.isTrue(enable) && Objects.equals("h2",type);
+        return StringRegularOpt.isTrue(enable) && StringUtils.equals("h2",type);
     }
 }
