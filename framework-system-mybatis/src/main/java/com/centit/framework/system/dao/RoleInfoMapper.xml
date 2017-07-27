@@ -202,9 +202,14 @@
 	</delete>
 	<!--删除记录 结束 -->
 	
-	<select id="getNextKey" resultType="Long">
+	<select id="getNextKey" databaseId="oracle" resultType="Long">
 		SELECT S_FILTER_NO.nextval from dual
 	</select>
+
+	<select id="getNextKey" databaseId="mysql" resultType="Long">
+		SELECT sequence_nextval('S_FILTER_NO')
+	</select>
+
 	<select id="listObjects" parameterType="map" resultMap="RoleInfo">
 		 <include refid="coreSql" />
 		 <where>

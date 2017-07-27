@@ -1,11 +1,10 @@
 package com.centit.framework.system.dao;
 
-import java.util.List;
-import java.util.Map;
-
+import com.centit.framework.system.po.OptLog;
 import org.springframework.stereotype.Repository;
 
-import com.centit.framework.system.po.OptLog;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface OptLogDao{

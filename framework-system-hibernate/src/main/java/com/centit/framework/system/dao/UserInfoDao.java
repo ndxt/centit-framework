@@ -1,15 +1,5 @@
 package com.centit.framework.system.dao;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.common.ObjectException;
 import com.centit.framework.core.dao.CodeBook;
@@ -19,6 +9,14 @@ import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.system.po.FVUserOptList;
 import com.centit.framework.system.po.UserInfo;
 import com.centit.support.database.QueryUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class UserInfoDao extends BaseDaoImpl<UserInfo, String> {
@@ -58,14 +56,14 @@ public class UserInfoDao extends BaseDaoImpl<UserInfo, String> {
             filterField.put("USERTAG", CodeBook.EQUAL_HQL_ID);
             filterField.put("USERWORD", CodeBook.EQUAL_HQL_ID);
 
-            filterField.put("byUnderUnit", "userCode in ( select  id.userCode from UserUnit where id.unitCode = ? ) ");
+            filterField.put("byUnderUnit", "userCode in ( select  id.userCode from UserUnit where id.unitCode = :byUnderUnit ) ");
 
-            filterField.put("queryByUnit", "userCode in ( select  id.userCode from UserUnit where id.unitCode = ? ) ");
-            filterField.put("queryByGW", "userCode in ( select  id.userCode from UserUnit where id.userStation = ? )");
-            filterField.put("queryByXZ", "userCode in ( select  id.userCode from UserUnit where id.userRank = ? )");
+            filterField.put("queryByUnit", "userCode in ( select  id.userCode from UserUnit where id.unitCode = :queryByUnit ) ");
+            filterField.put("queryByGW", "userCode in ( select  id.userCode from UserUnit where id.userStation = :queryByGW )");
+            filterField.put("queryByXZ", "userCode in ( select  id.userCode from UserUnit where id.userRank = :queryByXZ )");
             filterField
                     .put("queryByRole",
-                            "userCode in (select r.id.userCode from UserRole r, RoleInfo i where r.id.roleCode = ? and r.id.roleCode = i.roleCode and i.isValid = 'T')");
+                            "userCode in (select r.id.userCode from UserRole r, RoleInfo i where r.id.roleCode = :queryByRole and r.id.roleCode = i.roleCode and i.isValid = 'T')");
 
             filterField.put(CodeBook.ORDER_BY_HQL_ID, "userOrder asc");
         }

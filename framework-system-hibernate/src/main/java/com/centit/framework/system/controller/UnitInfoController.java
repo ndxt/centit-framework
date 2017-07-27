@@ -7,7 +7,6 @@ import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
-import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.framework.system.po.UnitInfo;
@@ -121,8 +120,7 @@ public class UnitInfoController extends BaseController {
             JsonResultUtils.writeSuccessJson(response);
             return;
         }
-        Collections.sort(listObjects, new Comparator<UnitInfo>() {
-            public int compare(UnitInfo o1, UnitInfo o2) {
+        Collections.sort(listObjects, (o1, o2) ->{
                 if (o2.getUnitOrder() == null && o1.getUnitOrder() == null) {
                     return 0;
                 }
@@ -139,23 +137,16 @@ public class UnitInfoController extends BaseController {
                     return 1;
                 }
                 return -1;
-            }
-        });
-        JSONArray ja = DictionaryMapUtils.objectsToJSONArray(listObjects);
+            });
+        JSONArray ja = SysDaoOptUtils.objectsToJSONArray(listObjects);
         if(struct){
-        	ja = ListOpt.srotAsTreeAndToJSON(ja, 
-    				new ListOpt.ParentChild<Object>(){
-						@Override
-						public boolean parentAndChild(Object p, Object c) {
-							return StringUtils.equals(
+        	ja = ListOpt.srotAsTreeAndToJSON(ja, (p, c) ->
+    				StringUtils.equals(
 									((JSONObject)p).getString("unitCode"),
-									((JSONObject)c).getString("parentUnit"));
-						}
-
-        			}, "children");
+									((JSONObject)c).getString("parentUnit")),
+                    "children");
         }
-        JsonResultUtils.writeSingleDataJson(
-        		ja,
+        JsonResultUtils.writeSingleDataJson(ja,
         		response, JsonPropertyUtils.getIncludePropPreFilter(JSONObject.class, field));
       }
     

@@ -485,7 +485,8 @@ public abstract class DatabaseOptUtils {
     public final static Object getSingleObjectBySql(BaseDaoImpl<?, ?> baseDao,
             final String sSql, final Object[] paramObjects) {
         NativeQuery queryObject = baseDao.getCurrentSession().createNativeQuery(sSql);
-        setQueryParameter(queryObject,new Object[] {paramObjects});
+//        setQueryParameter(queryObject,new Object[] {paramObjects});
+        setQueryParameter(queryObject, paramObjects);
         return queryObject.uniqueResult();
 
     }

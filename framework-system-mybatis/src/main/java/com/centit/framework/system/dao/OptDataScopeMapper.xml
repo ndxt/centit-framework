@@ -173,10 +173,14 @@
 		 DELETE FROM F_OPTDATASCOPE WHERE OPTID =#{sOptID}
 	</delete>
 	
-	<select id="getNextOptCode"  resultType="String">
+	<select id="getNextOptCode" databaseId="oracle" resultType="String">
 			select S_OPTDEFCODE.nextval from dual
 	</select>
-	
+
+	<select id="getNextOptCode" databaseId="mysql" resultType="String">
+			select sequence_nextval('S_OPTDEFCODE')
+	</select>
+
 	<select id="listDataFiltersByIds" parameterType="map"  resultType="String" >
 		 select 
 			       u.FILTERCONDITION

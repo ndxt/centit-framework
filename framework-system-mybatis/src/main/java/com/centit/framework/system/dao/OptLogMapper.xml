@@ -212,10 +212,14 @@
 	</delete>
 	<!--删除记录 结束 -->
 	
-	<select id="createNewLogId"  resultType="Long">
+	<select id="createNewLogId" databaseId="oracle"  resultType="Long">
 		SELECT S_SYS_LOG.nextval from dual
 	</select>
-	
+
+	<select id="createNewLogId" databaseId="mysql"  resultType="Long">
+		SELECT sequence_nextval('S_SYS_LOG')
+	</select>
+
 	<select id="listOptIds" resultType="String">
 		select DISTINCT f.OPTID from F_OPT_LOG f
 	</select>

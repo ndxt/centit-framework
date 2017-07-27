@@ -227,8 +227,11 @@
 		 <include refid="coreSql" />
 		 where USERCODE=#{userCode}  and UNITCODE=#{unitCode}
 	</select>
-	<select id="getNextKey" resultType="Long">
+	<select id="getNextKey" databaseId="oracle" resultType="Long">
 		SELECT S_USER_UNIT_ID.nextval from dual
+	</select>
+	<select id="getNextKey" databaseId="mysql" resultType="Long">
+		SELECT sequence_nextval('S_USER_UNIT_ID')
 	</select>
 	<delete id="deleteOtherPrimaryUnit" parameterType="com.centit.framework.system.po.UserUnit" >
 	<![CDATA[
