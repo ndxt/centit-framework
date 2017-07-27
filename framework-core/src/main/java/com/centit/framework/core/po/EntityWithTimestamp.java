@@ -12,11 +12,11 @@ public interface EntityWithTimestamp{
      * 获取最后更新时间戳
      * @return 最后更新时间戳
      */
-    public Date getLastModifyDate();
+    Date getLastModifyDate();
     /**
      * 设置最后更新时间戳
      * @param lastModifyDate Date
      */
-    public void setLastModifyDate(Date lastModifyDate);
+    void setLastModifyDate(Date lastModifyDate);
 
 }

@@ -1,10 +1,10 @@
 package com.centit.framework.core.service;
 
+import com.centit.framework.core.dao.PageDesc;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import com.centit.framework.core.dao.PageDesc;
 
 public interface BaseEntityManager<T extends Serializable, PK extends Serializable> {
     /**
@@ -12,14 +12,14 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      *
      * @return 表中的所有 isValid = 'T' 的记录
      */
-    public List<T> listValidObjects();
+    List<T> listValidObjects();
 
     /**
      * 查找表中的所有记录， 包括禁用的 isValid = 'F' 的记录, 如果没有isValid这个字段也可以使用
      *
      * @return 表中的所有记录， 包括禁用的 isValid = 'F' 的记录, 如果没有isValid这个字段也可以使用
      */
-    public List<T> listObjects();
+    List<T> listObjects();
 
     /*
      * getObjects 为一组查找 T 数组的函数 根据表单中的过滤条件查找符合条件的对象集合
@@ -34,14 +34,14 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      * @param id PK
      * @return 数据库中对应的对象信息
      */
-    public T getObjectById(PK id);
+    T getObjectById(PK id);
 
     /**
      * 保存泛型参数对象
      *
      * @param o T
      */
-    public void saveObject(T o);
+    void saveObject(T o);
 
     
     /**
@@ -50,7 +50,7 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      * @param o T
      * @return Serializable
      */
-    public Serializable saveNewObject(T o);
+    Serializable saveNewObject(T o);
     
     /**
      * 更新泛型参数对象
@@ -64,41 +64,41 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      *
      * @param o T
      */
-    public void mergeObject(T o);
+    void mergeObject(T o);
     
     
     /**
      * 修改之前check一下版本号，不一致抛异常
      * @param o T
      */
-    public void updateObjectCheckTimestamp(T o);
+    void updateObjectCheckTimestamp(T o);
 
     /**
      * 删除泛型参数对象
      *
      * @param o T
      */
-    public void deleteObject(T o);
+    void deleteObject(T o);
 
     /**
      * 根据主键删除泛型参数对象
      *
      * @param id PK
      */
-    public void deleteObjectById(PK id);
+    void deleteObjectById(PK id);
 
     /**
      * @param shql sql,hql语句
      * @param filterMap 过滤条件
      * @return listObjects
      */
-    public List<T> listObjects(String shql, Map<String, Object> filterMap);
+    List<T> listObjects(String shql, Map<String, Object> filterMap);
 
     /**
      * @param filterMap 过滤条件
      * @return listObjects
      */
-    public List<T> listObjects(Map<String, Object> filterMap);
+    List<T> listObjects(Map<String, Object> filterMap);
 
     /**
      * 配合 EC Table 设计的一个查询语句
@@ -108,7 +108,7 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      * @param pageDesc  分页属性
      * @return listObjects
      */
-    public List<T> listObjects(String shql, Map<String, Object> filterMap, PageDesc pageDesc);
+    List<T> listObjects(String shql, Map<String, Object> filterMap, PageDesc pageDesc);
 
     /**
      * 配合 EC Table 设计的一个查询语句，将 filterMap 组装成对应的Hql语句 调用对应的 getObjects
@@ -117,7 +117,7 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      * @param pageDesc  分页属性
      * @return listObjects
      */
-    public List<T> listObjects(Map<String, Object> filterMap, PageDesc pageDesc);
+    List<T> listObjects(Map<String, Object> filterMap, PageDesc pageDesc);
 
     /**
      * 根据唯一属性值返回对象
@@ -143,7 +143,7 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      * @param des  T
      * @param sou  T
      */
-    public void copyObjectNotNullProperty(T des, T sou);
+    void copyObjectNotNullProperty(T des, T sou);
 
     /**
      * 通过反射调用泛型对象 des 的 copy("F") 函数，参数为 sou， 要求对象必须有
@@ -152,7 +152,7 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      * @param des  T
      * @param sou  T
      */
-    public void copyObject(T des, T sou);
+    void copyObject(T des, T sou);
 
     /**
      * 通过反射调用泛型对象 clearProperties 函数，清楚对象的所有非主键属性的值， 要求对象必须有
@@ -160,6 +160,6 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      *
      * @param des  T
      */
-    public void clearObjectProperties(T des);
+    void clearObjectProperties(T des);
 
 }

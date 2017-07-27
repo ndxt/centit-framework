@@ -1,18 +1,10 @@
 package com.centit.framework.security.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.centit.support.algorithm.StringBaseOpt;
 import org.springframework.security.access.ConfigAttribute;
 
-import com.centit.support.algorithm.StringBaseOpt;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 public class CentitSecurityMetadata {
     public static final String ROLE_PREFIX = "R_";  
@@ -139,12 +131,8 @@ public class CentitSecurityMetadata {
         //测试比较排序效果
         for(Map.Entry<String ,List<ConfigAttribute >> roleMap : optMethodRoleMap.entrySet()){
           //排序便于后面比较
-            Collections.sort(roleMap.getValue(),
-                    new Comparator<ConfigAttribute>(){
-                        public int compare(ConfigAttribute o1, ConfigAttribute o2) {
-                            return o1.getAttribute().compareTo(o2.getAttribute());
-                        }
-                      });            
+            Collections.sort(roleMap.getValue(),(o1, o2) ->
+                            o1.getAttribute().compareTo(o2.getAttribute()));
         }
         //测试比较排序效果
     }

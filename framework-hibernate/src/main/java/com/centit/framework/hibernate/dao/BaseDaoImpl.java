@@ -3,7 +3,6 @@ package com.centit.framework.hibernate.dao;
 import com.centit.framework.core.common.ObjectException;
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.core.dao.QueryParameterPrepare;
 import com.centit.framework.core.po.EntityWithDeleteTag;
 import com.centit.framework.core.po.EntityWithTimestamp;
 import com.centit.support.algorithm.DatetimeOpt;
@@ -17,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
-import org.h2.util.New;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -969,7 +967,8 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
         QueryAndNamedParams hql = builderHqlAndNamedParams(shql, filterDesc);
         List<T> listObjs = listObjectsByNamedHql(hql.getHql(), hql.getParams(),
         		startPos, maxSize);
-        
+
+
         if(listObjs != null && pageDesc!=null){
         	if(maxSize>0){       
 		        Query q =  getCurrentSession().createQuery("SELECT COUNT(1) "

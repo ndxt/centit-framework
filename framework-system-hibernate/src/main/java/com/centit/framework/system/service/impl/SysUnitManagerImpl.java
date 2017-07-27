@@ -145,6 +145,7 @@ public class SysUnitManagerImpl extends BaseEntityManagerImpl<UnitInfo, String, 
     @Override
     @CacheEvict(value = "UnitInfo",allEntries = true)
     public Serializable saveNewUnitInfo(UnitInfo unitinfo){
+        unitinfo.setUnitCode(baseDao.getNextKey());
     	UnitInfo parentUnit = baseDao.getObjectById(unitinfo.getParentUnit());
     	if(parentUnit==null)
     		unitinfo.setUnitPath("/"+unitinfo.getUnitCode());
