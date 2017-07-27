@@ -46,10 +46,7 @@ public class UserQueryFilterManagerImpl implements UserQueryFilterManager{
 	public JSONArray listUserQueryFiltersAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
-		//TODO 获取SQL SESSION	
-		SqlSession sqlSession = null;
-		return DictionaryMapUtils.listObjectsBySqlAsJson(sqlSession,"sql",filterMap, fields,
-    			(Map<String,KeyValuePair<String,String>> )null, pageDesc);
+		return DictionaryMapUtils.objectsToJSONArray(listObjects(filterMap,pageDesc), fields);
 	}
 	
 	@Override
