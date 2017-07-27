@@ -7,6 +7,7 @@ import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.framework.system.po.UnitInfo;
@@ -120,7 +121,7 @@ public class UnitInfoController extends BaseController {
             JsonResultUtils.writeSuccessJson(response);
             return;
         }
-        Collections.sort(listObjects, (o1, o2) ->{
+        Collections.sort(listObjects, (o1, o2) -> {
                 if (o2.getUnitOrder() == null && o1.getUnitOrder() == null) {
                     return 0;
                 }
@@ -130,15 +131,9 @@ public class UnitInfoController extends BaseController {
                 if (o1.getUnitOrder() == null) {
                     return -1;
                 }
-                if (o1.getUnitOrder() == o2.getUnitOrder()) {
-                    return 0;
-                }
-                if (o1.getUnitOrder() > o2.getUnitOrder()) {
-                    return 1;
-                }
-                return -1;
+                return Long.compare(o1.getUnitOrder(), o2.getUnitOrder());
             });
-        JSONArray ja = SysDaoOptUtils.objectsToJSONArray(listObjects);
+        JSONArray ja = DictionaryMapUtils.objectsToJSONArray(listObjects);
         if(struct){
         	ja = ListOpt.srotAsTreeAndToJSON(ja, (p, c) ->
     				StringUtils.equals(
