@@ -832,12 +832,13 @@ public abstract class DatabaseOptUtils {
     /**
      * 用原生SQL 查询数据库 objectType 如果没有的话可以为NULL
      * @param objectType 制定返回的结构类型
+     * @param <T> 返回的po类型
      * @return List
      * @param baseDao BaseDaoImpl
      * @param ssql ssql
      */
-    public final static List<?> findObjectsBySql(BaseDaoImpl<?, ?> baseDao,
-            String ssql, Class<?> objectType) {
+    public final static <T> List<T> findObjectsBySql(BaseDaoImpl<?, ?> baseDao,
+            String ssql, Class<T> objectType) {
 
         try {
             NativeQuery q = baseDao.getCurrentSession().createNativeQuery(ssql);
@@ -862,8 +863,8 @@ public abstract class DatabaseOptUtils {
   
    
 
-    public final static List<?> findObjectsBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
-            Object[] values, PageDesc pageDesc, Class<?> objectType) {
+    public final static <T> List<T> findObjectsBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
+            Object[] values, PageDesc pageDesc, Class<T> objectType) {
         
     	int startPos = 0;
         int maxSize = 0;
@@ -883,7 +884,7 @@ public abstract class DatabaseOptUtils {
         if(objectType!=null)
         	q.addEntity(objectType);
         
-        List<?> l = q.list();
+        List<T> l = q.list();
 
         if(l!=null && pageDesc!=null){
         	if(maxSize>0){
@@ -959,13 +960,14 @@ public abstract class DatabaseOptUtils {
      * 返回的类型为 List
      * @param baseDao 这个Dao和sqlSen语句中的对象没有任何关系，这个只用了获取session来访问数据
      * @param ssql sql语句，这个语句必须用命名参数
+     * @param <T> 返回的PO类型
      * @param values  命名参数对应的变量
      * @param pageDesc 分页信息，其中的totalRows属性为输出信息，表示总共的记录条数
      * @param objectType 是一个Po类型，将查询结果封装成对象，要求查询返回的字段和Po中的字段定义一致。
      * @return List
      */
-    public final static List<?> findObjectsBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
-            Map<String, Object> values, PageDesc pageDesc,Class<?> objectType) {
+    public final static <T> List<T> findObjectsBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
+            Map<String, Object> values, PageDesc pageDesc,Class<T> objectType) {
         
         int startPos = 0;
         int maxSize = 0;
@@ -985,7 +987,7 @@ public abstract class DatabaseOptUtils {
         if(objectType!=null)
         	q.addEntity(objectType);
         
-        List<?> l = q.list();
+        List<T> l = q.list();
 
         if(l!=null && pageDesc!=null){
         	if(maxSize>0){
@@ -1024,12 +1026,13 @@ public abstract class DatabaseOptUtils {
      * 用原带参数的SQL 查询数据库 objectType 如果没有的话可以为NULL
      * @param values 参数
      * @param objectType 制定返回的结构类型
+     * @param <T> 返回的PO类型
      * @return  List
      * @param baseDao BaseDaoImpl
      * @param ssql ssql
      */
-    public final static List<?> findObjectsBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
-            Object[] values, Class<?> objectType) {
+    public final static <T> List<T> findObjectsBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
+            Object[] values, Class<T> objectType) {
     	return findObjectsBySql( baseDao,  ssql,
                 values,  new PageDesc(-1,-1),objectType);
     }
