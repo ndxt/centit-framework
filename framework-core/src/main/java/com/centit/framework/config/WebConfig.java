@@ -5,6 +5,7 @@ import com.centit.framework.filter.RequestThreadLocalFilter;
 import com.centit.framework.filter.ResponseCorsFilter;
 import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.file.PropertiesReader;
+import org.h2.server.web.WebServlet;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRegistration;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Properties;
@@ -179,5 +181,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         springSecurityFilterChain.addMappingForUrlPatterns(
                 null, false, "/login/*" ,"/logout/*", "/service/*", "/system/*");
         springSecurityFilterChain.setAsyncSupported(true);
+    }
+
+    /**
+     * 访问 h2 console
+     * @param servletContext ServletContext
+     */
+    private void initializeH2Console(ServletContext servletContext){
+        ServletRegistration.Dynamic h2console  = servletContext.addServlet("h2console", WebServlet.class);
+        h2console.setInitParameter("webAllowOthers", "");
+        h2console.addMapping("/h2console/*");
+        h2console.setLoadOnStartup(1);
+        h2console.setAsyncSupported(true);
     }
 }
