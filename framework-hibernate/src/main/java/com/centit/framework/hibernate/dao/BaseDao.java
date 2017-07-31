@@ -19,14 +19,21 @@ public interface BaseDao<T extends Serializable, PK extends Serializable>
 
     void deleteObjectById(PK id);
 
-    PK saveNewObject(T o);
+    void saveNewObject(T o);
+
+    void mergeObject(T o) ;
+
+    void saveRawObject(T o);
+
+    void saveObject(T o);
+
+    T getObjectById(PK id) ;
 
     List<PK> saveNewObjects(Collection<T> os);
 
     List<PK> saveNewObjects(T[] os);
 
     void updateRawObject(T o);
-
 
     void updateObject(T o);
 
@@ -128,11 +135,7 @@ public interface BaseDao<T extends Serializable, PK extends Serializable>
     List<PK> replaceObjectsAsTabulationCheckTimestamp(Collection<T> newObjects,
     Map<String, Object> properties);
 
-    T mergeObject(T o) ;
 
-    void saveRawObject(T o);
-
-    void saveObject(T o);
 
     List<T> listObjectsAll();
 
@@ -178,7 +181,6 @@ public interface BaseDao<T extends Serializable, PK extends Serializable>
 
     List<T> listObjects(Map<String, Object> filterMap, PageDesc pageDesc);
 
-    T getObjectById(PK id) ;
 
     List<T> listObjectByProperty(final String propertyName,
     final Object propertyValue) ;

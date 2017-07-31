@@ -178,6 +178,22 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Transactional
+    public T getObjectById(PK id) {
+        if (id == null)
+            return null;
+        // Type[] params = getClass().getTypeParameters();
+        try {
+            return (T) getCurrentSession().get(getPoClass(), id);
+            //return (T) getCurrentSession().get(getClassTName(), id);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return null;
+            //throw new ObjectException(ObjectException.DATABASE_OPERATE_EXCEPTION,e);
+        }
+    }
+
     @Transactional(propagation=Propagation.MANDATORY) 
     public void deleteObjectForceById(PK id) {
         T o = getObjectById(id);
@@ -192,13 +208,13 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
 
     @SuppressWarnings("unchecked")
 	@Transactional(propagation=Propagation.MANDATORY) 
-    public PK saveNewObject(T o) {
+    public void saveNewObject(T o) {
         try {
             if(o instanceof EntityWithTimestamp){
                 EntityWithTimestamp ewto = (EntityWithTimestamp) o;
                 ewto.setLastModifyDate(DatetimeOpt.currentUtilDate());
             }
-            return (PK) sessionFactory.getCurrentSession().save(o);// .persist(o);//
+            /*return (PK)*/ sessionFactory.getCurrentSession().save(o);// .persist(o);//
             // log.debug("save or update successful");
         } catch (RuntimeException re) {
             logger.error("save new object failed", re);
@@ -615,12 +631,13 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
     
     @SuppressWarnings("unchecked")
 	@Transactional(propagation=Propagation.MANDATORY) 
-    public T mergeObject(T o) {
+    public void mergeObject(T o) {
         try {
             if(o instanceof EntityWithTimestamp){
                 ((EntityWithTimestamp) o).setLastModifyDate(DatetimeOpt.currentUtilDate());
             }
-            return (T) sessionFactory.getCurrentSession().merge(o);// .persist(o);//
+            /*return (T) */
+            sessionFactory.getCurrentSession().merge(o);// .persist(o);//
             // log.debug("save or update successful");
         } catch (RuntimeException re) {
             logger.error("margin failed", re);
@@ -1038,22 +1055,7 @@ public abstract class BaseDaoImpl<T extends Serializable, PK extends Serializabl
         return listObjects(shql, filterMap, pageDesc);
     }
 
-    @SuppressWarnings("unchecked")
-    @Transactional
-    public T getObjectById(PK id) {
-        if (id == null)
-            return null;
-        // Type[] params = getClass().getTypeParameters();
-        try {
-            return (T) getCurrentSession().get(getPoClass(), id);
-            //return (T) getCurrentSession().get(getClassTName(), id);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
-            //throw new ObjectException(ObjectException.DATABASE_OPERATE_EXCEPTION,e);
-        }
-    }
-    
+
     @SuppressWarnings("unchecked")
     @Transactional
     public List<T> listObjectByProperty(final String propertyName,
