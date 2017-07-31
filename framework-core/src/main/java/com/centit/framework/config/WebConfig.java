@@ -187,7 +187,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
      * 访问 h2 console
      * @param servletContext ServletContext
      */
-    private void initializeH2Console(ServletContext servletContext){
+    public static void initializeH2Console(ServletContext servletContext){
         ServletRegistration.Dynamic h2console  = servletContext.addServlet("h2console", WebServlet.class);
         h2console.setInitParameter("webAllowOthers", "");
         h2console.addMapping("/h2console/*");
