@@ -1,5 +1,6 @@
 package com.centit.framework.staticsystem.config;
 
+import com.centit.framework.config.BaseBeanConfig;
 import com.centit.framework.config.H2Config;
 import com.centit.framework.config.RedisConfig;
 import com.centit.framework.listener.InitialWebRuntimeEnvironment;
@@ -20,7 +21,11 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @PropertySource("classpath:system.properties")
-@Import({RedisConfig.class, H2Config.class, SpringSecurityDaoConfig.class, SpringSecurityCasConfig.class})
+@Import({BaseBeanConfig.class,
+        RedisConfig.class,
+        H2Config.class,
+        SpringSecurityDaoConfig.class,
+        SpringSecurityCasConfig.class})
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @Lazy
 public class StaticSystemBeanConfig implements EnvironmentAware {

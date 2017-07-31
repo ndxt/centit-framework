@@ -1,5 +1,6 @@
 package com.centit.framework.system.config;
 
+import com.centit.framework.config.BaseBeanConfig;
 import com.centit.framework.config.H2Config;
 import com.centit.framework.config.RedisConfig;
 import com.centit.framework.hibernate.config.DataSourceConfig;
@@ -23,7 +24,8 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @ComponentScan(basePackages = "com.centit.framework",
                excludeFilters = @ComponentScan.Filter(value = org.springframework.stereotype.Controller.class))
 @PropertySource("classpath:system.properties")
-@Import({DataSourceConfig.class,
+@Import({BaseBeanConfig.class,
+        DataSourceConfig.class,
         RedisConfig.class, H2Config.class,
         SpringSecurityDaoConfig.class,
         SpringSecurityCasConfig.class}
@@ -33,7 +35,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 public class SystemBeanConfig implements EnvironmentAware {
 
     @Autowired
-    Environment env;
+    protected Environment env;
 
     @Override
     public void setEnvironment(final Environment environment) {

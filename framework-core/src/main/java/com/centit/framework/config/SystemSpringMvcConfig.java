@@ -9,9 +9,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * Created by zou_wy on 2017/3/29.
  */
 @Configuration
-@Import(WebConfig.class)
 @ComponentScan(basePackages = {"com.centit.framework.**.controller"},
         includeFilters = {@ComponentScan.Filter(value= org.springframework.stereotype.Controller.class)},
         useDefaultFilters = false)
-public class SystemSpringMvcConfig extends WebMvcConfigurerAdapter {
+public class SystemSpringMvcConfig extends BaseSpringMvcConfig {
+
 }
