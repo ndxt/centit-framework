@@ -20,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -527,8 +526,8 @@ public abstract class DatabaseOptUtils {
      *               返回的最大记录数
      * @return JSONArray实现了List接口，JSONObject实现了Map接口。所以可以直接转换为List
      */
-    public final static JSONArray findObjectsAsJSonBySql(SqlSession sqlSession, String ssql, 
-            String [] fieldnames, Map<String,Object> values, PageDesc pageDesc) {
+    public final static JSONArray findObjectsAsJsonBySql(SqlSession sqlSession, String ssql,
+                                                         String [] fieldnames, Map<String,Object> values, PageDesc pageDesc) {
     	
     	List<?> dataList = findObjectsBySql(sqlSession,ssql,values,pageDesc,null);
     	if(dataList==null || dataList.size()==0)
@@ -562,21 +561,21 @@ public abstract class DatabaseOptUtils {
     
    
     
-    public final static JSONArray findObjectsAsJSonBySql(SqlSession sqlSession, String ssql, String [] fieldNames) {
-        return findObjectsAsJSonBySql(sqlSession, ssql,fieldNames,(Map<String,Object>) null , new PageDesc(-1,-1));
+    public final static JSONArray findObjectsAsJsonBySql(SqlSession sqlSession, String ssql, String [] fieldNames) {
+        return findObjectsAsJsonBySql(sqlSession, ssql,fieldNames,(Map<String,Object>) null , new PageDesc(-1,-1));
     }
     
  
     
-    public final static JSONArray findObjectsAsJSonBySql(SqlSession sqlSession, String shql, 
-            Map<String,Object> values, PageDesc pageDesc) {
-        return findObjectsAsJSonBySql(sqlSession,  shql, null, 
+    public final static JSONArray findObjectsAsJsonBySql(SqlSession sqlSession, String shql,
+                                                         Map<String,Object> values, PageDesc pageDesc) {
+        return findObjectsAsJsonBySql(sqlSession,  shql, null,
                 values,  pageDesc);
     }    
   
     
-    public final static JSONArray findObjectsAsJSonBySql(SqlSession sqlSession, String ssql) {
-        return findObjectsAsJSonBySql(sqlSession, ssql,null,(Map<String,Object>) null ,  new PageDesc(-1,-1));
+    public final static JSONArray findObjectsAsJsonBySql(SqlSession sqlSession, String ssql) {
+        return findObjectsAsJsonBySql(sqlSession, ssql,null,(Map<String,Object>) null ,  new PageDesc(-1,-1));
     }
     
     /**
