@@ -526,7 +526,7 @@ public abstract class DatabaseOptUtils {
      *               返回的最大记录数
      * @return JSONArray实现了List接口，JSONObject实现了Map接口。所以可以直接转换为List
      */
-    public final static JSONArray findObjectsAsJsonBySql(SqlSession sqlSession, String ssql,
+    public final static JSONArray findObjectsAsJSONBySql(SqlSession sqlSession, String ssql,
                                                          String [] fieldnames, Map<String,Object> values, PageDesc pageDesc) {
     	
     	List<?> dataList = findObjectsBySql(sqlSession,ssql,values,pageDesc,null);
@@ -561,21 +561,21 @@ public abstract class DatabaseOptUtils {
     
    
     
-    public final static JSONArray findObjectsAsJsonBySql(SqlSession sqlSession, String ssql, String [] fieldNames) {
-        return findObjectsAsJsonBySql(sqlSession, ssql,fieldNames,(Map<String,Object>) null , new PageDesc(-1,-1));
+    public final static JSONArray findObjectsAsJSONBySql(SqlSession sqlSession, String ssql, String [] fieldNames) {
+        return findObjectsAsJSONBySql(sqlSession, ssql,fieldNames,(Map<String,Object>) null , new PageDesc(-1,-1));
     }
     
  
     
-    public final static JSONArray findObjectsAsJsonBySql(SqlSession sqlSession, String shql,
+    public final static JSONArray findObjectsAsJSONBySql(SqlSession sqlSession, String shql,
                                                          Map<String,Object> values, PageDesc pageDesc) {
-        return findObjectsAsJsonBySql(sqlSession,  shql, null,
+        return findObjectsAsJSONBySql(sqlSession,  shql, null,
                 values,  pageDesc);
     }    
   
     
-    public final static JSONArray findObjectsAsJsonBySql(SqlSession sqlSession, String ssql) {
-        return findObjectsAsJsonBySql(sqlSession, ssql,null,(Map<String,Object>) null ,  new PageDesc(-1,-1));
+    public final static JSONArray findObjectsAsJSONBySql(SqlSession sqlSession, String ssql) {
+        return findObjectsAsJSONBySql(sqlSession, ssql,null,(Map<String,Object>) null ,  new PageDesc(-1,-1));
     }
     
     /**

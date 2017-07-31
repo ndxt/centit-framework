@@ -1043,7 +1043,7 @@ public abstract class DatabaseOptUtils {
                 values,pageDesc,null);
     }
     
-    public final static JSONArray findObjectsAsJsonByHql(BaseDaoImpl<?, ?> baseDao, String shql,
+    public final static JSONArray findObjectsAsJSONByHql(BaseDaoImpl<?, ?> baseDao, String shql,
                                                          String [] fieldnames, Object[] values, PageDesc pageDesc) {
     	
     	List<?> dataList = findObjectsByHql(baseDao,shql,values,pageDesc);
@@ -1072,7 +1072,7 @@ public abstract class DatabaseOptUtils {
         return ja;    
     }
     
-    public final static JSONArray findObjectsAsJsonByHql(BaseDaoImpl<?, ?> baseDao, String shql,
+    public final static JSONArray findObjectsAsJSONByHql(BaseDaoImpl<?, ?> baseDao, String shql,
                                                          String [] fieldnames, Map<String,Object> values, PageDesc pageDesc) {
     	
     	List<?> dataList = findObjectsByHql(baseDao,shql,values,pageDesc);
@@ -1106,22 +1106,22 @@ public abstract class DatabaseOptUtils {
     
   
    
-    public final static JSONArray findObjectsAsJsonByHql(BaseDaoImpl<?, ?> baseDao, String shql, String [] fieldNames) {
-        return findObjectsAsJsonByHql(baseDao, shql,fieldNames,(Object []) null ,new PageDesc(-1,-1));
+    public final static JSONArray findObjectsAsJSONByHql(BaseDaoImpl<?, ?> baseDao, String shql, String [] fieldNames) {
+        return findObjectsAsJSONByHql(baseDao, shql,fieldNames,(Object []) null ,new PageDesc(-1,-1));
     }
     
-    public final static JSONArray findObjectsAsJsonByHql(BaseDaoImpl<?, ?> baseDao, String shql,
+    public final static JSONArray findObjectsAsJSONByHql(BaseDaoImpl<?, ?> baseDao, String shql,
                                                          Object[] values, PageDesc pageDesc) {
-        return findObjectsAsJsonByHql(baseDao, shql,null, values ,new PageDesc(-1,-1));
+        return findObjectsAsJSONByHql(baseDao, shql,null, values ,new PageDesc(-1,-1));
     }
     
-    public final static JSONArray findObjectsAsJsonByHql(BaseDaoImpl<?, ?> baseDao, String shql,
+    public final static JSONArray findObjectsAsJSONByHql(BaseDaoImpl<?, ?> baseDao, String shql,
                                                          Map<String,Object> values, PageDesc pageDesc) {
-        return findObjectsAsJsonByHql(baseDao, shql,null, values ,new PageDesc(-1,-1));
+        return findObjectsAsJSONByHql(baseDao, shql,null, values ,new PageDesc(-1,-1));
     }
  
-    public final static JSONArray findObjectsAsJsonByHql(BaseDaoImpl<?, ?> baseDao, String ssql) {
-        return findObjectsAsJsonByHql(baseDao, ssql, null ,(Object[])null, new PageDesc(-1,-1));
+    public final static JSONArray findObjectsAsJSONByHql(BaseDaoImpl<?, ?> baseDao, String ssql) {
+        return findObjectsAsJSONByHql(baseDao, ssql, null ,(Object[])null, new PageDesc(-1,-1));
     }
     
     /**
@@ -1134,7 +1134,7 @@ public abstract class DatabaseOptUtils {
               返回的最大记录数
      * @return JSONArray实现了List接口，JSONObject实现了Map接口。所以可以直接转换为List
      */
-    public final static JSONArray findObjectsAsJsonBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
+    public final static JSONArray findObjectsAsJSONBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
                                                          String [] fieldnames, Object[] values, PageDesc pageDesc) {
     	
     	List<?> dataList = findObjectsBySql(baseDao,ssql,values,pageDesc,null);
@@ -1177,7 +1177,7 @@ public abstract class DatabaseOptUtils {
          返回的最大记录数
      * @return JSONArray实现了List接口，JSONObject实现了Map接口。所以可以直接转换为List
      */
-    public final static JSONArray findObjectsAsJsonBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
+    public final static JSONArray findObjectsAsJSONBySql(BaseDaoImpl<?, ?> baseDao, String ssql,
                                                          String [] fieldnames, Map<String,Object> values, PageDesc pageDesc) {
     	
     	List<?> dataList = findObjectsBySql(baseDao,ssql,values,pageDesc,null);
@@ -1212,25 +1212,25 @@ public abstract class DatabaseOptUtils {
     
    
     
-    public final static JSONArray findObjectsAsJsonBySql(BaseDaoImpl<?, ?> baseDao, String ssql, String [] fieldNames) {
-        return findObjectsAsJsonBySql(baseDao, ssql,fieldNames,(Object[]) null , new PageDesc(-1,-1));
+    public final static JSONArray findObjectsAsJSONBySql(BaseDaoImpl<?, ?> baseDao, String ssql, String [] fieldNames) {
+        return findObjectsAsJSONBySql(baseDao, ssql,fieldNames,(Object[]) null , new PageDesc(-1,-1));
     }
     
-    public final static JSONArray findObjectsAsJsonBySql(BaseDaoImpl<?, ?> baseDao, String shql,
+    public final static JSONArray findObjectsAsJSONBySql(BaseDaoImpl<?, ?> baseDao, String shql,
                                                          Object[] values, PageDesc pageDesc) {
-        return findObjectsAsJsonBySql(baseDao,  shql, null,
+        return findObjectsAsJSONBySql(baseDao,  shql, null,
                 values,  pageDesc);
     }
     
-    public final static JSONArray findObjectsAsJsonBySql(BaseDaoImpl<?, ?> baseDao, String shql,
+    public final static JSONArray findObjectsAsJSONBySql(BaseDaoImpl<?, ?> baseDao, String shql,
                                                          Map<String,Object> values, PageDesc pageDesc) {
-        return findObjectsAsJsonBySql(baseDao,  shql, null,
+        return findObjectsAsJSONBySql(baseDao,  shql, null,
                 values,  pageDesc);
     }    
   
     
-    public final static JSONArray findObjectsAsJsonBySql(BaseDaoImpl<?, ?> baseDao, String ssql) {
-        return findObjectsAsJsonBySql(baseDao, ssql,null,(Object[]) null ,  new PageDesc(-1,-1));
+    public final static JSONArray findObjectsAsJSONBySql(BaseDaoImpl<?, ?> baseDao, String ssql) {
+        return findObjectsAsJSONBySql(baseDao, ssql,null,(Object[]) null ,  new PageDesc(-1,-1));
     }
     
     
