@@ -50,14 +50,14 @@ public interface BaseEntityManager<T extends Serializable, PK extends Serializab
      * @param o T
      * @return Serializable
      */
-    Serializable saveNewObject(T o);
+    void saveNewObject(T o);
     
     /**
      * 更新泛型参数对象
      *
      * @param o T
      */
-    public void updateObject(T o);
+    void updateObject(T o);
     
     /**
      * 保存泛型参数对象
