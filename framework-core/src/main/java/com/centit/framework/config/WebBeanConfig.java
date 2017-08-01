@@ -1,30 +1,21 @@
 package com.centit.framework.config;
 
-import com.centit.framework.filter.RequestThreadLocalFilter;
-import com.centit.framework.filter.ResponseCorsFilter;
-import com.centit.support.algorithm.StringRegularOpt;
-import com.centit.support.file.PropertiesReader;
-import org.h2.server.web.WebServlet;
-import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
+import com.alibaba.fastjson.parser.Feature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
-import org.springframework.web.context.request.RequestContextListener;
-import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.filter.DelegatingFilterProxy;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
-import org.springframework.web.filter.HttpPutFormContentFilter;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRegistration;
-import java.util.EnumSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -34,10 +25,8 @@ import java.util.Properties;
 
 @SuppressWarnings("unused")
 @Configuration
-public class BaseBeanConfig {
+public class WebBeanConfig {
 
-
-/*
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
@@ -46,14 +35,32 @@ public class BaseBeanConfig {
         resolver.setSuffix(".jsp");
         return resolver;
     }
-*/
 
     @Bean
-    public static PropertyPlaceholderConfigurer propertyConfigurer() {
+    public PropertyPlaceholderConfigurer propertyConfigurer() {
         PropertyPlaceholderConfigurer propertyConfigurer = new PropertyPlaceholderConfigurer();
         propertyConfigurer.setLocation(new ClassPathResource("system.properties"));
 //        propertyConfigurer.setIgnoreUnresolvablePlaceholders(true);
         return propertyConfigurer;
+    }
+
+    @Bean
+    public FastJsonHttpMessageConverter4 fastJsonHttpMessageConverter(){
+        FastJsonHttpMessageConverter4 fastJsonHttpMessageConverter =
+                new FastJsonHttpMessageConverter4();
+        List<MediaType> supportedMediaTypes = new ArrayList<>();
+        supportedMediaTypes.add(MediaType.ALL);
+
+        fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
+        fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig());
+        return fastJsonHttpMessageConverter;
+    }
+
+    private FastJsonConfig fastJsonConfig() {
+        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        fastJsonConfig.setFeatures(Feature.AllowArbitraryCommas,Feature.AllowUnQuotedFieldNames,Feature.DisableCircularReferenceDetect);
+        fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
+        return fastJsonConfig;
     }
 
     @Bean
@@ -77,10 +84,6 @@ public class BaseBeanConfig {
     public ConfigurableWebBindingInitializer webBindingInitializer() {
         ConfigurableWebBindingInitializer webBindingInitializer =
                 new ConfigurableWebBindingInitializer();
-        /*FormattingConversionService conversionService2 =
-                conversionServiceBean().getObject();
-        //conversionService2.addConverter(new ObjectByteConverter());
-        webBindingInitializer.setConversionService(conversionService2);*/
         return webBindingInitializer;
     }
 
