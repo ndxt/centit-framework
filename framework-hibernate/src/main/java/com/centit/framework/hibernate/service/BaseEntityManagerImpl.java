@@ -1,18 +1,17 @@
 package com.centit.framework.hibernate.service;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-
+import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.core.service.BaseEntityManager;
+import com.centit.framework.hibernate.dao.BaseDaoImpl;
+import com.centit.support.algorithm.ReflectionOpt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.core.service.BaseEntityManager;
-import com.centit.framework.hibernate.dao.BaseDaoImpl;
-import com.centit.support.algorithm.ReflectionOpt;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 数据库的基本操作工具类
@@ -65,8 +64,8 @@ public abstract class BaseEntityManagerImpl<T extends Serializable,
      */
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
-    public Serializable saveNewObject(T o){
-        return baseDao.saveNewObject(o);
+    public void saveNewObject(T o){
+        /*return*/ baseDao.saveNewObject(o);
     }
     
     /**
