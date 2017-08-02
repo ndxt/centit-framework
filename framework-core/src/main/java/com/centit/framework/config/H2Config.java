@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.embedded.ConnectionProperties;
@@ -23,7 +22,6 @@ import java.sql.Driver;
  */
 @Configuration
 @Conditional(H2Condition.class)
-@PropertySource("classpath:system.properties")
 @EnableJdbcHttpSession
 public class H2Config {
 
@@ -70,7 +68,7 @@ public class H2Config {
                         return this.dataSource;
                     }
                 })
-                .addScript("org/springframework/session/jdbc/schema-derby.sql").build();
+                .addScript("org/springframework/session/jdbc/schema-h2.sql").build();
     }
 
 

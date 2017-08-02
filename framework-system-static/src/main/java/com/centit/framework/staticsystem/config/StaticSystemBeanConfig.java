@@ -1,8 +1,8 @@
 package com.centit.framework.staticsystem.config;
 
-import com.centit.framework.config.BaseBeanConfig;
 import com.centit.framework.config.H2Config;
 import com.centit.framework.config.RedisConfig;
+import com.centit.framework.config.WebBeanConfig;
 import com.centit.framework.listener.InitialWebRuntimeEnvironment;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.security.model.CentitPasswordEncoder;
@@ -21,7 +21,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @PropertySource("classpath:system.properties")
-@Import({BaseBeanConfig.class,
+@Import({WebBeanConfig.class,
         RedisConfig.class,
         H2Config.class,
         SpringSecurityDaoConfig.class,
@@ -30,7 +30,6 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @Lazy
 public class StaticSystemBeanConfig implements EnvironmentAware {
 
-    @Autowired
     private Environment env;
 
     @Override
