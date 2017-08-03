@@ -10,6 +10,6 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = {"com.centit.framework.**.controller"},
                includeFilters = {@ComponentScan.Filter(value= org.springframework.stereotype.Controller.class)},
                useDefaultFilters = false)
-public class SystemSpringMvcConfig{
+public class SystemSpringMvcConfig extends BaseSpringMvcConfig {
 
 }
