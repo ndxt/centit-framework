@@ -1,11 +1,13 @@
 package com.centit.framework.staticsystem.controller;
 
 import com.centit.framework.core.common.JsonResultUtils;
+import com.centit.framework.core.common.ResponseSingleData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -47,14 +49,17 @@ public class EnvironmentController extends BaseController {
 
 
 	@RequestMapping(value ="/reload/refreshall",method = RequestMethod.GET)
-	public void environmentRefreshAll(
+	@ResponseBody
+	public ResponseSingleData environmentRefreshAll(
 			HttpServletRequest request,HttpServletResponse response) {
 		boolean reloadDc = platformEnvironment.reloadDictionary();
 		boolean reloadSm = platformEnvironment.reloadSecurityMetadata();
 		if(reloadDc && reloadSm)
-			JsonResultUtils.writeSuccessJson(response);
+			return new ResponseSingleData();
+			//JsonResultUtils.writeSuccessJson(response);
 		else
-			JsonResultUtils.writeErrorMessageJson("environmentRefreshAll failed！", response);
+			return new ResponseSingleData( 500, "environmentRefreshAll failed！");
+		//JsonResultUtils.writeErrorMessageJson("environmentRefreshAll failed！", response);
 	}
 
 }
