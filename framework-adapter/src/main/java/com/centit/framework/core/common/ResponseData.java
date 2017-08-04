@@ -1,8 +1,6 @@
 package com.centit.framework.core.common;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
@@ -10,7 +8,7 @@ import com.alibaba.fastjson.serializer.PropertyPreFilter;
 /**
  * 响应 http 请求 返回的数据，可以用Map返回多个数据
  */
-public class ResponseData {
+public class ResponseData implements Map<String,Object> {
     /**
      * HTTP协议状态码详解（HTTP Status Code）
 
@@ -345,5 +343,67 @@ public class ResponseData {
 	@Override
 	public String toString(){
 		return toJSONString();
+	}
+
+
+	@Override
+	public int size() {
+		return resMapData.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return resMapData.isEmpty();
+	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		return resMapData.containsKey(key);
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		return resMapData.containsValue(value);
+	}
+
+	@Override
+	public Object get(Object key) {
+		return resMapData.get(key);
+	}
+
+	@Override
+	public Object put(String key, Object value) {
+		return resMapData.put(key,value);
+	}
+
+	@Override
+	public Object remove(Object key) {
+		return resMapData.remove(key);
+	}
+
+	@Override
+	public void putAll(Map<? extends String, ?> m) {
+		resMapData.putAll(m);
+	}
+
+	@Override
+	public void clear() {
+		resMapData.clear();
+	}
+
+
+	@Override
+	public Set<String> keySet() {
+		return resMapData.keySet();
+	}
+
+	@Override
+	public Collection<Object> values() {
+		return resMapData.values();
+	}
+
+	@Override
+	public Set<Entry<String, Object>> entrySet() {
+		return resMapData.entrySet();
 	}
 }

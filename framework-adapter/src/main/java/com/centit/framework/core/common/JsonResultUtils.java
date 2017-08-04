@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.centit.support.algorithm.ReflectionOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -262,8 +264,13 @@ public class JsonResultUtils {
      * @param response HttpServletResponse
      */
     public static <T> void writeOriginalObject(T objValue, HttpServletResponse response) {
-    	writeOriginalResponse("text/plain; charset=utf-8",
-    			objValue,response);
+		if(ReflectionOpt.isScalarType(objValue.getClass())){
+			writeOriginalResponse("text/plain; charset=utf-8",
+					JSON.toJSONString(objValue), response);
+		}else {
+			writeOriginalResponse("application/json; charset=utf-8",
+					JSON.toJSONString(objValue), response);
+		}
     }
     
     
@@ -307,9 +314,32 @@ public class JsonResultUtils {
 
         writeOriginalJson(text,response);
     }
-    
-   
-    /**
+
+
+	/**
+	 * 格式化Json数据输出
+	 * @param resData ResponseData
+	 * @param response HttpServletResponse
+	 * @param propertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
+	 */
+	public static void writeResponseSingleDataAsJson(ResponseSingleData resData, HttpServletResponse response,
+											   PropertyPreFilter propertyPreFilter) {
+		writeSingleDataJson(resData.getCode(),resData.getMessage(),
+				resData.getData(), response, propertyPreFilter);
+	}
+
+	/**
+	 * 格式化Json数据输出
+	 * @param resData ResponseData http响应信息
+	 * @param response HttpServletResponse
+	 */
+	public static void writeResponseSingleDataAsJson(ResponseSingleData resData, HttpServletResponse response) {
+		writeSingleDataJson(resData.getCode(),resData.getMessage(),
+				resData.getData(), response, null);
+	}
+
+
+	/**
      * 格式化Json数据输出
      * @param resData ResponseData
      * @param response HttpServletResponse
@@ -331,34 +361,10 @@ public class JsonResultUtils {
                 resData.getData(), response, null);
     }
     
-    
-    /**
-     * 格式化Json数据输出
-     * 请使用 writeResponseDataAsJson
-	 * @param resData ResponseData http响应信息
-     * @param response HttpServletResponse
-     * @param propertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
-     */
-    @Deprecated
-    public static void writeMapDataJson(ResponseData resData, HttpServletResponse response,
-                                        PropertyPreFilter propertyPreFilter) {
-        writeSingleDataJson(resData.getCode(),resData.getMessage(),
-                resData.getData(), response, propertyPreFilter);
-    }
-    
-    /**
-     * 格式化Json数据输出
-     * 请使用 writeResponseDataAsJson
-	 * @param resData ResponseData http响应信息
-     * @param response HttpServletResponse
-     */
-    @Deprecated
-    public static void writeMapDataJson(ResponseData resData, HttpServletResponse response) {
-        writeSingleDataJson(resData.getCode(),resData.getMessage(),
-                resData.getData(), response, null);
-   }
 
-    
+
+
+
     /**
      * Ajax 请求失败，http的状态码设置为 code
      * @param errorCode  错误返回码
