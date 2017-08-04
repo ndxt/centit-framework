@@ -59,9 +59,9 @@ public class ResponseJSON {
 
     public String getDataAsString(String skey) {
     	Object data = getData();
-        if(data==null || !(data instanceof JSONObject))
+        if(data==null || !(data instanceof Map))
             return null; 
-        Object dataObj = ((JSONObject)data).get(skey);         
+        Object dataObj = ((Map)data).get(skey);
         return  StringBaseOpt.objectToString(dataObj);
     }
 
@@ -114,9 +114,9 @@ public class ResponseJSON {
 
 	public <T> T getDataAsScalarObject(String skey, Class<T> clazz) {
     	Object data = getData();
-        if(data==null || !(data instanceof JSONObject))
+        if(data==null || !(data instanceof Map))
             return null;
-        Object dataObj = ((JSONObject)data).get(skey);
+        Object dataObj = ((Map)data).get(skey);
         
     	try{
 	        String sdata = StringBaseOpt.objectToString(dataObj);
@@ -137,31 +137,32 @@ public class ResponseJSON {
     
     public <T> T getDataAsObject(String sKey, Class<T> clazz) {
         Object data = getData();
-        if(data==null || !(data instanceof JSONObject))
+        if(data==null || !(data instanceof Map))
             return null;
-        // TypeUtils.castToJavaBean 
-        //return ((JSONObject)data).getObject(sKey,clazz);
-        
-        String str = JSON.toJSONString(((JSONObject)data).get(sKey));
+        Object dataObj = ((Map)data).get(sKey);
+        if(dataObj==null)
+            return null;
+        String str = JSON.toJSONString(dataObj);
         return JSON.parseObject(str, clazz);   
         /*
         Object dataObj = ((JSONObject)data).get(sKey);
         if(dataObj==null)
             return null;
         //这个地方重复解释字符串效率较低，应该可以优化
-        return JSON.parseObject(dataObj.toString(), clazz);   
-        */    
-    }    
+        return JSON.parseObject(dataObj.toString(), clazz);
+        */
+    }
 
     public <T> List<T> getDataAsArray(String sKey, Class<T> clazz) {
         Object data = getData();
-        if(data==null || !(data instanceof JSONObject))
+        if(data==null || !(data instanceof Map))
             return null;
-        Object dataObj = ((JSONObject)data).get(sKey);
+        Object dataObj = ((Map)data).get(sKey);
         if(dataObj==null)
             return null;
         //这个地方重复解释字符串效率较低，应该可以优化
-        return JSON.parseArray(dataObj.toString(), clazz);        
+        String str = JSON.toJSONString(dataObj);
+        return JSON.parseArray(str, clazz);
     }
 
     public <T> Map<String,T> convertJSONToMap(JSONObject jsonMap, Class<T> clazz) {
