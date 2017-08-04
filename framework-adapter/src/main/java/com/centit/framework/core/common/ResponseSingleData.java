@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 响应 http 请求 返回的单个数据
  */
-public class ResponseSingleData {
+public class ResponseSingleData implements ResponseData{
 
     /**
      * 返回代码，0 表示正确，其他的为错误代码
@@ -72,8 +72,10 @@ public class ResponseSingleData {
         return resData;
     }
 
-    public void setData(Object objValue) {
+    public Object setData(Object objValue) {
+        Object oldObj = this.resData;
 		this.resData = objValue;
+        return oldObj;
     }
 
     public String toJSONString(PropertyPreFilter simplePropertyPreFilter){
@@ -87,9 +89,6 @@ public class ResponseSingleData {
         return JSONObject.toJSONString(param,simplePropertyPreFilter);
     }
 
-	public String toJSONString(){
-		return toJSONString(null);
-	}
 
 	@Override
 	public String toString(){

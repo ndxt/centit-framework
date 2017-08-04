@@ -3,6 +3,7 @@ package com.centit.framework.core.controller;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
+import com.centit.framework.core.common.ResponseMapData;
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.ListOpt;
@@ -112,7 +113,7 @@ public class BaseController {
             }
             
             if(bindingResult!=null){
-	        	ResponseData responseData = new ResponseData(ResponseData.ERROR_BAD_REQUEST);
+                ResponseMapData responseData = new ResponseMapData(ResponseData.ERROR_BAD_REQUEST);
 	        	StringBuilder errMsg = new StringBuilder();
 
 	            if (bindingResult.hasErrors()) {

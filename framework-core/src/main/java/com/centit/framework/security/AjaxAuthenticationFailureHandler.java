@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.centit.framework.core.common.ResponseMapData;
 import com.centit.framework.security.model.CheckFailLogs;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -48,7 +49,7 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 			request.setAttribute("hasTriedTimes",tryTimes);
 			super.onAuthenticationFailure(request, response, exception);
 		}else {
-			ResponseData resData = new ResponseData(ResponseData.ERROR_USER_LOGIN_ERROR,
+			ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_LOGIN_ERROR,
 					"login error:" + exception.getMessage() + "!");
 			resData.addResponseData("hasTriedTimes",tryTimes);
 			JsonResultUtils.writeResponseDataAsJson(resData, response);

@@ -3,6 +3,7 @@ package com.centit.framework.system.controller;
 import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.core.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
@@ -218,7 +219,7 @@ public class MainFrameController extends BaseController {
 		}
 		String tokenKey = SecurityContextUtils.registerUserToken(ud);
 		//request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);		
-		ResponseData resData = new ResponseData();
+        ResponseMapData resData = new ResponseMapData();
 		resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
 		JsonResultUtils.writeResponseDataAsJson(resData, response);
 

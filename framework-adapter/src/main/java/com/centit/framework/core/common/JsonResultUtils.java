@@ -315,30 +315,6 @@ public class JsonResultUtils {
         writeOriginalJson(text,response);
     }
 
-
-	/**
-	 * 格式化Json数据输出
-	 * @param resData ResponseData
-	 * @param response HttpServletResponse
-	 * @param propertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
-	 */
-	public static void writeResponseSingleDataAsJson(ResponseSingleData resData, HttpServletResponse response,
-											   PropertyPreFilter propertyPreFilter) {
-		writeSingleDataJson(resData.getCode(),resData.getMessage(),
-				resData.getData(), response, propertyPreFilter);
-	}
-
-	/**
-	 * 格式化Json数据输出
-	 * @param resData ResponseData http响应信息
-	 * @param response HttpServletResponse
-	 */
-	public static void writeResponseSingleDataAsJson(ResponseSingleData resData, HttpServletResponse response) {
-		writeSingleDataJson(resData.getCode(),resData.getMessage(),
-				resData.getData(), response, null);
-	}
-
-
 	/**
      * 格式化Json数据输出
      * @param resData ResponseData

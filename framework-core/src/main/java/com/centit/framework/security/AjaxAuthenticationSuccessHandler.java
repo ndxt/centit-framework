@@ -3,7 +3,7 @@ package com.centit.framework.security;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.common.JsonResultUtils;
-import com.centit.framework.core.common.ResponseData;
+import com.centit.framework.core.common.ResponseMapData;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.CentitUserDetailsService;
 import com.centit.support.algorithm.DatetimeOpt;
@@ -94,7 +94,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
     	if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)){
     		super.onAuthenticationSuccess(request,response,authentication);
     	}else{
-    		ResponseData resData = new ResponseData();
+			ResponseMapData resData = new ResponseMapData();
     		if(registToken)
     			resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
     		resData.addResponseData("userInfo", ud);
