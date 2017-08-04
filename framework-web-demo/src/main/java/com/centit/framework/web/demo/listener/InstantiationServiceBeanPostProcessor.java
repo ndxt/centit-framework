@@ -20,7 +20,7 @@ public class InstantiationServiceBeanPostProcessor implements ApplicationListene
     @Autowired
     private OperationLogWriter optLogManager;
 
-    @Autowired
+    @Autowired(required = false)
     private MessageSender innerMessageManager;
 
 

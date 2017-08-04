@@ -10,7 +10,6 @@ import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -35,7 +34,6 @@ import java.util.List;
 /**
  * Created by zou_wy on 2017/3/29.
  */
-@PropertySource("classpath:system.properties")
 @EnableWebSecurity
 @Conditional(SecurityCasCondition.class)
 public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {

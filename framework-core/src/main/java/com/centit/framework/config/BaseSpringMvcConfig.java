@@ -1,38 +1,46 @@
 package com.centit.framework.config;
 
+import com.alibaba.fastjson.parser.Feature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by zou_wy on 2017/3/29.
  */
-
-
-@SuppressWarnings("unused")
+@Configuration
+@EnableWebMvc
 public class BaseSpringMvcConfig extends WebMvcConfigurerAdapter {
 
+    private FastJsonHttpMessageConverter4 fastJsonHttpMessageConverter(){
+        FastJsonHttpMessageConverter4 fastJsonHttpMessageConverter =
+                new FastJsonHttpMessageConverter4();
+        List<MediaType> supportedMediaTypes = new ArrayList<>();
+        supportedMediaTypes.add(MediaType.ALL);
 
-    @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
-        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setViewClass(org.springframework.web.servlet.view.JstlView.class);
-        resolver.setPrefix("/WEB-INF/jsp/");
-        resolver.setSuffix(".jsp");
+        fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
 
-        registry.viewResolver(resolver );
+        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        fastJsonConfig.setFeatures(Feature.AllowArbitraryCommas,Feature.AllowUnQuotedFieldNames,
+                Feature.DisableCircularReferenceDetect);
+        fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
+        return fastJsonHttpMessageConverter;
     }
-
-
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new FastJsonHttpMessageConverter4());
+        converters.add(fastJsonHttpMessageConverter());
+        converters.add(new StringHttpMessageConverter());
     }
-
 
 }

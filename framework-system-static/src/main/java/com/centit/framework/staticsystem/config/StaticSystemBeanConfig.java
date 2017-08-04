@@ -30,7 +30,6 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @Lazy
 public class StaticSystemBeanConfig implements EnvironmentAware {
 
-    @Autowired
     private Environment env;
 
     @Override

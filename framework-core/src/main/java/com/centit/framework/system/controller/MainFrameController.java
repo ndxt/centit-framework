@@ -328,6 +328,19 @@ public class MainFrameController extends BaseController {
     }
 
     /**
+     * @param request request
+     * @param response response
+     */
+    @RequestMapping("/hasLogin")
+    public void hasLogin(HttpServletRequest request, HttpServletResponse response) {
+        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
+        if(ud==null)
+            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录，请登录！", response);
+        else
+            JsonResultUtils.writeSingleDataJson(ud, response);
+    }
+
+    /**
      * 首页菜单
      *
      * @param request  HttpServletRequest
