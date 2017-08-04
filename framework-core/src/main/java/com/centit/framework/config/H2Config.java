@@ -3,7 +3,6 @@ package com.centit.framework.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -15,7 +14,6 @@ import javax.sql.DataSource;
 /**
  * Created by zou_wy on 2017/6/14.
  */
-@Configuration
 @Conditional(H2Condition.class)
 @EnableJdbcHttpSession
 public class H2Config {

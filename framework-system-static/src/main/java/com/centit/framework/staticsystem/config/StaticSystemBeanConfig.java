@@ -1,8 +1,5 @@
 package com.centit.framework.staticsystem.config;
 
-import com.centit.framework.config.H2Config;
-import com.centit.framework.config.RedisConfig;
-import com.centit.framework.config.WebBeanConfig;
 import com.centit.framework.listener.InitialWebRuntimeEnvironment;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.security.model.CentitPasswordEncoder;
@@ -19,15 +16,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
-@Configuration
-
-@Import({WebBeanConfig.class,
-        RedisConfig.class,
-        H2Config.class,
-        SpringSecurityDaoConfig.class,
-        SpringSecurityCasConfig.class})
+@PropertySource("classpath:system.properties")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@Lazy
+@Conditional(StaticSystemConfigCondition.class)
 public class StaticSystemBeanConfig implements EnvironmentAware {
 
     private Environment env;
