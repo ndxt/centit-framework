@@ -5,6 +5,7 @@ import com.centit.framework.config.FlywayEnableCondition;
 import com.centit.framework.mybatis.dao.BaseDaoSupport;
 import com.centit.support.algorithm.ListOpt;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -86,6 +87,7 @@ public class DataSourceConfig implements EnvironmentAware {
         configuration.setSafeRowBoundsEnabled(false);
         configuration.setMapUnderscoreToCamelCase(true);
         configuration.setAggressiveLazyLoading(false);
+        configuration.setLogImpl(StdOutImpl.class);
 
         Properties properties = new Properties();
         properties.setProperty("Oracle","oracle");

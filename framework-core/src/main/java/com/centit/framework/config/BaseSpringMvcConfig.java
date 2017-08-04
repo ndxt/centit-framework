@@ -24,7 +24,8 @@ public class BaseSpringMvcConfig extends WebMvcConfigurerAdapter {
         FastJsonHttpMessageConverter4 fastJsonHttpMessageConverter =
                 new FastJsonHttpMessageConverter4();
         List<MediaType> supportedMediaTypes = new ArrayList<>();
-        supportedMediaTypes.add(MediaType.ALL);
+        supportedMediaTypes.add(MediaType.APPLICATION_JSON);
+        supportedMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
 
         fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
 

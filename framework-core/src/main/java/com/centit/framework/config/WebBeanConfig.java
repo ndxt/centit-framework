@@ -1,8 +1,11 @@
 package com.centit.framework.config;
 
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
 import org.springframework.web.servlet.ViewResolver;
@@ -13,8 +16,16 @@ import java.util.Properties;
 /**
  * Created by zou_wy on 2017/3/29.
  */
+@PropertySource("classpath:system.properties")
 @Configuration
-public class WebBeanConfig {
+public class WebBeanConfig implements EnvironmentAware {
+
+    private Environment env;
+
+    @Override
+    public void setEnvironment(final Environment environment) {
+        this.env = environment;
+    }
 
     @Bean
     public ViewResolver viewResolver() {
@@ -37,7 +48,8 @@ public class WebBeanConfig {
 //        FastJsonHttpMessageConverter4 fastJsonHttpMessageConverter =
 //                new FastJsonHttpMessageConverter4();
 //        List<MediaType> supportedMediaTypes = new ArrayList<>();
-//        supportedMediaTypes.add(MediaType.ALL);
+//        supportedMediaTypes.add(MediaType.APPLICATION_JSON);
+//        supportedMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
 //
 //        fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
 //
