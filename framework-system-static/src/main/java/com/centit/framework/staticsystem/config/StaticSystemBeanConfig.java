@@ -18,7 +18,6 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @PropertySource("classpath:system.properties")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@Conditional(StaticSystemConfigCondition.class)
 public class StaticSystemBeanConfig implements EnvironmentAware {
 
     private Environment env;
