@@ -1,11 +1,9 @@
 package com.centit.framework.config;
 
-import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.env.Environment;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
 import org.springframework.web.servlet.ViewResolver;
@@ -18,14 +16,14 @@ import java.util.Properties;
  */
 @PropertySource("classpath:system.properties")
 @Configuration
-public class WebBeanConfig implements EnvironmentAware {
+public class WebBeanConfig /*implements EnvironmentAware*/ {
 
-    private Environment env;
+    /*private Environment env;
 
     @Override
     public void setEnvironment(final Environment environment) {
         this.env = environment;
-    }
+    }*/
 
     @Bean
     public ViewResolver viewResolver() {
