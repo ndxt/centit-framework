@@ -13,6 +13,7 @@ import com.centit.framework.staticsystem.service.impl.JdbcPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.JsonPlatformEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -27,10 +28,14 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
         SpringSecurityCasConfig.class})
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @Lazy
-public class StaticSystemBeanConfig {
+public class StaticSystemBeanConfig implements EnvironmentAware {
 
-    @Autowired
     private Environment env;
+
+    @Override
+    public void setEnvironment(final Environment environment) {
+        this.env = environment;
+    }
 
     @Bean
     public PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslationPostProcessor() {
