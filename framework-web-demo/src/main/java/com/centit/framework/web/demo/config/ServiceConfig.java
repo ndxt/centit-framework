@@ -2,8 +2,8 @@ package com.centit.framework.web.demo.config;
 
 import com.centit.framework.components.impl.NotificationCenterImpl;
 import com.centit.framework.components.impl.TextOperationLogWriterImpl;
-import com.centit.framework.config.H2Config;
-import com.centit.framework.config.RedisConfig;
+import com.centit.framework.config.H2SessionPersistenceConfig;
+import com.centit.framework.config.RedisSessionPersistenceConfig;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.staticsystem.config.SpringSecurityCasConfig;
@@ -18,8 +18,8 @@ import org.springframework.context.annotation.*;
 @Configuration
 @ComponentScan(basePackages = "com.centit",
         excludeFilters = @ComponentScan.Filter(value = org.springframework.stereotype.Controller.class))
-@Import({RedisConfig.class,
-        H2Config.class,
+@Import({RedisSessionPersistenceConfig.class,
+        H2SessionPersistenceConfig.class,
         SpringSecurityDaoConfig.class,
         SpringSecurityCasConfig.class,
         StaticSystemBeanConfig.class})

@@ -14,9 +14,6 @@ public class SecurityCasCondition implements Condition {
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         Environment evn = context.getEnvironment();
         String isCas = evn.getProperty("cas.sso");
-        if(isCas == null){
-            return false;
-        }
-        return StringRegularOpt.isTrue(isCas);
+        return isCas != null && StringRegularOpt.isTrue(isCas);
     }
 }

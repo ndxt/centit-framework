@@ -14,9 +14,6 @@ public class SecurityDaoCondition implements Condition {
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         Environment evn = context.getEnvironment();
         String isCas = evn.getProperty("cas.sso");
-        if(isCas == null){
-            return true;
-        }
-        return !StringRegularOpt.isTrue(isCas);
+        return isCas==null || !StringRegularOpt.isTrue(isCas);
     }
 }

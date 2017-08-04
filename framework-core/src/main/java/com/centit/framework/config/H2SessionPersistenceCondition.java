@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * Created by zou_wy on 2017/6/15.
  */
-public class H2Condition implements Condition {
+public class H2SessionPersistenceCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         Environment evn = context.getEnvironment();

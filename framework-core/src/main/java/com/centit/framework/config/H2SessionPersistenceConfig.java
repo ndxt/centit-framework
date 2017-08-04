@@ -14,9 +14,9 @@ import javax.sql.DataSource;
 /**
  * Created by zou_wy on 2017/6/14.
  */
-@Conditional(H2Condition.class)
+@Conditional(H2SessionPersistenceCondition.class)
 @EnableJdbcHttpSession
-public class H2Config {
+public class H2SessionPersistenceConfig {
 
     @Value("${session.h2.file}")
     private String filePath;

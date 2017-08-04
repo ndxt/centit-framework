@@ -9,9 +9,9 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 /**
  * Created by zou_wy on 2017/6/14.
  */
-@Conditional(RedisCondition.class)
+@Conditional(RedisSessionPersistenceCondition.class)
 @EnableRedisHttpSession
-public class RedisConfig {
+public class RedisSessionPersistenceConfig {
 
     @Value("${session.redis.host}")
     private String host;

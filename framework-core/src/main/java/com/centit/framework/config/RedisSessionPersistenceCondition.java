@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * Created by zou_wy on 2017/6/15.
  */
-public class RedisCondition implements Condition {
+public class RedisSessionPersistenceCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         Environment evn = context.getEnvironment();
