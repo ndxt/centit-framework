@@ -44,8 +44,8 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public CentitSessionRegistry centitSessionRegistry;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+//    @Autowired
+//    private UserDetailsService userDetailsService;
 
     @Autowired
     private PlatformEnvironment platformEnvironment;
@@ -104,7 +104,7 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
 
     private CasAuthenticationProvider createCasAuthenticationProvider(ServiceProperties casServiceProperties) {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-        casAuthenticationProvider.setUserDetailsService(userDetailsService);
+        casAuthenticationProvider.setUserDetailsService(userDetailsService());
         casAuthenticationProvider.setServiceProperties(casServiceProperties);
         casAuthenticationProvider.setTicketValidator(new Cas20ServiceTicketValidator(env.getProperty("cas.home")));
         casAuthenticationProvider.setKey(env.getProperty("app.key"));
