@@ -1,18 +1,19 @@
 package com.centit.framework.hibernate.config;
 
 import org.springframework.orm.hibernate5.support.OpenSessionInViewFilter;
-import org.springframework.web.WebApplicationInitializer;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 
 /**
  * Created by zou_wy on 2017/6/30.
  */
-public class HibernateWebInitializer implements WebApplicationInitializer {
-
-    @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
+@SuppressWarnings("unused")
+public class HibernateWebConfig  {
+    /**
+     * 注册OpenSessionInViewFilter 过滤器
+     * @param servletContext ServletContext
+     */
+    public static void registerOpenSessionInViewFilter(ServletContext servletContext) {
         javax.servlet.FilterRegistration.Dynamic openSessionInViewFilter
                 = servletContext.addFilter("openSessionInViewFilter", OpenSessionInViewFilter.class);
         openSessionInViewFilter.setAsyncSupported(true);

@@ -5,7 +5,6 @@ import com.centit.framework.config.FlywayEnableCondition;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.flywaydb.core.Flyway;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.*;
@@ -17,14 +16,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Properties;
 
-@Configuration
+//@Configuration
 @EnableTransactionManagement(proxyTargetClass = true)//启用注解事物管理
-@PropertySource("classpath:/system.properties")
-@EnableAspectJAutoProxy(proxyTargetClass = true)
+//@PropertySource("classpath:/system.properties")
+//@EnableAspectJAutoProxy(proxyTargetClass = true)
 @Lazy
 public class DataSourceConfig implements EnvironmentAware {
 
-    @Autowired
+//    @Autowired
     Environment env;
 
     @Override

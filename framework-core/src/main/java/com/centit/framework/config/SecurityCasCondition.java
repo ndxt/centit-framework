@@ -1,9 +1,9 @@
 package com.centit.framework.config;
 
+import com.centit.framework.common.SysParametersUtils;
 import com.centit.support.algorithm.StringRegularOpt;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
-import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
@@ -12,8 +12,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 public class SecurityCasCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        Environment evn = context.getEnvironment();
-        String isCas = evn.getProperty("cas.sso");
-        return isCas != null && StringRegularOpt.isTrue(isCas);
-    }
+        boolean isCas = StringRegularOpt.isTrue(SysParametersUtils.getStringValue("cas.sso"));
+        return isCas;
+   }
 }
