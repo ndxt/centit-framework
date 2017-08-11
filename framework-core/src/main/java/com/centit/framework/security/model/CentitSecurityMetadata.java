@@ -21,10 +21,10 @@ public class CentitSecurityMetadata {
         else
             sFunUrl = sUrl.substring(0,p);
         
-        swords.add(request.getMethod().toUpperCase());
+        swords.add(request.getMethod());
         for(String s:sFunUrl.split("/")){
             if(!StringBaseOpt.isNvl(s) /*&& !"*".equals(s)*/){
-                swords.add(s.toUpperCase());
+                swords.add(s);
             }
         }
         return swords;
@@ -44,7 +44,7 @@ public class CentitSecurityMetadata {
             sopts.add("POST");
             for(String s:sUrls){
                 if(!StringBaseOpt.isNvl(s)/* && !"*".equals(s)*/)
-                    sopts.add(s.toUpperCase());
+                    sopts.add(s);
             }
             swords.add(sopts);
         }
@@ -53,7 +53,7 @@ public class CentitSecurityMetadata {
             sopts.add("DELETE");
             for(String s:sUrls){
                 if(!StringBaseOpt.isNvl(s)/* && !"*".equals(s)*/)
-                    sopts.add(s.toUpperCase());
+                    sopts.add(s);
             }
             swords.add(sopts);
         }
@@ -62,7 +62,7 @@ public class CentitSecurityMetadata {
             sopts.add("GET");
             for(String s:sUrls){
                 if(!StringBaseOpt.isNvl(s) /*&& !"*".equals(s)*/)
-                    sopts.add(s.toUpperCase());
+                    sopts.add(s);
             }
             swords.add(sopts);
         }
@@ -71,7 +71,7 @@ public class CentitSecurityMetadata {
             sopts.add("PUT");
             for(String s:sUrls){
                 if(!StringBaseOpt.isNvl(s) /*&& !"*".equals(s)*/)
-                    sopts.add(s.toUpperCase());
+                    sopts.add(s);
             }
             swords.add(sopts);
         }
