@@ -463,7 +463,8 @@ public final class CodeRepositoryUtil {
         List<IRoleInfo> roleList = new ArrayList<>();
         for (Map.Entry<String,? extends IRoleInfo> ent : getRoleRepo().entrySet()) {
             IRoleInfo value = ent.getValue();
-            if (value.getRoleCode().startsWith(sPrefix) && CodeRepositoryUtil.T.equals(value.getIsValid())) {
+            if ((value.getRoleCode().startsWith(sPrefix)  || ( value.getRoleCode().startsWith("P-")))
+                    && CodeRepositoryUtil.T.equals(value.getIsValid())) {
                 roleList.add(value);
             }
         }
