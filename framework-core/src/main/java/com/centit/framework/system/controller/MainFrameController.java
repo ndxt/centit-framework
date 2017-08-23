@@ -143,6 +143,7 @@ public class MainFrameController extends BaseController {
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
         session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
+        session.removeAttribute(LOGIN_AUTH_ERROR_MSG);
         if(useCas)
         {
         	//return "sys/mainframe/index";
