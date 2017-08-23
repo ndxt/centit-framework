@@ -69,9 +69,9 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
 
         CentitUserDetailsService centitUserDetailsService = centitUserDetailsService();
 
-        AuthenticationProvider authenticationProvider = createAuthenticationProvider(centitUserDetailsService);
+        AuthenticationProvider authenticationProvider = authenticationProvider(centitUserDetailsService);
 
-        AuthenticationManager authenticationManager = createAuthenticationManager(authenticationProvider);
+        AuthenticationManager authenticationManager = authenticationManager(authenticationProvider);
 
         DaoFilterSecurityInterceptor centitPowerFilter = createCentitPowerFilter(authenticationManager,
                 new DaoInvocationSecurityMetadataSource(),
@@ -150,7 +150,8 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
                 new SecurityContextLogoutHandler());
     }
 
-    private AuthenticationProvider createAuthenticationProvider(CentitUserDetailsService centitUserDetailsService) {
+    @Bean
+    public AuthenticationProvider authenticationProvider(CentitUserDetailsService centitUserDetailsService) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setHideUserNotFoundExceptions(false);
         authenticationProvider.setUserDetailsService(centitUserDetailsService);
@@ -158,7 +159,8 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
         return authenticationProvider;
     }
 
-    private AuthenticationManager createAuthenticationManager(AuthenticationProvider authenticationProvider) {
+    @Bean
+    public  AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
         List<AuthenticationProvider> providerList = new ArrayList<>();
         providerList.add(authenticationProvider);
         return new ProviderManager(providerList);
