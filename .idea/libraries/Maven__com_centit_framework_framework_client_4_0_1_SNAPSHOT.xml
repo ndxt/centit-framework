@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Maven: com.centit.framework:framework-client:4.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar:///D/MyAppData/maven3/repo/com/centit/framework/framework-client/4.0.1-SNAPSHOT/framework-client-4.0.1-20170828.032843-1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/framework-client/framework-client-4.0.1-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar:///D/MyAppData/maven3/repo/com/centit/framework/framework-client/4.0.1-SNAPSHOT/framework-client-4.0.1-20170828.032843-1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/framework-client/framework-client-4.0.1-SNAPSHOT-sources.jar!/" />
+      <root url="jar:///D/MyAppData/maven3/repo/com/centit/framework/framework-client/4.0.1-SNAPSHOT/framework-client-4.0.1-20170828.032843-1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
