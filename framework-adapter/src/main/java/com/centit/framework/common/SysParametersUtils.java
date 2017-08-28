@@ -166,10 +166,10 @@ public class SysParametersUtils {
             prop = new Properties();
             try {
                 InputStream resource = SysParametersUtils
-                        .class.getResourceAsStream("system.properties");
+                        .class.getResourceAsStream("/system.properties");
                 //new ClassPathResource("system.properties").getInputStream();
                 if(resource==null)
-                    resource = ClassLoader.getSystemResourceAsStream("system.properties");
+                    resource = ClassLoader.getSystemResourceAsStream("/system.properties");
                 prop.load(resource);
             } catch (IOException e) {
                 logger.error("获取系统参数出错！",e);

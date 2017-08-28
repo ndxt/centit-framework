@@ -1,5 +1,6 @@
 package com.centit.framework.config;
 
+import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.filter.RequestThreadLocalFilter;
 import com.centit.framework.filter.ResponseCorsFilter;
 import com.centit.support.algorithm.StringRegularOpt;
@@ -31,7 +32,7 @@ public class WebConfig  {
      * @param servletContext ServletContext
      */
     public static void registerSpringSessionRepositoryFilter(ServletContext servletContext) {
-        Properties properties = PropertiesReader.getClassPathProperties("/system.properties");
+        Properties properties = SysParametersUtils.loadProperties();
         if( StringRegularOpt.isTrue(
                 properties.getProperty("session.persistence.enable"))) {
             javax.servlet.FilterRegistration.Dynamic springSessionRepositoryFilter
@@ -54,7 +55,7 @@ public class WebConfig  {
      * @param servletContext ServletContext
      */
     public static void registerSingleSignOutHttpSessionListener(ServletContext servletContext) {
-        Properties properties = PropertiesReader.getClassPathProperties("/system.properties");
+        Properties properties =  SysParametersUtils.loadProperties();
         if( StringRegularOpt.isTrue(
                 properties.getProperty("cas.sso"))) {
             servletContext.addListener(SingleSignOutHttpSessionListener.class);
