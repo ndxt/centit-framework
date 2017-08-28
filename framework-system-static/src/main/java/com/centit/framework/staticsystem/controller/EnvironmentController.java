@@ -1,7 +1,7 @@
 package com.centit.framework.staticsystem.controller;
 
-import com.centit.framework.core.common.JsonResultUtils;
-import com.centit.framework.core.common.ResponseSingleData;
+import com.centit.framework.common.JsonResultUtils;
+import com.centit.framework.common.ResponseSingleData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import org.springframework.stereotype.Controller;

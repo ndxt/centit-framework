@@ -6,9 +6,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <centit.framework.version>4.0.0-SNAPSHOT</centit.framework.version>
+        <centit.framework.version>4.0.1-SNAPSHOT</centit.framework.version>
         <jdk.version>1.8</jdk.version>
-        <centit.commons.version>2.2.1</centit.commons.version>
+        <centit.commons.version>2.2.3-SNAPSHOT</centit.commons.version>
         <centit.ui.version>3.0.1-SNAPSHOT</centit.ui.version>
         <servlet-api.version>3.1.0</servlet-api.version>
 
@@ -47,7 +47,7 @@
     <groupId>com.centit.framework</groupId>
     <artifactId>framework-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.0.1-SNAPSHOT</version>
     <name>com.centit.framework:framework-parent</name>
     <description>基于spring mvc的内部开发框架.
         包括了对 spring mvc, spring security, spring session, hibernate, mybatis, flyway 等等开源框架的整合；

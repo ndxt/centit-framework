@@ -1,4 +1,4 @@
-package com.centit.framework.core.common;
+package com.centit.framework.common;
 
 
 /**

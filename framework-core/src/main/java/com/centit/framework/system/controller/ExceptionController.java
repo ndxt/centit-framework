@@ -1,6 +1,6 @@
 package com.centit.framework.system.controller;
 
-import com.centit.framework.core.common.JsonResultUtils;
+import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
 import org.slf4j.Logger;

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 
-import com.centit.framework.core.common.ResponseJSON;
+import com.centit.framework.common.ResponseJSON;
 import com.centit.support.network.HttpExecutor;
 @SuppressWarnings("unused")
 public class RestfulHttpRequest {

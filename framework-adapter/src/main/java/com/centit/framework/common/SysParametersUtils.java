@@ -1,16 +1,13 @@
 package com.centit.framework.common;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import org.apache.commons.io.FilenameUtils;
+import com.centit.support.algorithm.StringRegularOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 
-import com.centit.support.algorithm.StringRegularOpt;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * 系统外置目录路径工具类
@@ -52,7 +49,7 @@ public class SysParametersUtils {
      * @return String 根目录
      */
     public static String getAppHome() {
-        return FilenameUtils.normalize(getParameters(Parameter.APP_HOME)) ;
+        return getParameters(Parameter.APP_HOME) ;
     }
 
     
@@ -62,8 +59,8 @@ public class SysParametersUtils {
      * @return String 应用的临时目录
      */
     public static String getTempHome() {
-        return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) 
-        		 + getParameters(Parameter.TEMP)) ;
+        return getParameters(Parameter.APP_HOME)
+        		 + getParameters(Parameter.TEMP) ;
     }
 
     /**
@@ -72,8 +69,7 @@ public class SysParametersUtils {
      * @return String 上传文件临时目录
      */
     public static String getUploadTempHome() {
-        return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) + getParameters(Parameter.UPLOAD_HOME)
-                + getParameters(Parameter.TEMP));
+        return getTempHome();
     }
 
     /**
@@ -82,7 +78,7 @@ public class SysParametersUtils {
      * @return String 配置目录
      */
     public static String getConfigHome() {
-        return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) +"/config");
+        return getParameters(Parameter.APP_HOME) +"/config";
     }
     
     /**
@@ -91,7 +87,7 @@ public class SysParametersUtils {
      * @return String 日志目录
      */
     public static String getLogHome() {
-        return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) + getParameters(Parameter.LOG_HOME));
+        return getParameters(Parameter.APP_HOME) + getParameters(Parameter.LOG_HOME);
     }
 
     /**
@@ -100,7 +96,7 @@ public class SysParametersUtils {
      * @return String 上传文件目录
      */
     public static String getUploadHome() {
-        return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) + getParameters(Parameter.UPLOAD_HOME));
+        return getParameters(Parameter.APP_HOME) + getParameters(Parameter.UPLOAD_HOME);
     }
 
     /**
@@ -109,7 +105,7 @@ public class SysParametersUtils {
      * @return String 索引文件目录
      */
     public static String getIndexHome() {
-        return FilenameUtils.normalize(getParameters(Parameter.APP_HOME) + getParameters(Parameter.INDEX_HOME));
+        return getParameters(Parameter.APP_HOME) + getParameters(Parameter.INDEX_HOME);
     }
 
     /**
@@ -118,7 +114,7 @@ public class SysParametersUtils {
      * @return String 公共文件夹
      */
     public static String getPublicFileHome() {
-        return FilenameUtils.normalize(getUploadHome() + getParameters(Parameter.PUBLIC_FILE));
+        return getUploadHome() + getParameters(Parameter.PUBLIC_FILE);
     }
 
     public static String getParameters(Parameter p) {
@@ -169,7 +165,11 @@ public class SysParametersUtils {
         if (forceReload || null == prop) {
             prop = new Properties();
             try {
-                InputStream resource = new ClassPathResource("system.properties").getInputStream();
+                InputStream resource = SysParametersUtils
+                        .class.getResourceAsStream("system.properties");
+                //new ClassPathResource("system.properties").getInputStream();
+                if(resource==null)
+                    resource = ClassLoader.getSystemResourceAsStream("system.properties");
                 prop.load(resource);
             } catch (IOException e) {
                 logger.error("获取系统参数出错！",e);

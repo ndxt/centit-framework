@@ -1,6 +1,6 @@
 package com.centit.framework.hibernate.dao;
 
-import com.centit.framework.core.common.ObjectException;
+import com.centit.framework.common.ObjectException;
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.core.po.EntityWithDeleteTag;

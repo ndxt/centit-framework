@@ -2,7 +2,7 @@ package com.centit.framework.security;
 
 import javax.servlet.http.HttpSession;
 
-import com.centit.framework.core.common.ObjectException;
+import com.centit.framework.common.ObjectException;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import org.springframework.security.core.context.SecurityContextHolder;
 

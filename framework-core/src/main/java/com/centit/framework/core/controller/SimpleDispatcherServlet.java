@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.util.UrlPathHelper;
 
-import com.centit.framework.core.common.JsonResultUtils;
-import com.centit.framework.core.common.ResponseData;
+import com.centit.framework.common.JsonResultUtils;
+import com.centit.framework.common.ResponseData;
 
 /**
  * 重写404

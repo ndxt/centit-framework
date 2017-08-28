@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.centit.framework.core.common.ObjectException;
 import org.apache.commons.lang3.StringUtils;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
