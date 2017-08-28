@@ -5,12 +5,7 @@
 # 模块列表
     <modules>
         <module>framework-adapter</module>
-        <module>framework-client</module>
         <module>framework-core</module>
-        <module>framework-mybatis</module>
-        <module>framework-hibernate</module>
-        <module>framework-system-hibernate</module>
-        <module>framework-system-mybatis</module>
         <module>framework-system-static</module>
     </modules>
 
