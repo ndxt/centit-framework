@@ -10,10 +10,10 @@ import java.util.List;
 
 /**
  *  配置日志级别为log
- *   <category name="com.centit.framework.components.impl.Log4jOperationLogWriterImpl">
- *   <priority value="info"/>
- *   <appender-ref ref="appender-info"/>
- *   </category>
+ *   &lt;category name="com.centit.framework.components.impl.Log4jOperationLogWriterImpl"&gt;
+ *   &lt;priority value="info"/&gt;
+ *   &lt;appender-ref ref="appender-info"/&gt;
+ *   &lt;/category&gt;
  */
 @SuppressWarnings("unused")
 public class Log4jOperationLogWriterImpl implements OperationLogWriter{

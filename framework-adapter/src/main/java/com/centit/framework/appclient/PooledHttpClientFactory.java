@@ -12,7 +12,7 @@ public class PooledHttpClientFactory implements PooledObjectFactory<CloseableHtt
 	@Override
 	public PooledObject<CloseableHttpClient> makeObject() throws Exception {
 		CloseableHttpClient httpClient = HttpExecutor.createKeepSessionHttpClient();
-		return new DefaultPooledObject<CloseableHttpClient>(httpClient);
+		return new DefaultPooledObject<>(httpClient);
 	}
 
 	@Override

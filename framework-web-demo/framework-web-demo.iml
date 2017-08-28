@@ -27,12 +27,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: mysql:mysql-connector-java:5.1.9" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.oracle:ojdbc6:11.2.0.4" level="project" />
     <orderEntry type="library" name="Maven: com.centit.framework:framework-base-view-easyui:3.0.1-SNAPSHOT" level="project" />
-    <orderEntry type="module" module-name="framework-system-static" />
-    <orderEntry type="module" module-name="framework-core" />
-    <orderEntry type="module" module-name="framework-adapter" />
+    <orderEntry type="library" name="Maven: com.centit.framework:framework-system-static:4.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.framework:framework-core:4.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.framework:framework-adapter:4.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.centit.support:centit-utils:2.2.1" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.8">
@@ -98,7 +96,7 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-web:2.8.2" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Maven: jstl:jstl:1.2" level="project" />
-    <orderEntry type="module" module-name="framework-client" />
+    <orderEntry type="library" name="Maven: com.centit.framework:framework-client:4.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.mnode.ical4j:ical4j:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy-all:2.3.2" level="project" />

@@ -4,13 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.staticsystem.po.*;
-import com.centit.support.database.DBConnect;
-import com.centit.support.database.DataSourceDescription;
-import com.centit.support.database.DatabaseAccess;
-import com.centit.support.database.DbcpConnectPools;
+import com.centit.support.database.utils.DataSourceDescription;
+import com.centit.support.database.utils.DatabaseAccess;
+import com.centit.support.database.utils.DbcpConnectPools;
 import org.dom4j.DocumentException;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment
 
 	private DataSourceDescription dataSource;
 
-	private DBConnect getConnection() throws SQLException {
+	private Connection getConnection() throws SQLException {
 		return DbcpConnectPools.getDbcpConnect(dataSource);
 	}
 
@@ -28,7 +28,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment
 		this.dataSource = new DataSourceDescription( connectURI,  username,  pswd);
 	}
 
-	public void close(DBConnect conn){
+	public void close(Connection conn){
 		if(conn!=null){
 			try {
 				conn.close();
@@ -62,7 +62,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment
 
 		CodeRepositoryUtil.loadExtendedSqlMap("ExtendedSqlMap.xml");
 
-		try(DBConnect conn = getConnection()) {
+		try(Connection conn = getConnection()) {
 			JSONArray userJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
 					CodeRepositoryUtil.getExtendedSql("LIST_ALL_USER"));
 			userinfos = jsonArrayToObjectList(userJSONArray, UserInfo.class);
@@ -136,7 +136,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment
 		if(ui==null)
 			return;
 		String userNewPassword = passwordEncoder.createPassword(userPassword, userCode);
-		try(DBConnect conn = getConnection()) {
+		try(Connection conn = getConnection()) {
 			DatabaseAccess.doExecuteSql(conn,
 					CodeRepositoryUtil.getExtendedSql("UPDATE_USER_PASSWORD"),
 					new Object []{ userNewPassword, userCode });
