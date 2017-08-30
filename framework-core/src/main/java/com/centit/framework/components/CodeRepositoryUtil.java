@@ -11,20 +11,14 @@ import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.ListOpt;
 import com.centit.support.compiler.Lexer;
-import com.centit.support.xml.IgnoreDTDEntityResolver;
+import com.centit.support.database.orm.JpaMetadata;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -45,12 +39,6 @@ public final class CodeRepositoryUtil {
     public static final String OPT_DESC = "optDesc";
     public static final String T = "T";
     public static final String F = "F";
-    
-    /**
-     * 通过XML文件加载
-     */
-    private static final Map<String,String> EXTENDED_SQL_MAP=new HashMap<String,String>();
-    
     
     private CodeRepositoryUtil()
     {
@@ -1360,34 +1348,10 @@ public final class CodeRepositoryUtil {
         return SysParametersUtils.getStringValue(key);
     }
 
-    /**
-     * 从文件中读取SQL MAP 文件
-     * @param extendedSqlXmlFile extendedSqlXmlFile
-     * @throws DocumentException DocumentException
-     * @throws IOException IOException
-     */
-    public static final void loadExtendedSqlMap(String extendedSqlXmlFile)
-    	throws DocumentException,IOException{
-   		
-		SAXReader  builder = new SAXReader(false);
-		builder.setValidation(false);
-		builder.setEntityResolver(new IgnoreDTDEntityResolver());
-		Document doc = null;
-		
-		doc= builder.read(new ClassPathResource
-				(extendedSqlXmlFile).getInputStream());
-		Element root  = doc.getRootElement();//获取根元素 
-		EXTENDED_SQL_MAP.clear();
-		for(Object element : root.elements()){
-			EXTENDED_SQL_MAP.put(
-					((Element)element).attributeValue("id"),
-					((Element)element).getStringValue());
-		}
 
-    }
     
     public static final String getExtendedSql(String extendedSqlId){
-   		return EXTENDED_SQL_MAP.get(extendedSqlId);
+   		return JpaMetadata.getExtendedSql(extendedSqlId);
     }
     
 }

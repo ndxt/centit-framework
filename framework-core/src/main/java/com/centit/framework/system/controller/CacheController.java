@@ -3,6 +3,7 @@ package com.centit.framework.system.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.SysUnitFilterEngine;
 import com.centit.framework.components.SysUserFilterEngine;
@@ -12,6 +13,9 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.support.database.orm.JpaMetadata;
+import com.centit.support.database.utils.DBType;
+import com.centit.support.file.FileSystemOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentException;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -456,12 +462,20 @@ public class CacheController {
      */
     @RequestMapping(value = "/reloadextendedsqlmap", method = { RequestMethod.GET })
     public void reloadExtendedSqlMap( HttpServletResponse response) {
-    	try {
-			CodeRepositoryUtil.loadExtendedSqlMap("ExtendedSqlMap.xml");
-		} catch (DocumentException | IOException e) {
-			JsonResultUtils.writeErrorMessageJson(e.getMessage(), response);
-			e.printStackTrace();
-		}
+
+        List<File> files = FileSystemOpt.findFilesByExt(SysParametersUtils.getAppHome()+"/sqlscript","xml");
+        DBType dbType = DBType.mapDBType( SysParametersUtils.getStringValue("jdbc.url"));
+	    if(files!=null & files.size()>0){
+            for(File file:files) {
+                try {
+                    JpaMetadata.loadExtendedSqlMap(
+                            new FileInputStream(file),dbType
+                    );
+                } catch (DocumentException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     	JsonResultUtils.writeSingleDataJson("Reload Extended Sql Map succeed！", response);
     }
     
