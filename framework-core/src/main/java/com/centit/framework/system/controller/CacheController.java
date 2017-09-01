@@ -10,10 +10,10 @@ import com.centit.framework.components.SysUserFilterEngine;
 import com.centit.framework.components.impl.UserUnitMapTranslate;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.support.database.orm.JpaMetadata;
 import com.centit.support.database.utils.DBType;
 import com.centit.support.file.FileSystemOpt;
 import org.apache.commons.lang3.StringUtils;
@@ -468,7 +468,7 @@ public class CacheController {
 	    if(files!=null & files.size()>0){
             for(File file:files) {
                 try {
-                    JpaMetadata.loadExtendedSqlMap(
+                    ExtendedQueryPool.loadExtendedSqlMap(
                             new FileInputStream(file),dbType
                     );
                 } catch (DocumentException | IOException e) {

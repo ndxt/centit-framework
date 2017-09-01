@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.filter.HttpThreadWrapper;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.adapter.PlatformEnvironment;
@@ -11,7 +12,6 @@ import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.ListOpt;
 import com.centit.support.compiler.Lexer;
-import com.centit.support.database.orm.JpaMetadata;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1351,7 +1351,7 @@ public final class CodeRepositoryUtil {
 
     
     public static final String getExtendedSql(String extendedSqlId){
-   		return JpaMetadata.getExtendedSql(extendedSqlId);
+   		return ExtendedQueryPool.getExtendedSql(extendedSqlId);
     }
     
 }
