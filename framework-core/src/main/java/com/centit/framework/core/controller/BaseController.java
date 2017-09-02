@@ -34,7 +34,8 @@ import java.util.Map;
  */
 
 @Controller
-public class BaseController {
+@SuppressWarnings("unused")
+public abstract class BaseController {
     
     /**
      * 转换查询参数为字符串，用于 = 或者 like 查询
@@ -168,6 +169,7 @@ public class BaseController {
 
     /**
      * 将查询条件转换为Dao中hql语句的参数变量
+     * 这个中的规则是为了兼容以前的版本，新的版本不需要添加任何前缀
      * @param request request
      * @return map 将查询条件转换为Dao中hql语句的参数变量
      */
@@ -226,6 +228,8 @@ public class BaseController {
             }
             else if (StringUtils.equals(key, CodeBook.TABLE_SORT_ORDER)) {
                 map.put(key, HtmlFormUtils.getParameterString(ent.getValue()));
+            }else {
+                map.put(key, ent.getValue());
             }
         }
         // log.error("规则化后参数表：" + map.toString());

@@ -22,11 +22,20 @@ public class DictionaryMapUtils {
         
     }
 
-    private static DictionaryMapColumn makeDictionaryMapColumn(DictionaryMap dictionary,String filedName ){
+    private static DictionaryMapColumn makeDictionaryMapColumn(DictionaryMap dictionary,String fieldName ){
 		Map<String,String> dm = CodeRepositoryUtil.getLabelValueMap(dictionary.value());
 		if(dm!=null)
-			return new DictionaryMapColumn(filedName,
+			return new DictionaryMapColumn(fieldName,
 					dictionary.fieldName(),
+					dm);
+		return null;
+	}
+
+	private static DictionaryMapColumn makeDictionaryMapColumn(String dictionaryFieldName  , String dataCatalog, String fieldName ){
+		Map<String,String> dm = CodeRepositoryUtil.getLabelValueMap(dataCatalog);
+		if(dm!=null)
+			return new DictionaryMapColumn(fieldName,
+					dictionaryFieldName,
 					dm);
 		return null;
 	}
@@ -138,21 +147,23 @@ public class DictionaryMapUtils {
 	 * @param fieldDictionaryMaps 数据字典映射表
 	 * @return Po对象转换为JSONObject
 	 */
-	public final static Object objectToJSON(Object obj , List<DictionaryMapColumn> fieldDictionaryMaps ){
+	private final static Object objectToJSON(Object obj , List<DictionaryMapColumn> fieldDictionaryMaps ){
 		if(obj==null)
 			return null;
-		Object json = JSON.toJSON(obj);
-		if(json instanceof JSONObject){
+		Object jsonObject= ( obj instanceof  Map) ? obj : JSON.toJSON(obj);
+		if(jsonObject instanceof Map){
 			if(fieldDictionaryMaps==null||fieldDictionaryMaps.size()==0)
-				return json;
-			JSONObject jsonObj = (JSONObject)json;
-			for(DictionaryMapColumn col:fieldDictionaryMaps){
-				jsonObj.put(col.getMapFieldName(),
-						col.getDictionaryMap().get(jsonObj.get(col.getFieldName())));
+				return jsonObject;
+			Map<String,Object> jsonObj = ( Map<String,Object>) jsonObject;
+			for(DictionaryMapColumn col: fieldDictionaryMaps){
+				if( jsonObj.get(col.getFieldName()) !=null) {
+					jsonObj.put(col.getMapFieldName(),
+							col.getDictionaryMap().get(jsonObj.get(col.getFieldName())));
+				}
 			}
 			return jsonObj;
 		}
-		return json;
+		return jsonObject;
 	}
 
 	/**
@@ -166,6 +177,7 @@ public class DictionaryMapUtils {
 		List<DictionaryMapColumn> fieldDictionaryMaps =  getDictionaryMapColumns(obj.getClass());
 		return objectToJSON(obj,fieldDictionaryMaps);
 	}
+
     /**
      * 将一个Po对象数组转换为JSONArray 同时检查对象上面的的属性是否有DictionaryMap注解，如果有转换数据字典
      * @param objs Object[]
@@ -264,7 +276,7 @@ public class DictionaryMapUtils {
     	public DictionaryMapBuilder addDictionaryDesc(
     			String codeField,String valueField,String dictCatalog){
     		dictionaryMap.put(codeField, 
-    				new KeyValuePair<String,String>(valueField,dictCatalog));
+    				new KeyValuePair<>(valueField,dictCatalog));
     		return this;
     	}
     	
@@ -292,5 +304,75 @@ public class DictionaryMapUtils {
 			String codeField,String valueField,String dictCatalog){
 		DictionaryMapBuilder builder = new DictionaryMapBuilder();
 		return builder.addDictionaryDesc(codeField, valueField, dictCatalog);
+	}
+
+
+	/**
+	 * 检查objType属性上是否有DictionaryMap注解，如果有则获取对应的数据字典用于后面查询是转换编码
+	 * @param mapInfo po对象类型
+	 * @return DictionaryMapColumn 字段名包括数据字典相关信息
+	 */
+	private final static List<DictionaryMapColumn> getDictionaryMapColumns
+	(Map<String,KeyValuePair<String,String>> mapInfo){
+		List<DictionaryMapColumn> fieldDictionaryMaps =
+				new ArrayList<>();
+
+		for(Map.Entry<String,KeyValuePair<String,String>> ent : mapInfo.entrySet()){
+			DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
+					ent.getValue().getLeft(),ent.getValue().getRight() , ent.getKey());
+
+			if(dictionaryMapColumn != null)
+				fieldDictionaryMaps.add(dictionaryMapColumn);
+
+		}//end of for
+		return fieldDictionaryMaps;
+	}
+
+	public final static Map<String,Object>  mapJsonObject(Map<String,Object> obj,Class<?> objType ) {
+		if (obj == null)
+			return null;
+		List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(obj.getClass());
+		return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
+	}
+
+	public final static Map<String,Object>  mapJsonObject(Map<String,Object> obj,
+														  Map<String,KeyValuePair<String,String>> mapInfo) {
+		List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
+		return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
+	}
+
+
+	private final static List<Map<String,Object>>
+		mapJsonArray(List<Map<String,Object>> objs, List<DictionaryMapColumn> fieldDictionaryMaps  ) {
+		if(fieldDictionaryMaps==null | fieldDictionaryMaps.size()<1)
+			return objs;
+		for(Map<String,Object> obj : objs){
+
+			for(DictionaryMapColumn col:fieldDictionaryMaps){
+				if( obj.get(col.getFieldName()) !=null) {
+					obj.put(col.getMapFieldName(),
+							col.getDictionaryMap().get(obj.get(col.getFieldName())));
+				}
+			}
+		}
+		return objs;
+
+	}
+
+
+	public final static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,Class<?> objType ) {
+		if (objs == null)
+			return null;
+		List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
+		return mapJsonArray( objs, fieldDictionaryMaps);
+
+	}
+
+	public final static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,
+															   Map<String,KeyValuePair<String,String>> mapInfo ) {
+		if (objs == null)
+			return null;
+		List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
+		return mapJsonArray( objs, fieldDictionaryMaps);
 	}
 }
