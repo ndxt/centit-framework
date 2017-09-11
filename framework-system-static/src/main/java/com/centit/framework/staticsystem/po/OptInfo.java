@@ -20,20 +20,11 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
 
  
     private String optId; // 业务编号
-    public String getId() {
-        return this.optId;
-    }
     
   
     private String preOptId; // 上级业务模块编号
-    public String getPid() {
-        return this.preOptId;
-    }
     
     private String optName; // 业务名称
-    public String getText() {
-        return this.optName;
-    }
     /**
      * S:实施业务, O:普通业务, W:流程业务, I:项目业务
      */
@@ -49,9 +40,6 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
      */
 
     private String optRoute;
-    public String getUrl() {
-        return this.optRoute;
-    }
     
 
     private String optUrl; // 业务url（b/s）
@@ -65,10 +53,6 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
 
     private String isInToolbar; // 是否放入工具栏
 
-
-    private Long imgIndex; // 图标编号
-
-
     private String topOptId; // 顶层业务编号
 
 
@@ -76,23 +60,12 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
 
  
     private String pageType; // 页面打开方式 D: DIV I： iFrame
-    
-    public Map<String, Object> getAttributes() {
-        boolean external = true;
-        if (StringUtils.equals("D", this.pageType)) {
-            external = false;
-        };
-        
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("external", external);
-        return map;
-    }
-    
+
  
     private Long orderInd; // 业务顺序
 
  
-    private String icon;// 图标
+    private String icon;// 图标 // 图标编号
 
  
     private Long height;// 高度
@@ -116,7 +89,7 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
 
     public OptInfo(String optid, String preoptid, String optname,
             String formcode, String opturl, Long msgno, String msgprm,
-            String isintoolbar, Long imgindex, String topoptid, String opttype,
+            String isintoolbar,  String topoptid, String opttype,
             String wfcode, Long orderind, String pageType, String icon,
             Long height, Long width) {
 
@@ -129,7 +102,6 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
         this.msgNo = msgno;
         this.msgPrm = msgprm;
         this.isInToolbar = isintoolbar;
-        this.imgIndex = imgindex;
         this.topOptId = topoptid;
         this.optType = opttype;
         this.flowCode = wfcode;
@@ -237,14 +209,6 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
         this.isInToolbar = isintoolbar;
     }
 
-    public Long getImgIndex() {
-        return this.imgIndex;
-    }
-
-    public void setImgIndex(Long imgindex) {
-        this.imgIndex = imgindex;
-    }
-
     public String getTopOptId() {
         return this.topOptId;
     }
@@ -313,7 +277,6 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
         this.msgNo = other.getMsgNo();
         this.msgPrm = other.getMsgPrm();
         this.isInToolbar = other.getIsInToolbar();
-        this.imgIndex = other.getImgIndex();
         this.topOptId = other.getTopOptId();
         this.optType = other.getOptType();
         this.flowCode = other.getFlowCode();
@@ -341,8 +304,6 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
             this.msgPrm = other.getMsgPrm();
         if (other.getIsInToolbar() != null)
             this.isInToolbar = other.getIsInToolbar();
-        if (other.getImgIndex() != null)
-            this.imgIndex = other.getImgIndex();
         if (other.getTopOptId() != null)
             this.topOptId = other.getTopOptId();
         if (other.getOptType() != null)
@@ -373,7 +334,6 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
         this.msgNo = null;
         this.msgPrm = null;
         this.isInToolbar = null;
-        this.imgIndex = null;
         this.topOptId = null;
         this.optType = null;
         this.flowCode = null;

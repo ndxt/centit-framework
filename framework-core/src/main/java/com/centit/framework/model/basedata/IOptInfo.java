@@ -1,5 +1,7 @@
 package com.centit.framework.model.basedata;
 
+import java.util.List;
+
 /**
  *  业务模块说明
  * @author codefan@hotmail.com
@@ -44,10 +46,10 @@ public interface IOptInfo {
      String getIsInToolbar();
     /**
      * 图标编号
-     * @return 图标编号
+     * @return 图标编号 Icon
      */
-     Long getImgIndex();
-    
+     //Long getImgIndex();
+     String getIcon();
     /**
      * 页面打开方式 D: DIV I： iFrame
      * @return 页面打开方式 D: DIV I： iFrame
@@ -58,4 +60,10 @@ public interface IOptInfo {
      * @return 业务排序号
      */
      Long getOrderInd();
+
+    /**
+     *
+     * @return 返回业务的下层业务
+     */
+    List<? extends IOptInfo> getChildren();
 }

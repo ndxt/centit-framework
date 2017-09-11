@@ -1,5 +1,7 @@
 package com.centit.framework.system.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
@@ -30,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -341,6 +344,28 @@ public class MainFrameController extends BaseController {
             JsonResultUtils.writeSingleDataJson(ud, response);
     }
 
+    private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser){
+        if(menuFunsByUser == null)
+            return null;
+        JSONArray jsonArray = new JSONArray(menuFunsByUser.size());
+        for(IOptInfo optInfo :  menuFunsByUser){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id",optInfo.getOptId());
+            jsonObject.put("pid",optInfo.getPreOptId());
+            jsonObject.put("text",optInfo.getOptName());
+            jsonObject.put("url",optInfo.getOptRoute());
+            jsonObject.put("icon",optInfo.getIcon());
+            Map<String, Object> map = new HashMap<>(2);
+            map.put("external", !("D".equals(optInfo.getPageType())));
+            jsonObject.put("attributes", map);
+            jsonObject.put("isInToolbar",optInfo.getIsInToolbar());
+            jsonObject.put("children",optInfo.getChildren());
+
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
+    }
+
     /**
      * 首页菜单
      *
@@ -359,10 +384,7 @@ public class MainFrameController extends BaseController {
        
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserCode(),asAdmin );
 
-        JsonResultUtils.writeSingleDataJson(
-                menuFunsByUser, response, JsonPropertyUtils.getIncludePropPreFilter(IOptInfo.class,
-                "id", "pid", "text", "url", "icon", "attributes", "isInToolbar", "children"));
-
+        JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }
 
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
@@ -380,9 +402,7 @@ public class MainFrameController extends BaseController {
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(
         		userDetails.getUserCode(),optid ,asAdmin);
 
-        JsonResultUtils.writeSingleDataJson(menuFunsByUser, response,
-                JsonPropertyUtils.getIncludePropPreFilter(IOptInfo.class,
-                "id", "pid", "text", "url", "icon", "attributes", "isInToolbar", "children"));
+        JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
 
     }
     
@@ -392,9 +412,7 @@ public class MainFrameController extends BaseController {
     	
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userCode, false);
 
-        JsonResultUtils.writeSingleDataJson(menuFunsByUser, response,
-                JsonPropertyUtils.getIncludePropPreFilter(IOptInfo.class,
-                "id", "pid", "text", "url", "icon", "attributes", "isInToolbar", "children"));
+        JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
 
     }
     
