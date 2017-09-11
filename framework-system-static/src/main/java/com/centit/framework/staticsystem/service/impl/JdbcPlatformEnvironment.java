@@ -2,6 +2,7 @@ package com.centit.framework.staticsystem.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.components.CodeRepositoryUtil;
+import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.database.utils.DataSourceDescription;
@@ -60,7 +61,9 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment
 
 	public void loadConfigFromJdbc() throws SQLException, IOException,DocumentException {
 
-		CodeRepositoryUtil.loadExtendedSqlMap("ExtendedSqlMap.xml");
+		ExtendedQueryPool.loadExtendedSqlMap(
+				"ExtendedSqlMap.xml",
+				dataSource.getDbType());
 
 		try(Connection conn = getConnection()) {
 			JSONArray userJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
