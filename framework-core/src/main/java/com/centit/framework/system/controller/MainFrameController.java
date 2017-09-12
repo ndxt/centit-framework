@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
-import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.common.ResponseMapData;
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
@@ -13,7 +13,6 @@ import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
-import com.centit.support.json.JsonPropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
@@ -359,7 +358,7 @@ public class MainFrameController extends BaseController {
             map.put("external", !("D".equals(optInfo.getPageType())));
             jsonObject.put("attributes", map);
             jsonObject.put("isInToolbar",optInfo.getIsInToolbar());
-            jsonObject.put("children",optInfo.getChildren());
+            jsonObject.put("children",makeMenuFuncsJson(optInfo.getChildren()));
 
             jsonArray.add(jsonObject);
         }
