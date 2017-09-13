@@ -64,6 +64,6 @@ public class UserDetailsServiceImpl implements
 	@Override
 	public void saveUserSetting(String userCode, String paramCode, String paramValue, String paramClass,
 			String paramName) {
-		// TODO 静态服务器没有提供保存用户设置持久化的地方
+
 	}
 }

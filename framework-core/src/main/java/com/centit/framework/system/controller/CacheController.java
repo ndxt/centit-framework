@@ -3,13 +3,13 @@ package com.centit.framework.system.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.SysParametersUtils;
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.SysUnitFilterEngine;
 import com.centit.framework.components.SysUserFilterEngine;
 import com.centit.framework.components.impl.UserUnitMapTranslate;
-import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
@@ -17,9 +17,14 @@ import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.database.utils.DBType;
 import com.centit.support.file.FileSystemOpt;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +42,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/cp")
 public class CacheController {
+
+    private static Log logger = LogFactory.getLog(CacheController.class);
 
     /**
      * cp标签中MAPVALUE实现，获取数据字典对应的值
@@ -462,7 +469,8 @@ public class CacheController {
      */
     @RequestMapping(value = "/reloadextendedsqlmap", method = { RequestMethod.GET })
     public void reloadExtendedSqlMap( HttpServletResponse response) {
-
+        boolean hasError = false;
+        StringBuilder errorMsg = new StringBuilder();
         List<File> files = FileSystemOpt.findFilesByExt(SysParametersUtils.getAppHome()+"/sqlscript","xml");
         DBType dbType = DBType.mapDBType( SysParametersUtils.getStringValue("jdbc.url"));
 	    if(files!=null & files.size()>0){
@@ -472,11 +480,24 @@ public class CacheController {
                             new FileInputStream(file),dbType
                     );
                 } catch (DocumentException | IOException e) {
-                    e.printStackTrace();
+                    hasError = true;
+                    errorMsg.append(e.getMessage());
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
-    	JsonResultUtils.writeSingleDataJson("Reload Extended Sql Map succeed！", response);
+        try {
+            ExtendedQueryPool.loadResourceExtendedSqlMap(dbType);
+        } catch (DocumentException | IOException e) {
+            hasError = true;
+            errorMsg.append(e.getMessage());
+            logger.error(e.getMessage(),e);
+        }
+        if(hasError){
+            JsonResultUtils.writeErrorMessageJson(errorMsg.toString(), response );
+        }else {
+            JsonResultUtils.writeSingleDataJson("Reload Extended Sql Map succeed！", response);
+        }
     }
     
 }

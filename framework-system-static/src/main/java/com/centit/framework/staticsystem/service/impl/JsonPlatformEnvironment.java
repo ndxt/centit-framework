@@ -8,6 +8,8 @@ import com.centit.framework.staticsystem.po.*;
 import com.centit.support.file.FileIOOpt;
 import com.centit.support.file.FileSystemOpt;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 
 public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
 	implements PlatformEnvironment {
+
+    private static Log logger = LogFactory.getLog(JsonPlatformEnvironment.class);
 
 	public void init(){
 		reloadDictionary();
@@ -38,6 +42,17 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
 		datadictionaies = JSON.parseArray(json.getString("dataDictionaries"), DataDictionary.class);
 	}
 
+	public static String loadJsonStringFormConfigFile(String fileName) throws IOException {
+		String jsonFile = SysParametersUtils.getConfigHome()+ fileName;
+		if(FileSystemOpt.existFile(jsonFile)) {
+			return FileIOOpt.readStringFromFile(jsonFile,"UTF-8");
+		}else{
+
+			return FileIOOpt.readStringFromInputStream(
+					new ClassPathResource(fileName).getInputStream(),"UTF-8");
+
+		}
+	}
 	/**
 	 * 刷新数据字典
 	 *
@@ -46,15 +61,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
 	@Override
 	public boolean reloadDictionary() {
 		try {
-			String jsonFile = SysParametersUtils.getConfigHome()+"/static_system_config.json";
-			if(!FileSystemOpt.existFile(jsonFile)){
-				FileSystemOpt.createDirect(  SysParametersUtils.getConfigHome());
-				FileSystemOpt.fileCopy(
-						new ClassPathResource("static_system_config.json").getFile() ,
-						new File(jsonFile)
-				);
-			}
-			String jsonstr = FileIOOpt.readStringFromFile(jsonFile,"UTF-8");
+			String jsonstr = loadJsonStringFormConfigFile("/static_system_config.json");
 			loadConfigFromJSONString(jsonstr);
 		} catch (IOException e) {
 			userinfos = new ArrayList<>();
@@ -73,16 +80,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
 
 		//static_system_user_pwd.json
 		try {
-			String jsonFile = SysParametersUtils.getConfigHome()+"/static_system_user_pwd.json";
-			if(!FileSystemOpt.existFile(jsonFile)){
-				FileSystemOpt.createDirect(  SysParametersUtils.getConfigHome());
-				FileSystemOpt.fileCopy(
-						new ClassPathResource("static_system_user_pwd.json").getFile() ,
-						new File(jsonFile)
-				);
-			}
-
-			String jsonStr = FileIOOpt.readStringFromFile(jsonFile,"UTF-8");
+			String jsonStr = loadJsonStringFormConfigFile("/static_system_user_pwd.json");
 			JSONObject json = JSON.parseObject(jsonStr);
 			for(UserInfo u :userinfos){
 				String spwd = json.getString(u.getUserCode());
@@ -90,7 +88,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
 					u.setUserPin(spwd);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		return true;
 	}
@@ -110,9 +108,10 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
 		JSONObject json = null;
 		String jsonFile = SysParametersUtils.getConfigHome()+"/static_system_user_pwd.json";
 		try {
-			String jsonstr = FileIOOpt.readStringFromFile(jsonFile,"UTF-8");
+			String jsonstr = loadJsonStringFormConfigFile("/static_system_user_pwd.json");
 			json = JSON.parseObject(jsonstr);
 		} catch (IOException e) {
+            logger.error(e.getMessage(),e);
 		}
 
 		if(json==null)
@@ -122,7 +121,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
 			json.put(userCode,ui.getUserPin());
 			FileIOOpt.writeStringToFile(json.toJSONString(),jsonFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 	}
 }
