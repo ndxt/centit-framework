@@ -1,9 +1,9 @@
 package com.centit.framework.core.controller;
 
-import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.ListOpt;
@@ -12,7 +12,6 @@ import com.centit.support.network.HtmlFormUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -33,7 +32,7 @@ import java.util.Map;
  * 2013年12月30日
  */
 
-@Controller
+//@Controller
 @SuppressWarnings("unused")
 public abstract class BaseController {
     
