@@ -61,9 +61,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment
 
 	public void loadConfigFromJdbc() throws SQLException, IOException,DocumentException {
 
-		ExtendedQueryPool.loadExtendedSqlMap(
-				"ExtendedSqlMap.xml",
-				dataSource.getDbType());
+		ExtendedQueryPool.loadResourceExtendedSqlMap(dataSource.getDbType());
 
 		try(Connection conn = getConnection()) {
 			JSONArray userJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
