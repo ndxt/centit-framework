@@ -19,11 +19,11 @@
 
     <sql id="LIST_ALL_USER">
         <![CDATA[
-            select USERCODE as userCode, USERPIN as userPin , ISVALID as isValid, USERTYPE as userType,
-                LOGINNAME as loginName, USERNAMEas userName, ENGLISHNAME as englishName, USERDESC as userDesc,
-                LOGINTIMES as loginTimes, ACTIVETIME as activeTime, PWDEXPIREDTIME as pwdExpiredTime, LOGINIP as loginIp,
-                ADDRBOOKID as addrbookId, REGEMAIL as regEmail ,  REGCELLPHONE as regCellPhone, USERWORD as userWord,
-                USERTAG as userTag, USERORDER as userOrder, PRIMARYUNIT as primaryUnit
+            select USER_CODE as userCode, USER_PIN as userPin , IS_VALID as isValid, USER_TYPE as userType,
+                LOGIN_NAME as loginName, USER_NAME as userName, ENGLISH_NAME as englishName, USER_DESC as userDesc,
+                LOGIN_TIMES as loginTimes, ACTIVE_TIME as activeTime, PWD_EXPIRED_TIME as pwdExpiredTime, LOGIN_IP as loginIp,
+                ADDRBOOK_ID as addrbookId, REG_EMAIL as regEmail ,  REG_CELL_PHONE as regCellPhone, USER_WORD as userWord,
+                USER_TAG as userTag, USER_ORDER as userOrder, PRIMARY_UNIT as primaryUnit
             from F_USERINFO
         ]]>
     </sql>
