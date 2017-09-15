@@ -21,7 +21,7 @@ import com.centit.support.file.PropertiesReader;
 public class HostIpSecurityMetadataSource
             implements FilterInvocationSecurityMetadataSource
          {
-	public static final String LOCAL_HOST_IP="127.0.0.1";
+    public static final String LOCAL_HOST_IP="127.0.0.1";
     //private static final Logger logger = LoggerFactory.getLogger(DaoInvocationSecurityMetadataSource.class);
     //private static boolean logDebug = logger.isDebugEnabled();
     private Map<String,Collection<ConfigAttribute>> hostIpAttributes=null;

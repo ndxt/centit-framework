@@ -13,7 +13,7 @@ import com.centit.support.algorithm.DatetimeOpt;
 public class TestJsonParser {
 
     public static void main(String[] args) {
-    	toJsonDate();
+        toJsonDate();
     }
     
     public static void toJsonDate(){

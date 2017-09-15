@@ -57,17 +57,17 @@ public class ResponseMapData implements ResponseData {
         this.resCode = resCode;
     }
 
-	public String getMessage() {
-		return resMessage;
-	}
+    public String getMessage() {
+        return resMessage;
+    }
 
     /*public String getResponseMessage() {
         return resMessage;
     }
-	*/
-	public void setMessage(String resMessage) {
-		this.resMessage = resMessage;
-	}
+    */
+    public void setMessage(String resMessage) {
+        this.resMessage = resMessage;
+    }
 
     public void setResponseMessage(String resMessage) {
         this.resMessage = resMessage;
@@ -77,11 +77,11 @@ public class ResponseMapData implements ResponseData {
         return resMapData;
     }
 
-	public Map<String, Object> setData(Map<String, Object> objValue) {
-		Map<String, Object> oldObj = this.resMapData;
-		this.resMapData = objValue;
-		return oldObj;
-	}
+    public Map<String, Object> setData(Map<String, Object> objValue) {
+        Map<String, Object> oldObj = this.resMapData;
+        this.resMapData = objValue;
+        return oldObj;
+    }
 
     public void addResponseData(String sKey, Object objValue) {
         resMapData.put(sKey, objValue);
@@ -97,14 +97,14 @@ public class ResponseMapData implements ResponseData {
         param.put(RES_MSG_FILED,  resMessage );
         if(resMapData!=null)
             param.put(RES_DATA_FILED, resMapData);
-		if(simplePropertyPreFilter==null)
-			return JSONObject.toJSONString(param);
-		return JSONObject.toJSONString(param,simplePropertyPreFilter);
+        if(simplePropertyPreFilter==null)
+            return JSONObject.toJSONString(param);
+        return JSONObject.toJSONString(param,simplePropertyPreFilter);
     }
 
-	@Override
-	public String toString(){
-		return toJSONString();
-	}
+    @Override
+    public String toString(){
+        return toJSONString();
+    }
 
 }

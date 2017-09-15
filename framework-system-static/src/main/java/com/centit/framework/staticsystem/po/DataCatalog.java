@@ -125,11 +125,11 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
     }
 
     public void setFieldDesc(String fielddesc) {
-    	
-    	if (StringUtils.isNotBlank(fielddesc)) {
-    		fielddesc = HtmlUtils.htmlUnescape(fielddesc);
-    	}
-    	
+
+        if (StringUtils.isNotBlank(fielddesc)) {
+            fielddesc = HtmlUtils.htmlUnescape(fielddesc);
+        }
+
         this.fieldDesc = fielddesc;
     }
 
@@ -150,7 +150,7 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
         this.needCache = needCache;
     }
   
-	//结束
+    //结束
     public void copy(DataCatalog other) {
 
         this.catalogName = other.getCatalogName();
@@ -197,8 +197,8 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
     }
 
     public DataCatalog addDataDictionary(DataDictionary dd) {
-    	getDataDictionaries().add(dd);
-    	return this;
+        getDataDictionaries().add(dd);
+        return this;
     }
     
     public List<DataDictionary> getDataDictionaries() {

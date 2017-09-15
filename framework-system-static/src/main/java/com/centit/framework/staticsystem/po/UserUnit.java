@@ -157,7 +157,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
     }
 
     public void copy(UserUnit other) {
-    	this.userUnitId  = other.getUserUnitId();
+        this.userUnitId  = other.getUserUnitId();
         this.isPrimary = other.getIsPrimary();
         this.createDate = other.getCreateDate();
         this.rankMemo = other.getRankMemo();
@@ -169,7 +169,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
      }
 
     public void copyNotNullProperty(UserUnit other) {
-   	
+
         if (null != other.getIsPrimary()) {
             this.isPrimary = other.getIsPrimary();
         }

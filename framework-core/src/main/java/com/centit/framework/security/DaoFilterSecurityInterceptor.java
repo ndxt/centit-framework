@@ -63,42 +63,42 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
 
     public void invoke(FilterInvocation fi) throws IOException,
             ServletException {
-    	
-    	Authentication authentication = SecurityContextHolder.getContext()
-				.getAuthentication();
-    	
-    	boolean alwaysReauthenticate = false;
-    	
-    	//从session中获取用户信息
-    	if(authentication==null || "anonymousUser".equals(authentication.getName())){
-	    	Object attr = fi.getHttpRequest().getSession().getAttribute(
-	    			SecurityContextUtils.SecurityContextUserdetail);
-	    	if(attr!=null && attr instanceof CentitUserDetails){
-	    		authentication = (CentitUserDetails)attr;
-	    		alwaysReauthenticate = this.isAlwaysReauthenticate();
-    			if(alwaysReauthenticate)
-    				this.setAlwaysReauthenticate(false);
-    			SecurityContextHolder.getContext().setAuthentication(authentication);
-	    	}
-    	}
-    	
-    	//从token中获取用户信息
-    	if(authentication==null || "anonymousUser".equals(authentication.getName())){
-    		String accessToken = fi.getHttpRequest().getParameter(SecurityContextUtils.SecurityContextTokenName);
-    		if(StringUtils.isBlank(accessToken))
-    			accessToken = String.valueOf(fi.getHttpRequest().getAttribute(SecurityContextUtils.SecurityContextTokenName) );
-    		CentitUserDetails ud = sessionRegistry.getCurrentUserDetails(accessToken);
-    		if(ud!=null){
-    			alwaysReauthenticate = this.isAlwaysReauthenticate();
-    			if(alwaysReauthenticate)
-    				this.setAlwaysReauthenticate(false);
-    			SecurityContextHolder.getContext().setAuthentication(ud);
-    			//设置用户默认语言
-    			WebOptUtils.setCurrentLang(fi.getHttpRequest(), 
-    					ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE));
-    		}
-    	}
-    	
+
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+
+        boolean alwaysReauthenticate = false;
+
+        //从session中获取用户信息
+        if(authentication==null || "anonymousUser".equals(authentication.getName())){
+            Object attr = fi.getHttpRequest().getSession().getAttribute(
+                    SecurityContextUtils.SecurityContextUserdetail);
+            if(attr!=null && attr instanceof CentitUserDetails){
+                authentication = (CentitUserDetails)attr;
+                alwaysReauthenticate = this.isAlwaysReauthenticate();
+                if(alwaysReauthenticate)
+                    this.setAlwaysReauthenticate(false);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
+
+        //从token中获取用户信息
+        if(authentication==null || "anonymousUser".equals(authentication.getName())){
+            String accessToken = fi.getHttpRequest().getParameter(SecurityContextUtils.SecurityContextTokenName);
+            if(StringUtils.isBlank(accessToken))
+                accessToken = String.valueOf(fi.getHttpRequest().getAttribute(SecurityContextUtils.SecurityContextTokenName) );
+            CentitUserDetails ud = sessionRegistry.getCurrentUserDetails(accessToken);
+            if(ud!=null){
+                alwaysReauthenticate = this.isAlwaysReauthenticate();
+                if(alwaysReauthenticate)
+                    this.setAlwaysReauthenticate(false);
+                SecurityContextHolder.getContext().setAuthentication(ud);
+                //设置用户默认语言
+                WebOptUtils.setCurrentLang(fi.getHttpRequest(),
+                        ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE));
+            }
+        }
+
         InterceptorStatusToken token = super.beforeInvocation(fi);
         try {
             fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
@@ -106,8 +106,8 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
             super.afterInvocation(token, null);
         }
 
-		if(alwaysReauthenticate)
-			this.setAlwaysReauthenticate(true);
+        if(alwaysReauthenticate)
+            this.setAlwaysReauthenticate(true);
     }
 
     public SecurityMetadataSource obtainSecurityMetadataSource() {

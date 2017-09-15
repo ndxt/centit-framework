@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.centit.framework.model.basedata.IUserInfo;
 
 public interface CentitUserDetails extends
-		Authentication, UserDetails,IUserInfo {
+        Authentication, UserDetails,IUserInfo {
     /**
      * 用户头衔，业务系统可以自定义这个字段的意义
      * @return 用户头衔，业务系统可以自定义这个字段的意义
@@ -36,7 +36,7 @@ public interface CentitUserDetails extends
     
     /**
      * 用户某个具体的参数值
-     * @param paramCode	参数代码
+     * @param paramCode    参数代码
      * @return 用户某个具体的参数值
      */
      String getUserSettingValue(String paramCode);
@@ -47,8 +47,8 @@ public interface CentitUserDetails extends
      Map<String, String> getUserOptList();
     /**
      * 判断用户是否有某个具体的操作方法权限
-     * @param optId	业务ID
-     * @param optMethod	方法名称
+     * @param optId    业务ID
+     * @param optMethod    方法名称
      * @return 判断用户是否有某个具体的操作方法权限
      */
      boolean checkOptPower(String optId, String optMethod);
@@ -68,5 +68,5 @@ public interface CentitUserDetails extends
      * @param loginTime loginTime
      */
      void setActiveTime(Date loginTime);
-	
+
 }

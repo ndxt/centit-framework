@@ -8,10 +8,10 @@ import java.util.List;
  * @author codefan@sina.com
  */
  public interface IUserInfo{
-	/**
-	 * 用户编码，是用户的主键
-	 * @return 用户编码，是用户的主键
-	 */
+    /**
+     * 用户编码，是用户的主键
+     * @return 用户编码，是用户的主键
+     */
      String getUserCode();
     
     /**
@@ -20,21 +20,21 @@ import java.util.List;
      */
      String getUserPin();
     /**
-	 * 用户是否有效 T/F/A  T 正常 ， F 禁用,A为新建可以删除
-	 * @return 用户是否有效 T/F/A  T 正常 ， F 禁用,A为新建可以删除
-	 */
-	 String getIsValid();
-	
+     * 用户是否有效 T/F/A  T 正常 ， F 禁用,A为新建可以删除
+     * @return 用户是否有效 T/F/A  T 正常 ， F 禁用,A为新建可以删除
+     */
+     String getIsValid();
+
     /**
-	 * 用户名称  ，和 getUsername()不同后者返回的是用户登录名称
-	 * @return 用户名称
+     * 用户名称  ，和 getUsername()不同后者返回的是用户登录名称
+     * @return 用户名称
      */
      String getUserName();
     
     /**
-	 * 用户登录名 同 getUsername
-	 * @return 用户登录名
-	 */
+     * 用户登录名 同 getUsername
+     * @return 用户登录名
+     */
      String getLoginName();
     /**
      * 用户默认机构（主机构）代码
@@ -64,8 +64,8 @@ import java.util.List;
      */
      Long getUserOrder();
     /**
-	 * 获取用户归属机构关系
-	 * @return 获取用户归属机构关系
-	 */
-	 List<? extends IUserUnit> getUserUnits();
+     * 获取用户归属机构关系
+     * @return 获取用户归属机构关系
+     */
+     List<? extends IUserUnit> getUserUnits();
 }

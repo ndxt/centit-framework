@@ -6,22 +6,22 @@ package com.centit.framework.model.basedata;
  * @author MyEclipse Persistence Tools
  */
 public interface IUserUnit{
-	/**
-	 * 关联关系主键
-	 * @return 关联关系主键
-	 */
-	String getUserUnitId();
-	/**
-	 * 用户编码，是用户的主键
-	 * @return 用户编码，是用户的主键
-	 */
+    /**
+     * 关联关系主键
+     * @return 关联关系主键
+     */
+    String getUserUnitId();
+    /**
+     * 用户编码，是用户的主键
+     * @return 用户编码，是用户的主键
+     */
     String getUserCode();
     /**
-	 * 机构代码 是机构的主键
-	 * @return 机构代码 是机构的主键
-	 */
-	String getUnitCode();
-	/**
+     * 机构代码 是机构的主键
+     * @return 机构代码 是机构的主键
+     */
+    String getUnitCode();
+    /**
      * 是否为主机构 T:主机构 F：辅机构
      * @return 是否为主机构 T:主机构 F：辅机构
      */
@@ -37,9 +37,9 @@ public interface IUserUnit{
      */
     String getUserRank();
 
-	/**
-	 * 用户在本单位的排序号
-	 * @return 排序号
-	 */
-	Long getUserOrder();
+    /**
+     * 用户在本单位的排序号
+     * @return 排序号
+     */
+    Long getUserOrder();
 }

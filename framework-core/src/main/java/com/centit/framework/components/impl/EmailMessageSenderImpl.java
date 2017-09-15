@@ -21,7 +21,7 @@ public class EmailMessageSenderImpl implements MessageSender {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailMessageSenderImpl.class);
     private EmailMessageSenderImpl(){
-    	
+
     }
     public final static EmailMessageSenderImpl instance = new EmailMessageSenderImpl();
 

@@ -13,16 +13,16 @@ import javax.validation.ValidatorFactory;
  * 常用验证工具，适用于控制器及业务层中判断主键或关键对象且需要中断执行流程
  */
 public class ValidatorUtils {
-	
-	private static Validator validator = null;
-	
-	private static synchronized Validator getDefaultValidator(){
-		if(validator==null){
-			ValidatorFactory factory = Validation.buildDefaultValidatorFactory();    
-	        validator = factory.getValidator(); 
-		}
-		return validator;		
-	}
+
+    private static Validator validator = null;
+
+    private static synchronized Validator getDefaultValidator(){
+        if(validator==null){
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            validator = factory.getValidator();
+        }
+        return validator;
+    }
     /**
      * 判断空对象
      *
@@ -53,16 +53,16 @@ public class ValidatorUtils {
      * @param po 持久对象
      * @return Map 错误信息
      */
-    public static <Po>  Map<String,String> validatorEntityPo(Po po) {    	
+    public static <Po>  Map<String,String> validatorEntityPo(Po po) {
         Validator validator = getDefaultValidator(); 
         
         Set<ConstraintViolation<Po>> constraintViolations = validator.validate(po); 
         Map<String,String> errMsg = new HashMap<String,String>();
-       	for (ConstraintViolation<Po> constraintViolation : constraintViolations) {    
-       		errMsg.put(String.valueOf(constraintViolation.getPropertyPath()),
-       				constraintViolation.getMessage());    
+           for (ConstraintViolation<Po> constraintViolation : constraintViolations) {
+               errMsg.put(String.valueOf(constraintViolation.getPropertyPath()),
+                       constraintViolation.getMessage());
         }
-       	return errMsg;
+           return errMsg;
     }
     
 }

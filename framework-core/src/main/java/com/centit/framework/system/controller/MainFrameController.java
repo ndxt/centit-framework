@@ -38,7 +38,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/mainframe")
 public class MainFrameController extends BaseController {
-	
+
     public static final String ENTRANCE_TYPE = "ENTRANCE_TYPE";
     public static final String NORMAL_LOGIN = "NORMAL";
     public static final String DEPLOY_LOGIN = "DEPLOY";
@@ -94,13 +94,13 @@ public class MainFrameController extends BaseController {
     @RequestMapping("/login")
     public String login(HttpSession session) {
         //输入实施人员链接后未登录，后直接输入 普通用户登录链接
-    	session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
-    	if(useCas)
-	     {
-			 return "redirect:/system/mainframe/logincas";
-	     }else{	    	 
-	    	 return "sys/login";
-	     }       
+        session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
+        if(useCas)
+         {
+             return "redirect:/system/mainframe/logincas";
+         }else{
+             return "sys/login";
+         }
     }
 
     /**
@@ -148,7 +148,7 @@ public class MainFrameController extends BaseController {
         session.removeAttribute(LOGIN_AUTH_ERROR_MSG);
         if(useCas)
         {
-        	//return "sys/mainframe/index";
+            //return "sys/mainframe/index";
             session.invalidate();
             return "redirect:"+casHome+"/logout?service="+localHome+"/system/mainframe/index";
         }
@@ -166,18 +166,18 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value ="/changepwd",method = RequestMethod.PUT)
     public void changepassword(String password, String newPassword,
             HttpServletRequest request,HttpServletResponse response) {
-    	CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-    	if(ud==null){
-    		JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
-    	}else{    		
-	    	boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), password);
-	    	if(!bo){
-	    		JsonResultUtils.writeErrorMessageJson("用户输入的密码错误，不能修改密码！", response);
-	    	}else{
-	    		platformEnvironment.changeUserPassword(ud.getUserCode(), newPassword);
-	    		JsonResultUtils.writeSuccessJson(response);
-	    	}
-    	}
+        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
+        if(ud==null){
+            JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
+        }else{
+            boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), password);
+            if(!bo){
+                JsonResultUtils.writeErrorMessageJson("用户输入的密码错误，不能修改密码！", response);
+            }else{
+                platformEnvironment.changeUserPassword(ud.getUserCode(), newPassword);
+                JsonResultUtils.writeSuccessJson(response);
+            }
+        }
     }
 
     /**
@@ -189,13 +189,13 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value ="/checkpwd",method = RequestMethod.POST)
     public void checkpassword(String password, 
             HttpServletRequest request,HttpServletResponse response) {
-    	CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-    	if(ud==null){
-    		JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
-    	}else{    		
-	    	boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), password);
-	        JsonResultUtils.writeOriginalObject(bo, response);
-    	}
+        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
+        if(ud==null){
+            JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
+        }else{
+            boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), password);
+            JsonResultUtils.writeOriginalObject(bo, response);
+        }
     }
     
     /**
@@ -205,26 +205,26 @@ public class MainFrameController extends BaseController {
      */
     @RequestMapping(value="/loginasclient",method = RequestMethod.POST)
     public void loginAsClient(HttpServletRequest request,HttpServletResponse response) {
-    	Map<String, Object> formValue = collectRequestParameters(request);
+        Map<String, Object> formValue = collectRequestParameters(request);
 
-    	String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
-    	String userPwd = StringBaseOpt.objectToString(formValue.get("password"));
+        String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
+        String userPwd = StringBaseOpt.objectToString(formValue.get("password"));
     
-		CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
-		if(ud==null){
-			JsonResultUtils.writeErrorMessageJson("用户： "+userCode+"不存在。", response);
-			return;
-		}
-		boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), userPwd);
-		if(!bo){
-			JsonResultUtils.writeErrorMessageJson("用户 名和密码不匹配。", response);
-			return;
-		}
-		String tokenKey = SecurityContextUtils.registerUserToken(ud);
-		//request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);		
+        CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
+        if(ud==null){
+            JsonResultUtils.writeErrorMessageJson("用户： "+userCode+"不存在。", response);
+            return;
+        }
+        boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), userPwd);
+        if(!bo){
+            JsonResultUtils.writeErrorMessageJson("用户 名和密码不匹配。", response);
+            return;
+        }
+        String tokenKey = SecurityContextUtils.registerUserToken(ud);
+        //request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         ResponseMapData resData = new ResponseMapData();
-		resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
-		JsonResultUtils.writeResponseDataAsJson(resData, response);
+        resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
+        JsonResultUtils.writeResponseDataAsJson(resData, response);
 
     }
 
@@ -235,22 +235,22 @@ public class MainFrameController extends BaseController {
      */
     @RequestMapping(value = "/login/csrf",method = RequestMethod.GET)
     public void getLoginCsrfToken(HttpServletRequest request,HttpServletResponse response) {
-    	if(csrfTokenRepository!=null){
-    		CsrfToken token = csrfTokenRepository.generateToken(request);
-  		
-	    	response.setHeader("_csrf_parameter", token.getParameterName());
-	    	response.setHeader("_csrf_header", token.getHeaderName());
-	    	response.setHeader("_csrf", token.getToken());   
-	    	
-	    	csrfTokenRepository.saveToken( token,  request,
-	    			 response);
-	    	
-	    	JsonResultUtils.writeSingleDataJson
-				(token, response);
-    	}else{
-    		JsonResultUtils.writeErrorMessageJson(
-    				"Bean csrfTokenRepository not found!", response);
-    	}
+        if(csrfTokenRepository!=null){
+            CsrfToken token = csrfTokenRepository.generateToken(request);
+
+            response.setHeader("_csrf_parameter", token.getParameterName());
+            response.setHeader("_csrf_header", token.getHeaderName());
+            response.setHeader("_csrf", token.getToken());
+
+            csrfTokenRepository.saveToken( token,  request,
+                     response);
+
+            JsonResultUtils.writeSingleDataJson
+                (token, response);
+        }else{
+            JsonResultUtils.writeErrorMessageJson(
+                    "Bean csrfTokenRepository not found!", response);
+        }
     }
 
     /**
@@ -297,7 +297,7 @@ public class MainFrameController extends BaseController {
      */
     @RequestMapping(value = "/login/captchaimage",method = RequestMethod.GET)
     public void loginCaptchaImage( HttpServletRequest request, HttpServletResponse response) {  
-    	captchaImage(  request,  response);
+        captchaImage(  request,  response);
     }
 
     /**
@@ -310,8 +310,8 @@ public class MainFrameController extends BaseController {
     public void checkCaptchaImage(@PathVariable String checkcode, HttpServletRequest request, HttpServletResponse response) {
   
         String sessionCode = StringBaseOpt.objectToString(
-			        request.getSession().getAttribute(
-			                CaptchaImageUtil.SESSIONCHECKCODE));
+                    request.getSession().getAttribute(
+                            CaptchaImageUtil.SESSIONCHECKCODE));
         
         JsonResultUtils.writeOriginalObject(StringUtils.equals(checkcode, sessionCode), response);
     }
@@ -322,12 +322,12 @@ public class MainFrameController extends BaseController {
      */
     @RequestMapping("/currentuser")
     public void getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
-    	CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-    	if(ud==null)
-    		JsonResultUtils.writeMessageAndData(
-    				"No user login on current session!",request.getSession().getId(), response);
-    	else
-    		JsonResultUtils.writeSingleDataJson(ud, response);
+        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
+        if(ud==null)
+            JsonResultUtils.writeMessageAndData(
+                    "No user login on current session!",request.getSession().getId(), response);
+        else
+            JsonResultUtils.writeSingleDataJson(ud, response);
     }
 
     /**
@@ -388,18 +388,18 @@ public class MainFrameController extends BaseController {
 
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
     public void getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optid,
-    		HttpServletRequest request,HttpServletResponse response) {
+            HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails userDetails = super.getLoginUser(request);
         if(userDetails==null){
             JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
-            		"用户没有登录，请登录！", response);
+                    "用户没有登录，请登录！", response);
             return;
         }
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);  
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
        
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(
-        		userDetails.getUserCode(),optid ,asAdmin);
+                userDetails.getUserCode(),optid ,asAdmin);
 
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
 
@@ -408,7 +408,7 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/getMenu/{userCode}" , method = RequestMethod.GET)
     public void getMemuByUsercode(@PathVariable String userCode,
             HttpServletRequest request, HttpServletResponse response) {
-    	
+
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userCode, false);
 
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
@@ -417,14 +417,14 @@ public class MainFrameController extends BaseController {
     
     @RequestMapping("/expired")
     public String sessionExpired(
-    		HttpServletRequest request,HttpServletResponse response) {
-    	
-    	if (WebOptUtils.isAjax(request)) {
-    		JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
-    				"session超时，请重新登录。", response);
+            HttpServletRequest request,HttpServletResponse response) {
+
+        if (WebOptUtils.isAjax(request)) {
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
+                    "session超时，请重新登录。", response);
             return null;
-    	}else{
-    		return "exception/timeout";
-    	}
+        }else{
+            return "exception/timeout";
+        }
     }
 }

@@ -10,21 +10,21 @@ import org.springframework.web.util.HtmlUtils;
  */
 public class StringPropertiesEditor extends PropertiesEditor {
     
-	@Override
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         if(trimWhile) {
             String noSpaceText = StringUtils.trimWhitespace(text);
             setValue(StringUtils.hasText(noSpaceText) ? 
-            		HtmlUtils.htmlEscape(noSpaceText) : noSpaceText);
+                    HtmlUtils.htmlEscape(noSpaceText) : noSpaceText);
         }else
-        	setValue(StringUtils.hasText(text) ? HtmlUtils.htmlEscape(text) : text);
+            setValue(StringUtils.hasText(text) ? HtmlUtils.htmlEscape(text) : text);
     }
 
     @Override
     public String getAsText() {
-    	Object obj = getValue();
+        Object obj = getValue();
         if(obj==null)
-     	   return null;
+            return null;
         return obj.toString();
     }
 
@@ -39,6 +39,6 @@ public class StringPropertiesEditor extends PropertiesEditor {
     }
 
     public StringPropertiesEditor() {
-    	 this.trimWhile = false;
+         this.trimWhile = false;
     }
 }

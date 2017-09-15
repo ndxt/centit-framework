@@ -7,10 +7,10 @@ import java.util.List;
  * @author codefan@hotmail.com
  */
 public interface IOptInfo {
-	/**
-	 * 业务ID 主键
-	 * @return optId
-	 */
+    /**
+     * 业务ID 主键
+     * @return optId
+     */
      String getOptId();
     /**
      * 父业务ID

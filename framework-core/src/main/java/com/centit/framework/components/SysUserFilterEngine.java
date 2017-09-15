@@ -259,14 +259,14 @@ public class SysUserFilterEngine implements Serializable {
 
         if (ROLE_TYPE_GW.equalsIgnoreCase(roleType)) {
             for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-            	IUserUnit uu = it.next();
+                IUserUnit uu = it.next();
                 // 过滤掉不符合要求的岗位
                 if (!roleCode.equals(uu.getUserStation()))
                     it.remove();
             }
         } else if (ROLE_TYPE_XZ.equalsIgnoreCase(roleType)) {
             for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-            	IUserUnit uu = it.next();
+                IUserUnit uu = it.next();
                 // 过滤掉不符合要求的职位
                 if (!roleCode.equals(uu.getUserRank()))
                     it.remove();
@@ -315,7 +315,7 @@ public class SysUserFilterEngine implements Serializable {
 
         if (rf.isHasGWFilter()) {
             for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-            	IUserUnit uu = it.next();
+                IUserUnit uu = it.next();
                 // 过滤掉不符合要求的岗位
                 if (!rf.getGwRoles().contains(uu.getUserStation()))
                     it.remove();
@@ -324,7 +324,7 @@ public class SysUserFilterEngine implements Serializable {
 
         if (rf.isHasXZFilter()) {
             for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-            	IUserUnit uu = it.next();
+                IUserUnit uu = it.next();
                 // 过滤掉不符合要求的职位
                 if (!rf.getXzRoles().contains(uu.getUserRank()))
                     it.remove();
@@ -334,7 +334,7 @@ public class SysUserFilterEngine implements Serializable {
         if (rf.isHasRankFilter()) {
             if (rf.isRankAllSub() || rf.isRankAllTop()) { // 所有下级
                 for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-                	IUserUnit uu = it.next();
+                    IUserUnit uu = it.next();
                     if (!rf.matchRank(ecc.getXzRank(uu.getUserRank())))
                         it.remove();
                 }

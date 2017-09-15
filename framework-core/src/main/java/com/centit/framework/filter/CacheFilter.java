@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CacheFilter implements Filter {
-	protected Logger logger = LoggerFactory.getLogger(CacheFilter.class);
+    protected Logger logger = LoggerFactory.getLogger(CacheFilter.class);
     ServletContext sc;
     FilterConfig fc;
     long cacheTimeout = Long.MAX_VALUE;
@@ -126,7 +126,7 @@ public class CacheFilter implements Filter {
             }
             fis.close();
         } catch (IOException e) {
-        	logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(),e);
             if (fis != null)
                 fis.close();
         }

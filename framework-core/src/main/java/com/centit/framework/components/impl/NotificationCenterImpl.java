@@ -22,7 +22,7 @@ public class NotificationCenterImpl implements NotificationCenter {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationCenterImpl.class);
     private static Map<String, MessageSender> msgSenders
-    		= new HashMap<String, MessageSender>();
+            = new HashMap<String, MessageSender>();
 
     /**
      * 用户设置
@@ -32,10 +32,10 @@ public class NotificationCenterImpl implements NotificationCenter {
     //注入接口MessageSender实现类，通过setMsgSenders方法进行配置
     
     public void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
-		this.platformEnvironment = platformEnvironment;
-	}
+        this.platformEnvironment = platformEnvironment;
+    }
 
-	private MessageSender defautlMsgSender;
+    private MessageSender defautlMsgSender;
     /**
      * 这个通过spring注入
      */
@@ -190,7 +190,7 @@ public class NotificationCenterImpl implements NotificationCenter {
         sysNotify.put("notifyState", notifyState);
         sysNotify.put("errorText", errorText);
         
-    	OperationLogCenter.log(sender, "Notify","notify", JSON.toJSONString(sysNotify));
+        OperationLogCenter.log(sender, "Notify","notify", JSON.toJSONString(sysNotify));
   
     }
 

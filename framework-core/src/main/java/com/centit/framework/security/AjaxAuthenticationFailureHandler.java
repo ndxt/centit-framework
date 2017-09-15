@@ -17,8 +17,8 @@ import com.centit.framework.common.ResponseData;
 import com.centit.support.algorithm.DatetimeOpt;
 
 public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
-	
-	private boolean writeLog = false;
+
+    private boolean writeLog = false;
     
     public void setWriteLog(boolean writeLog) {
         this.writeLog = writeLog;
@@ -31,28 +31,28 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         super(defaultFailureUrl);
     }
     
-	@Override
-	public void onAuthenticationFailure(HttpServletRequest request,
-			HttpServletResponse response, AuthenticationException exception)
-			throws IOException, ServletException {
-		
-		if(writeLog){
-			String loginName = request.getParameter("username");
-	        String loginHost = request.getRemoteHost()+":"+request.getRemotePort();
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request,
+            HttpServletResponse response, AuthenticationException exception)
+            throws IOException, ServletException {
+
+        if(writeLog){
+            String loginName = request.getParameter("username");
+            String loginHost = request.getRemoteHost()+":"+request.getRemotePort();
             OperationLogCenter.log(loginName,"login", "loginError",
                     "用户 ："+loginName+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
                     + "从主机"+loginHost+"尝试登录,失败原因:"+exception.getMessage()+"。");
         }
-		int tryTimes = CheckFailLogs.getHasTriedTimes(request);
-		String ajax = request.getParameter("ajax");
-    	if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)) {
-			request.setAttribute("hasTriedTimes",tryTimes);
-			super.onAuthenticationFailure(request, response, exception);
-		}else {
-			ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_LOGIN_ERROR,
-					"login error:" + exception.getMessage() + "!");
-			resData.addResponseData("hasTriedTimes",tryTimes);
-			JsonResultUtils.writeResponseDataAsJson(resData, response);
-		}
-	}
+        int tryTimes = CheckFailLogs.getHasTriedTimes(request);
+        String ajax = request.getParameter("ajax");
+        if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)) {
+            request.setAttribute("hasTriedTimes",tryTimes);
+            super.onAuthenticationFailure(request, response, exception);
+        }else {
+            ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_LOGIN_ERROR,
+                    "login error:" + exception.getMessage() + "!");
+            resData.addResponseData("hasTriedTimes",tryTimes);
+            JsonResultUtils.writeResponseDataAsJson(resData, response);
+        }
+    }
 }

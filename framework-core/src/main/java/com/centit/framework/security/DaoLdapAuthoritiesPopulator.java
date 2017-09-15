@@ -14,7 +14,7 @@ public class DaoLdapAuthoritiesPopulator implements LdapAuthoritiesPopulator {
     private CentitUserDetailsService userDetailsService;
 
     public void setUserDetailsService(CentitUserDetailsService uM) {
-    	userDetailsService = uM;
+        userDetailsService = uM;
     }
 
     @Override

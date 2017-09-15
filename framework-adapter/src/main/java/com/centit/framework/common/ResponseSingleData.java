@@ -60,13 +60,13 @@ public class ResponseSingleData implements ResponseData{
         this.resCode = resCode;
     }
 
-	public String getMessage() {
-		return resMessage;
-	}
+    public String getMessage() {
+        return resMessage;
+    }
 
-	public void setMessage(String resMessage) {
-		this.resMessage = resMessage;
-	}
+    public void setMessage(String resMessage) {
+        this.resMessage = resMessage;
+    }
 
     public Object getData() {
         return resData;
@@ -74,7 +74,7 @@ public class ResponseSingleData implements ResponseData{
 
     public Object setData(Object objValue) {
         Object oldObj = this.resData;
-		this.resData = objValue;
+        this.resData = objValue;
         return oldObj;
     }
 
@@ -84,14 +84,14 @@ public class ResponseSingleData implements ResponseData{
         param.put(ResponseData.RES_MSG_FILED,  resMessage );
         if(resData!=null)
             param.put(ResponseData.RES_DATA_FILED, resData);
-		if(simplePropertyPreFilter==null)
-			return JSONObject.toJSONString(param);
+        if(simplePropertyPreFilter==null)
+            return JSONObject.toJSONString(param);
         return JSONObject.toJSONString(param,simplePropertyPreFilter);
     }
 
 
-	@Override
-	public String toString(){
-		return toJSONString();
-	}
+    @Override
+    public String toString(){
+        return toJSONString();
+    }
 }

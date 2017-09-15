@@ -43,7 +43,7 @@ public class GZIPResponseWrapper extends HttpServletResponseWrapper {
                 }
             }
         } catch (IOException e) {
-        	logger.error(e.getMessage(),e);//e.printStackTrace();
+            logger.error(e.getMessage(),e);//e.printStackTrace();
         }
     }
 

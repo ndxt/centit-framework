@@ -74,7 +74,7 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
     private Long width;// 宽度
 
 
-	/**
+    /**
      * default constructor
      */
     public OptInfo() {
@@ -119,11 +119,11 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
     }
     
     public void addChild(OptInfo child) {
-    	if(children==null)
-    		children = new ArrayList<OptInfo>();
+        if(children==null)
+            children = new ArrayList<OptInfo>();
         this.children.add(child);
     }   
-	
+
 
     public void setChildren(List<OptInfo> children) {
         this.children = children;

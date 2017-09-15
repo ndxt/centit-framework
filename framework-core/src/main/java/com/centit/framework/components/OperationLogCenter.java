@@ -44,13 +44,13 @@ public class OperationLogCenter {
     }
 
   
-	private static BlockingQueue<OperationLog> waitingForWriteLogs = new LinkedBlockingQueue<OperationLog>();
-	private static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(3);
+    private static BlockingQueue<OperationLog> waitingForWriteLogs = new LinkedBlockingQueue<OperationLog>();
+    private static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(3);
 
-	/**
+    /**
      * 异步写入日志
      */
-	static {
+    static {
        executor.scheduleWithFixedDelay(
           () -> {
                   if(logWriter == null)
@@ -61,7 +61,7 @@ public class OperationLogCenter {
                            //logger.error("logWriter +++++ " + optLog.getOptContent());
                            logWriter.save(optLog);
                        } catch (Exception e) {
-                    	   logger.error(e.getMessage(),e);
+                           logger.error(e.getMessage(),e);
                        }
                    }
                }, 30, 10, TimeUnit.SECONDS);
@@ -147,8 +147,8 @@ public class OperationLogCenter {
     * @param optContent 操作说明
     */  
    public static void logError(String userCode, String optId, String optMethod, String optContent) {
-		   log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent,null, null);
-   }	
+           log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent,null, null);
+   }
 
    /**
     * 记录日志内容 
@@ -159,8 +159,8 @@ public class OperationLogCenter {
     * @param newValue 详细参数JSON
     */
    public static void logError(String userCode, String optId, String optMethod,
-		   String optContent,String newValue) {
-	   log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent,newValue, null);
+           String optContent,String newValue) {
+       log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent,newValue, null);
    }
    
    /**
@@ -174,7 +174,7 @@ public class OperationLogCenter {
     * @param oldValue 旧值json
     */
    public static void log(HttpServletRequest request, String optId, String optTag, String optMethod,
-		   String optContent, String newValue, String oldValue ) {
+           String optContent, String newValue, String oldValue ) {
        log(OperationLog.LEVEL_INFO, WebOptUtils.getLoginUser(request).getUserCode(),
                 optId, optTag, optMethod, optContent,newValue ,oldValue );
       
@@ -189,7 +189,7 @@ public class OperationLogCenter {
     * @param newValue 详细参数json
     */
    public static void log(HttpServletRequest request, String optId,
-		  String optMethod,String optContent, String newValue) {       
+          String optMethod,String optContent, String newValue) {
        log(request, optId, null, optMethod, optContent, newValue,null);
    }
   
@@ -215,7 +215,7 @@ public class OperationLogCenter {
     * @param newObject 新增对象
     */
    public static void logNewObject(String userCode, String optId, String optTag, String optMethod,
-		   String optContent, Object newObject ) {
+           String optContent, Object newObject ) {
        log(OperationLog.LEVEL_INFO, userCode,
                 optId, optTag, optMethod, optContent,JSON.toJSONString(newObject) ,null );
       
@@ -231,7 +231,7 @@ public class OperationLogCenter {
     * @param oldObject 删除的对象
     */
    public static void logDeleteObject(String userCode, String optId, String optTag, String optMethod,
-		   String optContent, Object oldObject ) {
+           String optContent, Object oldObject ) {
        log(OperationLog.LEVEL_INFO, userCode,
                 optId, optTag, optMethod, optContent,null,JSON.toJSONString(oldObject)  );
       
@@ -248,12 +248,12 @@ public class OperationLogCenter {
     * @param oldObject 旧对象
     */
    public static void logUpdateObject(String userCode, String optId, String optTag, String optMethod,
-		   String optContent,Object newObject , Object oldObject ) {
-	   
-	   OperationLog optLog = new OperationLog(userCode,
-			   optId, optTag, optMethod,  optContent );
-	   optLog.setOptDifference(newObject, oldObject);
-	   optLog.setOptTime(new Date());
+           String optContent,Object newObject , Object oldObject ) {
+
+       OperationLog optLog = new OperationLog(userCode,
+               optId, optTag, optMethod,  optContent );
+       optLog.setOptDifference(newObject, oldObject);
+       optLog.setOptTime(new Date());
        log(optLog);
    }
 
@@ -268,8 +268,8 @@ public class OperationLogCenter {
     * @param newObject 新增对象
     */
    public static void logNewObject(HttpServletRequest request, String optId, String optTag, String optMethod,
-		   String optContent, Object newObject ) {
-	   logNewObject( WebOptUtils.getLoginUser(request).getUserCode(),
+           String optContent, Object newObject ) {
+       logNewObject( WebOptUtils.getLoginUser(request).getUserCode(),
                 optId, optTag, optMethod, optContent,newObject );
       
    }
@@ -283,14 +283,14 @@ public class OperationLogCenter {
     * @param queryMap 查询条件对象
     */
    public static void logQuery(String userCode, String optId, String optMethod,
-		   String queryDesc, Map<String,Object> queryMap ) {
-	   log(OperationLog.LEVEL_INFO, userCode,
+           String queryDesc, Map<String,Object> queryMap ) {
+       log(OperationLog.LEVEL_INFO, userCode,
                optId, null, optMethod, queryDesc,JSON.toJSONString(queryMap),null);
    }
    
    public static void logQuery(HttpServletRequest request, String optId, String optMethod,
-			   String queryDesc, Map<String,Object> queryMap ) {
-		   logQuery( WebOptUtils.getLoginUser(request).getUserCode(),
+               String queryDesc, Map<String,Object> queryMap ) {
+           logQuery( WebOptUtils.getLoginUser(request).getUserCode(),
                 optId,  optMethod, queryDesc,queryMap);
    }
    
@@ -304,8 +304,8 @@ public class OperationLogCenter {
     * @param oldObject 删除的对象
     */
    public static void logDeleteObject(HttpServletRequest request, String optId, String optTag, String optMethod,
-		   String optContent, Object oldObject ) {
-	   logDeleteObject( WebOptUtils.getLoginUser(request).getUserCode(),
+           String optContent, Object oldObject ) {
+       logDeleteObject( WebOptUtils.getLoginUser(request).getUserCode(),
                 optId, optTag, optMethod, optContent,oldObject);
       
    }
@@ -321,9 +321,9 @@ public class OperationLogCenter {
     * @param oldObject 旧对象
     */
    public static void logUpdateObject(HttpServletRequest request, String optId, String optTag, String optMethod,
-		   String optContent,Object newObject , Object oldObject ) {
-	   
-	   logUpdateObject( WebOptUtils.getLoginUser(request).getUserCode(),
+           String optContent,Object newObject , Object oldObject ) {
+
+       logUpdateObject( WebOptUtils.getLoginUser(request).getUserCode(),
                optId, optTag, optMethod, optContent,newObject,oldObject);
    }
  }

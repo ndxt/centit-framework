@@ -19,7 +19,7 @@ import com.alibaba.fastjson.serializer.SerializeWriter;
 import com.centit.support.algorithm.StringBaseOpt;
 
 public class LobSerializer implements ObjectSerializer {
-	protected Logger logger = LoggerFactory.getLogger(LobSerializer.class);
+    protected Logger logger = LoggerFactory.getLogger(LobSerializer.class);
     public final static LobSerializer instance = new LobSerializer();
     
     public void write(JSONSerializer serializer, Object object, Object fieldName, Type fieldType, int features) throws IOException {
@@ -31,34 +31,34 @@ public class LobSerializer implements ObjectSerializer {
         }
         
         if (object instanceof Clob) {
-        	try {
-		        Clob clob = (Clob) object;
-		        Reader reader = clob.getCharacterStream();		
-		        StringWriter writer = new StringWriter();
-		        char[] buf = new char[1024];
-		        int len = 0;
-		        while ((len = reader.read(buf)) != -1) {
-		            writer.write(buf, 0, len);
-		        }
-		        reader.close();		        
-		        String text = writer.toString();
-		        serializer.write(text);
-        	} catch (SQLException e) {			
-        		logger.error(e.getMessage(),e);//e.printStackTrace();
-				throw new IOException("write clob error", e);
-			}  
+            try {
+                Clob clob = (Clob) object;
+                Reader reader = clob.getCharacterStream();
+                StringWriter writer = new StringWriter();
+                char[] buf = new char[1024];
+                int len = 0;
+                while ((len = reader.read(buf)) != -1) {
+                    writer.write(buf, 0, len);
+                }
+                reader.close();
+                String text = writer.toString();
+                serializer.write(text);
+            } catch (SQLException e) {
+                logger.error(e.getMessage(),e);//e.printStackTrace();
+                throw new IOException("write clob error", e);
+            }
         }else   if (object instanceof Blob) {
-        	try {
-        		Blob lobData = (Blob) object;
-				InputStream is = lobData.getBinaryStream();
-				byte[] readBytes = new byte[is.available()];
-				int count = is.read(readBytes);
-				if(count>0)
-					out.writeString(new String(Base64.encodeBase64(readBytes)));
-			} catch (SQLException e) {			
-				logger.error(e.getMessage(),e);//e.printStackTrace();
-				throw new IOException("write blob error", e);
-			}       	 	
+            try {
+                Blob lobData = (Blob) object;
+                InputStream is = lobData.getBinaryStream();
+                byte[] readBytes = new byte[is.available()];
+                int count = is.read(readBytes);
+                if(count>0)
+                    out.writeString(new String(Base64.encodeBase64(readBytes)));
+            } catch (SQLException e) {
+                logger.error(e.getMessage(),e);//e.printStackTrace();
+                throw new IOException("write blob error", e);
+            }
         } else {     
             out.writeString(StringBaseOpt.objectToString(object));
         }

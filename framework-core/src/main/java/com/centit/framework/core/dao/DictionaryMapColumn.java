@@ -10,13 +10,13 @@ public class DictionaryMapColumn {
     private Map<String,String> dictionaryMap;
     
     public DictionaryMapColumn(){
-    	fieldName = null;
+        fieldName = null;
         dictionaryMap = null;
         mapFieldName = null;
     }
     
     public DictionaryMapColumn(String fn){
-    	fieldName = fn;
+        fieldName = fn;
         dictionaryMap = null;
         mapFieldName = null;
     }

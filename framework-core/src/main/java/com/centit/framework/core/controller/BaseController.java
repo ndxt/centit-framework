@@ -104,29 +104,29 @@ public abstract class BaseController {
             throws IOException {        
         logger.error(ex.getMessage(), ex);
         if (WebOptUtils.isAjax(request)) {
-        	
-        	BindingResult bindingResult = null;
+
+            BindingResult bindingResult = null;
             if(ex instanceof BindException){
-            	bindingResult =((BindException)ex).getBindingResult();
+                bindingResult =((BindException)ex).getBindingResult();
             }else if(ex instanceof MethodArgumentNotValidException){
-            	bindingResult =((MethodArgumentNotValidException)ex).getBindingResult();
+                bindingResult =((MethodArgumentNotValidException)ex).getBindingResult();
             }
             
             if(bindingResult!=null){
                 ResponseMapData responseData = new ResponseMapData(ResponseData.ERROR_BAD_REQUEST);
-	        	StringBuilder errMsg = new StringBuilder();
+                StringBuilder errMsg = new StringBuilder();
 
-	            if (bindingResult.hasErrors()) {
-	                for (FieldError fieldError : bindingResult.getFieldErrors()) {
-	                    responseData.addResponseData(fieldError.getField(), fieldError.getDefaultMessage());
-	                    
-	                    errMsg.append(fieldError.getField()).append("：")
-	                    	.append(fieldError.getDefaultMessage()).append("；"); 
+                if (bindingResult.hasErrors()) {
+                    for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                        responseData.addResponseData(fieldError.getField(), fieldError.getDefaultMessage());
 
-	                }
-	            }
-	            responseData.setResponseMessage(errMsg.toString());
-	            JsonResultUtils.writeResponseDataAsJson(responseData, response);
+                        errMsg.append(fieldError.getField()).append("：")
+                            .append(fieldError.getDefaultMessage()).append("；");
+
+                    }
+                }
+                responseData.setResponseMessage(errMsg.toString());
+                JsonResultUtils.writeResponseDataAsJson(responseData, response);
             }else{
                 // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误
                 JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
@@ -178,10 +178,10 @@ public abstract class BaseController {
         Map<String, Object> map = new HashMap<>();
         //map.put("isValid", "T");
         for (Map.Entry<String, String[]> ent : parameterMap.entrySet()) {
-        	String key = ent.getKey();
-        	
-        	// 查询字符串 s_
-        	if (key.startsWith(SEARCH_STRING_PREFIX)) {
+            String key = ent.getKey();
+
+            // 查询字符串 s_
+            if (key.startsWith(SEARCH_STRING_PREFIX)) {
                 String sKey = key.substring(SEARCH_STRING_PREFIX_LEN);
                 String sValue = HtmlFormUtils.getParameterString(ent.getValue());
                 if (sValue != null) {
@@ -192,19 +192,19 @@ public abstract class BaseController {
                         map.put(sKey, sValue);
                 }
             }
-        	// 查询数组 a_
-        	else if (key.startsWith(SEARCH_ARRAY_PREFIX)) {
-        	    String sKey = key.substring(SEARCH_ARRAY_PREFIX_LEN);
+            // 查询数组 a_
+            else if (key.startsWith(SEARCH_ARRAY_PREFIX)) {
+                String sKey = key.substring(SEARCH_ARRAY_PREFIX_LEN);
                 Object sValue = ent.getValue();//HtmlFormUtils.getParameterObject(ent.getValue());
                 map.put(sKey, sValue);
-        	}
-        	// 查询数字 n_
-        	else if (key.startsWith(SEARCH_NUMBER_PREFIX)) {
+            }
+            // 查询数字 n_
+            else if (key.startsWith(SEARCH_NUMBER_PREFIX)) {
                 String sKey = key.substring(SEARCH_NUMBER_PREFIX_LEN);
                 String sValue = HtmlFormUtils.getParameterString(ent.getValue());                
                 map.put(sKey, NumberBaseOpt.parseLong(sValue));
             }
-        	// 查询数字数组 na_
+            // 查询数字数组 na_
             else if (key.startsWith(SEARCH_NUMBER_ARRAY_PREFIX)) {
                 String sKey = key.substring(SEARCH_NUMBER_ARRAY_PREFIX_LEN);
                 
@@ -247,14 +247,14 @@ public abstract class BaseController {
         Map<String, Object> map = new HashMap<>();
         //map.put("isValid", "T");
         for (Map.Entry<String, String[]> ent : parameterMap.entrySet()) {
-        	String[] values = ListOpt.removeBlankString(ent.getValue());
-        	if(values==null)
-        		continue;
-        	if(values.length==1){
-        		map.put(ent.getKey(), values[0]);
-        	}else{
-        		map.put(ent.getKey(), values);
-        	}
+            String[] values = ListOpt.removeBlankString(ent.getValue());
+            if(values==null)
+                continue;
+            if(values.length==1){
+                map.put(ent.getKey(), values[0]);
+            }else{
+                map.put(ent.getKey(), values);
+            }
         }
         return map;
     }

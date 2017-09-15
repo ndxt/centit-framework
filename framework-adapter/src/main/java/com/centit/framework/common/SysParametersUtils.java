@@ -60,7 +60,7 @@ public class SysParametersUtils {
      */
     public static String getTempHome() {
         return getParameters(Parameter.APP_HOME)
-        		 + getParameters(Parameter.TEMP) ;
+                 + getParameters(Parameter.TEMP) ;
     }
 
     /**
@@ -137,19 +137,19 @@ public class SysParametersUtils {
     public static int getIntValue(String key,int defaultValue) {
        String s = loadProperties().getProperty(key);
        if(StringRegularOpt.isNumber(s))
-    	   return Integer.parseInt(s);
+           return Integer.parseInt(s);
        return defaultValue;
     }
     
     public static boolean getBoolean(String key) {
-		return Boolean.parseBoolean(getStringValue(key));
-	}
+        return Boolean.parseBoolean(getStringValue(key));
+    }
     
     public static boolean getBoolean(String key,boolean defaultValue) {
-    	String sValue = getStringValue(key);
-    	return StringUtils.isNotBlank(sValue)?
-    		 Boolean.parseBoolean(sValue):defaultValue;
-	}
+        String sValue = getStringValue(key);
+        return StringUtils.isNotBlank(sValue)?
+             Boolean.parseBoolean(sValue):defaultValue;
+    }
     
 
     public static Properties loadProperties() {

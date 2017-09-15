@@ -127,22 +127,22 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
 
     
     public String getEnglishName() {
-		return englishName;
-	}
+        return englishName;
+    }
 
-	public void setEnglishName(String englishName) {
-		this.englishName = englishName;
-	}
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
+    }
 
-	public String getUnitTag() {
-		return unitTag;
-	}
+    public String getUnitTag() {
+        return unitTag;
+    }
 
-	public void setUnitTag(String unitTag) {
-		this.unitTag = unitTag;
-	}
+    public void setUnitTag(String unitTag) {
+        this.unitTag = unitTag;
+    }
 
-	// Property accessors
+    // Property accessors
     public String getUnitCode() {
         return this.unitCode;
     }
@@ -261,11 +261,11 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         if (other.getDepNo() != null)
             this.depNo = other.getDepNo();
         if (other.getUnitTag() != null)
-        	this.unitTag = other.getUnitTag();
+            this.unitTag = other.getUnitTag();
         if (other.getEnglishName() != null)
-        	this.englishName =other.getEnglishName();
+            this.englishName =other.getEnglishName();
         if (other.getUnitPath() != null)
-        	this.unitPath =other.getUnitPath();
+            this.unitPath =other.getUnitPath();
     }
 
     public static String[] field2Name(Field[] f) {
@@ -318,49 +318,49 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
     }
 
  
-	public String getUnitPath() {
-		return unitPath;
-	}
+    public String getUnitPath() {
+        return unitPath;
+    }
 
-	public void setUnitPath(String unitPath) {
-		this.unitPath = unitPath;
-	}
-
-
-	private List<UnitInfo> subUnits;
-
-	public UnitInfo addSubUnit(UnitInfo ui) {
-		getSubUnits().add(ui);
-		return this;
-	}
+    public void setUnitPath(String unitPath) {
+        this.unitPath = unitPath;
+    }
 
 
-	@Override
-	public List<UnitInfo> getSubUnits() {
-		if(subUnits==null)
-			subUnits = new ArrayList<UnitInfo>();
-		return subUnits;
-	}
-	
-	private List<UserUnit> unitUsers;
+    private List<UnitInfo> subUnits;
 
-	public UnitInfo addUnitUser(UserUnit uu) {
-		getUnitUsers().add(uu);
-		return this;
-	}
+    public UnitInfo addSubUnit(UnitInfo ui) {
+        getSubUnits().add(ui);
+        return this;
+    }
 
-	@Override
-	public List<UserUnit> getUnitUsers() {
-		if(unitUsers==null)
-			unitUsers = new ArrayList<UserUnit>();
-		return unitUsers;
-	}
 
-	public String getUnitManager() {
-		return unitManager;
-	}
+    @Override
+    public List<UnitInfo> getSubUnits() {
+        if(subUnits==null)
+            subUnits = new ArrayList<UnitInfo>();
+        return subUnits;
+    }
 
-	public void setUnitManager(String unitManager) {
-		this.unitManager = unitManager;
-	}
+    private List<UserUnit> unitUsers;
+
+    public UnitInfo addUnitUser(UserUnit uu) {
+        getUnitUsers().add(uu);
+        return this;
+    }
+
+    @Override
+    public List<UserUnit> getUnitUsers() {
+        if(unitUsers==null)
+            unitUsers = new ArrayList<UserUnit>();
+        return unitUsers;
+    }
+
+    public String getUnitManager() {
+        return unitManager;
+    }
+
+    public void setUnitManager(String unitManager) {
+        this.unitManager = unitManager;
+    }
 }

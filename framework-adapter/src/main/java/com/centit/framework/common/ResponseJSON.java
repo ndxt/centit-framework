@@ -17,7 +17,7 @@ import com.centit.support.algorithm.StringBaseOpt;
  */
 @SuppressWarnings("unused")
 public class ResponseJSON {
-	private static final Logger logger = LoggerFactory.getLogger(ResponseJSON.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResponseJSON.class);
     public static final String RES_CODE_FILED = ResponseData.RES_CODE_FILED;
     public static final String RES_MSG_FILED  = ResponseData.RES_MSG_FILED;
     public static final String RES_DATA_FILED = ResponseData.RES_DATA_FILED;
@@ -35,30 +35,30 @@ public class ResponseJSON {
     }
     
     public Integer getCode() {
-    	if(resJSON==null)
-    		return null;
-    	return resJSON.getInteger(RES_CODE_FILED);
+        if(resJSON==null)
+            return null;
+        return resJSON.getInteger(RES_CODE_FILED);
     }
     
     public String getMessage() {
-    	if(resJSON==null)
-    		return null;
-    	return resJSON.getString(RES_MSG_FILED);
+        if(resJSON==null)
+            return null;
+        return resJSON.getString(RES_MSG_FILED);
     }
     
     public Object getData() {
-    	if(resJSON==null)
-    		return null;
+        if(resJSON==null)
+            return null;
         return resJSON.get(RES_DATA_FILED);
     }
     
     public String getDataAsString() {
         return StringBaseOpt.objectToString(
-        		resJSON.get(RES_DATA_FILED));
+                resJSON.get(RES_DATA_FILED));
     }
 
     public String getDataAsString(String skey) {
-    	Object data = getData();
+        Object data = getData();
         if(data==null || !(data instanceof Map))
             return null; 
         Object dataObj = ((Map)data).get(skey);
@@ -93,14 +93,14 @@ public class ResponseJSON {
      * @param clazz Class
      * @return 转化结果
      */
-	public <T> T getDataAsScalarObject( Class<T> clazz) {
-    	try{
-	        String sdata = String.valueOf(getData());
+    public <T> T getDataAsScalarObject( Class<T> clazz) {
+        try{
+            String sdata = String.valueOf(getData());
             return stringToScalarData(sdata,clazz);
-    	}catch(Exception e){
-    		logger.error("获取标量出错！",e);//e.printStackTrace();
-    		return null;
-    	}
+        }catch(Exception e){
+            logger.error("获取标量出错！",e);//e.printStackTrace();
+            return null;
+        }
     }    
      
     public <T> T getDataAsObject( Class<T> clazz) {
@@ -112,19 +112,19 @@ public class ResponseJSON {
     }
 
 
-	public <T> T getDataAsScalarObject(String skey, Class<T> clazz) {
-    	Object data = getData();
+    public <T> T getDataAsScalarObject(String skey, Class<T> clazz) {
+        Object data = getData();
         if(data==null || !(data instanceof Map))
             return null;
         Object dataObj = ((Map)data).get(skey);
         
-    	try{
-	        String sdata = StringBaseOpt.objectToString(dataObj);
+        try{
+            String sdata = StringBaseOpt.objectToString(dataObj);
             return stringToScalarData(sdata,clazz);
-    	}catch(Exception e){
-    		logger.error("获取标量出错！",e);// e.printStackTrace();
-    		return null;
-    	}
+        }catch(Exception e){
+            logger.error("获取标量出错！",e);// e.printStackTrace();
+            return null;
+        }
     }    
     
     public <T> List<T> getDataAsArray(Class<T> clazz) {
@@ -187,7 +187,7 @@ public class ResponseJSON {
     }
     
     public <T> Map<String,T> getDataAsMap(String key, Class<T> clazz) {
-    	Object data = getData();
+        Object data = getData();
         if(data==null || !(data instanceof JSONObject))
             return null; 
         Object dataObj = ((JSONObject)data).get(key);        

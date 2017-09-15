@@ -17,49 +17,49 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/environment")
 public class EnvironmentController extends BaseController {
 
-	@Resource
+    @Resource
     protected PlatformEnvironment platformEnvironment;
 
-	
-	@RequestMapping(value ="/test",method = RequestMethod.GET)
+
+    @RequestMapping(value ="/test",method = RequestMethod.GET)
     public void test(
             HttpServletRequest request,HttpServletResponse response) {
-		String testSessionString = new String("hello");
-		request.getSession().setAttribute("test", (String) testSessionString);
-		JsonResultUtils.writeSingleDataJson("test=zouwuyang", response);
-	}
+        String testSessionString = new String("hello");
+        request.getSession().setAttribute("test", (String) testSessionString);
+        JsonResultUtils.writeSingleDataJson("test=zouwuyang", response);
+    }
 
-	@RequestMapping(value ="/reload/dictionary",method = RequestMethod.GET)
+    @RequestMapping(value ="/reload/dictionary",method = RequestMethod.GET)
     public void reloadDictionary(
             HttpServletRequest request,HttpServletResponse response) {
-		if(platformEnvironment.reloadDictionary())
-			JsonResultUtils.writeSuccessJson(response);
-		else
-			JsonResultUtils.writeErrorMessageJson("reloadDictionary failed！", response);
-	}
+        if(platformEnvironment.reloadDictionary())
+            JsonResultUtils.writeSuccessJson(response);
+        else
+            JsonResultUtils.writeErrorMessageJson("reloadDictionary failed！", response);
+    }
 
-	@RequestMapping(value ="/reload/securitymetadata",method = RequestMethod.GET)
+    @RequestMapping(value ="/reload/securitymetadata",method = RequestMethod.GET)
     public void reloadSecurityMetadata(
             HttpServletRequest request,HttpServletResponse response) {
-		if(platformEnvironment.reloadSecurityMetadata())
-			JsonResultUtils.writeSuccessJson(response);
-		else
-			JsonResultUtils.writeErrorMessageJson("reloadSecurityMetadata failed！", response);
-	}
+        if(platformEnvironment.reloadSecurityMetadata())
+            JsonResultUtils.writeSuccessJson(response);
+        else
+            JsonResultUtils.writeErrorMessageJson("reloadSecurityMetadata failed！", response);
+    }
 
 
-	@RequestMapping(value ="/reload/refreshall",method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseSingleData environmentRefreshAll(
-			HttpServletRequest request,HttpServletResponse response) {
-		boolean reloadDc = platformEnvironment.reloadDictionary();
-		boolean reloadSm = platformEnvironment.reloadSecurityMetadata();
-		if(reloadDc && reloadSm)
-			return new ResponseSingleData();
-			//JsonResultUtils.writeSuccessJson(response);
-		else
-			return new ResponseSingleData( 500, "environmentRefreshAll failed！");
-		//JsonResultUtils.writeErrorMessageJson("environmentRefreshAll failed！", response);
-	}
+    @RequestMapping(value ="/reload/refreshall",method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseSingleData environmentRefreshAll(
+            HttpServletRequest request,HttpServletResponse response) {
+        boolean reloadDc = platformEnvironment.reloadDictionary();
+        boolean reloadSm = platformEnvironment.reloadSecurityMetadata();
+        if(reloadDc && reloadSm)
+            return new ResponseSingleData();
+            //JsonResultUtils.writeSuccessJson(response);
+        else
+            return new ResponseSingleData( 500, "environmentRefreshAll failed！");
+        //JsonResultUtils.writeErrorMessageJson("environmentRefreshAll failed！", response);
+    }
 
 }

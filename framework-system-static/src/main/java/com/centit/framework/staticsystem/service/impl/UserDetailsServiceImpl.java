@@ -14,56 +14,56 @@ import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.CentitUserDetailsService;
 
 public class UserDetailsServiceImpl implements 
-	CentitUserDetailsService,UserDetailsService, 
-	AuthenticationUserDetailsService<Authentication>
+    CentitUserDetailsService,UserDetailsService,
+    AuthenticationUserDetailsService<Authentication>
 {
-	private PlatformEnvironment platformEnvironment;
-	
-	public void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
-		this.platformEnvironment = platformEnvironment;
-	}
-	
-	@Override
-	public UserDetails loadUserByUsername(String userLoginName) throws UsernameNotFoundException {
-		return loadDetailsByLoginName(userLoginName);
-	}
+    private PlatformEnvironment platformEnvironment;
 
-	@Override
-	public UserDetails loadUserDetails(Authentication token) throws UsernameNotFoundException {
-		return loadDetailsByLoginName(token.getName());
-	}
+    public void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
+        this.platformEnvironment = platformEnvironment;
+    }
 
-	@Override
-	public Collection<? extends GrantedAuthority> loadUserAuthorities(String loginname) throws UsernameNotFoundException {
-		CentitUserDetails ud = loadDetailsByLoginName(loginname);
-		if(ud==null)
-			return null;
-		return ud.getAuthorities();
-	}
+    @Override
+    public UserDetails loadUserByUsername(String userLoginName) throws UsernameNotFoundException {
+        return loadDetailsByLoginName(userLoginName);
+    }
 
-	@Override
-	public CentitUserDetails loadDetailsByLoginName(String loginName) {
-		return platformEnvironment.loadUserDetailsByLoginName(loginName);
-	}
+    @Override
+    public UserDetails loadUserDetails(Authentication token) throws UsernameNotFoundException {
+        return loadDetailsByLoginName(token.getName());
+    }
 
-	@Override
-	public CentitUserDetails loadDetailsByUserCode(String userCode) {
-		return platformEnvironment.loadUserDetailsByUserCode(userCode);
-	}
-	
-	@Override
-	public CentitUserDetails loadDetailsByRegEmail(String regEmail) {
-		return platformEnvironment.loadUserDetailsByRegEmail(regEmail);
-	}
-	
-	@Override
-	public CentitUserDetails loadDetailsByRegCellPhone(String regCellPhone) {
-		return platformEnvironment.loadUserDetailsByRegCellPhone(regCellPhone);
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> loadUserAuthorities(String loginname) throws UsernameNotFoundException {
+        CentitUserDetails ud = loadDetailsByLoginName(loginname);
+        if(ud==null)
+            return null;
+        return ud.getAuthorities();
+    }
 
-	@Override
-	public void saveUserSetting(String userCode, String paramCode, String paramValue, String paramClass,
-			String paramName) {
+    @Override
+    public CentitUserDetails loadDetailsByLoginName(String loginName) {
+        return platformEnvironment.loadUserDetailsByLoginName(loginName);
+    }
 
-	}
+    @Override
+    public CentitUserDetails loadDetailsByUserCode(String userCode) {
+        return platformEnvironment.loadUserDetailsByUserCode(userCode);
+    }
+
+    @Override
+    public CentitUserDetails loadDetailsByRegEmail(String regEmail) {
+        return platformEnvironment.loadUserDetailsByRegEmail(regEmail);
+    }
+
+    @Override
+    public CentitUserDetails loadDetailsByRegCellPhone(String regCellPhone) {
+        return platformEnvironment.loadUserDetailsByRegCellPhone(regCellPhone);
+    }
+
+    @Override
+    public void saveUserSetting(String userCode, String paramCode, String paramValue, String paramClass,
+            String paramName) {
+
+    }
 }

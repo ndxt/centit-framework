@@ -18,13 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-	 
-	private boolean writeLog = false;
+
+    private boolean writeLog = false;
     
     public void setWriteLog(boolean writeLog) {
         this.writeLog = writeLog;
     } 
-	
+
     private boolean registToken = false;
     
     public void setRegistToken(boolean registToken) {
@@ -32,75 +32,75 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
     }
 
 
-	private SessionRegistry sessionRegistry;
-	private CentitUserDetailsService userDetailsService;
+    private SessionRegistry sessionRegistry;
+    private CentitUserDetailsService userDetailsService;
 
-	public void setSessionRegistry(SessionRegistry sessionManger) {
-		this.sessionRegistry = sessionManger;
-	}
+    public void setSessionRegistry(SessionRegistry sessionManger) {
+        this.sessionRegistry = sessionManger;
+    }
 
-	public void setUserDetailsService(CentitUserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
-	}
+    public void setUserDetailsService(CentitUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
 
-	
+
     public AjaxAuthenticationSuccessHandler() {
     }
  
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
-    	
-    	CentitUserDetails ud = (CentitUserDetails) authentication.getPrincipal();
 
-    	String lang = WebOptUtils.getLocalLangParameter(request);
-		if(StringUtils.isNotBlank(lang)){
-			//request.getSession().setAttribute("LOCAL_LANG", lang);
-			WebOptUtils.setCurrentLang(request, lang);
+        CentitUserDetails ud = (CentitUserDetails) authentication.getPrincipal();
+
+        String lang = WebOptUtils.getLocalLangParameter(request);
+        if(StringUtils.isNotBlank(lang)){
+            //request.getSession().setAttribute("LOCAL_LANG", lang);
+            WebOptUtils.setCurrentLang(request, lang);
             String userLang = ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE);                
             if(! lang.equals(userLang)){
-            	ud.setUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE, userLang);
-            	userDetailsService.saveUserSetting(ud.getUserCode(),
-            			WebOptUtils.LOCAL_LANGUAGE_LABLE, lang, "SYS", "用户默认区域语言");
+                ud.setUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE, userLang);
+                userDetailsService.saveUserSetting(ud.getUserCode(),
+                        WebOptUtils.LOCAL_LANGUAGE_LABLE, lang, "SYS", "用户默认区域语言");
             }
-		}else{
+        }else{
             lang = ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE);
             if(StringUtils.isNotBlank(lang)){
-            	WebOptUtils.setCurrentLang(request, lang);
-	            //request.getSession().setAttribute("LOCAL_LANG", lang);
-	            request.setAttribute(WebOptUtils.LOCAL_LANGUAGE_LABLE,lang);
+                WebOptUtils.setCurrentLang(request, lang);
+                //request.getSession().setAttribute("LOCAL_LANG", lang);
+                request.setAttribute(WebOptUtils.LOCAL_LANGUAGE_LABLE,lang);
             }
-		}
-		ud.setLoginIp(request.getRemoteHost()+":"+request.getRemotePort());
-		ud.setActiveTime(DatetimeOpt.currentUtilDate());
-		request.getSession().setAttribute(
-				SecurityContextUtils.SecurityContextUserdetail,ud);
-		//ud.setAuthenticated(true);
-		String tokenKey =request.getSession().getId();
-		
-		if(registToken){
-			//tokenKey = UuidOpt.getUuidAsString();
-			sessionRegistry.registerNewSession(tokenKey,ud);
-			request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);	
-		}
-		
-		if(writeLog){
+        }
+        ud.setLoginIp(request.getRemoteHost()+":"+request.getRemotePort());
+        ud.setActiveTime(DatetimeOpt.currentUtilDate());
+        request.getSession().setAttribute(
+                SecurityContextUtils.SecurityContextUserdetail,ud);
+        //ud.setAuthenticated(true);
+        String tokenKey =request.getSession().getId();
+
+        if(registToken){
+            //tokenKey = UuidOpt.getUuidAsString();
+            sessionRegistry.registerNewSession(tokenKey,ud);
+            request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
+        }
+
+        if(writeLog){
             OperationLogCenter.log(ud.getUserCode(),"login", "login",
                     "用户 ："+ud.getUserCode()+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
                     + "从主机"+request.getRemoteHost()+":"+request.getRemotePort()+"登录。");
         }
-		
-    	String ajax = request.getParameter("ajax");
-    	if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)){
-    		super.onAuthenticationSuccess(request,response,authentication);
-    	}else{
-			ResponseMapData resData = new ResponseMapData();
-    		if(registToken)
-    			resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
-    		resData.addResponseData("userInfo", ud);
-    		JsonResultUtils.writeResponseDataAsJson(resData, response);
-    		//request.getSession().setAttribute("SPRING_SECURITY_AUTHENTICATION", authentication);
-    		//JsonResultUtils.writeSingleErrorDataJson(0,authentication.getName() + " login ok！",request.getSession().getId(), response);
-    	}
+
+        String ajax = request.getParameter("ajax");
+        if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)){
+            super.onAuthenticationSuccess(request,response,authentication);
+        }else{
+            ResponseMapData resData = new ResponseMapData();
+            if(registToken)
+                resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
+            resData.addResponseData("userInfo", ud);
+            JsonResultUtils.writeResponseDataAsJson(resData, response);
+            //request.getSession().setAttribute("SPRING_SECURITY_AUTHENTICATION", authentication);
+            //JsonResultUtils.writeSingleErrorDataJson(0,authentication.getName() + " login ok！",request.getSession().getId(), response);
+        }
     }
 }

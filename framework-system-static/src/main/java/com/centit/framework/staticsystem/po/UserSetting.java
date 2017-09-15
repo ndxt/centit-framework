@@ -51,17 +51,17 @@ public class UserSetting implements IUserSetting, java.io.Serializable {
 
 
     public UserSetting(String userCode, String paramCode,String paramValue, String paramName) {
-    	this.userCode = userCode;
+        this.userCode = userCode;
         this.paramCode = paramCode;
-	    this.paramValue = paramValue;
-	    this.optId = "SYS";
-	    this.paramName = paramName;
-	    this.createDate = DatetimeOpt.currentUtilDate();
-	}
+        this.paramValue = paramValue;
+        this.optId = "SYS";
+        this.paramName = paramName;
+        this.createDate = DatetimeOpt.currentUtilDate();
+    }
 
     public UserSetting(String userCode, String paramCode,
-    		String paramValue, String paramClass, String paramName, Date createDate) {
-    	this.userCode = userCode;
+            String paramValue, String paramClass, String paramName, Date createDate) {
+        this.userCode = userCode;
         this.paramCode = paramCode;
         this.paramValue = paramValue;
         this.optId = paramClass;
@@ -87,13 +87,13 @@ public class UserSetting implements IUserSetting, java.io.Serializable {
 
     // Property accessors
 
-//	public UserInfo getUserInfo() {
-//		return userInfo;
-//	}
+//    public UserInfo getUserInfo() {
+//        return userInfo;
+//    }
 //
-//	public void setUserInfo(UserInfo userInfo) {
-//		this.userInfo = userInfo;
-//	}
+//    public void setUserInfo(UserInfo userInfo) {
+//        this.userInfo = userInfo;
+//    }
 
     public String getParamValue() {
         return this.paramValue;

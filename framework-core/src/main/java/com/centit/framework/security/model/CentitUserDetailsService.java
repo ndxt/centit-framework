@@ -7,21 +7,21 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.Collection;
 
 public interface CentitUserDetailsService
-		extends UserDetailsService
-				/*AuthenticationUserDetailsService<Authentication>*/{
-	/**
-	 * 获取用户 权限，角色名数组
-	 * @param loginname loginname
-	 * @return 用户 权限，角色名数组
-	 * @throws UsernameNotFoundException UsernameNotFoundException
-	 */
-	 Collection<? extends GrantedAuthority> loadUserAuthorities(String loginname) throws UsernameNotFoundException;
-	
-	/**
-	 * 获取用户信息 by loginname，用户的登录名
-	 * @param loginname loginname
-	 * @return  用户信息
-	 */
+        extends UserDetailsService
+                /*AuthenticationUserDetailsService<Authentication>*/{
+    /**
+     * 获取用户 权限，角色名数组
+     * @param loginname loginname
+     * @return 用户 权限，角色名数组
+     * @throws UsernameNotFoundException UsernameNotFoundException
+     */
+     Collection<? extends GrantedAuthority> loadUserAuthorities(String loginname) throws UsernameNotFoundException;
+
+    /**
+     * 获取用户信息 by loginname，用户的登录名
+     * @param loginname loginname
+     * @return  用户信息
+     */
      CentitUserDetails loadDetailsByLoginName(String loginname);
     
     /**
@@ -35,7 +35,7 @@ public interface CentitUserDetailsService
      * 获取用户信息 by RegEmail，用户的主键
      * @param regEmail regEmail
      * @return 用户信息
-	 */
+     */
      CentitUserDetails loadDetailsByRegEmail(String regEmail);
 
     /**
@@ -53,6 +53,6 @@ public interface CentitUserDetailsService
      * @param paramName paramName
      */
      void saveUserSetting(String userCode, String paramCode,String paramValue,
-			String paramClass, String paramName);
+            String paramClass, String paramName);
 
 }

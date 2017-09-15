@@ -83,7 +83,7 @@ public class OperationLog implements java.io.Serializable {
     }
     
     public OperationLog(String userCode, String optId, String optTag, String optmethod, 
-    		String optcontent ,String newValue, String oldvalue ) {
+            String optcontent ,String newValue, String oldvalue ) {
         this.logLevel = LEVEL_INFO;
         this.userCode = userCode;
         this.optId = optId;
@@ -96,7 +96,7 @@ public class OperationLog implements java.io.Serializable {
     
 
     public OperationLog(String loglevel, String userCode, String optId, String optTag, String optmethod, 
-    		String optcontent,String newValue, String oldvalue) {
+            String optcontent,String newValue, String oldvalue) {
         this.logLevel = loglevel;
         this.userCode = userCode;
         this.optId = optId;
@@ -172,11 +172,11 @@ public class OperationLog implements java.io.Serializable {
 
     
     public void setOptNewObject(Object obj){
-    	this.newValue = JSON.toJSONString(obj);
+        this.newValue = JSON.toJSONString(obj);
     }
 
     public void setOptOldObject(Object obj){
-    	this.oldValue = JSON.toJSONString(obj);
+        this.oldValue = JSON.toJSONString(obj);
     }
 
     public <T extends Object> void setOptDifference(T newObj,T oldObj){
@@ -185,37 +185,37 @@ public class OperationLog implements java.io.Serializable {
             this.oldValue = JSON.toJSONString(oldObj);
             return;
         }
-    	Field[] fields = ReflectionOpt.getFields(newObj);
-    	if(fields==null || fields.length<1)
-    		return ;
-    	Map<String,Object> newTempValue = new HashMap<>();
-    	Map<String,Object> oldTempValue = new HashMap<>();
-    	for(Field field : fields){
-    		try{
-    			Object obj1 = ReflectionOpt.forceGetFieldValue(newObj, field);
-    			Object obj2 = ReflectionOpt.forceGetFieldValue(oldObj, field);
-    			//method.getName()
-    			if(obj1==null){
-    				if(obj2!=null){
-    					//newValue.put(field.getName(),"");
-    					oldTempValue.put(field.getName(),obj2);
-    				}
-    			}else{
-    				if(obj2==null){
-    					newTempValue.put(field.getName(),obj1);
-    					//oldValue.put(field.getName(),"");
-    				}else if(!obj1.equals(obj2)){
-    					newTempValue.put(field.getName(),obj1);
-    					oldTempValue.put(field.getName(),obj2);
-    				}
-    			}
-    				
-    		} catch (Exception e) {
-    			logger.error(e.getMessage(),e);
-    		}
-    	}    	 
-    	this.newValue = JSON.toJSONString(newTempValue);
-    	this.oldValue = JSON.toJSONString(oldTempValue);
+        Field[] fields = ReflectionOpt.getFields(newObj);
+        if(fields==null || fields.length<1)
+            return ;
+        Map<String,Object> newTempValue = new HashMap<>();
+        Map<String,Object> oldTempValue = new HashMap<>();
+        for(Field field : fields){
+            try{
+                Object obj1 = ReflectionOpt.forceGetFieldValue(newObj, field);
+                Object obj2 = ReflectionOpt.forceGetFieldValue(oldObj, field);
+                //method.getName()
+                if(obj1==null){
+                    if(obj2!=null){
+                        //newValue.put(field.getName(),"");
+                        oldTempValue.put(field.getName(),obj2);
+                    }
+                }else{
+                    if(obj2==null){
+                        newTempValue.put(field.getName(),obj1);
+                        //oldValue.put(field.getName(),"");
+                    }else if(!obj1.equals(obj2)){
+                        newTempValue.put(field.getName(),obj1);
+                        oldTempValue.put(field.getName(),obj2);
+                    }
+                }
+
+            } catch (Exception e) {
+                logger.error(e.getMessage(),e);
+            }
+        }
+        this.newValue = JSON.toJSONString(newTempValue);
+        this.oldValue = JSON.toJSONString(oldTempValue);
     }
     
     public String getOldValue() {

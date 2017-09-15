@@ -120,14 +120,14 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
      * @return  Date
      */
     public Date getPwdExpiredTime() {
-		return pwdExpiredTime;
-	}
+        return pwdExpiredTime;
+    }
 
-	public void setPwdExpiredTime(Date pwdExpiredTime) {
-		this.pwdExpiredTime = pwdExpiredTime;
-	}
+    public void setPwdExpiredTime(Date pwdExpiredTime) {
+        this.pwdExpiredTime = pwdExpiredTime;
+    }
 
-	/**
+    /**
      * default constructor
      */
     public UserInfo() {
@@ -155,20 +155,20 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
     public UserInfo(String userCode, String userpin,String usertype, String userstate,
             String loginname, String username, String userdesc,
             Long logintimes, Date activeime, String loginip, Long addrbookid) {
-			this.userCode = userCode;
-			this.userPin = userpin;
-			this.isValid = userstate;
-			this.userName = username;
-			this.userType = usertype;
-			this.userDesc = userdesc;
-			this.loginTimes = logintimes;
-			this.activeTime = activeime;
-			this.loginIp = loginip;
-			this.loginName = loginname;
-			this.addrbookId = addrbookid;
-			// userUnits=null;
-			primaryUnit = null;
-			}
+            this.userCode = userCode;
+            this.userPin = userpin;
+            this.isValid = userstate;
+            this.userName = username;
+            this.userType = usertype;
+            this.userDesc = userdesc;
+            this.loginTimes = logintimes;
+            this.activeTime = activeime;
+            this.loginIp = loginip;
+            this.loginName = loginname;
+            this.addrbookId = addrbookid;
+            // userUnits=null;
+            primaryUnit = null;
+            }
 
     
     public UserInfo(String userCode, String userpin,String usertype, String userstate,
@@ -210,22 +210,22 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
     }
 
     public String getEnglishName() {
-		return englishName;
-	}
+        return englishName;
+    }
 
-	public void setEnglishName(String englishName) {
-		this.englishName = englishName;
-	}
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
+    }
 
-	public String getUserTag() {
-		return userTag;
-	}
+    public String getUserTag() {
+        return userTag;
+    }
 
-	public void setUserTag(String userTag) {
-		this.userTag = userTag;
-	}
+    public void setUserTag(String userTag) {
+        this.userTag = userTag;
+    }
 
-	/**
+    /**
      * T:生效 F:无效
      *
      * @return T:生效 F:无效
@@ -337,7 +337,7 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
         this.primaryUnit = primaryUnit;
     }
 
-	public void copy(UserInfo other) {
+    public void copy(UserInfo other) {
         this.userCode = other.getUserCode();
         this.userPin = other.getUserPin();
         this.isValid = other.getIsValid();
@@ -385,9 +385,9 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
         if (other.getRegEmail() != null)
             this.regEmail = other.getRegEmail();
         if (other.getUserTag() != null)
-        	this.userTag = other.getUserTag();
+            this.userTag = other.getUserTag();
         if (other.getEnglishName() != null)
-        	this.englishName =other.getEnglishName();
+            this.englishName =other.getEnglishName();
         if (other.getUserOrder() != null)
             this.userOrder = other.getUserOrder();
         if (other.regCellPhone != null)
@@ -425,36 +425,36 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
     
     private List<UserUnit> userUnits;
 
-	public UserInfo addUserUnit(UserUnit uu) {
-		if(userUnits==null)
-			userUnits = new ArrayList<UserUnit>();
-		userUnits.add(uu);
-		return this;
-	}
-	
-	@Override
-	public List<UserUnit> getUserUnits() {
-		return userUnits;
-	}
+    public UserInfo addUserUnit(UserUnit uu) {
+        if(userUnits==null)
+            userUnits = new ArrayList<UserUnit>();
+        userUnits.add(uu);
+        return this;
+    }
 
-	public void setUserUnits( List<UserUnit> userUnits) {
-		this.userUnits = userUnits;
-	}
-	
-	@JSONField(serialize = false)
-	private List<GrantedAuthority> arrayAuths;
-	
+    @Override
+    public List<UserUnit> getUserUnits() {
+        return userUnits;
+    }
+
+    public void setUserUnits( List<UserUnit> userUnits) {
+        this.userUnits = userUnits;
+    }
+
+    @JSONField(serialize = false)
+    private List<GrantedAuthority> arrayAuths;
+
     public void setAuthoritiesByRoles(List<String> roleCodes) {
         if (roleCodes.size() < 1)
             return;
         arrayAuths = new ArrayList<GrantedAuthority>();
         for (String roleCode : roleCodes) {
-        	if(StringUtils.isBlank(roleCode))
-        		continue;
-        	String authCode = StringUtils.trim(roleCode);
-        	if(!authCode.startsWith(CentitSecurityMetadata.ROLE_PREFIX)){
-        		authCode = CentitSecurityMetadata.ROLE_PREFIX +authCode;
-        	}
+            if(StringUtils.isBlank(roleCode))
+                continue;
+            String authCode = StringUtils.trim(roleCode);
+            if(!authCode.startsWith(CentitSecurityMetadata.ROLE_PREFIX)){
+                authCode = CentitSecurityMetadata.ROLE_PREFIX +authCode;
+            }
             arrayAuths.add(new SimpleGrantedAuthority(authCode));
         }
         //排序便于后面比较
@@ -467,129 +467,129 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
         //lastUpdateRoleTime = new Date(System.currentTimeMillis());
     }
     
-	@Override
-	@JSONField(serialize = false)
-	public List<String> getUserRoleCodes() {
-		List<String> userRoles = new ArrayList<String>();
-    	if(arrayAuths==null)
-    		return userRoles;
-    	for(GrantedAuthority auth:arrayAuths)
-    		userRoles.add(auth.getAuthority().substring(2));
-    	return userRoles;
-	}
+    @Override
+    @JSONField(serialize = false)
+    public List<String> getUserRoleCodes() {
+        List<String> userRoles = new ArrayList<String>();
+        if(arrayAuths==null)
+            return userRoles;
+        for(GrantedAuthority auth:arrayAuths)
+            userRoles.add(auth.getAuthority().substring(2));
+        return userRoles;
+    }
 
-	
-	@Override
-	@JSONField(serialize = false)
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.arrayAuths;
-	}
 
-	@Override
-	@JSONField(serialize = false)
-	public String getPassword() {
-		return this.userPin;
-	}
+    @Override
+    @JSONField(serialize = false)
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.arrayAuths;
+    }
 
-	@Override
-	public String getUsername() {
-		
-		return this.loginName;
-	}
+    @Override
+    @JSONField(serialize = false)
+    public String getPassword() {
+        return this.userPin;
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return isEnabled();
-	}
+    @Override
+    public String getUsername() {
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return isEnabled();
-	}
+        return this.loginName;
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return isEnabled();
-	}
+    @Override
+    public boolean isAccountNonExpired() {
+        return isEnabled();
+    }
 
-	@Override
-	public Map<String, String> getUserSettings() {
-		return new HashMap<String, String>();
-	}
-	private Map<String, String> userSettings;
-	
-	@Override
-	public String getUserSettingValue(String paramCode) {
-		 if(userSettings==null)
-	            return null;
-	        
-	        return userSettings.get(paramCode);
-	}
+    @Override
+    public boolean isAccountNonLocked() {
+        return isEnabled();
+    }
 
-	@Override
-	public void setUserSettingValue(String paramCode, String paramValue) {
-		if(userSettings==null)
-			userSettings=new HashMap<>();
-		userSettings.put(paramCode, paramValue);
-	}
-	
-	private Map<String, String> userOptList;
-	
-	public void setUserOptList(Map<String, String> userOptList) {
-		this.userOptList = userOptList;
-	}
-	
-	@Override
-	public Map<String, String> getUserOptList() {
-		if(userOptList==null)
-    		userOptList = new HashMap<String, String>();
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isEnabled();
+    }
+
+    @Override
+    public Map<String, String> getUserSettings() {
+        return new HashMap<String, String>();
+    }
+    private Map<String, String> userSettings;
+
+    @Override
+    public String getUserSettingValue(String paramCode) {
+         if(userSettings==null)
+                return null;
+
+            return userSettings.get(paramCode);
+    }
+
+    @Override
+    public void setUserSettingValue(String paramCode, String paramValue) {
+        if(userSettings==null)
+            userSettings=new HashMap<>();
+        userSettings.put(paramCode, paramValue);
+    }
+
+    private Map<String, String> userOptList;
+
+    public void setUserOptList(Map<String, String> userOptList) {
+        this.userOptList = userOptList;
+    }
+
+    @Override
+    public Map<String, String> getUserOptList() {
+        if(userOptList==null)
+            userOptList = new HashMap<String, String>();
         return userOptList;
-	}
+    }
 
-	@Override
-	public boolean checkOptPower(String optId, String optMethod) {
-		String s = userOptList.get(optId + "-" + optMethod);
+    @Override
+    public boolean checkOptPower(String optId, String optMethod) {
+        String s = userOptList.get(optId + "-" + optMethod);
         if (s == null) {
             return false;
         }
         return true;//"T".equals(s);
-	}
+    }
 
-	@Override
-	@JSONField(serialize = false)
-	public Object getCredentials() {
-		return this.userPin;
-	}
+    @Override
+    @JSONField(serialize = false)
+    public Object getCredentials() {
+        return this.userPin;
+    }
 
-	@Override
-	@JSONField(serialize = false)
-	public Object getDetails() {
-		return this;
-	}
+    @Override
+    @JSONField(serialize = false)
+    public Object getDetails() {
+        return this;
+    }
 
-	@Override
-	@JSONField(serialize = false)
-	public Object getPrincipal() {
-		return this;
-	}
+    @Override
+    @JSONField(serialize = false)
+    public Object getPrincipal() {
+        return this;
+    }
 
 
-	@Override
-	public boolean isAuthenticated() {
-		return true;
-	}
+    @Override
+    public boolean isAuthenticated() {
+        return true;
+    }
 
-	@Override
-	public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-		
-	}
+    @Override
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
 
-	@Override
-	public String getName() {
-		return this.loginName;
-	}
-	
-	@Override
+    }
+
+    @Override
+    public String getName() {
+        return this.loginName;
+    }
+
+    @Override
     public boolean equals(Object other) {
        if(other instanceof CentitUserDetails)
            return this.getUserCode().equals(((CentitUserDetails) other).getUserCode());

@@ -19,9 +19,9 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
 
     private boolean allResourceMustBeAudited = false;
     
-	public void setAllResourceMustBeAudited(boolean allResourceMustBeAudited) {
-		this.allResourceMustBeAudited = allResourceMustBeAudited;
-	}
+    public void setAllResourceMustBeAudited(boolean allResourceMustBeAudited) {
+        this.allResourceMustBeAudited = allResourceMustBeAudited;
+    }
     
     // In this method, need to compare authentication with configAttributes.
     // 1, A object is a URL, a filter was find permission configuration by this
@@ -33,10 +33,10 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
             throws AccessDeniedException, InsufficientAuthenticationException {
-    	
-    	if (configAttributes==null || configAttributes.size()<1) {
+
+        if (configAttributes==null || configAttributes.size()<1) {
             if(allResourceMustBeAudited){
-            	FilterInvocation fi = (FilterInvocation) object;
+                FilterInvocation fi = (FilterInvocation) object;
                 String requestUrl = fi.getRequestUrl();
                 String sErrMsg = "资源:"+requestUrl+",必须要在角色中配置，以便于分配。";                
                 fi.getRequest().setAttribute("CENTIT_SYSTEM_ERROR_MSG", sErrMsg);
@@ -57,42 +57,42 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
         }
 
         //if(authentication!=null){
-    	Collection<? extends GrantedAuthority> userRoles = authentication.getAuthorities();
-    	if(userRoles!=null){    	
-	    	Iterator<? extends GrantedAuthority> userRolesItr = userRoles.iterator();
+        Collection<? extends GrantedAuthority> userRoles = authentication.getAuthorities();
+        if(userRoles!=null){
+            Iterator<? extends GrantedAuthority> userRolesItr = userRoles.iterator();
             needRolesItr = configAttributes.iterator();
-	        /*for(ConfigAttribute ca : configAttributes) {
-	            if (ca == null) {
-	                continue;
-	            }
-	            String needRole = ca.getAttribute();
-	            for (GrantedAuthority ga : authentication.getAuthorities()) {
-	                if (needRole.equals(ga.getAuthority())) { // ga is user's role.
-	                    return;
-	                }
-	            }
-	        }*/
-	        //将两个集合排序 是可以提高效率的， 但考虑到这两个集合都比较小（一般应该不会大于3）所以优化的意义不大
-	        String needRole = needRolesItr.next().getAttribute();
-	        String userRole = userRolesItr.next().getAuthority();
-	        while(true){
-	            int n = needRole.compareTo(userRole);
-	            if(n==0) return; // 匹配成功
-	            
-	            if(n<0){
-	                if(!needRolesItr.hasNext())
-	                    break;
-	                needRole = needRolesItr.next().getAttribute();
-	            }else{
-	                if(!userRolesItr.hasNext())
-	                    break;
-	                userRole = userRolesItr.next().getAuthority();
-	            }            
-	        }       
-    	}
+            /*for(ConfigAttribute ca : configAttributes) {
+                if (ca == null) {
+                    continue;
+                }
+                String needRole = ca.getAttribute();
+                for (GrantedAuthority ga : authentication.getAuthorities()) {
+                    if (needRole.equals(ga.getAuthority())) { // ga is user's role.
+                        return;
+                    }
+                }
+            }*/
+            //将两个集合排序 是可以提高效率的， 但考虑到这两个集合都比较小（一般应该不会大于3）所以优化的意义不大
+            String needRole = needRolesItr.next().getAttribute();
+            String userRole = userRolesItr.next().getAuthority();
+            while(true){
+                int n = needRole.compareTo(userRole);
+                if(n==0) return; // 匹配成功
+
+                if(n<0){
+                    if(!needRolesItr.hasNext())
+                        break;
+                    needRole = needRolesItr.next().getAttribute();
+                }else{
+                    if(!userRolesItr.hasNext())
+                        break;
+                    userRole = userRolesItr.next().getAuthority();
+                }
+            }
+        }
 
         //没有权限，组织提示信息。
-    	FilterInvocation fi = (FilterInvocation) object;
+        FilterInvocation fi = (FilterInvocation) object;
         String requestUrl = fi.getRequestUrl();
         
         StringBuilder needRoles = new StringBuilder();

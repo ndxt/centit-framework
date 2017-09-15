@@ -12,32 +12,32 @@ import com.centit.support.file.TxtLogFile;
 
 public class TextOperationLogWriterImpl implements OperationLogWriter{
 
-	//@PostConstruct
-	public void init(){
-		OperationLogCenter.initOperationLogWriter(this);
-		//OperationLogCenter.registerOperationLogWriter(this);
-	}
-	
-	public String getCurrentLogPath(){
-		return SysParametersUtils.getLogHome()+"/D"
-				+DatetimeOpt.convertDateToString(
-						DatetimeOpt.currentUtilDate(),"yyyyMMdd")+".log";
-	}
-	
-	@Override
-	public void save(OperationLog optLog) {
-		TxtLogFile.writeLog(getCurrentLogPath(), JSON.toJSONString(optLog),
-				true,true);
-	}
+    //@PostConstruct
+    public void init(){
+        OperationLogCenter.initOperationLogWriter(this);
+        //OperationLogCenter.registerOperationLogWriter(this);
+    }
 
-	@Override
-	public void save(List<OperationLog> optLogs) {
-		String logFilePath = getCurrentLogPath();
-		TxtLogFile logger = new TxtLogFile();
-		logger.openLogFile(logFilePath);
-		for(OperationLog optLog : optLogs)
-			logger.writeLog(JSON.toJSONString(optLog),
-				true,true);
-		logger.closeLogFile();
-	}
+    public String getCurrentLogPath(){
+        return SysParametersUtils.getLogHome()+"/D"
+                +DatetimeOpt.convertDateToString(
+                        DatetimeOpt.currentUtilDate(),"yyyyMMdd")+".log";
+    }
+
+    @Override
+    public void save(OperationLog optLog) {
+        TxtLogFile.writeLog(getCurrentLogPath(), JSON.toJSONString(optLog),
+                true,true);
+    }
+
+    @Override
+    public void save(List<OperationLog> optLogs) {
+        String logFilePath = getCurrentLogPath();
+        TxtLogFile logger = new TxtLogFile();
+        logger.openLogFile(logFilePath);
+        for(OperationLog optLog : optLogs)
+            logger.writeLog(JSON.toJSONString(optLog),
+                true,true);
+        logger.closeLogFile();
+    }
 }

@@ -21,79 +21,79 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
     private final String [] ignoreUrls = new String[]{
-    		"login","publicinfo","index.do","showMain.do","init.jsp",
-    		"download","listSelectOrg","selectList"};
-	/**
-	 * 封装http请求
-	 * @param request request
-	 */
-	public XSSHttpRequestWrapper(HttpServletRequest request) {
-		super(request);
-	}
-	
-	@Override
-	public String getHeader(String name) {
-		String value = super.getHeader(name);
-		// 若开启特殊字符替换，对特殊字符进行替换
-		XSSSecurityConfig cfg = XSSSecurityConfig.getConfig();
-		if(cfg.isReplace()){
-			XSSSecurityManager.securityReplace(name);
-		}
-		return value;
-	}
+            "login","publicinfo","index.do","showMain.do","init.jsp",
+            "download","listSelectOrg","selectList"};
+    /**
+     * 封装http请求
+     * @param request request
+     */
+    public XSSHttpRequestWrapper(HttpServletRequest request) {
+        super(request);
+    }
 
-	@Override
-	public String getParameter(String name) {
-		String value = super.getParameter(name);
-		XSSSecurityConfig cfg = XSSSecurityConfig.getConfig();
-		// 若开启特殊字符替换，对特殊字符进行替换
-		if(cfg.isReplace()){
-			XSSSecurityManager.securityReplace(name);
-		}
-		return value;
-	}
+    @Override
+    public String getHeader(String name) {
+        String value = super.getHeader(name);
+        // 若开启特殊字符替换，对特殊字符进行替换
+        XSSSecurityConfig cfg = XSSSecurityConfig.getConfig();
+        if(cfg.isReplace()){
+            XSSSecurityManager.securityReplace(name);
+        }
+        return value;
+    }
 
-	/**
-	 * 没有违规的数据，就返回false;
-	 * 
-	 * @return
-	 */
-	private boolean checkHeader(){
-		Enumeration<String> headerParams = this.getHeaderNames();
-		//ADD BY LAY 检验Referer
-		String contextPathDefault = this.getScheme()+"://"+this.getServerName() 
-				+ ("80".equals(this.getServerPort())? "" : (":" + this.getServerPort()))
+    @Override
+    public String getParameter(String name) {
+        String value = super.getParameter(name);
+        XSSSecurityConfig cfg = XSSSecurityConfig.getConfig();
+        // 若开启特殊字符替换，对特殊字符进行替换
+        if(cfg.isReplace()){
+            XSSSecurityManager.securityReplace(name);
+        }
+        return value;
+    }
+
+    /**
+     * 没有违规的数据，就返回false;
+     *
+     * @return
+     */
+    private boolean checkHeader(){
+        Enumeration<String> headerParams = this.getHeaderNames();
+        //ADD BY LAY 检验Referer
+        String contextPathDefault = this.getScheme()+"://"+this.getServerName()
+                + ("80".equals(this.getServerPort())? "" : (":" + this.getServerPort()))
                 + this.getContextPath();
-		String referer = null;
-		//END ADD
-		while(headerParams.hasMoreElements()){
-			String headerName = headerParams.nextElement();
-			String headerValue = this.getHeader(headerName);
-			if(XSSSecurityManager.matches(headerValue)){
-				return true;
-			}
-			//ADD BY LAY 检验Referer
-			if("referer".equals(headerName)){
-			    referer = headerValue;
-			}
-			//END ADD
-		}
-		//ADD BY LAY 检验Referer,首次打开的时候正常操作这个参数会为空
-		XSSSecurityConfig cfg = XSSSecurityConfig.getConfig();
-		if((referer==null && !allowRefererEmpty()) || 
-		        (referer!=null && !referer.contains(contextPathDefault) 
-		        && !referer.contains(cfg.getRefererAllowUrlExtra()))){
+        String referer = null;
+        //END ADD
+        while(headerParams.hasMoreElements()){
+            String headerName = headerParams.nextElement();
+            String headerValue = this.getHeader(headerName);
+            if(XSSSecurityManager.matches(headerValue)){
+                return true;
+            }
+            //ADD BY LAY 检验Referer
+            if("referer".equals(headerName)){
+                referer = headerValue;
+            }
+            //END ADD
+        }
+        //ADD BY LAY 检验Referer,首次打开的时候正常操作这个参数会为空
+        XSSSecurityConfig cfg = XSSSecurityConfig.getConfig();
+        if((referer==null && !allowRefererEmpty()) ||
+                (referer!=null && !referer.contains(contextPathDefault)
+                && !referer.contains(cfg.getRefererAllowUrlExtra()))){
             return true;
         }
-		//END ADD
-		return false;
-	}
-	/**
-	 * 当用户没有登录的时候我们允许referer为空
-	 * @return
-	 */
-	private boolean allowRefererEmpty(){
-	    SecurityContext scontext = SecurityContextHolder.getContext();
+        //END ADD
+        return false;
+    }
+    /**
+     * 当用户没有登录的时候我们允许referer为空
+     * @return
+     */
+    private boolean allowRefererEmpty(){
+        SecurityContext scontext = SecurityContextHolder.getContext();
         Authentication auth = scontext.getAuthentication();
       
         Object o = null;
@@ -107,35 +107,35 @@ public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
             return true;
         }
         
-	    String reqUrl = this.getServletPath();
-	    for(String url:ignoreUrls){
+        String reqUrl = this.getServletPath();
+        for(String url:ignoreUrls){
             if(reqUrl.indexOf(url) > -1){
                 return true;
             }
         }
-	    return false;
-	}
-	
-	/**
-	 * 没有违规的数据，就返回false;
-	 * 
-	 * @return
-	 */
-	private boolean checkParameter(){
-		Map<String,String[]> submitParams = this.getParameterMap();
-		if(submitParams==null)
-			return false;
-		//Set<String> submitNames = submitParams.keySet();
-		for(Map.Entry<String,String[]> ent : submitParams.entrySet()){			
-			for(String submitValue : ent.getValue()){
-				if(XSSSecurityManager.matches(submitValue)){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
+        return false;
+    }
+
+    /**
+     * 没有违规的数据，就返回false;
+     *
+     * @return
+     */
+    private boolean checkParameter(){
+        Map<String,String[]> submitParams = this.getParameterMap();
+        if(submitParams==null)
+            return false;
+        //Set<String> submitNames = submitParams.keySet();
+        for(Map.Entry<String,String[]> ent : submitParams.entrySet()){
+            for(String submitValue : ent.getValue()){
+                if(XSSSecurityManager.matches(submitValue)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
    
     /**
      * 没有违规的数据，就返回false;
@@ -146,20 +146,20 @@ public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
      * @throws ServletException  ServletException
      */
     public boolean validateParameter(HttpServletResponse response) throws ServletException, IOException{
-    	XSSSecurityConfig cfg = XSSSecurityConfig.getConfig();
-    	// 开始header校验，对header信息进行校验
-    	if(cfg.isCheckHeader()){
-	    	if(this.checkHeader()){
-	    		return true;
-	    	}
-    	}
-    	// 开始parameter校验，对parameter信息进行校验
-    	if(cfg.isCheckParameter()){
-	    	if(this.checkParameter()){
-	    		return true;
-	    	}
-    	}
-    	return false;
+        XSSSecurityConfig cfg = XSSSecurityConfig.getConfig();
+        // 开始header校验，对header信息进行校验
+        if(cfg.isCheckHeader()){
+            if(this.checkHeader()){
+                return true;
+            }
+        }
+        // 开始parameter校验，对parameter信息进行校验
+        if(cfg.isCheckParameter()){
+            if(this.checkParameter()){
+                return true;
+            }
+        }
+        return false;
     }
-	
+
 }

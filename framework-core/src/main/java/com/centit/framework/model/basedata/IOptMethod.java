@@ -5,10 +5,10 @@ package com.centit.framework.model.basedata;
  * @author codefan@hotmail.com
  */
 public interface IOptMethod{
-	/**
-	 * 操作方法主键
-	 * @return 操作方法主键
-	 */
+    /**
+     * 操作方法主键
+     * @return 操作方法主键
+     */
     String getOptCode(); 
     /**
      * 所属业务ID

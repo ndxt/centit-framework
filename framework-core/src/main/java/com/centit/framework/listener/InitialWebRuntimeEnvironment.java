@@ -10,23 +10,23 @@ import com.centit.framework.core.controller.UtilDateDeserializer;
 
 public class InitialWebRuntimeEnvironment {
 
-	public InitialWebRuntimeEnvironment(){
-		
-	}	
+    public InitialWebRuntimeEnvironment(){
 
-	public void initialEnvironment(){
-		configFastjson();
-	}
+    }
 
-	private static void configFastjson(){
-		ParserConfig.getGlobalInstance().putDeserializer(java.sql.Timestamp.class, SqlTimestampDeserializer.instance);
-		ParserConfig.getGlobalInstance().putDeserializer(java.sql.Date.class,  SqlDateDeserializer.instance);
-		ParserConfig.getGlobalInstance().putDeserializer(java.util.Date.class, UtilDateDeserializer.instance);
+    public void initialEnvironment(){
+        configFastjson();
+    }
 
-		SerializeConfig.getGlobalInstance().put(java.util.Date.class, DatetimeSerializer.instance);
-		SerializeConfig.getGlobalInstance().put(java.sql.Date.class, DatetimeSerializer.instance);
-		SerializeConfig.getGlobalInstance().put(java.sql.Timestamp.class, DatetimeSerializer.instance);
-		SerializeConfig.getGlobalInstance().put(java.sql.Blob.class, LobSerializer.instance);
-		//SerializeConfig.getGlobalInstance().put(oracle.sql.BLOB.class, LobSerializer.instance);
-	}
+    private static void configFastjson(){
+        ParserConfig.getGlobalInstance().putDeserializer(java.sql.Timestamp.class, SqlTimestampDeserializer.instance);
+        ParserConfig.getGlobalInstance().putDeserializer(java.sql.Date.class,  SqlDateDeserializer.instance);
+        ParserConfig.getGlobalInstance().putDeserializer(java.util.Date.class, UtilDateDeserializer.instance);
+
+        SerializeConfig.getGlobalInstance().put(java.util.Date.class, DatetimeSerializer.instance);
+        SerializeConfig.getGlobalInstance().put(java.sql.Date.class, DatetimeSerializer.instance);
+        SerializeConfig.getGlobalInstance().put(java.sql.Timestamp.class, DatetimeSerializer.instance);
+        SerializeConfig.getGlobalInstance().put(java.sql.Blob.class, LobSerializer.instance);
+        //SerializeConfig.getGlobalInstance().put(oracle.sql.BLOB.class, LobSerializer.instance);
+    }
 }

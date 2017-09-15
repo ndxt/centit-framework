@@ -51,7 +51,7 @@ public class DataDictionary implements IDataDictionary, java.io.Serializable {
     public DataDictionary(String catalogcode, String datacode, String extracode,
                           String extracode2, String datatag, String datavalue,
                           String datastyle, String datadesc) {
-    	 this.catalogCode = catalogcode;
+         this.catalogCode = catalogcode;
          this.dataCode = datacode;
         this.extraCode = extracode;
         this.extraCode2 = extracode2;
@@ -117,9 +117,9 @@ public class DataDictionary implements IDataDictionary, java.io.Serializable {
     }
     
     @Override
-	public String getLocalDataValue(String lang) {
-    	 return this.dataValue;
-	}
+    public String getLocalDataValue(String lang) {
+         return this.dataValue;
+    }
  
     public String getFullKey() {
         return this.catalogCode + "." + this.dataCode;
@@ -188,5 +188,5 @@ public class DataDictionary implements IDataDictionary, java.io.Serializable {
     }
 
 
-	
+
   }

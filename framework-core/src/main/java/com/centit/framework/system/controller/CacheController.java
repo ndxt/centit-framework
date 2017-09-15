@@ -49,14 +49,14 @@ public class CacheController {
      * cp标签中MAPVALUE实现，获取数据字典对应的值
      *
      * @param catalog  系统内置的类别 字符串[userCode,loginName,
-     * 							unitcode,depno,rolecode,optid,optcode,optdesc,]
-     * 							以及数据目录中的catalogCode变量值
+     *                             unitcode,depno,rolecode,optid,optcode,optdesc,]
+     *                             以及数据目录中的catalogCode变量值
      * @param key      对应的变量值 或 数据字典中的 dataCode
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/mapvalue/{catalog}/{key}", method = RequestMethod.GET)
     public void mapvalue(@PathVariable String catalog, @PathVariable String key,
-    		HttpServletResponse response) {
+            HttpServletResponse response) {
         String value = CodeRepositoryUtil.getValue(catalog, key);
 
         JsonResultUtils.writeSingleDataJson(value, response);
@@ -174,19 +174,19 @@ public class CacheController {
      */
     @RequestMapping(value = "/dictionary/{catalog}", method = RequestMethod.GET)
     public void dictionary(@PathVariable String catalog, String extraCode,
-    		HttpServletRequest request,HttpServletResponse response) {
+            HttpServletRequest request,HttpServletResponse response) {
         List<? extends IDataDictionary> listObjects = CodeRepositoryUtil.getDictionary(catalog);
         
         String lang = WebOptUtils.getCurrentLang(request);
         JSONArray dictJson = new JSONArray();
         for(IDataDictionary dict : listObjects){
-        	// 级联或者树形数据字典明细查询
-        	if (StringUtils.isNotBlank(extraCode) && !extraCode.equals(dict.getExtraCode()))
-        		continue;
-        	
-        	JSONObject obj = (JSONObject)JSON.toJSON(dict);
-        	obj.put("dataValue", dict.getLocalDataValue(lang));
-        	dictJson.add(obj);
+            // 级联或者树形数据字典明细查询
+            if (StringUtils.isNotBlank(extraCode) && !extraCode.equals(dict.getExtraCode()))
+                continue;
+
+            JSONObject obj = (JSONObject)JSON.toJSON(dict);
+            obj.put("dataValue", dict.getLocalDataValue(lang));
+            dictJson.add(obj);
         }
         
         JsonResultUtils.writeSingleDataJson(dictJson, response);
@@ -202,15 +202,15 @@ public class CacheController {
      */
     @RequestMapping(value = "/dictionaryd/{catalog}", method = RequestMethod.GET)
     public void dictionaryd(@PathVariable String catalog, 
-    		HttpServletRequest request,HttpServletResponse response) {
+            HttpServletRequest request,HttpServletResponse response) {
         List<? extends IDataDictionary> listObjects = CodeRepositoryUtil.getDictionaryIgnoreD(catalog);
 
         String lang = WebOptUtils.getCurrentLang(request);
         JSONArray dictJson = new JSONArray();
         for(IDataDictionary dict : listObjects){
-        	JSONObject obj = (JSONObject)JSON.toJSON(dict);
-        	obj.put("dataValue", dict.getLocalDataValue(lang));
-        	dictJson.add(obj);
+            JSONObject obj = (JSONObject)JSON.toJSON(dict);
+            obj.put("dataValue", dict.getLocalDataValue(lang));
+            dictJson.add(obj);
         }
         
         JsonResultUtils.writeSingleDataJson(dictJson, response);
@@ -409,7 +409,7 @@ public class CacheController {
     @RequestMapping(value = "/userdetails", method = RequestMethod.GET)
     public void getUserDetails(
             HttpServletResponse response) {
-    	CentitUserDetails userDetails = WebOptUtils.getLoginUser(RequestThreadLocal.getHttpThreadWrapper()
+        CentitUserDetails userDetails = WebOptUtils.getLoginUser(RequestThreadLocal.getHttpThreadWrapper()
                 .getRequest());
         JsonResultUtils.writeSingleDataJson(userDetails, response);
     }
@@ -435,7 +435,7 @@ public class CacheController {
     @RequestMapping(value = "/usersettings", method = RequestMethod.GET)
     public void getUserAllSettings(HttpServletResponse response) {
         JsonResultUtils.writeSingleDataJson(
-        		CodeRepositoryUtil.getUserAllSettings(), response);
+                CodeRepositoryUtil.getUserAllSettings(), response);
     }
 
     /**
@@ -446,7 +446,7 @@ public class CacheController {
      */
     @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = { RequestMethod.GET })
     public void checkUserOptPower(@PathVariable String optId,
-    		@PathVariable String method, HttpServletResponse response) {
+            @PathVariable String method, HttpServletResponse response) {
         boolean s = CodeRepositoryUtil
                 .checkUserOptPower(optId,method);
         JsonResultUtils.writeSingleDataJson(s, response);
@@ -460,7 +460,7 @@ public class CacheController {
     @RequestMapping(value = "/userallpowers", method = { RequestMethod.GET })
     public void getUserAllPowers( HttpServletResponse response) {
         JsonResultUtils.writeSingleDataJson(
-        		CodeRepositoryUtil.getUserAllOptPowers(), response);
+                CodeRepositoryUtil.getUserAllOptPowers(), response);
     }
     
     /**
@@ -473,7 +473,7 @@ public class CacheController {
         StringBuilder errorMsg = new StringBuilder();
         List<File> files = FileSystemOpt.findFilesByExt(SysParametersUtils.getAppHome()+"/sqlscript","xml");
         DBType dbType = DBType.mapDBType( SysParametersUtils.getStringValue("jdbc.url"));
-	    if(files!=null & files.size()>0){
+        if(files!=null & files.size()>0){
             for(File file:files) {
                 try {
                     ExtendedQueryPool.loadExtendedSqlMap(

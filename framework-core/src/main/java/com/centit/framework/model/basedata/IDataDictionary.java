@@ -6,10 +6,10 @@ package com.centit.framework.model.basedata;
 //数据字典表
 public interface IDataDictionary{
 
-	/**
-	 * 类别代码
-	 * @return 类别代码
-	 */
+    /**
+     * 类别代码
+     * @return 类别代码
+     */
      String getCatalogCode();
     /**
      * 数据字典代码

@@ -10,108 +10,108 @@ import com.centit.support.network.HttpExecutor;
 @SuppressWarnings("unused")
 public class RestfulHttpRequest {
 
-	public static ResponseJSON getResponseData(String httpGetUrl) {        
-		CloseableHttpClient httpClient = HttpExecutor.createHttpClient();
-		ResponseJSON resJson = getResponseData(httpClient,httpGetUrl);
-		try {
-			httpClient.close();
-		} catch (IOException e) {
-		}
-		return resJson;
-    }
-	
-	public static ResponseJSON getResponseData(CloseableHttpClient httpclient,String httpGetUrl) {        
-		ResponseJSON resJson=null;
-		try {
-			resJson = ResponseJSON.valueOfJson(
-					HttpExecutor.simpleGet(httpclient, httpGetUrl, "") );
-		} catch (IOException e) {
-		}
+    public static ResponseJSON getResponseData(String httpGetUrl) {
+        CloseableHttpClient httpClient = HttpExecutor.createHttpClient();
+        ResponseJSON resJson = getResponseData(httpClient,httpGetUrl);
+        try {
+            httpClient.close();
+        } catch (IOException e) {
+        }
         return resJson;
     }
 
-	public static <T> List<T>  getResponseObjectList(CloseableHttpClient httpClient,
-											   String httpGetUrl,Class<T> clazz ) {
-		try {
-			ResponseJSON resJson = RestfulHttpRequest.getResponseData(
-					httpClient,httpGetUrl);
+    public static ResponseJSON getResponseData(CloseableHttpClient httpclient,String httpGetUrl) {
+        ResponseJSON resJson=null;
+        try {
+            resJson = ResponseJSON.valueOfJson(
+                    HttpExecutor.simpleGet(httpclient, httpGetUrl, "") );
+        } catch (IOException e) {
+        }
+        return resJson;
+    }
 
-			if(resJson==null)
-				return null;
-			return resJson.getDataAsArray(clazz);
+    public static <T> List<T>  getResponseObjectList(CloseableHttpClient httpClient,
+                                               String httpGetUrl,Class<T> clazz ) {
+        try {
+            ResponseJSON resJson = RestfulHttpRequest.getResponseData(
+                    httpClient,httpGetUrl);
 
-		} catch (Exception e) {
-			return null;
-		}
-	}
+            if(resJson==null)
+                return null;
+            return resJson.getDataAsArray(clazz);
 
-	public static <T> T  getResponseObject(CloseableHttpClient httpClient,
-											   String httpGetUrl,Class<T> clazz ) {
-		try {
-			ResponseJSON resJson = RestfulHttpRequest.getResponseData(
-					httpClient,httpGetUrl);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-			if(resJson==null)
-				return null;
-			return resJson.getDataAsObject(clazz);
+    public static <T> T  getResponseObject(CloseableHttpClient httpClient,
+                                               String httpGetUrl,Class<T> clazz ) {
+        try {
+            ResponseJSON resJson = RestfulHttpRequest.getResponseData(
+                    httpClient,httpGetUrl);
 
-		} catch (Exception e) {
-			return null;
-		}
-	}
+            if(resJson==null)
+                return null;
+            return resJson.getDataAsObject(clazz);
 
-	public static <T> List<T>  getResponseObjectList(AppSession appSession,
-													 String httpGetUrl,Class<T> clazz ) {
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-		CloseableHttpClient httpClient = null;
-		try {
-			httpClient = appSession.getHttpClient();
-			return getResponseObjectList(
-					httpClient,
-					appSession.completeQueryUrl(httpGetUrl),clazz);
+    public static <T> List<T>  getResponseObjectList(AppSession appSession,
+                                                     String httpGetUrl,Class<T> clazz ) {
 
-		} catch (Exception e) {
-			return null;
-		} finally {
-			if(httpClient!=null)
-				appSession.releaseHttpClient(httpClient);
-		}
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = appSession.getHttpClient();
+            return getResponseObjectList(
+                    httpClient,
+                    appSession.completeQueryUrl(httpGetUrl),clazz);
 
-	}
+        } catch (Exception e) {
+            return null;
+        } finally {
+            if(httpClient!=null)
+                appSession.releaseHttpClient(httpClient);
+        }
 
-	public static <T> T  getResponseObject(AppSession appSession,
-										   String httpGetUrl,Class<T> clazz ) {
+    }
 
-		CloseableHttpClient httpClient = null;
-		try {
-			httpClient = appSession.getHttpClient();
-			return getResponseObject(
-					httpClient,
-					appSession.completeQueryUrl(httpGetUrl),clazz);
+    public static <T> T  getResponseObject(AppSession appSession,
+                                           String httpGetUrl,Class<T> clazz ) {
 
-		} catch (Exception e) {
-			return null;
-		} finally {
-			if(httpClient!=null)
-				appSession.releaseHttpClient(httpClient);
-		}
-	}
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = appSession.getHttpClient();
+            return getResponseObject(
+                    httpClient,
+                    appSession.completeQueryUrl(httpGetUrl),clazz);
 
-	public static ResponseJSON  getResponseData (AppSession appSession,
-												 String httpGetUrl) {
+        } catch (Exception e) {
+            return null;
+        } finally {
+            if(httpClient!=null)
+                appSession.releaseHttpClient(httpClient);
+        }
+    }
 
-		CloseableHttpClient httpClient = null;
-		try {
-			httpClient = appSession.getHttpClient();
-			return getResponseData(
-					httpClient,
-					appSession.completeQueryUrl(httpGetUrl));
+    public static ResponseJSON  getResponseData (AppSession appSession,
+                                                 String httpGetUrl) {
 
-		} catch (Exception e) {
-			return null;
-		} finally {
-			if(httpClient!=null)
-				appSession.releaseHttpClient(httpClient);
-		}
-	}
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = appSession.getHttpClient();
+            return getResponseData(
+                    httpClient,
+                    appSession.completeQueryUrl(httpGetUrl));
+
+        } catch (Exception e) {
+            return null;
+        } finally {
+            if(httpClient!=null)
+                appSession.releaseHttpClient(httpClient);
+        }
+    }
 }

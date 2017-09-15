@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
  */
 public class MemorySessionRegistryImpl implements CentitSessionRegistry,
         ApplicationListener<SessionDestroyedEvent> {
-	
+
     // ~ Instance fields
     // ================================================================================================
 

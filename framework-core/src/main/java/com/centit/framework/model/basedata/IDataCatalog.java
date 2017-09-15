@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface IDataCatalog{
  
-	/**
-	 * 类别代码
-	 * @return 类别代码
-	 */
+    /**
+     * 类别代码
+     * @return 类别代码
+     */
      String getCatalogCode();
     /**
      * 类别名称

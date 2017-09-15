@@ -56,7 +56,7 @@ public class ObjectException extends RuntimeException {
      * @param message String
      */
     public ObjectException(String message) {
-    	 super(message);
+         super(message);
          this.exceptionCode = UNKNOWN_EXCEPTION;
     }
 
@@ -106,20 +106,20 @@ public class ObjectException extends RuntimeException {
         this.objectData = obj;
     }
     
-	public int getExceptionCode() {
-		return exceptionCode;
-	}
+    public int getExceptionCode() {
+        return exceptionCode;
+    }
 
-	public void setExceptionCode(int exceptionCode) {
-		this.exceptionCode = exceptionCode;
-	}
+    public void setExceptionCode(int exceptionCode) {
+        this.exceptionCode = exceptionCode;
+    }
 
-	public Object getObjectData() {
-		return objectData;
-	}
+    public Object getObjectData() {
+        return objectData;
+    }
 
-	public void setObjectData(Object objectData) {
-		this.objectData = objectData;
-	}
+    public void setObjectData(Object objectData) {
+        this.objectData = objectData;
+    }
   
 }

@@ -19,12 +19,12 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 public class ResponseCorsFilter implements Filter {
-	@Override
+    @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-		HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse alteredResponse = (HttpServletResponse) servletResponse;
-		
-		if (servletResponse instanceof HttpServletResponse) {
+
+        if (servletResponse instanceof HttpServletResponse) {
             if (request.getMethod().equals("OPTION") || request.getMethod().equals("OPTIONS")) {
                 System.out.println("In Options");
                 if (request.getServletPath().equals("/login")) {
@@ -37,7 +37,7 @@ public class ResponseCorsFilter implements Filter {
 
             addHeadersFor200Response(alteredResponse);
         }
-		
+
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
@@ -50,15 +50,15 @@ public class ResponseCorsFilter implements Filter {
         response.addHeader("Access-Control-Max-Age", "86400");
     }
 
-	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void destroy() {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void init(FilterConfig arg0) throws ServletException {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    @Override
+    public void init(FilterConfig arg0) throws ServletException {
+        // TODO Auto-generated method stub
+
+    }
 }

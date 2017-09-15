@@ -36,10 +36,10 @@ public class OptMethod implements IOptMethod, java.io.Serializable{
 
     private Integer optOrder;// 操作方法排序
  
-	
+
     // Constructors
  
-	/**
+    /**
      * default constructor
      */
     public OptMethod() {
@@ -142,15 +142,15 @@ public class OptMethod implements IOptMethod, java.io.Serializable{
 
 
     public void setOptOrder(Integer optOrder) {
-		this.optOrder = optOrder;
-	}
-	@Override
-	public Integer getOptOrder() {
-		return optOrder;
-	}
-	
+        this.optOrder = optOrder;
+    }
+    @Override
+    public Integer getOptOrder() {
+        return optOrder;
+    }
+
     public void copy(OptMethod other) {
-    	this.optCode = other.getOptCode();
+        this.optCode = other.getOptCode();
         this.optName = other.getOptName();
         this.optMethod = other.getOptMethod();
         this.optDesc = other.getOptDesc();
@@ -173,10 +173,10 @@ public class OptMethod implements IOptMethod, java.io.Serializable{
         if (other.getIsInWorkflow() != null)
             this.isInWorkflow = other.getIsInWorkflow();
         if (other.getOptOrder() != null)
-        	this.optOrder = other.getOptOrder();
+            this.optOrder = other.getOptOrder();
         if (other.getOptReq() != null)
-        	this.optReq = other.getOptReq();
+            this.optReq = other.getOptReq();
         if (other.getOptUrl() != null)
-        	this.optUrl = other.getOptUrl();
+            this.optUrl = other.getOptUrl();
     } 
 }

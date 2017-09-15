@@ -45,8 +45,8 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
     }
     
     @Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {   
-		int tryTimes = CheckFailLogs.getHasTriedTimes(request);
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        int tryTimes = CheckFailLogs.getHasTriedTimes(request);
         if(checkCaptcha ||
                 (checkCaptchaType==1
                         && CheckFailLogs.getMaxTryTimes() >= 0
@@ -84,7 +84,7 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
         
         Authentication auth = null;
                 
-		//if(!onlyPretreat || writeLog || CheckFailLogs.getMaxTryTimes() > 0){
+        //if(!onlyPretreat || writeLog || CheckFailLogs.getMaxTryTimes() > 0){
             try{
                 
                 auth = super.attemptAuthentication(request, response);
@@ -100,9 +100,9 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
                 }
                 throw failed;
             }
-		//}
+        //}
         
         return auth;
-	}
+    }
   
 }

@@ -42,15 +42,15 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
     protected Date createDate;
 
     /**
-	 * CREATOR(创建人) 创建人 
-	 */
+     * CREATOR(创建人) 创建人
+     */
 
 
     /**
      * default constructor
      */
     public RoleInfo() {
-    	roleType = "S";
+        roleType = "S";
     }
 
     public RoleInfo(String rolecode, String isvalid) {
@@ -60,7 +60,7 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
     }
 
     public RoleInfo(String rolecode, String rolename,String roleType,
-    		String unitCode,String isvalid, String roledesc) {
+            String unitCode,String isvalid, String roledesc) {
         this.roleCode = rolecode;
         this.roleName = rolename;
         this.roleType = roleType;
@@ -118,27 +118,27 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
      * S为系统角色 I为项目角色 W工作量角色
      * @return  S为系统角色 I为项目角色 W工作量角色
      */
-	public String getRoleType() {
-		return roleType;
-	}
+    public String getRoleType() {
+        return roleType;
+    }
 
-	/**
+    /**
      * S为系统角色 I为项目角色  D 部门权限  W工作量角色
      * @param  roleType roleType
      */
-	public void setRoleType(String roleType) {
-		this.roleType = roleType;
-	}
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
+    }
 
-	public String getUnitCode() {
-		return unitCode;
-	}
+    public String getUnitCode() {
+        return unitCode;
+    }
 
-	public void setUnitCode(String unitCode) {
-		this.unitCode = unitCode;
-	}
+    public void setUnitCode(String unitCode) {
+        this.unitCode = unitCode;
+    }
 
-	
+
 
     public void copyNotNullProperty(RoleInfo other) {
         // this.rolecode = other.getRolecode();
@@ -149,9 +149,9 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
         if (other.getRoleDesc() != null)
             this.roleDesc = other.getRoleDesc();
         if (other.getRoleType() != null)
-        	this.roleType = other.getRoleType();
+            this.roleType = other.getRoleType();
         if (other.getUnitCode() != null)
-        	this.unitCode = other.getUnitCode();
+            this.unitCode = other.getUnitCode();
  
     }
 
@@ -168,16 +168,16 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
     private List<RolePower> rolePowers;
     
     public void addRolePowers(RolePower rolePower){
-    	if(rolePowers==null)
-    		rolePowers = new ArrayList<RolePower>();
-    	rolePowers.add(rolePower);
+        if(rolePowers==null)
+            rolePowers = new ArrayList<RolePower>();
+        rolePowers.add(rolePower);
     }
     
-	@Override
-	public List<RolePower> getRolePowers() {
-		if(rolePowers==null)
-    		rolePowers = new ArrayList<RolePower>();
-		return this.rolePowers;
-	}
+    @Override
+    public List<RolePower> getRolePowers() {
+        if(rolePowers==null)
+            rolePowers = new ArrayList<RolePower>();
+        return this.rolePowers;
+    }
 
 }
