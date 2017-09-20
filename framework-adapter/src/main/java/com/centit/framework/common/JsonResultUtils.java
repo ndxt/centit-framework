@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.centit.support.algorithm.ReflectionOpt;
+import com.centit.support.xml.XMLObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -232,7 +233,7 @@ public class JsonResultUtils {
                 response.getWriter().print(objValue);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-            throw new ObjectException(e.getMessage());
+            throw new ObjectException(objValue, e.getMessage());
         }
     }
 
@@ -243,9 +244,9 @@ public class JsonResultUtils {
      */
     public static void writeOriginalJson(JSON json, HttpServletResponse response) {
         writeOriginalResponse("application/json; charset=utf-8",
-                json,response);
+                json.toJSONString(), response);
     }
-    
+
     /**
      * 格式化Json数据输出
      *@param jsonValue String类型
@@ -255,7 +256,31 @@ public class JsonResultUtils {
         writeOriginalResponse("application/json; charset=utf-8",
                 jsonValue,response);
     }
-    
+
+
+
+    /**
+     * 直接文本数据输出
+     * @param <T> 类型通配符
+     * @param objValue T
+     * @param response HttpServletResponse
+     */
+    public static <T> void writeOriginalHtml(T objValue, HttpServletResponse response) {
+        writeOriginalResponse("text/html; charset=utf-8",
+                objValue,response);
+    }
+
+    /**
+     * 格式化XML数据输出
+     *@param xml XML格式
+     * @param response HttpServletResponse
+     */
+    public static void writeOriginalXml(String xml, HttpServletResponse response) {
+        writeOriginalResponse("text/xml; charset=utf-8",
+                xml,response);
+    }
+
+
     /**
      * 直接文本数据输出
      * @param <T> 类型通配符
@@ -272,17 +297,7 @@ public class JsonResultUtils {
         }
     }
     
-    
-    /**
-     * 直接文本数据输出
-     * @param <T> 类型通配符
-     * @param objValue T
-     * @param response HttpServletResponse
-     */
-    public static <T> void writeOriginalHtml(T objValue, HttpServletResponse response) {
-        writeOriginalResponse("text/html; charset=utf-8",
-                objValue,response);
-    }
+
     /**
      * javascript脚本输出
      * @param scriptValue javascript脚本 String类型
@@ -292,6 +307,7 @@ public class JsonResultUtils {
            writeOriginalResponse("application/javascript; charset=utf-8",
                    scriptValue,response);
      }
+
     /**
      * 格式化Json数据输出
      * @param code 返回码
@@ -312,6 +328,27 @@ public class JsonResultUtils {
         String text = JSONObject.toJSONString(param, simplePropertyPreFilter);
 
         writeOriginalJson(text,response);
+    }
+
+
+    /**
+     * 格式化XML数据输出
+     * @param code 返回码
+     * @param message 返回提示信息
+     * @param objValue 返回数据对象
+     * @param response HttpServletResponse
+     */
+    public static void writeSingleDataXml(int code,String message, Object objValue, HttpServletResponse response) {
+
+        Map<String, Object> param = new HashMap<>();
+        param.put(ResponseData.RES_CODE_FILED, code );
+        param.put(ResponseData.RES_MSG_FILED,  message );
+        if(objValue!=null)
+            param.put(ResponseData.RES_DATA_FILED, objValue);
+
+        String text = XMLObject.objectToXMLString("response", param);
+
+        writeOriginalXml(text,response);
     }
 
     /**
@@ -335,9 +372,16 @@ public class JsonResultUtils {
         writeSingleDataJson(resData.getCode(),resData.getMessage(),
                 resData.getData(), response, null);
     }
-    
 
-
+    /**
+     * 格式化XML数据输出
+     * @param resData ResponseData http响应信息
+     * @param response HttpServletResponse
+     */
+    public static void writeResponseDataAsXml(ResponseData resData, HttpServletResponse response) {
+        writeSingleDataXml(resData.getCode(),resData.getMessage(),
+                resData.getData(), response);
+    }
 
 
     /**
@@ -437,6 +481,16 @@ public class JsonResultUtils {
      */
     public static void writeSingleDataJson(Object objValue, HttpServletResponse response) {
         writeSingleDataJson(0,"OK",objValue, response, null);
+    }
+
+
+    /**
+     * 格式化XML数据输出
+     * @param objValue Object
+     * @param response HttpServletResponse
+     */
+    public static void writeSingleDataXml(Object objValue, HttpServletResponse response) {
+        writeSingleDataXml(0,"OK",objValue, response);
     }
 
     /**
