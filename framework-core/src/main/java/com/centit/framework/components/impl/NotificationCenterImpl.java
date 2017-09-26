@@ -21,13 +21,11 @@ import com.centit.framework.model.adapter.PlatformEnvironment;
 public class NotificationCenterImpl implements NotificationCenter {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationCenterImpl.class);
-    private static Map<String, MessageSender> msgSenders
-            = new HashMap<String, MessageSender>();
+    private static Map<String, MessageSender> msgSenders = new HashMap<>();
 
     /**
      * 用户设置
      */
-
     private PlatformEnvironment platformEnvironment;
     //注入接口MessageSender实现类，通过setMsgSenders方法进行配置
     
@@ -40,8 +38,8 @@ public class NotificationCenterImpl implements NotificationCenter {
      * 这个通过spring注入
      */
     public void initMsgSenders() {
-        msgSenders.put("email", EmailMessageSenderImpl.instance);
-        defautlMsgSender = EmailMessageSenderImpl.instance;
+        msgSenders.put("dummy", DummyMessageSenderImpl.instance);
+        defautlMsgSender = DummyMessageSenderImpl.instance;
         //目前支持内部消息、短信
         //msgSenders中的键与UserSetting表中receiveways中值一一对应
         /*msgSenders.put("I", innerMessageSender);

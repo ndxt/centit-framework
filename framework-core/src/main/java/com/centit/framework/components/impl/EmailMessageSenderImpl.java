@@ -3,6 +3,7 @@
  */
 package com.centit.framework.components.impl;
 
+import com.centit.framework.common.SysParametersUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.mail.EmailException;
@@ -20,22 +21,35 @@ import com.centit.framework.model.basedata.IUserInfo;
 public class EmailMessageSenderImpl implements MessageSender {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailMessageSenderImpl.class);
-    private EmailMessageSenderImpl(){
 
+    private String hostName;
+    private int smtpPort;
+    private String userName;
+    private String userPassword;
+    private String serverEmail;
+
+    public  EmailMessageSenderImpl(){
+        this.hostName = SysParametersUtils.getStringValue("message.sender.email.hostName");
+        this.smtpPort = SysParametersUtils.getIntValue("message.sender.email.smtpPort",25);
+        this.userName = SysParametersUtils.getStringValue("message.sender.email.userName");
+        this.userPassword = SysParametersUtils.getStringValue("message.sender.email.userPassword");
+        this.serverEmail = SysParametersUtils.getStringValue("message.sender.email.serverEmail");
     }
-    public final static EmailMessageSenderImpl instance = new EmailMessageSenderImpl();
 
-    public static String sendEmailMessage(String mailTo,String mailFrom,String msgSubject,String msgContent) {
+    public String sendEmailMessage(String mailTo,String mailFrom,String msgSubject,String msgContent) {
         
         MultiPartEmail multMail = new MultiPartEmail();
         
         // SMTP
-        multMail.setHostName(CodeRepositoryUtil.getValue("SysMail", "host_name"));
+        multMail.setHostName(hostName);
+                //CodeRepositoryUtil.getValue("SysMail", "host_name"));
+        multMail.setSmtpPort(smtpPort);
+
         String resStr = "OK";
         // 需要提供公用的消息用户名和密码
-        multMail.setAuthentication(
-                CodeRepositoryUtil.getValue("SysMail", "host_user"),
-                CodeRepositoryUtil.getValue("SysMail", "host_password"));
+        multMail.setAuthentication(userName, userPassword);
+                //CodeRepositoryUtil.getValue("SysMail", "host_user"),
+                //CodeRepositoryUtil.getValue("SysMail", "host_password"));
         try {
             //multMail.setFrom(CodeRepositoryUtil.getValue("SysMail", "admin_email"));
             multMail.setFrom(mailFrom);
@@ -57,7 +71,8 @@ public class EmailMessageSenderImpl implements MessageSender {
         IUserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(sender);
         String mailFrom;
         if(userinfo==null){
-            mailFrom = CodeRepositoryUtil.getValue("SysMail", "admin_email");
+            mailFrom = serverEmail;
+            //CodeRepositoryUtil.getValue("SysMail", "admin_email");
         }else
             mailFrom =  userinfo.getRegEmail();
         
