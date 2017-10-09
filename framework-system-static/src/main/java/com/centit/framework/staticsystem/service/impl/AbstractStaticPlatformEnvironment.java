@@ -366,6 +366,13 @@ public abstract class AbstractStaticPlatformEnvironment
 
         List<OptInfo> allUserOpt = getMenuFuncs(preOpts,userOptinfos);
 
+        Collections.sort(allUserOpt, (o1, o2) -> // Long.compare(o1.getOrderInd() , o2.getOrderInd())) ;
+                ( o2.getOrderInd() == null && o1.getOrderInd() == null)? 0 :
+                        ( (o2.getOrderInd() == null)? 1 :
+                                (( o1.getOrderInd() == null)? -1 :
+                                        ((o1.getOrderInd() > o2.getOrderInd())? 1:(
+                                                o1.getOrderInd() < o2.getOrderInd()?-1:0 ) ))));
+
         return listObjectFormatAndFilterOptId(allUserOpt,null);
     }
 
