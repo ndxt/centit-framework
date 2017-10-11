@@ -201,6 +201,7 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
         this.userCode = userCode;
     }
 
+    @JSONField(serialize = false)
     public String getUserPin() {
         return this.userPin;
     }
