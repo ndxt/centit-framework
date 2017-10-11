@@ -1,5 +1,6 @@
 package com.centit.framework.common;
 
+import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -137,7 +138,7 @@ public class SysParametersUtils {
     public static int getIntValue(String key,int defaultValue) {
        String s = loadProperties().getProperty(key);
        if(StringRegularOpt.isNumber(s))
-           return Integer.parseInt(s);
+           return NumberBaseOpt.parseInteger(s,defaultValue);
        return defaultValue;
     }
     
