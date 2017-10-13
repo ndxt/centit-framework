@@ -6,11 +6,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <centit.framework.version>4.0.1-SNAPSHOT</centit.framework.version>
+        <centit.framework.version>4.0.1</centit.framework.version>
         <jdk.version>1.8</jdk.version>
-        <centit.commons.version>2.2.3-SNAPSHOT</centit.commons.version>
-        <centit.ui.version>3.0.1-SNAPSHOT</centit.ui.version>
-        <centit.persistence.version>1.0-SNAPSHOT</centit.persistence.version>
+        <centit.commons.version>2.2.4</centit.commons.version>
+        <centit.ui.version>3.0.1</centit.ui.version>
+        <centit.persistence.version>1.0</centit.persistence.version>
 
         <spring.version>4.3.9.RELEASE</spring.version>
         <spring.security.version>4.2.3.RELEASE</spring.security.version>
@@ -39,7 +39,7 @@
     <groupId>com.centit.framework</groupId>
     <artifactId>framework-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.1-SNAPSHOT</version>
+    <version>4.0.1</version>
     <name>com.centit.framework:framework-parent</name>
     <description>基于spring mvc的内部开发框架.
         包括了对 spring mvc, spring security, spring session, hibernate, mybatis, flyway 等等开源框架的整合；
@@ -53,6 +53,11 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
+    <organization>
+        <name>江苏南大先腾信息产业股份有限公司</name>
+        <url>www.centit.com</url>
+    </organization>
 
     <developers>
         <developer>
@@ -113,20 +118,19 @@
 
     <!-- mvn deploy -DpomFile=pom.xml -->
 
-        <!--<distributionManagement>
-           <repository>
-               <id>ossrh</id>
-               <name>sonatype-releases</name>
-               <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-           </repository>
-           <snapshotRepository>
-               <id>ossrh</id>
-               <name>sonatype-snapshots</name>
-               <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-           </snapshotRepository>
-       </distributionManagement>
--->
     <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>sonatype-releases</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>sonatype-snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <!--<distributionManagement>
         <repository>
             <id>centit-releases</id>
             <name>centit-release</name>
@@ -137,7 +141,7 @@
             <name>centit-snapshots</name>
             <url>http://develop.centit.com:8080/nexus/content/repositories/centit-snapshots/</url>
         </snapshotRepository>
-    </distributionManagement>
+    </distributionManagement>-->
 
     <build>
         <plugins>
@@ -156,6 +160,14 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.20.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
             <!-- 打包时添加源码 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

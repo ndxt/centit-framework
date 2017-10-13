@@ -13,7 +13,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="framework-adapter" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-utils:2.2.3-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-utils:2.2.4" level="project" />
     <orderEntry type="library" name="Maven: org.mnode.ical4j:ical4j:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.9" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.0" level="project" />
@@ -37,7 +37,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.8">
         <CLASSES>
-          <root url="jar://C:/develop/jvm/jdk1_8_0_05/lib/tools.jar!/" />
+          <root url="jar:///opt/develop/jvm/jdk1.8.0_102/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -46,7 +46,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:rt:1.8">
         <CLASSES>
-          <root url="jar://C:/develop/jvm/jdk1_8_0_05/jre/lib/rt.jar!/" />
+          <root url="jar:///opt/develop/jvm/jdk1.8.0_102/jre/lib/rt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -55,7 +55,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:jce:1.8">
         <CLASSES>
-          <root url="jar://C:/develop/jvm/jdk1_8_0_05/jre/lib/jce.jar!/" />
+          <root url="jar:///opt/develop/jvm/jdk1.8.0_102/jre/lib/jce.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -72,9 +72,9 @@
     <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.13.Final" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />
     <orderEntry type="library" name="Maven: com.h2database:h2:1.4.196" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.framework:centit-persistence-core:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.2.3-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-compiler:2.2.3-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.framework:centit-persistence-core:1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.2.4" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-compiler:2.2.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-dbcp2:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:15.0" level="project" />
     <orderEntry type="library" name="Maven: org.flywaydb:flyway-core:4.2.0" level="project" />
