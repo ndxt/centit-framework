@@ -46,7 +46,13 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
             return;
         }
 
-        Iterator<ConfigAttribute> needRolesItr = configAttributes.iterator();
+        if(configAttributes.contains("R_G-forbidden")){
+            String sErrMsg = "资源被禁止访问";
+            logger.error(sErrMsg);
+            throw new AccessDeniedException(sErrMsg);
+        }
+
+        /*Iterator<ConfigAttribute> needRolesItr = configAttributes.iterator();
         while(needRolesItr.hasNext()){
             String needRole = needRolesItr.next().getAttribute();
             if("R_G-forbidden".equals(needRole)){
@@ -54,13 +60,14 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
                 logger.error(sErrMsg);
                 throw new AccessDeniedException(sErrMsg);
             }
-        }
+        }*/
+
 
         //if(authentication!=null){
         Collection<? extends GrantedAuthority> userRoles = authentication.getAuthorities();
         if(userRoles!=null){
             Iterator<? extends GrantedAuthority> userRolesItr = userRoles.iterator();
-            needRolesItr = configAttributes.iterator();
+            Iterator<ConfigAttribute> needRolesItr = configAttributes.iterator();
             /*for(ConfigAttribute ca : configAttributes) {
                 if (ca == null) {
                     continue;

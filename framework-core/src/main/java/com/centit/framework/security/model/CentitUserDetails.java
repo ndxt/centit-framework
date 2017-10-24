@@ -1,9 +1,8 @@
 package com.centit.framework.security.model;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -69,4 +68,17 @@ public interface CentitUserDetails extends
      */
      void setActiveTime(Date loginTime);
 
+    /*
+     * 判断用户是否有以下角色集合中的一个
+     * @param sortedRoleAttribute 排序号的角色列表
+     * @return 如果有返回 true 否则会 false
+     */
+     //boolean hasOneRoleOf(Collection<ConfigAttribute> sortedRoleAttribute);
+
+    /*
+     * 为了配合是由添加的额外的角色，用户登录时可以选择一个事由，配合这个事由有一个额外的角色
+     * 并将这个状态记录在这个用户的信息中
+     * @param roleCode 角色代码
+     */
+    //void setUserExtendRole(String roleCode);
 }

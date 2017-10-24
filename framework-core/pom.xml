@@ -196,13 +196,6 @@
             <version>${javassist.version}</version>
         </dependency>
 
-        <!-- 系统包中确实的依赖 -->
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
         <!-- log4j 2 这个将会在下一个大版本中升级，需要改动的地方较多  -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

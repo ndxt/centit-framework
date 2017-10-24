@@ -11,6 +11,7 @@ public class TestJson {
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData("hello","world");
         resData.addResponseData("hello2","world");
-        System.out.println(JSON.toJSONString(resData));
+        System.out.println(resData.toJSONString());
+        System.out.println(JSON.toJSONString(true));
     }
 }
