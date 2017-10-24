@@ -10,7 +10,7 @@ public class CentitSecurityMetadata {
     public static final String ROLE_PREFIX = "R_";  
     public static final OptTreeNode optTreeNode = new OptTreeNode();  
     public static final Map<String/*optCode*/,List<ConfigAttribute/*roleCode*/>>
-            optMethodRoleMap = new HashMap<String/*optCode*/,List<ConfigAttribute/*roleCode*/>>();
+            optMethodRoleMap = new HashMap<>();
     
     public static List<String> parseUrl(String sUrl,HttpServletRequest request){
         List<String> swords = new ArrayList<String>();

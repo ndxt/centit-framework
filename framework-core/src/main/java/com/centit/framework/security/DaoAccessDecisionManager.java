@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,7 +47,7 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
             return;
         }
 
-        if(configAttributes.contains("R_G-forbidden")){
+        if(configAttributes.contains(new SecurityConfig("R_G-forbidden"))){
             String sErrMsg = "资源被禁止访问";
             logger.error(sErrMsg);
             throw new AccessDeniedException(sErrMsg);
