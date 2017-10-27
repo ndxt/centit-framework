@@ -2,10 +2,7 @@ package com.centit.framework.system.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.ResponseData;
-import com.centit.framework.common.ResponseMapData;
-import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.common.*;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
@@ -13,6 +10,7 @@ import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
+import com.centit.support.json.JSONOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
@@ -343,7 +341,7 @@ public class MainFrameController extends BaseController {
             JsonResultUtils.writeSingleDataJson(ud, response);
     }
 
-    private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser){
+    /*private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser){
         if(menuFunsByUser == null)
             return null;
         JSONArray jsonArray = new JSONArray(menuFunsByUser.size());
@@ -363,8 +361,19 @@ public class MainFrameController extends BaseController {
             jsonArray.add(jsonObject);
         }
         return jsonArray;
+    }*/
+    private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser){
+        return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
+                ViewDataTransform.createStringHashMap("id","optId",
+                        "pid","preOptId",
+                        "text","optName",
+                        "url","optRoute",
+                        "icon","icon",
+                        "children","children",
+                        "isInToolbar","isInToolbar"
+                        //"attributes.external","pageType"
+                    ), (map,obj) -> map.put("external", !("D".equals(obj.getPageType()))));
     }
-
     /**
      * 首页菜单
      *

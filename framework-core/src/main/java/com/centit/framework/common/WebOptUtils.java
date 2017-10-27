@@ -182,19 +182,5 @@ public class WebOptUtils {
             return "";
         return ud.getUsername();
     }
-   
-    /**
-     * 文件下载
-     * @param downloadFile 下载文件流
-     * @param downloadName 下载文件名
-     * @param response HttpServletResponse
-     * @throws IOException IO异常
-     */
-    public static void download(InputStream downloadFile, String downloadName, HttpServletResponse response) throws IOException {
-        downloadName = new String(downloadName.getBytes("GBK"), "ISO8859-1");
-        response.setContentType("application/x-msdownload;");
-        response.setHeader("Content-disposition", "attachment; filename=" + downloadName);
-        response.setHeader("Content-Length", String.valueOf(downloadFile.available()));
-        IOUtils.copy(downloadFile, response.getOutputStream());
-    }
+
 }
