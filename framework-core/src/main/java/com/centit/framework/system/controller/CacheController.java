@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.SysParametersUtils;
+import com.centit.framework.common.ViewDataTransform;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.SysUnitFilterEngine;
@@ -356,7 +357,23 @@ public class CacheController {
     public void optinfo(@PathVariable String optType, HttpServletResponse response) {
         List<IOptInfo> listObjects = CodeRepositoryUtil.getOptinfoList(optType);
 
-        JsonResultUtils.writeSingleDataJson(listObjects, response);
+        JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(listObjects), response);
+    }
+
+    private JSONArray makeMenuFuncsJson(List<IOptInfo> menuFunsByUser) {
+        return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
+                ViewDataTransform.createStringHashMap("id", "optId",
+                        "optId", "optId",
+                        "pid", "preOptId",
+                        "text", "optName",
+                        "url", "optRoute",
+                        "icon", "icon",
+                        "children", "children",
+                        "isInToolbar", "isInToolbar",
+                        "state", "state"
+                ), (jsonObject, obj) -> {
+                    jsonObject.put("external", !("D".equals(obj.getPageType())));
+                });
     }
 
     /**
