@@ -31,7 +31,7 @@ public abstract class ViewDataTransform {
 
 
     public interface TreeViewExteralAttributes<T>{
-        void setAttributes(Map<String, Object> map , T obj);
+        void setAttributes(JSONObject jsonObject , T obj);
     }
 
     public static <T> JSONArray makeTreeViewJson(Collection<T> treaData,
@@ -64,7 +64,7 @@ public abstract class ViewDataTransform {
                             ReflectionOpt.attainExpressionValue(obj, ent.getValue()));
                 }
             }
-            Map<String, Object> map = new HashMap<>(2);
+            JSONObject map = new JSONObject(2);
             attributesSetter.setAttributes(map, obj);
             //map.put("external", !("D".equals(optInfo.getPageType())));
             jsonObject.put("attributes", map);

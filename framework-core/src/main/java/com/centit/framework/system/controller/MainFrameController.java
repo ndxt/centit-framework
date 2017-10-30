@@ -372,7 +372,7 @@ public class MainFrameController extends BaseController {
                         "children","children",
                         "isInToolbar","isInToolbar"
                         //"attributes.external","pageType"
-                    ), (map,obj) -> map.put("external", !("D".equals(obj.getPageType()))));
+                    ), (jsonObject,obj) -> jsonObject.put("external", !("D".equals(obj.getPageType()))));
     }
     /**
      * 首页菜单
