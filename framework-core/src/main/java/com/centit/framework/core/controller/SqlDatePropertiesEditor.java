@@ -17,7 +17,7 @@ public class SqlDatePropertiesEditor extends PropertiesEditor {
         } else if(Pattern.matches("\\d+", text)) {
             setValue(new Date(Long.parseLong(text)));
         }else {
-            Date value = DatetimeOpt.convertSqlDate(
+            Date value = DatetimeOpt.convertToSqlDate(
                     DatetimeOpt.smartPraseDate(text));
             setValue(value);
         }

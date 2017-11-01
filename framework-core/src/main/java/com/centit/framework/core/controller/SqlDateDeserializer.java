@@ -25,7 +25,7 @@ public class SqlDateDeserializer extends AbstractDateDeserializer implements Obj
         if (val instanceof java.sql.Date) {
             return (T) val;
         }  if (val instanceof java.util.Date) {
-            return (T) DatetimeOpt.convertSqlDate((java.util.Date)val);
+            return (T) DatetimeOpt.convertToSqlDate((java.util.Date)val);
         } else if (val instanceof Number) {
             return (T) new java.sql.Date(((Number) val).longValue());
         } else if (val instanceof String) {
@@ -36,7 +36,7 @@ public class SqlDateDeserializer extends AbstractDateDeserializer implements Obj
             } else if(Pattern.matches("\\d+", strVal)) {
                 return (T) new java.sql.Date(Long.parseLong(strVal));
             }else {
-               return (T) (DatetimeOpt.convertSqlDate( DatetimeOpt.smartPraseDate(strVal)));
+               return (T) (DatetimeOpt.convertToSqlDate(DatetimeOpt.smartPraseDate(strVal)));
             }
         }
         return null;

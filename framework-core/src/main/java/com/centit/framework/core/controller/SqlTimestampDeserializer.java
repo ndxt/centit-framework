@@ -25,7 +25,7 @@ public class SqlTimestampDeserializer extends AbstractDateDeserializer implement
         if (val instanceof java.sql.Timestamp) {
             return (T) val;
         }  if (val instanceof java.util.Date) {
-            return (T) DatetimeOpt.convertSqlTimestamp((java.util.Date)val);
+            return (T) DatetimeOpt.convertToSqlTimestamp((java.util.Date)val);
         } else if (val instanceof Number) {
             return (T) new java.sql.Timestamp(((Number) val).longValue());
         } else if (val instanceof String) {
@@ -36,7 +36,7 @@ public class SqlTimestampDeserializer extends AbstractDateDeserializer implement
             } else if(Pattern.matches("\\d+", strVal)) {
                 return (T) new java.sql.Timestamp(Long.parseLong(strVal));
             }else {
-               return (T) (DatetimeOpt.convertSqlTimestamp( DatetimeOpt.smartPraseDate(strVal)));
+               return (T) (DatetimeOpt.convertToSqlTimestamp(DatetimeOpt.smartPraseDate(strVal)));
             }
         }
         return null;
