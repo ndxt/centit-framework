@@ -58,11 +58,11 @@ public class ValidatorUtils {
         
         Set<ConstraintViolation<Po>> constraintViolations = validator.validate(po); 
         Map<String,String> errMsg = new HashMap<String,String>();
-           for (ConstraintViolation<Po> constraintViolation : constraintViolations) {
-               errMsg.put(String.valueOf(constraintViolation.getPropertyPath()),
-                       constraintViolation.getMessage());
+            for(ConstraintViolation<Po> constraintViolation : constraintViolations) {
+                errMsg.put(String.valueOf(constraintViolation.getPropertyPath()),
+                        constraintViolation.getMessage());
         }
-           return errMsg;
+        return errMsg;
     }
     
 }
