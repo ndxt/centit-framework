@@ -1,7 +1,7 @@
 package com.centit.framework.system.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.operationlog.RecordOperationLog;
 import com.centit.framework.common.*;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.PlatformEnvironment;
@@ -10,7 +10,6 @@ import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
-import com.centit.support.json.JSONOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -396,7 +394,8 @@ public class MainFrameController extends BaseController {
     }
 
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
-    public void getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optid,
+    //@RecordOperationLog(optContent="请求{optId}{userInfo.userCode}菜单")
+    public void getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optId,
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails userDetails = super.getLoginUser(request);
         if(userDetails==null){
@@ -408,7 +407,7 @@ public class MainFrameController extends BaseController {
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
        
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(
-                userDetails.getUserCode(),optid ,asAdmin);
+                userDetails.getUserCode(),optId ,asAdmin);
 
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
 
