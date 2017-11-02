@@ -9,4 +9,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RecordOperationLog {
 	String optContent() default "";
+
+	/**
+	 * 是否记录操作时间
+	 * @return boolean
+	 */
+	boolean recordTime() default false;
 }
