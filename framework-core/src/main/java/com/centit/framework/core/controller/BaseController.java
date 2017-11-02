@@ -77,6 +77,9 @@ public abstract class BaseController {
 
     protected static final String OBJLIST = "objList";
 
+    /*public  String getOptId(){
+        return "NOT_DEFINED";
+    }*/
     /**
      * 绑定所有字符串参数绑定，将Html字符转义 和日期参数转义
      *
@@ -136,7 +139,6 @@ public abstract class BaseController {
             response.sendRedirect(request.getContextPath() + "/system/exception/error/500");
         }
     }
-
 
     /**
      * 获取当前用户信息

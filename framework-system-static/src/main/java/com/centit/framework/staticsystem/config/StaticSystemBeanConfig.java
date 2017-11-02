@@ -2,22 +2,21 @@ package com.centit.framework.staticsystem.config;
 
 import com.centit.framework.listener.InitialWebRuntimeEnvironment;
 import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.framework.security.model.CentitPasswordEncoder;
-import com.centit.framework.security.model.CentitPasswordEncoderImpl;
-import com.centit.framework.security.model.CentitSessionRegistry;
-import com.centit.framework.security.model.MemorySessionRegistryImpl;
+import com.centit.framework.security.model.*;
 import com.centit.framework.staticsystem.service.impl.JdbcPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.JsonPlatformEnvironment;
+import com.centit.framework.staticsystem.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @PropertySource("classpath:system.properties")
-@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class StaticSystemBeanConfig implements EnvironmentAware {
 
     private Environment env;
@@ -70,6 +69,14 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
             jsonPlatformEnvironment.init();
             return jsonPlatformEnvironment;
         }
+    }
+
+
+    @Bean
+    public CentitUserDetailsService userDetailsService(@Autowired PlatformEnvironment platformEnvironment) {
+        UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
+        userDetailsService.setPlatformEnvironment(platformEnvironment);
+        return userDetailsService;
     }
 
     @Bean

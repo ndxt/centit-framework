@@ -1,20 +1,18 @@
 package com.centit.framework.staticsystem.service.impl;
 
-import java.util.Collection;
-
+import com.centit.framework.model.adapter.PlatformEnvironment;
+import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.framework.security.model.CentitUserDetailsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.framework.security.model.CentitUserDetailsService;
+import java.util.Collection;
 
 public class UserDetailsServiceImpl implements 
-    CentitUserDetailsService,UserDetailsService,
+    CentitUserDetailsService,
     AuthenticationUserDetailsService<Authentication>
 {
     private PlatformEnvironment platformEnvironment;

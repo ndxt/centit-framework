@@ -23,6 +23,7 @@ public class OperationLog implements java.io.Serializable {
      * 错误提示
      */
     public static final String LEVEL_ERROR = "1";
+
     private static Logger logger = LoggerFactory.getLogger(OperationLog.class);
     /**
      * 系统日志操作

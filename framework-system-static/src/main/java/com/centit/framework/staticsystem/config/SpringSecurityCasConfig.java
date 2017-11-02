@@ -1,14 +1,12 @@
 package com.centit.framework.staticsystem.config;
 
 import com.centit.framework.config.SecurityCasCondition;
-import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.security.*;
 import com.centit.framework.security.model.CentitSessionRegistry;
-import com.centit.framework.staticsystem.service.impl.UserDetailsServiceImpl;
+import com.centit.framework.security.model.CentitUserDetailsService;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +20,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -44,11 +41,8 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public CentitSessionRegistry centitSessionRegistry;
 
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-
     @Autowired
-    private PlatformEnvironment platformEnvironment;
+    private CentitUserDetailsService userDetailsService;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -104,7 +98,7 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
 
     private CasAuthenticationProvider createCasAuthenticationProvider(ServiceProperties casServiceProperties) {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-        casAuthenticationProvider.setUserDetailsService(userDetailsService());
+        casAuthenticationProvider.setUserDetailsService(userDetailsService);
         casAuthenticationProvider.setServiceProperties(casServiceProperties);
         casAuthenticationProvider.setTicketValidator(new Cas20ServiceTicketValidator(env.getProperty("cas.home")));
         casAuthenticationProvider.setKey(env.getProperty("app.key"));
@@ -169,13 +163,6 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
         List<AuthenticationProvider> providerList = new ArrayList<>();
         providerList.add(casAuthenticationProvider);
         return new ProviderManager(providerList);
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
-        userDetailsService.setPlatformEnvironment(platformEnvironment);
-        return userDetailsService;
     }
 
 }

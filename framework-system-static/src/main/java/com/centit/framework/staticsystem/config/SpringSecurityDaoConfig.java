@@ -1,12 +1,10 @@
 package com.centit.framework.staticsystem.config;
 
 import com.centit.framework.config.SecurityDaoCondition;
-import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.security.*;
 import com.centit.framework.security.model.CentitPasswordEncoderImpl;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.CentitUserDetailsService;
-import com.centit.framework.staticsystem.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -45,11 +43,9 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CentitPasswordEncoderImpl passwordEncoder;
 
-//    @Autowired
-//    private CentitUserDetailsService centitUserDetailsService;
-
     @Autowired
-    private PlatformEnvironment platformEnvironment;
+    private CentitUserDetailsService userDetailsService;
+
 
     @Autowired
     private CentitSessionRegistry centitSessionRegistry;
@@ -59,7 +55,7 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/system/mainframe/login","/system/exception").anonymous()
+                .antMatchers("/system/mainframe/login","/system/exception").permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/system/exception/accessDenied")
                 .and()
@@ -67,9 +63,9 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint());
         http.headers().frameOptions().sameOrigin();
 
-        CentitUserDetailsService centitUserDetailsService = centitUserDetailsService();
 
-        AuthenticationProvider authenticationProvider = authenticationProvider(centitUserDetailsService);
+
+        AuthenticationProvider authenticationProvider = authenticationProvider();
 
         AuthenticationManager authenticationManager = authenticationManager(authenticationProvider);
 
@@ -80,7 +76,7 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
 
         AuthenticationFailureHandler ajaxFailureHandler = createAjaxFailureHandler();
 
-        AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(centitUserDetailsService);
+        AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(userDetailsService);
 
         UsernamePasswordAuthenticationFilter pretreatmentAuthenticationProcessingFilter =
                 createPretreatmentAuthenticationProcessingFilter(
@@ -151,10 +147,10 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(CentitUserDetailsService centitUserDetailsService) {
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setHideUserNotFoundExceptions(false);
-        authenticationProvider.setUserDetailsService(centitUserDetailsService);
+        authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
     }
@@ -166,11 +162,5 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
         return new ProviderManager(providerList);
     }
 
-    @Bean
-    public CentitUserDetailsService centitUserDetailsService() {
-        UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
-        userDetailsService.setPlatformEnvironment(platformEnvironment);
-        return userDetailsService;
-    }
 
 }
