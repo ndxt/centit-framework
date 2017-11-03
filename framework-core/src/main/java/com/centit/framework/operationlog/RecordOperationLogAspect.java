@@ -28,9 +28,18 @@ import java.util.Map;
 @Component
 public class RecordOperationLogAspect {
 
+	/**
+	 * 注册 注入点
+	 */
 	@Pointcut("@annotation(com.centit.framework.operationlog.RecordOperationLog)")
 	public void logAspect(){}
 
+	/**
+	 * controller 方法执行开始前 记录当前时间，暂时不知道改怎么记录时间，
+	 * 所有只能放到request属性中
+	 * @param joinPoint
+	 * @param operationLog
+	 */
 	@Before("logAspect() && @annotation(operationLog)")
 	public  void doBefore(JoinPoint joinPoint, RecordOperationLog operationLog) {
 		if(operationLog.timing()){
@@ -39,6 +48,11 @@ public class RecordOperationLogAspect {
 		}
 	}
 
+	/**
+	 * 获取切入点中的参数信息，目前不能获取到参数名称，按道理java8可以通过反射获取方法参数名称的但是获得只是arg0.1.2...
+	 * @param joinPoint 切入点
+	 * @return 返回 map 中包括参数名和参数值
+	 */
 	public static Map<String, Object> getMethodDescription(JoinPoint joinPoint){
 		Map<String, Object> map = new HashMap<>(10);
 
@@ -58,6 +72,12 @@ public class RecordOperationLogAspect {
 		return map;
 	}
 
+	/**
+	 * 记录日志
+	 * @param joinPoint joinPoint 切入点
+	 * @param operationLog 注解
+	 * @param e 如果为null没有异常说明执行成功，否在记录异常信息
+	 */
 	private static void writeOperationLog(JoinPoint joinPoint, RecordOperationLog operationLog, Throwable e ){
 		Map<String, Object> map = getMethodDescription(joinPoint);
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -91,12 +111,23 @@ public class RecordOperationLogAspect {
 				optContent, newValue, null);
 	}
 
+	/**
+	 * 执行错误时记录错误日志
+	 * @param joinPoint joinPoint 切入点
+	 * @param operationLog 注解
+	 * @param e 如果为null没有异常说明执行成功，否在记录异常信息
+	 */
 	@AfterThrowing(pointcut = "logAspect() && @annotation(operationLog)", throwing = "e")
 	public  void doAfterThrowing(JoinPoint joinPoint, RecordOperationLog operationLog, Throwable e) {
 		writeOperationLog(joinPoint, operationLog, e);
 
 	}
 
+	/**
+	 * 正常完成时记录日志
+	 * @param joinPoint joinPoint 切入点
+	 * @param operationLog 注解
+	 */
 	@AfterReturning(pointcut = "logAspect() && @annotation(operationLog)")
 	public  void doAfterReturning(JoinPoint joinPoint, RecordOperationLog operationLog) {
 		writeOperationLog(joinPoint, operationLog, null);
