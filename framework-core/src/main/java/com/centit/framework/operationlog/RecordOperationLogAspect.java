@@ -1,15 +1,28 @@
 package com.centit.framework.operationlog;
 
+import com.alibaba.fastjson.JSON;
+import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.components.OperationLogCenter;
+import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.model.basedata.OperationLog;
+import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.support.algorithm.ReflectionOpt;
+import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.compiler.Pretreatment;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Aspect
 @Component
@@ -18,126 +31,74 @@ public class RecordOperationLogAspect {
 	@Pointcut("@annotation(com.centit.framework.operationlog.RecordOperationLog)")
 	public void logAspect(){}
 
-	@Before("logAspect()")
-	public  void doBefore(JoinPoint joinPoint) {
-
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-		HttpSession session = request.getSession();
-//		//读取session中的用户
-//		UserInfo user = (UserInfo) session.getAttribute("currentUser");
-		//请求的IP
-//		String ip = request.getRemoteAddr();
-			//*========控制台输出=========*//
-			System.out.println("==================================================");
+	@Before("logAspect() && @annotation(operationLog)")
+	public  void doBefore(JoinPoint joinPoint, RecordOperationLog operationLog) {
+		if(operationLog.timing()){
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+			request.setAttribute("_before_method_run", System.currentTimeMillis());
+		}
 	}
 
-	/**
-	 * 异常通知 用于拦截service层记录异常日志
-	 *
-	 * @param joinPoint
-	 * @param e
-	 */
-	/*@AfterThrowing(pointcut = "serviceAspect()", throwing = "e")
-	public  void doAfterThrowing(JoinPoint joinPoint, Throwable e) {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-		HttpSession session = request.getSession();
-		//读取session中的用户
-		User user = (User) session.getAttribute(WebConstants.CURRENT_USER);
-		//获取请求ip
-		String ip = request.getRemoteAddr();
-		//获取用户请求方法的参数并序列化为JSON格式字符串
-		String params = "";
-		if (joinPoint.getArgs() !=  null && joinPoint.getArgs().length > 0) {
-			for ( int i = 0; i < joinPoint.getArgs().length; i++) {
-				params += JSONUtil.toJsonString(joinPoint.getArgs()[i]) + ";";
-			}
-		}
-		try {
-              *//*========控制台输出=========*//*
-			System.out.println("=====异常通知开始=====");
-			System.out.println("异常代码:" + e.getClass().getName());
-			System.out.println("异常信息:" + e.getMessage());
-			System.out.println("异常方法:" + (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
-			System.out.println("方法描述:" + getServiceMthodDescription(joinPoint));
-			System.out.println("请求人:" + user.getName());
-			System.out.println("请求IP:" + ip);
-			System.out.println("请求参数:" + params);
-               *//*==========数据库日志=========*//*
-			Log log = SpringContextHolder.getBean("logxx");
-			log.setDescription(getServiceMthodDescription(joinPoint));
-			log.setExceptionCode(e.getClass().getName());
-			log.setType("1");
-			log.setExceptionDetail(e.getMessage());
-			log.setMethod((joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
-			log.setParams(params);
-			log.setCreateBy(user);
-			log.setCreateDate(DateUtil.getCurrentDate());
-			log.setRequestIp(ip);
-			//保存数据库
-			logService.add(log);
-			System.out.println("=====异常通知结束=====");
-		}  catch (Exception ex) {
-			//记录本地异常日志
-			logger.error("==异常通知异常==");
-			logger.error("异常信息:{}", ex.getMessage());
-		}
-         *//*==========记录本地异常日志==========*//*
-		logger.error("异常方法:{}异常代码:{}异常信息:{}参数:{}", joinPoint.getTarget().getClass().getName() + joinPoint.getSignature().getName(), e.getClass().getName(), e.getMessage(), params);
+	public static Map<String, Object> getMethodDescription(JoinPoint joinPoint){
+		Map<String, Object> map = new HashMap<>(10);
 
-	}*/
-
-
-	/**
-	 * 获取注解中对方法的描述信息 用于service层注解
-	 *
-	 * @param joinPoint 切点
-	 * @return 方法描述
-	 * @throws Exception
-	 */
-	/*public  static String getServiceMthodDescription(JoinPoint joinPoint)
-			throws Exception {
-		String targetName = joinPoint.getTarget().getClass().getName();
-		String methodName = joinPoint.getSignature().getName();
+		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+		Method method = methodSignature.getMethod();
+		Parameter[] parameters = method.getParameters();
 		Object[] arguments = joinPoint.getArgs();
-		Class targetClass = Class.forName(targetName);
-		Method[] methods = targetClass.getMethods();
-		String description = "";
-		for (Method method : methods) {
-			if (method.getName().equals(methodName)) {
-				Class[] clazzs = method.getParameterTypes();
-				if (clazzs.length == arguments.length) {
-					description = method.getAnnotation(SystemServiceLog. class).description();
-					break;
-				}
-			}
+		int nps = parameters.length;
+		int nas = arguments.length;
+		for(int i=0; i<nps && i<nas; i++){
+			if(arguments[i] instanceof ServletRequest)
+				continue;
+			if(arguments[i] instanceof ServletResponse)
+				continue;
+			map.put(parameters[i].getName(),arguments[i]);
 		}
-		return description;
+		return map;
 	}
 
-	*//**
-	 * 获取注解中对方法的描述信息 用于Controller层注解
-	 *
-	 * @param joinPoint 切点
-	 * @return 方法描述
-	 * @throws Exception
-	 *//*
-	public  static String getControllerMethodDescription(JoinPoint joinPoint)  throws Exception {
-		String targetName = joinPoint.getTarget().getClass().getName();
-		String methodName = joinPoint.getSignature().getName();
-		Object[] arguments = joinPoint.getArgs();
-		Class targetClass = Class.forName(targetName);
-		Method[] methods = targetClass.getMethods();
-		String description = "";
-		for (Method method : methods) {
-			if (method.getName().equals(methodName)) {
-				Class[] clazzs = method.getParameterTypes();
-				if (clazzs.length == arguments.length) {
-					description = method.getAnnotation(SystemControllerLog. class).description();
-					break;
-				}
-			}
+	private static void writeOperationLog(JoinPoint joinPoint, RecordOperationLog operationLog, Throwable e ){
+		Map<String, Object> map = getMethodDescription(joinPoint);
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		CentitUserDetails userInfo = WebOptUtils.getLoginUser(request);
+		Map<String, Object> params = BaseController.collectRequestParameters(request);
+		String newValue;
+		if(operationLog.appendRequest()){
+			map.putAll(params);
+			newValue = JSON.toJSONString(map);
+		}else{
+			newValue = JSON.toJSONString(map);
+			map.putAll(params);
 		}
-		return description;
-	}*/
+		map.put("userInfo",userInfo);
+		String optContent = Pretreatment.mapTemplateString(operationLog.content(),map);
 
+		Object targetController = joinPoint.getTarget();
+		String optId = StringBaseOpt.objectToString(
+				ReflectionOpt.getFieldValue(targetController,"optId"));
+		String logLevel = OperationLog.LEVEL_INFO;
+		if(e != null){
+			logLevel = OperationLog.LEVEL_ERROR;
+			optContent += " 执行报错：" + e.getLocalizedMessage();
+		}
+		if(operationLog.timing()){
+			Long beforeRun = (Long)request.getAttribute("_before_method_run");
+			optContent += " 耗时：" + (System.currentTimeMillis() - beforeRun);
+		}
+		OperationLogCenter.log(logLevel, userInfo==null?"anonymous":userInfo.getUserCode(),
+				optId, null ,joinPoint.getSignature().getName(),
+				optContent, newValue, null);
+	}
+
+	@AfterThrowing(pointcut = "logAspect() && @annotation(operationLog)", throwing = "e")
+	public  void doAfterThrowing(JoinPoint joinPoint, RecordOperationLog operationLog, Throwable e) {
+		writeOperationLog(joinPoint, operationLog, e);
+
+	}
+
+	@AfterReturning(pointcut = "logAspect() && @annotation(operationLog)")
+	public  void doAfterReturning(JoinPoint joinPoint, RecordOperationLog operationLog) {
+		writeOperationLog(joinPoint, operationLog, null);
+	}
 }

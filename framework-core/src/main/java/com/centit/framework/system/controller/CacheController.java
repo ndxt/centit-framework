@@ -45,7 +45,7 @@ import java.util.*;
 public class CacheController {
 
     private static Log logger = LogFactory.getLog(CacheController.class);
-
+    private String optId = "cache";
     /**
      * cp标签中MAPVALUE实现，获取数据字典对应的值
      *
@@ -56,6 +56,7 @@ public class CacheController {
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/mapvalue/{catalog}/{key}", method = RequestMethod.GET)
+    //@RecordOperationLog(content = "查询字典{arg0}中{arg1}的值",timing = true, appendRequest = true)
     public void mapvalue(@PathVariable String catalog, @PathVariable String key,
             HttpServletResponse response) {
         String value = CodeRepositoryUtil.getValue(catalog, key);

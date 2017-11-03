@@ -249,6 +249,8 @@ public abstract class BaseController {
         Map<String, Object> map = new HashMap<>();
         //map.put("isValid", "T");
         for (Map.Entry<String, String[]> ent : parameterMap.entrySet()) {
+            if(ent.getKey().startsWith("_"))
+                continue;
             String[] values = ListOpt.removeBlankString(ent.getValue());
             if(values==null)
                 continue;

@@ -17,9 +17,6 @@ public @interface RecordOperationLog {
     @AliasFor("value")
 	String content() default "";
 
-    @AliasFor("content")
-    String value() default "";
-
     /**
 	 * 是否记录操作时间
 	 * @return boolean
