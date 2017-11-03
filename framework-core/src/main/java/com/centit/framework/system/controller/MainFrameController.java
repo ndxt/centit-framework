@@ -394,7 +394,7 @@ public class MainFrameController extends BaseController {
     }
 
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
-    //@RecordOperationLog(optContent="请求{optId}{userInfo.userCode}菜单")
+    //@RecordOperationLog(content="请求{optId}{userInfo.userCode}菜单")
     public void getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optId,
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails userDetails = super.getLoginUser(request);
