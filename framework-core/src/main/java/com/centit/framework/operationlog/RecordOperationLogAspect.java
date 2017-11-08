@@ -37,8 +37,8 @@ public class RecordOperationLogAspect {
 	/**
 	 * controller 方法执行开始前 记录当前时间，暂时不知道改怎么记录时间，
 	 * 所有只能放到request属性中
-	 * @param joinPoint
-	 * @param operationLog
+	 * @param joinPoint 切入点
+	 * @param operationLog RecordOperationLog 注解信息
 	 */
 	@Before("logAspect() && @annotation(operationLog)")
 	public  void doBefore(JoinPoint joinPoint, RecordOperationLog operationLog) {
@@ -114,7 +114,7 @@ public class RecordOperationLogAspect {
 	/**
 	 * 执行错误时记录错误日志
 	 * @param joinPoint joinPoint 切入点
-	 * @param operationLog 注解
+	 * @param operationLog  RecordOperationLog 注解
 	 * @param e 如果为null没有异常说明执行成功，否在记录异常信息
 	 */
 	@AfterThrowing(pointcut = "logAspect() && @annotation(operationLog)", throwing = "e")
@@ -126,7 +126,7 @@ public class RecordOperationLogAspect {
 	/**
 	 * 正常完成时记录日志
 	 * @param joinPoint joinPoint 切入点
-	 * @param operationLog 注解
+	 * @param operationLog  RecordOperationLog 注解
 	 */
 	@AfterReturning(pointcut = "logAspect() && @annotation(operationLog)")
 	public  void doAfterReturning(JoinPoint joinPoint, RecordOperationLog operationLog) {
