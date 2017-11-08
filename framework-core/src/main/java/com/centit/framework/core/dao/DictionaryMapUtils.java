@@ -9,7 +9,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
-
+import javax.persistence.EmbeddedId;
 /**
  * 作为DatabaseOptUtils的补充，添加的主要内容是和数据字典管理，包括对 DictionaryMap注解的处理
  * @author codefan
@@ -46,21 +46,7 @@ public class DictionaryMapUtils {
      */
     public final static List<DictionaryMapColumn> getDictionaryMapColumns
             (Class<?> objType){
-        
-        Field[] objFields = objType.getDeclaredFields();
-        List<DictionaryMapColumn> fieldDictionaryMaps = 
-                new ArrayList<>();
-        
-        for(Field field :objFields){
-            if(field.isAnnotationPresent(DictionaryMap.class)){
-                DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
-                        field.getAnnotation(DictionaryMap.class),field.getName());
-
-                if(dictionaryMapColumn != null)
-                    fieldDictionaryMaps.add(dictionaryMapColumn);
-            }
-        }//end of for
-        return fieldDictionaryMaps;        
+        return getDictionaryMapColumns(null,objType);
     }
 
     /**
@@ -75,7 +61,7 @@ public class DictionaryMapUtils {
 
         Field[] objFields = objType.getDeclaredFields();
         List<DictionaryMapColumn> fieldDictionaryMaps =
-                new ArrayList<>();
+                new ArrayList<>(10);
 
         for(Field field :objFields){
             if(fields==null || fields.length==0 ||
@@ -88,6 +74,10 @@ public class DictionaryMapUtils {
 
                     if(dictionaryMapColumn != null)
                         fieldDictionaryMaps.add(dictionaryMapColumn);
+
+                } else if (field.isAnnotationPresent(EmbeddedId.class)) {
+                    fieldDictionaryMaps.addAll(
+                        getDictionaryMapColumns(field.getType()));
                 }
             }
 

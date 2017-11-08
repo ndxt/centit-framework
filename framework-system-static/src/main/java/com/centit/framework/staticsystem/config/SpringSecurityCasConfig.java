@@ -4,6 +4,7 @@ import com.centit.framework.config.SecurityCasCondition;
 import com.centit.framework.security.*;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.CentitUserDetailsService;
+import com.centit.support.algorithm.BooleanBaseOpt;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,9 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private CsrfTokenRepository csrfTokenRepository;
 
     @Autowired
     public CentitSessionRegistry centitSessionRegistry;
@@ -56,8 +61,12 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
         ServiceProperties casServiceProperties = createCasServiceProperties();
         CasAuthenticationEntryPoint casEntryPoint = createCasEntryPoint(casServiceProperties);
 
-        http.csrf().disable()
-                .logout()
+        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
+            http.csrf().csrfTokenRepository(csrfTokenRepository);
+        } else {
+            http.csrf().disable();
+        }
+        http.logout()
                 .logoutSuccessUrl("/index.jsp")
                 .and()
                 .exceptionHandling().accessDeniedPage("/service/exception/accessDenied")

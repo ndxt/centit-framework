@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/environment")
 public class EnvironmentController extends BaseController {
 
+    private String optId = "environment";
+
     @Resource
     protected PlatformEnvironment platformEnvironment;
 

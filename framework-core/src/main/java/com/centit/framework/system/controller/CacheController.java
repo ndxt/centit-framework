@@ -45,7 +45,7 @@ import java.util.*;
 public class CacheController {
 
     private static Log logger = LogFactory.getLog(CacheController.class);
-
+    private String optId = "cache";
     /**
      * cp标签中MAPVALUE实现，获取数据字典对应的值
      *
@@ -56,10 +56,10 @@ public class CacheController {
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/mapvalue/{catalog}/{key}", method = RequestMethod.GET)
+    //@RecordOperationLog(content = "查询字典{arg0}中{arg1}的值",timing = true, appendRequest = true)
     public void mapvalue(@PathVariable String catalog, @PathVariable String key,
             HttpServletResponse response) {
         String value = CodeRepositoryUtil.getValue(catalog, key);
-
         JsonResultUtils.writeSingleDataJson(value, response);
     }
 
@@ -73,7 +73,6 @@ public class CacheController {
     @RequestMapping(value = "/mapcode/{catalog}/{value}", method = RequestMethod.GET)
     public void mapcode(@PathVariable String catalog, @PathVariable String value, HttpServletResponse response) {
         String key = CodeRepositoryUtil.getValue(catalog, value);
-
         JsonResultUtils.writeSingleDataJson(key, response);
     }
 
@@ -87,7 +86,6 @@ public class CacheController {
     @RequestMapping(value = "/lvb/{catalog}", method = RequestMethod.GET)
     public void lvb(@PathVariable String catalog, HttpServletResponse response) {
         Map<String,String> keyValueMap = CodeRepositoryUtil.getLabelValueMap(catalog);
-
         JsonResultUtils.writeSingleDataJson(keyValueMap, response);
     }
 
@@ -102,7 +100,6 @@ public class CacheController {
     @RequestMapping(value = "/mapexpression/{catalog}/{expression}", method = RequestMethod.GET)
     public void mapexpression(@PathVariable String catalog, String expression, HttpServletResponse response) {
         String s = CodeRepositoryUtil.transExpression(catalog, expression);
-
         JsonResultUtils.writeSingleDataJson(s, response);
     }
 
@@ -116,7 +113,6 @@ public class CacheController {
     @RequestMapping(value = "/mapstate/{catalog}/{key}", method = RequestMethod.GET)
     public void mapstate(@PathVariable String catalog, @PathVariable String key, HttpServletResponse response) {
         String s = CodeRepositoryUtil.getItemState(catalog, key);
-
         JsonResultUtils.writeSingleDataJson(s, response);
     }
 
@@ -131,7 +127,6 @@ public class CacheController {
     @RequestMapping(value = "/subunits/{unitCode}/{unitType}", method = RequestMethod.GET)
     public void subunits(@PathVariable String unitCode, @PathVariable String unitType, HttpServletResponse response) {
         List<IUnitInfo> listObjects = CodeRepositoryUtil.getSortedSubUnits(unitCode, unitType);
-
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
 
@@ -145,7 +140,6 @@ public class CacheController {
     @RequestMapping(value = "/allunits/{state}", method = RequestMethod.GET)
     public void allunits(@PathVariable String state, HttpServletResponse response) {
         List<IUnitInfo> listObjects = CodeRepositoryUtil.getAllUnits(state);
-
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
 
@@ -159,7 +153,6 @@ public class CacheController {
     @RequestMapping(value = "/recurseunits/{parentUnit}", method = RequestMethod.GET)
     public void recurseunits(@PathVariable String parentUnit, HttpServletResponse response) {
         Map<String, IUnitInfo> objects = CodeRepositoryUtil.getUnitMapBuyParaentRecurse(parentUnit);
-
         JsonResultUtils.writeSingleDataJson(objects, response);
     }
 
@@ -184,12 +177,10 @@ public class CacheController {
             // 级联或者树形数据字典明细查询
             if (StringUtils.isNotBlank(extraCode) && !extraCode.equals(dict.getExtraCode()))
                 continue;
-
             JSONObject obj = (JSONObject)JSON.toJSON(dict);
             obj.put("dataValue", dict.getLocalDataValue(lang));
             dictJson.add(obj);
         }
-        
         JsonResultUtils.writeSingleDataJson(dictJson, response);
     }
 
@@ -213,7 +204,6 @@ public class CacheController {
             obj.put("dataValue", dict.getLocalDataValue(lang));
             dictJson.add(obj);
         }
-        
         JsonResultUtils.writeSingleDataJson(dictJson, response);
     }
 
@@ -227,7 +217,6 @@ public class CacheController {
     @RequestMapping(value = "/unituser/{unitCode}", method = RequestMethod.GET)
     public void unituser(@PathVariable String unitCode, HttpServletResponse response) {
         List<IUserInfo> listObjects = CodeRepositoryUtil.getSortedUnitUsers(unitCode);
-
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
 
@@ -241,7 +230,6 @@ public class CacheController {
     @RequestMapping(value = "/alluser/{state}", method = RequestMethod.GET)
     public void alluser(@PathVariable String state, HttpServletResponse response) {
         List<IUserInfo> listObjects = CodeRepositoryUtil.getAllUsers(state);
-
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
 
@@ -255,14 +243,12 @@ public class CacheController {
     @RequestMapping(value = "/subunits/{unitcode}", method = RequestMethod.GET)
     public void getSubUnits(@PathVariable String unitcode, HttpServletResponse response) {
         List<IUnitInfo> listObjects = CodeRepositoryUtil.getSubUnits(unitcode);
-
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
     
     @RequestMapping(value = "/allsubunits/{unitcode}", method = RequestMethod.GET)
     public void getAllSubUnits(@PathVariable String unitcode, HttpServletResponse response) {
         List<IUnitInfo> listObjects = CodeRepositoryUtil.getAllSubUnits(unitcode);
-
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
     
@@ -298,7 +284,6 @@ public class CacheController {
         for(String uc : units){
             listObjects.add( CodeRepositoryUtil.getUnitInfoByCode(uc) );
         }
-
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
 
@@ -326,7 +311,6 @@ public class CacheController {
                 uSet.add(userCode);
                 userParams.put("O", uSet);
             }
-
             String userUnit = ud.getPrimaryUnit();
             if(userUnit!=null){
                 unitParams = new HashMap<>();
@@ -341,7 +325,6 @@ public class CacheController {
         for(String uc : users){
             listObjects.add( CodeRepositoryUtil.getUserInfoByCode(uc));
         }
-
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
 
@@ -356,7 +339,6 @@ public class CacheController {
     @RequestMapping(value = "/optinfo/{optType}", method = RequestMethod.GET)
     public void optinfo(@PathVariable String optType, HttpServletResponse response) {
         List<IOptInfo> listObjects = CodeRepositoryUtil.getOptinfoList(optType);
-
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(listObjects), response);
     }
 
@@ -386,7 +368,6 @@ public class CacheController {
     @RequestMapping(value = "/optdef/{optID}", method = RequestMethod.GET)
     public void optdef(@PathVariable String optID, HttpServletResponse response) {
         List<? extends IOptMethod> listObjects = CodeRepositoryUtil.getOptMethodByOptID(optID);
-
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
 
@@ -401,7 +382,6 @@ public class CacheController {
     @RequestMapping(value = "/roleinfo/{prefix}", method = RequestMethod.GET)
     public void roleinfo(@PathVariable String prefix, HttpServletResponse response) {
         List<IRoleInfo> listObjects = CodeRepositoryUtil.getRoleinfoList(prefix);
-
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
     
@@ -516,5 +496,4 @@ public class CacheController {
             JsonResultUtils.writeSingleDataJson("Reload Extended Sql Map succeed！", response);
         }
     }
-    
 }

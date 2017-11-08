@@ -1,7 +1,6 @@
 package com.centit.framework.system.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.*;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.PlatformEnvironment;
@@ -10,7 +9,6 @@ import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
-import com.centit.support.json.JSONOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
@@ -29,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +38,8 @@ public class MainFrameController extends BaseController {
     public static final String NORMAL_LOGIN = "NORMAL";
     public static final String DEPLOY_LOGIN = "DEPLOY";
     public static final String LOGIN_AUTH_ERROR_MSG = "LOGIN_ERROR_MSG";
-    
+
+    private String optId = "mainframe";
     @Resource
     protected CsrfTokenRepository csrfTokenRepository;
     
@@ -234,15 +232,15 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/login/csrf",method = RequestMethod.GET)
     public void getLoginCsrfToken(HttpServletRequest request,HttpServletResponse response) {
         if(csrfTokenRepository!=null){
-            CsrfToken token = csrfTokenRepository.generateToken(request);
-
+            CsrfToken token = csrfTokenRepository.loadToken(request);
+            if(token == null){
+                token = csrfTokenRepository.generateToken(request);
+                csrfTokenRepository.saveToken( token,  request,
+                        response);
+            }
             response.setHeader("_csrf_parameter", token.getParameterName());
             response.setHeader("_csrf_header", token.getHeaderName());
             response.setHeader("_csrf", token.getToken());
-
-            csrfTokenRepository.saveToken( token,  request,
-                     response);
-
             JsonResultUtils.writeSingleDataJson
                 (token, response);
         }else{
@@ -341,27 +339,6 @@ public class MainFrameController extends BaseController {
             JsonResultUtils.writeSingleDataJson(ud, response);
     }
 
-    /*private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser){
-        if(menuFunsByUser == null)
-            return null;
-        JSONArray jsonArray = new JSONArray(menuFunsByUser.size());
-        for(IOptInfo optInfo :  menuFunsByUser){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id",optInfo.getOptId());
-            jsonObject.put("pid",optInfo.getPreOptId());
-            jsonObject.put("text",optInfo.getOptName());
-            jsonObject.put("url",optInfo.getOptRoute());
-            jsonObject.put("icon",optInfo.getIcon());
-            Map<String, Object> map = new HashMap<>(2);
-            map.put("external", !("D".equals(optInfo.getPageType())));
-            jsonObject.put("attributes", map);
-            jsonObject.put("isInToolbar",optInfo.getIsInToolbar());
-            jsonObject.put("children",makeMenuFuncsJson(optInfo.getChildren()));
-
-            jsonArray.add(jsonObject);
-        }
-        return jsonArray;
-    }*/
     private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser){
         return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
                 ViewDataTransform.createStringHashMap("id","optId",
@@ -396,7 +373,7 @@ public class MainFrameController extends BaseController {
     }
 
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
-    public void getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optid,
+    public void getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optId,
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails userDetails = super.getLoginUser(request);
         if(userDetails==null){
@@ -408,7 +385,7 @@ public class MainFrameController extends BaseController {
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
        
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(
-                userDetails.getUserCode(),optid ,asAdmin);
+                userDetails.getUserCode(),optId ,asAdmin);
 
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
 
