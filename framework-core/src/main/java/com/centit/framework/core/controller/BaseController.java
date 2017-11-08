@@ -235,7 +235,7 @@ public abstract class BaseController {
         }
         // log.error("规则化后参数表：" + map.toString());
         // 回写查询变量
-        setbackSearchColumn(map, request);
+        // setbackSearchColumn(map, request);
 
         return map;
     }
@@ -266,6 +266,7 @@ public abstract class BaseController {
      * @param filterMap Map 过滤条件
      * @param request request
      */
+    @Deprecated
     public static void setbackSearchColumn(Map<String, Object> filterMap, HttpServletRequest request) {
         if (filterMap == null || filterMap.size() < 1) {
             return;
