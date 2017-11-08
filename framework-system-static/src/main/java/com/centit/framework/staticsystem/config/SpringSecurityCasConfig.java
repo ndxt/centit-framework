@@ -4,6 +4,7 @@ import com.centit.framework.config.SecurityCasCondition;
 import com.centit.framework.security.*;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.CentitUserDetailsService;
+import com.centit.support.algorithm.BooleanBaseOpt;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,12 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
         ServiceProperties casServiceProperties = createCasServiceProperties();
         CasAuthenticationEntryPoint casEntryPoint = createCasEntryPoint(casServiceProperties);
 
-        http.csrf().disable()
-                .logout()
+        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
+            http.csrf();
+        } else {
+            http.csrf().disable();
+        }
+        http.logout()
                 .logoutSuccessUrl("/index.jsp")
                 .and()
                 .exceptionHandling().accessDeniedPage("/service/exception/accessDenied")

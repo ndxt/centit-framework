@@ -5,9 +5,11 @@ import com.centit.framework.security.*;
 import com.centit.framework.security.model.CentitPasswordEncoderImpl;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.CentitUserDetailsService;
+import com.centit.support.algorithm.BooleanBaseOpt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.core.env.Environment;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -38,6 +40,9 @@ import java.util.List;
 public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    private Environment env;
+
+    @Autowired
     private HttpSessionCsrfTokenRepository csrfTokenRepository;
 
     @Autowired
@@ -53,8 +58,12 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
+        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
+            http.csrf();
+        } else {
+            http.csrf().disable();
+        }
+        http.authorizeRequests()
                 .antMatchers("/system/mainframe/login","/system/exception").permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/system/exception/accessDenied")
