@@ -27,6 +27,7 @@ import org.springframework.security.web.authentication.logout.CookieClearingLogo
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CsrfLogoutHandler;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
     private Environment env;
 
     @Autowired
-    private HttpSessionCsrfTokenRepository csrfTokenRepository;
+    private CsrfTokenRepository csrfTokenRepository;
 
     @Autowired
     private CentitPasswordEncoderImpl passwordEncoder;
@@ -59,7 +60,7 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
-            http.csrf();
+            http.csrf().csrfTokenRepository(csrfTokenRepository);
         } else {
             http.csrf().disable();
         }

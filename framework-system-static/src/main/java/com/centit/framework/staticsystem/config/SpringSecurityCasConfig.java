@@ -25,6 +25,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,9 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private CsrfTokenRepository csrfTokenRepository;
 
     @Autowired
     public CentitSessionRegistry centitSessionRegistry;
@@ -58,7 +62,7 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
         CasAuthenticationEntryPoint casEntryPoint = createCasEntryPoint(casServiceProperties);
 
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
-            http.csrf();
+            http.csrf().csrfTokenRepository(csrfTokenRepository);
         } else {
             http.csrf().disable();
         }

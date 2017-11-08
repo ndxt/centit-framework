@@ -232,15 +232,15 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/login/csrf",method = RequestMethod.GET)
     public void getLoginCsrfToken(HttpServletRequest request,HttpServletResponse response) {
         if(csrfTokenRepository!=null){
-            CsrfToken token = csrfTokenRepository.generateToken(request);
-
+            CsrfToken token = csrfTokenRepository.loadToken(request);
+            if(token == null){
+                token = csrfTokenRepository.generateToken(request);
+                csrfTokenRepository.saveToken( token,  request,
+                        response);
+            }
             response.setHeader("_csrf_parameter", token.getParameterName());
             response.setHeader("_csrf_header", token.getHeaderName());
             response.setHeader("_csrf", token.getToken());
-
-            csrfTokenRepository.saveToken( token,  request,
-                     response);
-
             JsonResultUtils.writeSingleDataJson
                 (token, response);
         }else{

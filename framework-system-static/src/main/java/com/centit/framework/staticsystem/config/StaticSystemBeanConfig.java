@@ -14,7 +14,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.csrf.LazyCsrfTokenRepository;
 
 @PropertySource("classpath:system.properties")
 public class StaticSystemBeanConfig implements EnvironmentAware {
@@ -86,8 +88,9 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
 
 
     @Bean
-    public HttpSessionCsrfTokenRepository csrfTokenRepository() {
-        return new HttpSessionCsrfTokenRepository();
+    public CsrfTokenRepository csrfTokenRepository() {
+        return //new LazyCsrfTokenRepository(
+                new HttpSessionCsrfTokenRepository();
     }
 
 }
