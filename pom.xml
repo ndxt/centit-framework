@@ -28,6 +28,7 @@
         <h2.version>1.4.196</h2.version>
         <redis.version>4.4.1.Final</redis.version>
 
+        <persistence-api.version>2.2</persistence-api.version>
         <javax.validation.version>2.0.0.Final</javax.validation.version>
         <javassist.version>3.21.0-GA</javassist.version>
         <jstl.version>1.2</jstl.version>
