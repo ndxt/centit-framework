@@ -1,24 +1,21 @@
 package com.centit.framework.staticsystem.config;
 
 import com.centit.framework.config.SecurityDaoCondition;
+import com.centit.framework.config.SpringSecurityBaseConfig;
 import com.centit.framework.security.*;
-import com.centit.framework.security.model.CentitPasswordEncoderImpl;
-import com.centit.framework.security.model.CentitSessionRegistry;
-import com.centit.framework.security.model.CentitUserDetailsService;
+import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.support.algorithm.BooleanBaseOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.core.env.Environment;
-import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -27,8 +24,6 @@ import org.springframework.security.web.authentication.logout.CookieClearingLogo
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CsrfLogoutHandler;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,24 +33,10 @@ import java.util.List;
  */
 @EnableWebSecurity
 @Conditional(SecurityDaoCondition.class)
-public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
+public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Autowired
-    private Environment env;
-
-    @Autowired
-    private CsrfTokenRepository csrfTokenRepository;
-
-    @Autowired
-    private CentitPasswordEncoderImpl passwordEncoder;
-
-    @Autowired
-    private CentitUserDetailsService userDetailsService;
-
-
-    @Autowired
-    private CentitSessionRegistry centitSessionRegistry;
-
+    private CentitPasswordEncoder passwordEncoder;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -73,19 +54,12 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint());
         http.headers().frameOptions().sameOrigin();
 
-
-
         AuthenticationProvider authenticationProvider = authenticationProvider();
-
         AuthenticationManager authenticationManager = authenticationManager(authenticationProvider);
-
         DaoFilterSecurityInterceptor centitPowerFilter = createCentitPowerFilter(authenticationManager,
-                new DaoInvocationSecurityMetadataSource(),
-                new DaoAccessDecisionManager(),
-                centitSessionRegistry );
+                new DaoAccessDecisionManager(),new DaoInvocationSecurityMetadataSource());
 
         AuthenticationFailureHandler ajaxFailureHandler = createAjaxFailureHandler();
-
         AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(userDetailsService);
 
         UsernamePasswordAuthenticationFilter pretreatmentAuthenticationProcessingFilter =
@@ -101,36 +75,6 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
         return new LoginUrlAuthenticationEntryPoint("/system/mainframe/login");
     }
 
-
-
-    private DaoFilterSecurityInterceptor createCentitPowerFilter(AuthenticationManager authenticationManager,
-                                                                 FilterInvocationSecurityMetadataSource centitSecurityMetadataSource,
-                                                                 AccessDecisionManager centitAccessDecisionManagerBean,
-                                                                 CentitSessionRegistry centitSessionRegistry) {
-
-        DaoFilterSecurityInterceptor centitPowerFilter = new DaoFilterSecurityInterceptor();
-        centitPowerFilter.setAuthenticationManager(authenticationManager);
-        centitPowerFilter.setAccessDecisionManager(centitAccessDecisionManagerBean);
-        centitPowerFilter.setSecurityMetadataSource(centitSecurityMetadataSource);
-        centitPowerFilter.setSessionRegistry(centitSessionRegistry);
-        return centitPowerFilter;
-    }
-
-
-    private AuthenticationFailureHandler createAjaxFailureHandler() {
-        AjaxAuthenticationFailureHandler ajaxFailureHandler = new AjaxAuthenticationFailureHandler();
-        ajaxFailureHandler.setDefaultFailureUrl("/system/mainframe/login/error");
-        ajaxFailureHandler.setWriteLog(false);
-        return ajaxFailureHandler;
-    }
-
-    private AjaxAuthenticationSuccessHandler createAjaxSuccessHandler(CentitUserDetailsService centitUserDetailsService) {
-        AjaxAuthenticationSuccessHandler ajaxSuccessHandler = new AjaxAuthenticationSuccessHandler();
-        ajaxSuccessHandler.setWriteLog(true);
-        ajaxSuccessHandler.setUserDetailsService(centitUserDetailsService);
-        return ajaxSuccessHandler;
-    }
-
     private UsernamePasswordAuthenticationFilter createPretreatmentAuthenticationProcessingFilter(
             AuthenticationManager authenticationManager,AjaxAuthenticationSuccessHandler ajaxSuccessHandler,
             AuthenticationFailureHandler ajaxFailureHandler) {
@@ -138,12 +82,25 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
         PretreatmentAuthenticationProcessingFilter
                 pretreatmentAuthenticationProcessingFilter = new PretreatmentAuthenticationProcessingFilter();
         pretreatmentAuthenticationProcessingFilter.setAuthenticationManager(authenticationManager);
-        pretreatmentAuthenticationProcessingFilter.setCheckCaptcha(false);
-        pretreatmentAuthenticationProcessingFilter.setMaxTryTimes(0);
-        pretreatmentAuthenticationProcessingFilter.setCheckTimeTnterval(3);
-        pretreatmentAuthenticationProcessingFilter.setCheckType("loginName");
-        pretreatmentAuthenticationProcessingFilter.setLockMinites(3);
-        pretreatmentAuthenticationProcessingFilter.setContinueChainBeforeSuccessfulAuthentication(false);
+        pretreatmentAuthenticationProcessingFilter.setCheckCaptchaTime(
+                NumberBaseOpt.castObjectToInteger(env.getProperty("login.captcha.checkTime"),0));
+        pretreatmentAuthenticationProcessingFilter.setCheckCaptchaType(
+                NumberBaseOpt.castObjectToInteger(env.getProperty("login.captcha.checkType"),0));
+        pretreatmentAuthenticationProcessingFilter.setRetryCheckType(
+                StringBaseOpt.emptyValue( env.getProperty("login.retry.checkType"),"H"));
+
+        pretreatmentAuthenticationProcessingFilter.setRetryMaxTryTimes(
+                NumberBaseOpt.castObjectToInteger(env.getProperty("login.retry.maxTryTimes"),0));
+
+        pretreatmentAuthenticationProcessingFilter.setRetryLockMinites(
+                NumberBaseOpt.castObjectToInteger(env.getProperty("login.retry.lockMinites"),10));
+
+        pretreatmentAuthenticationProcessingFilter.setRetryCheckTimeTnterval(
+                NumberBaseOpt.castObjectToInteger(env.getProperty("login.retry.checkTimeTnterval"),3));
+
+        pretreatmentAuthenticationProcessingFilter.setContinueChainBeforeSuccessfulAuthentication(
+		        BooleanBaseOpt.castObjectToBoolean(
+		        		env.getProperty("http.filter.chain.continueBeforeSuccessfulAuthentication"),false));
         pretreatmentAuthenticationProcessingFilter.setAuthenticationFailureHandler(ajaxFailureHandler);
         pretreatmentAuthenticationProcessingFilter.setAuthenticationSuccessHandler(ajaxSuccessHandler);
         return pretreatmentAuthenticationProcessingFilter;
@@ -171,6 +128,5 @@ public class SpringSecurityDaoConfig extends WebSecurityConfigurerAdapter {
         providerList.add(authenticationProvider);
         return new ProviderManager(providerList);
     }
-
 
 }

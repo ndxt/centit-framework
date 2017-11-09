@@ -52,7 +52,6 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             Authentication authentication) throws IOException, ServletException {
 
         CentitUserDetails ud = (CentitUserDetails) authentication.getPrincipal();
-
         String lang = WebOptUtils.getLocalLangParameter(request);
         if(StringUtils.isNotBlank(lang)){
             //request.getSession().setAttribute("LOCAL_LANG", lang);
@@ -60,8 +59,10 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             String userLang = ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE);                
             if(! lang.equals(userLang)){
                 ud.setUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE, userLang);
-                userDetailsService.saveUserSetting(ud.getUserCode(),
-                        WebOptUtils.LOCAL_LANGUAGE_LABLE, lang, "SYS", "用户默认区域语言");
+                if(userDetailsService!=null){
+                    userDetailsService.saveUserSetting(ud.getUserCode(),
+                            WebOptUtils.LOCAL_LANGUAGE_LABLE, lang, "SYS", "用户默认区域语言");
+                }
             }
         }else{
             lang = ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE);

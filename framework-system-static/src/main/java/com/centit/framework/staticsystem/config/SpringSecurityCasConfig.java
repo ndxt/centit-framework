@@ -1,15 +1,12 @@
 package com.centit.framework.staticsystem.config;
 
 import com.centit.framework.config.SecurityCasCondition;
+import com.centit.framework.config.SpringSecurityBaseConfig;
 import com.centit.framework.security.*;
-import com.centit.framework.security.model.CentitSessionRegistry;
-import com.centit.framework.security.model.CentitUserDetailsService;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -20,12 +17,10 @@ import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,19 +30,7 @@ import java.util.List;
  */
 @EnableWebSecurity
 @Conditional(SecurityCasCondition.class)
-public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private Environment env;
-
-    @Autowired
-    private CsrfTokenRepository csrfTokenRepository;
-
-    @Autowired
-    public CentitSessionRegistry centitSessionRegistry;
-
-    @Autowired
-    private CentitUserDetailsService userDetailsService;
+public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -74,16 +57,18 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .authenticationEntryPoint(casEntryPoint);
 
-        AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler();
+        AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(userDetailsService);
         AjaxAuthenticationFailureHandler ajaxFailureHandler = createAjaxFailureHandler();
         CasAuthenticationProvider casAuthenticationProvider = createCasAuthenticationProvider(casServiceProperties);
         AuthenticationManager authenticationManager = creatAuthenticationManager(casAuthenticationProvider);
         CasAuthenticationFilter casFilter = createCasFilter(authenticationManager, ajaxSuccessHandler, ajaxFailureHandler);
 
-        DaoAccessDecisionManager centitAccessDecisionManagerBean = createCentitAccessDecisionManagerBean();
-        DaoInvocationSecurityMetadataSource centitSecurityMetadataSource = createCentitSecurityMetadataSource();
+
         DaoFilterSecurityInterceptor centitPowerFilter = createCentitPowerFilter(authenticationManager,
-                centitAccessDecisionManagerBean,centitSecurityMetadataSource);
+		        new DaoAccessDecisionManager(),new DaoInvocationSecurityMetadataSource());
+
+
+
 
         http.addFilterAt(casFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(centitPowerFilter, FilterSecurityInterceptor.class)
@@ -112,39 +97,6 @@ public class SpringSecurityCasConfig extends WebSecurityConfigurerAdapter {
         casAuthenticationProvider.setTicketValidator(new Cas20ServiceTicketValidator(env.getProperty("cas.home")));
         casAuthenticationProvider.setKey(env.getProperty("app.key"));
         return casAuthenticationProvider;
-    }
-
-    private DaoAccessDecisionManager createCentitAccessDecisionManagerBean() {
-        return new DaoAccessDecisionManager();
-    }
-
-    private DaoInvocationSecurityMetadataSource createCentitSecurityMetadataSource() {
-        return new DaoInvocationSecurityMetadataSource();
-    }
-
-    private DaoFilterSecurityInterceptor createCentitPowerFilter(AuthenticationManager authenticationManager,
-                                                                 DaoAccessDecisionManager centitAccessDecisionManagerBean,
-                                                                 DaoInvocationSecurityMetadataSource centitSecurityMetadataSource) {
-
-        DaoFilterSecurityInterceptor centitPowerFilter = new DaoFilterSecurityInterceptor();
-        centitPowerFilter.setAuthenticationManager(authenticationManager);
-        centitPowerFilter.setAccessDecisionManager(centitAccessDecisionManagerBean);
-        centitPowerFilter.setSecurityMetadataSource(centitSecurityMetadataSource);
-        centitPowerFilter.setSessionRegistry(centitSessionRegistry);
-        return centitPowerFilter;
-    }
-
-    private AjaxAuthenticationFailureHandler createAjaxFailureHandler() {
-        AjaxAuthenticationFailureHandler ajaxFailureHandler = new AjaxAuthenticationFailureHandler();
-        ajaxFailureHandler.setDefaultFailureUrl("/system/mainframe/login/error");
-        ajaxFailureHandler.setWriteLog(false);
-        return ajaxFailureHandler;
-    }
-
-    private AjaxAuthenticationSuccessHandler createAjaxSuccessHandler() {
-        AjaxAuthenticationSuccessHandler ajaxSuccessHandler = new AjaxAuthenticationSuccessHandler();
-        ajaxSuccessHandler.setWriteLog(true);
-        return ajaxSuccessHandler;
     }
 
     private CasAuthenticationFilter createCasFilter(AuthenticationManager authenticationManager,

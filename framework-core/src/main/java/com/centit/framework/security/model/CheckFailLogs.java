@@ -14,11 +14,11 @@ public class CheckFailLogs {
    
     private static int checkTimeTnterval = 3;//Minite
     //允许尝试的最大次数
-    private static int maxTryTimes= -1;
+    private static int maxTryTimes = -1;
     //L:loginName H: HostIP
-    private static char checkType='L';
+    private static char checkType = 'L';
     
-    private static int lockMinites=15;
+    private static int lockMinites = 5 ;
 
 
     public static void setMaxTryTimes(int maxTryTimes) {
@@ -31,7 +31,9 @@ public class CheckFailLogs {
     
     public static void setCheckType(String checkType) {
         CheckFailLogs.checkType =
-                checkType.equalsIgnoreCase("hostIp")?'H':'L';
+                ("H".equalsIgnoreCase(checkType) || "hostIp".equalsIgnoreCase(checkType)||
+                  "ip".equalsIgnoreCase(checkType) || "host".equalsIgnoreCase(checkType))
+                        ?'H':'L';
     }
 
     public static char getCheckType() {
@@ -49,12 +51,9 @@ public class CheckFailLogs {
         CheckFailLogs.checkTimeTnterval = checkTimeTnterval;
     }
     
-
-    
     private static Map<String ,CheckFailLog> failLogs =
-            new HashMap<String ,CheckFailLog>();
+            new HashMap<>();
     
-
     public static class CheckFailLog {
         private int tryTimes;
         
@@ -65,17 +64,17 @@ public class CheckFailLogs {
             lastCheckTime = DatetimeOpt.currentUtilDate();                
         }
 
-        public int getTryTimes() {
+        public int fetchTryTimes() {
+            Date currentDate = DatetimeOpt.currentUtilDate();
+            if( DatetimeOpt.addMinutes(lastCheckTime,
+                    checkTimeTnterval ).before(currentDate)) {
+                tryTimes = 0;
+            }
             return tryTimes;
         }
-        public void setTryTimes(int tryTimes) {
-            this.tryTimes = tryTimes;
-        }
+
         public Date getLastCheckTime() {
             return lastCheckTime;
-        }
-        public void setLastCheckTime(Date lastCheckTime) {
-            this.lastCheckTime = lastCheckTime;
         }
         
         public void plusCheckFail(){
@@ -121,10 +120,11 @@ public class CheckFailLogs {
 
     public static boolean isLocked(HttpServletRequest request){
         CheckFailLog failLog = failLogs.get(getCheckKey(request));
-        return failLog==null?false:failLog.isLocked();
+        return failLog != null && failLog.isLocked();
     }
+
     public static int getHasTriedTimes(HttpServletRequest request){
         CheckFailLog failLog = failLogs.get(getCheckKey(request));
-        return failLog==null?0:failLog.getTryTimes();
+        return failLog==null? 0 : failLog.fetchTryTimes();
     }
 }

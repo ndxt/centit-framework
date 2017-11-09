@@ -16,93 +16,87 @@ import com.centit.support.image.CaptchaImageUtil;
 
 public class PretreatmentAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
     public static final String AJAX_CHECK_CAPTCHA_RESULT = "ajaxCheckCaptchaResult";
-    //是否有验证码
-    private boolean checkCaptcha=false;
 
-    private int checkCaptchaType=0;// 0 不验证，1 一起验证， 2 ajax 验证
+	private int checkCaptchaTime = 0 ; // 0 不验证, 1 登陆失败后 再次登陆验证, 2 始终验证
+    private int checkCaptchaType = 0;  // 0 不验证, 1 一起验证, 2 ajax 验证
 
-    public void setCheckCaptchaType(int checkCaptchaType) {
+	public void setCheckCaptchaTime(int checkCaptchaTime) {
+		this.checkCaptchaTime = checkCaptchaTime;
+	}
+
+	public void setCheckCaptchaType(int checkCaptchaType) {
         this.checkCaptchaType = checkCaptchaType;
     }
 
-    public void setCheckCaptcha(boolean checkCaptcha) {
-        this.checkCaptcha = checkCaptcha;
-    }
-
-    public void setMaxTryTimes(int maxTryTimes) {
+    public void setRetryMaxTryTimes(int maxTryTimes) {
         CheckFailLogs.setMaxTryTimes(maxTryTimes);
     }
 
-    public void setCheckType(String checkType) {
+    public void setRetryCheckType(String checkType) {
         CheckFailLogs.setCheckType(checkType);
     }
 
-    public void setLockMinites(int lockMinites) {
+    public void setRetryLockMinites(int lockMinites) {
         CheckFailLogs.setLockMinites(lockMinites);
     }
 
-    public void setCheckTimeTnterval(int checkTimeTnterval) {
+    public void setRetryCheckTimeTnterval(int checkTimeTnterval) {
         CheckFailLogs.setCheckTimeTnterval(checkTimeTnterval);
     }
     
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        int tryTimes = CheckFailLogs.getHasTriedTimes(request);
-        if(checkCaptcha ||
-                (checkCaptchaType==1
-                        && CheckFailLogs.getMaxTryTimes() >= 0
-                        && tryTimes >= CheckFailLogs.getMaxTryTimes())){
-            String request_checkcode = request.getParameter(CaptchaImageUtil.REQUESTCHECKCODE);
-            
-            String session_checkcode = null;
-            Object obj = request.getSession().getAttribute(CaptchaImageUtil.SESSIONCHECKCODE);  
-            if (obj!=null)
-                session_checkcode = obj.toString();
+
+	    if (CheckFailLogs.getMaxTryTimes() > 0 && CheckFailLogs.isLocked(request)) {
+		    throw new AuthenticationServiceException("User is locked, please try late!");
+	    }
+
+		int tryTimes = CheckFailLogs.getHasTriedTimes(request);
+        if(checkCaptchaType == 1 && ( checkCaptchaTime == 2 ||
+                (checkCaptchaTime == 1
+                        //&& CheckFailLogs.getMaxTryTimes() >= 0
+                        && tryTimes > 0 ))){
+            String requestCheckcode = request.getParameter(CaptchaImageUtil.REQUESTCHECKCODE);
+
+            String sessionCheckcode = StringBaseOpt.castObjectToString(
+                    request.getSession().getAttribute(CaptchaImageUtil.SESSIONCHECKCODE));
+
             request.getSession().removeAttribute(CaptchaImageUtil.SESSIONCHECKCODE);  
             
-            if(! "nocheckcode".equals(request_checkcode)){          
-                if(!CaptchaImageUtil.checkcodeMatch(session_checkcode, request_checkcode))
+            if(! "nocheckcode".equals(requestCheckcode)){
+                if(!CaptchaImageUtil.checkcodeMatch(sessionCheckcode, requestCheckcode))
                 //if(request_checkcode==null || ! request_checkcode.equalsIgnoreCase(session_checkcode)  )
                     throw new AuthenticationServiceException("bad checkcode");   
             }
         }
-        
-        if(CheckFailLogs.getMaxTryTimes() >= 0){
-            if(checkCaptchaType==2 && tryTimes >= CheckFailLogs.getMaxTryTimes()){
-                if(!BooleanBaseOpt.castObjectToBoolean(
-                                request.getSession().getAttribute(AJAX_CHECK_CAPTCHA_RESULT),
-                                false)){
-                    throw new AuthenticationServiceException(
-                            "Captcha input is error, please try late!");
-                }
-                request.getSession().setAttribute(AJAX_CHECK_CAPTCHA_RESULT,false);
-            }else{
-                if (CheckFailLogs.getMaxTryTimes() > 0 && CheckFailLogs.isLocked(request)) {
-                    throw new AuthenticationServiceException("User is locked, please try late!");
-                }
-            }
-        }
-        
+
+	    if(checkCaptchaType == 2 && ( checkCaptchaTime == 2 ||
+			    (checkCaptchaTime == 1
+					    //&& CheckFailLogs.getMaxTryTimes() >= 0
+					    && tryTimes > 0 ))) {
+		    if (!BooleanBaseOpt.castObjectToBoolean(
+				    request.getSession().getAttribute(AJAX_CHECK_CAPTCHA_RESULT),
+				    false)) {
+			    throw new AuthenticationServiceException(
+					    "Captcha input is error, please try late!");
+		    }
+		    request.getSession().setAttribute(AJAX_CHECK_CAPTCHA_RESULT, false);
+	    }
         Authentication auth = null;
-                
         //if(!onlyPretreat || writeLog || CheckFailLogs.getMaxTryTimes() > 0){
-            try{
-                
-                auth = super.attemptAuthentication(request, response);
-                
-                if(CheckFailLogs.getMaxTryTimes() >= 0){
-                    CheckFailLogs.removeCheckFail(request);
-                }
-                
-            }catch (AuthenticationException failed) {
-                //System.err.println(failed.getMessage());
-                if(CheckFailLogs.getMaxTryTimes() >= 0){
-                    CheckFailLogs.plusCheckFail(request);
-                }
-                throw failed;
-            }
+        try{
+            auth = super.attemptAuthentication(request, response);
+            //if(CheckFailLogs.getMaxTryTimes() >= 0){
+                CheckFailLogs.removeCheckFail(request);
+            //}
+        }catch (AuthenticationException failed) {
+            //System.err.println(failed.getMessage());
+            //if(CheckFailLogs.getMaxTryTimes() >= 0){
+                CheckFailLogs.plusCheckFail(request);
+            //}
+            throw failed;
+        }
         //}
-        
         return auth;
     }
   
