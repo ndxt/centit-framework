@@ -27,7 +27,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
     protected CentitSessionRegistry centitSessionRegistry;
 
     @Autowired
-    protected CentitUserDetailsService userDetailsService;
+    protected CentitUserDetailsService centitUserDetailsService;
 
 
     protected DaoFilterSecurityInterceptor createCentitPowerFilter(AuthenticationManager authenticationManager,
@@ -56,14 +56,27 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
 
     protected AjaxAuthenticationSuccessHandler createAjaxSuccessHandler(CentitUserDetailsService centitUserDetailsService) {
         AjaxAuthenticationSuccessHandler ajaxSuccessHandler = new AjaxAuthenticationSuccessHandler();
+        String defaultTargetUrl = env.getProperty("login.success.targetUrl");
+        ajaxSuccessHandler.setDefaultTargetUrl(StringBaseOpt.emptyValue(defaultTargetUrl,"/"));
+
         ajaxSuccessHandler.setWriteLog(BooleanBaseOpt.castObjectToBoolean(
                 env.getProperty("login.success.writeLog"),true));
-        String defaultTargetUrl = env.getProperty("login.failure.targetUrl");
-        ajaxSuccessHandler.setDefaultTargetUrl(StringBaseOpt.emptyValue(defaultTargetUrl,"/"));
         ajaxSuccessHandler.setRegistToken(BooleanBaseOpt.castObjectToBoolean(
                 env.getProperty("login.success.registToken"),false));
         ajaxSuccessHandler.setUserDetailsService(centitUserDetailsService);
         return ajaxSuccessHandler;
+    }
+
+    protected DaoAccessDecisionManager createCentitAccessDecisionManager() {
+        DaoAccessDecisionManager accessDecisionManager = new DaoAccessDecisionManager();
+        accessDecisionManager.setAllResourceMustBeAudited(
+                BooleanBaseOpt.castObjectToBoolean(
+                        env.getProperty("login.success.registToken"),false));
+        return accessDecisionManager;
+    }
+
+    protected DaoInvocationSecurityMetadataSource createCentitSecurityMetadataSource() {
+        return new DaoInvocationSecurityMetadataSource();
     }
 
 }

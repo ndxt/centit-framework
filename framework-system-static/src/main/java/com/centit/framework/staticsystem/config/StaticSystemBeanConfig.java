@@ -75,7 +75,7 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
 
 
     @Bean
-    public CentitUserDetailsService userDetailsService(@Autowired PlatformEnvironment platformEnvironment) {
+    public CentitUserDetailsService centitUserDetailsService(@Autowired PlatformEnvironment platformEnvironment) {
         UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
         userDetailsService.setPlatformEnvironment(platformEnvironment);
         return userDetailsService;

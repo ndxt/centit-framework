@@ -4,6 +4,7 @@ import com.centit.framework.config.SecurityCasCondition;
 import com.centit.framework.config.SpringSecurityBaseConfig;
 import com.centit.framework.security.*;
 import com.centit.support.algorithm.BooleanBaseOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.springframework.context.annotation.Conditional;
@@ -49,26 +50,24 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         } else {
             http.csrf().disable();
         }
+        String defaultTargetUrl = env.getProperty("login.success.targetUrl");
         http.logout()
-                .logoutSuccessUrl("/index.jsp")
+                .logoutSuccessUrl(StringBaseOpt.emptyValue(defaultTargetUrl,"/"))
                 .and()
                 .exceptionHandling().accessDeniedPage("/service/exception/accessDenied")
                 .and()
                 .httpBasic()
                 .authenticationEntryPoint(casEntryPoint);
 
-        AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(userDetailsService);
+        AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(centitUserDetailsService);
         AjaxAuthenticationFailureHandler ajaxFailureHandler = createAjaxFailureHandler();
         CasAuthenticationProvider casAuthenticationProvider = createCasAuthenticationProvider(casServiceProperties);
         AuthenticationManager authenticationManager = creatAuthenticationManager(casAuthenticationProvider);
-        CasAuthenticationFilter casFilter = createCasFilter(authenticationManager, ajaxSuccessHandler, ajaxFailureHandler);
-
+        CasAuthenticationFilter casFilter = createCasFilter(authenticationManager,
+                ajaxSuccessHandler, ajaxFailureHandler);
 
         DaoFilterSecurityInterceptor centitPowerFilter = createCentitPowerFilter(authenticationManager,
-		        new DaoAccessDecisionManager(),new DaoInvocationSecurityMetadataSource());
-
-
-
+                createCentitAccessDecisionManager(),createCentitSecurityMetadataSource());
 
         http.addFilterAt(casFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(centitPowerFilter, FilterSecurityInterceptor.class)
@@ -92,7 +91,7 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
 
     private CasAuthenticationProvider createCasAuthenticationProvider(ServiceProperties casServiceProperties) {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-        casAuthenticationProvider.setUserDetailsService(userDetailsService);
+        casAuthenticationProvider.setUserDetailsService(centitUserDetailsService);
         casAuthenticationProvider.setServiceProperties(casServiceProperties);
         casAuthenticationProvider.setTicketValidator(new Cas20ServiceTicketValidator(env.getProperty("cas.home")));
         casAuthenticationProvider.setKey(env.getProperty("app.key"));

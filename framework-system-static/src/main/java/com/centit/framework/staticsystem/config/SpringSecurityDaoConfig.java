@@ -57,10 +57,10 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         AuthenticationProvider authenticationProvider = createAuthenticationProvider();
         AuthenticationManager authenticationManager = createAuthenticationManager(authenticationProvider);
         DaoFilterSecurityInterceptor centitPowerFilter = createCentitPowerFilter(authenticationManager,
-                new DaoAccessDecisionManager(),new DaoInvocationSecurityMetadataSource());
+                createCentitAccessDecisionManager(),createCentitSecurityMetadataSource());
 
         AuthenticationFailureHandler ajaxFailureHandler = createAjaxFailureHandler();
-        AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(userDetailsService);
+        AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(centitUserDetailsService);
 
         UsernamePasswordAuthenticationFilter pretreatmentAuthenticationProcessingFilter =
                 createPretreatmentAuthenticationProcessingFilter(
@@ -116,7 +116,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
     public AuthenticationProvider createAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setHideUserNotFoundExceptions(false);
-        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setUserDetailsService(centitUserDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
     }
