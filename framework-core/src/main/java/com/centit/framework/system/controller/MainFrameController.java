@@ -5,6 +5,7 @@ import com.centit.framework.common.*;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
+import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
@@ -21,12 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
@@ -270,20 +268,9 @@ public class MainFrameController extends BaseController {
         String checkcode = CaptchaImageUtil.getRandomString();
         request.getSession().setAttribute(
                 CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
-        
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("image/gif");
-        //response.setContentType("application/json; charset=utf-8");
-        try(ServletOutputStream os = response.getOutputStream()) {
-            BufferedImage img = CaptchaImageUtil
-                    .generateCaptchaImage(checkcode);
-            //ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ImageIO.write(img, "gif", os);
-            os.flush();
-            os.close();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+
+        JsonResultUtils.writeOriginalImage(
+                CaptchaImageUtil.generateCaptchaImage(checkcode), response );
     }
 
     /**
@@ -308,8 +295,11 @@ public class MainFrameController extends BaseController {
         String sessionCode = StringBaseOpt.objectToString(
                     request.getSession().getAttribute(
                             CaptchaImageUtil.SESSIONCHECKCODE));
-        
-        JsonResultUtils.writeOriginalObject(StringUtils.equals(checkcode, sessionCode), response);
+        Boolean checkResult = StringUtils.equals(checkcode, sessionCode);
+        request.getSession().setAttribute(
+                PretreatmentAuthenticationProcessingFilter.AJAX_CHECK_CAPTCHA_RESULT,
+                checkResult);
+        JsonResultUtils.writeOriginalObject(checkResult, response);
     }
 
     /**

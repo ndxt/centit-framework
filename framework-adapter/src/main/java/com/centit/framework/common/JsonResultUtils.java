@@ -1,22 +1,25 @@
 package com.centit.framework.common;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
-import com.centit.support.algorithm.ReflectionOpt;
-import com.centit.support.xml.XMLObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import com.centit.support.algorithm.ReflectionOpt;
+import com.centit.support.file.FileType;
+import com.centit.support.xml.XMLObject;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.RenderedImage;
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 使用阿里提供的Json API 格式化Json数据
@@ -280,6 +283,62 @@ public class JsonResultUtils {
                 xml,response);
     }
 
+
+    /**
+     * 直接文本数据输出
+     * @param image 图片 RenderedImage
+     * @param response HttpServletResponse
+     */
+    public static void writeOriginalImage(RenderedImage image, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("image/gif");
+        //response.setContentType("application/json; charset=utf-8");
+        try(ServletOutputStream os = response.getOutputStream()) {
+            ImageIO.write(image, "gif", os);
+            os.flush();
+        }catch(IOException e){
+            logger.error(e.getLocalizedMessage(),e);
+        }
+    }
+
+    /**
+     * 直接文本数据输出
+     * @param is 文件 InputStream
+     * @param fileName 文件名称
+     * @param response HttpServletResponse
+     */
+    public static void writeOriginalFile(InputStream is, String fileName, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType(FileType.getFileMimeType(fileName));
+        response.setHeader("Content-Disposition",
+                "attachment; filename=" +
+                        StringEscapeUtils.escapeHtml4(fileName));
+        try(ServletOutputStream out = response.getOutputStream();
+            BufferedOutputStream bufferOut = new BufferedOutputStream(out)){
+
+            byte[] buffer = new byte[64 * 1024];
+            int length;
+            while((length = is.read(buffer, 0, buffer.length)) != -1) {
+                bufferOut.write(buffer, 0, length);
+                bufferOut.flush();
+            }
+        } catch (IOException e){
+            logger.error("客户端断开链接："+e.getLocalizedMessage(), e);
+        }
+    }
+
+    /**
+     * 直接文本数据输出
+     * @param file 文件 InputStream
+     * @param response HttpServletResponse
+     */
+    public static void writeOriginalFile(File file, HttpServletResponse response) {
+        try(InputStream inputStream = new FileInputStream(file)){
+            writeOriginalFile(inputStream,file.getName(),response);
+        } catch (IOException e){
+            logger.error("文件打开失败："+e.getLocalizedMessage(), e);
+        }
+    }
 
     /**
      * 直接文本数据输出

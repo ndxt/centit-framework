@@ -3,6 +3,7 @@ package com.centit.framework.security;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -68,9 +69,9 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
         
         if(CheckFailLogs.getMaxTryTimes() >= 0){
             if(checkCaptchaType==2 && tryTimes >= CheckFailLogs.getMaxTryTimes()){
-                if(!StringRegularOpt.isTrue(
-                        StringBaseOpt.objectToString(
-                                request.getSession().getAttribute(AJAX_CHECK_CAPTCHA_RESULT)))){
+                if(!BooleanBaseOpt.castObjectToBoolean(
+                                request.getSession().getAttribute(AJAX_CHECK_CAPTCHA_RESULT),
+                                false)){
                     throw new AuthenticationServiceException(
                             "Captcha input is error, please try late!");
                 }
