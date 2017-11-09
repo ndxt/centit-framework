@@ -321,7 +321,7 @@ public class CacheController {
         }
         Set<String> users =  SysUserFilterEngine.calcSystemOperators(userfilter,
                 unitParams,userParams,null,new UserUnitMapTranslate(varMap));
-        List<IUserInfo> listObjects = new ArrayList<IUserInfo>();
+        List<IUserInfo> listObjects = new ArrayList<>();
         for(String uc : users){
             listObjects.add( CodeRepositoryUtil.getUserInfoByCode(uc));
         }
@@ -386,27 +386,26 @@ public class CacheController {
     /**
      * CP标签中 SYS_VALUE 实现
      * 获取系统设置的值
-     *
-     * @param paramCode 系统设置的参数
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/sysconfig/{paramCode}", method = RequestMethod.GET)
-    public void getSysConfigValue(@PathVariable String paramCode,
-            HttpServletResponse response) {
+    public void getSysConfigValue(HttpServletRequest request, HttpServletResponse response) {
+        String uri = request.getRequestURI();
+        String paramCode = uri.substring(uri.lastIndexOf('/')+1);
         String pv =  CodeRepositoryUtil.getSysConfigValue(paramCode);
         JsonResultUtils.writeSingleDataJson(pv, response);
     }
 
     /**
      * CP标签中 SYS_VALUE 实现
-     * 获取系统设置的值
-     *
-     * @param prefix 系统设置的参数的前缀
+     * 系统设置的参数的前缀
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/sysconfigbyprefix/{prefix}", method = RequestMethod.GET)
-    public void getSysConfigByPrefix(@PathVariable String prefix,
+    public void getSysConfigByPrefix(HttpServletRequest request,
                                   HttpServletResponse response) {
+        String uri = request.getRequestURI();
+        String prefix = uri.substring(uri.lastIndexOf('/')+1);
         Map<String, Object> pv =  CodeRepositoryUtil.getSysConfigByPrefix(prefix);
         JsonResultUtils.writeSingleDataJson(pv, response);
     }
