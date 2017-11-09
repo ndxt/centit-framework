@@ -387,13 +387,27 @@ public class CacheController {
      * CP标签中 SYS_VALUE 实现
      * 获取系统设置的值
      *
-     * @param paramCode 用户设置的参数
+     * @param paramCode 系统设置的参数
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/sysconfig/{paramCode}", method = RequestMethod.GET)
     public void getSysConfigValue(@PathVariable String paramCode,
             HttpServletResponse response) {
         String pv =  CodeRepositoryUtil.getSysConfigValue(paramCode);
+        JsonResultUtils.writeSingleDataJson(pv, response);
+    }
+
+    /**
+     * CP标签中 SYS_VALUE 实现
+     * 获取系统设置的值
+     *
+     * @param prefix 系统设置的参数的前缀
+     * @param response HttpServletResponse
+     */
+    @RequestMapping(value = "/sysconfigbyprefix/{prefix}", method = RequestMethod.GET)
+    public void getSysConfigByPrefix(@PathVariable String prefix,
+                                  HttpServletResponse response) {
+        Map<String, Object> pv =  CodeRepositoryUtil.getSysConfigByPrefix(prefix);
         JsonResultUtils.writeSingleDataJson(pv, response);
     }
     
