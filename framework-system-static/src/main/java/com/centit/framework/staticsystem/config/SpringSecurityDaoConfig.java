@@ -2,13 +2,14 @@ package com.centit.framework.staticsystem.config;
 
 import com.centit.framework.config.SecurityDaoCondition;
 import com.centit.framework.config.SpringSecurityBaseConfig;
-import com.centit.framework.security.*;
+import com.centit.framework.security.AjaxAuthenticationSuccessHandler;
+import com.centit.framework.security.DaoFilterSecurityInterceptor;
+import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
