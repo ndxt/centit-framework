@@ -54,8 +54,8 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
                 .authenticationEntryPoint(authenticationEntryPoint());
         http.headers().frameOptions().sameOrigin();
 
-        AuthenticationProvider authenticationProvider = authenticationProvider();
-        AuthenticationManager authenticationManager = authenticationManager(authenticationProvider);
+        AuthenticationProvider authenticationProvider = createAuthenticationProvider();
+        AuthenticationManager authenticationManager = createAuthenticationManager(authenticationProvider);
         DaoFilterSecurityInterceptor centitPowerFilter = createCentitPowerFilter(authenticationManager,
                 new DaoAccessDecisionManager(),new DaoInvocationSecurityMetadataSource());
 
@@ -113,8 +113,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
                 new SecurityContextLogoutHandler());
     }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider createAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setHideUserNotFoundExceptions(false);
         authenticationProvider.setUserDetailsService(userDetailsService);
@@ -122,8 +121,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         return authenticationProvider;
     }
 
-    @Bean
-    public  AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
+    public  AuthenticationManager createAuthenticationManager(AuthenticationProvider authenticationProvider) {
         List<AuthenticationProvider> providerList = new ArrayList<>();
         providerList.add(authenticationProvider);
         return new ProviderManager(providerList);
