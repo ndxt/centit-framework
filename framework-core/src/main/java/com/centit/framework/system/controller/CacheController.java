@@ -353,9 +353,8 @@ public class CacheController {
                         "children", "children",
                         "isInToolbar", "isInToolbar",
                         "state", "state"
-                ), (jsonObject, obj) -> {
-                    jsonObject.put("external", !("D".equals(obj.getPageType())));
-                });
+                ), (jsonObject, obj) ->
+                    jsonObject.put("external", !("D".equals(obj.getPageType()))));
     }
 
     /**
@@ -370,7 +369,6 @@ public class CacheController {
         List<? extends IOptMethod> listObjects = CodeRepositoryUtil.getOptMethodByOptID(optID);
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
-
 
     /**
      * CP标签中ROLEINFO实现

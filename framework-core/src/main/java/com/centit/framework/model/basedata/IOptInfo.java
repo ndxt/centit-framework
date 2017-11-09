@@ -66,4 +66,11 @@ public interface IOptInfo {
      * @return 返回业务的下层业务
      */
     List<? extends IOptInfo> getChildren();
+
+    /**
+     * 这个属性不需要持久化，这个字段属于DTO，只用来存储树形展示时，其子业务是否打开
+     * @return
+     */
+    String getState();
+
 }

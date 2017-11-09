@@ -1,13 +1,9 @@
 package com.centit.framework.staticsystem.po;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.centit.framework.model.basedata.IOptInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * FAddressBook entity.
@@ -73,6 +69,8 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
  
     private Long width;// 宽度
 
+
+    private String state;
 
     /**
      * default constructor
@@ -247,6 +245,15 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
 
     public void setOptRoute(String optRoute) {
         this.optRoute = optRoute;
+    }
+
+	@Override
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     /**
