@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -218,6 +219,7 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
         this.englishName = englishName;
     }
 
+    @Override
     public String getUserTag() {
         return userTag;
     }
@@ -419,6 +421,16 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
         return userOrder;
     }
 
+    /**
+     * 获取用户身份证号码;这个方法不是必须的可以直接返回 null
+     *
+     * @return 用户身份证号码
+     */
+    @Override
+    public String getIdCardNo() {
+        return null;
+    }
+
     public void setUserOrder(Long userorder) {
         this.userOrder = userorder;
     }
@@ -436,6 +448,26 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
     @Override
     public List<UserUnit> getUserUnits() {
         return userUnits;
+    }
+
+    /**
+     * 获取创建时间
+     *
+     * @return 创建时间
+     */
+    @Override
+    public Date getCreateDate() {
+        return DatetimeOpt.currentUtilDate();
+    }
+
+    /**
+     * 获取最后更新时间戳
+     *
+     * @return 最后更新时间戳
+     */
+    @Override
+    public Date getLastModifyDate() {
+        return DatetimeOpt.currentUtilDate();
     }
 
     public void setUserUnits( List<UserUnit> userUnits) {

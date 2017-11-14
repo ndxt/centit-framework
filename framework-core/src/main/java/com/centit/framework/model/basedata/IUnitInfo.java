@@ -1,5 +1,6 @@
 package com.centit.framework.model.basedata;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,15 +58,34 @@ public interface IUnitInfo{
      * @return 分管领导（机构管理员）
      */
      String getUnitManager();
+
+    /**
+     * 获取和第三方对接数据，一般为第三方业务数据组件
+     * @return 机构第三发业务中的主键
+     */
+    String getUnitTag();
+
     /**
      * 获取下级机构
      * @return 获取下级机构
      */
-     List<? extends IUnitInfo> getSubUnits();
+    List<? extends IUnitInfo> getSubUnits();
 
     /**
      * 获取机构用户下属用户关系
      * @return 获取机构用户下属用户关系
      */
-     List<? extends IUserUnit> getUnitUsers();
+    List<? extends IUserUnit> getUnitUsers();
+    /**
+     * 获取创建时间
+     * @return 创建时间
+     */
+    Date getCreateDate();
+
+    /**
+     * 获取最后更新时间
+     * @return 最后更新时间
+     */
+    Date getLastModifyDate();
+
 }
