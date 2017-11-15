@@ -28,7 +28,7 @@ import java.util.*;
  * @author codefan@sina.com
  * 2015-11-3
  */
-public final class CodeRepositoryUtil {    
+public abstract class CodeRepositoryUtil {
     
     public static final String LOGIN_NAME = "loginName";
     public static final String USER_CODE = "userCode";
@@ -44,7 +44,7 @@ public final class CodeRepositoryUtil {
 
     private CodeRepositoryUtil()
     {
-        
+        throw new IllegalAccessError("Utility class");
     }
     
     private static final Logger logger = LoggerFactory.getLogger(CodeRepositoryUtil.class);
