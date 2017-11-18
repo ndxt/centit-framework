@@ -249,7 +249,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
      * 获取创建人
      * @return 创建人Code
      */
-    @Override
     public String getCreator() {
         return creator;
     }
@@ -258,7 +257,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
      * 获取更新人
      * @return 更新人Code
      */
-    @Override
+
     public String getUpdator() {
         return updator;
     }
