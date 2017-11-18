@@ -92,15 +92,4 @@ public interface IUserInfo{
     */
     List<? extends IUserUnit> getUserUnits();
 
-    /**
-     * 获取创建时间
-     * @return 创建时间
-     */
-    Date getCreateDate();
-
-    /**
-     * 获取最后更新时间
-     * @return 最后更新时间
-     */
-    Date getLastModifyDate();
 }

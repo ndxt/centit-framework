@@ -76,15 +76,5 @@ public interface IUnitInfo{
      * @return 获取机构用户下属用户关系
      */
     List<? extends IUserUnit> getUnitUsers();
-    /**
-     * 获取创建时间
-     * @return 创建时间
-     */
-    Date getCreateDate();
 
-    /**
-     * 获取最后更新时间
-     * @return 最后更新时间
-     */
-    Date getLastModifyDate();
 }
