@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,7 +24,7 @@ import com.centit.framework.security.model.CentitUserDetails;
  * @author MyEclipse Persistence Tools
  */
 // 系统用户信息表
-public class UserInfo implements IUserInfo, java.io.Serializable{
+public class UserInfo implements CentitUserDetails, java.io.Serializable{
     // Fields
     private static final long serialVersionUID = 1L;
 
@@ -36,7 +35,8 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     @JSONField(serialize = false)
     private String userPin; // 用户密码
 
-    private String isValid; // 状态
+    private String isValid; // 状态   
+    
     /**
      * 'G发布任务/R接收任务/S系统管理';
      */
@@ -44,31 +44,45 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
 
     private String loginName; // 用户登录名
 
+
     private String userName; // 用户姓名
+
  
     private String englishName;// 用户英文姓名
+    
  
     private String userDesc; // 用户描述
+
  
     private Long loginTimes; // 登录次数
+
  
     private Date activeTime; // 最后一次登录时间
+
  
     private Date pwdExpiredTime; // 密码失效时间
+    
  
     private String loginIp; // 登录地址
 
+
     private Long addrbookId; // 通讯id
 
+
     private String regEmail; // 注册email
+
  
     private String userPwd;
+
  
     private String regCellPhone;
+
  
     private String userWord;
+    
 
     private String userTag;
+    
  
     private Long userOrder; // 用户排序
     
@@ -76,6 +90,17 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     
     private String userNamePinyin; //
     // 用户的主机构，只有在数据字典中有效
+
+    /**
+     * 创建人
+     */
+    private String creator;
+
+    /**
+     * 更新人
+     */
+    private String updator;
+
  
     public String getUserPwd() {
         return userPwd;
@@ -269,6 +294,9 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
         this.loginIp = loginip;
     }
 
+    public boolean isEnabled() {
+        return "T".equals(isValid);
+    }
 
     public String getLoginName() {
         if (loginName == null)
@@ -320,6 +348,30 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     
     public void setPrimaryUnit(String primaryUnit) {
         this.primaryUnit = primaryUnit;
+    }
+
+    /**
+     * 获取创建人
+     * @return 创建人Code
+     */
+    public String getCreator() {
+        return creator;
+    }
+
+    /**
+     * 获取更新人
+     * @return 更新人Code
+     */
+    public String getUpdator() {
+        return updator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public void setUpdator(String updator) {
+        this.updator = updator;
     }
 
     public void copy(UserInfo other) {
@@ -422,7 +474,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
 
     public UserInfo addUserUnit(UserUnit uu) {
         if(userUnits==null)
-            userUnits = new ArrayList<>();
+            userUnits = new ArrayList<UserUnit>();
         userUnits.add(uu);
         return this;
     }
@@ -437,7 +489,6 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
      *
      * @return 创建时间
      */
-    @Override
     public Date getCreateDate() {
         return DatetimeOpt.currentUtilDate();
     }
@@ -447,7 +498,6 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
      *
      * @return 最后更新时间戳
      */
-    @Override
     public Date getLastModifyDate() {
         return DatetimeOpt.currentUtilDate();
     }
@@ -456,11 +506,159 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
         this.userUnits = userUnits;
     }
 
+    @JSONField(serialize = false)
+    private List<GrantedAuthority> arrayAuths;
+
+    public void setAuthoritiesByRoles(List<String> roleCodes) {
+        if (roleCodes.size() < 1)
+            return;
+        arrayAuths = new ArrayList<GrantedAuthority>();
+        for (String roleCode : roleCodes) {
+            if(StringUtils.isBlank(roleCode))
+                continue;
+            String authCode = StringUtils.trim(roleCode);
+            if(!authCode.startsWith(CentitSecurityMetadata.ROLE_PREFIX)){
+                authCode = CentitSecurityMetadata.ROLE_PREFIX +authCode;
+            }
+            arrayAuths.add(new SimpleGrantedAuthority(authCode));
+        }
+        //排序便于后面比较
+        Collections.sort(arrayAuths,
+                new Comparator<GrantedAuthority>(){
+                    public int compare(GrantedAuthority o1, GrantedAuthority o2) {
+                        return o1.getAuthority().compareTo(o2.getAuthority());
+                    }
+                  }); 
+        //lastUpdateRoleTime = new Date(System.currentTimeMillis());
+    }
+    
+    @Override
+    @JSONField(serialize = false)
+    public List<String> getUserRoleCodes() {
+        List<String> userRoles = new ArrayList<String>();
+        if(arrayAuths==null)
+            return userRoles;
+        for(GrantedAuthority auth:arrayAuths)
+            userRoles.add(auth.getAuthority().substring(2));
+        return userRoles;
+    }
+
+
+    @Override
+    @JSONField(serialize = false)
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.arrayAuths;
+    }
+
+    @Override
+    @JSONField(serialize = false)
+    public String getPassword() {
+        return this.userPin;
+    }
+
+    @Override
+    public String getUsername() {
+
+        return this.loginName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isEnabled();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isEnabled();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isEnabled();
+    }
+
+    @Override
+    public Map<String, String> getUserSettings() {
+        return new HashMap<String, String>();
+    }
+    private Map<String, String> userSettings;
+
+    @Override
+    public String getUserSettingValue(String paramCode) {
+         if(userSettings==null)
+                return null;
+
+            return userSettings.get(paramCode);
+    }
+
+    @Override
+    public void setUserSettingValue(String paramCode, String paramValue) {
+        if(userSettings==null)
+            userSettings=new HashMap<>();
+        userSettings.put(paramCode, paramValue);
+    }
+
+    private Map<String, String> userOptList;
+
+    public void setUserOptList(Map<String, String> userOptList) {
+        this.userOptList = userOptList;
+    }
+
+    @Override
+    public Map<String, String> getUserOptList() {
+        if(userOptList==null)
+            userOptList = new HashMap<String, String>();
+        return userOptList;
+    }
+
+    @Override
+    public boolean checkOptPower(String optId, String optMethod) {
+        String s = userOptList.get(optId + "-" + optMethod);
+        if (s == null) {
+            return false;
+        }
+        return true;//"T".equals(s);
+    }
+
+    @Override
+    @JSONField(serialize = false)
+    public Object getCredentials() {
+        return this.userPin;
+    }
+
+    @Override
+    @JSONField(serialize = false)
+    public Object getDetails() {
+        return this;
+    }
+
+    @Override
+    @JSONField(serialize = false)
+    public Object getPrincipal() {
+        return this;
+    }
+
+
+    @Override
+    public boolean isAuthenticated() {
+        return true;
+    }
+
+    @Override
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public String getName() {
+        return this.loginName;
+    }
 
     @Override
     public boolean equals(Object other) {
-
-       if(other instanceof IUserInfo)
+       if(other instanceof CentitUserDetails)
+           return this.getUserCode().equals(((CentitUserDetails) other).getUserCode());
+       if(other instanceof UserInfo)
            return this.getUserCode().equals(((UserInfo) other).getUserCode());
        return false;            
     }
