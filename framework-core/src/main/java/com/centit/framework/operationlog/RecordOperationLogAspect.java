@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.ReflectionOpt;
@@ -81,7 +82,7 @@ public class RecordOperationLogAspect {
 	private static void writeOperationLog(JoinPoint joinPoint, RecordOperationLog operationLog, Throwable e ){
 		Map<String, Object> map = getMethodDescription(joinPoint);
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-		CentitUserDetails userInfo = WebOptUtils.getLoginUser(request);
+		IUserInfo userInfo = WebOptUtils.getLoginUser(request).getUserInfo();
 		Map<String, Object> params = BaseController.collectRequestParameters(request);
 		String newValue;
 		if(operationLog.appendRequest()){

@@ -9,17 +9,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.centit.framework.model.basedata.IUserInfo;
 
 public interface CentitUserDetails extends
-        Authentication, UserDetails,IUserInfo {
+        Authentication, UserDetails {
     /**
-     * 用户头衔，业务系统可以自定义这个字段的意义
-     * @return 用户头衔，业务系统可以自定义这个字段的意义
+     * 获取用户基本信息，将用户信息 有继承 重构为组合
+     * @return IUserInfo
      */
-     String getUserWord();
-    /**
-     * 密码有效期时间
-     * @return 密码有效期时间
-     */
-     Date getPwdExpiredTime();
+    IUserInfo getUserInfo();
     /**
      * 用户的参数，是个Map对，有系统参数也有业务系统自定义的参数
      * @return 用户的参数，是个Map对，有系统参数也有业务系统自定义的参数

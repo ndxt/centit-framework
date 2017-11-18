@@ -23,6 +23,13 @@ public interface IUserInfo{
     */
     @JSONField(serialize = false)
     String getUserPin();
+
+    /**
+     * 密码有效期时间
+     * @return 密码有效期时间
+     */
+    Date getPwdExpiredTime();
+
     /**
     * 用户是否有效 T/F/A  T 正常 ， F 禁用,A为新建可以删除
     * @return 用户是否有效 T/F/A  T 正常 ， F 禁用,A为新建可以删除

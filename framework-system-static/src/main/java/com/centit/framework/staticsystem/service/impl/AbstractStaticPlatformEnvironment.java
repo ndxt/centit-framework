@@ -8,6 +8,7 @@ import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.OptTreeNode;
 import com.centit.framework.staticsystem.po.*;
+import com.centit.framework.staticsystem.security.StaticCentitUserDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -17,6 +18,7 @@ import java.util.*;
 public abstract class AbstractStaticPlatformEnvironment
     implements PlatformEnvironment {
     protected List<UserInfo> userinfos;
+    protected List<StaticCentitUserDetails> userDetails;
     protected List<OptInfo> optinfos;
     protected List<OptMethod> optmethods;
     protected List<RoleInfo> roleinfos;
@@ -50,10 +52,10 @@ public abstract class AbstractStaticPlatformEnvironment
                 }
             }
         }
-
+        userDetails = new ArrayList<>(userinfos.size());
         for (UserInfo ui : userinfos) {
-            List<String> ris = new ArrayList<String>();
-            Map<String, String> userOptList = new HashMap<String, String>();
+            List<String> ris = new ArrayList<>();
+            Map<String, String> userOptList = new HashMap<>();
             for (UserRole ur : userroles) {
                 if (StringUtils.equals(ur.getUserCode(), ui.getUserCode())) {
                     ris.add(ur.getRoleCode());
@@ -67,8 +69,10 @@ public abstract class AbstractStaticPlatformEnvironment
                     }
                 }
             }
-            ui.setAuthoritiesByRoles(ris);
-            ui.setUserOptList(userOptList);
+            StaticCentitUserDetails ud = new StaticCentitUserDetails(ui);
+            ud.setAuthoritiesByRoles(ris);
+            ud.setUserOptList(userOptList);
+            userDetails.add(ud);
         }
 
         for (UnitInfo ui : unitinfos) {
@@ -139,6 +143,14 @@ public abstract class AbstractStaticPlatformEnvironment
         return null;
     }
 
+    public StaticCentitUserDetails getUserDetailsByUserCode(String userCode){
+        for(StaticCentitUserDetails ud : userDetails){
+            if(StringUtils.equals(ud.getUserInfo().getUserCode(), userCode))
+                return ud;
+        }
+        return null;
+    }
+
     @Override
     public UserInfo getUserInfoByUserCode(String userCode){
         for(UserInfo ui : userinfos){
@@ -172,7 +184,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public String getUserSetting(String userCode, String paramCode) {
-        UserInfo ud = getUserInfoByUserCode(userCode);
+        StaticCentitUserDetails ud =  getUserDetailsByUserCode(userCode);
         if(ud==null)
             return null;
         return ud.getUserSettingValue(paramCode);
@@ -347,13 +359,15 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public List<OptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin) {
-        UserInfo ud = getUserInfoByUserCode(userCode);
+        StaticCentitUserDetails ud =  getUserDetailsByUserCode(userCode);
         if(ud==null)
             return null;
+
         Map<String, String> userOpts = ud.getUserOptList();
-        List<OptInfo> userOptinfos = new ArrayList<OptInfo>();
+        List<OptInfo> userOptinfos = new ArrayList<>();
+
         for(Map.Entry<String, String> uo : userOpts.entrySet()){
-            OptInfo oi= this.getOptInfo(uo.getValue());
+            OptInfo oi = this.getOptInfo(uo.getValue());
             if("Y".equals(oi.getIsInToolbar())){
                 OptInfo soi = new OptInfo();
                 soi.copy(oi);
@@ -379,7 +393,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<OptInfo> listUserMenuOptInfosUnderSuperOptId(
             String userCode,String superOptId , boolean asAdmin) {
-        UserInfo ud = getUserInfoByUserCode(userCode);
+        StaticCentitUserDetails ud =  getUserDetailsByUserCode(userCode);
         if(ud==null)
             return null;
         Map<String, String> userOpts = ud.getUserOptList();
@@ -420,9 +434,9 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     @Override
-    public Map<String,UserInfo> getLoginNameRepo() {
-        Map<String,UserInfo> userRepo = new HashMap<String,UserInfo>();
-        for(UserInfo user:userinfos){
+    public Map<String, UserInfo> getLoginNameRepo() {
+        Map<String, UserInfo> userRepo = new HashMap<>();
+        for(UserInfo user : userinfos){
             userRepo.put(user.getLoginName(), user);
         }
         return userRepo;

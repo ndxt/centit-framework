@@ -60,7 +60,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             if(! lang.equals(userLang)){
                 ud.setUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE, userLang);
                 if(userDetailsService!=null){
-                    userDetailsService.saveUserSetting(ud.getUserCode(),
+                    userDetailsService.saveUserSetting(ud.getUserInfo().getUserCode(),
                             WebOptUtils.LOCAL_LANGUAGE_LABLE, lang, "SYS", "用户默认区域语言");
                 }
             }
@@ -86,8 +86,8 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         }
 
         if(writeLog){
-            OperationLogCenter.log(ud.getUserCode(),"login", "login",
-                    "用户 ："+ud.getUserCode()+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
+            OperationLogCenter.log(ud.getUserInfo().getUserCode(),"login", "login",
+                    "用户 ："+ud.getUserInfo().getUserCode()+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
                     + "从主机"+request.getRemoteHost()+":"+request.getRemotePort()+"登录。");
         }
 

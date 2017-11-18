@@ -62,7 +62,7 @@ public class UserAccessTokenMetadata{
     protected static final Map<String,String> userTokens = new ConcurrentHashMap<String,String>();
 
     public static void addToken(String token,CentitUserDetails data){
-        String userChannel =  data.getUserCode();
+        String userChannel =  data.getUserInfo().getUserCode();
 
         String oldToken = userTokens.get(userChannel);
         if(StringUtils.isNotBlank(oldToken))

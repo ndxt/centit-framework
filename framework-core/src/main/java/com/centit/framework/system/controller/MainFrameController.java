@@ -164,11 +164,11 @@ public class MainFrameController extends BaseController {
         if(ud==null){
             JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
         }else{
-            boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), password);
+            boolean bo=platformEnvironment.checkUserPassword(ud.getUserInfo().getUserCode(), password);
             if(!bo){
                 JsonResultUtils.writeErrorMessageJson("用户输入的密码错误，不能修改密码！", response);
             }else{
-                platformEnvironment.changeUserPassword(ud.getUserCode(), newPassword);
+                platformEnvironment.changeUserPassword(ud.getUserInfo().getUserCode(), newPassword);
                 JsonResultUtils.writeSuccessJson(response);
             }
         }
@@ -187,7 +187,7 @@ public class MainFrameController extends BaseController {
         if(ud==null){
             JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
         }else{
-            boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), password);
+            boolean bo=platformEnvironment.checkUserPassword(ud.getUserInfo().getUserCode(), password);
             JsonResultUtils.writeOriginalObject(bo, response);
         }
     }
@@ -209,7 +209,7 @@ public class MainFrameController extends BaseController {
             JsonResultUtils.writeErrorMessageJson("用户： "+userCode+"不存在。", response);
             return;
         }
-        boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), userPwd);
+        boolean bo=platformEnvironment.checkUserPassword(ud.getUserInfo().getUserCode(), userPwd);
         if(!bo){
             JsonResultUtils.writeErrorMessageJson("用户 名和密码不匹配。", response);
             return;
@@ -357,7 +357,7 @@ public class MainFrameController extends BaseController {
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);  
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
        
-        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserCode(),asAdmin );
+        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(),asAdmin );
 
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }
@@ -375,7 +375,7 @@ public class MainFrameController extends BaseController {
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
        
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(
-                userDetails.getUserCode(),optId ,asAdmin);
+                userDetails.getUserInfo().getUserCode(),optId ,asAdmin);
 
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
 

@@ -270,7 +270,7 @@ public class CacheController {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud!=null){
             //String usercode = ud.getUserCode();
-            String userUnit = ud.getPrimaryUnit();
+            String userUnit = ud.getUserInfo().getPrimaryUnit();
             if(userUnit!=null){
                 unitParams = new HashMap<>();
                 Set<String> uSet = new HashSet<String>();
@@ -280,7 +280,7 @@ public class CacheController {
         }
         Set<String> units =  SysUnitFilterEngine.calcSystemUnitsByExp(
                 unitfilter,unitParams,new UserUnitMapTranslate(varMap));
-        List<IUnitInfo> listObjects = new ArrayList<IUnitInfo>();
+        List<IUnitInfo> listObjects = new ArrayList<>();
         for(String uc : units){
             listObjects.add( CodeRepositoryUtil.getUnitInfoByCode(uc) );
         }
@@ -304,14 +304,14 @@ public class CacheController {
         Map<String, Set<String>> userParams = null;
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud!=null){
-            String userCode = ud.getUserCode();
+            String userCode = ud.getUserInfo().getUserCode();
             if(userCode!=null){
                 userParams = new HashMap<>();
                 Set<String> uSet = new HashSet<>();
                 uSet.add(userCode);
                 userParams.put("O", uSet);
             }
-            String userUnit = ud.getPrimaryUnit();
+            String userUnit = ud.getUserInfo().getPrimaryUnit();
             if(userUnit!=null){
                 unitParams = new HashMap<>();
                 Set<String> uSet = new HashSet<>();
