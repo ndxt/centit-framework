@@ -70,7 +70,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
             arrayAuths.add(new SimpleGrantedAuthority(authCode));
         }
         //排序便于后面比较
-        Collections.sort(arrayAuths,(o1,o2) -> o1.getAuthority().compareTo(o2.getAuthority()));
+        Collections.sort(arrayAuths,Comparator.comparing(GrantedAuthority::getAuthority));
         //lastUpdateRoleTime = new Date(System.currentTimeMillis());
     }
     
@@ -129,9 +129,15 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
         return isEnabled();
     }
 
+    public void setUserSettings(Map<String, String> userSettings) {
+        this.userSettings = userSettings;
+    }
+
     @Override
     public Map<String, String> getUserSettings() {
-        return new HashMap<>();
+        if(userSettings==null)
+            userSettings=new HashMap<>();
+        return this.userSettings;
     }
 
 
@@ -139,8 +145,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     public String getUserSettingValue(String paramCode) {
          if(userSettings==null)
                 return null;
-
-            return userSettings.get(paramCode);
+         return userSettings.get(paramCode);
     }
 
     @Override
@@ -149,8 +154,6 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
             userSettings=new HashMap<>();
         userSettings.put(paramCode, paramValue);
     }
-
-
 
     public void setUserOptList(Map<String, String> userOptList) {
         this.userOptList = userOptList;

@@ -51,6 +51,13 @@ public class ResponseJSON {
             return null;
         return resJSON.get(RES_DATA_FILED);
     }
+
+    public Object getData(String skey) {
+        Object data = getData();
+        if(data==null || !(data instanceof Map))
+            return null;
+        return ((Map)data).get(skey);
+    }
     
     public String getDataAsString() {
         return StringBaseOpt.objectToString(
