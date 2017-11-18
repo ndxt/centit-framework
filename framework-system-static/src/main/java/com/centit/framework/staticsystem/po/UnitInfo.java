@@ -65,6 +65,16 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
     
     private String unitManager;
 
+    /**
+     * 创建人
+     */
+    private String creator;
+
+    /**
+     * 更新人
+     */
+    private String updator;
+
   
     // Constructors
 
@@ -233,6 +243,32 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
     @Override
     public Date getLastModifyDate() {
         return DatetimeOpt.currentUtilDate();
+    }
+
+    /**
+     * 获取创建人
+     * @return 创建人Code
+     */
+    @Override
+    public String getCreator() {
+        return creator;
+    }
+
+    /**
+     * 获取更新人
+     * @return 更新人Code
+     */
+    @Override
+    public String getUpdator() {
+        return updator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public void setUpdator(String updator) {
+        this.updator = updator;
     }
 
     public void copy(UnitInfo other) {

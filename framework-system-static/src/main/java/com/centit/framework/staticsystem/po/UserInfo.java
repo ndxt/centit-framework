@@ -91,6 +91,16 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
     private String userNamePinyin; //
     // 用户的主机构，只有在数据字典中有效
 
+    /**
+     * 创建人
+     */
+    private String creator;
+
+    /**
+     * 更新人
+     */
+    private String updator;
+
  
     public String getUserPwd() {
         return userPwd;
@@ -338,6 +348,32 @@ public class UserInfo implements CentitUserDetails, java.io.Serializable{
     
     public void setPrimaryUnit(String primaryUnit) {
         this.primaryUnit = primaryUnit;
+    }
+
+    /**
+     * 获取创建人
+     * @return 创建人Code
+     */
+    @Override
+    public String getCreator() {
+        return creator;
+    }
+
+    /**
+     * 获取更新人
+     * @return 更新人Code
+     */
+    @Override
+    public String getUpdator() {
+        return updator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public void setUpdator(String updator) {
+        this.updator = updator;
     }
 
     public void copy(UserInfo other) {
