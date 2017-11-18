@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.basedata.IUnitInfo;
+import com.centit.support.algorithm.DatetimeOpt;
 
 /**
  * FUnitinfo entity.
@@ -214,7 +215,25 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.addrbookId = addrbookid;
     }
 
-  
+    /**
+     * 获取创建时间
+     *
+     * @return 创建时间
+     */
+    @Override
+    public Date getCreateDate() {
+        return DatetimeOpt.currentUtilDate();
+    }
+
+    /**
+     * 获取最后更新时间戳
+     *
+     * @return 最后更新时间戳
+     */
+    @Override
+    public Date getLastModifyDate() {
+        return DatetimeOpt.currentUtilDate();
+    }
 
     public void copy(UnitInfo other) {
 

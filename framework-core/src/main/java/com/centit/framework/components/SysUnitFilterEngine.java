@@ -19,9 +19,9 @@ import java.util.Set;
  *
  * @author codefan
  */
-public class SysUnitFilterEngine implements Serializable {
+public abstract class SysUnitFilterEngine implements Serializable {
     private SysUnitFilterEngine(){
-        
+        throw new IllegalAccessError("Utility class");
     }
     
     private static final long serialVersionUID = 1L;

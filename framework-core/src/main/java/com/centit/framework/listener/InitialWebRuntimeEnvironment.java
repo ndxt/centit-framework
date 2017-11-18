@@ -18,7 +18,7 @@ public class InitialWebRuntimeEnvironment {
         configFastjson();
     }
 
-    private static void configFastjson(){
+    public static void configFastjson(){
         ParserConfig.getGlobalInstance().putDeserializer(java.sql.Timestamp.class, SqlTimestampDeserializer.instance);
         ParserConfig.getGlobalInstance().putDeserializer(java.sql.Date.class,  SqlDateDeserializer.instance);
         ParserConfig.getGlobalInstance().putDeserializer(java.util.Date.class, UtilDateDeserializer.instance);

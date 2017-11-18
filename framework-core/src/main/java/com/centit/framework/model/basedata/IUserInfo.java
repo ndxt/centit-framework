@@ -2,6 +2,7 @@ package com.centit.framework.model.basedata;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,9 +67,34 @@ public interface IUserInfo{
     * @return 用户排序号
     */
     Long getUserOrder();
+
+    /**
+     * 获取用户身份证号码;这个方法不是必须的可以直接返回 null
+     * @return 用户身份证号码
+     */
+    String getIdCardNo();
+
+    /**
+     * 获取和第三方对接数据，一般为第三方业务数据组件
+     * @return 用户第三发业务中的主键
+     */
+    String getUserTag();
     /**
     * 获取用户归属机构关系
     * @return 获取用户归属机构关系
     */
     List<? extends IUserUnit> getUserUnits();
+
+    /**
+     * 获取创建时间
+     * @return 创建时间
+     */
+    Date getCreateDate();
+
+    /**
+     * 获取最后更新时间
+     * @return 最后更新时间
+     */
+    Date getLastModifyDate();
+
 }
