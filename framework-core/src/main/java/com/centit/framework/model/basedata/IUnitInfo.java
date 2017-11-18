@@ -87,17 +87,4 @@ public interface IUnitInfo{
      * @return 最后更新时间
      */
     Date getLastModifyDate();
-
-    /**
-     * 获取创建人
-     * @return 创建人Code
-     */
-    String getCreator();
-
-    /**
-     * 获取更新人
-     * @return 更新人Code
-     */
-    String getUpdator();
-
 }
