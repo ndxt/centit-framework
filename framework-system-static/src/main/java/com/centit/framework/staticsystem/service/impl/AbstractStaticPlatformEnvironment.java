@@ -54,13 +54,13 @@ public abstract class AbstractStaticPlatformEnvironment
         }
         userDetails = new ArrayList<>(userinfos.size());
         for (UserInfo ui : userinfos) {
-            List<String> ris = new ArrayList<>();
+            List<RoleInfo> roles = new ArrayList<>();
             Map<String, String> userOptList = new HashMap<>();
             for (UserRole ur : userroles) {
                 if (StringUtils.equals(ur.getUserCode(), ui.getUserCode())) {
-                    ris.add(ur.getRoleCode());
                     RoleInfo ri = getRoleInfo(ur.getRoleCode());
                     if (ri != null) {
+                        roles.add(ri);
                         for (RolePower rp : ri.getRolePowers()) {
                             OptMethod om = getOptMethod(rp.getOptCode());
                             if (om != null)
@@ -70,7 +70,7 @@ public abstract class AbstractStaticPlatformEnvironment
                 }
             }
             StaticCentitUserDetails ud = new StaticCentitUserDetails(ui);
-            ud.setAuthoritiesByRoles(ris);
+            ud.setAuthoritiesByRoles(roles);
             ud.setUserOptList(userOptList);
             userDetails.add(ud);
         }

@@ -4,7 +4,6 @@ import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.filter.RequestThreadLocalFilter;
 import com.centit.framework.filter.ResponseCorsFilter;
 import com.centit.support.algorithm.StringRegularOpt;
-import com.centit.support.file.PropertiesReader;
 import org.h2.server.web.WebServlet;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.springframework.web.context.request.RequestContextListener;

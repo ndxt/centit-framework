@@ -4,7 +4,9 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.framework.staticsystem.po.RoleInfo;
 import com.centit.framework.staticsystem.po.UserInfo;
+import com.centit.framework.staticsystem.po.UserRole;
 import com.centit.framework.staticsystem.po.UserUnit;
 import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +37,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
 
     private Map<String, String> userSettings;
     private Map<String, String> userOptList;
+    private List<RoleInfo> userRoles;
 
     @JSONField(serialize = false)
     private List<GrantedAuthority> arrayAuths;
@@ -52,6 +55,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
         return this.userInfo;
     }
 
+    @Override
     public String getUserCode(){
         return getUserInfo().getUserCode();
     }
@@ -61,37 +65,33 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
         return "T".equals(this.userInfo.getIsValid());
     }
 
-    public void setAuthoritiesByRoles(List<String> roleCodes) {
-        if (roleCodes.size() < 1) {
-            return;
-        }
+    @Override
+    public List<RoleInfo> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(List<RoleInfo> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    private void makeUserAuthorities(){
         arrayAuths = new ArrayList<>();
-        for (String roleCode : roleCodes) {
-            if(StringUtils.isBlank(roleCode)) {
-                continue;
-            }
-            String authCode = StringUtils.trim(roleCode);
-            if(!authCode.startsWith(CentitSecurityMetadata.ROLE_PREFIX)){
-                authCode = CentitSecurityMetadata.ROLE_PREFIX +authCode;
-            }
-            arrayAuths.add(new SimpleGrantedAuthority(authCode));
+        if (this.userRoles.size() < 1)
+            return;
+
+        for (RoleInfo role : this.userRoles) {
+            arrayAuths.add(new SimpleGrantedAuthority(CentitSecurityMetadata.ROLE_PREFIX
+                    + StringUtils.trim(role.getRoleCode())));
         }
         //排序便于后面比较
         Collections.sort(arrayAuths,Comparator.comparing(GrantedAuthority::getAuthority));
         //lastUpdateRoleTime = new Date(System.currentTimeMillis());
     }
-    
-    @Override
-    @JSONField(serialize = false)
-    public List<String> getUserRoleCodes() {
-        List<String> userRoles = new ArrayList<String>();
-        if(arrayAuths==null) {
-            return userRoles;
-        }
-        for(GrantedAuthority auth:arrayAuths) {
-            userRoles.add(auth.getAuthority().substring(2));
-        }
-        return userRoles;
+
+    // Property accessors
+    public void setAuthoritiesByRoles(List<RoleInfo> roles) {
+        setUserRoles(roles);
+        makeUserAuthorities();
     }
 
     @Override
@@ -149,7 +149,6 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
         }
         return this.userSettings;
     }
-
 
     @Override
     public String getUserSettingValue(String paramCode) {

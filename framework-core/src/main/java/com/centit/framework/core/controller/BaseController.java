@@ -87,6 +87,7 @@ public abstract class BaseController {
      */
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
+        //binder.setAutoGrowCollectionLimit(4096);
         binder.registerCustomEditor(String.class, new StringPropertiesEditor(true));
         binder.registerCustomEditor(Date.class, new DatePropertiesEditor());
         binder.registerCustomEditor(java.sql.Date.class, new SqlDatePropertiesEditor());

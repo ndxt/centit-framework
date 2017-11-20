@@ -24,21 +24,42 @@ public class UserRole implements IUserRole, java.io.Serializable {
     private String roleCode; // 角色代码
 
     private Date obtainDate; // 获得角色时间
-    
+
+
 
     private String changeDesc; // 说明
 
 
     protected Date createDate;
-    
- 
+
+    private String obtainType;
+
+    private String inheritedFrom;
+
+    @Override
+    public String getObtainType() {
+        return obtainType;
+    }
+
+    public void setObtainType(String obtainType) {
+        this.obtainType = obtainType;
+    }
+
+    @Override
+    public String getInheritedFrom() {
+        return inheritedFrom;
+    }
+
+    public void setInheritedFrom(String inheritedFrom) {
+        this.inheritedFrom = inheritedFrom;
+    }
     // Constructors
 
     /**
      * default constructor
      */
     public UserRole() {
-      
+        obtainType = "D";
     }
     
     public String getUserCode() {

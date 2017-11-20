@@ -49,8 +49,6 @@ public abstract class CodeRepositoryUtil {
     
     private static final Logger logger = LoggerFactory.getLogger(CodeRepositoryUtil.class);
 
-
-    
     private static <T> T getCtxBean(String beanName, Class<T> clazz ) {
         WebApplicationContext ctx = ContextLoaderListener.getCurrentWebApplicationContext();
         if(ctx==null)

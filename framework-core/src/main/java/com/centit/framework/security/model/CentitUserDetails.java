@@ -1,15 +1,23 @@
 package com.centit.framework.security.model;
 
-import java.util.*;
-
-import org.springframework.security.access.ConfigAttribute;
+import com.centit.framework.model.basedata.IRoleInfo;
+import com.centit.framework.model.basedata.IUserInfo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.centit.framework.model.basedata.IUserInfo;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public interface CentitUserDetails extends
         Authentication, UserDetails {
+    /**
+     * 获取用户代码
+     * @return 用户代码
+     * 设置为 default getUserInfo().getUserCode()
+     */
+    String getUserCode();
+
     /**
      * 获取用户基本信息，将用户信息 有继承 重构为组合
      * @return IUserInfo
@@ -35,11 +43,13 @@ public interface CentitUserDetails extends
      * @return 用户某个具体的参数值
      */
      String getUserSettingValue(String paramCode);
+
     /**
      * 用户所有的可以执行操作方法，用于权限控制
      * @return 用户所有的可以执行操作方法，用于权限控制
      */
      Map<String, String> getUserOptList();
+
     /**
      * 判断用户是否有某个具体的操作方法权限
      * @param optId    业务ID
@@ -49,10 +59,11 @@ public interface CentitUserDetails extends
      boolean checkOptPower(String optId, String optMethod);
     
     /**
-     * 获得用户授权角色代码
+     * 获得用户授权角色
      * @return 获得用户授权角色代码
      */
-     List<String> getUserRoleCodes();
+     List<? extends IRoleInfo> getUserRoles();
+
     /**
      * 设置用户登录机器IP
      * @param loginHost loginHost
@@ -64,17 +75,5 @@ public interface CentitUserDetails extends
      */
      void setActiveTime(Date loginTime);
 
-    /*
-     * 判断用户是否有以下角色集合中的一个
-     * @param sortedRoleAttribute 排序号的角色列表
-     * @return 如果有返回 true 否则会 false
-     */
-     //boolean hasOneRoleOf(Collection<ConfigAttribute> sortedRoleAttribute);
 
-    /*
-     * 为了配合是由添加的额外的角色，用户登录时可以选择一个事由，配合这个事由有一个额外的角色
-     * 并将这个状态记录在这个用户的信息中
-     * @param roleCode 角色代码
-     */
-    //void setUserExtendRole(String roleCode);
 }
