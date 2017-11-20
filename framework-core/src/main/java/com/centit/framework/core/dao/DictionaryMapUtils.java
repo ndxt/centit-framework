@@ -44,7 +44,7 @@ public class DictionaryMapUtils {
      * @param objType po对象类型
      * @return DictionaryMapColumn 字段名包括数据字典相关信息
      */
-    public final static List<DictionaryMapColumn> getDictionaryMapColumns
+    public static List<DictionaryMapColumn> getDictionaryMapColumns
             (Class<?> objType){
         return getDictionaryMapColumns(null,objType);
     }
@@ -56,7 +56,7 @@ public class DictionaryMapUtils {
      * @param objType po对象类型
      * @return DictionaryMapColumn 字段名包括数据字典相关信息
      */
-    public final static List<DictionaryMapColumn> getDictionaryMapColumns
+    public static List<DictionaryMapColumn> getDictionaryMapColumns
     (String[] fields,Class<?> objType){
 
         Field[] objFields = objType.getDeclaredFields();
@@ -92,7 +92,7 @@ public class DictionaryMapUtils {
      * @param fields 过滤相关字段
      * @return Po对象转换为JSONObject
      */
-    public final static Object objectToJSON(Object obj, String[] fields, List<DictionaryMapColumn> fieldDictionaryMaps ){
+    public static Object objectToJSON(Object obj, String[] fields, List<DictionaryMapColumn> fieldDictionaryMaps ){
         if(obj==null)
             return null;
         if(fields==null || fields.length==0){
@@ -123,7 +123,7 @@ public class DictionaryMapUtils {
      * @param fields 过滤相关字段
      * @return Po对象转换为JSONObject
      */
-    public final static Object objectToJSON(Object obj, String[] fields){
+    public static Object objectToJSON(Object obj, String[] fields){
         if(obj==null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps =  getDictionaryMapColumns(obj.getClass());
@@ -137,7 +137,7 @@ public class DictionaryMapUtils {
      * @param fieldDictionaryMaps 数据字典映射表
      * @return Po对象转换为JSONObject
      */
-    private final static Object objectToJSON(Object obj , List<DictionaryMapColumn> fieldDictionaryMaps ){
+    private static Object objectToJSON(Object obj , List<DictionaryMapColumn> fieldDictionaryMaps ){
         if(obj==null)
             return null;
         Object jsonObject= ( obj instanceof  Map) ? obj : JSON.toJSON(obj);
@@ -161,7 +161,7 @@ public class DictionaryMapUtils {
      * @param obj Object
      * @return Po对象转换为JSONObject
      */
-    public final static Object objectToJSON(Object obj){
+    public static Object objectToJSON(Object obj){
         if(obj==null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps =  getDictionaryMapColumns(obj.getClass());
@@ -174,7 +174,7 @@ public class DictionaryMapUtils {
      * @param fields 过滤相关字段
      * @return  Po对象数组转换为JSONArray
      */
-    public final static JSONArray objectsToJSONArray(Object[] objs, String[] fields){
+    public static JSONArray objectsToJSONArray(Object[] objs, String[] fields){
         JSONArray ja = new JSONArray();
         if(objs==null||objs.length==0||objs[0]==null)
             return ja;
@@ -192,7 +192,7 @@ public class DictionaryMapUtils {
      * @param fields 过滤相关字段
      * @return Po对象列表转换为JSONArray
      */
-    public final static JSONArray objectsToJSONArray(Collection<? extends Object> objs, String[] fields){
+    public static JSONArray objectsToJSONArray(Collection<? extends Object> objs, String[] fields){
         JSONArray ja = new JSONArray();
         if(objs==null||objs.isEmpty())
             return ja;
@@ -213,7 +213,7 @@ public class DictionaryMapUtils {
      * @param objs Object[]
      * @return  Po对象数组转换为JSONArray
      */
-    public final static JSONArray objectsToJSONArray(Object[] objs){
+    public static JSONArray objectsToJSONArray(Object[] objs){
         JSONArray ja = new JSONArray();
         if(objs==null||objs.length==0||objs[0]==null)
             return ja;
@@ -253,7 +253,7 @@ public class DictionaryMapUtils {
     static public class DictionaryMapBuilder{
         private Map<String,KeyValuePair<String,String>> dictionaryMap;
         private DictionaryMapBuilder(){
-            dictionaryMap = new HashMap<String,KeyValuePair<String,String>>();
+            dictionaryMap = new HashMap<>();
         }
 
         /**
@@ -302,7 +302,7 @@ public class DictionaryMapUtils {
      * @param mapInfo po对象类型
      * @return DictionaryMapColumn 字段名包括数据字典相关信息
      */
-    private final static List<DictionaryMapColumn> getDictionaryMapColumns
+    private static List<DictionaryMapColumn> getDictionaryMapColumns
     (Map<String,KeyValuePair<String,String>> mapInfo){
         List<DictionaryMapColumn> fieldDictionaryMaps =
                 new ArrayList<>();
@@ -318,26 +318,25 @@ public class DictionaryMapUtils {
         return fieldDictionaryMaps;
     }
 
-    public final static Map<String,Object>  mapJsonObject(Map<String,Object> obj,Class<?> objType ) {
+    public static Map<String,Object>  mapJsonObject(Map<String,Object> obj,Class<?> objType ) {
         if (obj == null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(obj.getClass());
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
     }
 
-    public final static Map<String,Object>  mapJsonObject(Map<String,Object> obj,
+    public static Map<String,Object>  mapJsonObject(Map<String,Object> obj,
                                                           Map<String,KeyValuePair<String,String>> mapInfo) {
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
     }
 
 
-    private final static List<Map<String,Object>>
+    private static List<Map<String,Object>>
         mapJsonArray(List<Map<String,Object>> objs, List<DictionaryMapColumn> fieldDictionaryMaps  ) {
         if(fieldDictionaryMaps==null | fieldDictionaryMaps.size()<1)
             return objs;
         for(Map<String,Object> obj : objs){
-
             for(DictionaryMapColumn col:fieldDictionaryMaps){
                 if( obj.get(col.getFieldName()) !=null) {
                     obj.put(col.getMapFieldName(),
@@ -350,7 +349,7 @@ public class DictionaryMapUtils {
     }
 
 
-    public final static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,Class<?> objType ) {
+    public static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,Class<?> objType ) {
         if (objs == null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
@@ -358,8 +357,44 @@ public class DictionaryMapUtils {
 
     }
 
-    public final static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,
-                                                               Map<String,KeyValuePair<String,String>> mapInfo ) {
+    public static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,
+                                                         Map<String,KeyValuePair<String,String>> mapInfo ) {
+        if (objs == null)
+            return null;
+        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
+        return mapJsonArray( objs, fieldDictionaryMaps);
+    }
+
+    private static JSONArray
+    mapJsonArray(JSONArray objs, List<DictionaryMapColumn> fieldDictionaryMaps  ) {
+        if(fieldDictionaryMaps==null | fieldDictionaryMaps.size()<1)
+            return objs;
+        for(Object obj : objs){
+            if(obj instanceof Map) {
+                Map<String,Object> jsonObj = (Map<String,Object>)obj;
+                for (DictionaryMapColumn col : fieldDictionaryMaps) {
+                    if (jsonObj.get(col.getFieldName()) != null) {
+                        jsonObj.put(col.getMapFieldName(),
+                                col.getDictionaryMap().get(jsonObj.get(col.getFieldName())));
+                    }
+                }
+            }
+        }
+        return objs;
+
+    }
+
+
+    public static  JSONArray mapJsonArray(JSONArray objs,Class<?> objType ) {
+        if (objs == null)
+            return null;
+        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
+        return mapJsonArray( objs, fieldDictionaryMaps);
+
+    }
+
+    public static  JSONArray mapJsonArray(JSONArray objs,
+              Map<String,KeyValuePair<String,String>> mapInfo ) {
         if (objs == null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
