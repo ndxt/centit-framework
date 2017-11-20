@@ -47,8 +47,13 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
      * 获取用户基本信息，将用户信息 有继承 重构为组合
      * @return IUserInfo
      */
+    @Override
     public UserInfo getUserInfo(){
         return this.userInfo;
+    }
+
+    public String getUserCode(){
+        return getUserInfo().getUserCode();
     }
 
     @Override
@@ -57,12 +62,14 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     }
 
     public void setAuthoritiesByRoles(List<String> roleCodes) {
-        if (roleCodes.size() < 1)
+        if (roleCodes.size() < 1) {
             return;
+        }
         arrayAuths = new ArrayList<>();
         for (String roleCode : roleCodes) {
-            if(StringUtils.isBlank(roleCode))
+            if(StringUtils.isBlank(roleCode)) {
                 continue;
+            }
             String authCode = StringUtils.trim(roleCode);
             if(!authCode.startsWith(CentitSecurityMetadata.ROLE_PREFIX)){
                 authCode = CentitSecurityMetadata.ROLE_PREFIX +authCode;
@@ -78,10 +85,12 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     @JSONField(serialize = false)
     public List<String> getUserRoleCodes() {
         List<String> userRoles = new ArrayList<String>();
-        if(arrayAuths==null)
+        if(arrayAuths==null) {
             return userRoles;
-        for(GrantedAuthority auth:arrayAuths)
+        }
+        for(GrantedAuthority auth:arrayAuths) {
             userRoles.add(auth.getAuthority().substring(2));
+        }
         return userRoles;
     }
 
@@ -135,23 +144,26 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
 
     @Override
     public Map<String, String> getUserSettings() {
-        if(userSettings==null)
-            userSettings=new HashMap<>();
+        if(userSettings==null) {
+            userSettings = new HashMap<>(2);
+        }
         return this.userSettings;
     }
 
 
     @Override
     public String getUserSettingValue(String paramCode) {
-         if(userSettings==null)
-                return null;
+         if(userSettings==null) {
+             return null;
+         }
          return userSettings.get(paramCode);
     }
 
     @Override
     public void setUserSettingValue(String paramCode, String paramValue) {
-        if(userSettings==null)
-            userSettings=new HashMap<>();
+        if(userSettings==null) {
+            userSettings = new HashMap<>();
+        }
         userSettings.put(paramCode, paramValue);
     }
 
@@ -161,8 +173,9 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
 
     @Override
     public Map<String, String> getUserOptList() {
-        if(userOptList==null)
-            userOptList = new HashMap<>();
+        if(userOptList==null) {
+            userOptList = new HashMap<>(2);
+        }
         return userOptList;
     }
 

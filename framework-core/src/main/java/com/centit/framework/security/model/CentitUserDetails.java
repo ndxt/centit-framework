@@ -16,9 +16,6 @@ public interface CentitUserDetails extends
      */
     IUserInfo getUserInfo();
 
-    default String getUserCode(){
-        return getUserInfo().getUserCode();
-    }
     /**
      * 用户的参数，是个Map对，有系统参数也有业务系统自定义的参数
      * @return 用户的参数，是个Map对，有系统参数也有业务系统自定义的参数
