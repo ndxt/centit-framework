@@ -329,6 +329,22 @@ public class CacheController {
     }
 
 
+    private JSONArray makeMenuFuncsJson(List<IOptInfo> menuFunsByUser) {
+        return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
+                ViewDataTransform.createStringHashMap("id", "optId",
+                        "optId", "optId",
+                        "pid", "preOptId",
+                        "text", "optName",
+                        "optName", "optName",
+                        "url", "optRoute",
+                        "icon", "icon",
+                        "children", "children",
+                        "isInToolbar", "isInToolbar",
+                        "state", "state"
+                ), (jsonObject, obj) ->
+                        jsonObject.put("external", !("D".equals(obj.getPageType()))));
+    }
+
     /**
      * CP标签中OPTINFO实现
      * 按类别获取 业务定义信息
@@ -337,25 +353,12 @@ public class CacheController {
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/optinfo/{optType}", method = RequestMethod.GET)
-    public void optinfo(@PathVariable String optType, HttpServletResponse response) {
+    public void optinfoByTypeAsMenu(@PathVariable String optType, HttpServletResponse response) {
         List<IOptInfo> listObjects = CodeRepositoryUtil.getOptinfoList(optType);
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(listObjects), response);
     }
 
-    private JSONArray makeMenuFuncsJson(List<IOptInfo> menuFunsByUser) {
-        return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
-                ViewDataTransform.createStringHashMap("id", "optId",
-                        "optId", "optId",
-                        "pid", "preOptId",
-                        "text", "optName",
-                        "url", "optRoute",
-                        "icon", "icon",
-                        "children", "children",
-                        "isInToolbar", "isInToolbar",
-                        "state", "state"
-                ), (jsonObject, obj) ->
-                    jsonObject.put("external", !("D".equals(obj.getPageType()))));
-    }
+
 
     /**
      * CP标签中OPTDEF实现
