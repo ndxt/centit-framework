@@ -2,6 +2,7 @@ package com.centit.framework.staticsystem.service.impl;
 
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
+import com.centit.framework.model.basedata.IRoleInfo;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitSecurityMetadata;
@@ -415,9 +416,41 @@ public abstract class AbstractStaticPlatformEnvironment
         return listObjectFormatAndFilterOptId(allUserOpt,superOptId);
     }
 
+    /**
+     * 获取用户所有角色
+     * @param userCode 用户代码
+     * @return  List 用户所有菜单功能
+     */
+    @Override
+    public List<RoleInfo> listUserRoles(String userCode){
+        List<RoleInfo> roles = new ArrayList<>();
+        for (UserRole ur : userroles) {
+            if (StringUtils.equals(ur.getUserCode(),userCode)) {
+                roles.add(getRoleInfo(ur.getRoleCode()));
+            }
+        }
+        return roles;
+    }
+
+    /**
+     * 获取拥有改角色的所有用户
+     * @param roleCode 角色代码
+     * @return  List 用户所有菜单功能
+     */
+    @Override
+    public List<UserInfo> listRoleUsers(String roleCode){
+        List<UserInfo> users = new ArrayList<>();
+        for (UserRole ur : userroles) {
+            if (StringUtils.equals(ur.getRoleCode(),roleCode)) {
+                users.add(getUserInfoByUserCode(ur.getRoleCode()));
+            }
+        }
+        return users;
+    }
+
     @Override
     public Map<String,UnitInfo> getUnitRepo() {
-        Map<String,UnitInfo> unitRepo = new HashMap<String,UnitInfo>();
+        Map<String,UnitInfo> unitRepo = new HashMap<>();
         for(UnitInfo unit:unitinfos){
             unitRepo.put(unit.getUnitCode(), unit);
         }
@@ -426,7 +459,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public Map<String,UserInfo> getUserRepo() {
-        Map<String,UserInfo> userRepo = new HashMap<String,UserInfo>();
+        Map<String,UserInfo> userRepo = new HashMap<>();
         for(UserInfo user:userinfos){
             userRepo.put(user.getUserCode(), user);
         }
@@ -444,7 +477,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public Map<String,UnitInfo> getDepNoRepo() {
-        Map<String,UnitInfo> depnoRepo = new HashMap<String,UnitInfo>();
+        Map<String,UnitInfo> depnoRepo = new HashMap<>();
         for(UnitInfo unit:unitinfos){
             depnoRepo.put(unit.getDepNo(), unit);
         }
@@ -496,7 +529,7 @@ public abstract class AbstractStaticPlatformEnvironment
         for(RolePower rp: rolepowers ){
             List<ConfigAttribute/*roleCode*/> roles = CentitSecurityMetadata.optMethodRoleMap.get(rp.getOptCode());
             if(roles == null){
-                roles = new ArrayList<ConfigAttribute/*roleCode*/>();
+                roles = new ArrayList</*roleCode*/>();
             }
             roles.add(new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + StringUtils.trim(rp.getRoleCode())));
             CentitSecurityMetadata.optMethodRoleMap.put(rp.getOptCode(), roles);

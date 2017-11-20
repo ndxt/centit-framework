@@ -51,6 +51,19 @@ public interface PlatformEnvironment {
             String userCode,String superOptId,boolean asAdmin);
 
     /**
+     * 获取用户所有角色
+     * @param userCode 用户代码
+     * @return  List 用户所有菜单功能
+     */
+    List<? extends IRoleInfo> listUserRoles(String userCode);
+
+    /**
+     * 获取拥有改角色的所有用户
+     * @param roleCode 角色代码
+     * @return  List 用户所有菜单功能
+     */
+    List<? extends IUserInfo> listRoleUsers(String roleCode);
+    /**
      * 根据用户代码获取用户信息，
      * @param userCode userCode
      * @return 用户信息
@@ -131,7 +144,7 @@ public interface PlatformEnvironment {
     Map<String, ? extends IUserInfo> getUserRepo();
     
     /**
-     * 获取机构代码映射表
+     * 获取用户登陆名映射表
      * @return Map 机构代码映射表
      */
     Map<String, ? extends IUserInfo> getLoginNameRepo();
