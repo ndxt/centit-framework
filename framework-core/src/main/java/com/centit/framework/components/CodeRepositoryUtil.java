@@ -874,6 +874,16 @@ public abstract class CodeRepositoryUtil {
             return lbvs;
         }
 
+        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.LOGIN_NAME)) {
+            for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
+                IUserInfo value = ent.getValue();
+                //if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                lbvs.put(value.getUserCode(),value.getLoginName());
+                //}
+            }
+            return lbvs;
+        }
+
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.UNIT_CODE)) {
             for (IUnitInfo value : getUnitAsTree()) {
                 //if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
@@ -972,7 +982,15 @@ public abstract class CodeRepositoryUtil {
             }
             return lbvs;
         }
-
+        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.LOGIN_NAME)) {
+            for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
+                IUserInfo value = ent.getValue();
+                if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                    lbvs.put(value.getUserCode(),value.getLoginName());
+                }
+            }
+            return lbvs;
+        }
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.UNIT_CODE)) {
             for (IUnitInfo value : getUnitAsTree()) {
                 if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
@@ -1057,6 +1075,17 @@ public abstract class CodeRepositoryUtil {
                 if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.add(new OptionItem(value.getUserName(),
                              value.getUserCode(), value.getPrimaryUnit()));
+                }
+            }
+            return lbvs;
+        }
+
+        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.LOGIN_NAME)) {
+            for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
+                IUserInfo value = ent.getValue();
+                if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                    lbvs.add(new OptionItem(value.getLoginName(),
+                            value.getUserCode(), value.getPrimaryUnit()));
                 }
             }
             return lbvs;
