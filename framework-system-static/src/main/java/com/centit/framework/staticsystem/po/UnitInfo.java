@@ -230,7 +230,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
      *
      * @return 创建时间
      */
-    @Override
+
     public Date getCreateDate() {
         return DatetimeOpt.currentUtilDate();
     }
@@ -240,7 +240,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
      *
      * @return 最后更新时间戳
      */
-    @Override
+
     public Date getLastModifyDate() {
         return DatetimeOpt.currentUtilDate();
     }
