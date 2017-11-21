@@ -19,13 +19,13 @@ import java.util.Map;
 @Deprecated
 public abstract class SystemDataRepository {
 
-
     private SystemDataRepository()
     {
         throw new IllegalAccessError("Utility class");
     }
     
     private static final Logger logger = LoggerFactory.getLogger(SystemDataRepository.class);
+
     private static <T> T getCtxBean(String beanName, Class<T> clazz ) {
         WebApplicationContext ctx = ContextLoaderListener.getCurrentWebApplicationContext();
         if(ctx==null)
@@ -56,10 +56,10 @@ public abstract class SystemDataRepository {
 
     public static Map<String, List<? extends IRoleInfo>> codeToRoleMap;
 
-    public static Map<String, List<? extends IRoleInfo>> userRolesMap;
-    public static Map<String, List<? extends IOptMethod>> userMethodsMap;
+    public static Map<String, List<? extends IUserRole>> userRolesMap;
+    public static Map<String, List<? extends IUserRole>> roleUsersMap;
 
-    public static Map<String, List<? extends IUserInfo>> roleUsersMap;
+    public static Map<String, List<? extends IOptMethod>> userMethodsMap;
     public static Map<String, List<? extends IOptMethod>> roleMethodsMap;
 
     public static Map<String, ? extends IDataCatalog> codeToCatalogMap;
@@ -102,7 +102,7 @@ public abstract class SystemDataRepository {
         return codeToRoleMap;
     }
 
-    public static Map<String, List<? extends IRoleInfo>> getUserRolesMap() {
+    public static Map<String, List<? extends IUserRole>> getUserRolesMap() {
         return userRolesMap;
     }
 
@@ -110,7 +110,7 @@ public abstract class SystemDataRepository {
         return userMethodsMap;
     }
 
-    public static Map<String, List<? extends IUserInfo>> getRoleUsersMap() {
+    public static Map<String, List<? extends IUserRole>> getRoleUsersMap() {
         return roleUsersMap;
     }
 

@@ -55,14 +55,28 @@ public interface PlatformEnvironment {
      * @param userCode 用户代码
      * @return  List 用户所有菜单功能
      */
-    List<? extends IRoleInfo> listUserRoles(String userCode);
+    List<? extends IRoleInfo> listUserRolesByUserCode(String userCode);
 
     /**
      * 获取拥有改角色的所有用户
      * @param roleCode 角色代码
      * @return  List 用户所有菜单功能
      */
-    List<? extends IUserInfo> listRoleUsers(String roleCode);
+    List<? extends IUserInfo> listRoleUserByRoleCode(String roleCode);
+
+    /**
+     * 获取用户所有角色
+     * @param userCode 用户代码
+     * @return  List 用户所有菜单功能
+     */
+    List<? extends IUserRole> listUserRoles(String userCode);
+
+    /**
+     * 获取拥有改角色的所有用户
+     * @param roleCode 角色代码
+     * @return  List 用户所有菜单功能
+     */
+    List<? extends IUserRole> listRoleUsers(String roleCode);
     /**
      * 根据用户代码获取用户信息，
      * @param userCode userCode

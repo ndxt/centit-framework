@@ -602,7 +602,7 @@ public abstract class CodeRepositoryUtil {
         }
         return users;
     }
-    
+
     /**
      * 获取一个用户所有机构，没有排序
      *
@@ -610,8 +610,8 @@ public abstract class CodeRepositoryUtil {
      * @return Set 一个用户所有机构
      */
     public static Set<IUnitInfo> getUserUnits(String userCode) {
-        
-        List<? extends IUserUnit> uus = listUserUnits(userCode);        
+
+        List<? extends IUserUnit> uus = listUserUnits(userCode);
         Set<IUnitInfo> units = new HashSet<>();
         if(uus==null)
             return units;
@@ -624,6 +624,42 @@ public abstract class CodeRepositoryUtil {
             }
         }
         return units;
+    }
+
+    /**
+     * 获取 拥有指定角色的所有用户
+     * @param roleCode 角色代码
+     * @return 返回拥有这个角色的所有用户
+     */
+    public static List<? extends IUserInfo> getUsersByRoleCode(String roleCode) {
+        return getPlatformEnvironment().listRoleUserByRoleCode(roleCode);
+    }
+
+    /**
+     * 获取用户拥有的角色
+     * @param userCode 用户代码
+     * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
+     */
+    public static List<? extends IRoleInfo> getRolesByUserCode(String userCode) {
+        return getPlatformEnvironment().listUserRolesByUserCode(userCode);
+    }
+
+    /**
+     * 获取 用户角色关系
+     * @param roleCode 角色代码
+     * @return 返回拥有这个角色的所有用户
+     */
+    public static List<? extends IUserRole> getRoleUsers(String roleCode) {
+        return getPlatformEnvironment().listRoleUsers(roleCode);
+    }
+
+    /**
+     * 获取 角色用户关系
+     * @param userCode 用户代码
+     * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
+     */
+    public static List<? extends IUserRole> getRoleUserRoles(String userCode) {
+        return getPlatformEnvironment().listUserRoles(userCode);
     }
 
     /**

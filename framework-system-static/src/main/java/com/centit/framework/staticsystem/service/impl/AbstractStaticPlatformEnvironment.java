@@ -2,8 +2,6 @@ package com.centit.framework.staticsystem.service.impl;
 
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.framework.model.basedata.IRoleInfo;
-import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
@@ -421,8 +419,7 @@ public abstract class AbstractStaticPlatformEnvironment
      * @param userCode 用户代码
      * @return  List 用户所有菜单功能
      */
-    @Override
-    public List<RoleInfo> listUserRoles(String userCode){
+    public List<RoleInfo> listUserRolesByUserCode(String userCode){
         List<RoleInfo> roles = new ArrayList<>();
         for (UserRole ur : userroles) {
             if (StringUtils.equals(ur.getUserCode(),userCode)) {
@@ -437,12 +434,42 @@ public abstract class AbstractStaticPlatformEnvironment
      * @param roleCode 角色代码
      * @return  List 用户所有菜单功能
      */
-    @Override
-    public List<UserInfo> listRoleUsers(String roleCode){
+    public List<UserInfo> listRoleUserByRoleCode(String roleCode){
         List<UserInfo> users = new ArrayList<>();
         for (UserRole ur : userroles) {
             if (StringUtils.equals(ur.getRoleCode(),roleCode)) {
                 users.add(getUserInfoByUserCode(ur.getRoleCode()));
+            }
+        }
+        return users;
+    }
+    /**
+     * 获取 用户角色关系
+     * @param userCode 用户代码
+     * @return  List 用户所有菜单功能
+     */
+    @Override
+    public List<UserRole> listUserRoles(String userCode){
+        List<UserRole> roles = new ArrayList<>();
+        for (UserRole ur : userroles) {
+            if (StringUtils.equals(ur.getUserCode(),userCode)) {
+                roles.add(ur);
+            }
+        }
+        return roles;
+    }
+
+    /**
+     * 获取 角色用户关系
+     * @param roleCode 角色代码
+     * @return  List 用户所有菜单功能
+     */
+    @Override
+    public List<UserRole> listRoleUsers(String roleCode){
+        List<UserRole> users = new ArrayList<>();
+        for (UserRole ur : userroles) {
+            if (StringUtils.equals(ur.getRoleCode(),roleCode)) {
+                users.add(ur);
             }
         }
         return users;
@@ -486,7 +513,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByLoginName(String loginName) {
-        for(IUserInfo u : listAllUsers()){
+        for(UserInfo u : listAllUsers()){
             if(StringUtils.equals(u.getLoginName(),loginName))
                 return (CentitUserDetails)u;
         }
@@ -495,7 +522,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByUserCode(String userCode) {
-        for(IUserInfo u :listAllUsers()){
+        for(UserInfo u :listAllUsers()){
             if(StringUtils.equals(u.getUserCode(),userCode))
                 return (CentitUserDetails)u;
         }
@@ -504,7 +531,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByRegEmail(String regEmail) {
-        for(IUserInfo u :listAllUsers()){
+        for(UserInfo u :listAllUsers()){
             if(StringUtils.equals(u.getRegEmail(),regEmail))
                 return (CentitUserDetails)u;
         }
@@ -513,7 +540,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone) {
-        for(IUserInfo u :listAllUsers()){
+        for(UserInfo u :listAllUsers()){
             if(StringUtils.equals(u.getRegCellPhone(),regCellPhone))
                 return (CentitUserDetails)u;
         }
