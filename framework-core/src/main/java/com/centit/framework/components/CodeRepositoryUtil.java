@@ -81,7 +81,7 @@ public abstract class CodeRepositoryUtil {
     }
 
     public static Map<String, IUnitInfo> getUnitRepo() {
-        Map<String, IUnitInfo> unitRepo = new HashMap<String, IUnitInfo>();
+        Map<String, IUnitInfo> unitRepo = new HashMap<>();
         List<? extends IUnitInfo> units = getPlatformEnvironment().listAllUnits();
         if(units==null)
             return unitRepo;
@@ -658,8 +658,62 @@ public abstract class CodeRepositoryUtil {
      * @param userCode 用户代码
      * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
      */
-    public static List<? extends IUserRole> getRoleUserRoles(String userCode) {
+    public static List<? extends IUserRole> getUserRoles(String userCode) {
         return getPlatformEnvironment().listUserRoles(userCode);
+    }
+
+    /** 获取机构所有角色
+     * @param unitCode 机构代码
+     * @return  List 机构所有菜单功能
+     * */
+    public static List<? extends IRoleInfo> listUnitRolesByUnitCode(String unitCode){
+        List<? extends IUnitRole> urs =
+                getPlatformEnvironment().listUnitRoles(unitCode);
+        if(urs == null || urs.size()==0)
+            return null;
+        List<IRoleInfo> unitInfos = new ArrayList<>(urs.size());
+        Map<String, ? extends IRoleInfo> roleMap =
+                CodeRepositoryUtil.getRoleRepo();
+        for(IUnitRole ur : urs){
+            unitInfos.add( roleMap.get(ur.getUnitCode()));
+        }
+        return unitInfos;
+    }
+
+
+     /** 获取拥有该角色的所有用户
+     * @param roleCode 角色代码
+     * @return  List
+      * */
+     public static List<? extends IUnitInfo> listRoleUnitByRoleCode(String roleCode){
+        List<? extends IUnitRole> urs =
+                getPlatformEnvironment().listRoleUnits(roleCode);
+        if(urs == null || urs.size()==0)
+            return null;
+        List<IUnitInfo> unitInfos = new ArrayList<>(urs.size());
+        Map<String, IUnitInfo> unitInfoMap = CodeRepositoryUtil.getUnitRepo();
+        for(IUnitRole ur : urs){
+            unitInfos.add( unitInfoMap.get(ur.getUnitCode()));
+        }
+        return unitInfos;
+    }
+
+    /**
+     * 获取用户所有角色
+     * @param unitCode 机构代码
+     * @return  List 用户所有菜单功能
+     */
+    public static List<? extends IUnitRole> listUnitRoles(String unitCode){
+        return getPlatformEnvironment().listUnitRoles(unitCode);
+    }
+
+    /**
+     * 获取拥有该角色的所有用户
+     * @param roleCode 角色代码
+     * @return  List 用户所有菜单功能
+     */
+    public static List<? extends IUnitRole> listRoleUnits(String roleCode){
+        return getPlatformEnvironment().listRoleUnits(roleCode);
     }
 
     /**

@@ -59,6 +59,9 @@ public abstract class SystemDataRepository {
     public static Map<String, List<? extends IUserRole>> userRolesMap;
     public static Map<String, List<? extends IUserRole>> roleUsersMap;
 
+    public static Map<String, List<? extends IUnitRole>> unitRolesMap;
+    public static Map<String, List<? extends IUnitRole>> roleUnitsMap;
+
     public static Map<String, List<? extends IOptMethod>> userMethodsMap;
     public static Map<String, List<? extends IOptMethod>> roleMethodsMap;
 
@@ -124,5 +127,13 @@ public abstract class SystemDataRepository {
 
     public static Map<String, Map<String, ? extends IDataDictionary>> getCodeToDictionaryMap() {
         return codeToDictionaryMap;
+    }
+
+    public static Map<String, List<? extends IUnitRole>> getUnitRolesMap() {
+        return unitRolesMap;
+    }
+
+    public static Map<String, List<? extends IUnitRole>> getRoleUnitsMap() {
+        return roleUnitsMap;
     }
 }

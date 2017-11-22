@@ -2,6 +2,7 @@ package com.centit.framework.staticsystem.service.impl;
 
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
+import com.centit.framework.model.basedata.IUnitRole;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
@@ -475,6 +476,15 @@ public abstract class AbstractStaticPlatformEnvironment
         return users;
     }
 
+    @Override
+    public List<? extends IUnitRole> listUnitRoles(String unitCode) {
+        return null;
+    }
+
+    @Override
+    public List<? extends IUnitRole> listRoleUnits(String roleCode) {
+        return null;
+    }
     @Override
     public Map<String,UnitInfo> getUnitRepo() {
         Map<String,UnitInfo> unitRepo = new HashMap<>();

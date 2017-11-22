@@ -58,7 +58,7 @@ public interface PlatformEnvironment {
     List<? extends IRoleInfo> listUserRolesByUserCode(String userCode);
 
     /**
-     * 获取拥有改角色的所有用户
+     * 获取拥有该角色的所有用户
      * @param roleCode 角色代码
      * @return  List 用户所有菜单功能
      */
@@ -72,11 +72,38 @@ public interface PlatformEnvironment {
     List<? extends IUserRole> listUserRoles(String userCode);
 
     /**
-     * 获取拥有改角色的所有用户
+     * 获取拥有该角色的所有用户
      * @param roleCode 角色代码
      * @return  List 用户所有菜单功能
      */
     List<? extends IUserRole> listRoleUsers(String roleCode);
+
+
+/*
+     * 获取机构所有角色
+     * @param unitCode 机构代码
+     * @return  List 机构所有菜单功能
+    List<? extends IRoleInfo> listUnitRolesByUnitCode(String unitCode);
+
+
+     * 获取拥有该角色的所有用户
+     * @param roleCode 角色代码
+     * @return  List
+    List<? extends IUnitInfo> listRoleUnitByRoleCode(String roleCode);*/
+
+    /**
+     * 获取用户所有角色
+     * @param unitCode 机构代码
+     * @return  List 用户所有菜单功能
+     */
+    List<? extends IUnitRole> listUnitRoles(String unitCode);
+
+    /**
+     * 获取拥有该角色的所有用户
+     * @param roleCode 角色代码
+     * @return  List 用户所有菜单功能
+     */
+    List<? extends IUnitRole> listRoleUnits(String roleCode);
     /**
      * 根据用户代码获取用户信息，
      * @param userCode userCode
