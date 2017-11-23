@@ -92,6 +92,8 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     private String userNamePinyin; //
     // 用户的主机构，只有在数据字典中有效
 
+    private String idCardNo;
+
     /**
      * 创建人
      */
@@ -463,7 +465,11 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
      */
     @Override
     public String getIdCardNo() {
-        return null;
+        return this.idCardNo;
+    }
+
+    public void setIdCardNo(String idCardNo) {
+        this.idCardNo = idCardNo;
     }
 
     public void setUserOrder(Long userorder) {
