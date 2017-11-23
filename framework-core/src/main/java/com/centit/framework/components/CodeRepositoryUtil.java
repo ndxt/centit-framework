@@ -1252,7 +1252,9 @@ public abstract class CodeRepositoryUtil {
     }
     
     public static List<OptionItem> getOptionForSelect(String sCatalog) {
-        return getOptionForSelect(sCatalog,WebOptUtils.getCurrentLang(getLocalThreadWrapperRequest()));
+        return getOptionForSelect(sCatalog,
+                WebOptUtils.getCurrentLang(
+                    getLocalThreadWrapperRequest()));
     }
 
     /**

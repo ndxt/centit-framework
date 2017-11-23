@@ -2,11 +2,14 @@ package com.centit.framework.model.adapter;
 
 import com.centit.framework.model.basedata.*;
 import com.centit.support.common.CachedObject;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +22,7 @@ import java.util.Map;
 @Deprecated
 public abstract class SystemDataRepository {
 
+    private final static int CACHE_FRESH_PERIOD_MINITES = 15;
     private SystemDataRepository()
     {
         throw new IllegalAccessError("Utility class");
@@ -35,105 +39,243 @@ public abstract class SystemDataRepository {
 
     private static PlatformEnvironment platformEnvironment = null;
 
-    public static PlatformEnvironment getPlatformEnvironment() {
+    private static PlatformEnvironment getPlatformEnvironment() {
         if(platformEnvironment==null)
             platformEnvironment = getCtxBean("platformEnvironment", PlatformEnvironment.class);
         return platformEnvironment;
     }
 
-    public static CachedObject<Map<String, ? extends IUserInfo>> codeToUserMap =
-            new CachedObject<>(()-> getPlatformEnvironment().getUserRepo(),15);
+    /**
+     * 缓存用户信息
+     */
+    private static CachedObject<List<? extends IUserInfo>> userInfoRepo =
+            new CachedObject<>(()-> getPlatformEnvironment().listAllUsers(),
+                    CACHE_FRESH_PERIOD_MINITES);
+    /**
+     * 派生的缓存信息，派生缓存相当于索引
+     */
+    private static CachedObject<Map<String, ? extends IUserInfo>> codeToUserMap =
+            new CachedObject<>(()-> {
+                List<? extends IUserInfo> userInfos = userInfoRepo.getCachedObject();
+                if(userInfos == null)
+                    return null;
+                Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size());
+                for(IUserInfo userInfo : userInfos){
+                    codeToUser.put(userInfo.getUserCode(), userInfo);
+                }
+                return codeToUser;
+            },CACHE_FRESH_PERIOD_MINITES);
 
-    public static Map<String, ? extends IUserInfo> loginNameToUserMap;
-    public static Map<String, ? extends IUserInfo> emailToUserMap;
-    public static Map<String, ? extends IUserInfo> phoneToUserMap;
-    public static Map<String, ? extends IUserInfo> idcardToUserMap;
+    private static CachedObject<Map<String, ? extends IUserInfo>> loginNameToUserMap =
+            new CachedObject<>(()-> {
+                List<? extends IUserInfo> userInfos = userInfoRepo.getCachedObject();
+                if(userInfos == null)
+                    return null;
+                Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size());
+                for(IUserInfo userInfo : userInfos){
+                    codeToUser.put(userInfo.getLoginName(), userInfo);
+                }
+                return codeToUser;
+            },CACHE_FRESH_PERIOD_MINITES);
 
-    public static Map<String, ? extends IUnitInfo> codeToUnitMap;
+    private static CachedObject<Map<String, ? extends IUserInfo>> emailToUserMap  =
+            new CachedObject<>(()-> {
+                List<? extends IUserInfo> userInfos = userInfoRepo.getCachedObject();
+                if(userInfos == null)
+                    return null;
+                Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size());
+                for(IUserInfo userInfo : userInfos){
+                    if(StringUtils.isNoneBlank(userInfo.getRegEmail())) {
+                        codeToUser.put(userInfo.getRegEmail(), userInfo);
+                    }
+                }
+                return codeToUser;
+            },CACHE_FRESH_PERIOD_MINITES);
 
-    public static Map<String, List<? extends IUserUnit>> userUnitsMap;
-    public static Map<String, List<? extends IUserUnit>> unitUsersMap;
+    private static CachedObject<Map<String, ? extends IUserInfo>> phoneToUserMap =
+            new CachedObject<>(()-> {
+                List<? extends IUserInfo> userInfos = userInfoRepo.getCachedObject();
+                if(userInfos == null)
+                    return null;
+                Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size());
+                for(IUserInfo userInfo : userInfos){
+                    if(StringUtils.isNoneBlank(userInfo.getRegCellPhone())) {
+                        codeToUser.put(userInfo.getRegCellPhone(), userInfo);
+                    }
+                }
+                return codeToUser;
+            },CACHE_FRESH_PERIOD_MINITES);
 
-    public static Map<String, List<? extends IRoleInfo>> codeToRoleMap;
+    private static CachedObject<Map<String, ? extends IUserInfo>> idcardToUserMap =
+            new CachedObject<>(()-> {
+                List<? extends IUserInfo> userInfos = userInfoRepo.getCachedObject();
+                if(userInfos == null)
+                    return null;
+                Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size());
+                for(IUserInfo userInfo : userInfos){
+                    if(StringUtils.isNoneBlank(userInfo.getIdCardNo())) {
+                        codeToUser.put(userInfo.getIdCardNo(), userInfo);
+                    }
+                }
+                return codeToUser;
+            },CACHE_FRESH_PERIOD_MINITES);
 
-    public static Map<String, List<? extends IUserRole>> userRolesMap;
-    public static Map<String, List<? extends IUserRole>> roleUsersMap;
 
-    public static Map<String, List<? extends IUnitRole>> unitRolesMap;
-    public static Map<String, List<? extends IUnitRole>> roleUnitsMap;
 
-    public static Map<String, List<? extends IOptMethod>> userMethodsMap;
-    public static Map<String, List<? extends IOptMethod>> roleMethodsMap;
+    /**
+     * 缓存机构信息
+     */
+    private static CachedObject<List<? extends IUnitInfo>> unitInfoRepo =
+            new CachedObject<>(()-> getPlatformEnvironment().listAllUnits(),
+                    CACHE_FRESH_PERIOD_MINITES);
 
-    public static Map<String, ? extends IDataCatalog> codeToCatalogMap;
-    public static Map<String, Map<String,? extends IDataDictionary>> codeToDictionaryMap;
+    /**
+     * 机构的派生缓存
+     */
+    private static CachedObject<Map<String, ? extends IUnitInfo>> codeToUnitMap =
+            new CachedObject<>(()-> {
+                List<? extends IUnitInfo> unitInfos = unitInfoRepo.getCachedObject();
+                if(unitInfos == null)
+                    return null;
+                Map<String, IUnitInfo> codeToUnit = new HashMap<>(unitInfos.size());
+                for(IUnitInfo unitInfo : unitInfos){
+                    codeToUnit.put(unitInfo.getUnitCode(), unitInfo);
+                }
+                return codeToUnit;
+            },CACHE_FRESH_PERIOD_MINITES);
 
+    private static CachedObject<List<? extends IUserUnit>> userUnitsRepo =
+            new CachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(),
+                    CACHE_FRESH_PERIOD_MINITES);
+
+    private static CachedObject<Map<String, List<IUserUnit>>> userUnitsMap =
+            new CachedObject<>(()-> {
+                List<? extends IUserUnit> userUnits = userUnitsRepo.getCachedObject();
+                if(userUnits == null)
+                    return null;
+                Map<String, List<IUserUnit>> userToUnit = new HashMap<>(userUnits.size());
+                for(IUserUnit uu : userUnits){
+                    List<IUserUnit> uus = userToUnit.get(uu.getUserCode());
+                    if(uus==null){
+                        uus = new ArrayList<>(4);
+                    }
+                    uus.add( uu );
+                    userToUnit.put(uu.getUserCode(), uus);
+                }
+                return userToUnit;
+            },CACHE_FRESH_PERIOD_MINITES);
+
+    private static CachedObject<Map<String, List<IUserUnit>>> unitUsersMap=
+            new CachedObject<>(()-> {
+                List<? extends IUserUnit> userUnits = userUnitsRepo.getCachedObject();
+                if(userUnits == null)
+                    return null;
+                Map<String, List<IUserUnit>> unitToUser =
+                        new HashMap<>(userUnits.size() >10?userUnits.size()/4:10);
+                for(IUserUnit uu : userUnits){
+                    List<IUserUnit> uus = unitToUser.get(uu.getUnitCode());
+                    if(uus==null){
+                        uus = new ArrayList<>(16);
+                    }
+                    uus.add( uu );
+                    unitToUser.put(uu.getUnitCode(), uus);
+                }
+                return unitToUser;
+            },CACHE_FRESH_PERIOD_MINITES);
+
+    private static CachedObject<Map<String,  ? extends IRoleInfo>> codeToRoleMap  =
+            new CachedObject<>(()-> getPlatformEnvironment().getRoleRepo(),
+                    CACHE_FRESH_PERIOD_MINITES);
+
+    private static CachedObject<Map<String, ? extends IDataCatalog>> codeToCatalogMap;
+
+    private static CachedObject<Map<String, Map<String,? extends IDataDictionary>>> codeToDictionaryMap;
+
+    private static CachedObject<Map<String, List<IUserRole>>> userRolesMap;
+
+    private static CachedObject<Map<String, List<IUserRole>>> roleUsersMap;
+
+    private static CachedObject<Map<String, List<IUnitRole>>> unitRolesMap;
+
+    private static CachedObject<Map<String, List<IUnitRole>>> roleUnitsMap;
+
+    private static CachedObject<Map<String, List<IOptMethod>>> userMethodsMap;
+
+    private static CachedObject<Map<String, List<IOptMethod>>> roleMethodsMap;
+
+    public static List<? extends IUserInfo> getUserInfoRepo() {
+        return userInfoRepo.getCachedObject();
+    }
 
     public static Map<String, ? extends IUserInfo> getCodeToUserMap() {
         return codeToUserMap.getCachedObject();
     }
 
     public static Map<String, ? extends IUserInfo> getLoginNameToUserMap() {
-        return loginNameToUserMap;
+        return loginNameToUserMap.getCachedObject();
     }
 
     public static Map<String, ? extends IUserInfo> getEmailToUserMap() {
-        return emailToUserMap;
+        return emailToUserMap.getCachedObject();
     }
 
     public static Map<String, ? extends IUserInfo> getPhoneToUserMap() {
-        return phoneToUserMap;
+        return phoneToUserMap.getCachedObject();
     }
 
     public static Map<String, ? extends IUserInfo> getIdcardToUserMap() {
-        return idcardToUserMap;
+        return idcardToUserMap.getCachedObject();
     }
 
     public static Map<String, ? extends IUnitInfo> getCodeToUnitMap() {
-        return codeToUnitMap;
+        return codeToUnitMap.getCachedObject();
     }
 
-    public static Map<String, List<? extends IUserUnit>> getUserUnitsMap() {
-        return userUnitsMap;
+    public static List<? extends IUnitInfo> getUnitInfoRepo() {
+        return unitInfoRepo.getCachedObject();
     }
 
-    public static Map<String, List<? extends IUserUnit>> getUnitUsersMap() {
-        return unitUsersMap;
+    public static Map<String, List<IUserUnit>> getUserUnitsMap() {
+        return userUnitsMap.getCachedObject();
     }
 
-    public static Map<String, List<? extends IRoleInfo>> getCodeToRoleMap() {
-        return codeToRoleMap;
+    public static Map<String, List<IUserUnit>> getUnitUsersMap() {
+        return unitUsersMap.getCachedObject();
     }
 
-    public static Map<String, List<? extends IUserRole>> getUserRolesMap() {
-        return userRolesMap;
+    public static Map<String, ? extends IRoleInfo> getCodeToRoleMap() {
+        return codeToRoleMap.getCachedObject();
     }
 
-    public static Map<String, List<? extends IOptMethod>> getUserMethodsMap() {
-        return userMethodsMap;
+    public static Map<String, List<IUserRole>> getUserRolesMap() {
+        return userRolesMap.getCachedObject();
     }
 
-    public static Map<String, List<? extends IUserRole>> getRoleUsersMap() {
-        return roleUsersMap;
+    public static Map<String, List<IOptMethod>> getUserMethodsMap() {
+        return userMethodsMap.getCachedObject();
     }
 
-    public static Map<String, List<? extends IOptMethod>> getRoleMethodsMap() {
-        return roleMethodsMap;
+    public static Map<String, List<IUserRole>> getRoleUsersMap() {
+        return roleUsersMap.getCachedObject();
+    }
+
+    public static Map<String, List<IOptMethod>> getRoleMethodsMap() {
+        return roleMethodsMap.getCachedObject();
     }
 
     public static Map<String, ? extends IDataCatalog> getCodeToCatalogMap() {
-        return codeToCatalogMap;
+        return codeToCatalogMap.getCachedObject();
     }
 
     public static Map<String, Map<String, ? extends IDataDictionary>> getCodeToDictionaryMap() {
-        return codeToDictionaryMap;
+        return codeToDictionaryMap.getCachedObject();
     }
 
-    public static Map<String, List<? extends IUnitRole>> getUnitRolesMap() {
-        return unitRolesMap;
+    public static Map<String, List<IUnitRole>> getUnitRolesMap() {
+        return unitRolesMap.getCachedObject();
     }
 
-    public static Map<String, List<? extends IUnitRole>> getRoleUnitsMap() {
-        return roleUnitsMap;
+    public static Map<String, List<IUnitRole>> getRoleUnitsMap() {
+        return roleUnitsMap.getCachedObject();
     }
 }
