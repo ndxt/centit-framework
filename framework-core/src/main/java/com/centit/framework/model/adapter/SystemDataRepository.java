@@ -1,6 +1,7 @@
 package com.centit.framework.model.adapter;
 
 import com.centit.framework.model.basedata.*;
+import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -148,22 +149,10 @@ public abstract class SystemDataRepository {
             new CachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(),
                     CACHE_FRESH_PERIOD_MINITES);
 
-    private static CachedObject<Map<String, List<IUserUnit>>> userUnitsMap =
-            new CachedObject<>(()-> {
-                List<? extends IUserUnit> userUnits = userUnitsRepo.getCachedObject();
-                if(userUnits == null)
-                    return null;
-                Map<String, List<IUserUnit>> userToUnit = new HashMap<>(userUnits.size());
-                for(IUserUnit uu : userUnits){
-                    List<IUserUnit> uus = userToUnit.get(uu.getUserCode());
-                    if(uus==null){
-                        uus = new ArrayList<>(4);
-                    }
-                    uus.add( uu );
-                    userToUnit.put(uu.getUserCode(), uus);
-                }
-                return userToUnit;
-            },CACHE_FRESH_PERIOD_MINITES);
+    private static CachedMap<String, List<? extends IUserUnit>> userUnitsMap =
+            new CachedMap<>(
+                    (key)-> getPlatformEnvironment().listUserUnits(key)
+                    ,CACHE_FRESH_PERIOD_MINITES * 2, 300);
 
     private static CachedObject<Map<String, List<IUserUnit>>> unitUsersMap=
             new CachedObject<>(()-> {
@@ -235,8 +224,8 @@ public abstract class SystemDataRepository {
         return unitInfoRepo.getCachedObject();
     }
 
-    public static Map<String, List<IUserUnit>> getUserUnitsMap() {
-        return userUnitsMap.getCachedObject();
+    public static List<? extends IUserUnit> getUserUnitsMap(String userCode) {
+        return userUnitsMap.getCachedObject(userCode);
     }
 
     public static Map<String, List<IUserUnit>> getUnitUsersMap() {
