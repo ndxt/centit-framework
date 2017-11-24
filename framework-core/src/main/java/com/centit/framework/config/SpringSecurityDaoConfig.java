@@ -1,7 +1,5 @@
-package com.centit.framework.staticsystem.config;
+package com.centit.framework.config;
 
-import com.centit.framework.config.SecurityDaoCondition;
-import com.centit.framework.config.SpringSecurityBaseConfig;
 import com.centit.framework.security.AjaxAuthenticationSuccessHandler;
 import com.centit.framework.security.DaoFilterSecurityInterceptor;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
@@ -37,7 +35,7 @@ import java.util.List;
 public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Autowired
-    private CentitPasswordEncoder passwordEncoder;
+    protected CentitPasswordEncoder passwordEncoder;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

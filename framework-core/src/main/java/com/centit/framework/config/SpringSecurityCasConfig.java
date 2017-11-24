@@ -1,7 +1,5 @@
-package com.centit.framework.staticsystem.config;
+package com.centit.framework.config;
 
-import com.centit.framework.config.SecurityCasCondition;
-import com.centit.framework.config.SpringSecurityBaseConfig;
 import com.centit.framework.security.AjaxAuthenticationFailureHandler;
 import com.centit.framework.security.AjaxAuthenticationSuccessHandler;
 import com.centit.framework.security.DaoFilterSecurityInterceptor;
@@ -24,6 +22,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -141,15 +141,7 @@ public abstract class AbstractStaticPlatformEnvironment
                 return ui;
         }
         return null;
-    }
-
-    public StaticCentitUserDetails getUserDetailsByUserCode(String userCode){
-        for(StaticCentitUserDetails ud : userDetails){
-            if(StringUtils.equals(ud.getUserInfo().getUserCode(), userCode))
-                return ud;
-        }
-        return null;
-    }
+    }   
 
     @Override
     public UserInfo getUserInfoByUserCode(String userCode){
@@ -184,7 +176,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public String getUserSetting(String userCode, String paramCode) {
-        StaticCentitUserDetails ud =  getUserDetailsByUserCode(userCode);
+        CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
         if(ud==null)
             return null;
         return ud.getUserSettingValue(paramCode);
@@ -359,7 +351,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public List<OptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin) {
-        StaticCentitUserDetails ud =  getUserDetailsByUserCode(userCode);
+        CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
         if(ud==null)
             return null;
 
@@ -393,7 +385,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<OptInfo> listUserMenuOptInfosUnderSuperOptId(
             String userCode,String superOptId , boolean asAdmin) {
-        StaticCentitUserDetails ud =  getUserDetailsByUserCode(userCode);
+        CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
         if(ud==null)
             return null;
         Map<String, String> userOpts = ud.getUserOptList();
@@ -523,40 +515,39 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByLoginName(String loginName) {
-        for(UserInfo u : listAllUsers()){
-            if(StringUtils.equals(u.getLoginName(),loginName))
-                return (CentitUserDetails)u;
+        for(StaticCentitUserDetails ud : userDetails){
+            if(StringUtils.equals(ud.getUserInfo().getLoginName(), loginName))
+                return ud;
         }
         return null;
     }
 
     @Override
     public CentitUserDetails loadUserDetailsByUserCode(String userCode) {
-        for(UserInfo u :listAllUsers()){
-            if(StringUtils.equals(u.getUserCode(),userCode))
-                return (CentitUserDetails)u;
+        for(StaticCentitUserDetails ud : userDetails){
+            if(StringUtils.equals(ud.getUserInfo().getUserCode(), userCode))
+                return ud;
         }
         return null;
     }
 
     @Override
     public CentitUserDetails loadUserDetailsByRegEmail(String regEmail) {
-        for(UserInfo u :listAllUsers()){
-            if(StringUtils.equals(u.getRegEmail(),regEmail))
-                return (CentitUserDetails)u;
+        for(StaticCentitUserDetails ud : userDetails){
+            if(StringUtils.equals(ud.getUserInfo().getRegEmail(), regEmail))
+                return ud;
         }
         return null;
     }
 
     @Override
     public CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone) {
-        for(UserInfo u :listAllUsers()){
-            if(StringUtils.equals(u.getRegCellPhone(),regCellPhone))
-                return (CentitUserDetails)u;
+        for(StaticCentitUserDetails ud : userDetails){
+            if(StringUtils.equals(ud.getUserInfo().getRegCellPhone(), regCellPhone))
+                return ud;
         }
         return null;
     }
-
 
     @Override
     public boolean reloadSecurityMetadata() {

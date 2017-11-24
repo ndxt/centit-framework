@@ -26,10 +26,12 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
 
     private String isValid; // 是否生效
 
-    /**
-     * S为系统角色  I为项目角色  W 工作流角色  
-     */
-
+    /** 角色的类别 F （Fixe）系统内置的，固有的， G （global） 全局的
+     *          P （public） 公用的，指 系统全局 和 部门之间公用的
+     *          D （department）部门（机构）特有的角色
+     *          I ( Item )为项目角色 W (workflow)工作流角色 ，这两个为保留类别，暂时没有使用
+     *  F/G/P/D/I/W
+    */
     private String roleType; // 角色类别
 
 
@@ -44,19 +46,14 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
     /**
      * CREATOR(创建人) 创建人
      */
-
-
-    /**
-     * default constructor
-     */
     public RoleInfo() {
-        roleType = "S";
+        roleType = "G";
     }
 
     public RoleInfo(String rolecode, String isvalid) {
         this.roleCode = rolecode;
         this.isValid = isvalid;
-        this.roleType = "S";
+        this.roleType = "G";
     }
 
     public RoleInfo(String rolecode, String rolename,String roleType,
@@ -115,8 +112,11 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
     }
 
     /**
-     * S为系统角色 I为项目角色 W工作量角色
-     * @return  S为系统角色 I为项目角色 W工作量角色
+     * 角色的类别 F （Fixe）系统内置的，固有的， G （global） 全局的
+     *          P （public） 公用的，指 系统全局 和 部门之间公用的
+     *          D （department）部门（机构）特有的角色
+     *          I ( Item )为项目角色 W (workflow)工作流角色 ，这两个为保留类别，暂时没有使用
+     * @return 角色的类别 F/G/P/D/I/W
      */
     public String getRoleType() {
         return roleType;
@@ -134,11 +134,13 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
         return unitCode;
     }
 
+    public String getRoleOwner() {
+        return unitCode;
+    }
+
     public void setUnitCode(String unitCode) {
         this.unitCode = unitCode;
     }
-
-
 
     public void copyNotNullProperty(RoleInfo other) {
         // this.rolecode = other.getRolecode();

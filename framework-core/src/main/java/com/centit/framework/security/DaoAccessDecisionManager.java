@@ -47,7 +47,7 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
             return;
         }
 
-        if(configAttributes.contains(new SecurityConfig("R_G-forbidden"))){
+        if(configAttributes.contains(new SecurityConfig("R_forbidden"))){
             String sErrMsg = "资源被禁止访问";
             logger.error(sErrMsg);
             throw new AccessDeniedException(sErrMsg);
