@@ -1,23 +1,12 @@
 package com.centit.framework.staticsystem.po;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.support.algorithm.DatetimeOpt;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.centit.framework.security.model.CentitSecurityMetadata;
-import com.centit.framework.security.model.CentitUserDetails;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * FUserinfo entity.
@@ -28,16 +17,12 @@ import com.centit.framework.security.model.CentitUserDetails;
 public class UserInfo implements IUserInfo, java.io.Serializable{
     // Fields
     private static final long serialVersionUID = 1L;
-
- 
     private String userCode; // 用户代码
-
     //密码不参与返回序列化
     @JSONField(serialize = false)
     private String userPin; // 用户密码
 
-    private String isValid; // 状态   
-    
+    private String isValid; // 状态
     /**
      * 'G发布任务/R接收任务/S系统管理';
      */
@@ -45,48 +30,34 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
 
     private String loginName; // 用户登录名
 
-
     private String userName; // 用户姓名
-
  
     private String englishName;// 用户英文姓名
-    
  
     private String userDesc; // 用户描述
-
  
     private Long loginTimes; // 登录次数
 
- 
     private Date activeTime; // 最后一次登录时间
 
- 
     private Date pwdExpiredTime; // 密码失效时间
-    
- 
-    private String loginIp; // 登录地址
 
+    private String loginIp; // 登录地址
 
     private Long addrbookId; // 通讯id
 
-
     private String regEmail; // 注册email
 
- 
     private String userPwd;
 
- 
     private String regCellPhone;
 
- 
     private String userWord;
-    
 
     private String userTag;
-    
- 
+
     private Long userOrder; // 用户排序
-    
+
     private String primaryUnit;
     
     private String userNamePinyin; //
@@ -113,6 +84,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
         this.userPwd = userPwd;
     }
 
+    @Override
     public String getRegCellPhone() {
         return regCellPhone;
     }
@@ -133,6 +105,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
      * 密码失效时间
      * @return  Date
      */
+    @Override
     public Date getPwdExpiredTime() {
         return pwdExpiredTime;
     }
@@ -207,6 +180,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     }
 
     // Property accessors
+    @Override
     public String getUserCode() {
         return this.userCode;
     }
@@ -216,6 +190,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     }
 
     @JSONField(serialize = false)
+    @Override
     public String getUserPin() {
         return this.userPin;
     }
@@ -246,6 +221,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
      *
      * @return T:生效 F:无效
      */
+    @Override
     public String getIsValid() {
         return this.isValid;
     }
@@ -256,11 +232,11 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     public void setIsValid(String userstate) {
         this.isValid = userstate;
     }
-
+    @Override
     public String getUserName() {
         return this.userName;
     }
-
+    @Override
     public String getUserType() {
         return userType;
     }
@@ -300,7 +276,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     public boolean isEnabled() {
         return "T".equals(isValid);
     }
-
+    @Override
     public String getLoginName() {
         if (loginName == null)
             return "";
@@ -340,11 +316,11 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     public void setRegEmail(String regEmail) {
         this.regEmail = regEmail;
     }
-
+    @Override
     public String getRegEmail() {
         return regEmail;
     }
-
+    @Override
     public String getPrimaryUnit() {
         return primaryUnit;
     } 
@@ -451,7 +427,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
         this.userType = null;
         this.userOrder = null;
     }
-
+    @Override
     public Long getUserOrder() {
         if (userOrder == null)
             return 1000l;
