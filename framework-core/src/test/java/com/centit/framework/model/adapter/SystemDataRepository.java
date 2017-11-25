@@ -20,7 +20,6 @@ import java.util.Map;
  * @author codefan@sina.com
  * 2015-11-3
  */
-@Deprecated
 public abstract class SystemDataRepository {
 
     private final static int CACHE_FRESH_PERIOD_MINITES = 15;
