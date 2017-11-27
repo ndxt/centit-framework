@@ -23,7 +23,8 @@ public interface IRoleInfo{
      *          P （public） 公用的，指 系统全局 和 部门之间公用的
      *          D （department）部门（机构）特有的角色
      *          I ( Item )为项目角色 W (workflow)工作流角色 ，这两个为保留类别，暂时没有使用
-     * @return 角色的类别 F/G/P/D/I/W
+     *          H (HIDE)系统内置的不要显示的，是部门可以自己支配的操作权限集合
+     * @return 角色的类别 F/G/P/D/I/W/H
      */
     String getRoleType();
 

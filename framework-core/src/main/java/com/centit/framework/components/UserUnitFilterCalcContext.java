@@ -63,11 +63,26 @@ public interface UserUnitFilterCalcContext {
 
     List<? extends IUnitInfo> listAllUnitInfo();
 
+    /**
+     * 获得机构所有的子机构
+     * @param unitCode 机构代码
+     * @return 子机构集合
+     */
+    List<? extends IUnitInfo> listSubUnit(String unitCode);
+    /**
+     * 获得机构所有的子机构， 包括 子机构的下级机构
+     * @param unitCode 机构代码
+     * @return 子机构集合
+     */
+    List<? extends IUnitInfo> listSubUnitAll(String unitCode);
+
     IUnitInfo getUnitInfoByCode(String unitCode);
 
     List<? extends IUserUnit> listAllUserUnits();
 
     List<? extends IUserUnit> listUnitUsers(String unitCode);
+
+
 
     IUserInfo getUserInfoByCode(String userCode);
 

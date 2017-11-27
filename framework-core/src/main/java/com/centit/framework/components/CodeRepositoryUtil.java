@@ -1359,11 +1359,11 @@ public abstract class CodeRepositoryUtil {
             return null;
         List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits();
 
-        List<IUnitInfo> units = new ArrayList<IUnitInfo>();
+        List<IUnitInfo> units = new ArrayList<>();
         List<IUnitInfo> subunits = fetchSubUnits(allunits,unitCode);
         while( subunits!=null && subunits.size()>0){
             units.addAll(subunits);
-            List<IUnitInfo> subunits1 = new ArrayList<IUnitInfo>();
+            List<IUnitInfo> subunits1 = new ArrayList<>();
             for(IUnitInfo u1: subunits){
                 List<IUnitInfo> subunits2 = fetchSubUnits(allunits,u1.getUnitCode());
                 if(subunits2!=null)

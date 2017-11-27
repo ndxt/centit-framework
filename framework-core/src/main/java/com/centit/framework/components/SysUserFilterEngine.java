@@ -240,18 +240,19 @@ public abstract class SysUserFilterEngine implements Serializable {
                                                     String roleType,String roleCode,
                                                     String unitCode, boolean onlyGetPrimary)
     {
-        List<IUserUnit> lsUserunit = new LinkedList<IUserUnit>();
+        List<IUserUnit> lsUserunit = new LinkedList<>();
         if (unitCode != null && !"".equals(unitCode)) {
             IUnitInfo unit = ecc.getUnitInfoByCode(unitCode);
             if (unit != null){
                 if(onlyGetPrimary){
-                    for(IUserUnit uu:unit.getUnitUsers()){
+                    for(IUserUnit uu: ecc.listUnitUsers(unitCode)){
                         if("T".equals(uu.getIsPrimary())){
                             lsUserunit.add(uu); 
                         }
                     }
-                }else
-                    lsUserunit.addAll(unit.getUnitUsers());
+                }else {
+                    lsUserunit.addAll(ecc.listUnitUsers(unitCode));
+                }
             }
         } else {
             lsUserunit.addAll(ecc.listAllUserUnits());
@@ -289,7 +290,7 @@ public abstract class SysUserFilterEngine implements Serializable {
                 || rf.isHasXZFilter();
 
         if (!hasFilter)
-            return new HashSet<String>();
+            return new HashSet<>();
         if (rf.isHasUserFilter())
             return rf.getUsers();
         /**
@@ -297,7 +298,7 @@ public abstract class SysUserFilterEngine implements Serializable {
          *
          */
         // 获取所有候选人的岗位、职务信息
-        List<IUserUnit> lsUserunit = new LinkedList<IUserUnit>();
+        List<IUserUnit> lsUserunit = new LinkedList<>();
         if (rf.isHasUnitFilter()) {
             for (String unitCode : rf.getUnits()) {          
                 if(rf.isOnlyGetPrimaryUser()){

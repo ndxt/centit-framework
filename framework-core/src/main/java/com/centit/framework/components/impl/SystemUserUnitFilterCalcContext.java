@@ -31,6 +31,16 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     }
 
     @Override
+    public List<? extends IUnitInfo> listSubUnit(String unitCode) {
+        return CodeRepositoryUtil.getSubUnits(unitCode);
+    }
+
+    @Override
+    public List<? extends IUnitInfo> listSubUnitAll(String unitCode) {
+        return CodeRepositoryUtil.getAllSubUnits(unitCode);
+    }
+
+    @Override
     public IUnitInfo getUnitInfoByCode(String unitCode) {
         return CodeRepositoryUtil.getUnitInfoByCode(unitCode);
     }

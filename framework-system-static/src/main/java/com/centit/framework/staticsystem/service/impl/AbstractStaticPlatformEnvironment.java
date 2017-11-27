@@ -258,7 +258,7 @@ public abstract class AbstractStaticPlatformEnvironment
         for (int i = 0; i < preOpts.size(); i++) {
             isNeeds[i] = false;
         }
-        List<OptInfo> opts = new ArrayList<OptInfo>();
+        List<OptInfo> opts = new ArrayList<>();
 
         for (OptInfo opm : ls) {
             opts.add(opm);
@@ -270,7 +270,7 @@ public abstract class AbstractStaticPlatformEnvironment
             }
         }
 
-        List<OptInfo> needAdd = new ArrayList<OptInfo>();
+        List<OptInfo> needAdd = new ArrayList<>();
         for (int i = 0; i < preOpts.size(); i++) {
             if (isNeeds[i]) {
                 needAdd.add(preOpts.get(i));
@@ -314,52 +314,61 @@ public abstract class AbstractStaticPlatformEnvironment
         return opts;
     }
 
-     private static List<OptInfo> listObjectFormatAndFilterOptId(List<OptInfo> optInfos,String superOptId) {
-            // 获取当前菜单的子菜单
-            Iterator<OptInfo> menus = optInfos.iterator();
+    private static List<OptInfo> listObjectFormatAndFilterOptId(List<OptInfo> optInfos,String superOptId) {
+        // 获取当前菜单的子菜单
+        Iterator<OptInfo> menus = optInfos.iterator();
 
-            OptInfo parentOpt = null;
+        OptInfo parentOpt = null;
 
-            List<OptInfo> parentMenu = new ArrayList<OptInfo>();
-            while (menus.hasNext()) {
+        List<OptInfo> parentMenu = new ArrayList<OptInfo>();
+        while (menus.hasNext()) {
 
-                OptInfo optInfo = menus.next();
-                //去掉级联关系后需要手动维护这个属性
+            OptInfo optInfo = menus.next();
+            //去掉级联关系后需要手动维护这个属性
 
-                if (superOptId!=null && superOptId.equals(optInfo.getOptId())) {
-                    parentOpt=optInfo;
-                }
-                boolean getParent = false;
-                for (OptInfo opt : optInfos) {
-                    if (opt.getOptId().equals(optInfo.getPreOptId())) {
-                        opt.addChild(optInfo);
-                        getParent = true;
-                        break;
-                    }
-                }
-                if(!getParent)
-                    parentMenu.add(optInfo);
+            if (superOptId!=null && superOptId.equals(optInfo.getOptId())) {
+                parentOpt=optInfo;
             }
-
-            if (superOptId!=null && parentOpt!=null){
-                    return parentOpt.getChildren();
-                //else
-                    //return null;
-            }else
-                return parentMenu;
+            boolean getParent = false;
+            for (OptInfo opt : optInfos) {
+                if (opt.getOptId().equals(optInfo.getPreOptId())) {
+                    opt.addChild(optInfo);
+                    getParent = true;
+                    break;
+                }
+            }
+            if(!getParent)
+                parentMenu.add(optInfo);
         }
 
-    @Override
-    public List<OptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin) {
-        CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
-        if(ud==null)
-            return null;
+        if (superOptId!=null && parentOpt!=null){
+                return parentOpt.getChildren();
+            //else
+                //return null;
+        }else {
+            return parentMenu;
+        }
+    }
 
-        Map<String, String> userOpts = ud.getUserOptList();
+    private List<OptInfo> listUserOptInfos(String userCode){
         List<OptInfo> userOptinfos = new ArrayList<>();
 
-        for(Map.Entry<String, String> uo : userOpts.entrySet()){
-            OptInfo oi = this.getOptInfo(uo.getValue());
+        Set<String> optIds = new HashSet<>(20);
+        for (UserRole ur : userroles) {
+            if (StringUtils.equals(ur.getUserCode(), userCode)) {
+                RoleInfo ri = getRoleInfo(ur.getRoleCode());
+                if (ri != null) {
+                    for (RolePower rp : ri.getRolePowers()) {
+                        OptMethod om = getOptMethod(rp.getOptCode());
+                        if (om != null)
+                            optIds.add(om.getOptId());
+                    }
+                }
+            }
+        }
+
+        for(String optId : optIds){
+            OptInfo oi = this.getOptInfo(optId);
             if("Y".equals(oi.getIsInToolbar())){
                 OptInfo soi = new OptInfo();
                 soi.copy(oi);
@@ -367,7 +376,16 @@ public abstract class AbstractStaticPlatformEnvironment
                 userOptinfos.add(soi);
             }
         }
+        return userOptinfos;
+    }
 
+    @Override
+    public List<OptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin) {
+        CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
+        if(ud==null)
+            return null;
+
+        List<OptInfo> userOptinfos =listUserOptInfos(ud.getUserCode());
         List<OptInfo> preOpts = getDirectOptInfo();
 
         List<OptInfo> allUserOpt = getMenuFuncs(preOpts,userOptinfos);
@@ -388,17 +406,8 @@ public abstract class AbstractStaticPlatformEnvironment
         CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
         if(ud==null)
             return null;
-        Map<String, String> userOpts = ud.getUserOptList();
-        List<OptInfo> userOptinfos = new ArrayList<OptInfo>();
-        for(Map.Entry<String, String> uo : userOpts.entrySet()){
-            OptInfo oi= this.getOptInfo(uo.getValue());
-            if("Y".equals(oi.getIsInToolbar())){
-                OptInfo soi = new OptInfo();
-                soi.copy(oi);
-                soi.setOptId(oi.getOptId());
-                userOptinfos.add(soi);
-            }
-        }
+
+        List<OptInfo> userOptinfos =listUserOptInfos(ud.getUserCode());
 
         List<OptInfo> preOpts = getDirectOptInfo();
 
