@@ -64,7 +64,7 @@ public abstract class AbstractStaticPlatformEnvironment
                         for (RolePower rp : ri.getRolePowers()) {
                             OptMethod om = getOptMethod(rp.getOptCode());
                             if (om != null)
-                                userOptList.put(om.getOptId() + "-" + om.getOptMethod(), om.getOptId());
+                                userOptList.put(om.getOptId() + "-" + om.getOptMethod(), om.getOptMethod());
                         }
                     }
                 }
