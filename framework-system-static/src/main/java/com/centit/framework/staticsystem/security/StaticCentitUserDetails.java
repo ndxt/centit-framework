@@ -161,7 +161,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     @Override
     public void setUserSettingValue(String paramCode, String paramValue) {
         if(userSettings==null) {
-            userSettings = new HashMap<>();
+            userSettings = new HashMap<>(10);
         }
         userSettings.put(paramCode, paramValue);
     }
@@ -173,7 +173,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     @Override
     public Map<String, String> getUserOptList() {
         if(userOptList==null) {
-            userOptList = new HashMap<>(2);
+            userOptList = new HashMap<>(10);
         }
         return userOptList;
     }

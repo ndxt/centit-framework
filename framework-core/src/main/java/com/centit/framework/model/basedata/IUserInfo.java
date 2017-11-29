@@ -86,6 +86,17 @@ public interface IUserInfo{
      * @return 用户第三发业务中的主键
      */
     String getUserTag();
+
+    /**
+     * @return 英文名
+     */
+    String getEnglishName();
+
+    /**
+     * @return 用户描述
+     */
+    String getUserDesc();
+
     /**
     * 获取用户归属机构关系
     * @return 获取用户归属机构关系

@@ -24,13 +24,6 @@ public interface PlatformEnvironment {
      * @return  系统配置参数
      */
     String getSystemParameter(String paramCode);
-    /**
-     * 获得用户设置参数
-     * @param userCode userCode
-     * @param paramCode paramCode
-     * @return 用户设置参数
-     */
-    String getUserSetting(String userCode,String paramCode);
 
     /**
      * 获取用户所有菜单功能
@@ -253,4 +246,24 @@ public interface PlatformEnvironment {
      * @return 用户基本信息，用户机构信息，用户权限信息等等
      */
     CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone);
+
+    /**
+     * 根据用户ID修改用户信息
+     * @param userInfo 用户信息
+     */
+    void  updateUserInfo(IUserInfo userInfo);
+
+    /**
+     * 获得用户设置参数
+     * @param userCode userCode
+     * @param paramCode paramCode
+     * @return 用户设置参数
+     */
+    IUserSetting getUserSetting(String userCode,String paramCode);
+
+    /**
+     * 设置用户参数
+     * @param userSetting 用户参数， paramValue = null 则为删除
+     */
+    void saveUserSetting(IUserSetting userSetting);
 }

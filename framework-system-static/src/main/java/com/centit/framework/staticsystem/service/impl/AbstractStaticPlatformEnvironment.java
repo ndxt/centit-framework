@@ -3,6 +3,8 @@ package com.centit.framework.staticsystem.service.impl;
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IUnitRole;
+import com.centit.framework.model.basedata.IUserInfo;
+import com.centit.framework.model.basedata.IUserSetting;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
@@ -175,11 +177,29 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     @Override
-    public String getUserSetting(String userCode, String paramCode) {
+    public UserSetting getUserSetting(String userCode, String paramCode) {
         CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
         if(ud==null)
             return null;
-        return ud.getUserSettingValue(paramCode);
+        //userCode, String paramCode,String paramValue, String paramName
+        return new UserSetting(ud.getUserCode(),paramCode,
+                 ud.getUserSettingValue(paramCode), "用户参数");
+    }
+
+    @Override
+    public void updateUserInfo(IUserInfo userInfo) {
+        UserInfo ui = this.getUserInfoByUserCode(userInfo.getUserCode());
+        if(ui==null)
+            return;
+        ui.copyNotNullProperty(userInfo);
+    }
+
+    @Override
+    public void saveUserSetting(IUserSetting userSetting) {
+        CentitUserDetails ud =  loadUserDetailsByUserCode(userSetting.getUserCode());
+        if(ud==null)
+            return;
+        ud.setUserSettingValue(userSetting.getParamCode(),userSetting.getParamValue());
     }
 
     @Override

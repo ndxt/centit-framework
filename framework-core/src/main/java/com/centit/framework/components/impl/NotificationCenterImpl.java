@@ -3,6 +3,7 @@ package com.centit.framework.components.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.centit.framework.model.basedata.IUserSetting;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -75,8 +76,8 @@ public class NotificationCenterImpl implements NotificationCenter {
          *  并在数据库中记录发送信息，在发送方式中用逗号把多个方式拼接在一起保存在对应的字段中
          */
         String returnText = "OK";
-        String receiveways = platformEnvironment.getUserSetting(receiver, "receiveways");
-
+        IUserSetting userReceiveWays = platformEnvironment.getUserSetting(receiver, "receiveways");
+        String receiveways = userReceiveWays==null?null:userReceiveWays.getParamValue();
         StringBuilder errorObjects = new StringBuilder();
 
         String noticeType ="" ;//default;

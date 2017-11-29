@@ -198,7 +198,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     public void setUserPin(String userpin) {
         this.userPin = userpin;
     }
-
+    @Override
     public String getEnglishName() {
         return englishName;
     }
@@ -248,7 +248,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     public void setUserName(String username) {
         this.userName = username;
     }
-
+    @Override
     public String getUserDesc() {
         return this.userDesc;
     }
@@ -373,7 +373,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
         this.englishName =other.getEnglishName();
     }
 
-    public void copyNotNullProperty(UserInfo other) {
+    public void copyNotNullProperty(IUserInfo other) {
         /*if (other.getUserCode() != null)
             this.userCode = other.getUserCode();
         if (other.getUserPin() != null)
@@ -390,14 +390,6 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
             this.userName = other.getUserName();
         if (other.getUserDesc() != null)
             this.userDesc = other.getUserDesc();
-        if (other.getLoginTimes() != null)
-            this.loginTimes = other.getLoginTimes();
-        if (other.getActiveTime() != null)
-            this.activeTime = other.getActiveTime();
-        if (other.getLoginIp() != null)
-            this.loginIp = other.getLoginIp();
-        if (other.getAddrbookId() != null)
-            this.addrbookId = other.getAddrbookId();
         if (other.getRegEmail() != null)
             this.regEmail = other.getRegEmail();
         if (other.getUserTag() != null)
@@ -406,7 +398,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
             this.englishName =other.getEnglishName();
         if (other.getUserOrder() != null)
             this.userOrder = other.getUserOrder();
-        if (other.regCellPhone != null)
+        if (other.getRegCellPhone() != null)
             this.regCellPhone = other.getRegCellPhone();
 
     }
