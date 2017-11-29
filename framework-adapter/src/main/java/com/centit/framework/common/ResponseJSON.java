@@ -66,10 +66,8 @@ public class ResponseJSON {
 
     public <T> Map<String,T> convertJSONToMap(JSONObject jsonMap, Class<T> clazz) {
         Map<String,T> ret = new HashMap<>();
-        for(Map.Entry<String, Object> ent : jsonMap.entrySet()){
-            if(ent.getValue() instanceof  JSONObject){
-                ret.put( ent.getKey(), ((JSONObject)ent.getValue()).toJavaObject(clazz));
-            }
+        for(String sKey : jsonMap.keySet()){
+            ret.put( sKey, jsonMap.getObject(sKey, clazz));
         }
         return ret;
     }
