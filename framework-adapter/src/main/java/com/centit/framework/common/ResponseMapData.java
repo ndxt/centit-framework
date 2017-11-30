@@ -28,27 +28,31 @@ public class ResponseMapData implements ResponseData {
     public ResponseMapData() {
         resCode = 0;
         resMessage = "OK";
-        resMapData = new LinkedHashMap<String, Object>();
+        resMapData = new LinkedHashMap<>();
     }
 
     public ResponseMapData(int nCode) {
         resCode = nCode;
         resMessage = nCode==0?"OK":"ERROR";
-        resMapData = new LinkedHashMap<String, Object>();
+        resMapData = new LinkedHashMap<>();
     }
 
     public ResponseMapData(String message) {
         resCode = 0;
         resMessage = message;
-        resMapData = new LinkedHashMap<String, Object>();
+        resMapData = new LinkedHashMap<>();
     }
 
     public ResponseMapData(int nCode, String message) {
         resCode = nCode;
         resMessage = message;
-        resMapData = new LinkedHashMap<String, Object>();
+        resMapData = new LinkedHashMap<>();
     }
-
+    public static ResponseMapData makeResponseData(Map<String, Object> resMapData){
+        ResponseMapData resData = new ResponseMapData();
+        resData.setData(resMapData);
+        return resData;
+    }
     public int getCode() {
         return resCode;
     }
