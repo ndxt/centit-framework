@@ -10,6 +10,7 @@ import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.compiler.Lexer;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -53,6 +54,11 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     @Override
     public List<? extends IUserUnit> listUnitUsers(String unitCode) {
         return CodeRepositoryUtil.listUnitUsers(unitCode);
+    }
+
+    @Override
+    public List<? extends IUserUnit> listUserUnits(String userCode){
+        return CodeRepositoryUtil.listUserUnits(userCode);
     }
 
     @Override

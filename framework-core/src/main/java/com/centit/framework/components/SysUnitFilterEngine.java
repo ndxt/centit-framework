@@ -78,7 +78,7 @@ public abstract class SysUnitFilterEngine implements Serializable {
         if (units == null || units.size() == 0)
             return units;
 
-        Set<String> retUnits = new HashSet<String>();
+        Set<String> retUnits = new HashSet<>();
         for (String unitCode : units) {
             String tu = topUnit(ecc,unitCode);
             if (tu != null)

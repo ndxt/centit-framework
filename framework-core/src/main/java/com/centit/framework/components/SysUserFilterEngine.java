@@ -3,6 +3,7 @@ package com.centit.framework.components;
 import com.centit.framework.components.impl.SystemUserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
+import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.support.algorithm.StringRegularOpt;
 import org.slf4j.Logger;
@@ -760,10 +761,15 @@ public abstract class SysUserFilterEngine implements Serializable {
         UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
         ecc.setFormula(roleExp);
         ecc.setVarTrans(varTrans);
-        // if(lastSameNodeUnit!=null)
-        ecc.addAllUnitParam(unitParams);
-        ecc.addAllUserParam(userParams);
-        ecc.addAllRankParam(rankParams);
+        if(unitParams!=null) {
+            ecc.addAllUnitParam(unitParams);
+        }
+        if(userParams!=null) {
+            ecc.addAllUserParam(userParams);
+        }
+        if(rankParams!=null) {
+            ecc.addAllRankParam(rankParams);
+        }
 
         Set<String> sUsers = calcRolesExp(ecc);
         if (sUsers == null || ecc.hasError())
@@ -780,4 +786,34 @@ public abstract class SysUserFilterEngine implements Serializable {
         return "T";
     }
 
+    public static Set<String> calcAllLeaderByUser(String userCode){
+        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
+        IUserInfo userInfo = ecc.getUserInfoByCode(userCode);
+        if(userInfo==null){
+            logger.error("系统中无此用户！");
+            return null;
+        }
+        ecc.addUserParam("self",userCode);
+        ecc.addUserParam("unit",userInfo.getPrimaryUnit());
+        ecc.addRankParam("userRank",
+                ecc.getUserUnitRank( userCode,userInfo.getPrimaryUnit()) );
+        ecc.setFormula("D(unit--)R(userRank--)");
+        Set<String> sUsers = calcRolesExp(ecc);
+        if (sUsers == null || ecc.hasError())
+            logger.error(ecc.getLastErrMsg());
+        return sUsers;
+    }
+
+    public static Set<String> calcUnitLeaderByUser(String userCode, String unitCode){
+        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
+        ecc.addUserParam("self",userCode);
+        ecc.addUserParam("unit",unitCode);
+        ecc.addRankParam("userRank",
+                ecc.getUserUnitRank( userCode,unitCode) );
+        ecc.setFormula("D(unit)R(userRank--)");
+        Set<String> sUsers = calcRolesExp(ecc);
+        if (sUsers == null || ecc.hasError())
+            logger.error(ecc.getLastErrMsg());
+        return sUsers;
+    }
 }

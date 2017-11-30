@@ -82,7 +82,7 @@ public interface UserUnitFilterCalcContext {
 
     List<? extends IUserUnit> listUnitUsers(String unitCode);
 
-
+    List<? extends IUserUnit> listUserUnits(String userCode);
 
     IUserInfo getUserInfoByCode(String userCode);
 
@@ -97,4 +97,7 @@ public interface UserUnitFilterCalcContext {
             return Integer.valueOf(dd.getExtraCode());
         return CodeRepositoryUtil.MAXXZRANK;
     }*/
+    int getUserRank(String userCode);
+
+    int getUserUnitRank(String userCode, String unitCode);
 }

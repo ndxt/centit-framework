@@ -1,15 +1,15 @@
 package com.centit.framework.components.impl;
 
+import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
+import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.compiler.Lexer;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilterCalcContext {
     protected Lexer lexer;
@@ -142,6 +142,38 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
         String srank = StringBaseOpt.objectToString(
                 varTrans.getGeneralVariable(paramName));
         return stringToRank(srank);
+    }
+
+    @Override
+    public int getUserRank(String userCode){
+        List<? extends IUserUnit> uus = listUserUnits(userCode);
+        int nRank = CodeRepositoryUtil.MAXXZRANK;
+        if(uus!=null){
+            for(IUserUnit uu : uus){
+                int nr = getXzRank(uu.getUserRank());
+                if(nr<nRank){
+                    nRank = nr;
+                }
+            }
+        }
+        return nRank;
+    }
+
+    @Override
+    public int getUserUnitRank(String userCode, String unitCode) {
+        List<? extends IUserUnit> uus = listUserUnits(userCode);
+        int nRank = CodeRepositoryUtil.MAXXZRANK;
+        if (uus != null) {
+            for (IUserUnit uu : uus) {
+                if (StringUtils.equals(uu.getUnitCode(), unitCode)) {
+                    int nr = getXzRank(uu.getUserRank());
+                    if (nr < nRank) {
+                        nRank = nr;
+                    }
+                }
+            }
+        }
+        return nRank;
     }
 
     @Override
