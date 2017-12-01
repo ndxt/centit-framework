@@ -374,15 +374,15 @@ public class CacheController {
     }
 
     /**
-     * CP标签中ROLEINFO实现
-     * 获取角色信息，根据前缀获取，系统中的角色的前缀可以区分 角色的类别。
      *
-     * @param prefix   角色前缀
+     * 根据角色类别获取角色
+     *
+     * @param roleType   角色类别
      * @param response HttpServletResponse
      */
-    @RequestMapping(value = "/roleinfo/{prefix}", method = RequestMethod.GET)
-    public void roleinfo(@PathVariable String prefix, HttpServletResponse response) {
-        List<IRoleInfo> listObjects = CodeRepositoryUtil.getRoleinfoList(prefix);
+    @RequestMapping(value = "/roleinfo/{roleType}", method = RequestMethod.GET)
+    public void roleinfo(@PathVariable String roleType, HttpServletResponse response) {
+        List<IRoleInfo> listObjects = CodeRepositoryUtil.getRoleinfoListByType(roleType);
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
     

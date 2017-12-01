@@ -2,6 +2,7 @@ package com.centit.framework.staticsystem.po;
 
 import java.util.Date;
 
+import com.centit.framework.core.dao.DictionaryMap;
 import com.centit.framework.model.basedata.IUserUnit;
 
 /**
@@ -15,31 +16,25 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
     // Fields
     private static final long serialVersionUID = 1L;
 
- 
     private String userUnitId;
 
+    @DictionaryMap(fieldName="unitName",value="unitCode")
     private String unitCode; // 机构代码
 
-
+    @DictionaryMap(fieldName="userName",value="userCode")
     private String userCode; // 用户代码
 
     /*@Transient
     private String userName;*/
-
+    @DictionaryMap(fieldName="userStationText",value="StationType")
     private String userStation; // 岗位
 
- 
+    @DictionaryMap(fieldName="userRankText",value="RankType")
     private String userRank; // 职务 
 
-
     private String rankMemo; // 备注
-
- 
     private String isPrimary; // 是否为主
-
-
     private Long userOrder;    //用户排序号
-    
 
     protected Date createDate;
 

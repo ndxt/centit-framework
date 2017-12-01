@@ -125,7 +125,7 @@ public abstract class CodeRepositoryUtil {
      * @return Map 所有数据字典类别
      */
     protected static final Map<String,String> getDataCatalogMap() {
-        Map<String, String> dataCatalogMap = new HashMap<String, String>();
+        Map<String, String> dataCatalogMap = new HashMap<>();
         List<? extends IDataCatalog> dataCatalogs = getPlatformEnvironment().listAllDataCatalogs();
         if(dataCatalogs==null)
             return dataCatalogMap;
@@ -442,21 +442,47 @@ public abstract class CodeRepositoryUtil {
 
    
     /**
-     * 获取角色信息，根据前缀获取，系统中的角色的前缀可以区分 角色的类别。
+     * 根据角色类别获取角色类别。
      *
-     * @param sPrefix 角色的前缀
+     * @param roleType 角色类别
      * @return List 角色信息
      */
-    public static List<IRoleInfo> getRoleinfoList(String sPrefix) {
+    public static List<IRoleInfo> getRoleinfoListByType(String roleType) {
         List<IRoleInfo> roleList = new ArrayList<>();
         for (Map.Entry<String,? extends IRoleInfo> ent : getRoleRepo().entrySet()) {
             IRoleInfo value = ent.getValue();
-            if ((value.getRoleCode().startsWith(sPrefix)  || ( value.getRoleCode().startsWith("P-")))
+            if (StringUtils.equals(roleType,value.getRoleType())
                     && CodeRepositoryUtil.T.equals(value.getIsValid())) {
                 roleList.add(value);
             }
         }
         return roleList;
+    }
+
+    /**
+     * 获取机构角色列表
+     * @param unitCode 角色类别
+     * @return List 角色信息
+     */
+    public static List<IRoleInfo> getUnitRoleinfoList(String unitCode) {
+        List<IRoleInfo> roleList = new ArrayList<>();
+        for (Map.Entry<String,? extends IRoleInfo> ent : getRoleRepo().entrySet()) {
+            IRoleInfo value = ent.getValue();
+            if ("D".equals(value.getRoleType())
+                    && StringUtils.equals(unitCode, value.getRoleOwner())) {
+                roleList.add(value);
+            }
+        }
+        return roleList;
+    }
+
+    /**
+     * 根据角色代码获得角色信息
+     * @param roleCode 角色代码
+     * @return 角色名称
+     */
+    public static IRoleInfo getRoleByRoleCode(String roleCode) {
+        return getRoleRepo().get(roleCode);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.centit.framework.system.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.common.*;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
@@ -403,7 +404,7 @@ public class MainFrameController extends BaseController {
 
     }
     
-    @RequestMapping("/expired")
+    @RequestMapping(value = "/expired" , method = RequestMethod.GET)
     public String sessionExpired(
             HttpServletRequest request,HttpServletResponse response) {
 
@@ -414,5 +415,48 @@ public class MainFrameController extends BaseController {
         }else{
             return "exception/timeout";
         }
+    }
+
+    @RequestMapping(value = "/userStations" , method = RequestMethod.GET)
+    public void listCurrentUserUnits(
+            HttpServletRequest request,HttpServletResponse response) {
+        CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
+        if(currentUser==null){
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
+                    "用户没有登录或者超时，请重新登录。", response);
+            return;
+        }
+        JsonResultUtils.writeSingleDataJson(
+                DictionaryMapUtils.objectsToJSONArray(
+                    currentUser.getUserInfo().getUserUnits()),
+                response);
+    }
+
+    @RequestMapping(value = "/userCurrStation" , method = RequestMethod.GET)
+    public void getUserCurrentStaticn(
+            HttpServletRequest request,HttpServletResponse response) {
+        CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
+        if(currentUser==null){
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
+                    "用户没有登录或者超时，请重新登录。", response);
+            return;
+        }
+        JsonResultUtils.writeSingleDataJson(
+                DictionaryMapUtils.objectToJSON(
+                        currentUser.getCurrentStation()),
+                response);
+    }
+
+    @RequestMapping(value = "/setUserStation/{userUnitId}" , method = RequestMethod.PUT)
+    public void setUserCurrentStaticn(@PathVariable String userUnitId,
+            HttpServletRequest request,HttpServletResponse response) {
+        CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
+        if(currentUser==null){
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
+                    "用户没有登录或者超时，请重新登录。", response);
+            return;
+        }
+        currentUser.setCurrentStation(userUnitId);
+        JsonResultUtils.writeSuccessJson(response);
     }
 }

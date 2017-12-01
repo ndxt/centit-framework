@@ -2,6 +2,7 @@ package com.centit.framework.staticsystem.security;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.model.basedata.IUserInfo;
+import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.staticsystem.po.RoleInfo;
@@ -10,6 +11,7 @@ import com.centit.framework.staticsystem.po.UserRole;
 import com.centit.framework.staticsystem.po.UserUnit;
 import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
+import org.h2.engine.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -34,7 +36,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     private static final long serialVersionUID = 1L;
 
     protected UserInfo userInfo;
-
+    private UserUnit currentStation;
     private Map<String, String> userSettings;
     private Map<String, String> userOptList;
     private List<RoleInfo> userRoles;
@@ -104,6 +106,36 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
         this.userInfo.setActiveTime(loginTime);
     }
 
+    @Override
+    public IUserUnit getCurrentStation() {
+        if(currentStation==null){
+            List<UserUnit> uus = getUserInfo().getUserUnits();
+            for(UserUnit uu : uus){
+                if("T".equals(uu.getIsPrimary())){
+                    currentStation = uu;
+                    break;
+                }
+            }
+        }
+        return currentStation;
+    }
+
+    @Override
+    public void setCurrentStation(String userUnitId) {
+        List<UserUnit> uus = getUserInfo().getUserUnits();
+        for(UserUnit uu : uus){
+            if(StringUtils.equals(userUnitId,uu.getUserUnitId())){
+                currentStation = uu;
+                return ;
+            }
+        }
+    }
+
+    @Override
+    public String getCurrentUnit(){
+        IUserUnit cs = getCurrentStation();
+        return cs != null? cs.getUnitCode() : getUserInfo().getPrimaryUnit();
+    }
 
     @Override
     @JSONField(serialize = false)

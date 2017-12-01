@@ -2,6 +2,7 @@ package com.centit.framework.security.model;
 
 import com.centit.framework.model.basedata.IRoleInfo;
 import com.centit.framework.model.basedata.IUserInfo;
+import com.centit.framework.model.basedata.IUserUnit;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,27 +29,27 @@ public interface CentitUserDetails extends
      * 用户的参数，是个Map对，有系统参数也有业务系统自定义的参数
      * @return 用户的参数，是个Map对，有系统参数也有业务系统自定义的参数
      */
-     Map<String, String> getUserSettings();
+    Map<String, String> getUserSettings();
     
     /**
      * 设置到缓存中，并不是保存到数据库中，如果需要保存到数据库中请调用Dao持久化接口
      * @param paramCode paramCode
      * @param paramValue paramValue
      */
-     void setUserSettingValue(String paramCode,String paramValue);
+    void setUserSettingValue(String paramCode,String paramValue);
     
     /**
      * 用户某个具体的参数值
      * @param paramCode    参数代码
      * @return 用户某个具体的参数值
      */
-     String getUserSettingValue(String paramCode);
+    String getUserSettingValue(String paramCode);
 
     /**
      * 用户所有的可以执行操作方法，用于权限控制
      * @return 用户所有的可以执行操作方法，用于权限控制
      */
-     Map<String, String> getUserOptList();
+    Map<String, String> getUserOptList();
 
     /**
      * 判断用户是否有某个具体的操作方法权限
@@ -56,24 +57,45 @@ public interface CentitUserDetails extends
      * @param optMethod    方法名称
      * @return 判断用户是否有某个具体的操作方法权限
      */
-     boolean checkOptPower(String optId, String optMethod);
+    boolean checkOptPower(String optId, String optMethod);
     
     /**
      * 获得用户授权角色
      * @return 获得用户授权角色代码
      */
-     List<? extends IRoleInfo> getUserRoles();
+    List<? extends IRoleInfo> getUserRoles();
 
     /**
      * 设置用户登录机器IP
      * @param loginHost loginHost
      */
-     void setLoginIp(String loginHost);
+
+    void setLoginIp(String loginHost);
+
     /**
      * 设置最新登录时间
      * @param loginTime loginTime
      */
-     void setActiveTime(Date loginTime);
+    void setActiveTime(Date loginTime);
 
+    /**
+     * 获取用户当前身份，用户有多个岗位时需要在首页上确定当前身份，默认为主机构
+     * @return 当前生
+     */
+    IUserUnit getCurrentStation();
 
+    /**
+     * 设置当前用户机构
+     * @param userUnitId 当前机构（单位）代码
+     */
+    void setCurrentStation(String userUnitId);
+    /**
+     * 获取当前机构
+     * @return 当前机构（单位）代码
+     */
+    String getCurrentUnit();
+    /*{
+        IUserUnit cs = getCurrentStation();
+        return cs != null? cs.getUnitCode() : getUserInfo().getPrimaryUnit();
+    }*/
 }
