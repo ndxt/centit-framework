@@ -2,6 +2,7 @@ package com.centit.framework.system.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.common.*;
+import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
@@ -458,5 +459,14 @@ public class MainFrameController extends BaseController {
         }
         currentUser.setCurrentStation(userUnitId);
         JsonResultUtils.writeSuccessJson(response);
+    }
+
+    ////TODO ZOU_WY listUserRank  listUserStation DictionaryMapUtils
+    @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = { RequestMethod.GET })
+    public void checkUserOptPower(@PathVariable String optId,
+                                  @PathVariable String method, HttpServletResponse response) {
+        boolean s = CodeRepositoryUtil
+                .checkUserOptPower(optId,method);
+        JsonResultUtils.writeSingleDataJson(s, response);
     }
 }

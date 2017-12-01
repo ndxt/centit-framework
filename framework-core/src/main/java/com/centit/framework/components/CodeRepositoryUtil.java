@@ -164,6 +164,9 @@ public abstract class CodeRepositoryUtil {
     public static List<? extends IUserUnit> listUnitUsers(String unitCode) {
         return getPlatformEnvironment().listUnitUsers(unitCode);
     }
+    //TODO ZOU_WY
+    //listUserUnitsByRank(String userCode, String rank);
+    //listUserUnitsByStation(String userCode, String Station);
 
     private static HttpServletRequest getLocalThreadWrapperRequest(){
         HttpThreadWrapper localThread = RequestThreadLocal.getHttpThreadWrapper();
