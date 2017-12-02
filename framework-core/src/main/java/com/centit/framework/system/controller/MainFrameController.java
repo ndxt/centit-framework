@@ -417,7 +417,12 @@ public class MainFrameController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/userpositions" , method = RequestMethod.GET)
+    /**
+     * 查询当前用户所有职位
+     * @param request {@link HttpServletRequest}
+     * @param response {@link HttpServletResponse}
+     */
+    @GetMapping(value = "/userpositions")
     public void listCurrentUserUnits(
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
@@ -432,7 +437,12 @@ public class MainFrameController extends BaseController {
                 response);
     }
 
-    @RequestMapping(value = "/usercurrposition" , method = RequestMethod.GET)
+    /**
+     * 查询当前用户当前职位
+     * @param request {@link HttpServletRequest}
+     * @param response {@link HttpServletResponse}
+     */
+    @GetMapping(value = "/usercurrposition")
     public void getUserCurrentStaticn(
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
@@ -447,7 +457,13 @@ public class MainFrameController extends BaseController {
                 response);
     }
 
-    @RequestMapping(value = "/setuserposition/{userUnitId}" , method = RequestMethod.PUT)
+    /**
+     * 设置当前用户当前职位
+     * @param userUnitId 用户机构Id
+     * @param request {@link HttpServletRequest}
+     * @param response {@link HttpServletResponse}
+     */
+    @PutMapping(value = "/setuserposition/{userUnitId}")
     public void setUserCurrentStaticn(@PathVariable String userUnitId,
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
