@@ -164,9 +164,38 @@ public abstract class CodeRepositoryUtil {
     public static List<? extends IUserUnit> listUnitUsers(String unitCode) {
         return getPlatformEnvironment().listUnitUsers(unitCode);
     }
-    //TODO ZOU_WY
-    //listUserUnitsByRank(String userCode, String rank);
-    //listUserUnitsByStation(String userCode, String Station);
+
+    /**
+     * 获取用户在某个职务的用户组列表
+     * @param userCode 用户代码
+     * @param rank 职务代码
+     * @return 用户组列表
+     */
+    public static List<? extends IUserUnit> listUserUnitsByRank(String userCode, String rank){
+        List<IUserUnit> result = new ArrayList<>();
+        for(IUserUnit un: listUserUnits(userCode)){
+            if(Objects.equals(un.getUserRank(),rank)){
+                result.add(un);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 获取用户在某个岗位的用户组列表
+     * @param userCode 用户代码
+     * @param station 岗位代码
+     * @return 用户组列表
+     */
+    public static List<? extends IUserUnit> listUserUnitsByStation(String userCode, String station){
+        List<IUserUnit> result = new ArrayList<>();
+        for(IUserUnit un: listUserUnits(userCode)){
+            if(Objects.equals(un.getUserStation(),station)){
+                result.add(un);
+            }
+        }
+        return result;
+    }
 
     private static HttpServletRequest getLocalThreadWrapperRequest(){
         HttpThreadWrapper localThread = RequestThreadLocal.getHttpThreadWrapper();

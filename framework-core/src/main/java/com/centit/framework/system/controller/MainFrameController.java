@@ -7,21 +7,20 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
+import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
+import com.sun.tools.javac.jvm.Code;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -418,7 +417,7 @@ public class MainFrameController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/userStations" , method = RequestMethod.GET)
+    @RequestMapping(value = "/userpositions" , method = RequestMethod.GET)
     public void listCurrentUserUnits(
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
@@ -433,7 +432,7 @@ public class MainFrameController extends BaseController {
                 response);
     }
 
-    @RequestMapping(value = "/userCurrStation" , method = RequestMethod.GET)
+    @RequestMapping(value = "/usercurrposition" , method = RequestMethod.GET)
     public void getUserCurrentStaticn(
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
@@ -448,7 +447,7 @@ public class MainFrameController extends BaseController {
                 response);
     }
 
-    @RequestMapping(value = "/setUserStation/{userUnitId}" , method = RequestMethod.PUT)
+    @RequestMapping(value = "/setuserposition/{userUnitId}" , method = RequestMethod.PUT)
     public void setUserCurrentStaticn(@PathVariable String userUnitId,
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
@@ -461,7 +460,6 @@ public class MainFrameController extends BaseController {
         JsonResultUtils.writeSuccessJson(response);
     }
 
-    ////TODO ZOU_WY listUserRank  listUserStation DictionaryMapUtils
     @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = { RequestMethod.GET })
     public void checkUserOptPower(@PathVariable String optId,
                                   @PathVariable String method, HttpServletResponse response) {
@@ -469,4 +467,34 @@ public class MainFrameController extends BaseController {
                 .checkUserOptPower(optId,method);
         JsonResultUtils.writeSingleDataJson(s, response);
     }
+
+    /**
+     * 查询当前用户在某岗位的所有职位信息
+     * @param rank 岗位代码
+     * @param response {@link HttpServletResponse}
+     */
+    @GetMapping(value = "userranks/{rank}")
+    @ResponseBody
+    public ResponseData listUserUnitsByRank(@PathVariable String rank, HttpServletResponse response){
+        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
+        List<IUserUnit> userUnits =
+                (List<IUserUnit>)CodeRepositoryUtil.listUserUnitsByRank(centitUserDetails.getUserCode(), rank);
+        JSONArray array = DictionaryMapUtils.objectsToJSONArray(userUnits);
+        return ResponseSingleData.makeResponseData(array);
+    }
+    /**
+     * 查询当前用户在某职务的所有职位信息
+     * @param station 职务代码
+     * @param response {@link HttpServletResponse}
+     */
+    @GetMapping(value = "userstations/{station}")
+    @ResponseBody
+    public ResponseData listUserUnitsByStation(@PathVariable String station, HttpServletResponse response){
+        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
+        List<IUserUnit> userUnits =
+                (List<IUserUnit>)CodeRepositoryUtil.listUserUnitsByStation(centitUserDetails.getUserCode(), station);
+        JSONArray array = DictionaryMapUtils.objectsToJSONArray(userUnits);
+        return ResponseSingleData.makeResponseData(array);
+    }
+
 }
