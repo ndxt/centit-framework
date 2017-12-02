@@ -477,10 +477,12 @@ public class MainFrameController extends BaseController {
     @ResponseBody
     public ResponseData listUserUnitsByRank(@PathVariable String rank, HttpServletResponse response){
         CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
-        List<IUserUnit> userUnits =
-                (List<IUserUnit>)CodeRepositoryUtil.listUserUnitsByRank(centitUserDetails.getUserCode(), rank);
-        JSONArray array = DictionaryMapUtils.objectsToJSONArray(userUnits);
-        return ResponseSingleData.makeResponseData(array);
+        if(centitUserDetails == null){
+            return new ResponseSingleData("用户没有登录或者超时，请重新登录");
+        }
+        return ResponseSingleData.makeResponseData(
+                DictionaryMapUtils.objectsToJSONArray(
+                CodeRepositoryUtil.listUserUnitsByRank(centitUserDetails.getUserCode(), rank)));
     }
     /**
      * 查询当前用户在某职务的所有职位信息
@@ -491,10 +493,12 @@ public class MainFrameController extends BaseController {
     @ResponseBody
     public ResponseData listUserUnitsByStation(@PathVariable String station, HttpServletResponse response){
         CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
-        List<IUserUnit> userUnits =
-                (List<IUserUnit>)CodeRepositoryUtil.listUserUnitsByStation(centitUserDetails.getUserCode(), station);
-        JSONArray array = DictionaryMapUtils.objectsToJSONArray(userUnits);
-        return ResponseSingleData.makeResponseData(array);
+        if(centitUserDetails == null){
+            return new ResponseSingleData("用户没有登录或者超时，请重新登录");
+        }
+        return ResponseSingleData.makeResponseData(
+                DictionaryMapUtils.objectsToJSONArray(
+                CodeRepositoryUtil.listUserUnitsByStation(centitUserDetails.getUserCode(), station)));
     }
 
 }
