@@ -99,27 +99,17 @@ public abstract class ViewDataTransform {
             if (obj instanceof JSONObject) {
                 JSONObject jsonObject = (JSONObject)obj;
                 for (Map.Entry<String, String> ent : propertyMap.entrySet()) {
-                    if (!"children".equals(ent.getKey())) {
-                        //JSONOpt.setAttribute(jsonObject, ent.getKey(),
-                        jsonObject.put(ent.getKey(), ReflectionOpt.attainExpressionValue(obj, ent.getValue()));
-                    }
+                    jsonObject.put(ent.getKey(), ReflectionOpt.attainExpressionValue(obj, ent.getValue()));
                 }
-                String childrenKey = propertyMap.get("children");
+                //String childrenKey = propertyMap.get("children");
                 Object childrenData = jsonObject.get("children");
-                if(childrenData == null && StringUtils.isNoneBlank(childrenKey)) {
-                    childrenData = ReflectionOpt.attainExpressionValue( obj ,childrenKey);
-                    jsonObject.put("children",childrenData);
-                }
-
                 if(childrenData != null && childrenData instanceof JSONArray){
                     appendTreeViewJson((JSONArray)childrenData, propertyMap, attributesSetter);
                 }
 
                 JSONObject map = new JSONObject(2);
                 attributesSetter.appendExtendedAttributes(map, jsonObject);
-                //map.put("external", !("D".equals(optInfo.getPageType())));
                 jsonObject.put("attributes", map);
-                //jsonArray.add(jsonObject);
             }
         }
         return treaJson;
