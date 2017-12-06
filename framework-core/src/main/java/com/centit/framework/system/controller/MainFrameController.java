@@ -269,7 +269,7 @@ public class MainFrameController extends BaseController {
         String checkcode = CaptchaImageUtil.getRandomString();
         request.getSession().setAttribute(
                 CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
-
+        response.setHeader("Cache-Control", "no-cache");
         JsonResultUtils.writeOriginalImage(
                 CaptchaImageUtil.generateCaptchaImage(checkcode), response );
     }
