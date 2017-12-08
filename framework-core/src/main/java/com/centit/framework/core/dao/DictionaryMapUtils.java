@@ -164,7 +164,8 @@ public class DictionaryMapUtils {
     public static Object objectToJSON(Object obj){
         if(obj==null)
             return null;
-        List<DictionaryMapColumn> fieldDictionaryMaps =  getDictionaryMapColumns(obj.getClass());
+        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(obj.getClass());
+
         return objectToJSON(obj,fieldDictionaryMaps);
     }
 
