@@ -441,6 +441,7 @@ public abstract class AbstractStaticPlatformEnvironment
      * @param userCode 用户代码
      * @return  List 用户所有菜单功能
      */
+    @Override
     public List<RoleInfo> listUserRolesByUserCode(String userCode){
         List<RoleInfo> roles = new ArrayList<>();
         for (UserRole ur : userroles) {
@@ -456,6 +457,7 @@ public abstract class AbstractStaticPlatformEnvironment
      * @param roleCode 角色代码
      * @return  List 用户所有菜单功能
      */
+    @Override
     public List<UserInfo> listRoleUserByRoleCode(String roleCode){
         List<UserInfo> users = new ArrayList<>();
         for (UserRole ur : userroles) {
@@ -613,6 +615,11 @@ public abstract class AbstractStaticPlatformEnvironment
             }
         }
         return true;
+    }
+
+    @Override
+    public List<UserSetting> getAllSettings(){
+        return null;
     }
 
 }

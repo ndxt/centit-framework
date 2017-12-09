@@ -248,6 +248,12 @@ public interface PlatformEnvironment {
     CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone);
 
     /**
+     * 获取全部个人设置
+     * @return 个人设置列表
+     */
+    List<? extends IUserSetting> getAllSettings();
+
+    /**
      * 根据用户ID修改用户信息
      * @param userInfo 用户信息
      */
