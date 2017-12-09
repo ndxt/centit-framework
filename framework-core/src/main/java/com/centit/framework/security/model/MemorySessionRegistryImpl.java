@@ -34,17 +34,19 @@ public class MemorySessionRegistryImpl implements CentitSessionRegistry,
     protected final Logger logger = LoggerFactory.getLogger(MemorySessionRegistryImpl.class);
 
     /** <principal:Object,SessionIdSet> */
-    private final ConcurrentMap<Object, Set<String>> principals = new ConcurrentHashMap<Object, Set<String>>();
+    private final ConcurrentMap<Object, Set<String>> principals = new ConcurrentHashMap<>();
     /** <sessionId:Object,SessionInformation> */
-    private final Map<String, SessionInformation> sessionIds = new ConcurrentHashMap<String, SessionInformation>();
+    private final Map<String, SessionInformation> sessionIds = new ConcurrentHashMap<>();
 
     // ~ Methods
     // ========================================================================================================
 
+    @Override
     public List<Object> getAllPrincipals() {
-        return new ArrayList<Object>(principals.keySet());
+        return new ArrayList<>(principals.keySet());
     }
 
+    @Override
     public List<SessionInformation> getAllSessions(Object principal,
                                                    boolean includeExpiredSessions) {
         final Set<String> sessionsUsedByPrincipal = principals.get(principal);
@@ -53,7 +55,7 @@ public class MemorySessionRegistryImpl implements CentitSessionRegistry,
             return Collections.emptyList();
         }
 
-        List<SessionInformation> list = new ArrayList<SessionInformation>(
+        List<SessionInformation> list = new ArrayList<>(
                 sessionsUsedByPrincipal.size());
 
         for (String sessionId : sessionsUsedByPrincipal) {
@@ -71,11 +73,13 @@ public class MemorySessionRegistryImpl implements CentitSessionRegistry,
         return list;
     }
 
+    @Override
     public SessionInformation getSessionInformation(String sessionId) {
         Assert.hasText(sessionId, "SessionId required as per interface contract");
         return sessionIds.get(sessionId);
     }
 
+    @Override
     public CentitUserDetails  getCurrentUserDetails(String /**sessionId*/ accessToken){
         SessionInformation info = getSessionInformation(accessToken);
         if(info==null){
@@ -84,11 +88,13 @@ public class MemorySessionRegistryImpl implements CentitSessionRegistry,
         return (CentitUserDetails)info.getPrincipal();
     }
 
+    @Override
     public void onApplicationEvent(SessionDestroyedEvent event) {
         String sessionId = event.getId();
         removeSessionInformation(sessionId);
     }
 
+    @Override
     public void refreshLastRequest(String sessionId) {
         Assert.hasText(sessionId, "SessionId required as per interface contract");
 
@@ -99,6 +105,7 @@ public class MemorySessionRegistryImpl implements CentitSessionRegistry,
         }
     }
 
+    @Override
     public void registerNewSession(String sessionId, Object principal) {
         Assert.hasText(sessionId, "SessionId required as per interface contract");
         Assert.notNull(principal, "Principal required as per interface contract");
@@ -127,7 +134,7 @@ public class MemorySessionRegistryImpl implements CentitSessionRegistry,
         Set<String> sessionsUsedByPrincipal = principals.get(principal);
 
         if (sessionsUsedByPrincipal == null) {
-            sessionsUsedByPrincipal = new CopyOnWriteArraySet<String>();
+            sessionsUsedByPrincipal = new CopyOnWriteArraySet<>();
             Set<String> prevSessionsUsedByPrincipal = principals.putIfAbsent(principal,
                     sessionsUsedByPrincipal);
             if (prevSessionsUsedByPrincipal != null) {
@@ -143,6 +150,7 @@ public class MemorySessionRegistryImpl implements CentitSessionRegistry,
         }
     }
 
+    @Override
     public void removeSessionInformation(String sessionId) {
         Assert.hasText(sessionId, "SessionId required as per interface contract");
 

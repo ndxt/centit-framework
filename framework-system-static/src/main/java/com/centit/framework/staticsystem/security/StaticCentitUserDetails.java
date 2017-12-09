@@ -123,10 +123,12 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     @Override
     public void setCurrentStation(String userUnitId) {
         List<UserUnit> uus = getUserInfo().getUserUnits();
-        for(UserUnit uu : uus){
-            if(StringUtils.equals(userUnitId,uu.getUserUnitId())){
-                currentStation = uu;
-                return ;
+        if(uus != null && uus.size() > 0) {
+            for (UserUnit uu : uus) {
+                if (StringUtils.equals(userUnitId, uu.getUserUnitId())) {
+                    currentStation = uu;
+                    return;
+                }
             }
         }
     }
