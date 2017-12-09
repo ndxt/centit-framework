@@ -269,7 +269,7 @@ public class MainFrameController extends BaseController {
         String checkcode = CaptchaImageUtil.getRandomString();
         request.getSession().setAttribute(
                 CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
-
+        response.setHeader("Cache-Control", "no-cache");
         JsonResultUtils.writeOriginalImage(
                 CaptchaImageUtil.generateCaptchaImage(checkcode), response );
     }
@@ -307,7 +307,7 @@ public class MainFrameController extends BaseController {
      * @param request request
      * @param response response
      */
-    @RequestMapping("/currentuser")
+    @RequestMapping("/currentuserinfo")
     public void getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null)
@@ -320,7 +320,7 @@ public class MainFrameController extends BaseController {
      * @param request request
      * @param response response
      */
-    @RequestMapping("/currentuserdetails")
+    @RequestMapping("/currentuser")
     public void getCurrentUserDetails(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null)

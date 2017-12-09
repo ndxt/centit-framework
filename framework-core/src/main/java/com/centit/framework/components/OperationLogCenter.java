@@ -150,18 +150,42 @@ public class OperationLogCenter {
            log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent,null, null);
    }
 
-   /**
-    * 记录日志内容 
-    * @param userCode 操作人员
-    * @param optId    业务代码（类别）
-    * @param optMethod 操作方法
-    * @param optContent 操作说明
-    * @param newValue 详细参数JSON
-    */
-   public static void logError(String userCode, String optId, String optMethod,
-           String optContent,String newValue) {
-       log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent,newValue, null);
-   }
+    /**
+     * 记录日志内容
+     * @param userCode 操作人员
+     * @param optId    业务代码（类别）
+     * @param optMethod 操作方法
+     * @param optContent 操作说明
+     * @param newValue 详细参数JSON
+     */
+    public static void logError(String userCode, String optId, String optMethod,
+                                String optContent,String newValue) {
+        log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent,newValue, null);
+    }
+
+    /**
+     * 记录日志内容
+     * @param userCode 操作人员
+     * @param optId    业务代码（类别）
+     * @param optMethod 操作方法
+     * @param optContent 操作说明
+     */
+    public static void logWarn(String userCode, String optId, String optMethod, String optContent) {
+        log(OperationLog.LEVEL_WARN,userCode, optId, null, optMethod,  optContent,null, null);
+    }
+
+    /**
+     * 记录日志内容
+     * @param userCode 操作人员
+     * @param optId    业务代码（类别）
+     * @param optMethod 操作方法
+     * @param optContent 操作说明
+     * @param newValue 详细参数JSON
+     */
+    public static void logWarn(String userCode, String optId, String optMethod,
+                                String optContent,String newValue) {
+        log(OperationLog.LEVEL_WARN,userCode, optId, null, optMethod,  optContent,newValue, null);
+    }
    
    /**
     * 记录日志内容 
