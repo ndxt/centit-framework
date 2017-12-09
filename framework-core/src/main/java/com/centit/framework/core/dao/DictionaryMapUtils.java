@@ -4,12 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
+import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.common.KeyValuePair;
 import org.apache.commons.lang3.ArrayUtils;
 
+import javax.persistence.EmbeddedId;
 import java.lang.reflect.Field;
 import java.util.*;
-import javax.persistence.EmbeddedId;
 /**
  * 作为DatabaseOptUtils的补充，添加的主要内容是和数据字典管理，包括对 DictionaryMap注解的处理
  * @author codefan
@@ -165,8 +166,55 @@ public class DictionaryMapUtils {
         if(obj==null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(obj.getClass());
-
         return objectToJSON(obj,fieldDictionaryMaps);
+
+    }
+
+
+    private static Map<String,Object>  mapJsonObjectCascade(Map<String,Object> jsonObj, Object object) {
+        Map<String,Object> jsonObject = mapJsonObject(jsonObj, object.getClass() );
+
+        for(Map.Entry<String, Object> entry : jsonObject.entrySet()){
+            if(entry.getValue() instanceof JSONObject){
+                Object fieldValue = ReflectionOpt.getFieldValue(object, entry.getKey());
+                if(fieldValue != null){
+                    mapJsonObjectCascade((JSONObject)entry.getValue(),fieldValue);
+                }
+            }else if(entry.getValue() instanceof JSONArray){
+                Object fieldValue = ReflectionOpt.getFieldValue(object, entry.getKey());
+                if(fieldValue instanceof List){
+                    JSONArray jsonArray = (JSONArray) entry.getValue();
+                    for(int i=0; i< jsonArray.size(); i++ ){
+                        if(jsonArray.get(i) instanceof  JSONObject) {
+                            mapJsonObjectCascade((JSONObject) jsonArray.get(i),
+                                    ((List) fieldValue).get(i));
+                        }
+                    }
+                }else if(fieldValue instanceof Set){
+                    // Set 因为是无序的所有只能情况重新转换，这个应该会影响性能
+                    JSONArray jsonArray = (JSONArray) entry.getValue();
+                    jsonArray.clear();
+                    for(Object listItem : (Set)fieldValue ){
+                        jsonArray.add(objectToJSONCascade(listItem));
+                    }
+                }
+            }
+        }
+        return jsonObject;
+    }
+
+    /**
+     * 将一个Po对象转换为JSONObject 同时检查对象上面的的属性是否有DictionaryMap注解，如果有转换数据字典
+     * 并且检查他的属性是否也对象 或者是 Set List 如果是 同时将子表也 进行数据字典映射
+     * 只能转换 List &lt; Object &gt; 不能转换 List &lt; List &lt; Object &gt; &gt; 就是不能转换二维数据
+     * 转换  Set 属性是 性能 有问题
+     * @param obj Object Object不能是 Collection 对象
+     * @return Po对象转换为JSONObject
+     */
+    public static Object objectToJSONCascade(Object obj){
+        if(obj==null)
+            return null;
+        return mapJsonObjectCascade((JSONObject)JSON.toJSON(obj), obj);
     }
 
     /**
