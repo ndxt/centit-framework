@@ -20,8 +20,14 @@
             <artifactId>framework-adapter</artifactId>
             <version>${centit.framework.version}</version>
         </dependency>
-        <!--引入h2嵌入式数据库来管理session的持久化问题-->
 
+        <dependency>
+            <groupId>com.centit.product</groupId>
+            <artifactId>msgpusher-utils</artifactId>
+            <version>${centit.msgpusher.version}</version>
+        </dependency>
+
+        <!--引入h2嵌入式数据库来管理session的持久化问题-->
         <dependency>
             <groupId>biz.paluch.redis</groupId>
             <artifactId>lettuce</artifactId>
@@ -79,7 +85,6 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-
 
         <dependency>
             <groupId>javax.validation</groupId>

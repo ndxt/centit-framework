@@ -370,7 +370,7 @@ public class DictionaryMapUtils {
     public static Map<String,Object>  mapJsonObject(Map<String,Object> obj,Class<?> objType ) {
         if (obj == null)
             return null;
-        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(obj.getClass());
+        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
     }
 

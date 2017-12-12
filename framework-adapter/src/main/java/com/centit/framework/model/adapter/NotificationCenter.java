@@ -1,8 +1,7 @@
 package com.centit.framework.model.adapter;
 
 /**
- * 
- * 系统的内置的通知中心bean名称为  notificationCenter 
+ * 系统的内置的通知中心bean名称为  notificationCenter
  * 在使用的地方 只要添加如下代码
         /@ Resource
         /@ NotNull
@@ -27,14 +26,14 @@ public interface NotificationCenter {
      * @param sender MessageSender
      * @return NotificationCenter 系统的内置的通知中心
      */
-    public NotificationCenter registerMessageSender(String sendType,MessageSender sender);
+    NotificationCenter registerMessageSender(String sendType,MessageSender sender);
 
     /**
      * 设置默认的发送通知内部
      * @param sendType 发送类型
      * @return NotificationCenter 系统的内置的通知中心
      */
-    public MessageSender setDefaultSendType(String sendType);
+    MessageSender setDefaultSendType(String sendType);
     /**
      * @param sender     发送人内部用户编码
      * @param receiver   接收人内部用户编码
@@ -42,7 +41,7 @@ public interface NotificationCenter {
      * @param msgContent 消息内容
      * @return "OK" 表示成功，其他的为错误信息
      */
-    public String sendMessage(String sender, String receiver, String msgSubject, String msgContent);
+    String sendMessage(String sender, String receiver, String msgSubject, String msgContent);
 
     
     /**
@@ -53,7 +52,7 @@ public interface NotificationCenter {
      * @param noticeType   指定发送类别
      * @return "OK" 表示成功，其他的为错误信息
      */
-    public String sendMessage(
+    String sendMessage(
             String sender, String receiver, String msgSubject, String msgContent,
             String noticeType);
     
@@ -68,7 +67,7 @@ public interface NotificationCenter {
      * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
      * @return "OK" 表示成功，其他的为错误信息
      */
-    public String sendMessage(String sender, String receiver, String msgSubject, String msgContent,
+    String sendMessage(String sender, String receiver, String msgSubject, String msgContent,
             String optId, String optMethod, String optTag);
 
     
@@ -83,7 +82,7 @@ public interface NotificationCenter {
      * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
      * @return "OK" 表示成功，其他的为错误信息
      */
-    public String sendMessage(
+    String sendMessage(
             String sender, String receiver, String msgSubject, String msgContent,
             String optId, String optMethod, String optTag,
             String noticeType);

@@ -10,6 +10,8 @@ import com.centit.framework.config.SpringSecurityCasConfig;
 import com.centit.framework.config.SpringSecurityDaoConfig;
 import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
 import com.centit.framework.web.demo.listener.InstantiationServiceBeanPostProcessor;
+import com.centit.msgpusher.msgpusher.websocket.SocketMsgPusher;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 
 /**
@@ -25,11 +27,18 @@ import org.springframework.context.annotation.*;
         StaticSystemBeanConfig.class})
 public class ServiceConfig {
 
+    @Autowired
+    protected SocketMsgPusher socketMsgPusher;
+
     @Bean
     public NotificationCenter notificationCenter() {
         NotificationCenterImpl notificationCenter = new NotificationCenterImpl();
         notificationCenter.initMsgSenders();
         //notificationCenter.registerMessageSender("innerMsg",innerMessageManager);
+        if(socketMsgPusher!=null){
+            notificationCenter.setSocketMsgPusher(socketMsgPusher);
+        }
+
         return notificationCenter;
     }
 
