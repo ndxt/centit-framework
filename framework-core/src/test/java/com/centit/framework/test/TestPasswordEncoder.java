@@ -1,6 +1,6 @@
 package com.centit.framework.test;
 
-import com.centit.framework.security.model.CentitCrypt;
+//import com.centit.framework.security.model.CentitCrypt;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitPasswordEncoderImpl;
 import org.junit.Test;
@@ -12,7 +12,7 @@ public class TestPasswordEncoder {
     @Test
     public void testCentitCrypt() {
         //093ce7e6c0476c39ce4a46ce53dbcc98b53c30c6baf92e98
-        System.out.println(CentitCrypt.createPassword("000000", "salt", 11));
+//        System.out.println(CentitCrypt.createPassword("000000", "salt", 11));
         //System.out.println(CentitCrypt.cryptPassword2("000000", "salt", 11));
     }
 
