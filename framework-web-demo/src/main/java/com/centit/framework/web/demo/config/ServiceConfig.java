@@ -18,7 +18,7 @@ import org.springframework.context.annotation.*;
  * Created by codefan on 17-7-18.
  */
 @Configuration
-@ComponentScan(basePackages = "com.centit",
+@ComponentScan(basePackages = {"com.centit","com.otherpackage"},
         excludeFilters = @ComponentScan.Filter(value = org.springframework.stereotype.Controller.class))
 @Import({RedisSessionPersistenceConfig.class,
         H2SessionPersistenceConfig.class,
