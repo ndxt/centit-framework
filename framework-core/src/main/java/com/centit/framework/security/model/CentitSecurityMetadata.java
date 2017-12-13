@@ -13,7 +13,7 @@ public class CentitSecurityMetadata {
             optMethodRoleMap = new HashMap<>();
     
     public static List<String> parseUrl(String sUrl,HttpServletRequest request){
-        List<String> swords = new ArrayList<String>();
+        List<String> swords = new ArrayList<>();
         String sFunUrl ;
         int p = sUrl.indexOf('?');
         if(p<1)
@@ -37,10 +37,10 @@ public class CentitSecurityMetadata {
      */
     public static List<List<String>> parseUrl(String sOptDefUrl,String sMethod){
         
-        List<List<String>> swords = new ArrayList<List<String>>();
+        List<List<String>> swords = new ArrayList<>();
         String sUrls[] = (sOptDefUrl).split("/");
         if(sMethod.indexOf('C')>=0){
-            List<String> sopts = new ArrayList<String>();
+            List<String> sopts = new ArrayList<>();
             sopts.add("POST");
             for(String s:sUrls){
                 if(!StringBaseOpt.isNvl(s)/* && !"*".equals(s)*/)
@@ -49,7 +49,7 @@ public class CentitSecurityMetadata {
             swords.add(sopts);
         }
         if(sMethod.indexOf('D')>=0){
-            List<String> sopts = new ArrayList<String>();
+            List<String> sopts = new ArrayList<>();
             sopts.add("DELETE");
             for(String s:sUrls){
                 if(!StringBaseOpt.isNvl(s)/* && !"*".equals(s)*/)
@@ -58,7 +58,7 @@ public class CentitSecurityMetadata {
             swords.add(sopts);
         }
         if(sMethod.indexOf('R')>=0){
-            List<String> sopts = new ArrayList<String>();
+            List<String> sopts = new ArrayList<>();
             sopts.add("GET");
             for(String s:sUrls){
                 if(!StringBaseOpt.isNvl(s) /*&& !"*".equals(s)*/)
@@ -67,7 +67,7 @@ public class CentitSecurityMetadata {
             swords.add(sopts);
         }
         if(sMethod.indexOf('U')>=0){
-            List<String> sopts = new ArrayList<String>();
+            List<String> sopts = new ArrayList<>();
             sopts.add("PUT");
             for(String s:sUrls){
                 if(!StringBaseOpt.isNvl(s) /*&& !"*".equals(s)*/)
@@ -131,8 +131,8 @@ public class CentitSecurityMetadata {
         //测试比较排序效果
         for(Map.Entry<String ,List<ConfigAttribute >> roleMap : optMethodRoleMap.entrySet()){
           //排序便于后面比较
-            Collections.sort(roleMap.getValue(),(o1, o2) ->
-                            o1.getAttribute().compareTo(o2.getAttribute()));
+            Collections.sort(roleMap.getValue(),
+                    Comparator.comparing(ConfigAttribute::getAttribute));
         }
         //测试比较排序效果
     }

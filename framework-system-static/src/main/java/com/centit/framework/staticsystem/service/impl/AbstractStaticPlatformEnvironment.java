@@ -11,6 +11,7 @@ import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.OptTreeNode;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.framework.staticsystem.security.StaticCentitUserDetails;
+import com.centit.support.algorithm.StringBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -100,7 +101,7 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     protected List<OptInfo> getDirectOptInfo(){
-        List<OptInfo> dirOptInfos = new ArrayList<OptInfo>();
+        List<OptInfo> dirOptInfos = new ArrayList<>();
         for(OptInfo oi : optinfos){
             if(StringUtils.equals(oi.getOptUrl(),"...")){
                 OptInfo soi = new OptInfo();
@@ -602,7 +603,7 @@ public abstract class AbstractStaticPlatformEnvironment
         for(OptMethod ou:optmethods){
             OptInfo oi = getOptInfo(ou.getOptId());
             if(oi!=null){
-                String  optDefUrl = oi.getOptUrl()+ou.getOptUrl();
+                String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());
                 List<List<String>> sOpt = CentitSecurityMetadata.parseUrl(
                         optDefUrl,ou.getOptReq());
 
