@@ -33,7 +33,11 @@ public abstract class RequestMappingUtils {
         optMethod.put("optUrl",Pretreatment.mapTemplateString(
                 StringBaseOpt.castObjectToString(methodMapping.value()),null,"*"));
         //GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE
-        optMethod.put("optReq",StringBaseOpt.castObjectToString(methodMapping.method()));
+        if(methodMapping.method()==null || methodMapping.method().length==0){
+            optMethod.put("optReq","R");
+        }else {
+            optMethod.put("optReq", StringBaseOpt.castObjectToString(methodMapping.method()));
+        }
     }
 
     private static void mapGetRequestInfo(JSONObject optMethod, Method method){
@@ -42,7 +46,7 @@ public abstract class RequestMappingUtils {
         optMethod.put("optUrl",Pretreatment.mapTemplateString(
                 StringBaseOpt.castObjectToString(methodMapping.value()),null,"*"));
         //GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE
-        optMethod.put("optReq",StringBaseOpt.castObjectToString("GET"));
+        optMethod.put("optReq","R");
     }
 
     private static void mapPostRequestInfo(JSONObject optMethod, Method method){
@@ -51,7 +55,7 @@ public abstract class RequestMappingUtils {
         optMethod.put("optUrl",Pretreatment.mapTemplateString(
                 StringBaseOpt.castObjectToString(methodMapping.value()),null,"*"));
         //GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE
-        optMethod.put("optReq",StringBaseOpt.castObjectToString("POST"));
+        optMethod.put("optReq","C");
     }
 
     private static void mapPutRequestInfo(JSONObject optMethod, Method method){
@@ -60,7 +64,7 @@ public abstract class RequestMappingUtils {
         optMethod.put("optUrl",Pretreatment.mapTemplateString(
                 StringBaseOpt.castObjectToString(methodMapping.value()),null,"*"));
         //GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE
-        optMethod.put("optReq",StringBaseOpt.castObjectToString("PUT"));
+        optMethod.put("optReq","U");
     }
 
     private static void mapDeleteRequestInfo(JSONObject optMethod, Method method){
@@ -68,7 +72,7 @@ public abstract class RequestMappingUtils {
         optMethod.put("optName",method.getName());
         optMethod.put("optUrl",StringBaseOpt.castObjectToString(methodMapping.value()));
         //GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE
-        optMethod.put("optReq",StringBaseOpt.castObjectToString("DELETE"));
+        optMethod.put("optReq","D");
     }
 
     public static JSONObject mapControllerInfo(Class clazz){
