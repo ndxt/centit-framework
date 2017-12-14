@@ -46,8 +46,8 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         }
         http.authorizeRequests()
                 .antMatchers("/system/mainframe/login","/system/exception").permitAll()
-                .and().exceptionHandling().accessDeniedPage("/system/exception/accessDenied")
-                .and().sessionManagement().invalidSessionUrl("/system/exception/error/302")
+                .and().exceptionHandling().accessDeniedPage("/system/exception/error/403")
+                .and().sessionManagement().invalidSessionUrl("/system/exception/error/401")
                 .and().httpBasic().authenticationEntryPoint(authenticationEntryPoint());
 
         http.headers().frameOptions().sameOrigin();

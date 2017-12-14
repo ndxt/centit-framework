@@ -3,8 +3,10 @@ package com.centit.framework.system.controller;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +30,10 @@ public class ExceptionController extends BaseController {
     
     /**
      * 访问当前无权限URL请求后返回地址
-     * @param request request
-     * @param response response
      * @return 访问当前无权限URL请求后返回地址
      */
     @RequestMapping(value = "/accessDenied")
-    public String accessDenied(HttpServletRequest request, HttpServletResponse response) {
+    public String accessDenied() {
         return "forward:/system/exception/error/403";          
     }
 
@@ -62,8 +62,11 @@ public class ExceptionController extends BaseController {
                 case 403:
                     {
                         errorMessage =(String) request.getAttribute("CENTIT_SYSTEM_ERROR_MSG");
-                        if(errorMessage==null){
-                            Exception ex = (Exception) request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+                        if(StringUtils.isBlank(errorMessage)){
+                            Exception ex = (Exception) request.getSession().getAttribute(WebAttributes.ACCESS_DENIED_403);
+                            if(ex==null){
+                                ex = (Exception) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+                            }
                             //触发异常的类
                             if (null != ex) {
                                 errorMessage = ex.getMessage();

@@ -85,7 +85,11 @@ public class MainFrameController extends BaseController {
      * @return 登录界面
      */
     @RequestMapping("/login")
-    public String login(HttpSession session) {
+    public String login(HttpServletRequest request, HttpSession session) {
+        //不允许ajax强求登录页面
+        if(WebOptUtils.isAjax(request)){
+            return "redirect:/system/exception/error/401";
+        }
         //输入实施人员链接后未登录，后直接输入 普通用户登录链接
         session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
         if(useCas)
@@ -102,7 +106,11 @@ public class MainFrameController extends BaseController {
      * @return 登录界面
      */
     @RequestMapping("/loginasadmin")
-    public String loginAsAdmin(HttpSession session) {
+    public String loginAsAdmin(HttpServletRequest request, HttpSession session) {
+        //不允许ajax强求登录页面
+        if(WebOptUtils.isAjax(request)){
+            return "redirect:/system/exception/error/401";
+        }
         if (deploy) {
             //实施人员入口标记
             session.setAttribute(ENTRANCE_TYPE, DEPLOY_LOGIN);
@@ -119,7 +127,7 @@ public class MainFrameController extends BaseController {
      * @return 登录界面
      */
     @RequestMapping("/login/error")
-    public String loginError(HttpSession session) {
+    public String loginError(HttpServletRequest request,HttpSession session) {
         //在系统中设定Spring Security 相关的错误信息
         AuthenticationException authException = (AuthenticationException)
                 session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
@@ -127,7 +135,7 @@ public class MainFrameController extends BaseController {
         if(authException!=null)
             session.setAttribute(LOGIN_AUTH_ERROR_MSG, authException.getMessage());
         //重新登录
-        return login(session);
+        return login(request,session);
     }
 
     /**
