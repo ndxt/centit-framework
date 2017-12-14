@@ -7,13 +7,11 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
-import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
-import com.sun.tools.javac.jvm.Code;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
@@ -38,7 +36,7 @@ public class MainFrameController extends BaseController {
     public static final String DEPLOY_LOGIN = "DEPLOY";
     public static final String LOGIN_AUTH_ERROR_MSG = "LOGIN_ERROR_MSG";
 
-    private String optId = "mainframe";
+    private static String optId = "mainframe";
     @Resource
     protected CsrfTokenRepository csrfTokenRepository;
     
