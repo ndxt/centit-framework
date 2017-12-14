@@ -22,7 +22,7 @@
         <jdk.version>1.8</jdk.version>
         <centit.framework.version>4.0.4-SNAPSHOT</centit.framework.version>
         <centit.commons.version>2.2.5-SNAPSHOT</centit.commons.version>
-        <centit.ui.version>3.0.1</centit.ui.version>
+        <centit.ui.version>3.0.1-SNAPSHOT</centit.ui.version>
         <ojdbc6.version>11.2.0.4</ojdbc6.version>
         <junit.version>4.12</junit.version>
         <mysql.version>5.1.9</mysql.version>
@@ -50,6 +50,13 @@
             <version>${jdk.version}</version>
             <systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
             <scope>system</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>${websocket-api.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

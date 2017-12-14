@@ -33,7 +33,9 @@ public class TestCaseController extends BaseController {
         String uri = request.getRequestURI();
         String message = uri.substring(uri.lastIndexOf('/')+1);
         try {
-            socketMsgPusher.pushMessage(new SimplePushMessage(message),
+            SimplePushMessage msg = new SimplePushMessage(message);
+            msg.setMsgReceiver(userCode);
+            socketMsgPusher.pushMessage(msg,
                     new SimplePushMsgPoint(userCode));
             return ResponseSingleData.makeResponseData("hello "+userCode+" !");
         } catch (Exception e) {
