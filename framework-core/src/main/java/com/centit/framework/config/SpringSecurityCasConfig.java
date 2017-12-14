@@ -53,11 +53,9 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         String defaultTargetUrl = env.getProperty("login.success.targetUrl");
         http.logout()
                 .logoutSuccessUrl(StringBaseOpt.emptyValue(defaultTargetUrl,"/"))
-                .and()
-                .exceptionHandling().accessDeniedPage("/service/exception/accessDenied")
-                .and()
-                .httpBasic()
-                .authenticationEntryPoint(casEntryPoint);
+                .and().exceptionHandling().accessDeniedPage("/system/exception/accessDenied")
+                .and().sessionManagement().invalidSessionUrl("/system/exception/error/302")
+                .and().httpBasic().authenticationEntryPoint(casEntryPoint);
 
         AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(centitUserDetailsService);
         AjaxAuthenticationFailureHandler ajaxFailureHandler = createAjaxFailureHandler();

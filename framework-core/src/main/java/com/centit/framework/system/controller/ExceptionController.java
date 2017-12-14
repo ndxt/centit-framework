@@ -72,6 +72,10 @@ public class ExceptionController extends BaseController {
                         }
                     }
                     break;
+                case 302:
+                case 401:
+                    errorMessage = "用户未登录或者session失效 !";
+                    break;
                 default:
                     errorMessage = "服务器内部错误";
                     Exception ex = (Exception) request.getAttribute("CENTIT_SYSTEM_ERROR_EXCEPTION");
