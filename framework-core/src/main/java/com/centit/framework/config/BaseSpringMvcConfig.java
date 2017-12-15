@@ -6,14 +6,17 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by zou_wy on 2017/3/29.
@@ -60,8 +63,23 @@ public class BaseSpringMvcConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
         registry.addResourceHandler("classpath:messagesource/base/messages/**");
-
     }
+
+    /*@Override
+    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
+        SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
+        Properties exceptionMappings = new Properties();
+        exceptionMappings.put("java.lang.Exception", "/system/exception/error/500");
+        exceptionMappings.put("java.lang.RuntimeException", "/system/exception/error/500");
+        exceptionMappings.put("org.springframework.web.servlet.NoHandlerFoundException", "/system/exception/error/404");
+        exceptionResolver.setExceptionMappings(exceptionMappings);
+        Properties statusCodes = new Properties();
+        statusCodes.put("/system/exception/error/404", "404");
+        statusCodes.put("/system/exception/error/500", "500");
+        exceptionResolver.setStatusCodes(statusCodes);
+        //return exceptionResolver;
+        exceptionResolvers.add(exceptionResolver);
+    }*/
+
 }

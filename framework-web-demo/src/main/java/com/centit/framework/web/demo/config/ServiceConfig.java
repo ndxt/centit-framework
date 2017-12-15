@@ -13,6 +13,9 @@ import com.centit.framework.web.demo.listener.InstantiationServiceBeanPostProces
 import com.centit.msgpusher.msgpusher.websocket.SocketMsgPusher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+
+import java.util.Properties;
 
 /**
  * Created by codefan on 17-7-18.

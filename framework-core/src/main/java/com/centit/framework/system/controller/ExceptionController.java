@@ -6,11 +6,13 @@ import com.centit.framework.core.controller.BaseController;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,12 +24,12 @@ import java.io.IOException;
  * @author codefan
  * 2014年10月24日
  */
+@SuppressWarnings("unused")
 @Controller
 @RequestMapping("/exception")
-public class ExceptionController extends BaseController {
+public class ExceptionController {
 
     private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
-    
     /**
      * 访问当前无权限URL请求后返回地址
      * @return 访问当前无权限URL请求后返回地址
