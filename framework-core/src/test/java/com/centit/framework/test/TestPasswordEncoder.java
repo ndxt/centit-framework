@@ -17,7 +17,7 @@ public class TestPasswordEncoder {
     }
 
     public void testPE() {
-        CentitPasswordEncoder pe = new CentitPasswordEncoderImpl();
+        CentitPasswordEncoderImpl pe = new CentitPasswordEncoderImpl();
         String password = pe.createPassword("000000",null);
         System.out.println(password);
 
