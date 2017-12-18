@@ -1,13 +1,11 @@
 package com.centit.framework.security.model;
 
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 /**
  * Created by codefan on 17-1-20.
  */
 @SuppressWarnings("deprecation")
-public interface CentitPasswordEncoder extends PasswordEncoder {
+public interface CentitPasswordEncoder {
     String pretreatPassword(String rawPass);
 
     String pretreatPassword(String rawPass, Object salt);

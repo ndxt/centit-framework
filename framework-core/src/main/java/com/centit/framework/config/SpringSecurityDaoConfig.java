@@ -3,11 +3,11 @@ package com.centit.framework.config;
 import com.centit.framework.security.AjaxAuthenticationSuccessHandler;
 import com.centit.framework.security.DaoFilterSecurityInterceptor;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
-import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -34,8 +34,10 @@ import java.util.List;
 @Conditional(SecurityDaoCondition.class)
 public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
+
     @Autowired
-    protected CentitPasswordEncoder passwordEncoder;
+    @Qualifier("passwordEncoder")
+    protected Object passwordEncoder;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

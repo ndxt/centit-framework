@@ -2,12 +2,13 @@ package com.centit.framework.security.model;
 
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Created by codefan on 17-1-20.
  */
 public class CentitPasswordEncoderImpl
-        implements CentitPasswordEncoder {
+        implements CentitPasswordEncoder,PasswordEncoder {
 
     private BCryptPasswordEncoder passwordEncoder ;
 

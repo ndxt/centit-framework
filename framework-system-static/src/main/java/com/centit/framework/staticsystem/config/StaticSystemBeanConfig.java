@@ -17,6 +17,8 @@ import org.springframework.dao.annotation.PersistenceExceptionTranslationPostPro
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
+import javax.annotation.Resource;
+
 @PropertySource("classpath:system.properties")
 public class StaticSystemBeanConfig implements EnvironmentAware {
 
@@ -47,11 +49,12 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
      * 这个bean必须要有
      * @return CentitPasswordEncoder 密码加密算法
      */
-    @Bean
-    public CentitPasswordEncoder passwordEncoder() {
+    @Bean("passwordEncoder")
+    public CentitPasswordEncoderImpl passwordEncoder() {
         return  new CentitPasswordEncoderImpl();
     }
 
+    @Resource
     @Bean
     @Lazy(value = false)
     public PlatformEnvironment platformEnvironment(

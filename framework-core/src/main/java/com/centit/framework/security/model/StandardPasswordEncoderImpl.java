@@ -5,6 +5,7 @@ import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.security.Md5Encoder;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,7 +15,7 @@ import java.lang.reflect.Method;
  * Created by codefan on 17-1-20.
  */
 @SuppressWarnings("deprecation")
-public class StandardPasswordEncoderImpl implements StandardPasswordEncoder {
+public class StandardPasswordEncoderImpl implements CentitPasswordEncoder, PasswordEncoder {
     private int strength;
 
     public StandardPasswordEncoderImpl() {
