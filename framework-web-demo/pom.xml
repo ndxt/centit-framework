@@ -27,6 +27,8 @@
         <ojdbc6.version>11.2.0.4</ojdbc6.version>
         <junit.version>4.12</junit.version>
         <mysql.version>5.1.9</mysql.version>
+        <javafaker.version>0.14</javafaker.version>
+
         <servlet-api.version>3.1.0</servlet-api.version>
         <persistence-api.version>2.2</persistence-api.version>
     </properties>
@@ -72,6 +74,14 @@
             <version>${servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>${javafaker.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
