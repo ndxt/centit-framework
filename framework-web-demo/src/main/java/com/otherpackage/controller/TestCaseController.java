@@ -6,6 +6,7 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.msgpusher.msgpusher.po.SimplePushMessage;
 import com.centit.msgpusher.msgpusher.po.SimplePushMsgPoint;
 import com.centit.msgpusher.msgpusher.websocket.SocketMsgPusher;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -63,7 +64,8 @@ public class TestCaseController extends BaseController {
         }
     }
 
-    @RequestMapping(value="/sse2",produces="text/event-stream")
+    //produces = "text/event-stream"
+    @RequestMapping(value="/sse2",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public @ResponseBody String serverSentEvent2() {
         Random r = new Random();
         try {
