@@ -71,7 +71,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         DaoAccessDecisionManager accessDecisionManager = new DaoAccessDecisionManager();
         accessDecisionManager.setAllResourceMustBeAudited(
                 BooleanBaseOpt.castObjectToBoolean(
-                        env.getProperty("login.success.registToken"),false));
+                        env.getProperty("access.resource.must.be.audited"),false));
         return accessDecisionManager;
     }
 
