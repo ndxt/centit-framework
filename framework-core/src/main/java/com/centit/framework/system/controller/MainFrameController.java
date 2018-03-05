@@ -222,6 +222,8 @@ public class MainFrameController extends BaseController {
             return;
         }
         String tokenKey = SecurityContextUtils.registerUserToken(ud);
+        // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
+        // SecurityContextUtils.setSecurityContext(ud,request.getSession());
         //request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
