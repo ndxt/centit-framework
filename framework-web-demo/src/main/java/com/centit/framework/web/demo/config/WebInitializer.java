@@ -2,7 +2,6 @@ package com.centit.framework.web.demo.config;
 
 import com.centit.framework.config.SystemSpringMvcConfig;
 import com.centit.framework.config.WebConfig;
-import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -30,13 +29,12 @@ public class WebInitializer implements WebApplicationInitializer {
         WebConfig.registerSpringSessionRepositoryFilter(servletContext);
         WebConfig.registerRequestContextListener(servletContext);
         WebConfig.registerSingleSignOutHttpSessionListener(servletContext);
-        WebConfig.registerResponseCorsFilter(servletContext);
+        //WebConfig.registerResponseCorsFilter(servletContext);
         WebConfig.registerCharacterEncodingFilter(servletContext);
         WebConfig.registerHttpPutFormContentFilter(servletContext);
         WebConfig.registerHiddenHttpMethodFilter(servletContext);
         WebConfig.registerRequestThreadLocalFilter(servletContext);
         WebConfig.registerSpringSecurityFilter(servletContext);
-
         //servletContext.
     }
 

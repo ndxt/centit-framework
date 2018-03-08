@@ -11,7 +11,7 @@ import com.centit.support.algorithm.UuidOpt;
 import org.springframework.web.context.ContextLoaderListener;
 
 public class SecurityContextUtils {
-
+    public static final String AJAX_CHECK_CAPTCHA_RESULT = "ajaxCheckCaptchaResult";
     public final static String SecurityContextUserdetail = "SECURITY_CONTEXT_USERDETAIL";
     public final static String SecurityContextTokenName = "accessToken";
 

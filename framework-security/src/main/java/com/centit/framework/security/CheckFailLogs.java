@@ -1,4 +1,4 @@
-package com.centit.framework.security.model;
+package com.centit.framework.security;
 
 import java.util.Date;
 import java.util.HashMap;

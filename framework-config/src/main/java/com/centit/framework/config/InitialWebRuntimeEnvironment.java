@@ -1,4 +1,4 @@
-package com.centit.framework.listener;
+package com.centit.framework.config;
 
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.parser.deserializer.SqlDateDeserializer;

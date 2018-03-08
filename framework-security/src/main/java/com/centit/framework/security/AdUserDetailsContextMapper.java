@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
+import com.centit.framework.security.SecurityContextUtils;
 
 public class AdUserDetailsContextMapper implements UserDetailsContextMapper {
 

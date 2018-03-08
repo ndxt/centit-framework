@@ -1,15 +1,8 @@
 package com.centit.framework.common;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitSessionRegistry;
-import org.apache.commons.io.IOUtils;
+import com.centit.framework.security.model.CentitUserDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -18,8 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import com.centit.framework.security.SecurityContextUtils;
-import com.centit.framework.security.model.CentitUserDetails;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Locale;
 
 /**
  * 系统Web常用工具类可以和spring WebUtils配合使用

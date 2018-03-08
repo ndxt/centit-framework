@@ -7,7 +7,6 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
-import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
@@ -206,7 +205,7 @@ public class MainFrameController extends BaseController {
      */
     @RequestMapping(value="/loginasclient",method = RequestMethod.POST)
     public void loginAsClient(HttpServletRequest request,HttpServletResponse response) {
-        Map<String, Object> formValue = collectRequestParameters(request);
+        Map<String, Object> formValue = BaseController.collectRequestParameters(request);
 
         String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
         String userPwd = StringBaseOpt.objectToString(formValue.get("password"));
@@ -306,7 +305,7 @@ public class MainFrameController extends BaseController {
                             CaptchaImageUtil.SESSIONCHECKCODE));
         Boolean checkResult = StringUtils.equals(checkcode, sessionCode);
         request.getSession().setAttribute(
-                PretreatmentAuthenticationProcessingFilter.AJAX_CHECK_CAPTCHA_RESULT,
+                SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT,
                 checkResult);
         JsonResultUtils.writeOriginalObject(checkResult, response);
     }

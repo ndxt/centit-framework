@@ -2,7 +2,6 @@ package com.centit.framework.config;
 
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.filter.RequestThreadLocalFilter;
-import com.centit.framework.filter.ResponseCorsFilter;
 import com.centit.support.algorithm.StringRegularOpt;
 import org.h2.server.web.WebServlet;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
@@ -65,11 +64,11 @@ public class WebConfig  {
      * 注册ResponseCorsFilter过滤器 （允许跨站脚本访问过滤器）
      * @param servletContext ServletContext
      */
-    public static void registerResponseCorsFilter(ServletContext servletContext) {
+    /*public static void registerResponseCorsFilter(ServletContext servletContext) {
         javax.servlet.FilterRegistration.Dynamic corsFilter
                 = servletContext.addFilter("corsFilter", ResponseCorsFilter.class);
         corsFilter.addMappingForUrlPatterns(null, false, "/service/*");
-    }
+    }*/
 
     /**
      * 注册CharacterEncodingFilter过滤器 （设置字符集）

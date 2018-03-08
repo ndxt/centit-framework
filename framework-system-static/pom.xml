@@ -16,7 +16,6 @@
         同时提供了一个和基于框架开发的集成平台对接的接口</description>
 
     <dependencies>
-
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-core</artifactId>

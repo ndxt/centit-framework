@@ -5,17 +5,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
-import com.centit.support.algorithm.StringRegularOpt;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.centit.framework.security.model.CheckFailLogs;
 import com.centit.support.image.CaptchaImageUtil;
 
 public class PretreatmentAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
-    public static final String AJAX_CHECK_CAPTCHA_RESULT = "ajaxCheckCaptchaResult";
 
 	private int checkCaptchaTime = 0 ; // 0 不验证, 1 登陆失败后 再次登陆验证, 2 始终验证
     private int checkCaptchaType = 0;  // 0 不验证, 1 一起验证, 2 ajax 验证
@@ -75,12 +72,14 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
 					    //&& CheckFailLogs.getMaxTryTimes() >= 0
 					    && tryTimes > 0 ))) {
 		    if (!BooleanBaseOpt.castObjectToBoolean(
-				    request.getSession().getAttribute(AJAX_CHECK_CAPTCHA_RESULT),
+				    request.getSession().getAttribute(
+				            SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
 				    false)) {
 			    throw new AuthenticationServiceException(
 					    "Captcha input is error, please try late!");
 		    }
-		    request.getSession().setAttribute(AJAX_CHECK_CAPTCHA_RESULT, false);
+		    request.getSession().setAttribute(
+                    SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
 	    }
         Authentication auth = null;
         //if(!onlyPretreat || writeLog || CheckFailLogs.getMaxTryTimes() > 0){

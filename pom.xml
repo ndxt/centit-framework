@@ -116,6 +116,9 @@
         <module>framework-adapter</module>
         <module>framework-core</module>
         <module>framework-system-static</module>
+        <module>framework-config</module>
+        <module>framework-filter</module>
+        <module>framework-security</module>
     </modules>
 
 
