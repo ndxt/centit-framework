@@ -2,12 +2,9 @@ package com.centit.framework.web.demo.config;
 
 import com.centit.framework.components.impl.NotificationCenterImpl;
 import com.centit.framework.components.impl.TextOperationLogWriterImpl;
-import com.centit.framework.config.H2SessionPersistenceConfig;
-import com.centit.framework.config.RedisSessionPersistenceConfig;
+import com.centit.framework.config.*;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
-import com.centit.framework.config.SpringSecurityCasConfig;
-import com.centit.framework.config.SpringSecurityDaoConfig;
 import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
 import com.centit.framework.web.demo.listener.InstantiationServiceBeanPostProcessor;
 import com.centit.msgpusher.msgpusher.websocket.SocketMsgPusher;
@@ -32,6 +29,13 @@ public class ServiceConfig {
 
     @Autowired
     protected SocketMsgPusher socketMsgPusher;
+
+
+    @Bean(initMethod = "initialEnvironment")
+    @Lazy(value = false)
+    public InitialWebRuntimeEnvironment initialEnvironment() {
+        return new InitialWebRuntimeEnvironment();
+    }
 
     @Bean
     public NotificationCenter notificationCenter() {

@@ -1,4 +1,4 @@
-package com.centit.test;
+package com.centit.framework.test;
 
 import java.util.ArrayList;
 import java.util.List;

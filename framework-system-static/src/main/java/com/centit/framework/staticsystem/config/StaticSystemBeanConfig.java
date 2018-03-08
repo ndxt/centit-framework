@@ -1,6 +1,5 @@
 package com.centit.framework.staticsystem.config;
 
-import com.centit.framework.config.InitialWebRuntimeEnvironment;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.security.model.*;
 import com.centit.framework.staticsystem.service.impl.JdbcPlatformEnvironment;
@@ -37,12 +36,6 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
     @Bean
     public AutowiredAnnotationBeanPostProcessor autowiredAnnotationBeanPostProcessor() {
         return new AutowiredAnnotationBeanPostProcessor();
-    }
-
-    @Bean(initMethod = "initialEnvironment")
-    @Lazy(value = false)
-    public InitialWebRuntimeEnvironment initialEnvironment() {
-        return new InitialWebRuntimeEnvironment();
     }
 
     /**

@@ -1,21 +1,16 @@
 package com.centit.framework.staticsystem.security;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.staticsystem.po.RoleInfo;
 import com.centit.framework.staticsystem.po.UserInfo;
-import com.centit.framework.staticsystem.po.UserRole;
 import com.centit.framework.staticsystem.po.UserUnit;
-import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
-import org.h2.engine.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.security.auth.Subject;
 import java.util.*;
 
 /**

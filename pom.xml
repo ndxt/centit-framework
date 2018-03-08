@@ -115,10 +115,10 @@
     <modules>
         <module>framework-adapter</module>
         <module>framework-core</module>
-        <module>framework-system-static</module>
         <module>framework-config</module>
         <module>framework-filter</module>
         <module>framework-security</module>
+        <module>framework-system-static</module>
     </modules>
 
 
@@ -133,7 +133,7 @@
         <snapshotRepository>
             <id>centit-snapshots</id>
             <name>centit-snapshots</name>
-            <url>http://develop.centit.com:8080/nexus/content/repositories/centit-snapshots/</url>
+            <url>http://nexus.centit.com:8081/nexus/content/repositories/centit-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
