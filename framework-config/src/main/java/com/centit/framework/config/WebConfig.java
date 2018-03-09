@@ -60,7 +60,7 @@ public class WebConfig  {
         }
     }
 
-    /**
+    /*
      * 注册ResponseCorsFilter过滤器 （允许跨站脚本访问过滤器）
      * @param servletContext ServletContext
      */

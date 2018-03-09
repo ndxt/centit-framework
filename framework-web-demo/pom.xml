@@ -47,11 +47,11 @@
             <version>${centit.framework.version}</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-security</artifactId>
             <version>${centit.framework.version}</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>com.centit.framework</groupId>
