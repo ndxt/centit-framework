@@ -21,28 +21,8 @@ public class SysParametersUtils {
     private static final Logger logger = LoggerFactory.getLogger(SysParametersUtils.class);
 
     private static Properties prop;
+    private static String APP_HOME ="app.home";
 
-    /**
-     * 常用参数在此添加对应枚举，并在下面添加对应静态方法
-     *
-     * @author sx
-     * date 2012-12-7
-     */
-    public static enum Parameter {
-        APP_HOME("app.home"), LOG_HOME("dir.log"), 
-        UPLOAD_HOME("dir.upload"), PUBLIC_FILE("dir.publicfile"), 
-        INDEX_HOME("dir.index"), TEMP("dir.temp");
-
-        private String value;
-
-        private Parameter(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
     
     /**
      * 获取应用的根目录
@@ -50,7 +30,7 @@ public class SysParametersUtils {
      * @return String 根目录
      */
     public static String getAppHome() {
-        return getParameters(Parameter.APP_HOME) ;
+        return getStringValue(APP_HOME) ;
     }
 
     
@@ -60,8 +40,7 @@ public class SysParametersUtils {
      * @return String 应用的临时目录
      */
     public static String getTempHome() {
-        return getParameters(Parameter.APP_HOME)
-                 + getParameters(Parameter.TEMP) ;
+        return getAppHome() + "/temp";
     }
 
     /**
@@ -79,7 +58,7 @@ public class SysParametersUtils {
      * @return String 配置目录
      */
     public static String getConfigHome() {
-        return getParameters(Parameter.APP_HOME) +"/config";
+        return getAppHome() + "/config";
     }
     
     /**
@@ -88,7 +67,7 @@ public class SysParametersUtils {
      * @return String 日志目录
      */
     public static String getLogHome() {
-        return getParameters(Parameter.APP_HOME) + getParameters(Parameter.LOG_HOME);
+        return getAppHome() + "/logs";
     }
 
     /**
@@ -97,7 +76,7 @@ public class SysParametersUtils {
      * @return String 上传文件目录
      */
     public static String getUploadHome() {
-        return getParameters(Parameter.APP_HOME) + getParameters(Parameter.UPLOAD_HOME);
+        return getAppHome() + "/upload";
     }
 
     /**
@@ -106,7 +85,7 @@ public class SysParametersUtils {
      * @return String 索引文件目录
      */
     public static String getIndexHome() {
-        return getParameters(Parameter.APP_HOME) + getParameters(Parameter.INDEX_HOME);
+        return getAppHome() + "/index";
     }
 
     /**
@@ -115,13 +94,8 @@ public class SysParametersUtils {
      * @return String 公共文件夹
      */
     public static String getPublicFileHome() {
-        return getUploadHome() + getParameters(Parameter.PUBLIC_FILE);
+        return getAppHome() + "/publicfile";
     }
-
-    public static String getParameters(Parameter p) {
-        return loadProperties().getProperty(p.getValue());
-    }
-
 
     public static String getStringValue(String key) {
         return loadProperties().getProperty(key);

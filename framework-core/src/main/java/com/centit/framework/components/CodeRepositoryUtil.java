@@ -2,7 +2,6 @@ package com.centit.framework.components;
 
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
-import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.filter.HttpThreadWrapper;
@@ -20,6 +19,8 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -1518,17 +1519,34 @@ public abstract class CodeRepositoryUtil {
         }
         return userDetails.getUserSettings();
     }
+
     /**
      * 获取System.properties文件属性值
-     * @param key 配置信息key值
      * @return System.properties文件属性值
      */
+
+    private static Properties loadProperties() {
+        Properties prop = new Properties();
+        try {
+            InputStream resource = CodeRepositoryUtil
+                    .class.getResourceAsStream("/system.properties");
+            //new ClassPathResource("system.properties").getInputStream();
+            if(resource==null)
+                resource = ClassLoader.getSystemResourceAsStream("/system.properties");
+            prop.load(resource);
+        } catch (IOException e) {
+            logger.error("获取系统参数出错！",e);
+            //e.printStackTrace();
+        }
+        return prop;
+    }
+
     public static String getSysConfigValue(String key) {
-        return SysParametersUtils.getStringValue(key);
+        return loadProperties().getProperty(key);
     }
 
     public static Map<String, Object> getSysConfigByPrefix(String prefix){
-        Properties properties = SysParametersUtils.loadProperties();
+        Properties properties = loadProperties();
         Map<String, Object> map = new HashMap<>(16);
         for(Map.Entry<Object,Object> ent :  properties.entrySet()){
             String paramName = StringBaseOpt.castObjectToString(ent.getKey());

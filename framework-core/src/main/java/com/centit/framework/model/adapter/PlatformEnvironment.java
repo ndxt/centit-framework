@@ -18,12 +18,6 @@ public interface PlatformEnvironment {
      * @return 是否刷新
      */
     boolean reloadSecurityMetadata();
-    /**
-     * 获取系统配置参数
-     * @param paramCode paramCode
-     * @return  系统配置参数
-     */
-    String getSystemParameter(String paramCode);
 
     /**
      * 获取用户所有菜单功能

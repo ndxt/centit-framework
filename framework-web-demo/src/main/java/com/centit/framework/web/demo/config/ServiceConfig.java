@@ -9,6 +9,7 @@ import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
 import com.centit.framework.web.demo.listener.InstantiationServiceBeanPostProcessor;
 import com.centit.msgpusher.msgpusher.websocket.SocketMsgPusher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
@@ -30,6 +31,8 @@ public class ServiceConfig {
     @Autowired
     protected SocketMsgPusher socketMsgPusher;
 
+    @Value("${app.home}")
+    private String appHome;
 
     @Bean(initMethod = "initialEnvironment")
     @Lazy(value = false)
@@ -53,6 +56,7 @@ public class ServiceConfig {
     @Lazy(value = false)
     public OperationLogWriter operationLogWriter() {
         TextOperationLogWriterImpl  operationLog =  new TextOperationLogWriterImpl();
+        operationLog.setOptLogHomePath(appHome+"/logs");
         operationLog.init();
         return operationLog;
     }

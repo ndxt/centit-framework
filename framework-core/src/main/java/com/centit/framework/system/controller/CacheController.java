@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.common.ViewDataTransform;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
@@ -21,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -473,7 +473,25 @@ public class CacheController {
         JsonResultUtils.writeSingleDataJson(
                 CodeRepositoryUtil.getUserAllOptPowers(), response);
     }
-    
+
+
+    @Value("${app.home}")
+    private String appHome;
+
+    @Value("${jdbc.url}")
+    private String jdbcUrl;
+
+    @Value("${spring.datasource.url}")
+    private String springDatasourceUrl;
+
+    public void setAppHome(String appHome) {
+        this.appHome = appHome;
+    }
+
+    public void setJdbcUrl(String jdbcUrl) {
+        this.jdbcUrl = jdbcUrl;
+    }
+
     /**
      * 重新load Sql ExtendedMap
      * @param response response
@@ -482,8 +500,10 @@ public class CacheController {
     public void reloadExtendedSqlMap( HttpServletResponse response) {
         boolean hasError = false;
         StringBuilder errorMsg = new StringBuilder();
-        List<File> files = FileSystemOpt.findFilesByExt(SysParametersUtils.getAppHome()+"/sqlscript","xml");
-        DBType dbType = DBType.mapDBType( SysParametersUtils.getStringValue("jdbc.url"));
+        List<File> files = FileSystemOpt.findFilesByExt(
+                appHome +"/sqlscript","xml");
+        DBType dbType = DBType.mapDBType(
+                StringUtils.isBlank(jdbcUrl)? springDatasourceUrl :jdbcUrl );
         if(files!=null & files.size()>0){
             for(File file:files) {
                 try {

@@ -1,6 +1,5 @@
 package com.centit.framework.staticsystem.service.impl;
 
-import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IUnitRole;
 import com.centit.framework.model.basedata.IUserInfo;
@@ -170,11 +169,6 @@ public abstract class AbstractStaticPlatformEnvironment
         if(ui==null)
             return false;
         return passwordEncoder.isPasswordValid(ui.getUserPin(),userPassword, userCode);
-    }
-
-    @Override
-    public String getSystemParameter(String paramCode) {
-        return SysParametersUtils.getStringValue(paramCode);
     }
 
     @Override

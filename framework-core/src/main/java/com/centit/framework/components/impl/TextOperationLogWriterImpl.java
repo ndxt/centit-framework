@@ -1,14 +1,13 @@
 package com.centit.framework.components.impl;
 
-import java.util.List;
-
 import com.alibaba.fastjson.JSON;
-import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.file.TxtLogFile;
+
+import java.util.List;
 
 public class TextOperationLogWriterImpl implements OperationLogWriter{
 
@@ -18,8 +17,14 @@ public class TextOperationLogWriterImpl implements OperationLogWriter{
         //OperationLogCenter.registerOperationLogWriter(this);
     }
 
+    private String optLogHomePath;
+
+    public void setOptLogHomePath(String optLogPath){
+        this.optLogHomePath = optLogPath;
+    }
+
     public String getCurrentLogPath(){
-        return SysParametersUtils.getLogHome()+"/D"
+        return optLogHomePath+"/D"
                 +DatetimeOpt.convertDateToString(
                         DatetimeOpt.currentUtilDate(),"yyyyMMdd")+".log";
     }

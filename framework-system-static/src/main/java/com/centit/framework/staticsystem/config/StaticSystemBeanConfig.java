@@ -56,6 +56,7 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         Boolean jdbcEnable = env.getProperty("centit.jdbcplatform.enable", Boolean.class);// = false
         if (jdbcEnable != null && jdbcEnable) {
             JdbcPlatformEnvironment jdbcPlatformEnvironment = new JdbcPlatformEnvironment();
+
             jdbcPlatformEnvironment.setDataBaseConnectInfo(
                  env.getProperty("centit.jdbcplatform.url"),
                     env.getProperty("centit.jdbcplatform.username"),
@@ -66,6 +67,7 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
             return jdbcPlatformEnvironment;
         } else{
             JsonPlatformEnvironment jsonPlatformEnvironment = new JsonPlatformEnvironment();
+            jsonPlatformEnvironment.setAppHome(env.getProperty("app.home"));
             jsonPlatformEnvironment.setPasswordEncoder(passwordEncoder);
             jsonPlatformEnvironment.init();
             return jsonPlatformEnvironment;

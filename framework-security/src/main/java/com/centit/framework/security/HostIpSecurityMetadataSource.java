@@ -1,30 +1,32 @@
 package com.centit.framework.security;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.centit.support.file.PropertiesReader;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 
-import com.centit.framework.common.SysParametersUtils;
-import com.centit.support.file.PropertiesReader;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 //@Component("hostIpSecurityMetadataSource")
 public class HostIpSecurityMetadataSource
             implements FilterInvocationSecurityMetadataSource
-         {
+{
     public static final String LOCAL_HOST_IP="127.0.0.1";
     //private static final Logger logger = LoggerFactory.getLogger(DaoInvocationSecurityMetadataSource.class);
     //private static boolean logDebug = logger.isDebugEnabled();
+
+
+    private String appHome;
+
+    public void setAppHome(String appHome) {
+        this.appHome = appHome;
+    }
+
     private Map<String,Collection<ConfigAttribute>> hostIpAttributes=null;
+
     @Override
     public boolean supports(Class<?> clazz) {
         if (FilterInvocation.class.isAssignableFrom(clazz)) {
@@ -50,9 +52,10 @@ public class HostIpSecurityMetadataSource
         if(hostIpAttributes!=null)
             hostIpAttributes.clear();
         else
-            hostIpAttributes = new HashMap<String,Collection<ConfigAttribute>>();
+            hostIpAttributes = new HashMap<>();
         
-        Properties hosts = PropertiesReader.getFilePathProperties(SysParametersUtils.getConfigHome()+"/host_white_list.properties");
+        Properties hosts = PropertiesReader.getFilePathProperties(
+                appHome +"/config/host_white_list.properties");
         if(hosts!=null){
             Set<Map.Entry<Object,Object>> hostset = hosts.entrySet();
             if(hostset!=null){                

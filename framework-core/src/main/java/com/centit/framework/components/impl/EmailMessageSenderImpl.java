@@ -3,15 +3,16 @@
  */
 package com.centit.framework.components.impl;
 
-import com.centit.framework.common.SysParametersUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.MultiPartEmail;
-
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.basedata.IUserInfo;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.MultiPartEmail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 
@@ -22,19 +23,22 @@ public class EmailMessageSenderImpl implements MessageSender {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailMessageSenderImpl.class);
 
+    @Value("${message.sender.email.hostName}")
+    @NotNull
     private String hostName;
-    private int smtpPort;
-    private String userName;
-    private String userPassword;
-    private String serverEmail;
 
-    public  EmailMessageSenderImpl(){
-        this.hostName = SysParametersUtils.getStringValue("message.sender.email.hostName");
-        this.smtpPort = SysParametersUtils.getIntValue("message.sender.email.smtpPort",25);
-        this.userName = SysParametersUtils.getStringValue("message.sender.email.userName");
-        this.userPassword = SysParametersUtils.getStringValue("message.sender.email.userPassword");
-        this.serverEmail = SysParametersUtils.getStringValue("message.sender.email.serverEmail");
-    }
+    @Value("${message.sender.email.smtpPort:25}")
+    @NotNull
+    private int smtpPort;
+
+    @Value("${message.sender.email.userName}")
+    private String userName;
+
+    @Value("${message.sender.email.userPassword}")
+    private String userPassword;
+
+    @Value("${message.sender.email.serverEmail}")
+    private String serverEmail;
 
     public String sendEmailMessage(String mailTo,String mailFrom,String msgSubject,String msgContent) {
         
