@@ -103,7 +103,7 @@ public class WebOptUtils {
         if(request==null)
             return null;
         String lang = request.getParameter(LOCAL_LANGUAGE_LABLE);
-        if(StringUtils.isNoneBlank(lang)){
+        if(StringUtils.isNotBlank(lang)){
             if("en".equals(lang))
                 lang="en_US";
             else if("zh".equals(lang))
