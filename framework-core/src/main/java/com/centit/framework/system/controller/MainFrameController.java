@@ -377,7 +377,8 @@ public class MainFrameController extends BaseController {
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);  
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
        
-        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(),asAdmin );
+//        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(),asAdmin );
+        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(),"CENTIT",asAdmin );
 
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }

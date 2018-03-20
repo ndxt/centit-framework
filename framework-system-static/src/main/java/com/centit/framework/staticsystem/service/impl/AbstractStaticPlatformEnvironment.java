@@ -1,9 +1,7 @@
 package com.centit.framework.staticsystem.service.impl;
 
 import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.framework.model.basedata.IUnitRole;
-import com.centit.framework.model.basedata.IUserInfo;
-import com.centit.framework.model.basedata.IUserSetting;
+import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
@@ -615,6 +613,16 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<UserSetting> getAllSettings(){
         return null;
+    }
+
+    /**
+     * 新增菜单和操作
+     * @param optInfos 菜单对象集合
+     * @param optMethods 操作对象集合
+     */
+    @Override
+    public void insertOpt(List<? extends IOptInfo> optInfos, List<? extends IOptMethod> optMethods){
+
     }
 
 }

@@ -266,4 +266,11 @@ public interface PlatformEnvironment {
      * @param userSetting 用户参数， paramValue = null 则为删除
      */
     void saveUserSetting(IUserSetting userSetting);
+
+    /**
+     * 新增菜单和操作
+     * @param optInfos 菜单对象集合
+     * @param optMethods 操作对象集合
+     */
+    void insertOpt(List<? extends IOptInfo> optInfos, List<? extends IOptMethod> optMethods);
 }
