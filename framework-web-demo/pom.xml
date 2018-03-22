@@ -67,6 +67,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.centit.framework</groupId>
+            <artifactId>framework-system-static-config</artifactId>
+            <version>${centit.framework.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
             <version>${persistence-api.version}</version>

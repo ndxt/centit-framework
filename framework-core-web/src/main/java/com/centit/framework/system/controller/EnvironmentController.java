@@ -1,4 +1,4 @@
-package com.centit.framework.staticsystem.controller;
+package com.centit.framework.system.controller;
 
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseSingleData;
