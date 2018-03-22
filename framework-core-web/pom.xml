@@ -9,17 +9,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>framework-filter</artifactId>
-    <name>com.centit.framework:framework-filter</name>
+    <artifactId>framework-core-web</artifactId>
+    <name>com.centit.framework:framework-core-web</name>
     <packaging>jar</packaging>
-    <description>框架过滤器配置类</description>
+    <description>用户验证接口，缓存接口</description>
 
     <dependencies>
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-core</artifactId>
             <version>${centit.framework.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -28,6 +27,6 @@
             <version>${servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
-    </dependencies>
 
+    </dependencies>
 </project>

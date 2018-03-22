@@ -5,7 +5,7 @@
     <parent>
         <artifactId>framework-parent</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>4.1-SNAPSHOT</version>
+        <version>4.1.1803</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,7 +19,6 @@
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-core</artifactId>
             <version>${centit.framework.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Spring security family -->
@@ -27,12 +26,12 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-cas</artifactId>
             <version>${spring.security.version}</version>
-            <exclusions>
+            <!--<exclusions>
                 <exclusion>
                     <artifactId>commons-lang</artifactId>
                     <groupId>commons-lang</groupId>
                 </exclusion>
-            </exclusions>
+            </exclusions>-->
         </dependency>
 
         <dependency>
