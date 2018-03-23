@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>com.centit.support</groupId>
-            <artifactId>centit-database</artifactId>
+            <artifactId>centit-database-datasource</artifactId>
             <version>${centit.commons.version}</version>
         </dependency>
 
@@ -47,6 +47,17 @@
             <version>${servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
 </project>

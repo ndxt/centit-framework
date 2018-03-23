@@ -68,8 +68,8 @@
     <orderEntry type="library" name="Maven: com.centit.product:msgpusher-utils:0.1.1803" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-websocket:4.3.14.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: com.centit.framework:centit-persistence-core:1.1.1803" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:4.3.14.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.3.14.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.2.1803" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-compiler:2.2.1803" level="project" />
     <orderEntry type="library" name="Maven: javax.validation:validation-api:2.0.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-web:4.3.14.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:4.3.14.RELEASE" level="project" />
@@ -99,6 +99,7 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:4.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-ldap:4.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.ldap:spring-ldap-core:2.3.2.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.3.12.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-taglibs:4.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-acl:4.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: biz.paluch.redis:lettuce:4.4.1.Final" level="project" />
@@ -111,6 +112,7 @@
     <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.15.Final" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />
     <orderEntry type="library" name="Maven: com.h2database:h2:1.4.196" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:4.3.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.session:spring-session:1.3.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.session:spring-session-data-redis:1.3.2.RELEASE" level="project" />
@@ -123,8 +125,7 @@
     <orderEntry type="module" module-name="framework-system-static" />
     <orderEntry type="module" module-name="framework-system-static-config" />
     <orderEntry type="module" module-name="framework-system-static-jdbc" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.2.1803" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-compiler:2.2.1803" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-database-datasource:2.2.1803" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-dbcp2:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: net.sf.ehcache:ehcache:2.10.4" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:javax.persistence-api:2.2" level="project" />
