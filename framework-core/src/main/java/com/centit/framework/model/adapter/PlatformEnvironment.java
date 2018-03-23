@@ -272,5 +272,7 @@ public interface PlatformEnvironment {
      * @param optInfos 菜单对象集合
      * @param optMethods 操作对象集合
      */
-    void insertOpt(List<? extends IOptInfo> optInfos, List<? extends IOptMethod> optMethods);
+    void insertOrUpdateMenu(List<? extends IOptInfo> optInfos, List<? extends IOptMethod> optMethods);
+
 }
+

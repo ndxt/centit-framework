@@ -621,7 +621,7 @@ public abstract class AbstractStaticPlatformEnvironment
      * @param optMethods 操作对象集合
      */
     @Override
-    public void insertOpt(List<? extends IOptInfo> optInfos, List<? extends IOptMethod> optMethods){
+    public void insertOrUpdateMenu(List<? extends IOptInfo> optInfos, List<? extends IOptMethod> optMethods){
 
     }
 

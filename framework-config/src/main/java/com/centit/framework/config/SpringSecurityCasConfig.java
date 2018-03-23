@@ -54,7 +54,7 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         http.logout()
                 .logoutSuccessUrl(StringBaseOpt.emptyValue(defaultTargetUrl,"/"))
                 .and().exceptionHandling().accessDeniedPage("/system/exception/error/403")
-                .and().sessionManagement().invalidSessionUrl("/system/exception/error/401")
+//                .and().sessionManagement().invalidSessionUrl("/system/exception/error/401")
                 .and().httpBasic().authenticationEntryPoint(casEntryPoint);
 
         AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(centitUserDetailsService);
