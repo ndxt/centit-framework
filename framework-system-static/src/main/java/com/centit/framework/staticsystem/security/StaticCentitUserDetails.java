@@ -105,10 +105,12 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     public IUserUnit getCurrentStation() {
         if(currentStation==null){
             List<UserUnit> uus = getUserInfo().getUserUnits();
-            for(UserUnit uu : uus){
-                if("T".equals(uu.getIsPrimary())){
-                    currentStation = uu;
-                    break;
+            if(uus!=null) {
+                for (UserUnit uu : uus) {
+                    if ("T".equals(uu.getIsPrimary())) {
+                        currentStation = uu;
+                        break;
+                    }
                 }
             }
         }
