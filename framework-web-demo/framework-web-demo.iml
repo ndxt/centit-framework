@@ -86,6 +86,7 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:4.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.21.0-GA" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.9.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.9.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-web:2.9.1" level="project" />
@@ -120,11 +121,12 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-oxm:4.2.9.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: redis.clients:jedis:2.8.1" level="project" />
     <orderEntry type="module" module-name="framework-system-static" />
+    <orderEntry type="module" module-name="framework-system-static-config" />
+    <orderEntry type="module" module-name="framework-system-static-jdbc" />
     <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.2.1803" level="project" />
     <orderEntry type="library" name="Maven: com.centit.support:centit-compiler:2.2.1803" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-dbcp2:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: net.sf.ehcache:ehcache:2.10.4" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:javax.persistence-api:2.2" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.8">

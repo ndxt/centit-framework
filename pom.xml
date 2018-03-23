@@ -121,6 +121,7 @@
         <module>framework-system-static</module>
         <module>framework-core-web</module>
         <module>framework-system-static-config</module>
+        <module>framework-system-static-jdbc</module>
     </modules>
 
 
