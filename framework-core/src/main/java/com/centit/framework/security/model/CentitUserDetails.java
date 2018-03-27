@@ -93,7 +93,7 @@ public interface CentitUserDetails extends
      * 获取当前机构
      * @return 当前机构（单位）代码
      */
-    String getCurrentStationId();
+    String getCurrentUnitCode();
     /*{
         IUserUnit cs = getCurrentStation();
         return cs != null? cs.getUnitCode() : getUserInfo().getPrimaryUnit();

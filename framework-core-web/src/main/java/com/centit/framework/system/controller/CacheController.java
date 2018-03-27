@@ -270,7 +270,7 @@ public class CacheController {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud!=null){
             //String usercode = ud.getUserCode();
-            String userUnit = ud.getCurrentStationId();
+            String userUnit = ud.getCurrentUnitCode();
             if(userUnit!=null){
                 unitParams = new HashMap<>();
                 Set<String> uSet = new HashSet<String>();
@@ -311,7 +311,7 @@ public class CacheController {
                 uSet.add(userCode);
                 userParams.put("O", uSet);
             }
-            String userUnit = ud.getCurrentStationId();
+            String userUnit = ud.getCurrentUnitCode();
             if(userUnit!=null){
                 unitParams = new HashMap<>();
                 Set<String> uSet = new HashSet<>();
