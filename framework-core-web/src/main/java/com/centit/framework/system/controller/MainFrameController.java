@@ -480,7 +480,7 @@ public class MainFrameController extends BaseController {
                     "用户没有登录或者超时，请重新登录。", response);
             return;
         }
-        currentUser.setCurrentStation(userUnitId);
+        currentUser.setCurrentStationId(userUnitId);
         JsonResultUtils.writeSuccessJson(response);
     }
 
