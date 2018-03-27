@@ -75,7 +75,8 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
      */
     private String updator;
 
- 
+    private List<UserUnit> userUnits;
+
     public String getUserPwd() {
         return userPwd;
     }
@@ -276,6 +277,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     public boolean isEnabled() {
         return "T".equals(isValid);
     }
+
     @Override
     public String getLoginName() {
         if (loginName == null)
@@ -445,7 +447,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     }
 
     
-    private List<UserUnit> userUnits;
+
 
     public UserInfo addUserUnit(UserUnit uu) {
         if(userUnits==null)

@@ -31,7 +31,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     private static final long serialVersionUID = 1L;
 
     protected UserInfo userInfo;
-    private UserUnit currentStation;
+    private String currentStationId;
     private Map<String, String> userSettings;
     private Map<String, String> userOptList;
     private List<RoleInfo> userRoles;
@@ -53,6 +53,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     }
 
     @Override
+    @JSONField(serialize = false)
     public String getUserCode(){
         return getUserInfo().getUserCode();
     }
@@ -102,36 +103,30 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     }
 
     @Override
+    @JSONField(serialize = false)
     public IUserUnit getCurrentStation() {
-        if(currentStation==null){
-            List<UserUnit> uus = getUserInfo().getUserUnits();
-            if(uus!=null) {
-                for (UserUnit uu : uus) {
-                    if ("T".equals(uu.getIsPrimary())) {
-                        currentStation = uu;
-                        break;
-                    }
-                }
-            }
-        }
-        return currentStation;
-    }
-
-    @Override
-    public void setCurrentStation(String userUnitId) {
         List<UserUnit> uus = getUserInfo().getUserUnits();
-        if(uus != null && uus.size() > 0) {
+        if (uus != null) {
             for (UserUnit uu : uus) {
-                if (StringUtils.equals(userUnitId, uu.getUserUnitId())) {
-                    currentStation = uu;
-                    return;
+                if (StringUtils.equals(currentStationId, uu.getUserUnitId())) {
+                    return uu;
+                }
+
+                if (StringUtils.isBlank(currentStationId) && "T".equals(uu.getIsPrimary())) {
+                    return uu;
                 }
             }
         }
+        return null;
     }
 
     @Override
-    public String getCurrentUnit(){
+    public void setCurrentStationId(String userUnitId) {
+        currentStationId = userUnitId;
+    }
+
+    @Override
+    public String getCurrentStationId(){
         IUserUnit cs = getCurrentStation();
         return cs != null? cs.getUnitCode() : getUserInfo().getPrimaryUnit();
     }

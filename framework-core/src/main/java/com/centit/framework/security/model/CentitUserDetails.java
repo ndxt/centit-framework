@@ -88,12 +88,12 @@ public interface CentitUserDetails extends
      * 设置当前用户机构
      * @param userUnitId 当前机构（单位）代码
      */
-    void setCurrentStation(String userUnitId);
+    void setCurrentStationId(String userUnitId);
     /**
      * 获取当前机构
      * @return 当前机构（单位）代码
      */
-    String getCurrentUnit();
+    String getCurrentStationId();
     /*{
         IUserUnit cs = getCurrentStation();
         return cs != null? cs.getUnitCode() : getUserInfo().getPrimaryUnit();
