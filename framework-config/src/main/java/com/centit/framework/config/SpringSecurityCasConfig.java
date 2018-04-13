@@ -43,7 +43,7 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.authorizeRequests().antMatchers("/**").hasAnyAuthority();
+        http.authorizeRequests().antMatchers("/**").authenticated();
 
         ServiceProperties casServiceProperties = createCasServiceProperties();
         CasAuthenticationEntryPoint casEntryPoint = createCasEntryPoint(casServiceProperties);
