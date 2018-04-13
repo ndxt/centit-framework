@@ -8,6 +8,7 @@ import com.centit.support.algorithm.StringBaseOpt;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -36,11 +37,13 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
     @Override
     public void configure(WebSecurity web) throws Exception {
         // 设置不拦截规则
-        web.ignoring().antMatchers("/system/login","/service/exception/**","/system/login/**");
+        web.ignoring().antMatchers(HttpMethod.GET, "/**/login","/**/exception/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http.authorizeRequests().antMatchers("/**").hasAnyAuthority();
 
         ServiceProperties casServiceProperties = createCasServiceProperties();
         CasAuthenticationEntryPoint casEntryPoint = createCasEntryPoint(casServiceProperties);
