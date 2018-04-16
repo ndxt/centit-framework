@@ -31,7 +31,7 @@
     <orderEntry type="module" module-name="framework-core-web" />
     <orderEntry type="module" module-name="framework-core" />
     <orderEntry type="module" module-name="framework-adapter" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-utils:2.2.1803" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-utils:2.2.1804" level="project" />
     <orderEntry type="library" name="Maven: org.mnode.ical4j:ical4j:2.2.0" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.1" level="project" />
@@ -67,9 +67,9 @@
     </orderEntry>
     <orderEntry type="library" name="Maven: com.centit.product:msgpusher-utils:0.1.1803" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-websocket:4.3.14.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.framework:centit-persistence-core:1.1.1803" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.2.1803" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-compiler:2.2.1803" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.framework:centit-persistence-core:1.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.2.1804" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-compiler:2.2.1804" level="project" />
     <orderEntry type="library" name="Maven: javax.validation:validation-api:2.0.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-web:4.3.14.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:4.3.14.RELEASE" level="project" />
@@ -125,7 +125,7 @@
     <orderEntry type="module" module-name="framework-system-static" />
     <orderEntry type="module" module-name="framework-system-static-config" />
     <orderEntry type="module" module-name="framework-system-static-jdbc" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-database-datasource:2.2.1803" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-database-datasource:2.2.1804" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-dbcp2:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: net.sf.ehcache:ehcache:2.10.4" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:javax.persistence-api:2.2" level="project" />

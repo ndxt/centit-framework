@@ -6,14 +6,10 @@ import com.centit.framework.config.*;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
-import com.centit.framework.web.demo.listener.InstantiationServiceBeanPostProcessor;
 import com.centit.msgpusher.msgpusher.websocket.SocketMsgPusher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
-
-import java.util.Properties;
 
 /**
  * Created by codefan on 17-7-18.

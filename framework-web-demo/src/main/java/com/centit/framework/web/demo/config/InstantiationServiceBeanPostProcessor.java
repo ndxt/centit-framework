@@ -1,4 +1,4 @@
-package com.centit.framework.web.demo.listener;
+package com.centit.framework.web.demo.config;
 
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.model.adapter.MessageSender;
