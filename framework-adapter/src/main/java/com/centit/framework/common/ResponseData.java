@@ -260,5 +260,11 @@ public interface ResponseData{
         return toJSONString(null);
     }
 
+    static ResponseData makeSuccessResponse(){
+        return new ResponseSingleData();
+    }
 
+    static ResponseData makeErrorMessage(String message){
+        return new ResponseSingleData(ERROR_INTERNAL_SERVER_ERROR, message);
+    }
 }

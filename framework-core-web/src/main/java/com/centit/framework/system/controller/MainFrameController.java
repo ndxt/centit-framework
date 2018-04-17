@@ -495,14 +495,13 @@ public class MainFrameController extends BaseController {
     /**
      * 查询当前用户在某岗位的所有职位信息
      * @param rank 岗位代码
-     * @param response {@link HttpServletResponse}
      */
     @GetMapping(value = "userranks/{rank}")
     @ResponseBody
-    public ResponseData listUserUnitsByRank(@PathVariable String rank, HttpServletResponse response){
+    public ResponseData listUserUnitsByRank(@PathVariable String rank){
         CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
         if(centitUserDetails == null){
-            return new ResponseSingleData("用户没有登录或者超时，请重新登录");
+            return new ResponseSingleData(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录或者超时，请重新登录");
         }
         return ResponseSingleData.makeResponseData(
                 DictionaryMapUtils.objectsToJSONArray(
@@ -511,11 +510,10 @@ public class MainFrameController extends BaseController {
     /**
      * 查询当前用户在某职务的所有职位信息
      * @param station 职务代码
-     * @param response {@link HttpServletResponse}
      */
     @GetMapping(value = "userstations/{station}")
     @ResponseBody
-    public ResponseData listUserUnitsByStation(@PathVariable String station, HttpServletResponse response){
+    public ResponseData listUserUnitsByStation(@PathVariable String station){
         CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
         if(centitUserDetails == null){
             return new ResponseSingleData("用户没有登录或者超时，请重新登录");
