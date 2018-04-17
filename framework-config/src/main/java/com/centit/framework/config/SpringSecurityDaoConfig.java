@@ -1,19 +1,25 @@
 package com.centit.framework.config;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.security.AjaxAuthenticationSuccessHandler;
 import com.centit.framework.security.DaoFilterSecurityInterceptor;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -40,12 +46,19 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
     protected Object passwordEncoder;
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        // 设置不拦截规则
+        web.ignoring().antMatchers(HttpMethod.GET,"/**/login","/service/exception/**");
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
             http.csrf().csrfTokenRepository(csrfTokenRepository);
         } else {
             http.csrf().disable();
         }
+        http.authorizeRequests().antMatchers("/**").authenticated();
         http.authorizeRequests()
                 .antMatchers("/system/mainframe/login","/system/exception").permitAll()
                 .and().exceptionHandling().accessDeniedPage("/system/exception/error/403")
