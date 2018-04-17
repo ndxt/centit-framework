@@ -47,8 +47,15 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
+        String ignoreUrl = StringUtils.deleteWhitespace(env.getProperty("security.ignore.url"));
+        if(StringUtils.isNotBlank(ignoreUrl)){
+            String[] ignoreUrls = ignoreUrl.split(",");
+            for(int i = 0; i < ignoreUrls.length; i++){
+                web.ignoring().antMatchers(HttpMethod.GET, ignoreUrls[i]);
+            }
+        }
         // 设置不拦截规则
-        web.ignoring().antMatchers(HttpMethod.GET,"/**/login","/service/exception/**");
+//        web.ignoring().antMatchers(HttpMethod.GET,"/**/login","/system/exception/**");
     }
 
     @Override
@@ -58,14 +65,13 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         } else {
             http.csrf().disable();
         }
+        http.authorizeRequests().antMatchers("/**/login","/system/exception").permitAll();
 
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("access.resource.notallowed.anonymous"),false)) {
             http.authorizeRequests().antMatchers("/**").authenticated();
         }
 
-        http.authorizeRequests()
-                .antMatchers("/system/mainframe/login","/system/exception").permitAll()
-                .and().exceptionHandling().accessDeniedPage("/system/exception/error/403")
+        http.exceptionHandling().accessDeniedPage("/system/exception/error/403")
 //                .and().sessionManagement().invalidSessionUrl("/system/exception/error/401")
                 .and().httpBasic().authenticationEntryPoint(authenticationEntryPoint());
 
