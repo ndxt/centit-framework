@@ -42,8 +42,9 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        http.authorizeRequests().antMatchers("/**").authenticated();
+        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("access.resource.notallowed.anonymous"),false)) {
+            http.authorizeRequests().antMatchers("/**").authenticated();
+        }
 
         ServiceProperties casServiceProperties = createCasServiceProperties();
         CasAuthenticationEntryPoint casEntryPoint = createCasEntryPoint(casServiceProperties);

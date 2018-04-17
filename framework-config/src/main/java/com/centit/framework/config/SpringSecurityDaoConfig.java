@@ -58,7 +58,11 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         } else {
             http.csrf().disable();
         }
-        http.authorizeRequests().antMatchers("/**").authenticated();
+
+        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("access.resource.notallowed.anonymous"),false)) {
+            http.authorizeRequests().antMatchers("/**").authenticated();
+        }
+
         http.authorizeRequests()
                 .antMatchers("/system/mainframe/login","/system/exception").permitAll()
                 .and().exceptionHandling().accessDeniedPage("/system/exception/error/403")
