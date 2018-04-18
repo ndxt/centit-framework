@@ -5,8 +5,10 @@ import com.centit.framework.security.AjaxAuthenticationSuccessHandler;
 import com.centit.framework.security.DaoFilterSecurityInterceptor;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import org.apache.commons.lang3.StringUtils;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,8 +38,15 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
+        String ignoreUrl = StringUtils.deleteWhitespace(env.getProperty("security.ignore.url"));
+        if(StringUtils.isNotBlank(ignoreUrl)){
+            String[] ignoreUrls = ignoreUrl.split(",");
+            for(int i = 0; i < ignoreUrls.length; i++){
+                web.ignoring().antMatchers(HttpMethod.GET, ignoreUrls[i]);
+            }
+        }
         // 设置不拦截规则
-        web.ignoring().antMatchers(HttpMethod.GET, "/**/login","/**/exception/**");
+//        web.ignoring().antMatchers(HttpMethod.GET, "/**/login","/**/exception/**");
     }
 
     @Override
@@ -78,7 +87,7 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
 
         http.addFilterAt(casFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(centitPowerFilter, FilterSecurityInterceptor.class)
-                .addFilterBefore(requestSingleLogoutFilter(), LogoutFilter.class)
+//                .addFilterBefore(requestSingleLogoutFilter(), LogoutFilter.class)
                 .addFilterBefore(singleLogoutFilter(), CasAuthenticationFilter.class);
     }
 
@@ -116,7 +125,8 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         return casFilter;
     }
 
-    private SingleSignOutFilter singleLogoutFilter() {
+    @Bean
+    public SingleSignOutFilter singleLogoutFilter() {
         SingleSignOutFilter singleLogoutFilter = new SingleSignOutFilter();
         singleLogoutFilter.setCasServerUrlPrefix(env.getProperty("login.cas.casHome"));
         return singleLogoutFilter;
