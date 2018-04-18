@@ -14,6 +14,11 @@ public class SecurityContextUtils {
     public static final String AJAX_CHECK_CAPTCHA_RESULT = "ajaxCheckCaptchaResult";
     public final static String SecurityContextUserdetail = "SECURITY_CONTEXT_USERDETAIL";
     public final static String SecurityContextTokenName = "accessToken";
+    public final static String PUBLIC_ROLE_CODE = "public";
+    public final static String ADMIN_ROLE_CODE = "sysadmin";
+    public final static String ANONYMOUS_ROLE_CODE = "anonymous";
+    public final static String FORBIDDEN_ROLE_CODE = "forbidden";
+    public final static String DEPLOYER_ROLE_CODE = "deploy";
 
     public static CentitSessionRegistry getCentitSessionRegistry() {
         return ContextLoaderListener.getCurrentWebApplicationContext().

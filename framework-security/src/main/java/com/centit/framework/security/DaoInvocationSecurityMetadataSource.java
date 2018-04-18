@@ -1,10 +1,13 @@
 package com.centit.framework.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 
@@ -42,6 +45,11 @@ public class DaoInvocationSecurityMetadataSource
        /* if (logDebug) {
             logger.debug("通过权限过滤器 请求url = " + requestUrl + " 请求类型 = " + request.getMethod());
         }*/
-        return CentitSecurityMetadata.matchUrlToRole(requestUrl,request);
+        Collection<ConfigAttribute> needRoles = CentitSecurityMetadata.matchUrlToRole(requestUrl,request);
+        if(needRoles==null && requestUrl.contains("/mainframe/logincas")){
+            needRoles = new ArrayList<>(1);
+            needRoles.add(new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + SecurityContextUtils.PUBLIC_ROLE_CODE));
+        }
+        return needRoles;
     }
 }

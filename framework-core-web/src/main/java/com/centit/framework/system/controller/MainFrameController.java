@@ -49,7 +49,7 @@ public class MainFrameController extends BaseController {
     private boolean useCas;
     @Value("${login.cas.localHome}")
     private String localHome ;
-    @Value("${login.casHome}")
+    @Value("${login.cas.casHome}")
     private String casHome ;// https://productsvr.centit.com:8443/cas
     @Value("${app.local.firstpage}")
     private String firstpage ;
