@@ -45,13 +45,13 @@ public class MainFrameController extends BaseController {
     @Value("${deploy.enabled}")
     private boolean deploy;
     //单点登录开关
-    @Value("${cas.sso}")
+    @Value("${login.cas.enable}")
     private boolean useCas;
-    @Value("${local.home}")
+    @Value("${login.cas.localHome}")
     private String localHome ;
-    @Value("${cas.home}")
+    @Value("${login.casHome}")
     private String casHome ;// https://productsvr.centit.com:8443/cas
-    @Value("${local.firstpage}")
+    @Value("${app.local.firstpage}")
     private String firstpage ;
    
     /**

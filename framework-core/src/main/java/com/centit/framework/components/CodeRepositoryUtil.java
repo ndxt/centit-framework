@@ -880,12 +880,16 @@ public abstract class CodeRepositoryUtil {
     public static List<IUnitInfo> getAllUnits(String sState) {
         
         List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits();
+
+        ListOpt.sortAsTree(allunits,
+                ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
+
         List<IUnitInfo> units = new ArrayList<>();
         if("A".equals(sState)){
             units.addAll(allunits);
             return units;
         }
-       
+
         for (IUnitInfo unit : allunits) {
             if (sState.equals(unit.getIsValid())) {
                 units.add(unit);

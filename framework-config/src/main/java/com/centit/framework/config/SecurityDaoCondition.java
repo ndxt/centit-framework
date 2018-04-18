@@ -10,9 +10,10 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * Created by zou_wy on 2017/4/18.
  */
 public class SecurityDaoCondition implements Condition {
+
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        boolean isCas = StringRegularOpt.isTrue(SysParametersUtils.getStringValue("cas.sso"));
-        return ! isCas;
+        boolean isDao = StringRegularOpt.isTrue(SysParametersUtils.getStringValue("login.dao.enable"));
+        return isDao;
     }
 }

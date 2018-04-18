@@ -53,6 +53,11 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.anonymous.disable"),false)) {
+            http.anonymous().disable();
+        }
+
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
             http.csrf().csrfTokenRepository(csrfTokenRepository);
         } else {

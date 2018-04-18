@@ -55,7 +55,7 @@ public class WebConfig  {
     public static void registerSingleSignOutHttpSessionListener(ServletContext servletContext) {
         Properties properties =  SysParametersUtils.loadProperties();
         if( StringRegularOpt.isTrue(
-                properties.getProperty("cas.sso"))) {
+                properties.getProperty("login.cas.enable"))) {
             servletContext.addListener(SingleSignOutHttpSessionListener.class);
         }
     }
