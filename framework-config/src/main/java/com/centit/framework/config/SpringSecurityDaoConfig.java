@@ -61,20 +61,22 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.anonymous.disable"),false)) {
-            http.anonymous().disable();
+        http.authorizeRequests().antMatchers("/**/login","/system/exception").permitAll();
+        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("access.resource.notallowed.anonymous"),false)) {
+            http.authorizeRequests().antMatchers("/**").authenticated();
         }
+
+        /*if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.anonymous.disable"),false)) {
+            http.anonymous().disable();
+        }*/
 
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
             http.csrf().csrfTokenRepository(csrfTokenRepository);
         } else {
             http.csrf().disable();
         }
-        http.authorizeRequests().antMatchers("/**/login","/system/exception").permitAll();
 
-        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("access.resource.notallowed.anonymous"),false)) {
-            http.authorizeRequests().antMatchers("/**").authenticated();
-        }
+
 
         http.exceptionHandling().accessDeniedPage("/system/exception/error/403")
 //                .and().sessionManagement().invalidSessionUrl("/system/exception/error/401")

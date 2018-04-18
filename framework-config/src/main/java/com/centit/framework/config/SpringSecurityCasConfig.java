@@ -56,6 +56,7 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
             http.anonymous().disable();
         }
 
+        http.authorizeRequests().antMatchers("/system/exception").permitAll();
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("access.resource.notallowed.anonymous"),false)) {
             http.authorizeRequests().antMatchers("/**").authenticated();
         }
