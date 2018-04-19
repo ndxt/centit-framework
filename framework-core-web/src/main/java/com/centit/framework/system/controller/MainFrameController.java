@@ -91,12 +91,7 @@ public class MainFrameController extends BaseController {
         }
         //输入实施人员链接后未登录，后直接输入 普通用户登录链接
         session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
-        if(useCas)
-         {
-             return "redirect:/system/mainframe/logincas";
-         }else{
-             return "sys/login";
-         }
+        return useCas?"redirect:/system/mainframe/logincas":"sys/login";
     }
 
     /**
@@ -114,10 +109,8 @@ public class MainFrameController extends BaseController {
             //实施人员入口标记
             session.setAttribute(ENTRANCE_TYPE, DEPLOY_LOGIN);
         }
-        if (useCas)
-            return "redirect:/system/mainframe/logincas";
-        else    
-            return "sys/login";
+
+        return useCas ? "redirect:/system/mainframe/logincas":"sys/login";
     }
 
     /**

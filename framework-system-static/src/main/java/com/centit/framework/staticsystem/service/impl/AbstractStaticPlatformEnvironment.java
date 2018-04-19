@@ -2,6 +2,7 @@ package com.centit.framework.staticsystem.service.impl;
 
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
+import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
@@ -9,6 +10,7 @@ import com.centit.framework.security.model.OptTreeNode;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.framework.staticsystem.security.StaticCentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -596,7 +598,7 @@ public abstract class AbstractStaticPlatformEnvironment
             OptInfo oi = getOptInfo(ou.getOptId());
             if(oi!=null){
                 String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());
-                List<List<String>> sOpt = CentitSecurityMetadata.parseUrl(
+                List<List<String>> sOpt = CentitSecurityMetadata.parsePowerDefineUrl(
                         optDefUrl,ou.getOptReq());
 
                 for(List<String> surls : sOpt){
@@ -607,6 +609,9 @@ public abstract class AbstractStaticPlatformEnvironment
                 }
             }
         }
+
+        CentitSecurityMetadata.confirmLoginCasMustBeAuthed();
+
         return true;
     }
 

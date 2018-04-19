@@ -42,14 +42,15 @@ public class DaoInvocationSecurityMetadataSource
         FilterInvocation fi = (FilterInvocation) object;
         HttpServletRequest request = fi.getHttpRequest();
         String requestUrl = fi.getRequestUrl();
-       /* if (logDebug) {
+        /* if (logDebug) {
             logger.debug("通过权限过滤器 请求url = " + requestUrl + " 请求类型 = " + request.getMethod());
         }*/
-        Collection<ConfigAttribute> needRoles = CentitSecurityMetadata.matchUrlToRole(requestUrl,request);
+        return CentitSecurityMetadata.matchUrlToRole(requestUrl,request);
+/*        Collection<ConfigAttribute> needRoles = CentitSecurityMetadata.matchUrlToRole(requestUrl,request);
         if(needRoles==null && requestUrl.contains("/mainframe/logincas")){
             needRoles = new ArrayList<>(1);
             needRoles.add(new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + SecurityContextUtils.PUBLIC_ROLE_CODE));
         }
-        return needRoles;
+        return needRoles;*/
     }
 }

@@ -59,6 +59,8 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         http.authorizeRequests().antMatchers("/system/exception").permitAll();
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("access.resource.notallowed.anonymous"),false)) {
             http.authorizeRequests().antMatchers("/**").authenticated();
+        } else {
+            http.authorizeRequests().antMatchers("/system/mainframe/logincas").authenticated();
         }
 
         ServiceProperties casServiceProperties = createCasServiceProperties();
