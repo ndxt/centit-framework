@@ -29,12 +29,12 @@ public class InstantiationServiceBeanPostProcessor implements ApplicationListene
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event)
     {
-        if(innerMessageManager!=null)
+        if(innerMessageManager!=null) {
             notificationCenter.registerMessageSender("innerMsg", innerMessageManager);
-        if(optLogManager!=null)
+        }
+        if(optLogManager!=null) {
             OperationLogCenter.registerOperationLogWriter(optLogManager);
-
-
+        }
     }
 
 }
