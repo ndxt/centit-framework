@@ -478,10 +478,10 @@ public class CacheController {
     @Value("${app.home}")
     private String appHome;
 
-    @Value("${jdbc.url:''}")
+    @Value("${jdbc.url:}")
     private String jdbcUrl;
 
-    @Value("${spring.datasource.url:''}")
+    @Value("${spring.datasource.url:}")
     private String springDatasourceUrl;
 
     public void setAppHome(String appHome) {
