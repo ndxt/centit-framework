@@ -16,11 +16,11 @@ public class RedisSessionPersistenceConfig {
     @Value("${session.redis.host}")
     private String host;
 
-    @Value("${session.redis.port}")
-    private String port;
+    @Value("${session.redis.port:6379}")
+    private Integer port;
 
     @Bean
     public LettuceConnectionFactory connectionFactory() {
-        return new LettuceConnectionFactory(host,Integer.parseInt(port));
+        return new LettuceConnectionFactory(host,port);
     }
 }
