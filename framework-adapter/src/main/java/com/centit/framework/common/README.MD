@@ -81,6 +81,15 @@ client.close();
 
 js客户端
 
+
 ```js
-//请张凯补充
+var Core = require('core/core');
+Core.ajax(url, options)
+    .then(function(data) {
+        alert('成功');
+    })
+    // 如果需要捕获错误
+    .catch(function(data) {
+        alert('错误');
+    });
 ```
