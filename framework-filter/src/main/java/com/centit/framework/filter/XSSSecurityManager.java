@@ -3,16 +3,15 @@
  */
 package com.centit.framework.filter;
 
-import java.util.Iterator;
-import java.util.regex.Pattern;
-
-import javax.servlet.FilterConfig;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.FilterConfig;
+import java.util.Iterator;
+import java.util.regex.Pattern;
 
 /**
  * @author hx

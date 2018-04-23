@@ -1,8 +1,8 @@
 package com.centit.framework.model.adapter;
 
-import java.util.List;
-
 import com.centit.framework.model.basedata.OperationLog;
+
+import java.util.List;
 
 /**
  * 

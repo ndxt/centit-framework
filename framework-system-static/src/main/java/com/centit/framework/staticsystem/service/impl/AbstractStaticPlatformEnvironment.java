@@ -2,7 +2,6 @@ package com.centit.framework.staticsystem.service.impl;
 
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
-import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
@@ -10,7 +9,6 @@ import com.centit.framework.security.model.OptTreeNode;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.framework.staticsystem.security.StaticCentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -143,7 +141,7 @@ public abstract class AbstractStaticPlatformEnvironment
                 return ui;
         }
         return null;
-    }   
+    }
 
     @Override
     public UserInfo getUserInfoByUserCode(String userCode){
@@ -590,7 +588,7 @@ public abstract class AbstractStaticPlatformEnvironment
         }
         //将操作和角色对应关系中的角色排序，便于权限判断中的比较
         CentitSecurityMetadata.sortOptMethodRoleMap();
-        
+
 
         CentitSecurityMetadata.optTreeNode.setChildList(null);
         CentitSecurityMetadata.optTreeNode.setOptCode(null);

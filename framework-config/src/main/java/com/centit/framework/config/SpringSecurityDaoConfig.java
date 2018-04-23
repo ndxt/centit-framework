@@ -1,8 +1,5 @@
 package com.centit.framework.config;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.security.AjaxAuthenticationSuccessHandler;
 import com.centit.framework.security.DaoFilterSecurityInterceptor;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;

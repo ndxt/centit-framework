@@ -1,12 +1,11 @@
 package com.centit.framework.appclient;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.http.impl.client.CloseableHttpClient;
-
 import com.centit.framework.common.ResponseJSON;
 import com.centit.support.network.HttpExecutor;
+import org.apache.http.impl.client.CloseableHttpClient;
+
+import java.io.IOException;
+import java.util.List;
 @SuppressWarnings("unused")
 public class RestfulHttpRequest {
 

@@ -1,15 +1,14 @@
 package com.centit.framework.model.basedata;
 
+import com.alibaba.fastjson.JSON;
+import com.centit.support.algorithm.ReflectionOpt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSON;
-import com.centit.support.algorithm.ReflectionOpt;
 
 
 public class OperationLog implements java.io.Serializable {

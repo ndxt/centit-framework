@@ -1,10 +1,10 @@
 package com.centit.framework.staticsystem.po;
 
+import com.centit.framework.model.basedata.IRoleInfo;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.centit.framework.model.basedata.IRoleInfo;
 
 /**
  * FRoleinfo entity.
@@ -17,10 +17,10 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
     // Fields
     private static final long serialVersionUID = 1L;
 
- 
+
     private String roleCode; // 角色代码
 
- 
+
     private String roleName; // 角色名称
 
 
@@ -39,8 +39,8 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
 
 
     private String roleDesc; // 角色描述
-    
- 
+
+
     protected Date createDate;
 
     /**
@@ -102,7 +102,7 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
     public void setRoleDesc(String roledesc) {
         this.roleDesc = roledesc;
     }
-    
+
     public Date getCreateDate() {
         return createDate;
     }
@@ -154,7 +154,7 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
             this.roleType = other.getRoleType();
         if (other.getUnitCode() != null)
             this.unitCode = other.getUnitCode();
- 
+
     }
 
     public void copy(RoleInfo other) {
@@ -164,17 +164,17 @@ public class RoleInfo implements IRoleInfo, java.io.Serializable{
         this.roleDesc = other.getRoleDesc();
         this.roleType = other.getRoleType();
         this.unitCode = other.getUnitCode();
- 
+
     }
 
     private List<RolePower> rolePowers;
-    
+
     public void addRolePowers(RolePower rolePower){
         if(rolePowers==null)
             rolePowers = new ArrayList<RolePower>();
         rolePowers.add(rolePower);
     }
-    
+
     @Override
     public List<RolePower> getRolePowers() {
         if(rolePowers==null)

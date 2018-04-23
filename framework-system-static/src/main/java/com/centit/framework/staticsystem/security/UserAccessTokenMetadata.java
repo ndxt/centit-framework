@@ -1,15 +1,14 @@
 package com.centit.framework.staticsystem.security;
 
+import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.support.algorithm.DatetimeOpt;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.support.algorithm.DatetimeOpt;
 
 public class UserAccessTokenMetadata{
 

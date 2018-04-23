@@ -1,9 +1,9 @@
 package com.centit.framework.staticsystem.po;
 
-import java.util.Date;
-
 import com.centit.framework.model.basedata.IUserSetting;
 import com.centit.support.algorithm.DatetimeOpt;
+
+import java.util.Date;
 
 /**
  * create by scaffold

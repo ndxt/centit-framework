@@ -1,7 +1,6 @@
 package com.centit.framework.security;
 
 import com.centit.support.file.PropertiesReader;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;

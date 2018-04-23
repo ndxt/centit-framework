@@ -1,8 +1,6 @@
 package com.centit.framework.components.impl;
 
 import com.centit.framework.model.adapter.MessageSender;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by codefan on 17-7-24.

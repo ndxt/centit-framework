@@ -1,10 +1,9 @@
 package com.centit.framework.common;
 
-import java.io.Serializable;
-
+import com.centit.support.algorithm.StringBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 
-import com.centit.support.algorithm.StringBaseOpt;
+import java.io.Serializable;
 
 public class OptionItem implements Serializable {
     private static final long serialVersionUID = 1L;

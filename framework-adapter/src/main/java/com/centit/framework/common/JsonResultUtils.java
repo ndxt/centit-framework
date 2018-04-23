@@ -8,7 +8,6 @@ import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.file.FileType;
 import com.centit.support.xml.XMLObject;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

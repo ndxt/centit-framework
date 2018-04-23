@@ -1,5 +1,13 @@
 package com.centit.framework.core.controller;
 
+import com.alibaba.fastjson.serializer.JSONSerializer;
+import com.alibaba.fastjson.serializer.ObjectSerializer;
+import com.alibaba.fastjson.serializer.SerializeWriter;
+import com.centit.support.algorithm.StringBaseOpt;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -8,15 +16,6 @@ import java.lang.reflect.Type;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
-
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.serializer.JSONSerializer;
-import com.alibaba.fastjson.serializer.ObjectSerializer;
-import com.alibaba.fastjson.serializer.SerializeWriter;
-import com.centit.support.algorithm.StringBaseOpt;
 
 public class LobSerializer implements ObjectSerializer {
     protected Logger logger = LoggerFactory.getLogger(LobSerializer.class);

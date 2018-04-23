@@ -1,11 +1,10 @@
 package com.centit.framework.appclient;
 
+import com.centit.support.network.HttpExecutor;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.http.impl.client.CloseableHttpClient;
-
-import com.centit.support.network.HttpExecutor;
 
 public class PooledHttpClientFactory implements PooledObjectFactory<CloseableHttpClient>{
 

@@ -1,13 +1,12 @@
 package com.centit.framework.staticsystem.po;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.centit.framework.model.basedata.IDataCatalog;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.util.HtmlUtils;
 
-import com.centit.framework.model.basedata.IDataCatalog;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * FAddressBook entity.
@@ -18,13 +17,13 @@ import com.centit.framework.model.basedata.IDataCatalog;
 public class DataCatalog implements IDataCatalog,java.io.Serializable{
     private static final long serialVersionUID = 1L;
 
- 
+
     private String catalogCode; // 类别代码
 
-  
+
     private String catalogName;// 类别名称
 
-  
+
     private String catalogStyle;// 类别状态
 
     private String catalogType;// 类别形式
@@ -32,17 +31,17 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
 
     private String catalogDesc;// 类别描述
 
- 
+
     private String fieldDesc; // 字典字段描述
 
- 
+
     // 默认值为1如何设置？
     private String needCache; // 是否需要缓存
 
 
     private String optId;
 
- 
+
     private List<DataDictionary> dataDictionaries;
 
     // Constructors
@@ -69,7 +68,7 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
         this.needCache = needCache;
     }
 
- 
+
     public String getCatalogCode() {
         return this.catalogCode;
     }
@@ -149,7 +148,7 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
     public void setNeedCache(String needCache) {
         this.needCache = needCache;
     }
-  
+
     //结束
     public void copy(DataCatalog other) {
 
@@ -160,7 +159,7 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
         this.fieldDesc = other.getFieldDesc();
         this.optId = other.getOptId();
         this.needCache = other.getNeedCache();
- 
+
     }
 
     public void copyNotNullProperty(DataCatalog other) {
@@ -179,7 +178,7 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
             this.optId = other.getOptId();
             this.needCache = other.getOptId() == null ? "1" : other.getNeedCache();
         }
-   
+
     }
 
 
@@ -200,7 +199,7 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
         getDataDictionaries().add(dd);
         return this;
     }
-    
+
     public List<DataDictionary> getDataDictionaries() {
         if (null == dataDictionaries) {
             dataDictionaries = new ArrayList<>();

@@ -1,15 +1,14 @@
 package com.centit.framework.core.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.centit.framework.common.JsonResultUtils;
+import com.centit.framework.common.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.util.UrlPathHelper;
 
-import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.ResponseData;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 重写404

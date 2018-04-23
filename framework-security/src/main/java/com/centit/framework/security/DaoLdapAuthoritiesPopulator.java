@@ -1,12 +1,11 @@
 package com.centit.framework.security;
 
-import java.util.Collection;
-
+import com.centit.framework.security.model.CentitUserDetailsService;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 
-import com.centit.framework.security.model.CentitUserDetailsService;
+import java.util.Collection;
 
 //@Component("daoLdapAuthoritiesPopulator")
 public class DaoLdapAuthoritiesPopulator implements LdapAuthoritiesPopulator {

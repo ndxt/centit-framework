@@ -1,13 +1,13 @@
 package com.centit.framework.staticsystem.po;
 
+import com.centit.framework.components.CodeRepositoryUtil;
+import com.centit.framework.model.basedata.IUnitInfo;
+import com.centit.support.algorithm.DatetimeOpt;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.support.algorithm.DatetimeOpt;
 
 /**
  * FUnitinfo entity.
@@ -19,13 +19,13 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
     // Fields
     private static final long serialVersionUID = -2538006375160615889L;
 
- 
+
     private String unitCode; // 机构代码
 
- 
+
     private String parentUnit; // 上级机构代码
 
- 
+
     private String unitType; // 机构类别
 
 
@@ -34,8 +34,8 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
     private String unitName;// 机构名称
 
 
-    private String englishName;// 机构英文名称      
-    
+    private String englishName;// 机构英文名称
+
 
     private String unitShortName;
 
@@ -44,7 +44,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
 
 
     private String unitTag;//机构标识用于第三方系统关联
-    
+
 
     private String unitDesc; // 机构描述
 
@@ -59,10 +59,10 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
 
 
     private String depNo;
-    
-    
+
+
     private String unitPath;
-    
+
     private String unitManager;
 
     /**
@@ -75,14 +75,14 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
      */
     private String updator;
 
-  
+
     // Constructors
 
     /**
      * default constructor
      */
     public UnitInfo() {
-    
+
     }
 
     /**
@@ -95,7 +95,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitCode = unitcode;
         this.isValid = unitstate;
         this.unitName = unitname;
- 
+
     }
 
     public UnitInfo(String unitcode, String parentunit, String unittype,
@@ -119,7 +119,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
 
     public UnitInfo(String unitcode, String parentunit, String unittype,
                     String unitstate, String unitname, String unitdesc,
-                    Long addrbookid, String unitshortname, String depno, 
+                    Long addrbookid, String unitshortname, String depno,
                     String unittag, String englishname,String unitword, Long unitgrade) {
         this.unitCode = unitcode;
         this.parentUnit = parentunit;
@@ -133,10 +133,10 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitWord = unitword;
         this.unitGrade = unitgrade;
         this.unitTag = unittag;
-        this.englishName = englishname; 
+        this.englishName = englishname;
     }
 
-    
+
     public String getEnglishName() {
         return englishName;
     }
@@ -371,7 +371,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.depNo = depNo;
     }
 
- 
+
     public String getUnitPath() {
         return unitPath;
     }

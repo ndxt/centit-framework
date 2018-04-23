@@ -1,8 +1,8 @@
 package com.centit.framework.staticsystem.po;
 
-import java.util.Date;
-
 import com.centit.framework.model.basedata.IUserRole;
+
+import java.util.Date;
 
 /**
  * FUserrole entity.
@@ -61,7 +61,7 @@ public class UserRole implements IUserRole, java.io.Serializable {
     public UserRole() {
         obtainType = "D";
     }
-    
+
     public String getUserCode() {
         return this.userCode;
     }
@@ -100,7 +100,7 @@ public class UserRole implements IUserRole, java.io.Serializable {
     public void setChangeDesc(String changedesc) {
         this.changeDesc = changedesc;
     }
-    
+
     public Date getCreateDate() {
         return createDate;
     }
@@ -117,11 +117,11 @@ public class UserRole implements IUserRole, java.io.Serializable {
     }
 
     public void copyNotNullProperty(UserRole other) {
-  
+
         if (other.getObtainDate() != null)
             this.obtainDate = other.getObtainDate();
         if (other.getChangeDesc() != null)
             this.changeDesc = other.getChangeDesc();
- 
-    }  
+
+    }
 }

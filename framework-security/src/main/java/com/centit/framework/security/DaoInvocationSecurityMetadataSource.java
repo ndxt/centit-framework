@@ -1,17 +1,12 @@
 package com.centit.framework.security;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
+import com.centit.framework.security.model.CentitSecurityMetadata;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 
-import com.centit.framework.security.model.CentitSecurityMetadata;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 
 //@Component("centitSecurityMetadataSource")
 public class DaoInvocationSecurityMetadataSource

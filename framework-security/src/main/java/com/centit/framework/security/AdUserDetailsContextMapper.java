@@ -1,14 +1,13 @@
 package com.centit.framework.security;
 
-import java.util.Collection;
-
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
-import com.centit.framework.security.SecurityContextUtils;
+
+import java.util.Collection;
 
 public class AdUserDetailsContextMapper implements UserDetailsContextMapper {
 

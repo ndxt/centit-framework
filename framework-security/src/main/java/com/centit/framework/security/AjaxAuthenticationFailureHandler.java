@@ -1,19 +1,17 @@
 package com.centit.framework.security;
 
-import java.io.IOException;
+import com.centit.framework.common.JsonResultUtils;
+import com.centit.framework.common.ResponseData;
+import com.centit.framework.common.ResponseMapData;
+import com.centit.framework.components.OperationLogCenter;
+import com.centit.support.algorithm.DatetimeOpt;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.centit.framework.common.ResponseMapData;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-
-import com.centit.framework.components.OperationLogCenter;
-import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.ResponseData;
-import com.centit.support.algorithm.DatetimeOpt;
+import java.io.IOException;
 
 public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 

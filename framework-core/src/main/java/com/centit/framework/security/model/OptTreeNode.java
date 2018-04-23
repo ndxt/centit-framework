@@ -1,9 +1,9 @@
 package com.centit.framework.security.model;
 
+import com.centit.support.algorithm.StringBaseOpt;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.centit.support.algorithm.StringBaseOpt;
 
 
 public class OptTreeNode {

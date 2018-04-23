@@ -8,16 +8,10 @@
  */
 package com.centit.framework.filter;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 网站常使用GZIP压缩算法对网页内容进行压缩，然后传给浏览器，以减小数据传输量，提高响应速度。浏览器接收到GZIP压缩数据后会自动解压并正确显示。

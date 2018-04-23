@@ -1,8 +1,11 @@
 package com.centit.framework.components.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSON;
+import com.centit.framework.components.CodeRepositoryUtil;
+import com.centit.framework.components.OperationLogCenter;
+import com.centit.framework.model.adapter.MessageSender;
+import com.centit.framework.model.adapter.NotificationCenter;
+import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IUserSetting;
 import com.centit.msgpusher.msgpusher.po.SimplePushMessage;
 import com.centit.msgpusher.msgpusher.po.SimplePushMsgPoint;
@@ -12,12 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSON;
-import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.model.adapter.NotificationCenter;
-import com.centit.framework.components.OperationLogCenter;
-import com.centit.framework.model.adapter.MessageSender;
-import com.centit.framework.model.adapter.PlatformEnvironment;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 通知中心实现，所有的消息通过此类进行发送，消息中心会通过接收用户设置的消息接收方式自行决定使用哪种消息发送方式

@@ -1,14 +1,14 @@
 package com.centit.framework.common;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 /**
  * 常用验证工具，适用于控制器及业务层中判断主键或关键对象且需要中断执行流程
  */

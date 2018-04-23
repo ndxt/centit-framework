@@ -1,9 +1,9 @@
 package com.centit.framework.staticsystem.po;
 
-import java.util.Date;
-
 import com.centit.framework.core.dao.DictionaryMap;
 import com.centit.framework.model.basedata.IUserUnit;
+
+import java.util.Date;
 
 /**
  * FUserunit entity.
@@ -30,7 +30,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
     private String userStation; // 岗位
 
     @DictionaryMap(fieldName="userRankText",value="RankType")
-    private String userRank; // 职务 
+    private String userRank; // 职务
 
     private String rankMemo; // 备注
     private String isPrimary; // 是否为主
@@ -38,7 +38,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
 
     protected Date createDate;
 
-  
+
     // Constructors
 
     /**
@@ -54,7 +54,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
     public void setUserUnitId(String userunitid) {
         this.userUnitId = userunitid;
     }
-    
+
     /**
      * minimal constructor
      * @param id String
@@ -109,8 +109,8 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
     public void setUserCode(String userCode) {
         this.userCode = userCode;
     }
-    
-    
+
+
 
     public String getRankMemo() {
         return this.rankMemo;
@@ -134,7 +134,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
         this.isPrimary = isprimary;
     }
 
-   
+
     public Long getUserOrder() {
         return userOrder;
     }
@@ -142,7 +142,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
     public void setUserOrder(Long userorder) {
         this.userOrder = userorder;
     }
-    
+
     public Date getCreateDate() {
         return createDate;
     }
