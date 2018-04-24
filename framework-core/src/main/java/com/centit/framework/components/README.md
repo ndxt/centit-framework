@@ -1,6 +1,6 @@
 # 公共组件
 
-## 代码库工具类 CodeRepositoryUtil
+## 数据字典工具类 CodeRepositoryUtil
 
 这个工具类通过静态方法可以访问框架中所有数据资源，包括：
 1. 组织、人员、人员组织关系信息。
