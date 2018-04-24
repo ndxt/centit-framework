@@ -45,22 +45,16 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
                 web.ignoring().antMatchers(HttpMethod.GET, ignoreUrls[i]);
             }
         }
+
+        web.httpFirewall(httpFirewall());
         // 设置不拦截规则
 //        web.ignoring().antMatchers(HttpMethod.GET, "/**/login","/**/exception/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.anonymous.disable"),false)) {
-            http.anonymous().disable();
-        }
-
-        http.authorizeRequests().antMatchers("/system/exception").permitAll();
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("access.resource.notallowed.anonymous"),false)) {
             http.authorizeRequests().antMatchers("/**").authenticated();
-        } else {
-            http.authorizeRequests().antMatchers("/system/mainframe/logincas").authenticated();
         }
 
         ServiceProperties casServiceProperties = createCasServiceProperties();
@@ -96,14 +90,14 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
 
     private CasAuthenticationEntryPoint createCasEntryPoint(ServiceProperties casServiceProperties) {
         CasAuthenticationEntryPoint casEntryPoint = new CasAuthenticationEntryPoint();
-        casEntryPoint.setLoginUrl(env.getProperty("login.cas.casHome")+"/login");
+        casEntryPoint.setLoginUrl(env.getProperty("cas.home")+"/login");
         casEntryPoint.setServiceProperties(casServiceProperties);
         return casEntryPoint;
     }
 
     private ServiceProperties createCasServiceProperties() {
         ServiceProperties casServiceProperties = new ServiceProperties();
-        casServiceProperties.setService(env.getProperty("login.cas.localHome")+"/login/cas");
+        casServiceProperties.setService(env.getProperty("local.home")+"/login/cas");
         casServiceProperties.setSendRenew(false);
         return casServiceProperties;
     }
@@ -112,7 +106,7 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
         casAuthenticationProvider.setUserDetailsService(centitUserDetailsService);
         casAuthenticationProvider.setServiceProperties(casServiceProperties);
-        casAuthenticationProvider.setTicketValidator(new Cas20ServiceTicketValidator(env.getProperty("login.cas.casHome")));
+        casAuthenticationProvider.setTicketValidator(new Cas20ServiceTicketValidator(env.getProperty("cas.home")));
         casAuthenticationProvider.setKey(env.getProperty("app.key"));
         return casAuthenticationProvider;
     }
@@ -131,12 +125,12 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
     @Bean
     public SingleSignOutFilter singleLogoutFilter() {
         SingleSignOutFilter singleLogoutFilter = new SingleSignOutFilter();
-        singleLogoutFilter.setCasServerUrlPrefix(env.getProperty("login.cas.casHome"));
+        singleLogoutFilter.setCasServerUrlPrefix(env.getProperty("cas.home"));
         return singleLogoutFilter;
     }
 
     private LogoutFilter requestSingleLogoutFilter() {
-        return new LogoutFilter(env.getProperty("login.cas.casHome")+"/logout", new SecurityContextLogoutHandler());
+        return new LogoutFilter(env.getProperty("cas.home")+"/logout", new SecurityContextLogoutHandler());
     }
 
     private AuthenticationManager creatAuthenticationManager(CasAuthenticationProvider casAuthenticationProvider) {

@@ -51,6 +51,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
                 web.ignoring().antMatchers(HttpMethod.GET, ignoreUrls[i]);
             }
         }
+        web.httpFirewall(httpFirewall());
         // 设置不拦截规则
 //        web.ignoring().antMatchers(HttpMethod.GET,"/**/login","/system/exception/**");
     }
@@ -72,8 +73,6 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         } else {
             http.csrf().disable();
         }
-
-
 
         http.exceptionHandling().accessDeniedPage("/system/exception/error/403")
 //                .and().sessionManagement().invalidSessionUrl("/system/exception/error/401")
