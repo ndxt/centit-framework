@@ -22,9 +22,12 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
 
     private Environment env;
 
+    @Resource
     @Override
     public void setEnvironment(final Environment environment) {
-        this.env = environment;
+        if(environment!=null) {
+            this.env = environment;
+        }
     }
 
     @Bean
@@ -41,7 +44,6 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         return  new StandardPasswordEncoderImpl();
     }
 
-    @Resource
     @Bean
     @Lazy(value = false)
     public PlatformEnvironment platformEnvironment(
