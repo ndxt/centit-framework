@@ -37,8 +37,8 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
      * @return CentitPasswordEncoder 密码加密算法
      */
     @Bean("passwordEncoder")
-    public CentitPasswordEncoderImpl passwordEncoder() {
-        return  new CentitPasswordEncoderImpl();
+    public StandardPasswordEncoderImpl passwordEncoder() {
+        return  new StandardPasswordEncoderImpl();
     }
 
     @Resource
