@@ -45,6 +45,8 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
                 web.ignoring().antMatchers(HttpMethod.GET, ignoreUrls[i]);
             }
         }
+
+        web.httpFirewall(httpFirewall());
         // 设置不拦截规则
 //        web.ignoring().antMatchers(HttpMethod.GET, "/**/login","/**/exception/**");
     }
