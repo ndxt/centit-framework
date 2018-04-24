@@ -24,7 +24,7 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
 
     @Resource
     @Override
-    public void setEnvironment(final Environment environment) {
+    public void setEnvironment(Environment environment) {
         if(environment!=null) {
             this.env = environment;
         }
