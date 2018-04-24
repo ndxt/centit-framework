@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-core</artifactId>
-            <version>${centit.framework.version}</version>
+            <version>${version}</version>
         </dependency>
 
         <!-- test library -->

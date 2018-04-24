@@ -20,7 +20,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <jdk.version>1.8</jdk.version>
-        <centit.framework.version>4.1-SNAPSHOT</centit.framework.version>
         <centit.commons.version>2.2.1803</centit.commons.version>
 
         <centit.ui.version>3.1.0</centit.ui.version>
@@ -45,13 +44,13 @@
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-core-web</artifactId>
-            <version>${centit.framework.version}</version>
+            <version>${version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-config</artifactId>
-            <version>${centit.framework.version}</version>
+            <version>${version}</version>
         </dependency>
 
         <!--<dependency>
@@ -63,13 +62,13 @@
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-system-static</artifactId>
-            <version>${centit.framework.version}</version>
+            <version>${version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-system-static-config</artifactId>
-            <version>${centit.framework.version}</version>
+            <version>${version}</version>
         </dependency>
 
         <dependency>
