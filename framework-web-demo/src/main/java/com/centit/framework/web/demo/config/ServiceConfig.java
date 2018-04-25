@@ -2,12 +2,14 @@ package com.centit.framework.web.demo.config;
 
 import com.centit.framework.components.impl.NotificationCenterImpl;
 import com.centit.framework.components.impl.TextOperationLogWriterImpl;
+import com.centit.framework.config.*;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
 import com.centit.msgpusher.msgpusher.websocket.SocketMsgPusher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.*;
 
 /**
  * Created by codefan on 17-7-18.
