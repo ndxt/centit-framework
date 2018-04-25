@@ -4,7 +4,7 @@
 
 ## 框架各模块介绍
 
-1. framework-adapter 将框提供的架基础服务抽象为接口，便于业务开发特定的实现，同时定义前后端数据交换格式。
+1. framework-adapter 将框提供的架基础服务抽象为接口，便于业务开发特定的实现，同时定义前后端数据交换格式。参见[framework-adapter/common](./tree/master/framework-adapter/src/main/java/com/centit/framework/common)。
 2. framework-core 框架的核心组件，包括工具类，用户、机构、权限等模型的数据抽象。平台运行依赖的数据接口（PlatformEnvironment）抽象等等。
 3. framework-security 框架基于spring security实现安全框架，这个类将spring security与平台数据模型整合。
 4. framework-filter 一组通用的过滤器，业务系统可以选择使用。
