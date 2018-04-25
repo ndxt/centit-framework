@@ -67,7 +67,13 @@ D/P：D和P对应的都是机构表达式，不同的是D是选择所有的用�
 
 ## impl/NotificationCenterImpl
 
-通知中心的默认实现，和日志不同，通知中心是也业务系统在同一个事务中的，所有没有提供工具类，而是通过bean的形式调用。通知中心的配置方式。
+通知中心的实现方式和操作日志不同，通知中心是也业务系统在同一个事务中的，所有没有提供工具类，而是通过bean的形式调用。
+
+1. 开发人员通过通知中心调用消息的发送操作，并不关系具体的发送方式。
+2. 通知中心可以注册多种发送方式，比如：邮件、短信等等，用户可以设置自己的接收方式，可以设置多种接收方式。
+3. 业务系统可以开发自己的消息发送[MessageSender](https://github.com/ndxt/centit-framework/tree/master/framework-adapter/src/main/java/com/centit/framework/model/adapter)接口,并注册到通知中心中。 
+
+通知中心的配置方式如下：
 
 ```java
 /**
