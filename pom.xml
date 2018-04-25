@@ -6,7 +6,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <centit.framework.version>4.1-SNAPSHOT</centit.framework.version>
         <centit.persistence.version>1.1-SNAPSHOT</centit.persistence.version>
         <jdk.version>1.8</jdk.version>
         <centit.commons.version>2.2.1804</centit.commons.version>
