@@ -60,3 +60,38 @@
 工作流权限引擎中的机构表达式中有一个特有的变量N，N代表节点的所属机构及引用节点机构引擎的结果。
 
 D/P：D和P对应的都是机构表达式，不同的是D是选择所有的用户P只选择主机构用户，所以一个【权限简单表达式】中只能有一个D或者P，不能同时存在。
+
+## OperationLogCenter
+
+日志记录操作工具类，参见[日志写入操作](https://github.com/ndxt/centit-framework/tree/master/framework-core/src/main/java/com/centit/framework/operationlog)。
+
+## impl/NotificationCenterImpl
+
+通知中心的默认实现，和日志不同，通知中心是也业务系统在同一个事务中的，所有没有提供工具类，而是通过bean的形式调用。通知中心的配置方式。
+
+```java
+/**
+ * Created by codefan on 17-7-6.
+ * 需要在配置类中创建这个 Bean 才能是日志生效
+ */
+public class InstantiationServiceBeanPostProcessor implements ApplicationListener<ContextRefreshedEvent>
+{
+
+    @Autowired
+    protected NotificationCenter notificationCenter;
+    
+    @Autowired(required = false)
+    private MessageSender innerMessageManager;
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event)
+    {
+        if(innerMessageManager!=null) {
+            //注入消息发送接口可以是多个
+            notificationCenter.registerMessageSender("innerMsg", innerMessageManager);
+        }
+    }
+
+}
+
+```
