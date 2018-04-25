@@ -170,7 +170,7 @@ public class CacheController {
     public void dictionary(@PathVariable String catalog, String extraCode,
             HttpServletRequest request,HttpServletResponse response) {
         List<? extends IDataDictionary> listObjects = CodeRepositoryUtil.getDictionary(catalog);
-        
+
         String lang = WebOptUtils.getCurrentLang(request);
         JSONArray dictJson = new JSONArray();
         for(IDataDictionary dict : listObjects){
@@ -193,7 +193,7 @@ public class CacheController {
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/dictionaryd/{catalog}", method = RequestMethod.GET)
-    public void dictionaryd(@PathVariable String catalog, 
+    public void dictionaryd(@PathVariable String catalog,
             HttpServletRequest request,HttpServletResponse response) {
         List<? extends IDataDictionary> listObjects = CodeRepositoryUtil.getDictionaryIgnoreD(catalog);
 
@@ -245,13 +245,13 @@ public class CacheController {
         List<IUnitInfo> listObjects = CodeRepositoryUtil.getSubUnits(unitcode);
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
-    
+
     @RequestMapping(value = "/allsubunits/{unitcode}", method = RequestMethod.GET)
     public void getAllSubUnits(@PathVariable String unitcode, HttpServletResponse response) {
         List<IUnitInfo> listObjects = CodeRepositoryUtil.getAllSubUnits(unitcode);
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
-    
+
     /**
      * 实现 机构表达式过滤
      * 获取所有符合状态标记的用户，
@@ -385,7 +385,7 @@ public class CacheController {
         List<IRoleInfo> listObjects = CodeRepositoryUtil.getRoleinfoListByType(roleType);
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
-    
+
     /**
      * CP标签中 SYS_VALUE 实现
      * 获取系统设置的值
@@ -412,7 +412,7 @@ public class CacheController {
         Map<String, Object> pv =  CodeRepositoryUtil.getSysConfigByPrefix(prefix);
         JsonResultUtils.writeSingleDataJson(pv, response);
     }
-    
+
     /**
      * 获取用户信息
      * @param response HttpServletResponse
@@ -424,7 +424,7 @@ public class CacheController {
                 .getRequest());
         JsonResultUtils.writeSingleDataJson(userDetails, response);
     }
-    
+
     /**
      * CP标签中USERSETTING实现
      * 获取用户当前设置值
@@ -438,7 +438,7 @@ public class CacheController {
         String pv =  CodeRepositoryUtil.getUserSettingValue(paramCode);
         JsonResultUtils.writeSingleDataJson(pv, response);
     }
-    
+
     /**
      * 获取用户所有设置
      * @param response HttpServletResponse
@@ -462,7 +462,7 @@ public class CacheController {
                 .checkUserOptPower(optId,method);
         JsonResultUtils.writeSingleDataJson(s, response);
     }
-    
+
     /**
      * 获取用户所有的 操作方法
      * 返回一个map，key为optid+‘-’+method value 为 'T'
@@ -475,7 +475,7 @@ public class CacheController {
     }
 
 
-    @Value("${app.home}")
+    @Value("${app.home:./}")
     private String appHome;
 
     @Value("${jdbc.url:}")

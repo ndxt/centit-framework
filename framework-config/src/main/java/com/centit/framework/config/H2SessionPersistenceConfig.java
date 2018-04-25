@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 @EnableJdbcHttpSession
 public class H2SessionPersistenceConfig {
 
-    @Value("${session.h2.file}")
+    @Value("${session.h2.file:}")
     private String filePath;
 
     @Bean

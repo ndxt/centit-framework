@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.centit.framework.components.impl;
 
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * @author ljy codefan
  * 2012-2-22
  */
@@ -23,7 +23,7 @@ public class EmailMessageSenderImpl implements MessageSender {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailMessageSenderImpl.class);
 
-    @Value("${message.sender.email.hostName}")
+    @Value("${message.sender.email.hostName:}")
     @NotNull
     private String hostName;
 
@@ -31,19 +31,19 @@ public class EmailMessageSenderImpl implements MessageSender {
     @NotNull
     private int smtpPort;
 
-    @Value("${message.sender.email.userName}")
+    @Value("${message.sender.email.userName:}")
     private String userName;
 
-    @Value("${message.sender.email.userPassword}")
+    @Value("${message.sender.email.userPassword:}")
     private String userPassword;
 
-    @Value("${message.sender.email.serverEmail}")
+    @Value("${message.sender.email.serverEmail:}")
     private String serverEmail;
 
     public String sendEmailMessage(String mailTo,String mailFrom,String msgSubject,String msgContent) {
-        
+
         MultiPartEmail multMail = new MultiPartEmail();
-        
+
         // SMTP
         multMail.setHostName(hostName);
                 //CodeRepositoryUtil.getValue("SysMail", "host_name"));
@@ -69,7 +69,7 @@ public class EmailMessageSenderImpl implements MessageSender {
         }
         return resStr;
     }
-    
+
     @Override
     public String sendMessage(String sender,String receiver ,String msgSubject,String msgContent){
         IUserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(sender);
@@ -79,16 +79,16 @@ public class EmailMessageSenderImpl implements MessageSender {
             //CodeRepositoryUtil.getValue("SysMail", "admin_email");
         }else
             mailFrom =  userinfo.getRegEmail();
-        
+
         userinfo = CodeRepositoryUtil.getUserInfoByCode(receiver);
         if(userinfo==null){
             logger.error("找不到用户："+receiver);
             return "找不到用户："+receiver;
         }
         String email = userinfo.getRegEmail();
-     
+
         if(email!=null && !"".equals(email))
-            return sendEmailMessage (email,mailFrom, msgSubject, msgContent); 
+            return sendEmailMessage (email,mailFrom, msgSubject, msgContent);
         else
             return "用户："+receiver+"没有设置注册邮箱";
     }

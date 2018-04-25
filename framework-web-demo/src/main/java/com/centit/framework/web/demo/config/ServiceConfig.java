@@ -27,7 +27,7 @@ public class ServiceConfig {
     @Autowired
     protected SocketMsgPusher socketMsgPusher;
 
-    @Value("${app.home}")
+    @Value("${app.home:./}")
     private String appHome;
 
     @Bean(initMethod = "initialEnvironment")

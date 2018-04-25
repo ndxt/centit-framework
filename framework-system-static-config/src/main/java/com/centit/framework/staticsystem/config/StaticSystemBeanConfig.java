@@ -63,7 +63,7 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
             return jdbcPlatformEnvironment;
         } else{
             JsonPlatformEnvironment jsonPlatformEnvironment = new JsonPlatformEnvironment();
-            jsonPlatformEnvironment.setAppHome(env.getProperty("app.home"));
+            jsonPlatformEnvironment.setAppHome(env.getProperty("app.home","./"));
             jsonPlatformEnvironment.setPasswordEncoder(passwordEncoder);
             jsonPlatformEnvironment.init();
             return jsonPlatformEnvironment;
