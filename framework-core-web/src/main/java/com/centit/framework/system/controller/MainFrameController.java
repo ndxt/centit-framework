@@ -38,22 +38,22 @@ public class MainFrameController extends BaseController {
     private static String optId = "mainframe";
     @Resource
     protected CsrfTokenRepository csrfTokenRepository;
-    
+
     @Resource
     protected PlatformEnvironment platformEnvironment;
     //实施人员入口开关
-    @Value("${deploy.enabled}")
+    @Value("${app.deploy.enabled:false}")
     private boolean deploy;
     //单点登录开关
-    @Value("${login.cas.enable}")
+    @Value("${login.cas.enable:false}")
     private boolean useCas;
-    @Value("${login.cas.localHome}")
+    @Value("${login.cas.localHome:}")
     private String localHome ;
-    @Value("${login.cas.casHome}")
+    @Value("${login.cas.casHome:}")
     private String casHome ;// https://productsvr.centit.com:8443/cas
-    @Value("${app.local.firstpage}")
+    @Value("${app.local.firstpage:}")
     private String firstpage ;
-   
+
     /**
      * 登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置
      * @param request request
@@ -180,7 +180,7 @@ public class MainFrameController extends BaseController {
      * @param response response
      */
     @RequestMapping(value ="/checkpwd",method = RequestMethod.POST)
-    public void checkpassword(String password, 
+    public void checkpassword(String password,
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null){
@@ -190,7 +190,7 @@ public class MainFrameController extends BaseController {
             JsonResultUtils.writeOriginalObject(bo, response);
         }
     }
-    
+
     /**
      * 这个方法是个内部通讯的客户端程序使用的，客户端程序通过用户代码（注意不是用户名）和密码登录，这个密码建议随机生成
      * @param request request
@@ -202,7 +202,7 @@ public class MainFrameController extends BaseController {
 
         String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
         String userPwd = StringBaseOpt.objectToString(formValue.get("password"));
-    
+
         CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
         if(ud==null){
             JsonResultUtils.writeErrorMessageJson("用户： "+userCode+"不存在。", response);
@@ -265,7 +265,7 @@ public class MainFrameController extends BaseController {
      */
     @RequestMapping(value = "/captchaimage",method = RequestMethod.GET)
     public void captchaImage( HttpServletRequest request, HttpServletResponse response) {
-  
+
         String checkcode = CaptchaImageUtil.getRandomString();
         request.getSession().setAttribute(
                 CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
@@ -280,7 +280,7 @@ public class MainFrameController extends BaseController {
      * @param response response
      */
     @RequestMapping(value = "/login/captchaimage",method = RequestMethod.GET)
-    public void loginCaptchaImage( HttpServletRequest request, HttpServletResponse response) {  
+    public void loginCaptchaImage( HttpServletRequest request, HttpServletResponse response) {
         captchaImage(  request,  response);
     }
 
@@ -292,7 +292,7 @@ public class MainFrameController extends BaseController {
      */
     @RequestMapping(value = "/checkcaptcha/{checkcode}",method = RequestMethod.GET)
     public void checkCaptchaImage(@PathVariable String checkcode, HttpServletRequest request, HttpServletResponse response) {
-  
+
         String sessionCode = StringBaseOpt.objectToString(
                     request.getSession().getAttribute(
                             CaptchaImageUtil.SESSIONCHECKCODE));
@@ -367,9 +367,9 @@ public class MainFrameController extends BaseController {
             JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN, "用户没有登录，请登录！", response);
             return;
         }
-        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);  
+        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
-       
+
 //        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(),asAdmin );
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(),"CENTIT",asAdmin );
 
@@ -385,16 +385,16 @@ public class MainFrameController extends BaseController {
                     "用户没有登录，请登录！", response);
             return;
         }
-        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);  
+        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
-       
+
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(
                 userDetails.getUserInfo().getUserCode(),optId ,asAdmin);
 
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
 
     }
-    
+
     @RequestMapping(value = "/getMenu/{userCode}" , method = RequestMethod.GET)
     public void getMemuByUsercode(@PathVariable String userCode,
             HttpServletRequest request, HttpServletResponse response) {
@@ -404,7 +404,7 @@ public class MainFrameController extends BaseController {
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
 
     }
-    
+
     @RequestMapping(value = "/expired" , method = RequestMethod.GET)
     public String sessionExpired(
             HttpServletRequest request,HttpServletResponse response) {
