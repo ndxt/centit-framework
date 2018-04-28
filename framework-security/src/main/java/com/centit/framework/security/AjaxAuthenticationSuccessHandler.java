@@ -20,13 +20,13 @@ import java.io.IOException;
 public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     private boolean writeLog = false;
-    
+
     public void setWriteLog(boolean writeLog) {
         this.writeLog = writeLog;
-    } 
+    }
 
     private boolean registToken = false;
-    
+
     public void setRegistToken(boolean registToken) {
         this.registToken = registToken;
     }
@@ -47,7 +47,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
 
     public AjaxAuthenticationSuccessHandler() {
     }
- 
+
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
 
@@ -56,7 +56,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         if(StringUtils.isNotBlank(lang)){
             //request.getSession().setAttribute("LOCAL_LANG", lang);
             WebOptUtils.setCurrentLang(request, lang);
-            String userLang = ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE);                
+            String userLang = ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE);
             if(! lang.equals(userLang)){
                 ud.setUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE, userLang);
                 if(userDetailsService!=null){
@@ -87,7 +87,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
 
         if(writeLog){
             OperationLogCenter.log(ud.getUserInfo().getUserCode(),"login", "login",
-                    "用户 ："+ud.getUserInfo().getUserCode()+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
+                    "用户 ："+ud.getUserInfo().getUserName()+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
                     + "从主机"+request.getRemoteHost()+":"+request.getRemotePort()+"登录。");
         }
 
