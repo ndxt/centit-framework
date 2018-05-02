@@ -159,8 +159,13 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value ="/changepwd",method = RequestMethod.PUT)
     public void changepassword(String password, String newPassword,
             HttpServletRequest request,HttpServletResponse response) {
-        password = request.getParameter("password");
-        newPassword = request.getParameter("newPassword");
+        if(StringUtils.isBlank(password)) {
+            password = request.getParameter("password");
+        }
+        if(StringUtils.isBlank(newPassword)) {
+            newPassword = request.getParameter("newPassword");
+        }
+
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null){
             JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
@@ -184,7 +189,9 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value ="/checkpwd",method = RequestMethod.POST)
     public void checkpassword(String password,
             HttpServletRequest request,HttpServletResponse response) {
-        password = request.getParameter("password");
+        if(StringUtils.isBlank(password)) {
+            password = request.getParameter("password");
+        }
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null){
             JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
