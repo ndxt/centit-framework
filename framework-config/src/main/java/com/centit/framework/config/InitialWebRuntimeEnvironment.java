@@ -18,6 +18,9 @@ public class InitialWebRuntimeEnvironment {
         configFastjson();
     }
 
+    /**
+     * 初始化fastJson的序列化类
+     */
     public static void configFastjson(){
         ParserConfig.getGlobalInstance().putDeserializer(java.sql.Timestamp.class, SqlTimestampDeserializer.instance);
         ParserConfig.getGlobalInstance().putDeserializer(java.sql.Date.class,  SqlDateDeserializer.instance);
