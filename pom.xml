@@ -4,40 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <centit.persistence.version>1.1-SNAPSHOT</centit.persistence.version>
-        <jdk.version>1.8</jdk.version>
-        <centit.commons.version>2.2.1804</centit.commons.version>
-        <centit.ui.version>3.1.0</centit.ui.version>
-
-        <centit.msgpusher.version>0.1.1803</centit.msgpusher.version>
-
-        <spring.version>4.3.14.RELEASE</spring.version>
-        <spring.security.version>4.2.4.RELEASE</spring.security.version>
-        <spring-security-oauth2.version>2.2.0.RELEASE</spring-security-oauth2.version>
-        <spring.session.version>1.3.2.RELEASE</spring.session.version>
-        <cas.client.version>3.4.1</cas.client.version>
-        <ehcache.version>2.10.4</ehcache.version>
-        <log4j.version>2.9.1</log4j.version>
-        <javafaker.version>0.14</javafaker.version>
-
-        <commons-pool2.version>2.4.3</commons-pool2.version>
-        <commons-fileupload.version>1.3.3</commons-fileupload.version>
-        <commons-io.version>2.5</commons-io.version>
-        <commons-codec.version>1.10</commons-codec.version>
-
-        <h2.version>1.4.196</h2.version>
-        <redis.version>4.4.1.Final</redis.version>
-
-        <persistence-api.version>2.2</persistence-api.version>
-        <javax.validation.version>2.0.0.Final</javax.validation.version>
-        <javassist.version>3.21.0-GA</javassist.version>
-        <jstl.version>1.2</jstl.version>
-        <servlet-api.version>3.1.0</servlet-api.version>
-
-        <junit.version>4.12</junit.version>
-    </properties>
+    <parent>
+        <artifactId>centit-framework-dependencies</artifactId>
+        <groupId>com.centit.framework</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
     <groupId>com.centit.framework</groupId>
     <artifactId>framework-parent</artifactId>
@@ -49,6 +20,13 @@
         同时，设计了一套基础用户、组织机构和功能权限、数据权限体系，作为公司内部研发的基础平台。
     </description>
     <url>https://github.com/ndxt/centit-framework</url>
+
+    <properties>
+        <centit.persistence.version>1.1-SNAPSHOT</centit.persistence.version>
+        <centit.commons.version>2.2.1804</centit.commons.version>
+        <centit.ui.version>3.1.0</centit.ui.version>
+        <centit.msgpusher.version>0.1.1803</centit.msgpusher.version>
+    </properties>
 
     <licenses>
         <license>
