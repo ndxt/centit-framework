@@ -20,7 +20,6 @@
             <artifactId>framework-system-static-jdbc</artifactId>
             <version>${version}</version>
         </dependency>
-
     </dependencies>
 
 </project>

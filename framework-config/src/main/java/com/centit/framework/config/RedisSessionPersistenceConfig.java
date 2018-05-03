@@ -13,7 +13,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableRedisHttpSession
 public class RedisSessionPersistenceConfig {
 
-    @Value("${session.redis.host}")
+    @Value("${session.redis.host:}")
     private String host;
 
     @Value("${session.redis.port:6379}")

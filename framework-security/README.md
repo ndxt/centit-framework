@@ -32,6 +32,6 @@ centit-cas在[apereo cas](https://www.apereo.org/projects/cas)的基础上开发
 
 功能权限通过[Spring security](https://docs.spring.io/spring-security/site/docs/current/guides/html5/)的过滤器实现，过滤器将请求url映射到optCode，通过角色信息查找用于这个optCode所有角色，然后对比当前用户是否具有其中的一个，如果有就通过，否则提示401。
 
-1. DaoInvocationSecurityMetadataSource 复制将url映射到业务操作，并查找对应的角色集合。
-2. DaoFilterSecurityInterceptor 复制过滤器的执行，在执行获取用户的session。
+1. DaoFilterSecurityInterceptor 负责过滤器的执行，在执行获取用户的session。
+2. DaoInvocationSecurityMetadataSource 复制将url映射到业务操作，并查找对应的角色集合。
 3. DaoAccessDecisionManager 判断用户是否有权限访问资源。
