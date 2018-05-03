@@ -92,6 +92,13 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
             }
         }
 
+        if(authentication==null || "anonymousUser".equals(authentication.getName())){
+            if("XMLHttpRequest".equals(fi.getRequest().getHeader("X-Requested-With"))){
+                fi.getResponse().setStatus(401);
+                return;
+            }
+        }
+
         InterceptorStatusToken token = super.beforeInvocation(fi);
         try {
             fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
