@@ -40,6 +40,11 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         centitPowerFilter.setAccessDecisionManager(centitAccessDecisionManagerBean);
         centitPowerFilter.setSecurityMetadataSource(centitSecurityMetadataSource);
         centitPowerFilter.setSessionRegistry(centitSessionRegistry);
+
+        centitPowerFilter.setAllResourceMustBeAudited(
+            BooleanBaseOpt.castObjectToBoolean(
+                env.getProperty("access.resource.must.be.audited"),false));
+
         return centitPowerFilter;
     }
 

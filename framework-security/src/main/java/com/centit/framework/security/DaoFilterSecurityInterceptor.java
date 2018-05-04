@@ -28,6 +28,11 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
     // ~ Methods
     // ========================================================================================================
 
+    private boolean allResourceMustBeAudited = false;
+
+    public void setAllResourceMustBeAudited(boolean allResourceMustBeAudited) {
+        this.allResourceMustBeAudited = allResourceMustBeAudited;
+    }
     /**
      * Method that is actually called by the filter chain. Simply delegates to
      * the {@link #invoke(FilterInvocation)} method.
@@ -92,7 +97,7 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
             }
         }
 
-        if(authentication==null || "anonymousUser".equals(authentication.getName())){
+        if(allResourceMustBeAudited && (authentication==null || "anonymousUser".equals(authentication.getName()))){
             if("XMLHttpRequest".equals(fi.getRequest().getHeader("X-Requested-With"))){
                 fi.getResponse().setStatus(401);
                 return;
