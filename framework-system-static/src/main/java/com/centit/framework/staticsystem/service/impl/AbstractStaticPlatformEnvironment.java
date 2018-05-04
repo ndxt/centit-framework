@@ -338,10 +338,10 @@ public abstract class AbstractStaticPlatformEnvironment
 
             OptInfo optInfo = menus.next();
             //去掉级联关系后需要手动维护这个属性
-
-            if (superOptId!=null && superOptId.equals(optInfo.getOptId())) {
+            if (StringUtils.isNotBlank(superOptId) && superOptId.equals(optInfo.getOptId())) {
                 parentOpt=optInfo;
             }
+
             boolean getParent = false;
             for (OptInfo opt : optInfos) {
                 if (opt.getOptId().equals(optInfo.getPreOptId())) {
@@ -394,37 +394,27 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public List<OptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin) {
-        CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
-        if(ud==null)
-            return null;
-
-        List<OptInfo> userOptinfos =listUserOptInfos(ud.getUserCode());
-        List<OptInfo> preOpts = getDirectOptInfo();
-
-        List<OptInfo> allUserOpt = getMenuFuncs(preOpts,userOptinfos);
-
-        Collections.sort(allUserOpt, (o1, o2) -> // Long.compare(o1.getOrderInd() , o2.getOrderInd())) ;
-                ( o2.getOrderInd() == null && o1.getOrderInd() == null)? 0 :
-                        ( (o2.getOrderInd() == null)? 1 :
-                                (( o1.getOrderInd() == null)? -1 :
-                                        ((o1.getOrderInd() > o2.getOrderInd())? 1:(
-                                                o1.getOrderInd() < o2.getOrderInd()?-1:0 ) ))));
-
-        return listObjectFormatAndFilterOptId(allUserOpt,null);
+        return listUserMenuOptInfosUnderSuperOptId(userCode, null, asAdmin);
     }
 
     @Override
     public List<OptInfo> listUserMenuOptInfosUnderSuperOptId(
             String userCode,String superOptId , boolean asAdmin) {
-        CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
+
+       /* CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
         if(ud==null)
-            return null;
-
-        List<OptInfo> userOptinfos =listUserOptInfos(ud.getUserCode());
-
+            return null;*/
+        List<OptInfo> userOptinfos =listUserOptInfos(userCode/*ud.getUserCode()*/);
         List<OptInfo> preOpts = getDirectOptInfo();
 
         List<OptInfo> allUserOpt = getMenuFuncs(preOpts,userOptinfos);
+
+        Collections.sort(allUserOpt, (o1, o2) -> // Long.compare(o1.getOrderInd() , o2.getOrderInd())) ;
+            ( o2.getOrderInd() == null && o1.getOrderInd() == null)? 0 :
+                ( (o2.getOrderInd() == null)? 1 :
+                    (( o1.getOrderInd() == null)? -1 :
+                        ((o1.getOrderInd() > o2.getOrderInd())? 1:(
+                            o1.getOrderInd() < o2.getOrderInd()?-1:0 ) ))));
 
         return listObjectFormatAndFilterOptId(allUserOpt,superOptId);
     }

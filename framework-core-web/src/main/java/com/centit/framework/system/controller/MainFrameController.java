@@ -53,7 +53,8 @@ public class MainFrameController extends BaseController {
     private String casHome ;// https://productsvr.centit.com:8443/cas
     @Value("${app.local.firstpage:}")
     private String firstpage ;
-
+    @Value("${app.menu.topoptid:}")
+    private String topOptId ;
     /**
      * 登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置
      * @param request request
@@ -364,6 +365,18 @@ public class MainFrameController extends BaseController {
                         //"attributes.external","pageType"
                     ), (jsonObject,obj) -> jsonObject.put("external", !("D".equals(obj.getPageType()))));
     }
+
+
+    private  List<? extends IOptInfo> listCurrentUserMenu(HttpServletRequest request, String menuTopOptId ){
+        CentitUserDetails userDetails = super.getLoginUser(request);
+        if(userDetails==null){
+            return null;
+        }
+        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
+        boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
+//      List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(),asAdmin );
+        return platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(),menuTopOptId ,asAdmin );
+     }
     /**
      * 首页菜单
      *
@@ -372,47 +385,36 @@ public class MainFrameController extends BaseController {
      */
     @RequestMapping(value = "/menu" , method = RequestMethod.GET)
     public void getMenu(HttpServletRequest request, HttpServletResponse response) {
-        CentitUserDetails userDetails = super.getLoginUser(request);
-        if(userDetails==null){
-            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN, "用户没有登录，请登录！", response);
+        List<? extends IOptInfo> menuFunsByUser = listCurrentUserMenu(request , topOptId);
+        if(menuFunsByUser==null){
+            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
+                "用户没有登录,或者没有给用户任何权限，请重新登录！", response);
             return;
         }
-        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
-        boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
-
-//        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(),asAdmin );
-        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(),"CENTIT",asAdmin );
-
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }
 
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
     public void getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optId,
             HttpServletRequest request,HttpServletResponse response) {
-        CentitUserDetails userDetails = super.getLoginUser(request);
-        if(userDetails==null){
+
+        List<? extends IOptInfo> menuFunsByUser = listCurrentUserMenu(request , optId);
+        if(menuFunsByUser==null){
             JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
-                    "用户没有登录，请登录！", response);
+                "用户没有登录,或者没有给用户任何权限，请重新登录！", response);
             return;
         }
-        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
-        boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
-
-        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(
-                userDetails.getUserInfo().getUserCode(),optId ,asAdmin);
 
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
-
     }
 
     @RequestMapping(value = "/getMenu/{userCode}" , method = RequestMethod.GET)
     public void getMemuByUsercode(@PathVariable String userCode,
-            HttpServletRequest request, HttpServletResponse response) {
+           HttpServletResponse response) {
 
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userCode, false);
 
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
-
     }
 
     @RequestMapping(value = "/expired" , method = RequestMethod.GET)
