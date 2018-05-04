@@ -31,11 +31,11 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     private String loginName; // 用户登录名
 
     private String userName; // 用户姓名
- 
+
     private String englishName;// 用户英文姓名
- 
+
     private String userDesc; // 用户描述
- 
+
     private Long loginTimes; // 登录次数
 
     private Date activeTime; // 最后一次登录时间
@@ -59,7 +59,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     private Long userOrder; // 用户排序
 
     private String primaryUnit;
-    
+
     private String userNamePinyin; //
     // 用户的主机构，只有在数据字典中有效
 
@@ -158,7 +158,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
             primaryUnit = null;
             }
 
-    
+
     public UserInfo(String userCode, String userpin,String usertype, String userstate,
                     String loginname, String username, String userdesc,
                     String usertag, String englishname,
@@ -245,7 +245,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     public void setUserType(String userType) {
         this.userType = userType;
     }
-    
+
     public void setUserName(String username) {
         this.userName = username;
     }
@@ -288,7 +288,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     public void setLoginName(String loginname) {
         if(loginname==null)
             return;
-        this.loginName = loginname.toLowerCase();
+        this.loginName = loginname;
     }
 
     public Date getActiveTime() {
@@ -325,8 +325,8 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     @Override
     public String getPrimaryUnit() {
         return primaryUnit;
-    } 
-    
+    }
+
     public void setPrimaryUnit(String primaryUnit) {
         this.primaryUnit = primaryUnit;
     }
@@ -446,7 +446,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
         this.userOrder = userorder;
     }
 
-    
+
 
 
     public UserInfo addUserUnit(UserUnit uu) {
@@ -488,7 +488,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
        if(other instanceof IUserInfo)
            return this.getUserCode().equals(((IUserInfo) other).getUserCode());
 
-       return false;            
+       return false;
     }
 
     @Override
