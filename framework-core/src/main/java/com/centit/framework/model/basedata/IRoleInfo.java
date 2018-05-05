@@ -30,7 +30,7 @@ public interface IRoleInfo{
 
     /**
      * 获取角色的所有者， roleType = 'D' 时 生效， 其他的都返回 system 系统的
-     * @return
+     * @return 角色的所有者
      */
     String getRoleOwner();
     /**

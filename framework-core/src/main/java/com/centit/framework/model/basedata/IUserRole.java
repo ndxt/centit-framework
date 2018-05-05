@@ -26,7 +26,7 @@ public interface IUserRole{
 
     /**
      * 从何处继承
-     * @return
+     * @return 继承
      */
     String getInheritedFrom();
 }

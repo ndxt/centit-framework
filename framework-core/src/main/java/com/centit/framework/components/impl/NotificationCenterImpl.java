@@ -32,7 +32,7 @@ public class NotificationCenterImpl implements NotificationCenter {
      */
     private PlatformEnvironment platformEnvironment;
     //注入接口MessageSender实现类，通过setMsgSenders方法进行配置
-    
+
     public void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
         this.platformEnvironment = platformEnvironment;
     }
@@ -51,18 +51,18 @@ public class NotificationCenterImpl implements NotificationCenter {
     }
 
     /**
-     * 如果 MessageSender 是spring托管类请 
-     * MessageSender msgManager = 
+     * 如果 MessageSender 是spring托管类请
+     * MessageSender msgManager =
                 ContextLoaderListener.getCurrentWebApplicationContext().
                 getBean("optLogManager",  OperationLogWriter.class);
         // 这个地方不能直接用 this， this不是spring管理的bean，必须从容器中获取托管的 bean
-        notificationCenter.registerMessageSender("type",msgManager); 
+        notificationCenter.registerMessageSender("type",msgManager);
      */
     public NotificationCenter registerMessageSender(String sendType,MessageSender sender){
         msgSenders.put(sendType, sender);
         return this;
     }
-    
+
     public MessageSender setDefaultSendType(String sendType){
         MessageSender ms = msgSenders.get(sendType);
         if(ms!=null)
@@ -79,7 +79,7 @@ public class NotificationCenterImpl implements NotificationCenter {
      * @param optId 关联的业务编号
      * @param optMethod 管理的操作
      * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
-     * @return
+     * @return 结果
      */
     @Override
     public String sendMessage(String sender, String receiver, String msgSubject, String msgContent,
@@ -99,10 +99,10 @@ public class NotificationCenterImpl implements NotificationCenter {
         int sendErrorCount = 0;
         if (receiveways!= null && StringUtils.isNotBlank(receiveways)) {
             String[] vals = receiveways.split(",");
-            
+
             if (ArrayUtils.isNotEmpty(vals)) {
-                
-                noticeType = receiveways; 
+
+                noticeType = receiveways;
                 for (String val : vals) {
                     if (StringUtils.isNotBlank(val)) {
                         sendTypeCount++;
@@ -128,7 +128,7 @@ public class NotificationCenterImpl implements NotificationCenter {
                 sendErrorCount ++;
                 errorObjects.append(errorText).append("\r\n");
             }
-        }        
+        }
 
         if(socketMsgPusher!=null){
             try {
@@ -140,7 +140,7 @@ public class NotificationCenterImpl implements NotificationCenter {
             }
         }
         String notifyState =sendErrorCount==0?"0":(sendErrorCount==sendTypeCount?"1":"2");
-        
+
         if (sendErrorCount>0) {//返回异常信息
             returnText = errorObjects.toString();
          }
@@ -150,11 +150,11 @@ public class NotificationCenterImpl implements NotificationCenter {
 
         return returnText;
     }
-       
+
 
     @Override
     public String sendMessage(String sender, String receiver, String msgSubject, String msgContent) {
-        
+
         return sendMessage( sender,  receiver,  msgSubject,  msgContent,
                  "",  "",  "");
     }
@@ -169,7 +169,7 @@ public class NotificationCenterImpl implements NotificationCenter {
      * @param optMethod 管理的操作
      * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
      * @param noticeType   指定发送类别
-     * @return
+     * @return 结果
      */
     @Override
     public String sendMessage(String sender, String receiver, String msgSubject, String msgContent,
@@ -193,15 +193,15 @@ public class NotificationCenterImpl implements NotificationCenter {
             notifyState = "1";
             returnText = errorText;
         }
-        wirteNotifyLog(sender, receiver, msgSubject, msgContent, noticeType, 
+        wirteNotifyLog(sender, receiver, msgSubject, msgContent, noticeType,
                 optId,  optMethod,  optTag,
                 errorText, notifyState);
         return returnText;
     }
-    
+
     @Override
     public String sendMessage(String sender, String receiver, String msgSubject, String msgContent, String noticeType) {
-        
+
         return sendMessage( sender,  receiver,  msgSubject,  msgContent,
                  "",  "",  "",  noticeType);
     }
@@ -218,7 +218,7 @@ public class NotificationCenterImpl implements NotificationCenter {
      * @param notifyState
      */
     private void wirteNotifyLog(String sender, String receiver,
-                               String msgSubject, String msgContent, String noticeType, 
+                               String msgSubject, String msgContent, String noticeType,
                                String optId, String optMethod, String optTag,
                                String errorText, String notifyState ) {
         Map<String,String> sysNotify = new HashMap<String,String>();
@@ -232,9 +232,9 @@ public class NotificationCenterImpl implements NotificationCenter {
         sysNotify.put("optTag", optTag);
         sysNotify.put("notifyState", notifyState);
         sysNotify.put("errorText", errorText);
-        
+
         OperationLogCenter.log(sender, "Notify","notify", JSON.toJSONString(sysNotify));
-  
+
     }
 
     /**

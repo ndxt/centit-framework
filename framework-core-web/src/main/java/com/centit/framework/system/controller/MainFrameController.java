@@ -82,6 +82,7 @@ public class MainFrameController extends BaseController {
     /**
      * 登录界面入口
      * @param session session
+     * @param request HttpServletRequest
      * @return 登录界面
      */
     @RequestMapping("/login")
@@ -98,6 +99,7 @@ public class MainFrameController extends BaseController {
     /**
      *
      * @param session session
+     * @param request HttpServletRequest
      * @return 登录界面
      */
     @RequestMapping("/loginasadmin")
@@ -116,6 +118,7 @@ public class MainFrameController extends BaseController {
 
     /**
      *
+     * @param request HttpServletRequest
      * @param session session
      * @return 登录界面
      */
@@ -500,6 +503,7 @@ public class MainFrameController extends BaseController {
     /**
      * 查询当前用户在某岗位的所有职位信息
      * @param rank 岗位代码
+     * @return json 结果
      */
     @GetMapping(value = "userranks/{rank}")
     @ResponseBody
@@ -515,6 +519,7 @@ public class MainFrameController extends BaseController {
     /**
      * 查询当前用户在某职务的所有职位信息
      * @param station 职务代码
+     * @return json结果
      */
     @GetMapping(value = "userstations/{station}")
     @ResponseBody

@@ -13,7 +13,16 @@
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">
-      <configuration />
+      <configuration>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/../framework-config/src/main/java/com/centit/framework/config/H2SessionPersistenceConfig.java</file>
+          <file>file://$MODULE_DIR$/../framework-config/src/main/java/com/centit/framework/config/RedisSessionPersistenceConfig.java</file>
+          <file>file://$MODULE_DIR$/../framework-config/src/main/java/com/centit/framework/config/SpringSecurityCasConfig.java</file>
+          <file>file://$MODULE_DIR$/../framework-config/src/main/java/com/centit/framework/config/SpringSecurityDaoConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/centit/framework/web/demo/config/NormalSpringMvcConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/centit/framework/web/demo/config/ServiceConfig.java</file>
+        </fileset>
+      </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">

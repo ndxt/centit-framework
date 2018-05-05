@@ -18,7 +18,7 @@
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-system-static-jdbc</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>framework-snapshot-dependencies</artifactId>
+        <artifactId>framework-release-dependencies</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <groupId>com.centit.framework</groupId>
@@ -21,8 +21,6 @@
         这三个基础包选择一个， 选择 framework-system-static 需要 framework-base-view-easyui和其搭配，
         其他的两个选择 framework-sys-view-easyui
     </description>
-
-
 
     <dependencies>
 

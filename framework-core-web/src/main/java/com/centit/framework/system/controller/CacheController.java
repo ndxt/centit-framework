@@ -402,8 +402,9 @@ public class CacheController {
     /**
      * CP标签中 SYS_VALUE 实现
      * 系统设置的参数的前缀
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
-     */
+     **/
     @RequestMapping(value = "/sysconfigbyprefix/{prefix}", method = RequestMethod.GET)
     public void getSysConfigByPrefix(HttpServletRequest request,
                                   HttpServletResponse response) {

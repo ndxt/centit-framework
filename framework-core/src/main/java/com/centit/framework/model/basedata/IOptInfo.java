@@ -22,7 +22,7 @@ public interface IOptInfo {
      * @return 业务名称
      */
      String getOptName();
-    
+
     /**
      * S:实施业务, O:普通业务, W:流程业务, I:项目业务
      * @return OptType
@@ -38,11 +38,11 @@ public interface IOptInfo {
      * @return 后台权限控制业务url前缀
      */
      String getOptUrl();
-    
+
     /**
      * 是否是菜单项，Y:是 N:否
      * @return 是否是菜单项，Y:是 N:否
-     */    
+     */
      String getIsInToolbar();
     /**
      * 图标编号
@@ -69,7 +69,7 @@ public interface IOptInfo {
 
     /**
      * 这个属性不需要持久化，这个字段属于DTO，只用来存储树形展示时，其子业务是否打开
-     * @return
+     * @return 状态
      */
     String getState();
 
