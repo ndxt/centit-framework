@@ -377,8 +377,11 @@ public class MainFrameController extends BaseController {
         }
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
-//      List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(),asAdmin );
-        return platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(),menuTopOptId ,asAdmin );
+        if(StringUtils.isEmpty(menuTopOptId)) {
+            return platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(), asAdmin);
+        }else {
+            return platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(), menuTopOptId, asAdmin);
+        }
      }
     /**
      * 首页菜单
