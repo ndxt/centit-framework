@@ -327,21 +327,17 @@ public abstract class AbstractStaticPlatformEnvironment
         return opts;
     }
 
-    private static List<OptInfo> listObjectFormatAndFilterOptId(List<OptInfo> optInfos,String superOptId) {
-        // 获取当前菜单的子菜单
+    /**
+     * 将菜单列表组装为树状
+     * @param optInfos 菜单列表
+     * @return 树状菜单列表
+     */
+    private List<OptInfo> formatMenuTree(List<OptInfo> optInfos) {
         Iterator<OptInfo> menus = optInfos.iterator();
 
-        OptInfo parentOpt = null;
-
-        List<OptInfo> parentMenu = new ArrayList<OptInfo>();
+        List<OptInfo> parentMenu = new ArrayList<>();
         while (menus.hasNext()) {
-
             OptInfo optInfo = menus.next();
-            //去掉级联关系后需要手动维护这个属性
-            if (StringUtils.isNotBlank(superOptId) && superOptId.equals(optInfo.getOptId())) {
-                parentOpt=optInfo;
-            }
-
             boolean getParent = false;
             for (OptInfo opt : optInfos) {
                 if (opt.getOptId().equals(optInfo.getPreOptId())) {
@@ -350,16 +346,42 @@ public abstract class AbstractStaticPlatformEnvironment
                     break;
                 }
             }
-            if(!getParent)
+            if(!getParent) {
                 parentMenu.add(optInfo);
+            }
+        }
+        return parentMenu;
+    }
+
+    /**
+     * 将菜单列表组装为树状
+     * @param optInfos 菜单列表
+     * @param superOptId 顶级菜单ID 不为空时返回该菜单的下级菜单
+     * @return 树状菜单列表
+     */
+    private List<OptInfo> formatMenuTree(List<OptInfo> optInfos,String superOptId) {
+        if (StringUtils.isEmpty(superOptId)){
+            return Collections.emptyList();
         }
 
-        if (superOptId!=null && parentOpt!=null){
-                return parentOpt.getChildren();
-            //else
-                //return null;
+        Iterator<OptInfo> menus = optInfos.iterator();
+        OptInfo parentOpt = null;
+
+        while (menus.hasNext()) {
+            OptInfo optInfo = menus.next();
+            if (StringUtils.equals(superOptId, optInfo.getOptId())) {
+                parentOpt=optInfo;
+            }
+            for (OptInfo opt : optInfos) {
+                if (opt.getOptId().equals(optInfo.getPreOptId())) {
+                    opt.addChild(optInfo);
+                }
+            }
+        }
+        if (parentOpt!=null){
+            return parentOpt.getChildren();
         }else {
-            return parentMenu;
+            return Collections.emptyList();
         }
     }
 
@@ -394,7 +416,18 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public List<OptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin) {
-        return listUserMenuOptInfosUnderSuperOptId(userCode, null, asAdmin);
+        List<OptInfo> userOptinfos =listUserOptInfos(userCode/*ud.getUserCode()*/);
+        List<OptInfo> preOpts = getDirectOptInfo();
+
+        List<OptInfo> allUserOpt = getMenuFuncs(preOpts,userOptinfos);
+
+        Collections.sort(allUserOpt, (o1, o2) -> // Long.compare(o1.getOrderInd() , o2.getOrderInd())) ;
+            ( o2.getOrderInd() == null && o1.getOrderInd() == null)? 0 :
+                ( (o2.getOrderInd() == null)? 1 :
+                    (( o1.getOrderInd() == null)? -1 :
+                        ((o1.getOrderInd() > o2.getOrderInd())? 1:(
+                            o1.getOrderInd() < o2.getOrderInd()?-1:0 ) ))));
+        return formatMenuTree(allUserOpt);
     }
 
     @Override
@@ -416,7 +449,7 @@ public abstract class AbstractStaticPlatformEnvironment
                         ((o1.getOrderInd() > o2.getOrderInd())? 1:(
                             o1.getOrderInd() < o2.getOrderInd()?-1:0 ) ))));
 
-        return listObjectFormatAndFilterOptId(allUserOpt,superOptId);
+        return formatMenuTree(allUserOpt,superOptId);
     }
 
     /**

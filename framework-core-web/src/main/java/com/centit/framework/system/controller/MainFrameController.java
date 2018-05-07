@@ -128,8 +128,9 @@ public class MainFrameController extends BaseController {
         AuthenticationException authException = (AuthenticationException)
                 session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
         //设置错误信息
-        if(authException!=null)
+        if(authException!=null) {
             session.setAttribute(LOGIN_AUTH_ERROR_MSG, authException.getMessage());
+        }
         //重新登录
         return login(request,session);
     }
@@ -143,14 +144,14 @@ public class MainFrameController extends BaseController {
     public String logout(HttpSession session) {
         session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
         session.removeAttribute(LOGIN_AUTH_ERROR_MSG);
-        if(useCas)
-        {
+        if(useCas){
             //return "sys/mainframe/index";
             session.invalidate();
             return "redirect:"+casHome+"/logout?service="+localHome+"/system/mainframe/index";
         }
-        else
+        else {
             return "redirect:/logout";//j_spring_security_logout
+        }
     }
 
     /**
@@ -324,11 +325,13 @@ public class MainFrameController extends BaseController {
     @RequestMapping("/currentuserinfo")
     public void getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-        if(ud==null)
+        if(ud==null) {
             JsonResultUtils.writeMessageAndData(
-                    "No user login on current session!",request.getSession().getId(), response);
-        else
+                "No user login on current session!", request.getSession().getId(), response);
+        }
+        else {
             JsonResultUtils.writeSingleDataJson(ud.getUserInfo(), response);
+        }
     }
     /**
      * @param request request
@@ -337,11 +340,13 @@ public class MainFrameController extends BaseController {
     @RequestMapping("/currentuser")
     public void getCurrentUserDetails(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-        if(ud==null)
+        if(ud==null) {
             JsonResultUtils.writeMessageAndData(
-                    "No user login on current session!",request.getSession().getId(), response);
-        else
+                "No user login on current session!", request.getSession().getId(), response);
+        }
+        else {
             JsonResultUtils.writeSingleDataJson(ud, response);
+        }
     }
     /**
      * @param request request
@@ -350,10 +355,12 @@ public class MainFrameController extends BaseController {
     @RequestMapping("/hasLogin")
     public void hasLogin(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-        if(ud==null)
+        if(ud==null) {
             JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录，请登录！", response);
-        else
+        }
+        else {
             JsonResultUtils.writeSingleDataJson(ud, response);
+        }
     }
 
     private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser){
@@ -369,20 +376,6 @@ public class MainFrameController extends BaseController {
                     ), (jsonObject,obj) -> jsonObject.put("external", !("D".equals(obj.getPageType()))));
     }
 
-
-    private  List<? extends IOptInfo> listCurrentUserMenu(HttpServletRequest request, String menuTopOptId ){
-        CentitUserDetails userDetails = super.getLoginUser(request);
-        if(userDetails==null){
-            return null;
-        }
-        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
-        boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
-        if(StringUtils.isEmpty(menuTopOptId)) {
-            return platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(), asAdmin);
-        }else {
-            return platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(), menuTopOptId, asAdmin);
-        }
-     }
     /**
      * 首页菜单
      *
@@ -391,7 +384,20 @@ public class MainFrameController extends BaseController {
      */
     @RequestMapping(value = "/menu" , method = RequestMethod.GET)
     public void getMenu(HttpServletRequest request, HttpServletResponse response) {
-        List<? extends IOptInfo> menuFunsByUser = listCurrentUserMenu(request , topOptId);
+        CentitUserDetails userDetails = super.getLoginUser(request);
+        if(userDetails==null){
+            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
+                "用户没有登录，请重新登录！", response);
+            return;
+        }
+        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
+        boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
+        List<? extends IOptInfo> menuFunsByUser = null;
+        if(StringUtils.isEmpty(topOptId)) {
+            menuFunsByUser =  platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(), asAdmin);
+        }else {
+            menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(), topOptId, asAdmin);
+        }
         if(menuFunsByUser==null){
             JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录,或者没有给用户任何权限，请重新登录！", response);
@@ -404,7 +410,15 @@ public class MainFrameController extends BaseController {
     public void getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optId,
             HttpServletRequest request,HttpServletResponse response) {
 
-        List<? extends IOptInfo> menuFunsByUser = listCurrentUserMenu(request , optId);
+        CentitUserDetails userDetails = super.getLoginUser(request);
+        if(userDetails==null){
+            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
+                "用户没有登录，请重新登录！", response);
+            return;
+        }
+        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
+        boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
+        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(), optId, asAdmin);
         if(menuFunsByUser==null){
             JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录,或者没有给用户任何权限，请重新登录！", response);
