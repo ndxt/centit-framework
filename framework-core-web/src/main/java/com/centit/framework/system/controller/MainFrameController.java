@@ -11,6 +11,8 @@ import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
@@ -393,11 +395,15 @@ public class MainFrameController extends BaseController {
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
         List<? extends IOptInfo> menuFunsByUser = null;
-        if(StringUtils.isEmpty(topOptId)) {
-            menuFunsByUser =  platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(), asAdmin);
-        }else {
+
+        if(StringUtils.isNotBlank(topOptId)) {
             menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(), topOptId, asAdmin);
         }
+
+        if(CollectionUtils.isEmpty( menuFunsByUser) ){
+            menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(), asAdmin);
+        }
+
         if(menuFunsByUser==null){
             JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录,或者没有给用户任何权限，请重新登录！", response);
@@ -428,12 +434,28 @@ public class MainFrameController extends BaseController {
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }
 
-    @RequestMapping(value = "/getMenu/{userCode}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/userMenu/{userCode}" , method = RequestMethod.GET)
     public void getMemuByUsercode(@PathVariable String userCode,
            HttpServletResponse response) {
 
-        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userCode, false);
+        List<? extends IOptInfo> menuFunsByUser = null;
 
+        if(StringUtils.isNotBlank(topOptId)) {
+            menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, topOptId, false);
+        }
+
+        if(CollectionUtils.isEmpty( menuFunsByUser) ){
+            menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userCode, false);
+        }
+
+        JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
+    }
+
+    @RequestMapping(value = "/useSubrMenu/{userCode}/{menuOptId}" , method = RequestMethod.GET)
+    public void getSubMemuByUsercode(@PathVariable String userCode,@PathVariable String menuOptId,
+                                  HttpServletResponse response) {
+        List<? extends IOptInfo> menuFunsByUser  = platformEnvironment
+            .listUserMenuOptInfosUnderSuperOptId(userCode, menuOptId, false);
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }
 
