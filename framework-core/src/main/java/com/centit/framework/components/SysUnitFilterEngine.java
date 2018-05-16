@@ -4,7 +4,7 @@ import com.centit.framework.components.impl.SystemUserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.support.algorithm.StringRegularOpt;
-import com.centit.support.compiler.Formula;
+import com.centit.support.compiler.VariableFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +23,7 @@ public abstract class SysUnitFilterEngine implements Serializable {
     private SysUnitFilterEngine(){
         throw new IllegalAccessError("Utility class");
     }
-    
+
     private static final long serialVersionUID = 1L;
 
     private static final Logger logger = LoggerFactory.getLogger(SysUnitFilterEngine.class);
@@ -127,7 +127,7 @@ public abstract class SysUnitFilterEngine implements Serializable {
         Set<String> parUnits = new HashSet<String>();
         while(true) {
             Set<String> retUnits = new HashSet<String>();
-            
+
             for (String suc : midUnits) {
                 IUnitInfo u = ecc.getUnitInfoByCode(suc);
                 String puc = u.getParentUnit();
@@ -137,13 +137,13 @@ public abstract class SysUnitFilterEngine implements Serializable {
             if(retUnits.size()<1)
                 break;
             parUnits.addAll(midUnits);
-            midUnits = retUnits;            
+            midUnits = retUnits;
         }
         parUnits.addAll(midUnits);
         return parUnits;
     }
-   
-  
+
+
     /**
      * D(U+5)
      *
@@ -193,8 +193,8 @@ public abstract class SysUnitFilterEngine implements Serializable {
         }
         return midUnits;
     }
-    
-  
+
+
 
     /**
      * D(U*1)
@@ -244,7 +244,7 @@ public abstract class SysUnitFilterEngine implements Serializable {
      * @return 同一系列最上面几层节点
      */
     public static Set<String> seriesUnits(UserUnitFilterCalcContext ecc, Set<String> units, int nTiers) {
-        
+
         if ( units == null || units.size() == 0)
             return units;
 
@@ -256,7 +256,7 @@ public abstract class SysUnitFilterEngine implements Serializable {
         }
         if(nTiers < 1)
             return retUnits;
-        
+
         Set<String> midUnits = retUnits;
         Set<String> serUnits = new HashSet<>();
         for (int i = 0; i < nTiers; i++) {
@@ -264,7 +264,7 @@ public abstract class SysUnitFilterEngine implements Serializable {
             for (String suc : midUnits) {
                 IUnitInfo u = ecc.getUnitInfoByCode(suc);
                 for(IUnitInfo ui:u.getSubUnits())
-                    retUnits.add(ui.getUnitCode());                
+                    retUnits.add(ui.getUnitCode());
             }
             serUnits.addAll(midUnits);
             midUnits = retUnits;
@@ -272,7 +272,7 @@ public abstract class SysUnitFilterEngine implements Serializable {
         serUnits.addAll(midUnits);
         return serUnits;
     }
-    
+
     /**
      * D(null) =>null D(all) => D1,D2,D11,D12,D111,D112,D1111,D1112 D("D12")
      * =>D12 D(null+1) =>D1,D2 D(all+1) => D11,D12,D111,D112,D1111,D1112 D(A) =>
@@ -298,7 +298,7 @@ public abstract class SysUnitFilterEngine implements Serializable {
                         return null;
                     }
                     units = nullParentUnits(ecc,Integer.valueOf(w));
-                    
+
                 } else if ("+".equals(w)) {
                     w = ecc.getAWord();
                     if (!StringRegularOpt.isNumber(w)) {
@@ -318,7 +318,7 @@ public abstract class SysUnitFilterEngine implements Serializable {
                     }
                 }
             }
-        } else if (!Formula.isKeyWord(w)) { // 常量
+        } else if (!VariableFormula.isKeyWord(w)) { // 常量
             String unitCode = StringRegularOpt.trimString(w);
             if (ecc.getUnitInfoByCode(unitCode) != null)
                 units.add(unitCode);
@@ -330,19 +330,19 @@ public abstract class SysUnitFilterEngine implements Serializable {
         w = ecc.getAWord();
         if ("-".equals(w)) {
             ecc.setCanAcceptOpt(true);
-            w = ecc.getAWord();           
+            w = ecc.getAWord();
             if (!StringRegularOpt.isNumber(w)) {
                 ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - . ");
                 return null;
-            }            
+            }
             units = parentUnits(ecc,units, Integer.valueOf(w));
             w = ecc.getAWord();
             if("+".equals(w)){
-                w = ecc.getAWord();           
+                w = ecc.getAWord();
                 if (!StringRegularOpt.isNumber(w)) {
                     ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - A + B . ");
                     return null;
-                }            
+                }
                 units = subUnits(ecc,units, Integer.valueOf(w));
             }else
                 ecc.setPreword(w);
@@ -358,16 +358,16 @@ public abstract class SysUnitFilterEngine implements Serializable {
         } else if ("*".equals(w)) {
             ecc.setCanAcceptOpt(true);
             w = ecc.getAWord();
-            if ("+".equals(w)) {// 所有同一系列 同一层节点               
+            if ("+".equals(w)) {// 所有同一系列 同一层节点
                 w = ecc.getAWord();
                 if (!StringRegularOpt.isNumber(w)) {
                     ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *+.");
                     return null;
                 }
                 units = topUnits(ecc,units, Integer.valueOf(w));
-                
+
             } else if ("-".equals(w)) {// 所有节点的上层节点中， 指定层次的节点
-                
+
                 w = ecc.getAWord();
                 if (!StringRegularOpt.isNumber(w)) {
                     ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *-.");
@@ -376,13 +376,13 @@ public abstract class SysUnitFilterEngine implements Serializable {
                 Set<String> parUnits = allParentUnits(ecc,units);
                 units = topUnits(ecc,units, Integer.valueOf(w));
                 units.retainAll(parUnits);
-                
+
             } else{
                 if (!StringRegularOpt.isNumber(w)) {
                     ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *.");
                     return null;
                 }else
-                    //所有同一系列最上面几层节点               
+                    //所有同一系列最上面几层节点
                     units = seriesUnits(ecc,units, Integer.valueOf(w));
             }
         } else if ("++".equals(w)) {// 所有的下层节点
