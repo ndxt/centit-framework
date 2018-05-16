@@ -6,6 +6,7 @@ package com.centit.framework.components.impl;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.basedata.IUserInfo;
+import com.centit.framework.model.basedata.NoticeMessage;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
@@ -71,7 +72,7 @@ public class EmailMessageSenderImpl implements MessageSender {
     }
 
     @Override
-    public String sendMessage(String sender,String receiver ,String msgSubject,String msgContent){
+    public String sendMessage(String sender, String receiver, NoticeMessage message){
         IUserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(sender);
         String mailFrom;
         if(userinfo==null){
@@ -88,16 +89,9 @@ public class EmailMessageSenderImpl implements MessageSender {
         String email = userinfo.getRegEmail();
 
         if(email!=null && !"".equals(email))
-            return sendEmailMessage (email,mailFrom, msgSubject, msgContent);
+            return sendEmailMessage (email,mailFrom, message.getMsgSubject(), message.getMsgContent());
         else
             return "用户："+receiver+"没有设置注册邮箱";
     }
 
-    @Override
-    public String sendMessage(String sender, String receiver,
-            String msgSubject, String msgContent, String optId,
-            String optMethod, String optTag) {
-        return sendMessage(sender,  receiver,
-                 msgSubject,  msgContent);
-    }
 }

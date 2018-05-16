@@ -7,6 +7,7 @@ import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IUserSetting;
+import com.centit.framework.model.basedata.NoticeMessage;
 import com.centit.msgpusher.msgpusher.po.SimplePushMessage;
 import com.centit.msgpusher.msgpusher.po.SimplePushMsgPoint;
 import com.centit.msgpusher.msgpusher.websocket.SocketMsgPusher;
@@ -27,6 +28,11 @@ public class NotificationCenterImpl implements NotificationCenter {
     private static Map<String, MessageSender> msgSenders = new HashMap<>();
 
     protected SocketMsgPusher socketMsgPusher;
+    private boolean writeNoticeLog;
+
+    public NotificationCenterImpl() {
+        writeNoticeLog = false;
+    }
     /**
      * 用户设置
      */
@@ -70,22 +76,31 @@ public class NotificationCenterImpl implements NotificationCenter {
         return defautlMsgSender;
     }
 
+    private void pushMsgBySocket(String sender, String receiver, NoticeMessage message){
+        try {
+            SimplePushMessage pushMessage = new SimplePushMessage(sender,message.getMsgSubject(), message.getMsgContent());
+            pushMessage.setMsgType( message.getMsgType());
+            pushMessage.setMsgReceiver(receiver);
+            pushMessage.setOptId(message.getOptId());
+            pushMessage.setOptMethod(message.getOptMethod());
+            pushMessage.setOptTag(message.getOptTag());
+
+            socketMsgPusher.pushMessage(pushMessage,
+                new SimplePushMsgPoint(receiver));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage());
+        }
+    }
     /**
      * 根据用户设定的方式发送消息
      * @param sender     发送人内部用户编码
      * @param receiver   接收人内部用户编码
-     * @param msgSubject 消息主题
-     * @param msgContent 消息内容
-     * @param optId 关联的业务编号
-     * @param optMethod 管理的操作
-     * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
+     * @param message 消息主题
      * @return 结果
      */
     @Override
-    public String sendMessage(String sender, String receiver, String msgSubject, String msgContent,
-            String optId, String optMethod, String optTag) {
-
-        /**
+    public String sendMessage(String sender, String receiver, NoticeMessage message) {
+        /*
          *  从用户设置中获得用户希望的接收消息的方式，可能是多个，比如用户希望同时接收到Email和短信，这样就要发送两天
          *  并在数据库中记录发送信息，在发送方式中用逗号把多个方式拼接在一起保存在对应的字段中
          */
@@ -106,8 +121,7 @@ public class NotificationCenterImpl implements NotificationCenter {
                 for (String val : vals) {
                     if (StringUtils.isNotBlank(val)) {
                         sendTypeCount++;
-                        String errorText = realSendMessage(msgSenders.get(val.trim()), sender, receiver, msgSubject, msgContent,
-                                optId,  optMethod,  optTag);
+                        String errorText = realSendMessage(msgSenders.get(val.trim()), sender, receiver, message);
                         if (StringUtils.isNotBlank(errorText)) {
                             sendErrorCount ++;
                             errorObjects.append(errorText).append("\r\n");
@@ -122,8 +136,7 @@ public class NotificationCenterImpl implements NotificationCenter {
             logger.info(infoText);
             noticeType = StringUtils.isBlank(noticeType)?"D":noticeType+",D";
             sendTypeCount++;
-            String errorText = realSendMessage(defautlMsgSender, sender, receiver, msgSubject, msgContent,
-                    optId,  optMethod,  optTag);
+            String errorText = realSendMessage(defautlMsgSender, sender, receiver,message);
             if (StringUtils.isNotBlank(errorText)) {
                 sendErrorCount ++;
                 errorObjects.append(errorText).append("\r\n");
@@ -131,61 +144,38 @@ public class NotificationCenterImpl implements NotificationCenter {
         }
 
         if(socketMsgPusher!=null){
-            try {
-                socketMsgPusher.pushMessage(
-                        new SimplePushMessage(sender,msgSubject, msgContent),
-                        new SimplePushMsgPoint(receiver));
-            } catch (Exception e) {
-                logger.error(e.getLocalizedMessage());
-            }
+            pushMsgBySocket(sender,  receiver,  message);
         }
         String notifyState =sendErrorCount==0?"0":(sendErrorCount==sendTypeCount?"1":"2");
 
         if (sendErrorCount>0) {//返回异常信息
             returnText = errorObjects.toString();
-         }
-        wirteNotifyLog(sender, receiver, msgSubject, msgContent, noticeType,
-                optId,  optMethod,  optTag,
+        }
+        if(writeNoticeLog){
+            wirteNotifyLog(noticeType, sender, receiver, message,
                 returnText, notifyState);
+        }
 
         return returnText;
     }
 
 
-    @Override
-    public String sendMessage(String sender, String receiver, String msgSubject, String msgContent) {
-
-        return sendMessage( sender,  receiver,  msgSubject,  msgContent,
-                 "",  "",  "");
-    }
 
     /**
      * 发送指定类别的消息
      * @param sender     发送人内部用户编码
      * @param receiver   接收人内部用户编码
-     * @param msgSubject 消息主题
-     * @param msgContent 消息内容
-     * @param optId 关联的业务编号
-     * @param optMethod 管理的操作
-     * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
+     * @param message 消息主题
      * @param noticeType   指定发送类别
      * @return 结果
      */
     @Override
-    public String sendMessage(String sender, String receiver, String msgSubject, String msgContent,
-            String optId, String optMethod, String optTag, String noticeType) {
+    public String sendMessageAppointedType(String noticeType, String sender, String receiver, NoticeMessage message) {
         String returnText = "OK";
-        String errorText = realSendMessage(msgSenders.get(noticeType), sender, receiver, msgSubject, msgContent,
-                optId,  optMethod,  optTag);
+        String errorText = realSendMessage(msgSenders.get(noticeType), sender, receiver, message);
 
         if(socketMsgPusher!=null){
-            try {
-                socketMsgPusher.pushMessage(
-                        new SimplePushMessage(sender,msgSubject, msgContent),
-                        new SimplePushMsgPoint(receiver));
-            } catch (Exception e) {
-                logger.error(e.getLocalizedMessage());
-            }
+            pushMsgBySocket(sender,  receiver,  message);
         }
         //发送成功
         String notifyState = "0";
@@ -193,43 +183,35 @@ public class NotificationCenterImpl implements NotificationCenter {
             notifyState = "1";
             returnText = errorText;
         }
-        wirteNotifyLog(sender, receiver, msgSubject, msgContent, noticeType,
-                optId,  optMethod,  optTag,
+        if(writeNoticeLog) {
+            wirteNotifyLog(noticeType, sender, receiver, message,
                 errorText, notifyState);
+        }
         return returnText;
     }
 
-    @Override
-    public String sendMessage(String sender, String receiver, String msgSubject, String msgContent, String noticeType) {
 
-        return sendMessage( sender,  receiver,  msgSubject,  msgContent,
-                 "",  "",  "",  noticeType);
-    }
 
-     /**
+     /*
      * 保存系统通知中心数据
-     *
-     * @param sender
-     * @param receiver
-     * @param msgSubject
-     * @param msgContent
-     * @param noticeType
-     * @param errorText
-     * @param notifyState
      */
-    private void wirteNotifyLog(String sender, String receiver,
-                               String msgSubject, String msgContent, String noticeType,
-                               String optId, String optMethod, String optTag,
-                               String errorText, String notifyState ) {
-        Map<String,String> sysNotify = new HashMap<String,String>();
+    private void wirteNotifyLog(String noticeType, String sender, String receiver,
+                                NoticeMessage message, String errorText, String notifyState ) {
+        Map<String,String> sysNotify = new HashMap<>();
         sysNotify.put("sender", sender);
         sysNotify.put("receiver", receiver);
-        sysNotify.put("msgSubject", msgSubject);
-        sysNotify.put("msgContent", msgContent);
+        sysNotify.put("msgSubject", message.getMsgSubject());
+        sysNotify.put("msgContent", message.getMsgContent());
         sysNotify.put("noticeType", noticeType);
-        sysNotify.put("optId", optId);
-        sysNotify.put("optMethod", optMethod);
-        sysNotify.put("optTag", optTag);
+        if(StringUtils.isNotBlank(message.getOptId())) {
+            sysNotify.put("optId", message.getOptId());
+        }
+        if(StringUtils.isNotBlank(message.getOptMethod())) {
+            sysNotify.put("optMethod", message.getOptMethod());
+        }
+        if(StringUtils.isNotBlank(message.getOptTag())) {
+            sysNotify.put("optTag", message.getOptTag());
+        }
         sysNotify.put("notifyState", notifyState);
         sysNotify.put("errorText", errorText);
 
@@ -239,23 +221,20 @@ public class NotificationCenterImpl implements NotificationCenter {
 
     /**
      * 发送通知中心消息
-     * @param messageSender
-     * @param sender
-     * @param receiver
-     * @param msgSubject
-     * @param msgContent
-     * @return
+     * @param messageSender 真正的消息发送器
+     * @param sender     发送人内部用户编码
+     * @param receiver   接收人内部用户编码
+     * @param message 消息主题
+     * @return 结果信息
      */
-    private static String realSendMessage(MessageSender messageSender, String sender, String receiver, String msgSubject,
-                                          String msgContent , String optId, String optMethod, String optTag) {
+    private static String realSendMessage(MessageSender messageSender, String sender, String receiver, NoticeMessage message ) {
         if (null == messageSender) {
             String errorText = "找不到消息发送器，请检查Spring中的配置和数据字典 WFNotice中的配置是否一致";
             logger.error(errorText);
             return errorText;
         }
         try {
-            messageSender.sendMessage(sender, receiver, msgSubject, msgContent,optId,  optMethod,  optTag);
-
+            messageSender.sendMessage(sender, receiver, message);
         } catch (Exception e) {
             String errorText = messageSender.getClass().getName() + "发送通知失败，异常信息 " + e.getMessage();
             logger.error(errorText,e);
