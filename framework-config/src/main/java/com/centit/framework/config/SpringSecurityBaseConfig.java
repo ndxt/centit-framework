@@ -5,9 +5,12 @@ import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.CentitUserDetailsService;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
@@ -29,6 +32,18 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
 
     @Autowired
     protected CentitUserDetailsService centitUserDetailsService;
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        String ignoreUrl = StringUtils.deleteWhitespace(env.getProperty("security.ignore.url"));
+        if(StringUtils.isNotBlank(ignoreUrl)){
+            String[] ignoreUrls = ignoreUrl.split(",");
+            for(int i = 0; i < ignoreUrls.length; i++){
+                web.ignoring().antMatchers(ignoreUrls[i]);
+            }
+        }
+        web.httpFirewall(httpFirewall());
+}
 
 
     protected DaoFilterSecurityInterceptor createCentitPowerFilter(AuthenticationManager authenticationManager,

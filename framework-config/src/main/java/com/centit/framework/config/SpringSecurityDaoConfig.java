@@ -43,20 +43,6 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
     protected Object passwordEncoder;
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        String ignoreUrl = StringUtils.deleteWhitespace(env.getProperty("security.ignore.url"));
-        if(StringUtils.isNotBlank(ignoreUrl)){
-            String[] ignoreUrls = ignoreUrl.split(",");
-            for(int i = 0; i < ignoreUrls.length; i++){
-                web.ignoring().antMatchers(HttpMethod.GET, ignoreUrls[i]);
-            }
-        }
-        web.httpFirewall(httpFirewall());
-        // 设置不拦截规则
-//        web.ignoring().antMatchers(HttpMethod.GET,"/**/login","/system/exception/**");
-    }
-
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests().antMatchers("/**/login","/system/exception").permitAll();
