@@ -29,8 +29,11 @@ public class NotificationCenterImpl implements NotificationCenter {
 
     protected SocketMsgPusher socketMsgPusher;
     private boolean writeNoticeLog;
+    private boolean useWebSocketPusher;
 
     public NotificationCenterImpl() {
+        socketMsgPusher = null;
+        useWebSocketPusher = false;
         writeNoticeLog = false;
     }
     /**
@@ -143,7 +146,7 @@ public class NotificationCenterImpl implements NotificationCenter {
             }
         }
 
-        if(socketMsgPusher!=null){
+        if(useWebSocketPusher && socketMsgPusher!=null){
             pushMsgBySocket(sender,  receiver,  message);
         }
         String notifyState =sendErrorCount==0?"0":(sendErrorCount==sendTypeCount?"1":"2");
@@ -174,7 +177,7 @@ public class NotificationCenterImpl implements NotificationCenter {
         String returnText = "OK";
         String errorText = realSendMessage(msgSenders.get(noticeType), sender, receiver, message);
 
-        if(socketMsgPusher!=null){
+        if(useWebSocketPusher && socketMsgPusher!=null){
             pushMsgBySocket(sender,  receiver,  message);
         }
         //发送成功
@@ -244,6 +247,9 @@ public class NotificationCenterImpl implements NotificationCenter {
         return null;
     }
 
+    public void setUseWebSocketPusher(boolean useWebSocketPusher) {
+        this.useWebSocketPusher = useWebSocketPusher;
+    }
 
     public void setSocketMsgPusher(SocketMsgPusher socketMsgPusher) {
         this.socketMsgPusher = socketMsgPusher;

@@ -30,6 +30,9 @@ public class ServiceConfig {
     @Value("${app.home:./}")
     private String appHome;
 
+    @Value("${app.additions.websocket.pusher:false}")
+    private boolean useWebSocketPusher;
+
     @Bean(initMethod = "initialEnvironment")
     @Lazy(value = false)
     public InitialWebRuntimeEnvironment initialEnvironment() {
@@ -41,9 +44,11 @@ public class ServiceConfig {
         NotificationCenterImpl notificationCenter = new NotificationCenterImpl();
         notificationCenter.initMsgSenders();
         //notificationCenter.registerMessageSender("innerMsg",innerMessageManager);
+        //打开消息推送服务
         if(socketMsgPusher!=null){
             notificationCenter.setSocketMsgPusher(socketMsgPusher);
         }
+        notificationCenter.setUseWebSocketPusher(useWebSocketPusher);
 
         return notificationCenter;
     }
