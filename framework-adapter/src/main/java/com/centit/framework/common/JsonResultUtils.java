@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * 使用阿里提供的Json API 格式化Json数据
  *
- * @author sx 
+ * @author sx
  * @author codefan@sina.com 代码全部重写
  * @version fastjson文档地址：https://github.com/alibaba/fastjson/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98
  *          fastJson,jackJson,Gson性能比较 http://chenyanxi.blog.51cto.com/4599355/1543445
@@ -33,7 +33,7 @@ public class JsonResultUtils {
 
     private static Logger logger = LoggerFactory.getLogger(JsonResultUtils.class);
     private final static String DEFAULT_RESPONSE_CHARACTER = "UTF-8";
-    
+
     static {
         JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.getMask();
     }
@@ -41,7 +41,7 @@ public class JsonResultUtils {
     private JsonResultUtils() {
 
     }
-    
+
     /**
      * 调用response的原始接口输出
      *
@@ -228,12 +228,13 @@ public class JsonResultUtils {
         //response.setHeader("Cache-Control","no-store");
         //response.setHeader("Pragma","no-cache");
         response.setCharacterEncoding(DEFAULT_RESPONSE_CHARACTER);
-        response.setContentType(contentType);//"application/json; charset=utf-8"); 
+        response.setContentType(contentType);//"application/json; charset=utf-8");
         try {
-            if(objValue instanceof String)
-                response.getWriter().write((String)objValue);
-            else
+            if(objValue instanceof String) {
+                response.getWriter().write((String) objValue);
+            } else {
                 response.getWriter().print(objValue);
+            }
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             throw new ObjectException(objValue, e.getMessage());
@@ -355,7 +356,7 @@ public class JsonResultUtils {
                     JSON.toJSONString(objValue), response);
         }
     }
-    
+
 
     /**
      * javascript脚本输出
@@ -376,14 +377,14 @@ public class JsonResultUtils {
      * @param simplePropertyPreFilter PropertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
      */
     public static void writeSingleDataJson(int code,String message, Object objValue, HttpServletResponse response,
-                                           PropertyPreFilter simplePropertyPreFilter) {      
+                                           PropertyPreFilter simplePropertyPreFilter) {
 
         Map<String, Object> param = new HashMap<>();
         param.put(ResponseData.RES_CODE_FILED, code );
         param.put(ResponseData.RES_MSG_FILED,  message );
-        if(objValue!=null)
+        if(objValue!=null) {
             param.put(ResponseData.RES_DATA_FILED, objValue);
-
+        }
         String text = JSONObject.toJSONString(param, simplePropertyPreFilter);
 
         writeOriginalJson(text,response);
@@ -402,9 +403,9 @@ public class JsonResultUtils {
         Map<String, Object> param = new HashMap<>();
         param.put(ResponseData.RES_CODE_FILED, code );
         param.put(ResponseData.RES_MSG_FILED,  message );
-        if(objValue!=null)
+        if(objValue!=null) {
             param.put(ResponseData.RES_DATA_FILED, objValue);
-
+        }
         String text = XMLObject.objectToXMLString("response", param);
 
         writeOriginalXml(text,response);
@@ -421,7 +422,7 @@ public class JsonResultUtils {
         writeSingleDataJson(resData.getCode(),resData.getMessage(),
                 resData.getData(), response, propertyPreFilter);
     }
-    
+
     /**
      * 格式化Json数据输出
      * @param resData ResponseData http响应信息
@@ -455,8 +456,8 @@ public class JsonResultUtils {
         } catch (IOException e) {
             logger.error(e.getMessage(),e);
         }
-        
-        writeSingleDataJson(errorCode,errorMessage, 
+
+        writeSingleDataJson(errorCode,errorMessage,
                 null, response, null);
     }
     /**
@@ -466,7 +467,7 @@ public class JsonResultUtils {
      * @param response HttpServletResponse
      */
     public static void writeErrorMessageJson(int errorCode, String errorMessage, HttpServletResponse response) {
-        writeSingleDataJson(errorCode,errorMessage, 
+        writeSingleDataJson(errorCode,errorMessage,
                 null, response, null);
     }
 
@@ -477,20 +478,20 @@ public class JsonResultUtils {
      * @param response HttpServletResponse
      */
     public static void writeCodeAndMessageJson(int errorCode, String errorMessage, HttpServletResponse response) {
-        writeSingleDataJson(errorCode,errorMessage, 
+        writeSingleDataJson(errorCode,errorMessage,
                 null, response, null);
     }
- 
+
     /**
      * 格式化Json数据输出
      * @param message String
      * @param response HttpServletResponse
      */
     public static void writeMessageJson(String message, HttpServletResponse response) {
-        writeSingleDataJson(0,message, 
+        writeSingleDataJson(0,message,
                 null, response, null);
     }
-    
+
     /**
      * 格式化Json数据输出
      * @param message String
@@ -499,7 +500,7 @@ public class JsonResultUtils {
      */
     public static void writeMessageAndData(String message, Object objValue,
             HttpServletResponse response) {
-        writeSingleDataJson(0,message, 
+        writeSingleDataJson(0,message,
                 objValue, response, null);
     }
     /**
@@ -508,7 +509,7 @@ public class JsonResultUtils {
      * @param response HttpServletResponse
      */
     public static void writeErrorMessageJson(String errorMessage, HttpServletResponse response) {
-        writeSingleDataJson(500,errorMessage, 
+        writeSingleDataJson(500,errorMessage,
                 null, response, null);
     }
 
@@ -518,7 +519,7 @@ public class JsonResultUtils {
      * @param response HttpServletResponse
      */
     public static void writeBlankJson(HttpServletResponse response) {
-        writeSingleDataJson(0,"OK", 
+        writeSingleDataJson(0,"OK",
                 null, response, null);
     }
 
@@ -563,7 +564,7 @@ public class JsonResultUtils {
                                                 HttpServletResponse response) {
         writeSingleDataJson(errorCode,errorMessage,objValue, response,null);
     }
-    
+
     /**
      * 格式化Json数据输出
      *
@@ -576,36 +577,40 @@ public class JsonResultUtils {
     public static <T> T getDataAsObject(String jsonResult,String key, Class<T> clazz) {
         JSONObject jobj = JSON.parseObject(jsonResult);
         JSONObject dataObj = (JSONObject)jobj.get("data");
-        if(dataObj==null)
+        if(dataObj==null) {
             return null;
+        }
         Object rsObj = dataObj.get(key);
-        if(rsObj==null)
+        if(rsObj==null) {
             return null;
+        }
         //这个地方重复解释字符串效率较低，应该可以优化
-        return JSON.parseObject(rsObj.toString(), clazz);        
+        return JSON.parseObject(rsObj.toString(), clazz);
     }
-    
+
     public static <T> T getDataAsObject(String jsonResult, Class<T> clazz) {
         JSONObject jobj = JSON.parseObject(jsonResult);
         //这个地方重复解释字符串效率较低，应该可以优化
-        return JSON.parseObject(jobj.get("data").toString(), clazz);        
+        return JSON.parseObject(jobj.get("data").toString(), clazz);
     }
-    
+
     public static <T> List<T> getDataAsArray(String jsonResult,String key, Class<T> clazz) {
         JSONObject jobj = JSON.parseObject(jsonResult);
         JSONObject dataObj = (JSONObject)jobj.get("data");
-        if(dataObj==null)
+        if(dataObj==null) {
             return null;
+        }
         Object rsObj = dataObj.get(key);
-        if(rsObj==null)
+        if(rsObj==null) {
             return null;
+        }
         //这个地方重复解释字符串效率较低，应该可以优化
-        return JSON.parseArray(rsObj.toString(), clazz);        
+        return JSON.parseArray(rsObj.toString(), clazz);
     }
-    
+
     public static <T> List<T> getDataAsArray(String jsonResult, Class<T> clazz) {
         JSONObject jobj = JSON.parseObject(jsonResult);
         //这个地方重复解释字符串效率较低，应该可以优化
-        return JSON.parseArray(jobj.get("data").toString(), clazz);        
+        return JSON.parseArray(jobj.get("data").toString(), clazz);
     }
 }
