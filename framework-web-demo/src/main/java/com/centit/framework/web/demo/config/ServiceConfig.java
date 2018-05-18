@@ -6,8 +6,6 @@ import com.centit.framework.config.*;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
-import com.centit.msgpusher.msgpusher.websocket.SocketMsgPusher;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 
@@ -24,14 +22,12 @@ import org.springframework.context.annotation.*;
         StaticSystemBeanConfig.class})
 public class ServiceConfig {
 
-    @Autowired
-    protected SocketMsgPusher socketMsgPusher;
 
     @Value("${app.home:./}")
     private String appHome;
 
-    @Value("${app.additions.websocket.pusher:false}")
-    private boolean useWebSocketPusher;
+    /*@Value("${app.additions.websocket.pusher:false}")
+    private boolean useWebSocketPusher;*/
 
     @Bean(initMethod = "initialEnvironment")
     @Lazy(value = false)
@@ -42,14 +38,11 @@ public class ServiceConfig {
     @Bean
     public NotificationCenter notificationCenter() {
         NotificationCenterImpl notificationCenter = new NotificationCenterImpl();
-        notificationCenter.initMsgSenders();
+        //这个不是必须的,只是为了在没有真正的发送类时不报错
+        notificationCenter.initDummyMsgSenders();
         //notificationCenter.registerMessageSender("innerMsg",innerMessageManager);
-        //打开消息推送服务
-        if(socketMsgPusher!=null){
-            notificationCenter.setSocketMsgPusher(socketMsgPusher);
-        }
-        notificationCenter.setUseWebSocketPusher(useWebSocketPusher);
-
+        //打开消息推送服务日志
+        notificationCenter.setWriteNoticeLog(true);
         return notificationCenter;
     }
 

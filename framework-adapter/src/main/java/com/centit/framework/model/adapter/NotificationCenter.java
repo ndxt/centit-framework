@@ -33,9 +33,9 @@ public interface NotificationCenter extends MessageSender {
     /**
      * 设置默认的发送通知内部
      * @param sendType 发送类型
-     * @return NotificationCenter 系统的内置的通知中心
+     * @return 默认的消息发送器
      */
-    MessageSender setDefaultSendType(String sendType);
+    MessageSender appointDefaultSendType(String sendType);
 
     /**
      * 发送内部系统通知，通过自定的方式 发送

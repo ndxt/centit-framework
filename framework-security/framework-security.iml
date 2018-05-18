@@ -52,8 +52,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.4.3" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.product:msgpusher-utils:0.1.1805" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-websocket:4.3.14.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: com.centit.framework:centit-persistence-core:1.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.2-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.centit.support:centit-compiler:2.2-SNAPSHOT" level="project" />

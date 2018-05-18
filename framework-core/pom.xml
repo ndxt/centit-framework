@@ -22,12 +22,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.centit.product</groupId>
-            <artifactId>msgpusher-utils</artifactId>
-            <version>${centit.msgpusher.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>centit-persistence-core</artifactId>
             <version>${centit.persistence.version}</version>

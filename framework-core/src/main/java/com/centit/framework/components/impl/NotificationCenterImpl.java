@@ -8,9 +8,6 @@ import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IUserSetting;
 import com.centit.framework.model.basedata.NoticeMessage;
-import com.centit.msgpusher.msgpusher.po.SimplePushMessage;
-import com.centit.msgpusher.msgpusher.po.SimplePushMsgPoint;
-import com.centit.msgpusher.msgpusher.websocket.SocketMsgPusher;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,32 +22,35 @@ import java.util.Map;
 public class NotificationCenterImpl implements NotificationCenter {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationCenterImpl.class);
-    private static Map<String, MessageSender> msgSenders = new HashMap<>();
 
-    protected SocketMsgPusher socketMsgPusher;
-    private boolean writeNoticeLog;
-    private boolean useWebSocketPusher;
+    protected Map<String, MessageSender> msgSenders = new HashMap<>();
+    protected boolean writeNoticeLog;
+    protected MessageSender defautlMsgSender;
 
-    public NotificationCenterImpl() {
-        socketMsgPusher = null;
-        useWebSocketPusher = false;
-        writeNoticeLog = false;
-    }
     /**
      * 用户设置
      */
-    private PlatformEnvironment platformEnvironment;
+    protected PlatformEnvironment platformEnvironment;
     //注入接口MessageSender实现类，通过setMsgSenders方法进行配置
 
     public void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
         this.platformEnvironment = platformEnvironment;
     }
 
-    private MessageSender defautlMsgSender;
+    public void setWriteNoticeLog(boolean writeNoticeLog) {
+        this.writeNoticeLog = writeNoticeLog;
+    }
+
+
+
+    public NotificationCenterImpl() {
+        writeNoticeLog = false;
+    }
+
     /**
      * 这个通过spring注入
      */
-    public void initMsgSenders() {
+    public void initDummyMsgSenders() {
         msgSenders.put("dummy", DummyMessageSenderImpl.instance);
         defautlMsgSender = DummyMessageSenderImpl.instance;
         //目前支持内部消息、短信
@@ -67,33 +67,21 @@ public class NotificationCenterImpl implements NotificationCenter {
         // 这个地方不能直接用 this， this不是spring管理的bean，必须从容器中获取托管的 bean
         notificationCenter.registerMessageSender("type",msgManager);
      */
+    @Override
     public NotificationCenter registerMessageSender(String sendType,MessageSender sender){
         msgSenders.put(sendType, sender);
         return this;
     }
 
-    public MessageSender setDefaultSendType(String sendType){
+    @Override
+    public MessageSender appointDefaultSendType(String sendType){
         MessageSender ms = msgSenders.get(sendType);
         if(ms!=null)
             defautlMsgSender = ms;
         return defautlMsgSender;
     }
 
-    private void pushMsgBySocket(String sender, String receiver, NoticeMessage message){
-        try {
-            SimplePushMessage pushMessage = new SimplePushMessage(sender,message.getMsgSubject(), message.getMsgContent());
-            pushMessage.setMsgType( message.getMsgType());
-            pushMessage.setMsgReceiver(receiver);
-            pushMessage.setOptId(message.getOptId());
-            pushMessage.setOptMethod(message.getOptMethod());
-            pushMessage.setOptTag(message.getOptTag());
 
-            socketMsgPusher.pushMessage(pushMessage,
-                new SimplePushMsgPoint(receiver));
-        } catch (Exception e) {
-            logger.error(e.getLocalizedMessage());
-        }
-    }
     /**
      * 根据用户设定的方式发送消息
      * @param sender     发送人内部用户编码
@@ -146,9 +134,7 @@ public class NotificationCenterImpl implements NotificationCenter {
             }
         }
 
-        if(useWebSocketPusher && socketMsgPusher!=null){
-            pushMsgBySocket(sender,  receiver,  message);
-        }
+
         String notifyState =sendErrorCount==0?"0":(sendErrorCount==sendTypeCount?"1":"2");
 
         if (sendErrorCount>0) {//返回异常信息
@@ -177,9 +163,6 @@ public class NotificationCenterImpl implements NotificationCenter {
         String returnText = "OK";
         String errorText = realSendMessage(msgSenders.get(noticeType), sender, receiver, message);
 
-        if(useWebSocketPusher && socketMsgPusher!=null){
-            pushMsgBySocket(sender,  receiver,  message);
-        }
         //发送成功
         String notifyState = "0";
         if (StringUtils.isNotBlank(errorText)) {
@@ -198,7 +181,7 @@ public class NotificationCenterImpl implements NotificationCenter {
      /*
      * 保存系统通知中心数据
      */
-    private void wirteNotifyLog(String noticeType, String sender, String receiver,
+    protected void wirteNotifyLog(String noticeType, String sender, String receiver,
                                 NoticeMessage message, String errorText, String notifyState ) {
         Map<String,String> sysNotify = new HashMap<>();
         sysNotify.put("sender", sender);
@@ -230,7 +213,7 @@ public class NotificationCenterImpl implements NotificationCenter {
      * @param message 消息主题
      * @return 结果信息
      */
-    private static String realSendMessage(MessageSender messageSender, String sender, String receiver, NoticeMessage message ) {
+    public static String realSendMessage(MessageSender messageSender, String sender, String receiver, NoticeMessage message ) {
         if (null == messageSender) {
             String errorText = "找不到消息发送器，请检查Spring中的配置和数据字典 WFNotice中的配置是否一致";
             logger.error(errorText);
@@ -247,11 +230,4 @@ public class NotificationCenterImpl implements NotificationCenter {
         return null;
     }
 
-    public void setUseWebSocketPusher(boolean useWebSocketPusher) {
-        this.useWebSocketPusher = useWebSocketPusher;
-    }
-
-    public void setSocketMsgPusher(SocketMsgPusher socketMsgPusher) {
-        this.socketMsgPusher = socketMsgPusher;
-    }
 }
