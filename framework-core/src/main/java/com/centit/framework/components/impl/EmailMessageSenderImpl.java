@@ -94,4 +94,23 @@ public class EmailMessageSenderImpl implements MessageSender {
             return "用户："+receiver+"没有设置注册邮箱";
     }
 
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
+    public void setSmtpPort(int smtpPort) {
+        this.smtpPort = smtpPort;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public void setServerEmail(String serverEmail) {
+        this.serverEmail = serverEmail;
+    }
 }
