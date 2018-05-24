@@ -143,6 +143,48 @@ public class CacheController {
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
 
+    @RequestMapping(value = "/userinfo/{userCode}", method = RequestMethod.GET)
+    public void getUserInfo(@PathVariable String userCode, HttpServletResponse response) {
+        JsonResultUtils.writeSingleDataJson(CodeRepositoryUtil.getUserInfoByCode(userCode), response);
+    }
+
+    @RequestMapping(value = "/unitinfo/{unitCode}", method = RequestMethod.GET)
+    public void getUintInfo(@PathVariable String unitCode, HttpServletResponse response) {
+        JsonResultUtils.writeSingleDataJson(CodeRepositoryUtil.getUnitInfoByCode(unitCode), response);
+    }
+
+    @RequestMapping(value = "/parentunit/{unitCode}", method = RequestMethod.GET)
+    public void getParentUintInfo(@PathVariable String unitCode, HttpServletResponse response) {
+        IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(unitCode);
+        if(ui!=null){
+            JsonResultUtils.writeSingleDataJson(
+                CodeRepositoryUtil.getUnitInfoByCode(ui.getParentUnit()), response);
+        }else {
+            JsonResultUtils.writeErrorMessageJson("没有代码为: "+ unitCode+" 的机构！",response);
+        }
+    }
+
+    @RequestMapping(value = "/parentpath/{unitCode}", method = RequestMethod.GET)
+    public void getParentUintPath(@PathVariable String unitCode, HttpServletResponse response) {
+        IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(unitCode);
+        if(ui!=null){
+            List<IUnitInfo> parentUnits = new ArrayList<>();
+            while(true) {
+                if(StringUtils.isBlank(ui.getParentUnit())){
+                    break;
+                }
+                IUnitInfo parentUnit = CodeRepositoryUtil.getUnitInfoByCode(ui.getParentUnit());
+                if(parentUnit==null){
+                    break;
+                }
+                parentUnits.add(parentUnit);
+                ui = parentUnit;
+            }
+            JsonResultUtils.writeSingleDataJson(parentUnits, response);
+        }else {
+            JsonResultUtils.writeErrorMessageJson("没有代码为: "+ unitCode+" 的机构！",response);
+        }
+    }
     /**
      * cp标签中RECURSEUNITS实现
      * 获得已知机构 下级的所有有效机构并返回map，包括下级机构的下级机构
@@ -151,7 +193,7 @@ public class CacheController {
      * @param response   HttpServletResponse
      */
     @RequestMapping(value = "/recurseunits/{parentUnit}", method = RequestMethod.GET)
-    public void recurseunits(@PathVariable String parentUnit, HttpServletResponse response) {
+    public void recurseUnits(@PathVariable String parentUnit, HttpServletResponse response) {
         Map<String, IUnitInfo> objects = CodeRepositoryUtil.getUnitMapBuyParaentRecurse(parentUnit);
         JsonResultUtils.writeSingleDataJson(objects, response);
     }
