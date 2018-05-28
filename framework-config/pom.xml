@@ -29,10 +29,6 @@
         </dependency>
 
         <!--引入h2嵌入式数据库来管理session的持久化问题-->
-        <dependency>
-            <groupId>biz.paluch.redis</groupId>
-            <artifactId>lettuce</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>

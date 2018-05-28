@@ -22,12 +22,8 @@ import org.springframework.context.annotation.*;
         StaticSystemBeanConfig.class})
 public class ServiceConfig {
 
-
     @Value("${app.home:./}")
     private String appHome;
-
-    /*@Value("${app.additions.websocket.pusher:false}")
-    private boolean useWebSocketPusher;*/
 
     @Bean(initMethod = "initialEnvironment")
     @Lazy(value = false)
