@@ -50,7 +50,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
 
     private String userPwd;
 
-    private String regCellPhone;
+    private String regCellPhone;//手机号
 
     private String userWord;
 
@@ -58,12 +58,11 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
 
     private Long userOrder; // 用户排序
 
-    private String primaryUnit;
+    private String primaryUnit; //主机构
 
     private String userNamePinyin; //
-    // 用户的主机构，只有在数据字典中有效
 
-    private String idCardNo;
+    private String idCardNo;//身份证
 
     /**
      * 创建人

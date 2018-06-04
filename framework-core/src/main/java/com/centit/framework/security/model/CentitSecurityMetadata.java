@@ -11,20 +11,31 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 public class CentitSecurityMetadata {
-    public static final String ROLE_PREFIX = "R_";  
-    public static final OptTreeNode optTreeNode = new OptTreeNode();  
+    public static final String ROLE_PREFIX = "R_";
+    public static boolean isForbiddenWhenAssigned = false;
+    public static final OptTreeNode optTreeNode = new OptTreeNode();
     public static final Map<String/*optCode*/,List<ConfigAttribute/*roleCode*/>>
             optMethodRoleMap = new HashMap<>();
-    
+
+    /**
+     * 设置为true时，将url分配到菜单后 该url需要授权才能访问；
+     * 设置为false时，将url分配到菜单后不会对该url进行拦截，只有将该url分配给某个角色，其他角色才会被拦截
+     * @param isForbiddenWhenAssigned
+     */
+    public static void setIsForbiddenWhenAssigned(boolean isForbiddenWhenAssigned){
+        CentitSecurityMetadata.isForbiddenWhenAssigned = isForbiddenWhenAssigned;
+    }
+
     public static List<String> parseRequestUrl(String sUrl, String httpMethod){
         List<String> swords = new ArrayList<>();
         String sFunUrl ;
         int p = sUrl.indexOf('?');
-        if(p<1)
+        if(p<1) {
             sFunUrl = sUrl;
-        else
-            sFunUrl = sUrl.substring(0,p);
-        
+        }else {
+            sFunUrl = sUrl.substring(0, p);
+        }
+
         swords.add(httpMethod);
         for(String s:sFunUrl.split("/")){
             if(!StringBaseOpt.isNvl(s) /*&& !"*".equals(s)*/){
@@ -73,7 +84,7 @@ public class CentitSecurityMetadata {
             fullOpts.addAll(sopts);
             swords.add(fullOpts);
         }
-       
+
         return swords;
     }
 
@@ -81,33 +92,42 @@ public class CentitSecurityMetadata {
         List<String> urls = parseRequestUrl(sUrl,httpMethod);
         OptTreeNode curOpt = optTreeNode;
         for(String s: urls){
-            if(curOpt.childList == null)
+            if(curOpt.childList == null) {
                 return curOpt.optCode;
+            }
             OptTreeNode subOpt = curOpt.childList.get(s);
             if(subOpt == null){
                 subOpt = curOpt.childList.get("*");
-                if(subOpt == null)
-                    return  curOpt.optCode;
+                if(subOpt == null) {
+                    return curOpt.optCode;
+                }
             }
             curOpt = subOpt;
         }
-        if(curOpt!=null)
+        if(curOpt!=null) {
             return curOpt.optCode;
+        }
         return null;
     }
-    //public abstract void loadRoleSecurityMetadata();    
+    //public abstract void loadRoleSecurityMetadata();
     public static String matchUrlToOpt(String sUrl,HttpServletRequest request){
         return matchUrlToOpt(sUrl, request.getMethod());
     }
-    
+
     public static Collection<ConfigAttribute> matchUrlToRole(String sUrl,HttpServletRequest request){
-        
-       String sOptCode = matchUrlToOpt(sUrl,request);
-       if(sOptCode==null)
-           return null;
+
+        String sOptCode = matchUrlToOpt(sUrl,request);
+        if(sOptCode==null) {
+            return null;
+        }
+        List<ConfigAttribute> defaultRole = new ArrayList<>(2);
+        defaultRole.add(new SecurityConfig(SecurityContextUtils.FORBIDDEN_ROLE_CODE));
+        if(optMethodRoleMap.get(sOptCode) == null && isForbiddenWhenAssigned){
+            return defaultRole;
+        }
        return optMethodRoleMap.get(sOptCode);
     }
-    
+
     public static void printOptdefRoleMap(){
         for(Map.Entry<String ,List<ConfigAttribute >> roleMap : optMethodRoleMap.entrySet()){
             if(roleMap.getValue().size()>1){
@@ -122,7 +142,7 @@ public class CentitSecurityMetadata {
         }
         System.out.println("--------------------------------");
     }
-    
+
     /**
      * 将操作和角色对应关系中的角色排序，便于权限判断中的比较
      */
@@ -148,8 +168,9 @@ public class CentitSecurityMetadata {
 
             for(List<String> surls : sOpt){
                 OptTreeNode opt = optTreeNode;
-                for(String surl : surls)
+                for(String surl : surls) {
                     opt = opt.setChildPath(surl);
+                }
                 opt.setOptCode(loginCasOptCode);
             }
         }

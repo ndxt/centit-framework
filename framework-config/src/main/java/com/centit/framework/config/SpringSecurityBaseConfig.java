@@ -1,6 +1,7 @@
 package com.centit.framework.config;
 
 import com.centit.framework.security.*;
+import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.CentitUserDetailsService;
 import com.centit.support.algorithm.BooleanBaseOpt;
@@ -97,6 +98,8 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
     }
 
     protected DaoInvocationSecurityMetadataSource createCentitSecurityMetadataSource() {
+        CentitSecurityMetadata.setIsForbiddenWhenAssigned(
+            BooleanBaseOpt.castObjectToBoolean(env.getProperty("access.resource.must.be.assigned"), false));
         return new DaoInvocationSecurityMetadataSource();
     }
 

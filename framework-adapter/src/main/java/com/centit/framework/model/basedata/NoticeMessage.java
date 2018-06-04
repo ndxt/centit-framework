@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSON;
 public class NoticeMessage implements java.io.Serializable {
 
     private static final long serialVersionUID = 1;
-    private static String defautlMsgType = "msg";
+    private static String defaultMsgType = "msg";
     // 消息类别 默认值 msg
     private String msgType;
     // 消息主题
@@ -19,12 +19,12 @@ public class NoticeMessage implements java.io.Serializable {
     // 关联对象组件，多个主键用url参数的方式链接
     private String optTag;
 
-    public static void setDefautlMsgType(String defautlMsgType) {
-        NoticeMessage.defautlMsgType = defautlMsgType;
+    public static void setDefaultMsgType(String defaultMsgType) {
+        NoticeMessage.defaultMsgType = defaultMsgType;
     }
 
     public NoticeMessage(){
-        msgType = defautlMsgType;
+        msgType = defaultMsgType;
     }
 
     public String getMsgType() {
