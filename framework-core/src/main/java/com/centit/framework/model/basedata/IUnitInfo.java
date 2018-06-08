@@ -26,6 +26,12 @@ public interface IUnitInfo{
      * @return 机构名称
      */
      String getUnitName();
+
+    /**
+     * 机构简称
+     * @return 机构简称
+     */
+    String getUnitShortName();
     /**
      * 上级机构代码
      * @return 上级机构代码
