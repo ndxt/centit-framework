@@ -46,7 +46,7 @@ public class ValidatorUtils {
             throw new ObjectException(ObjectException.BLANK_EXCEPTION,errorText);
         }
     }
-    
+
     /**
      * 调用Hibernate注解进行验证
      * @param <Po> 持久对象
@@ -54,15 +54,15 @@ public class ValidatorUtils {
      * @return Map 错误信息
      */
     public static <Po>  Map<String,String> validatorEntityPo(Po po) {
-        Validator validator = getDefaultValidator(); 
-        
-        Set<ConstraintViolation<Po>> constraintViolations = validator.validate(po); 
-        Map<String,String> errMsg = new HashMap<String,String>();
+        Validator validator = getDefaultValidator();
+
+        Set<ConstraintViolation<Po>> constraintViolations = validator.validate(po);
+        Map<String,String> errMsg = new HashMap<>();
             for(ConstraintViolation<Po> constraintViolation : constraintViolations) {
                 errMsg.put(String.valueOf(constraintViolation.getPropertyPath()),
                         constraintViolation.getMessage());
         }
         return errMsg;
     }
-    
+
 }

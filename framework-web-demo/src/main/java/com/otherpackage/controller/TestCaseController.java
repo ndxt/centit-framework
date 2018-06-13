@@ -60,6 +60,7 @@ public class TestCaseController extends BaseController {
             } else {
                 responseData.addResponseData("long", ByteBaseOpt.readLong(buf, 0));
                 responseData.addResponseData("double", ByteBaseOpt.readDouble(buf, 0));
+                responseData.addResponseData("date", ByteBaseOpt.readDate(buf, 0));
                 responseData.addResponseData("Hex20180612105706", Hex.encode(ByteBaseOpt.castObjectToBytes(20180612105706L)));
             }
             return responseData;

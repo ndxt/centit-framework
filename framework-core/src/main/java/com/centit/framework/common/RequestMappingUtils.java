@@ -33,7 +33,7 @@ public abstract class RequestMappingUtils {
         optMethod.put("optUrl",Pretreatment.mapTemplateString(
                 StringBaseOpt.castObjectToString(methodMapping.value()),null,"*"));
         //GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE
-        if(methodMapping.method()==null || methodMapping.method().length==0){
+        if(/*methodMapping.method()==null ||*/ methodMapping.method().length==0){
             optMethod.put("optReq","R");
         }else {
             optMethod.put("optReq", StringBaseOpt.castObjectToString(methodMapping.method()));
