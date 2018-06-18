@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>framework-snapshot-dependencies</artifactId>
+        <artifactId>framework-release-dependencies</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>1.1.1805</version>
+        <version>1.1.1806</version>
     </parent>
 
     <groupId>com.centit.framework</groupId>
@@ -101,7 +101,7 @@
                     <encoding>UTF-8</encoding>
                     <compilerArguments>
                         <verbose />
-                        <bootclasspath>${java.home}/lib/rt.jar;${java.home}/lib/jce.jar</bootclasspath>
+                       <!-- <bootclasspath>${java.home}/lib/rt.jar;${java.home}/lib/jce.jar</bootclasspath>-->
                     </compilerArguments>
                 </configuration>
             </plugin>
