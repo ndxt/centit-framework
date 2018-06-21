@@ -65,7 +65,7 @@ public class RestfulHttpRequest {
 
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = appSession.getHttpClient();
+            httpClient = appSession.allocHttpClient();
             return getResponseObjectList(
                     httpClient,
                     appSession.completeQueryUrl(httpGetUrl),clazz);
@@ -84,7 +84,7 @@ public class RestfulHttpRequest {
 
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = appSession.getHttpClient();
+            httpClient = appSession.allocHttpClient();
             return getResponseObject(
                     httpClient,
                     appSession.completeQueryUrl(httpGetUrl),clazz);
@@ -102,7 +102,7 @@ public class RestfulHttpRequest {
 
         CloseableHttpClient httpClient = null;
         try {
-            httpClient = appSession.getHttpClient();
+            httpClient = appSession.allocHttpClient();
             return getResponseData(
                     httpClient,
                     appSession.completeQueryUrl(httpGetUrl));

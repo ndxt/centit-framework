@@ -90,7 +90,7 @@ public class AppSession {
                 :appServerUrl+queryUrl;
     }
 
-    public CloseableHttpClient getHttpClient() throws Exception{
+    public CloseableHttpClient allocHttpClient() throws Exception{
         return httpClientPool.borrowObject();
     }
 
