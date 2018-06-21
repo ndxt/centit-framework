@@ -13,7 +13,7 @@
     <groupId>com.centit.framework</groupId>
     <artifactId>framework-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.1.1806</version>
+    <version>4.1-SNAPSHOT</version>
     <name>com.centit.framework:framework-parent</name>
     <description>基于spring mvc的内部开发框架.
         包括了对 spring mvc, spring security, spring session, hibernate, mybatis, flyway 等等开源框架的整合；
@@ -23,7 +23,7 @@
 
     <properties>
         <centit.persistence.version>1.1.1806</centit.persistence.version>
-        <centit.commons.version>2.2.1806</centit.commons.version>
+        <centit.commons.version>2.2-SNAPSHOT</centit.commons.version>
         <centit.ui.version>3.1.0</centit.ui.version>
     </properties>
 

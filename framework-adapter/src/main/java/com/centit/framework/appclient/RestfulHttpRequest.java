@@ -2,6 +2,7 @@ package com.centit.framework.appclient;
 
 import com.centit.framework.common.ResponseJSON;
 import com.centit.support.network.HttpExecutor;
+import com.centit.support.network.HttpExecutorContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class RestfulHttpRequest {
         ResponseJSON resJson=null;
         try {
             resJson = ResponseJSON.valueOfJson(
-                    HttpExecutor.simpleGet(httpclient, httpGetUrl, "") );
+                    HttpExecutor.simpleGet(HttpExecutorContext.create(httpclient), httpGetUrl, "") );
         } catch (IOException e) {
         }
         return resJson;

@@ -4,6 +4,7 @@ import com.centit.framework.common.ObjectException;
 import com.centit.framework.common.ResponseJSON;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.network.HttpExecutor;
+import com.centit.support.network.HttpExecutorContext;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.http.client.ClientProtocolException;
@@ -71,7 +72,7 @@ public class AppSession {
         Map<String,String> param = new HashMap<>();
         param.put("userCode", userCode);
         param.put("password", password);
-        String jsonStr = HttpExecutor.formPost(httpclient, appServerUrl + "/system/mainframe/loginasclient", param);
+        String jsonStr = HttpExecutor.formPost(HttpExecutorContext.create(httpclient), appServerUrl + "/system/mainframe/loginasclient", param);
         ResponseJSON jsonData = ResponseJSON.valueOfJson(jsonStr);
         if(jsonData==null || jsonData.getCode()!=0){
             throw new ObjectException(jsonData==null?"访问服务器失败":jsonData.getMessage());
