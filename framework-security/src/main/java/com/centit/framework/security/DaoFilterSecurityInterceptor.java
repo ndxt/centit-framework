@@ -62,8 +62,7 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
     public void invoke(FilterInvocation fi) throws IOException,
             ServletException {
 
-        Authentication authentication = SecurityContextHolder.getContext()
-                .getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         boolean alwaysReauthenticate = false;
 
@@ -74,8 +73,9 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
             if(attr!=null && attr instanceof CentitUserDetails){
                 authentication = (CentitUserDetails)attr;
                 alwaysReauthenticate = this.isAlwaysReauthenticate();
-                if(alwaysReauthenticate)
+                if(alwaysReauthenticate) {
                     this.setAlwaysReauthenticate(false);
+                }
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
@@ -88,8 +88,9 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
             CentitUserDetails ud = sessionRegistry.getCurrentUserDetails(accessToken);
             if(ud!=null){
                 alwaysReauthenticate = this.isAlwaysReauthenticate();
-                if(alwaysReauthenticate)
+                if(alwaysReauthenticate) {
                     this.setAlwaysReauthenticate(false);
+                }
                 SecurityContextHolder.getContext().setAuthentication(ud);
                 //设置用户默认语言
                 WebOptUtils.setCurrentLang(fi.getHttpRequest(),
@@ -111,8 +112,9 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
             super.afterInvocation(token, null);
         }
 
-        if(alwaysReauthenticate)
+        if(alwaysReauthenticate) {
             this.setAlwaysReauthenticate(true);
+        }
     }
 
     public SecurityMetadataSource obtainSecurityMetadataSource() {

@@ -9,7 +9,6 @@ import com.centit.support.algorithm.StringBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,7 +18,6 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 /**
  * Created by zou_wy on 2017/3/29.
  */
-
 public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -44,7 +42,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
             }
         }
         web.httpFirewall(httpFirewall());
-}
+    }
 
 
     protected DaoFilterSecurityInterceptor createCentitPowerFilter(AuthenticationManager authenticationManager,
@@ -59,7 +57,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
 
         centitPowerFilter.setAllResourceMustBeAudited(
             BooleanBaseOpt.castObjectToBoolean(
-                env.getProperty("access.resource.must.be.audited"),false));
+                env.getProperty("access.resource.notallowed.anonymous"),false));
 
         return centitPowerFilter;
     }
@@ -90,11 +88,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
     }
 
     protected DaoAccessDecisionManager createCentitAccessDecisionManager() {
-        DaoAccessDecisionManager accessDecisionManager = new DaoAccessDecisionManager();
-        accessDecisionManager.setAllResourceMustBeAudited(
-                BooleanBaseOpt.castObjectToBoolean(
-                        env.getProperty("access.resource.must.be.audited"),false));
-        return accessDecisionManager;
+        return new DaoAccessDecisionManager();
     }
 
     protected DaoInvocationSecurityMetadataSource createCentitSecurityMetadataSource() {
