@@ -12,7 +12,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,12 +55,17 @@ public class NotificationCenterImpl implements NotificationCenter {
     public void initDummyMsgSenders() {
         msgSenders.put("dummy", DummyMessageSenderImpl.instance);
         defautlMsgSender = DummyMessageSenderImpl.instance;
-        //目前支持内部消息、短信
-        //msgSenders中的键与UserSetting表中receiveways中值一一对应
-        /*msgSenders.put("I", innerMessageSender);
-        */
     }
 
+    public void initEmailMsgSenders(String hostName, int smtpPort, String userName,
+                                    String userPassword, String serverEmail) {
+        EmailMessageSenderImpl emailMessageSender = new EmailMessageSenderImpl(hostName, smtpPort);
+        emailMessageSender.setUserName(userName);
+        emailMessageSender.setUserPassword(userPassword);
+        emailMessageSender.setServerEmail(serverEmail);
+        msgSenders.put("email", emailMessageSender);
+        defautlMsgSender = emailMessageSender;
+    }
     /**
      * 如果 MessageSender 是spring托管类请
      * MessageSender msgManager =

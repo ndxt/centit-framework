@@ -41,6 +41,14 @@ public class EmailMessageSenderImpl implements MessageSender {
     @Value("${message.sender.email.serverEmail:}")
     private String serverEmail;
 
+    public EmailMessageSenderImpl(){
+
+    }
+
+    public EmailMessageSenderImpl(String hostName, int smtpPort){
+        this.hostName = hostName;
+        this.smtpPort = smtpPort;
+    }
     public String sendEmailMessage(String mailTo,String mailFrom,String msgSubject,String msgContent) {
 
         MultiPartEmail multMail = new MultiPartEmail();
