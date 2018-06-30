@@ -19,12 +19,10 @@ import java.util.Set;
  *
  * @author codefan
  */
-public abstract class SysUnitFilterEngine implements Serializable {
+public abstract class SysUnitFilterEngine {
     private SysUnitFilterEngine(){
         throw new IllegalAccessError("Utility class");
     }
-
-    private static final long serialVersionUID = 1L;
 
     private static final Logger logger = LoggerFactory.getLogger(SysUnitFilterEngine.class);
 

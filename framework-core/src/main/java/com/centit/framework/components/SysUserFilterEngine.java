@@ -19,7 +19,7 @@ import java.util.*;
  * @version 2.0
  * 2012-2-3
  */
-public abstract class SysUserFilterEngine implements Serializable {
+public abstract class SysUserFilterEngine {
     /**
      * 岗位角色类别代码
      */
@@ -79,7 +79,6 @@ public abstract class SysUserFilterEngine implements Serializable {
     {
         throw new IllegalAccessError("Utility class");
     }
-    private static final long serialVersionUID = 1L;
 
     private static final Logger logger = LoggerFactory.getLogger(SysUserFilterEngine.class);
 
