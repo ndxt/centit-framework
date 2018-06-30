@@ -1,7 +1,9 @@
 package com.centit.framework.components;
 
+import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
+import com.centit.support.compiler.VariableFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,22 +15,6 @@ import java.util.*;
  * 2012-2-3
  */
 public abstract class InnerUserUnitFilterCompileEngine {
-    /**
-     * 岗位角色类别代码
-     */
-    public static final String ROLE_TYPE_GW = "GW";
-    /**
-     * 行政角色类别代码
-     */
-    public static final String ROLE_TYPE_XZ = "XZ";
-    /**
-     * 项目（办件）角色类别代码
-     */
-    public static final String ROLE_TYPE_ITEM = "BJ";
-    /**
-     * 角色表达式
-     */
-    public static final String ROLE_TYPE_ENGINE = "EN";
     /**
      * 按部门过滤
      */
@@ -85,6 +71,133 @@ public abstract class InnerUserUnitFilterCompileEngine {
     private static final Logger logger = LoggerFactory.getLogger(InnerUserUnitFilterCompileEngine.class);
 
     /**
+     * D(null) =>null D(all) => D1,D2,D11,D12,D111,D112,D1111,D1112 D("D12")
+     * =>D12 D(null+1) =>D1,D2 D(all+1) => D11,D12,D111,D112,D1111,D1112 D(A) =>
+     * D111 D(U+1) => D1111,D1112 D(U-1) => D11 D(P-1+1) => D111,D112 D(W*1) =>
+     * D1
+     * @param ecc UserUnitFilterCalcContext
+     * @return makeUserUnitFilter
+     */
+    private static Set<String> calcSimpleUnitExp(UserUnitFilterCalcContext ecc) {
+        Set<String> units = new HashSet<>();
+        String w = ecc.getAWord();
+        if (ecc.isLabel(w)) { // 变量
+            if ("all".equalsIgnoreCase(w)) {
+                for (IUnitInfo unitEnt: ecc.listAllUnitInfo()) {
+                    units.add(unitEnt.getUnitCode());
+                }
+            } else if ("empty".equalsIgnoreCase(w)) {
+                w = ecc.getAWord();
+                if ("-".equals(w)) {
+                    w = ecc.getAWord();
+                    if (!StringRegularOpt.isNumber(w)) {
+                        ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit null- .");
+                        return null;
+                    }
+                    units = SysUnitFilterEngine.nullParentUnits(ecc,Integer.valueOf(w));
+
+                } else if ("+".equals(w)) {
+                    w = ecc.getAWord();
+                    if (!StringRegularOpt.isNumber(w)) {
+                        ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit null+ . ");
+                        return null;
+                    }
+                    units = SysUnitFilterEngine.nullSubUnits(ecc,Integer.valueOf(w));
+                } else
+                    ecc.setPreword(w);
+            } else {
+                Set<String> us = ecc.getUnitCode(w);
+                if (us != null)
+                    units.addAll(us);
+                else{
+                    if( ecc.getUnitInfoByCode(w) !=null){
+                        units.add(w);
+                    }
+                }
+            }
+        } else if (!VariableFormula.isKeyWord(w)) { // 常量
+            String unitCode = StringRegularOpt.trimString(w);
+            if (ecc.getUnitInfoByCode(unitCode) != null)
+                units.add(unitCode);
+        } else { // 语法错误
+            ecc.setLastErrMsg(w + " is unexpected, expect label or string [unitcode]; calcSimpleUnit label . ");
+            return null;
+        }
+        // --------------------------------------------------------------//
+        w = ecc.getAWord();
+        if ("-".equals(w)) {
+            ecc.setCanAcceptOpt(true);
+            w = ecc.getAWord();
+            if (!StringRegularOpt.isNumber(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - . ");
+                return null;
+            }
+            units = SysUnitFilterEngine.parentUnits(ecc,units, Integer.valueOf(w));
+            w = ecc.getAWord();
+            if("+".equals(w)){
+                w = ecc.getAWord();
+                if (!StringRegularOpt.isNumber(w)) {
+                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - A + B . ");
+                    return null;
+                }
+                units = SysUnitFilterEngine.subUnits(ecc,units, Integer.valueOf(w));
+            }else
+                ecc.setPreword(w);
+
+        } else if ("+".equals(w)) {
+            w = ecc.getAWord();
+            if (!StringRegularOpt.isNumber(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit + . ");
+                return null;
+            }
+            units = SysUnitFilterEngine.subUnits(ecc,units, Integer.valueOf(w));
+
+        } else if ("*".equals(w)) {
+            ecc.setCanAcceptOpt(true);
+            w = ecc.getAWord();
+            if ("+".equals(w)) {// 所有同一系列 同一层节点
+                w = ecc.getAWord();
+                if (!StringRegularOpt.isNumber(w)) {
+                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *+.");
+                    return null;
+                }
+                units = SysUnitFilterEngine.topUnits(ecc,units, Integer.valueOf(w));
+
+            } else if ("-".equals(w)) {// 所有节点的上层节点中， 指定层次的节点
+
+                w = ecc.getAWord();
+                if (!StringRegularOpt.isNumber(w)) {
+                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *-.");
+                    return null;
+                }
+                Set<String> parUnits = SysUnitFilterEngine.allParentUnits(ecc,units);
+                units = SysUnitFilterEngine.topUnits(ecc,units, Integer.valueOf(w));
+                units.retainAll(parUnits);
+
+            } else{
+                if (!StringRegularOpt.isNumber(w)) {
+                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *.");
+                    return null;
+                }else
+                    //所有同一系列最上面几层节点
+                    units = SysUnitFilterEngine.seriesUnits(ecc,units, Integer.valueOf(w));
+            }
+        } else if ("++".equals(w)) {// 所有的下层节点
+
+            units = SysUnitFilterEngine.allSubUnits(ecc,units);
+        } else if ("--".equals(w)) {// 所有的上层节点
+            units = SysUnitFilterEngine.allParentUnits(ecc,units);
+        } else if ("**".equals(w)) {// 所有同一系列节点
+            units = SysUnitFilterEngine.allSeriesUnits(ecc,units);
+        } else
+            ecc.setPreword(w);
+        // w = ecc.getAWord();
+        // if(")".equals(w)){ //语句结束
+        return units;
+    }
+
+
+    /**
      * D(机构表达式)
      *
      * @param ecc 运行环境
@@ -97,7 +210,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
             ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcRoleUnits begin .");
             return false;
         }
-        Set<String> units = SysUnitFilterEngine.calcUnitsExp(ecc);
+        Set<String> units = calcSimpleUnitExp(ecc);
         if (units == null)
             return false;
         gene.addUnits(units);
@@ -491,7 +604,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
      * D()GW()XZ()R()U()
      * @return
      */
-    public static UserUnitFilterGene calcSimpleExp(UserUnitFilterCalcContext ecc) {
+    public static UserUnitFilterGene makeUserUnitFilter(UserUnitFilterCalcContext ecc) {
         UserUnitFilterGene gene = new UserUnitFilterGene();
         String w = ecc.getAWord();
         while (true) {

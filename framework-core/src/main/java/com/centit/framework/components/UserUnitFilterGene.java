@@ -196,7 +196,10 @@ public class UserUnitFilterGene {
         setRankPlus();
     }
 
-
+    public void addUnit(String sucs) {
+        units.add(sucs);
+        hasUnitFilter = true;
+    }
 
     public void addUnits(Set<String> sucs) {
         if (sucs != null && sucs.size() > 0) {

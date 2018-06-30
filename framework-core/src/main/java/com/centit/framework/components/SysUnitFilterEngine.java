@@ -3,16 +3,11 @@ package com.centit.framework.components;
 import com.centit.framework.components.impl.SystemUserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.support.algorithm.StringRegularOpt;
-import com.centit.support.compiler.VariableFormula;
+import com.centit.framework.model.basedata.IUserUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 结构引擎，相关说明文档参见 http://192.168.128.8/wiki/pages/viewpage.action?pageId=12746758
@@ -122,10 +117,9 @@ public abstract class SysUnitFilterEngine {
         if (units == null || units.size() == 0)
             return units;
         Set<String> midUnits = units;
-        Set<String> parUnits = new HashSet<String>();
+        Set<String> parUnits = new HashSet<>();
         while(true) {
-            Set<String> retUnits = new HashSet<String>();
-
+            Set<String> retUnits = new HashSet<>();
             for (String suc : midUnits) {
                 IUnitInfo u = ecc.getUnitInfoByCode(suc);
                 String puc = u.getParentUnit();
@@ -271,131 +265,6 @@ public abstract class SysUnitFilterEngine {
         return serUnits;
     }
 
-    /**
-     * D(null) =>null D(all) => D1,D2,D11,D12,D111,D112,D1111,D1112 D("D12")
-     * =>D12 D(null+1) =>D1,D2 D(all+1) => D11,D12,D111,D112,D1111,D1112 D(A) =>
-     * D111 D(U+1) => D1111,D1112 D(U-1) => D11 D(P-1+1) => D111,D112 D(W*1) =>
-     * D1
-     * @param ecc UserUnitFilterCalcContext
-     * @return calcSimpleExp
-     */
-    private static Set<String> calcSimpleExp(UserUnitFilterCalcContext ecc) {
-        Set<String> units = new HashSet<String>();
-        String w = ecc.getAWord();
-        if (ecc.isLabel(w)) { // 变量
-            if ("all".equalsIgnoreCase(w)) {
-                for (IUnitInfo  unitEnt: ecc.listAllUnitInfo()) {
-                    units.add(unitEnt.getUnitCode());
-                }
-            } else if ("empty".equalsIgnoreCase(w)) {
-                w = ecc.getAWord();
-                if ("-".equals(w)) {
-                    w = ecc.getAWord();
-                    if (!StringRegularOpt.isNumber(w)) {
-                        ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit null- .");
-                        return null;
-                    }
-                    units = nullParentUnits(ecc,Integer.valueOf(w));
-
-                } else if ("+".equals(w)) {
-                    w = ecc.getAWord();
-                    if (!StringRegularOpt.isNumber(w)) {
-                        ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit null+ . ");
-                        return null;
-                    }
-                    units = nullSubUnits(ecc,Integer.valueOf(w));
-                } else
-                    ecc.setPreword(w);
-            } else {
-                Set<String> us = ecc.getUnitCode(w);
-                if (us != null)
-                    units.addAll(us);
-                else{
-                    if( ecc.getUnitInfoByCode(w) !=null){
-                        units.add(w);
-                    }
-                }
-            }
-        } else if (!VariableFormula.isKeyWord(w)) { // 常量
-            String unitCode = StringRegularOpt.trimString(w);
-            if (ecc.getUnitInfoByCode(unitCode) != null)
-                units.add(unitCode);
-        } else { // 语法错误
-            ecc.setLastErrMsg(w + " is unexpected, expect label or string [unitcode]; calcSimpleUnit label . ");
-            return null;
-        }
-        // --------------------------------------------------------------//
-        w = ecc.getAWord();
-        if ("-".equals(w)) {
-            ecc.setCanAcceptOpt(true);
-            w = ecc.getAWord();
-            if (!StringRegularOpt.isNumber(w)) {
-                ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - . ");
-                return null;
-            }
-            units = parentUnits(ecc,units, Integer.valueOf(w));
-            w = ecc.getAWord();
-            if("+".equals(w)){
-                w = ecc.getAWord();
-                if (!StringRegularOpt.isNumber(w)) {
-                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - A + B . ");
-                    return null;
-                }
-                units = subUnits(ecc,units, Integer.valueOf(w));
-            }else
-                ecc.setPreword(w);
-
-        } else if ("+".equals(w)) {
-            w = ecc.getAWord();
-            if (!StringRegularOpt.isNumber(w)) {
-                ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit + . ");
-                return null;
-            }
-            units = subUnits(ecc,units, Integer.valueOf(w));
-
-        } else if ("*".equals(w)) {
-            ecc.setCanAcceptOpt(true);
-            w = ecc.getAWord();
-            if ("+".equals(w)) {// 所有同一系列 同一层节点
-                w = ecc.getAWord();
-                if (!StringRegularOpt.isNumber(w)) {
-                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *+.");
-                    return null;
-                }
-                units = topUnits(ecc,units, Integer.valueOf(w));
-
-            } else if ("-".equals(w)) {// 所有节点的上层节点中， 指定层次的节点
-
-                w = ecc.getAWord();
-                if (!StringRegularOpt.isNumber(w)) {
-                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *-.");
-                    return null;
-                }
-                Set<String> parUnits = allParentUnits(ecc,units);
-                units = topUnits(ecc,units, Integer.valueOf(w));
-                units.retainAll(parUnits);
-
-            } else{
-                if (!StringRegularOpt.isNumber(w)) {
-                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *.");
-                    return null;
-                }else
-                    //所有同一系列最上面几层节点
-                    units = seriesUnits(ecc,units, Integer.valueOf(w));
-            }
-        } else if ("++".equals(w)) {// 所有的下层节点
-
-            units = allSubUnits(ecc,units);
-        } else if ("--".equals(w)) {// 所有的上层节点
-            units = allParentUnits(ecc,units);
-        } else if ("**".equals(w)) {// 所有同一系列节点
-            units = allSeriesUnits(ecc,units);
-        } else
-            ecc.setPreword(w);
-        // w = ecc.getAWord();
-        // if(")".equals(w)){ //语句结束
-        return units;
-    }
 
     /**
      * S(unitExp[,unitExp]* )
@@ -451,7 +320,7 @@ public abstract class SysUnitFilterEngine {
                 return null;
             }
             // }else if("D".equals(w)){
-            // return calcSimpleExp(ecc);
+            // return makeUserUnitFilter(ecc);
         } else if ("S".equalsIgnoreCase(w)) {
             return calcSingleExp(ecc);
         } else {
@@ -500,6 +369,97 @@ public abstract class SysUnitFilterEngine {
                 return null;
             }
         }
+    }
+
+
+    private static Set<String> getUnitsByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
+
+        boolean hasUnitFilter =  rf.isHasUnitFilter()
+            || rf.isHasXZFilter();
+
+        boolean hasTypeTagFilter = rf.isHasUserTagFilter() || rf.isHasUserTypeFilter();
+
+        if (!hasUnitFilter && !hasTypeTagFilter)
+            return new HashSet<>();
+
+        /**
+         * 这个地方有一个逻辑错误
+         *
+         */
+        if (hasUnitFilter) {
+            // 获取所有候选人的岗位、职务信息
+            List<IUserUnit> lsUserunit = new LinkedList<>();
+            if (rf.isHasUnitFilter()) {
+                for (String unitCode : rf.getUnits()) {
+                    if (rf.isOnlyGetPrimaryUser()) {
+                        for (IUserUnit uu : ecc.listUnitUsers(unitCode)) {
+                            if ("T".equals(uu.getIsPrimary())) {
+                                lsUserunit.add(uu);
+                            }
+                        }
+                    } else
+                        lsUserunit.addAll(ecc.listUnitUsers(unitCode));
+                }
+            } else {
+                lsUserunit.addAll(ecc.listAllUserUnits());
+            }
+
+
+            if (rf.isHasGWFilter()) {
+                // 过滤掉不符合要求的岗位
+                lsUserunit.removeIf(uu -> !rf.getGwRoles().contains(uu.getUserStation()));
+            }
+
+            if (rf.isHasXZFilter()) {
+                // 过滤掉不符合要求的职位
+                lsUserunit.removeIf(uu -> !rf.getXzRoles().contains(uu.getUserRank()));
+            }
+
+            if (rf.isHasRankFilter()) {
+                if (rf.isRankAllSub() || rf.isRankAllTop()) { // 所有下级
+                    lsUserunit.removeIf(uu -> !rf.matchRank(ecc.getXzRank(uu.getUserRank())));
+                } else {
+                    Map<String, Integer> unitRank = new HashMap<String, Integer>();
+                    for (IUserUnit uu : lsUserunit) {
+                        if (rf.matchRank(ecc.getXzRank(uu.getUserRank()))) {
+                            Integer nR = unitRank.get(uu.getUnitCode());
+                            if (nR == null) {
+                                unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
+                            } else {
+                                if (rf.isRankPlus() && nR > ecc.getXzRank(uu.getUserRank()))
+                                    unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
+                                else if (rf.isRankMinus() && nR < ecc.getXzRank(uu.getUserRank()))
+                                    unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
+                            }
+                        }
+                    }
+
+                    for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
+                        IUserUnit uu = it.next();
+                        // 过滤掉不符合要求的职位
+                        Integer nR = unitRank.get(uu.getUnitCode());
+                        if (nR == null || nR != ecc.getXzRank(uu.getUserRank()))
+                            it.remove();
+                    }
+                }
+
+            }
+
+            // 获取所有 符合条件的用户代码
+            rf.getUsers().clear();
+            for (IUserUnit uu : lsUserunit) {
+                rf.addUser(uu.getUserCode());
+            }
+        }
+        return rf.getUnits();
+    }
+    /**
+     * D()DT()DL()
+     * @return
+     */
+    private static Set<String> calcSimpleExp(UserUnitFilterCalcContext ecc) {
+        UserUnitFilterGene gene = InnerUserUnitFilterCompileEngine.makeUserUnitFilter(ecc);
+        return getUnitsByFilter(ecc,gene);
     }
 
     /**
