@@ -88,21 +88,12 @@ public abstract class SysUserFilterEngine {
 
     private static Set<String> getUsersByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
 
-        if (rf.isHasUserFilter())
-            return rf.getUsers();
-
-        boolean hasUnitFilter = rf.isHasGWFilter() || rf.isHasRankFilter() || rf.isHasUnitFilter()
-                || rf.isHasXZFilter();
+        boolean hasUnitFilter = rf.isHasGWFilter() || rf.isHasRankFilter() || rf.isHasXZFilter();
 
         boolean hasTypeTagFilter = rf.isHasUserTagFilter() || rf.isHasUserTypeFilter();
+        //获取机构列表
+        SysUnitFilterEngine.getUnitsByFilter(ecc, rf);
 
-        if (!hasUnitFilter && !hasTypeTagFilter)
-            return new HashSet<>();
-
-        /**
-         * 这个地方有一个逻辑错误
-         *
-         */
         if(hasUnitFilter) {
             // 获取所有候选人的岗位、职务信息
             List<IUserUnit> lsUserunit = new LinkedList<>();
@@ -182,32 +173,34 @@ public abstract class SysUserFilterEngine {
                 lsUserInfo.addAll( extUserInfo);
             }
 
-            if (rf.isHasUserTypeFilter()) {
-                // 过滤掉不符合要求的岗位
-                lsUserInfo.removeIf(user -> !rf.getUserTypes().contains(user.getUserType()));
-            }
+            if(lsUserInfo!=null) {
+                if (rf.isHasUserTypeFilter()) {
+                    // 过滤掉不符合要求的岗位
+                    lsUserInfo.removeIf(user -> !rf.getUserTypes().contains(user.getUserType()));
+                }
 
-            if (rf.isHasUserTagFilter()) {
-                for (Iterator<IUserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
-                    IUserInfo user = it.next();
-                    boolean hasTag = false;
-                    if(StringUtils.isNoneBlank(user.getUserTag())){
-                        String tags[] = user.getUserTag().split(",");
-                        for(String tag : tags){
-                            if(rf.getUserTags().contains(tag)){
-                                hasTag = true;
-                                break;
+                if (rf.isHasUserTagFilter()) {
+                    for (Iterator<IUserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
+                        IUserInfo user = it.next();
+                        boolean hasTag = false;
+                        if (StringUtils.isNoneBlank(user.getUserTag())) {
+                            String tags[] = user.getUserTag().split(",");
+                            for (String tag : tags) {
+                                if (rf.getUserTags().contains(tag)) {
+                                    hasTag = true;
+                                    break;
+                                }
                             }
                         }
+                        if (!hasTag)
+                            it.remove();
                     }
-                    if (!hasTag)
-                        it.remove();
                 }
-            }
 
-            rf.getUsers().clear();
-            for (IUserInfo user : lsUserInfo) {
-                rf.addUser(user.getUserCode());
+                rf.getUsers().clear();
+                for (IUserInfo user : lsUserInfo) {
+                    rf.addUser(user.getUserCode());
+                }
             }
         }
 

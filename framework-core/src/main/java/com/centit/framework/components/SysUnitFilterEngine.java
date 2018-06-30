@@ -3,7 +3,7 @@ package com.centit.framework.components;
 import com.centit.framework.components.impl.SystemUserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.framework.model.basedata.IUserUnit;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -372,83 +372,50 @@ public abstract class SysUnitFilterEngine {
     }
 
 
-    private static Set<String> getUnitsByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
+    public static Set<String> getUnitsByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
 
-        boolean hasUnitFilter =  rf.isHasUnitFilter()
-            || rf.isHasXZFilter();
-
-        boolean hasTypeTagFilter = rf.isHasUserTagFilter() || rf.isHasUserTypeFilter();
-
-        if (!hasUnitFilter && !hasTypeTagFilter)
-            return new HashSet<>();
-
-        /**
-         * 这个地方有一个逻辑错误
-         *
-         */
-        if (hasUnitFilter) {
-            // 获取所有候选人的岗位、职务信息
-            List<IUserUnit> lsUserunit = new LinkedList<>();
-            if (rf.isHasUnitFilter()) {
-                for (String unitCode : rf.getUnits()) {
-                    if (rf.isOnlyGetPrimaryUser()) {
-                        for (IUserUnit uu : ecc.listUnitUsers(unitCode)) {
-                            if ("T".equals(uu.getIsPrimary())) {
-                                lsUserunit.add(uu);
-                            }
-                        }
-                    } else
-                        lsUserunit.addAll(ecc.listUnitUsers(unitCode));
+        boolean hasUnitFilter =  rf.isHasUnitTagFilter() || rf.isHasUnitTypeFilter();
+        if( hasUnitFilter) {
+            List<IUnitInfo> lsUnitInfo = null;
+            if(rf.getUnits() != null && rf.getUnits().size()>0){
+                lsUnitInfo = new ArrayList<>(rf.getUnits().size()+1);
+                for (String unitCode  : rf.getUnits()) {
+                    lsUnitInfo.add(ecc.getUnitInfoByCode(unitCode));
                 }
-            } else {
-                lsUserunit.addAll(ecc.listAllUserUnits());
+            }else if(!rf.isHasUnitFilter()){
+                List<? extends IUnitInfo> extUnitInfo = ecc.listAllUnitInfo();
+                lsUnitInfo = new ArrayList<>(extUnitInfo.size()+1);
+                lsUnitInfo.addAll( extUnitInfo);
             }
 
+            if(lsUnitInfo!=null) {
+                if (rf.isHasUnitTypeFilter()) {
+                    // 过滤掉不符合要求的岗位
+                    lsUnitInfo.removeIf(unit -> !rf.getUnitTypes().contains(unit.getUnitType()));
+                }
 
-            if (rf.isHasGWFilter()) {
-                // 过滤掉不符合要求的岗位
-                lsUserunit.removeIf(uu -> !rf.getGwRoles().contains(uu.getUserStation()));
-            }
-
-            if (rf.isHasXZFilter()) {
-                // 过滤掉不符合要求的职位
-                lsUserunit.removeIf(uu -> !rf.getXzRoles().contains(uu.getUserRank()));
-            }
-
-            if (rf.isHasRankFilter()) {
-                if (rf.isRankAllSub() || rf.isRankAllTop()) { // 所有下级
-                    lsUserunit.removeIf(uu -> !rf.matchRank(ecc.getXzRank(uu.getUserRank())));
-                } else {
-                    Map<String, Integer> unitRank = new HashMap<String, Integer>();
-                    for (IUserUnit uu : lsUserunit) {
-                        if (rf.matchRank(ecc.getXzRank(uu.getUserRank()))) {
-                            Integer nR = unitRank.get(uu.getUnitCode());
-                            if (nR == null) {
-                                unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
-                            } else {
-                                if (rf.isRankPlus() && nR > ecc.getXzRank(uu.getUserRank()))
-                                    unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
-                                else if (rf.isRankMinus() && nR < ecc.getXzRank(uu.getUserRank()))
-                                    unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
+                if (rf.isHasUnitTagFilter()) {
+                    for (Iterator<IUnitInfo> it = lsUnitInfo.iterator(); it.hasNext(); ) {
+                        IUnitInfo unit = it.next();
+                        boolean hasTag = false;
+                        if (StringUtils.isNoneBlank(unit.getUnitTag())) {
+                            String tags[] = unit.getUnitTag().split(",");
+                            for (String tag : tags) {
+                                if (rf.getUnitTags().contains(tag)) {
+                                    hasTag = true;
+                                    break;
+                                }
                             }
                         }
-                    }
-
-                    for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-                        IUserUnit uu = it.next();
-                        // 过滤掉不符合要求的职位
-                        Integer nR = unitRank.get(uu.getUnitCode());
-                        if (nR == null || nR != ecc.getXzRank(uu.getUserRank()))
+                        if (!hasTag)
                             it.remove();
                     }
                 }
 
-            }
-
-            // 获取所有 符合条件的用户代码
-            rf.getUsers().clear();
-            for (IUserUnit uu : lsUserunit) {
-                rf.addUser(uu.getUserCode());
+                rf.getUnits().clear();
+                for (IUnitInfo unit : lsUnitInfo) {
+                    rf.addUnit(unit.getUnitCode());
+                }
             }
         }
         return rf.getUnits();
