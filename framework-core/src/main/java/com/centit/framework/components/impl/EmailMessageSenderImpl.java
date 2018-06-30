@@ -41,15 +41,21 @@ public class EmailMessageSenderImpl implements MessageSender {
     @Value("${message.sender.email.serverEmail:}")
     private String serverEmail;
 
+    public EmailMessageSenderImpl(){
+        this.smtpPort = 25;
+    }
+
+    public EmailMessageSenderImpl(String hostName, int smtpPort){
+        this.hostName = hostName;
+        this.smtpPort = smtpPort;
+    }
     public String sendEmailMessage(String mailTo,String mailFrom,String msgSubject,String msgContent) {
 
         MultiPartEmail multMail = new MultiPartEmail();
-
         // SMTP
         multMail.setHostName(hostName);
                 //CodeRepositoryUtil.getValue("SysMail", "host_name"));
         multMail.setSmtpPort(smtpPort);
-
         String resStr = "OK";
         // 需要提供公用的消息用户名和密码
         multMail.setAuthentication(userName, userPassword);

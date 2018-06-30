@@ -6,17 +6,14 @@ import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -37,7 +34,6 @@ import java.util.List;
 @Conditional(SecurityDaoCondition.class)
 public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
-
     @Autowired
     @Qualifier("passwordEncoder")
     protected Object passwordEncoder;
@@ -50,9 +46,9 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
             http.authorizeRequests().antMatchers("/**").authenticated();
         }
 
-        /*if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.anonymous.disable"),false)) {
+        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.anonymous.disable"),false)) {
             http.anonymous().disable();
-        }*/
+        }
 
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
             http.csrf().csrfTokenRepository(csrfTokenRepository);

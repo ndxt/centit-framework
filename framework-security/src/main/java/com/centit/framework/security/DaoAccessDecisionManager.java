@@ -14,16 +14,9 @@ import org.springframework.security.web.FilterInvocation;
 import java.util.Collection;
 import java.util.Iterator;
 
-//@Component("centitAccessDecisionManagerBean")
 public class DaoAccessDecisionManager implements AccessDecisionManager {
-    protected static final Logger logger = LoggerFactory.getLogger(DaoAccessDecisionManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(DaoAccessDecisionManager.class);
 
-    private boolean allResourceMustBeAudited = false;
-    
-    public void setAllResourceMustBeAudited(boolean allResourceMustBeAudited) {
-        this.allResourceMustBeAudited = allResourceMustBeAudited;
-    }
-    
     // In this method, need to compare authentication with configAttributes.
     // 1, A object is a URL, a filter was find permission configuration by this
     // URL, and pass to here.
@@ -35,34 +28,11 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
             throws AccessDeniedException, InsufficientAuthenticationException {
 
-        if (configAttributes==null || configAttributes.size()<1) {
-            if(allResourceMustBeAudited){
-                FilterInvocation fi = (FilterInvocation) object;
-                String requestUrl = fi.getRequestUrl();
-                String sErrMsg = "资源:"+requestUrl+",必须要在角色中配置，以便于分配。";                
-                fi.getRequest().setAttribute("CENTIT_SYSTEM_ERROR_MSG", sErrMsg);
-                logger.error(sErrMsg);
-                throw new AccessDeniedException(sErrMsg);
-            }
-            return;
-        }
-
-        if(configAttributes.contains(new SecurityConfig("R_forbidden"))){
+        if(configAttributes.contains(new SecurityConfig(SecurityContextUtils.FORBIDDEN_ROLE_CODE))){
             String sErrMsg = "资源被禁止访问";
             logger.error(sErrMsg);
             throw new AccessDeniedException(sErrMsg);
         }
-
-        /*Iterator<ConfigAttribute> needRolesItr = configAttributes.iterator();
-        while(needRolesItr.hasNext()){
-            String needRole = needRolesItr.next().getAttribute();
-            if("R_G-forbidden".equals(needRole)){
-                String sErrMsg = "资源被禁止访问";
-                logger.error(sErrMsg);
-                throw new AccessDeniedException(sErrMsg);
-            }
-        }*/
-
 
         //if(authentication!=null){
         Collection<? extends GrantedAuthority> userRoles = authentication.getAuthorities();
@@ -102,13 +72,13 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
         //没有权限，组织提示信息。
         FilterInvocation fi = (FilterInvocation) object;
         String requestUrl = fi.getRequestUrl();
-        
+
         StringBuilder needRoles = new StringBuilder();
         for(ConfigAttribute ca : configAttributes){
             needRoles.append(ca.getAttribute().substring(2)).append(" ");
         }
         String sErrMsg = "无权限访问资源:"+requestUrl+",需要角色 "+needRoles+"中的一个。";
-        
+
         fi.getRequest().setAttribute("CENTIT_SYSTEM_ERROR_MSG", sErrMsg);
         logger.error(sErrMsg);
         throw new AccessDeniedException(sErrMsg);
