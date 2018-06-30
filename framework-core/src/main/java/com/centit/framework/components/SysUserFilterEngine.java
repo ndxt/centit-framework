@@ -5,7 +5,9 @@ import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserUnit;
+import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,10 +60,20 @@ public abstract class SysUserFilterEngine implements Serializable {
      * 按照行政角色等级过滤
      */
     public static final String USER_FILTER_ROLE_RANK = "R";
+
+    /**
+     * 根据用户类别过滤
+     */
+    public static final String USER_FILTER_USER_TYPE = "TYPE";
+
+    /**
+     * 根据用户tag标记过滤
+     */
+    public static final String USER_FILTER_USER_TAG = "TAG";
     /**
      * 所有过滤方式
      */
-    public static final String ALL_USER_FILTER_ROLE_RANK = "'D'、'P'、'U'、'GW'、'XZ'、'R'";
+    public static final String ALL_USER_FILTER_ROLE_RANK = "'D'、'P'、'U'、'GW'、'XZ'、'R'、'TYPE'、'TAG'";
 
     private SysUserFilterEngine()
     {
@@ -71,172 +83,12 @@ public abstract class SysUserFilterEngine implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(SysUserFilterEngine.class);
 
-    /**
-     * 每个RoleFilterGene类对应一个个权限表达式
-     *
-     * @author codefan
-     * @version 2.0
-     */
-    private static class RoleFilterGene {
-        private boolean hasUnitFilter;
-        private boolean hasUserFilter;
-        private boolean hasGWFilter;
-        private boolean hasXZFilter;
-        private boolean hasRankFilter;
-        private boolean onlyGetPrimaryUser;
-
-        private Set<String> units;
-        private Set<String> users;
-        private Set<String> xzRoles;
-        private Set<String> gwRoles;
-
-        private int xzRank;
-        private boolean rankPlus;
-        private boolean rankMinus;
-        private boolean rankAllTop;
-        private boolean rankAllSub;
-
-        public Set<String> getUnits() {
-            return units;
-        }
-
-        public Set<String> getUsers() {
-            // if(users==null)
-            // users = new HashSet<String>();
-            return users;
-        }
-
-        public Set<String> getXzRoles() {
-            return xzRoles;
-        }
-
-        public Set<String> getGwRoles() {
-            return gwRoles;
-        }
-
-        public void setXzRank(int r) {
-            xzRank = r;
-            hasRankFilter = true;
-        }
-
-        public boolean isHasUnitFilter() {
-            return hasUnitFilter;
-        }
-
-        public boolean isHasUserFilter() {
-            return hasUserFilter;
-        }
-
-        public boolean isHasGWFilter() {
-            return hasGWFilter;
-        }
-
-        public boolean isHasXZFilter() {
-            return hasXZFilter;
-        }
-
-        public boolean isHasRankFilter() {
-            return hasRankFilter;
-        }
-
-        public boolean isRankMinus() {
-            return rankMinus;
-        }
-
-        public void setRankMinus() {
-            this.rankMinus = true;
-            this.rankPlus = false;
-        }
-
-        public boolean isRankPlus() {
-            return rankPlus;
-        }
-
-        public void setRankPlus() {
-            this.rankPlus = true;
-            this.rankMinus = false;
-        }
-
-        public boolean isRankAllTop() {
-            return rankAllTop;
-        }
-        
-        public boolean isOnlyGetPrimaryUser() {
-            return onlyGetPrimaryUser;
-        }
-        
-        public void setOnlyGetPrimaryUser(boolean onlyGetPrimaryUser) {
-            this.onlyGetPrimaryUser = onlyGetPrimaryUser;
-        }
-        
-        public void setRankAllTop() {
-            this.rankAllTop = true;
-            this.rankAllSub = false;
-            xzRank--;
-            setRankMinus();
-        }
-
-        public boolean isRankAllSub() {
-            return rankAllSub;
-        }
-
-        public void setRankAllSub() {
-            this.rankAllTop = false;
-            this.rankAllSub = true;
-            xzRank++;
-            setRankPlus();
-        }
-
-        public RoleFilterGene() {
-            hasUnitFilter = hasUserFilter = hasGWFilter = hasXZFilter = hasRankFilter = rankPlus = rankMinus = rankAllTop = rankAllSub = false;
-            units = new HashSet<>();
-            users = new HashSet<>();
-            xzRoles = new HashSet<>();
-            gwRoles = new HashSet<>();
-            xzRank = 0;
-        }
-
-        public void addUnits(Set<String> sucs) {
-            if (sucs != null && sucs.size() > 0) {
-                units.addAll(sucs);
-                hasUnitFilter = true;
-            }
-        }
-
-        public void addUser(String suc) {
-            users.add(suc);
-            hasUserFilter = true;
-        }
-
-        public void addUsers(Set<String> sucs) {
-            if (sucs != null && sucs.size() > 0) {
-                users.addAll(sucs);
-                hasUserFilter = true;
-            }
-        }
-
-        public void addXzRole(String rc) {
-            xzRoles.add(rc);
-            hasXZFilter = true;
-        }
-
-        public void addGwRole(String rc) {
-            gwRoles.add(rc);
-            hasGWFilter = true;
-        }
-
-        public boolean matchRank(int nR) {
-            return rankPlus ? (nR >= xzRank) : (rankMinus ? nR <= xzRank : nR == xzRank);
-        }
-
-    }// end of class RoleFilterGene
-
     public static Set<String> getUsersByRoleAndUnit(UserUnitFilterCalcContext ecc,
                                                     String roleType,String roleCode,String unitCode)
     {
         return getUsersByRoleAndUnit(ecc,roleType, roleCode, unitCode, false);
     }
-    
+
     public static Set<String> getUsersByRoleAndUnit(UserUnitFilterCalcContext ecc,
                                                     String roleType,String roleCode,
                                                     String unitCode, boolean onlyGetPrimary)
@@ -248,7 +100,7 @@ public abstract class SysUserFilterEngine implements Serializable {
                 if(onlyGetPrimary){
                     for(IUserUnit uu: ecc.listUnitUsers(unitCode)){
                         if("T".equals(uu.getIsPrimary())){
-                            lsUserunit.add(uu); 
+                            lsUserunit.add(uu);
                         }
                     }
                 }else {
@@ -260,19 +112,11 @@ public abstract class SysUserFilterEngine implements Serializable {
         }
 
         if (ROLE_TYPE_GW.equalsIgnoreCase(roleType)) {
-            for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-                IUserUnit uu = it.next();
-                // 过滤掉不符合要求的岗位
-                if (!roleCode.equals(uu.getUserStation()))
-                    it.remove();
-            }
+            // 过滤掉不符合要求的岗位
+            lsUserunit.removeIf(uu -> !roleCode.equals(uu.getUserStation()));
         } else if (ROLE_TYPE_XZ.equalsIgnoreCase(roleType)) {
-            for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-                IUserUnit uu = it.next();
-                // 过滤掉不符合要求的职位
-                if (!roleCode.equals(uu.getUserRank()))
-                    it.remove();
-            }
+            // 过滤掉不符合要求的职位
+            lsUserunit.removeIf(uu -> !roleCode.equals(uu.getUserRank()));
         } else
             lsUserunit.clear();
 
@@ -286,104 +130,143 @@ public abstract class SysUserFilterEngine implements Serializable {
 
 
 
-    private static Set<String> getUsersByFilter(UserUnitFilterCalcContext ecc, RoleFilterGene rf) {
-        boolean hasFilter = rf.isHasGWFilter() || rf.isHasRankFilter() || rf.isHasUnitFilter() || rf.isHasUserFilter()
-                || rf.isHasXZFilter();
+    private static Set<String> getUsersByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
 
-        if (!hasFilter)
-            return new HashSet<>();
         if (rf.isHasUserFilter())
             return rf.getUsers();
+
+        boolean hasUnitFilter = rf.isHasGWFilter() || rf.isHasRankFilter() || rf.isHasUnitFilter()
+                || rf.isHasXZFilter();
+
+        boolean hasTypeTagFilter = rf.isHasUserTagFilter() || rf.isHasUserTypeFilter();
+
+        if (!hasUnitFilter && !hasTypeTagFilter)
+            return new HashSet<>();
+
         /**
          * 这个地方有一个逻辑错误
          *
          */
-        // 获取所有候选人的岗位、职务信息
-        List<IUserUnit> lsUserunit = new LinkedList<>();
-        if (rf.isHasUnitFilter()) {
-            for (String unitCode : rf.getUnits()) {          
-                if(rf.isOnlyGetPrimaryUser()){
-                    for(IUserUnit uu: ecc.listUnitUsers(unitCode )){
-                        if("T".equals(uu.getIsPrimary())){
-                            lsUserunit.add(uu); 
+        if(hasUnitFilter) {
+            // 获取所有候选人的岗位、职务信息
+            List<IUserUnit> lsUserunit = new LinkedList<>();
+            if (rf.isHasUnitFilter()) {
+                for (String unitCode : rf.getUnits()) {
+                    if (rf.isOnlyGetPrimaryUser()) {
+                        for (IUserUnit uu : ecc.listUnitUsers(unitCode)) {
+                            if ("T".equals(uu.getIsPrimary())) {
+                                lsUserunit.add(uu);
+                            }
                         }
-                    }
-                }else
-                    lsUserunit.addAll(ecc.listUnitUsers(unitCode ) );
-            }
-        } else {
-            lsUserunit.addAll(ecc.listAllUserUnits());
-        }
-
-        if (rf.isHasGWFilter()) {
-            for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-                IUserUnit uu = it.next();
-                // 过滤掉不符合要求的岗位
-                if (!rf.getGwRoles().contains(uu.getUserStation()))
-                    it.remove();
-            }
-        }
-
-        if (rf.isHasXZFilter()) {
-            for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-                IUserUnit uu = it.next();
-                // 过滤掉不符合要求的职位
-                if (!rf.getXzRoles().contains(uu.getUserRank()))
-                    it.remove();
-            }
-        }
-
-        if (rf.isHasRankFilter()) {
-            if (rf.isRankAllSub() || rf.isRankAllTop()) { // 所有下级
-                for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-                    IUserUnit uu = it.next();
-                    if (!rf.matchRank(ecc.getXzRank(uu.getUserRank())))
-                        it.remove();
+                    } else
+                        lsUserunit.addAll(ecc.listUnitUsers(unitCode));
                 }
             } else {
-                Map<String, Integer> unitRank = new HashMap<String, Integer>();
-                for (IUserUnit uu : lsUserunit) {
-                    if (rf.matchRank(ecc.getXzRank(uu.getUserRank()))) {
-                        Integer nR = unitRank.get(uu.getUnitCode());
-                        if (nR == null) {
-                            unitRank.put(uu.getUnitCode(),ecc.getXzRank(uu.getUserRank()));
-                        } else {
-                            if (rf.isRankPlus() && nR.intValue() > ecc.getXzRank(uu.getUserRank()))
-                                unitRank.put(uu.getUnitCode(),ecc.getXzRank(uu.getUserRank()));
-                            else if (rf.isRankMinus() && nR.intValue() < ecc.getXzRank(uu.getUserRank()))
-                                unitRank.put(uu.getUnitCode(),ecc.getXzRank(uu.getUserRank()));
+                lsUserunit.addAll(ecc.listAllUserUnits());
+            }
+
+
+            if (rf.isHasGWFilter()) {
+                // 过滤掉不符合要求的岗位
+                lsUserunit.removeIf(uu -> !rf.getGwRoles().contains(uu.getUserStation()));
+            }
+
+            if (rf.isHasXZFilter()) {
+                // 过滤掉不符合要求的职位
+                lsUserunit.removeIf(uu -> !rf.getXzRoles().contains(uu.getUserRank()));
+            }
+
+            if (rf.isHasRankFilter()) {
+                if (rf.isRankAllSub() || rf.isRankAllTop()) { // 所有下级
+                    lsUserunit.removeIf(uu -> !rf.matchRank(ecc.getXzRank(uu.getUserRank())));
+                } else {
+                    Map<String, Integer> unitRank = new HashMap<String, Integer>();
+                    for (IUserUnit uu : lsUserunit) {
+                        if (rf.matchRank(ecc.getXzRank(uu.getUserRank()))) {
+                            Integer nR = unitRank.get(uu.getUnitCode());
+                            if (nR == null) {
+                                unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
+                            } else {
+                                if (rf.isRankPlus() && nR > ecc.getXzRank(uu.getUserRank()))
+                                    unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
+                                else if (rf.isRankMinus() && nR < ecc.getXzRank(uu.getUserRank()))
+                                    unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
+                            }
                         }
+                    }
+
+                    for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
+                        IUserUnit uu = it.next();
+                        // 过滤掉不符合要求的职位
+                        Integer nR = unitRank.get(uu.getUnitCode());
+                        if (nR == null || nR != ecc.getXzRank(uu.getUserRank()))
+                            it.remove();
                     }
                 }
 
-                for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-                    IUserUnit uu = it.next();
-                    // 过滤掉不符合要求的职位
-                    Integer nR = unitRank.get(uu.getUnitCode());
-                    if (nR == null || nR.intValue() != ecc.getXzRank(uu.getUserRank()))
+            }
+
+            // 获取所有 符合条件的用户代码
+            rf.getUsers().clear();
+            for (IUserUnit uu : lsUserunit) {
+                rf.addUser(uu.getUserCode());
+            }
+        }
+
+        if(hasTypeTagFilter) {
+            List<IUserInfo> lsUserInfo = null;
+            if(rf.getUsers() != null && rf.getUsers().size()>0){
+                lsUserInfo = new ArrayList<>(rf.getUsers().size()+1);
+                for (String userCode  : rf.getUsers()) {
+                    lsUserInfo.add(ecc.getUserInfoByCode(userCode));
+                }
+            }else if(!hasUnitFilter){
+                List<? extends IUserInfo> extUserInfo = ecc.listAllUserInfo();
+                lsUserInfo = new ArrayList<>(extUserInfo.size()+1);
+                lsUserInfo.addAll( extUserInfo);
+            }
+
+            if (rf.isHasUserTypeFilter()) {
+                // 过滤掉不符合要求的岗位
+                lsUserInfo.removeIf(user -> !rf.getUserTypes().contains(user.getUserType()));
+            }
+
+            if (rf.isHasUserTagFilter()) {
+                for (Iterator<IUserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
+                    IUserInfo user = it.next();
+                    boolean hasTag = false;
+                    if(StringUtils.isNoneBlank(user.getUserTag())){
+                        String tags[] = user.getUserTag().split(",");
+                        for(String tag : tags){
+                            if(rf.getUserTags().contains(tag)){
+                                hasTag = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!hasTag)
                         it.remove();
                 }
             }
 
-        }
-
-        // 获取所有 符合条件的用户代码
-        rf.getUsers().clear();
-        for (IUserUnit uu : lsUserunit) {
-            rf.addUser(uu.getUserCode());
+            rf.getUsers().clear();
+            for (IUserInfo user : lsUserInfo) {
+                rf.addUser(user.getUserCode());
+            }
         }
 
         return rf.getUsers();
+
     }
 
     /**
      * D(机构表达式)
      *
-     * @param ecc
-     * @param gene
-     * @return
+     * @param ecc 运行环境
+     * @param gene 过滤条件
+     * @return 是否正确运行
      */
-    private static boolean calcUnits(UserUnitFilterCalcContext ecc, RoleFilterGene gene) {
+    private static boolean calcUnits(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
         String w = ecc.getAWord();
         if (!"(".equals(w)) { // 语法错误
             ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcRoleUnits begin .");
@@ -403,11 +286,11 @@ public abstract class SysUserFilterEngine implements Serializable {
     /**
      * U(用户变量|"用户代码常量" [,用户变量|"用户代码常量]* )
      *
-     * @param ecc
-     * @param gene
-     * @return
+     * @param ecc 运行环境
+     * @param gene 过滤条件
+     * @return 是否正确运行
      */
-    private static boolean calcUsers(UserUnitFilterCalcContext ecc, RoleFilterGene gene) {
+    private static boolean calcUsers(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
         String w = ecc.getAWord();
         if (!"(".equals(w)) { // 语法错误
             ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcRoleUsers begin .");
@@ -450,11 +333,11 @@ public abstract class SysUserFilterEngine implements Serializable {
     /**
      * gw("角色代码常量" [,"角色代码常量"]* )
      *
-     * @param ecc
-     * @param gene
-     * @return
+     * @param ecc 运行环境
+     * @param gene 过滤条件
+     * @return 是否正确运行
      */
-    private static boolean calcGwRoles(UserUnitFilterCalcContext ecc, RoleFilterGene gene) {
+    private static boolean calcGwRoles(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
         String w = ecc.getAWord();
         if (!"(".equals(w)) { // 语法错误
             ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcGwRoles begin .");
@@ -471,7 +354,8 @@ public abstract class SysUserFilterEngine implements Serializable {
                 return true;
             }
             if (ecc.isLabel(w)) { // 变量
-                gene.addGwRole(w);
+                Object obj = ecc.getVarTrans().getGeneralVariable(w);
+                gene.addUserTag(obj==null?w:StringBaseOpt.castObjectToString(obj));
             } else if (StringRegularOpt.isString(w)) { // 常量
                 String roleCode = StringRegularOpt.trimString(w);
                 gene.addGwRole(roleCode);
@@ -497,7 +381,7 @@ public abstract class SysUserFilterEngine implements Serializable {
      * @param gene
      * @return
      */
-    private static boolean calcXzRoles(UserUnitFilterCalcContext ecc, RoleFilterGene gene) {
+    private static boolean calcXzRoles(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
         String w = ecc.getAWord();
         if (!"(".equals(w)) { // 语法错误
             ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcXzRoles begin . ");
@@ -515,7 +399,8 @@ public abstract class SysUserFilterEngine implements Serializable {
             }
 
             if (ecc.isLabel(w)) { // 变量
-                gene.addXzRole(w);
+                Object obj = ecc.getVarTrans().getGeneralVariable(w);
+                gene.addUserTag(obj==null?w:StringBaseOpt.castObjectToString(obj));
             } else if (StringRegularOpt.isString(w)) { // 常量
                 String roleCode = StringRegularOpt.trimString(w);
                 gene.addXzRole(roleCode);
@@ -534,7 +419,93 @@ public abstract class SysUserFilterEngine implements Serializable {
         }
     }
 
-    private static boolean calcXzRank(UserUnitFilterCalcContext ecc, RoleFilterGene gene) {
+    /**
+     * type("角色代码常量" [,"角色代码常量"]* )
+     *
+     * @param ecc 运行环境
+     * @param gene 过滤条件
+     * @return 是否正确运行
+     */
+    private static boolean calcTypeFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
+        String w = ecc.getAWord();
+        if (!"(".equals(w)) { // 语法错误
+            ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcTypeFilter begin .");
+            return false;
+        }
+        while (true) {
+            w = ecc.getAWord();
+            if (w == null || "".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' ; calcTypeFilter end .");
+                return false;
+            }
+
+            if (")".equals(w)) { // 逗号后没有变量 或略这个错误
+                return true;
+            }
+            if (ecc.isLabel(w)) { // 变量
+                Object obj = ecc.getVarTrans().getGeneralVariable(w);
+                gene.addUserTag(obj==null?w:StringBaseOpt.castObjectToString(obj));
+            } else if (StringRegularOpt.isString(w)) { // 常量
+                gene.addUserType(StringRegularOpt.trimString(w));
+            } else { // 语法错误
+                ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Type]; calcTypeFilter label . ");
+                return false;
+            }
+
+            w = ecc.getAWord();
+            if (")".equals(w)) {
+                return true;
+            } else if (!",".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' or ','  ; calcTypeFilter , .");
+                return false;
+            }
+        }
+    }
+
+    /**
+     * tag("角色代码常量" [,"角色代码常量"]* )
+     *
+     * @param ecc 运行环境
+     * @param gene 过滤条件
+     * @return 是否正确运行
+     */
+    private static boolean calcTagFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
+        String w = ecc.getAWord();
+        if (!"(".equals(w)) { // 语法错误
+            ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcTagFilter begin .");
+            return false;
+        }
+        while (true) {
+            w = ecc.getAWord();
+            if (w == null || "".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' ; calcTagFilter end .");
+                return false;
+            }
+
+            if (")".equals(w)) { // 逗号后没有变量 或略这个错误
+                return true;
+            }
+            if (ecc.isLabel(w)) { // 变量
+                Object obj = ecc.getVarTrans().getGeneralVariable(w);
+                gene.addUserTag(obj==null?w:StringBaseOpt.castObjectToString(obj));
+            } else if (StringRegularOpt.isString(w)) { // 常量
+                gene.addUserTag(StringRegularOpt.trimString(w));
+            } else { // 语法错误
+                ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Tag]; calcTagFilter label . ");
+                return false;
+            }
+
+            w = ecc.getAWord();
+            if (")".equals(w)) {
+                return true;
+            } else if (!",".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' or ','  ; calcTagFilter , .");
+                return false;
+            }
+        }
+    }
+
+    private static boolean calcXzRank(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
         String w = ecc.getAWord();
         if (!"(".equals(w)) { // 语法错误
             ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcXzRank begin . ");
@@ -611,7 +582,7 @@ public abstract class SysUserFilterEngine implements Serializable {
      * @return
      */
     private static Set<String> calcSimpleExp(UserUnitFilterCalcContext ecc) {
-        RoleFilterGene gene = new RoleFilterGene();
+        UserUnitFilterGene gene = new UserUnitFilterGene();
         String w = ecc.getAWord();
         while (true) {
             if (w == null || "".equals(w))
@@ -625,7 +596,7 @@ public abstract class SysUserFilterEngine implements Serializable {
             if(USER_FILTER_DEPARTMENT.equalsIgnoreCase(w)){
                 if(!calcUnits(ecc,gene))
                     return null;
-                gene.setOnlyGetPrimaryUser(false);                
+                gene.setOnlyGetPrimaryUser(false);
             }else /*仅仅获取主要机构用户*/ if(USER_FILTER_PRIMARYUNIT.equalsIgnoreCase(w)){
                 if(!calcUnits(ecc,gene))
                     return null;
@@ -638,6 +609,12 @@ public abstract class SysUserFilterEngine implements Serializable {
                     return null;
             } else /*根据行政角色等级过滤*/if (USER_FILTER_ROLE_RANK.equalsIgnoreCase(w)) {
                 if (!calcXzRank(ecc, gene))
+                    return null;
+            } else /*根据用户类别过滤*/if (USER_FILTER_USER_TYPE.equalsIgnoreCase(w)) {
+                if (!calcTypeFilter(ecc, gene))
+                    return null;
+            } else /*根据用户标签过滤*/if (USER_FILTER_USER_TAG.equalsIgnoreCase(w)) {
+                if (!calcTagFilter(ecc, gene))
                     return null;
             } else /*根据用户代码过滤*/ if (USER_FILTER_USERCODE.equalsIgnoreCase(w)) {
                 if (!calcUsers(ecc, gene))

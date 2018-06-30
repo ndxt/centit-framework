@@ -10,8 +10,10 @@ import java.util.Map;
 import java.util.Set;
 
 public interface UserUnitFilterCalcContext {
-   
+
     void setVarTrans(UserUnitVariableTranslate varTrans);
+
+    UserUnitVariableTranslate getVarTrans();
 
     boolean hasError();
 
@@ -24,15 +26,15 @@ public interface UserUnitFilterCalcContext {
     void clearParams() ;
 
     void addUnitParam(String paramName, String unitCode) ;
-    
+
     void addAllUnitParam(Map<String, Set<String>> unitParam);
-    
+
     void addUnitParam(String paramName, Set<String> unitCodes);
 
     void addUserParam(String paramName, String userCode);
 
     void addAllUserParam(Map<String, Set<String>> userParam);
-    
+
     void addUserParam(String paramName, Set<String> userCodes);
 
     void addRankParam(String paramName, int r);
