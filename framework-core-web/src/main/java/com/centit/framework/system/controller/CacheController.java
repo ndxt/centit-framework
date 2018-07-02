@@ -14,8 +14,10 @@ import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.database.utils.DBType;
 import com.centit.support.file.FileSystemOpt;
+import com.centit.support.json.JSONOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -299,13 +301,12 @@ public class CacheController {
      * 获取所有符合状态标记的用户，
      *
      * @param unitfilter 机构代码
-     * @param varMap varMap
      * @param request request
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/unitfilter/{unitfilter}", method = RequestMethod.GET)
     public void unitfilter(@PathVariable String unitfilter,
-                           @RequestBody Map<String,Object> varMap,
+                           //@RequestBody Map<String,Object> varMap,
                            HttpServletRequest request, HttpServletResponse response) {
 
         Map<String, Set<String>> unitParams = null;
@@ -315,13 +316,11 @@ public class CacheController {
             String userUnit = ud.getCurrentUnitCode();
             if(userUnit!=null){
                 unitParams = new HashMap<>();
-                Set<String> uSet = new HashSet<String>();
-                uSet.add(userUnit);
-                unitParams.put("U", uSet);
+                unitParams.put("U", CollectionsOpt.createHashSet(userUnit));
             }
         }
         Set<String> units =  SysUnitFilterEngine.calcSystemUnitsByExp(
-                unitfilter,unitParams,new UserUnitMapTranslate(varMap));
+                unitfilter,unitParams, null);// new UserUnitMapTranslate(varMap));
         List<IUnitInfo> listObjects = new ArrayList<>();
         for(String uc : units){
             listObjects.add( CodeRepositoryUtil.getUnitInfoByCode(uc) );
@@ -334,13 +333,13 @@ public class CacheController {
      * 获取所有符合状态标记的用户，
      *
      * @param userfilter 机构代码
-     * @param varMap varMap
+     * varMap varMap
      * @param request request
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/userfilter/{userfilter}", method = RequestMethod.GET)
     public void userfilter(@PathVariable String userfilter,
-                           @RequestBody Map<String,Object> varMap,
+                           //@RequestBody Map<String,Object> varMap,
                            HttpServletRequest request, HttpServletResponse response) {
         Map<String, Set<String>> unitParams = null;
         Map<String, Set<String>> userParams = null;
@@ -348,21 +347,18 @@ public class CacheController {
         if(ud!=null){
             String userCode = ud.getUserInfo().getUserCode();
             if(userCode!=null){
-                userParams = new HashMap<>();
-                Set<String> uSet = new HashSet<>();
-                uSet.add(userCode);
-                userParams.put("O", uSet);
+                unitParams = new HashMap<>();
+                unitParams.put("O", CollectionsOpt.createHashSet(userCode));
             }
             String userUnit = ud.getCurrentUnitCode();
             if(userUnit!=null){
                 unitParams = new HashMap<>();
-                Set<String> uSet = new HashSet<>();
-                uSet.add(userUnit);
-                unitParams.put("U", uSet);
+                unitParams.put("U", CollectionsOpt.createHashSet(userUnit));
             }
         }
         Set<String> users =  SysUserFilterEngine.calcSystemOperators(userfilter,
-                unitParams,userParams,null,new UserUnitMapTranslate(varMap));
+                unitParams,userParams,null, null);
+        //new UserUnitMapTranslate(varMap));
         List<IUserInfo> listObjects = new ArrayList<>();
         for(String uc : users){
             listObjects.add( CodeRepositoryUtil.getUserInfoByCode(uc));

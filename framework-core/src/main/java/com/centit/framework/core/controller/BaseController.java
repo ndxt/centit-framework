@@ -6,7 +6,7 @@ import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.support.algorithm.ListOpt;
+import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.network.HtmlFormUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,35 +35,35 @@ import java.util.Map;
 //@Controller
 @SuppressWarnings("unused")
 public abstract class BaseController {
-    
+
     /**
      * 转换查询参数为字符串，用于 = 或者 like 查询
      */
     public static final String SEARCH_STRING_PREFIX = "s_";
 
     public static final int SEARCH_STRING_PREFIX_LEN = 2;
-    
+
     /**
      * 转换查询参数为字符串数组，用于 in 查询
      */
     public static final String SEARCH_ARRAY_PREFIX = "a_";
 
     public static final int SEARCH_ARRAY_PREFIX_LEN = 2;
-    
+
     /**
      * 转换查询参数为数字，用于 Long 类型的 = 或者 like 查询
      */
     public static final String SEARCH_NUMBER_PREFIX = "n_";
-    
+
     public static final int SEARCH_NUMBER_PREFIX_LEN = 2;
-    
+
     /**
      * 转换查询参数为数字数组，用于 Long 类型的 in 查询
      */
     public static final String SEARCH_NUMBER_ARRAY_PREFIX = "na_";
-    
+
     public static final int SEARCH_NUMBER_ARRAY_PREFIX_LEN = 3;
-    
+
 
     protected Logger logger = LoggerFactory.getLogger(BaseController.class);
     /**
@@ -105,7 +105,7 @@ public abstract class BaseController {
     //(value = {BindException.class,MethodArgumentNotValidException.class})
     @ExceptionHandler
     public void exceptionHandler(Exception ex, HttpServletRequest request, HttpServletResponse response)
-            throws IOException {        
+            throws IOException {
         logger.error(ex.getMessage(), ex);
         if (WebOptUtils.isAjax(request)) {
 
@@ -115,7 +115,7 @@ public abstract class BaseController {
             }else if(ex instanceof MethodArgumentNotValidException){
                 bindingResult =((MethodArgumentNotValidException)ex).getBindingResult();
             }
-            
+
             if(bindingResult!=null){
                 ResponseMapData responseData = new ResponseMapData(ResponseData.ERROR_BAD_REQUEST);
                 StringBuilder errMsg = new StringBuilder();
@@ -204,21 +204,21 @@ public abstract class BaseController {
             // 查询数字 n_
             else if (key.startsWith(SEARCH_NUMBER_PREFIX)) {
                 String sKey = key.substring(SEARCH_NUMBER_PREFIX_LEN);
-                String sValue = HtmlFormUtils.getParameterString(ent.getValue());                
+                String sValue = HtmlFormUtils.getParameterString(ent.getValue());
                 map.put(sKey, NumberBaseOpt.parseLong(sValue));
             }
             // 查询数字数组 na_
             else if (key.startsWith(SEARCH_NUMBER_ARRAY_PREFIX)) {
                 String sKey = key.substring(SEARCH_NUMBER_ARRAY_PREFIX_LEN);
-                
-                String[] sValue = HtmlFormUtils.getParameterStringArray(ent.getValue());  
+
+                String[] sValue = HtmlFormUtils.getParameterStringArray(ent.getValue());
                 if(sValue==null){
                     map.put(sKey,null);
                 }else{
-                    Long[] ll = new Long[sValue.length];                
+                    Long[] ll = new Long[sValue.length];
                     for (int i=0;i<sValue.length;i++) {
                         ll[i]=NumberBaseOpt.parseLong(sValue[i]);
-                    }                    
+                    }
                     map.put(sKey, ll);
                 }
             }
@@ -252,7 +252,7 @@ public abstract class BaseController {
         for (Map.Entry<String, String[]> ent : parameterMap.entrySet()) {
             if(ent.getKey().startsWith("_"))
                 continue;
-            String[] values = ListOpt.removeBlankString(ent.getValue());
+            String[] values = CollectionsOpt.removeBlankString(ent.getValue());
             if(values==null)
                 continue;
             if(values.length==1){

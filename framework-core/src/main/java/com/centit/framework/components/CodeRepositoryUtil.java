@@ -9,7 +9,7 @@ import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.support.algorithm.ListOpt;
+import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.compiler.Lexer;
 import org.apache.commons.lang3.StringUtils;
@@ -77,7 +77,7 @@ public abstract class CodeRepositoryUtil {
 
     public static List<? extends IUnitInfo> getUnitAsTree() {
         List<? extends IUnitInfo> units = getPlatformEnvironment().listAllUnits();
-        ListOpt.sortAsTree( units,( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
+        CollectionsOpt.sortAsTree( units,( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
         return units;
     }
 
@@ -881,7 +881,7 @@ public abstract class CodeRepositoryUtil {
 
         List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits();
 
-        ListOpt.sortAsTree(allunits,
+        CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
 
         List<IUnitInfo> units = new ArrayList<>();
@@ -1435,7 +1435,7 @@ public abstract class CodeRepositoryUtil {
             subunits = subunits1;
         }
 
-        ListOpt.sortAsTree(units, (p,c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()));
+        CollectionsOpt.sortAsTree(units, (p,c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()));
         return units;
     }
 

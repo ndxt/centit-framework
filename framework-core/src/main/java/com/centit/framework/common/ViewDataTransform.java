@@ -2,7 +2,7 @@ package com.centit.framework.common;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.support.algorithm.ListOpt;
+import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.ReflectionOpt;
 
 import java.util.Collection;
@@ -59,7 +59,7 @@ public abstract class ViewDataTransform {
                     if(children instanceof Collection){
                         childrenData = (Collection<T>) children;
                     }else if(children  instanceof Object[]) {
-                        childrenData = ListOpt.arrayToList(( T[]) children);
+                        childrenData = CollectionsOpt.arrayToList(( T[]) children);
                     }
 
                     if(childrenData!=null) {
