@@ -12,8 +12,8 @@
     <groupId>com.centit.framework</groupId>
     <version>1.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>framework-web-demo</artifactId>
+
     <packaging>war</packaging>
     <name>com.centit.framework:framework-web-demo</name>
     <description>基于框架开发的应用示例，根据项目的需要
