@@ -321,11 +321,11 @@ public class CacheController {
         }
         Set<String> units =  SysUnitFilterEngine.calcSystemUnitsByExp(
                 unitfilter,unitParams, null);// new UserUnitMapTranslate(varMap));
-        List<IUnitInfo> listObjects = new ArrayList<>();
+        /*List<IUnitInfo> listObjects = new ArrayList<>();
         for(String uc : units){
             listObjects.add( CodeRepositoryUtil.getUnitInfoByCode(uc) );
-        }
-        JsonResultUtils.writeSingleDataJson(listObjects, response);
+        }*/
+        JsonResultUtils.writeSingleDataJson(units, response);
     }
 
     /**
@@ -359,11 +359,11 @@ public class CacheController {
         Set<String> users =  SysUserFilterEngine.calcSystemOperators(userfilter,
                 unitParams,userParams,null, null);
         //new UserUnitMapTranslate(varMap));
-        List<IUserInfo> listObjects = new ArrayList<>();
+        /*List<IUserInfo> listObjects = new ArrayList<>();
         for(String uc : users){
             listObjects.add( CodeRepositoryUtil.getUserInfoByCode(uc));
-        }
-        JsonResultUtils.writeSingleDataJson(listObjects, response);
+        }*/
+        JsonResultUtils.writeSingleDataJson(users, response);
     }
 
 
@@ -427,6 +427,7 @@ public class CacheController {
     /**
      * CP标签中 SYS_VALUE 实现
      * 获取系统设置的值
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
     @RequestMapping(value = "/sysconfig/{paramCode}", method = RequestMethod.GET)

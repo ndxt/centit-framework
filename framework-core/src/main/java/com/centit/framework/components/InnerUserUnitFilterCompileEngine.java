@@ -247,9 +247,9 @@ public abstract class InnerUserUnitFilterCompileEngine {
             }
             if (ecc.isLabel(w)) { // 变量
                 Object obj = ecc.getVarTrans().getGeneralVariable(w);
-                gene.addUnitTag(obj==null?w:StringBaseOpt.castObjectToString(obj));
+                gene.addUnitType(obj==null?w:StringBaseOpt.castObjectToString(obj));
             } else if (StringRegularOpt.isString(w)) { // 常量
-                gene.addUnitTag(StringRegularOpt.trimString(w));
+                gene.addUnitType(StringRegularOpt.trimString(w));
             } else { // 语法错误
                 ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Type]; calcUnitTypeFilter label . ");
                 return false;
