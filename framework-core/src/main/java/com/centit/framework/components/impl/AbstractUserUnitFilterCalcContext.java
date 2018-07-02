@@ -35,6 +35,11 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     }
 
     @Override
+    public UserUnitVariableTranslate getVarTrans() {
+        return this.varTrans;
+    }
+
+    @Override
     public boolean hasError() {
         return hasError;
     }
