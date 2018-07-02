@@ -61,15 +61,11 @@ public class UserUnitMapTranslate implements UserUnitVariableTranslate {
      * @return  变量值的转变
      */
     @Override
-    public String getGeneralVariable(String varName) {
+    public Object getGeneralVariable(String varName) {
         if(varMap==null)
-            return "\"\"";
-
-        Object res = ReflectionOpt.attainExpressionValue(varMap, varName);
-        // varMap.get(varName);
-        if(res==null)
-            return "\"\"";
-        return StringRegularOpt.quotedString(StringBaseOpt.objectToString(res));
+            return null;
+        return ReflectionOpt.attainExpressionValue(varMap, varName);
+        //return StringBaseOpt.objectToString(res);
     }
 
     public Map<String,Object> getVarMap() {

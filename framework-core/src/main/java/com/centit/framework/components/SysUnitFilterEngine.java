@@ -375,19 +375,11 @@ public abstract class SysUnitFilterEngine {
     public static Set<String> getUnitsByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
 
         boolean hasUnitFilter =  rf.isHasUnitTagFilter() || rf.isHasUnitTypeFilter();
-        if( hasUnitFilter) {
-            List<IUnitInfo> lsUnitInfo = null;
-            if(rf.getUnits() != null && rf.getUnits().size()>0){
-                lsUnitInfo = new ArrayList<>(rf.getUnits().size()+1);
-                for (String unitCode  : rf.getUnits()) {
-                    lsUnitInfo.add(ecc.getUnitInfoByCode(unitCode));
-                }
-            }else if(!rf.isHasUnitFilter()){
-                List<? extends IUnitInfo> extUnitInfo = ecc.listAllUnitInfo();
-                lsUnitInfo = new ArrayList<>(extUnitInfo.size()+1);
-                lsUnitInfo.addAll( extUnitInfo);
+        if( hasUnitFilter && rf.getUnits() != null && rf.getUnits().size()>0) {
+            List<IUnitInfo> lsUnitInfo = new ArrayList<>(rf.getUnits().size()+1);
+            for (String unitCode  : rf.getUnits()) {
+                lsUnitInfo.add(ecc.getUnitInfoByCode(unitCode));
             }
-
             if(lsUnitInfo!=null) {
                 if (rf.isHasUnitTypeFilter()) {
                     // 过滤掉不符合要求的岗位

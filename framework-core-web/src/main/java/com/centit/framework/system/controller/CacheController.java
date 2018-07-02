@@ -320,7 +320,7 @@ public class CacheController {
             }
         }
         Set<String> units =  SysUnitFilterEngine.calcSystemUnitsByExp(
-                unitfilter,unitParams, null);// new UserUnitMapTranslate(varMap));
+                unitfilter,unitParams, new UserUnitMapTranslate());
         /*List<IUnitInfo> listObjects = new ArrayList<>();
         for(String uc : units){
             listObjects.add( CodeRepositoryUtil.getUnitInfoByCode(uc) );
@@ -357,8 +357,7 @@ public class CacheController {
             }
         }
         Set<String> users =  SysUserFilterEngine.calcSystemOperators(userfilter,
-                unitParams,userParams,null, null);
-        //new UserUnitMapTranslate(varMap));
+                unitParams,userParams,null, new UserUnitMapTranslate());
         /*List<IUserInfo> listObjects = new ArrayList<>();
         for(String uc : users){
             listObjects.add( CodeRepositoryUtil.getUserInfoByCode(uc));
