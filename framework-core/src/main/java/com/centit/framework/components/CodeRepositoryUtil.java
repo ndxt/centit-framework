@@ -1209,7 +1209,6 @@ public abstract class CodeRepositoryUtil {
         return lbvs;
     }
 
-
     /**
      * 获取 数据字典 key value 对， 忽略 禁用的 条目
      *
@@ -1434,31 +1433,27 @@ public abstract class CodeRepositoryUtil {
             }
             subunits = subunits1;
         }
-
         CollectionsOpt.sortAsTree(units, (p,c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()));
         return units;
     }
 
     /**
      * 获取所有机构信息，并返回json格式。
-     *
      * @return 所有机构信息，json格式
      */
     public static String getUnitsJson() {
 
         List<Map<String, Object>> dataMap = new ArrayList<>();
         for (Map.Entry<String, IUnitInfo> ent : getUnitRepo().entrySet()) {
-            Map<String, Object> dm = new HashMap<>();
             IUnitInfo u = ent.getValue();
             JSONObject rs = new JSONObject();
-            dm.put("MID", u.getUnitCode());
-            dm.put("MText", u.getUnitName());
-            dm.put("ParentID", u.getParentUnit());
+            rs.put("MID", u.getUnitCode());
+            rs.put("MText", u.getUnitName());
+            rs.put("ParentID", u.getParentUnit());
             dataMap.add(rs);
         }
 
         Map<String, Object> result = new HashMap<>();
-
         result.put("menuList", dataMap);
         return JSONObject.toJSONString(result);
     }
