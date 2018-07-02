@@ -61,6 +61,8 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
                 .and().httpBasic().authenticationEntryPoint(authenticationEntryPoint());
 
         String frameOptions = env.getProperty("framework.x-frame-options.mode");
+        frameOptions = StringBaseOpt.emptyValue(frameOptions,"deny").toUpperCase();
+
         switch (frameOptions){
             case "DISABLE":
                 http.headers().frameOptions().disable();

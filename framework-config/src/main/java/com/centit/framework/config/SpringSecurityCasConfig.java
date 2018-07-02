@@ -63,6 +63,7 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
                 .and().httpBasic().authenticationEntryPoint(casEntryPoint);
 
         String frameOptions = env.getProperty("framework.x-frame-options.mode");
+        frameOptions = StringBaseOpt.emptyValue(frameOptions,"deny").toUpperCase();
         switch (frameOptions){
             case "DISABLE":
                 http.headers().frameOptions().disable();
