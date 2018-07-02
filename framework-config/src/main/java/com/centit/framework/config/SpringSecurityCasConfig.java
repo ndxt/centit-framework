@@ -1,5 +1,6 @@
 package com.centit.framework.config;
 
+import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.security.AjaxAuthenticationFailureHandler;
 import com.centit.framework.security.AjaxAuthenticationSuccessHandler;
 import com.centit.framework.security.DaoFilterSecurityInterceptor;
@@ -61,6 +62,18 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
                 .and().exceptionHandling().accessDeniedPage("/system/exception/error/403")
 //                .and().sessionManagement().invalidSessionUrl("/system/exception/error/401")
                 .and().httpBasic().authenticationEntryPoint(casEntryPoint);
+
+        String frameOptions = SysParametersUtils.getStringValue("framework.x-frame-options.mode");
+        switch (frameOptions){
+            case "DISABLE":
+                http.headers().frameOptions().disable();
+                break;
+            case "SAMEORIGIN":
+                http.headers().frameOptions().sameOrigin();
+                break;
+            default:
+                http.headers().frameOptions().deny();
+        }
 
         AjaxAuthenticationSuccessHandler ajaxSuccessHandler = createAjaxSuccessHandler(centitUserDetailsService);
         AjaxAuthenticationFailureHandler ajaxFailureHandler = createAjaxFailureHandler();

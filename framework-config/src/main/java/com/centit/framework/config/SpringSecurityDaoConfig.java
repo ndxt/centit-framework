@@ -1,5 +1,6 @@
 package com.centit.framework.config;
 
+import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.security.AjaxAuthenticationSuccessHandler;
 import com.centit.framework.security.DaoFilterSecurityInterceptor;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
@@ -23,6 +24,10 @@ import org.springframework.security.web.authentication.logout.CookieClearingLogo
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CsrfLogoutHandler;
+import org.springframework.security.web.header.writers.frameoptions.AllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.RegExpAllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +65,17 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 //                .and().sessionManagement().invalidSessionUrl("/system/exception/error/401")
                 .and().httpBasic().authenticationEntryPoint(authenticationEntryPoint());
 
-        http.headers().frameOptions().sameOrigin();
+        String frameOptions = SysParametersUtils.getStringValue("framework.x-frame-options.mode");
+        switch (frameOptions){
+            case "DISABLE":
+                http.headers().frameOptions().disable();
+                break;
+            case "SAMEORIGIN":
+                http.headers().frameOptions().sameOrigin();
+                break;
+            default:
+                http.headers().frameOptions().deny();
+        }
 
         AuthenticationProvider authenticationProvider = createAuthenticationProvider();
         AuthenticationManager authenticationManager = createAuthenticationManager(authenticationProvider);
