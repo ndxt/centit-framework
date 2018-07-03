@@ -1437,26 +1437,6 @@ public abstract class CodeRepositoryUtil {
         return units;
     }
 
-    /**
-     * 获取所有机构信息，并返回json格式。
-     * @return 所有机构信息，json格式
-     */
-    public static String getUnitsJson() {
-
-        List<Map<String, Object>> dataMap = new ArrayList<>();
-        for (Map.Entry<String, IUnitInfo> ent : getUnitRepo().entrySet()) {
-            IUnitInfo u = ent.getValue();
-            JSONObject rs = new JSONObject();
-            rs.put("MID", u.getUnitCode());
-            rs.put("MText", u.getUnitName());
-            rs.put("ParentID", u.getParentUnit());
-            dataMap.add(rs);
-        }
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("menuList", dataMap);
-        return JSONObject.toJSONString(result);
-    }
 
     /**
      * 验证当前用户是否有某个操作方法的权限
