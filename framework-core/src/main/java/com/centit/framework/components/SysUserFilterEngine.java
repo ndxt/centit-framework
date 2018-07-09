@@ -88,13 +88,14 @@ public abstract class SysUserFilterEngine {
 
     private static Set<String> getUsersByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
 
-        boolean hasUnitFilter = rf.isHasGWFilter() || rf.isHasRankFilter() || rf.isHasXZFilter();
+        boolean hasUnitFilter = rf.isHasGWFilter() || rf.isHasRankFilter()
+            || rf.isHasXZFilter() || rf.isHasUnitFilter() ;
 
         boolean hasTypeTagFilter = rf.isHasUserTagFilter() || rf.isHasUserTypeFilter();
         //获取机构列表
         SysUnitFilterEngine.getUnitsByFilter(ecc, rf);
 
-        if(hasUnitFilter) {
+        if(hasUnitFilter && (!rf.isHasUserFilter())) {
             // 获取所有候选人的岗位、职务信息
             List<IUserUnit> lsUserunit = new LinkedList<>();
             if (rf.isHasUnitFilter()) {
@@ -111,7 +112,6 @@ public abstract class SysUserFilterEngine {
             } else {
                 lsUserunit.addAll(ecc.listAllUserUnits());
             }
-
 
             if (rf.isHasGWFilter()) {
                 // 过滤掉不符合要求的岗位
@@ -150,9 +150,7 @@ public abstract class SysUserFilterEngine {
                             it.remove();
                     }
                 }
-
             }
-
             // 获取所有 符合条件的用户代码
             rf.getUsers().clear();
             for (IUserUnit uu : lsUserunit) {
