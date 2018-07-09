@@ -1392,7 +1392,6 @@ public abstract class CodeRepositoryUtil {
             if ( parentUnitCode.equals(uc.getParentUnit()) &&
                     CodeRepositoryUtil.T.equals(uc.getIsValid())) {
                         units.add(uc);
-
             }
         }
         return units;

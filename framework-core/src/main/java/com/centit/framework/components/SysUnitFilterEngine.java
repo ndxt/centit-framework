@@ -53,7 +53,7 @@ public abstract class SysUnitFilterEngine {
             return units;
         // 找到所有的叶子机构
         for (IUnitInfo  unitEnt: ecc.listAllUnitInfo() ) {
-            List<? extends IUnitInfo> subUS = unitEnt.getSubUnits();
+            List<? extends IUnitInfo> subUS = CodeRepositoryUtil.getSubUnits(unitEnt.getUnitCode());
             if ((subUS == null || subUS.size() == 0) && "T".equals(unitEnt.getIsValid()))
                 units.add(unitEnt.getUnitCode());
         }
@@ -77,8 +77,7 @@ public abstract class SysUnitFilterEngine {
             if (tu != null)
                 retUnits.add(tu);
         }
-        retUnits.addAll(allSubUnits(ecc,retUnits));
-
+        //retUnits.addAll(allSubUnits(ecc,retUnits));
         return allSubUnits(ecc,retUnits);
     }
 
@@ -92,7 +91,7 @@ public abstract class SysUnitFilterEngine {
         if (units == null || units.size() == 0)
             return units;
         int preSize = 0;
-        Set<String> retUnits = new HashSet<String>();
+        Set<String> retUnits = new HashSet<>();
         Set<String> midUnits = units;
         while (midUnits != null && midUnits.size() != 0) {
             retUnits.addAll(midUnits);
@@ -152,8 +151,8 @@ public abstract class SysUnitFilterEngine {
         for (int i = 0; i < nTiers; i++) {
             Set<String> retUnits = new HashSet<String>();
             for (String suc : midUnits) {
-                IUnitInfo u = ecc.getUnitInfoByCode(suc);
-                for(IUnitInfo ui:u.getSubUnits())
+                //IUnitInfo u = ecc.getUnitInfoByCode(suc);
+                for(IUnitInfo ui: CodeRepositoryUtil.getSubUnits(suc))
                     retUnits.add(ui.getUnitCode());
             }
             midUnits = retUnits;
@@ -254,8 +253,8 @@ public abstract class SysUnitFilterEngine {
         for (int i = 0; i < nTiers; i++) {
             retUnits = new HashSet<>();
             for (String suc : midUnits) {
-                IUnitInfo u = ecc.getUnitInfoByCode(suc);
-                for(IUnitInfo ui:u.getSubUnits())
+                //IUnitInfo u = ecc.getUnitInfoByCode(suc);
+                for(IUnitInfo ui: CodeRepositoryUtil.getSubUnits(suc))
                     retUnits.add(ui.getUnitCode());
             }
             serUnits.addAll(midUnits);
