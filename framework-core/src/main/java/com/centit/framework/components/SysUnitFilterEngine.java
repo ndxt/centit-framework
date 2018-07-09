@@ -48,12 +48,12 @@ public abstract class SysUnitFilterEngine {
      * @return Set nullSubUnits
      */
     public static Set<String> nullParentUnits(UserUnitFilterCalcContext ecc, int nTiers) {
-        Set<String> units = new HashSet<String>();
+        Set<String> units = new HashSet<>();
         if (nTiers < 1)
             return units;
         // 找到所有的叶子机构
         for (IUnitInfo  unitEnt: ecc.listAllUnitInfo() ) {
-            List<? extends IUnitInfo> subUS = CodeRepositoryUtil.getSubUnits(unitEnt.getUnitCode());
+            List<? extends IUnitInfo> subUS = ecc.listSubUnit(unitEnt.getUnitCode());
             if ((subUS == null || subUS.size() == 0) && "T".equals(unitEnt.getIsValid()))
                 units.add(unitEnt.getUnitCode());
         }
@@ -149,10 +149,10 @@ public abstract class SysUnitFilterEngine {
 
         Set<String> midUnits = units;
         for (int i = 0; i < nTiers; i++) {
-            Set<String> retUnits = new HashSet<String>();
+            Set<String> retUnits = new HashSet<>();
             for (String suc : midUnits) {
                 //IUnitInfo u = ecc.getUnitInfoByCode(suc);
-                for(IUnitInfo ui: CodeRepositoryUtil.getSubUnits(suc))
+                for(IUnitInfo ui: ecc.listSubUnit(suc))
                     retUnits.add(ui.getUnitCode());
             }
             midUnits = retUnits;
@@ -254,7 +254,7 @@ public abstract class SysUnitFilterEngine {
             retUnits = new HashSet<>();
             for (String suc : midUnits) {
                 //IUnitInfo u = ecc.getUnitInfoByCode(suc);
-                for(IUnitInfo ui: CodeRepositoryUtil.getSubUnits(suc))
+                for(IUnitInfo ui: ecc.listSubUnit(suc))
                     retUnits.add(ui.getUnitCode());
             }
             serUnits.addAll(midUnits);
