@@ -10,10 +10,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.cas.web.CasAuthenticationFilter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.util.Assert;
+
+import javax.servlet.Filter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zou_wy on 2017/3/29.
@@ -44,8 +57,109 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         web.httpFirewall(httpFirewall());
     }
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
 
-    protected DaoFilterSecurityInterceptor createCentitPowerFilter(AuthenticationManager authenticationManager,
+        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.anonymous.disable"),false)) {
+            http.anonymous().disable();
+        }
+
+        if(getPermitAllUrl() != null && getPermitAllUrl().length>0) {
+            http.authorizeRequests().antMatchers(getPermitAllUrl()).permitAll();
+        }
+        if(getAuthenticatedUrl() != null && getAuthenticatedUrl().length>0) {
+            http.authorizeRequests().antMatchers(getAuthenticatedUrl()).authenticated();
+        }
+
+
+        if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
+            http.csrf().csrfTokenRepository(csrfTokenRepository);
+        } else {
+            http.csrf().disable();
+        }
+
+        http.exceptionHandling().accessDeniedPage("/system/exception/error/403");
+
+        http.httpBasic().authenticationEntryPoint(getAuthenticationEntryPoint());
+
+        switch (getFrameOptions()){
+            case "DISABLE":
+                http.headers().frameOptions().disable();
+                break;
+            case "SAMEORIGIN":
+                http.headers().frameOptions().sameOrigin();
+                break;
+            default:
+                http.headers().frameOptions().deny();
+        }
+
+        String defaultTargetUrl = env.getProperty("login.success.targetUrl");
+        http.logout().logoutSuccessUrl(StringBaseOpt.emptyValue(defaultTargetUrl,"/"));
+
+
+        http.addFilterAt(getAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(centitPowerFilter(), FilterSecurityInterceptor.class)
+            .addFilterBefore(logoutFilter(), CasAuthenticationFilter.class);
+    }
+
+    protected String[] getAuthenticatedUrl(){
+        return null;
+    }
+
+    protected String[] getPermitAllUrl(){
+        return null;
+    }
+
+    protected abstract AuthenticationEntryPoint getAuthenticationEntryPoint();
+
+    protected String getFrameOptions(){
+        String frameOptions = env.getProperty("framework.x-frame-options.mode");
+        frameOptions = StringBaseOpt.emptyValue(frameOptions,"deny").toUpperCase();
+        return frameOptions;
+    }
+
+    protected abstract AbstractAuthenticationProcessingFilter getAuthenticationFilter();
+
+    protected DaoFilterSecurityInterceptor centitPowerFilter(){
+        AuthenticationManager authenticationManager = createAuthenticationManager();
+        Assert.notNull(authenticationManager, "authenticationManager不能为空");
+        AjaxAuthenticationSuccessHandler successHandler = createAjaxSuccessHandler();
+        Assert.notNull(successHandler, "successHandler不能为空");
+        AjaxAuthenticationFailureHandler failureHandler = createAjaxFailureHandler();
+        Assert.notNull(failureHandler, "failureHandler不能为空");
+
+        DaoFilterSecurityInterceptor securityInterceptor = new DaoFilterSecurityInterceptor();
+        securityInterceptor.setAuthenticationManager(authenticationManager);
+        securityInterceptor.setAccessDecisionManager(createCentitAccessDecisionManager());
+        securityInterceptor.setSecurityMetadataSource(createCentitSecurityMetadataSource());
+        securityInterceptor.setSessionRegistry(centitSessionRegistry);
+
+        securityInterceptor.setAllResourceMustBeAudited(
+            BooleanBaseOpt.castObjectToBoolean(
+                env.getProperty("access.resource.notallowed.anonymous"),false));
+        return securityInterceptor;
+    }
+    protected abstract Filter logoutFilter();
+
+
+    protected AuthenticationManager createAuthenticationManager() {
+        AuthenticationProvider authenticationProvider = getAuthenticationProvider();
+        Assert.notNull(authenticationProvider, "authenticationProvider不能为空");
+        List<AuthenticationProvider> providerList = new ArrayList<>();
+        providerList.add(authenticationProvider);
+        return new ProviderManager(providerList);
+    }
+
+    protected abstract AuthenticationProvider getAuthenticationProvider();
+
+
+
+
+
+
+
+
+    /*protected DaoFilterSecurityInterceptor createCentitPowerFilter(AuthenticationManager authenticationManager,
                                                                  DaoAccessDecisionManager centitAccessDecisionManagerBean,
                                                                  DaoInvocationSecurityMetadataSource centitSecurityMetadataSource) {
 
@@ -60,7 +174,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
                 env.getProperty("access.resource.notallowed.anonymous"),false));
 
         return centitPowerFilter;
-    }
+    }*/
 
     protected AjaxAuthenticationFailureHandler createAjaxFailureHandler() {
         AjaxAuthenticationFailureHandler ajaxFailureHandler = new AjaxAuthenticationFailureHandler();
@@ -74,7 +188,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         return ajaxFailureHandler;
     }
 
-    protected AjaxAuthenticationSuccessHandler createAjaxSuccessHandler(CentitUserDetailsService centitUserDetailsService) {
+    protected AjaxAuthenticationSuccessHandler createAjaxSuccessHandler() {
         AjaxAuthenticationSuccessHandler ajaxSuccessHandler = new AjaxAuthenticationSuccessHandler();
         String defaultTargetUrl = env.getProperty("login.success.targetUrl");
         ajaxSuccessHandler.setDefaultTargetUrl(StringBaseOpt.emptyValue(defaultTargetUrl,"/"));
@@ -97,7 +211,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         return new DaoInvocationSecurityMetadataSource();
     }
 
-    protected StrictHttpFirewall httpFirewall() {
+    private StrictHttpFirewall httpFirewall() {
         StrictHttpFirewall firewall = new StrictHttpFirewall();
         firewall.setAllowSemicolon(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.firewall.allowSemicolon"),true));
         return firewall;
