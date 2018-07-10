@@ -152,30 +152,6 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
 
     protected abstract AuthenticationProvider getAuthenticationProvider();
 
-
-
-
-
-
-
-
-    /*protected DaoFilterSecurityInterceptor createCentitPowerFilter(AuthenticationManager authenticationManager,
-                                                                 DaoAccessDecisionManager centitAccessDecisionManagerBean,
-                                                                 DaoInvocationSecurityMetadataSource centitSecurityMetadataSource) {
-
-        DaoFilterSecurityInterceptor centitPowerFilter = new DaoFilterSecurityInterceptor();
-        centitPowerFilter.setAuthenticationManager(authenticationManager);
-        centitPowerFilter.setAccessDecisionManager(centitAccessDecisionManagerBean);
-        centitPowerFilter.setSecurityMetadataSource(centitSecurityMetadataSource);
-        centitPowerFilter.setSessionRegistry(centitSessionRegistry);
-
-        centitPowerFilter.setAllResourceMustBeAudited(
-            BooleanBaseOpt.castObjectToBoolean(
-                env.getProperty("access.resource.notallowed.anonymous"),false));
-
-        return centitPowerFilter;
-    }*/
-
     protected AjaxAuthenticationFailureHandler createAjaxFailureHandler() {
         AjaxAuthenticationFailureHandler ajaxFailureHandler = new AjaxAuthenticationFailureHandler();
         String defaultTargetUrl = env.getProperty("login.failure.targetUrl");
