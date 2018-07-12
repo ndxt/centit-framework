@@ -3,6 +3,8 @@ package com.centit.framework.staticsystem.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.model.adapter.PlatformEnvironment;
+import com.centit.framework.model.basedata.IOptInfo;
+import com.centit.framework.model.basedata.IRoleInfo;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.file.FileIOOpt;
 import com.centit.support.file.FileSystemOpt;
@@ -13,6 +15,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
     implements PlatformEnvironment {
@@ -127,4 +130,5 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
             logger.error(e.getMessage(),e);
         }
     }
+
 }

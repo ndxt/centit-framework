@@ -120,7 +120,6 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment
             e.printStackTrace();
         }
         organizeDictionaryData();
-
         return true;
     }
 

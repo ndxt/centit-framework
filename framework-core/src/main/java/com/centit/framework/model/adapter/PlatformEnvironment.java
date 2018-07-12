@@ -4,7 +4,6 @@ import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 
 import java.util.List;
-import java.util.Map;
 
 public interface PlatformEnvironment {
 
@@ -42,20 +41,6 @@ public interface PlatformEnvironment {
      * @param userCode 用户代码
      * @return  List 用户所有菜单功能
      */
-    List<? extends IRoleInfo> listUserRolesByUserCode(String userCode);
-
-    /**
-     * 获取拥有该角色的所有用户
-     * @param roleCode 角色代码
-     * @return  List 用户所有菜单功能
-     */
-    List<? extends IUserInfo> listRoleUserByRoleCode(String roleCode);
-
-    /**
-     * 获取用户所有角色
-     * @param userCode 用户代码
-     * @return  List 用户所有菜单功能
-     */
     List<? extends IUserRole> listUserRoles(String userCode);
 
     /**
@@ -65,18 +50,6 @@ public interface PlatformEnvironment {
      */
     List<? extends IUserRole> listRoleUsers(String roleCode);
 
-
-/*
-     * 获取机构所有角色
-     * @param unitCode 机构代码
-     * @return  List 机构所有菜单功能
-    List<? extends IRoleInfo> listUnitRolesByUnitCode(String unitCode);
-
-
-     * 获取拥有该角色的所有用户
-     * @param roleCode 角色代码
-     * @return  List
-    List<? extends IUnitInfo> listRoleUnitByRoleCode(String roleCode);*/
 
     /**
      * 获取用户所有角色
@@ -156,57 +129,37 @@ public interface PlatformEnvironment {
      * @return  List 机构所有用户信息
      */
     List<? extends IUserUnit> listUnitUsers(String unitCode);
-    /*---------------------------------------------------------------
-    下面一组 get*Repo的方法，在使用数据库持久化的项目中需要缓存
-    --------------------------------------------------------------*/
-    /**
-     * 获取机构代码映射表
-     * @return Map 机构代码映射表
-     */
-    Map<String, ? extends IUnitInfo> getUnitRepo();
-    
-    /**
-     * 获取部门编码映射表
-     * @return map 部门编码映射表
-     */
-    Map<String, ? extends IUserInfo> getUserRepo();
-    
-    /**
-     * 获取用户登陆名映射表
-     * @return Map 机构代码映射表
-     */
-    Map<String, ? extends IUserInfo> getLoginNameRepo();
-    
-    /**
-     * 获取部门编码映射表
-     * @return Map 部门编码映射表
-     */
-    Map<String, ? extends IUnitInfo> getDepNoRepo();
+
     /**
      * 获取所有角色信息
-     * @return Map 所有角色信息
+     * @return List 操作方法信息
      */
-     Map<String, ? extends IRoleInfo> getRoleRepo();
+    List<? extends IRoleInfo> listAllRoleInfo();
+
+    /**
+     * 获取所有角色和权限对应关系
+     * @return List 操作方法信息
+     */
+    List<? extends IRolePower> listAllRolePower();
 
 
     /**
-     * 获取业务信息
-     * @return Map 业务信息
+     * 获取业务操作信息
+     * @return List 业务信息
      */
-    Map<String, ? extends IOptInfo> getOptInfoRepo();
+    List<? extends IOptInfo> listAllOptInfo();
 
     /**
      * 获取操作方法信息
-     * @return Map 操作方法信息
+     * @return List 操作方法信息
      */
-    Map<String, ? extends IOptMethod> getOptMethodRepo();
+    List<? extends IOptMethod> listAllOptMethod();
 
     /**
      * 获取所有数据字典类别信息
      * @return List 所有数据字典类别信息
      */
     List<? extends IDataCatalog> listAllDataCatalogs();
-
 
     /**
      * 获取所有数据字典类别信息
@@ -215,19 +168,20 @@ public interface PlatformEnvironment {
      */
     List<? extends IDataDictionary> listDataDictionaries(String catalogCode);
 
-
     /**
      * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      * @param loginName loginName
      * @return 用户基本信息，用户机构信息，用户权限信息等等
      */
     CentitUserDetails loadUserDetailsByLoginName(String loginName);
+
     /**
      * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      * @param userCode userCode
      * @return 用户基本信息，用户机构信息，用户权限信息等等
      */
     CentitUserDetails loadUserDetailsByUserCode(String userCode);
+
     /**
      * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
      * @param regEmail regEmail
@@ -242,12 +196,6 @@ public interface PlatformEnvironment {
     CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone);
 
     /**
-     * 获取全部个人设置
-     * @return 个人设置列表
-     */
-    List<? extends IUserSetting> getAllSettings();
-
-    /**
      * 根据用户ID修改用户信息
      * @param userInfo 用户信息
      */
@@ -255,11 +203,18 @@ public interface PlatformEnvironment {
 
     /**
      * 获得用户设置参数
-     * @param userCode userCode
+     * @param userCode 用户编码
      * @param paramCode paramCode
      * @return 用户设置参数
      */
     IUserSetting getUserSetting(String userCode,String paramCode);
+
+    /**
+     * 获取全部个人设置
+     * @param userCode 用户编码
+     * @return 个人设置列表
+     */
+    List<? extends IUserSetting> listUserSettings(String userCode);
 
     /**
      * 设置用户参数
@@ -272,7 +227,8 @@ public interface PlatformEnvironment {
      * @param optInfos 菜单对象集合
      * @param optMethods 操作对象集合
      */
-    void insertOrUpdateMenu(List<? extends IOptInfo> optInfos, List<? extends IOptMethod> optMethods);
+    void insertOrUpdateMenu(List<? extends IOptInfo> optInfos,
+                            List<? extends IOptMethod> optMethods);
 
 }
 

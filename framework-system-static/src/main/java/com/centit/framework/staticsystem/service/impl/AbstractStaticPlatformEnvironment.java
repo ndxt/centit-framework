@@ -170,32 +170,6 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     @Override
-    public UserSetting getUserSetting(String userCode, String paramCode) {
-        CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
-        if(ud==null)
-            return null;
-        //userCode, String paramCode,String paramValue, String paramName
-        return new UserSetting(ud.getUserCode(),paramCode,
-                 ud.getUserSettingValue(paramCode), "用户参数");
-    }
-
-    @Override
-    public void updateUserInfo(IUserInfo userInfo) {
-        UserInfo ui = this.getUserInfoByUserCode(userInfo.getUserCode());
-        if(ui==null)
-            return;
-        ui.copyNotNullProperty(userInfo);
-    }
-
-    @Override
-    public void saveUserSetting(IUserSetting userSetting) {
-        CentitUserDetails ud =  loadUserDetailsByUserCode(userSetting.getUserCode());
-        if(ud==null)
-            return;
-        ud.setUserSettingValue(userSetting.getParamCode(),userSetting.getParamValue());
-    }
-
-    @Override
     public List<UserInfo> listAllUsers() {
         return userinfos;
     }
@@ -210,23 +184,6 @@ public abstract class AbstractStaticPlatformEnvironment
         return userunits;
     }
 
-    @Override
-    public Map<String,RoleInfo> getRoleRepo() {
-        Map<String,RoleInfo> roleRepo = new HashMap<String,RoleInfo>();
-        for(RoleInfo role:roleinfos){
-            roleRepo.put(role.getRoleCode(), role);
-        }
-        return roleRepo;
-    }
-
-    @Override
-    public Map<String,OptMethod> getOptMethodRepo() {
-        Map<String,OptMethod> methodRepo = new HashMap<String,OptMethod>();
-        for(OptMethod method:optmethods){
-            methodRepo.put(method.getOptCode(), method);
-        }
-        return methodRepo;
-    }
 
     @Override
     public List<DataCatalog> listAllDataCatalogs() {
@@ -257,14 +214,6 @@ public abstract class AbstractStaticPlatformEnvironment
         return null;
     }
 
-    @Override
-    public Map<String,OptInfo> getOptInfoRepo() {
-        Map<String,OptInfo> optRepo = new HashMap<String,OptInfo>();
-        for(OptInfo opt:optinfos){
-            optRepo.put(opt.getOptId(), opt);
-        }
-        return optRepo;
-    }
 
     private static List<OptInfo> getMenuFuncs(List<OptInfo> preOpts, List<OptInfo> ls) {
         boolean isNeeds[] = new boolean[preOpts.size()];
@@ -453,35 +402,41 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     /**
-     * 获取用户所有角色
-     * @param userCode 用户代码
-     * @return  List 用户所有菜单功能
+     * 获取所有角色信息
+     *
+     * @return List 操作方法信息
      */
     @Override
-    public List<RoleInfo> listUserRolesByUserCode(String userCode){
-        List<RoleInfo> roles = new ArrayList<>();
-        for (UserRole ur : userroles) {
-            if (StringUtils.equals(ur.getUserCode(),userCode)) {
-                roles.add(getRoleInfo(ur.getRoleCode()));
-            }
-        }
-        return roles;
+    public List<? extends IRoleInfo> listAllRoleInfo() {
+        return this.roleinfos;
     }
 
     /**
-     * 获取拥有改角色的所有用户
-     * @param roleCode 角色代码
-     * @return  List 用户所有菜单功能
+     * 获取业务操作信息
+     *
+     * @return List 业务信息
      */
     @Override
-    public List<UserInfo> listRoleUserByRoleCode(String roleCode){
-        List<UserInfo> users = new ArrayList<>();
-        for (UserRole ur : userroles) {
-            if (StringUtils.equals(ur.getRoleCode(),roleCode)) {
-                users.add(getUserInfoByUserCode(ur.getRoleCode()));
-            }
-        }
-        return users;
+    public List<? extends IOptInfo> listAllOptInfo() {
+        return this.optinfos;
+    }
+
+    /**
+     * 获取所有角色和权限对应关系
+     * @return List 操作方法信息
+     */
+    @Override
+    public List<? extends IRolePower> listAllRolePower(){
+        return this.rolepowers;
+    }
+
+    /**
+     * 获取操作方法信息
+     * @return List 操作方法信息
+     */
+    @Override
+    public List<? extends IOptMethod> listAllOptMethod(){
+        return this.optmethods;
     }
     /**
      * 获取 用户角色关系
@@ -524,41 +479,7 @@ public abstract class AbstractStaticPlatformEnvironment
     public List<? extends IUnitRole> listRoleUnits(String roleCode) {
         return null;
     }
-    @Override
-    public Map<String,UnitInfo> getUnitRepo() {
-        Map<String,UnitInfo> unitRepo = new HashMap<>();
-        for(UnitInfo unit:unitinfos){
-            unitRepo.put(unit.getUnitCode(), unit);
-        }
-        return unitRepo;
-    }
 
-    @Override
-    public Map<String,UserInfo> getUserRepo() {
-        Map<String,UserInfo> userRepo = new HashMap<>();
-        for(UserInfo user:userinfos){
-            userRepo.put(user.getUserCode(), user);
-        }
-        return userRepo;
-    }
-
-    @Override
-    public Map<String, UserInfo> getLoginNameRepo() {
-        Map<String, UserInfo> userRepo = new HashMap<>();
-        for(UserInfo user : userinfos){
-            userRepo.put(user.getLoginName(), user);
-        }
-        return userRepo;
-    }
-
-    @Override
-    public Map<String,UnitInfo> getDepNoRepo() {
-        Map<String,UnitInfo> depnoRepo = new HashMap<>();
-        for(UnitInfo unit:unitinfos){
-            depnoRepo.put(unit.getDepNo(), unit);
-        }
-        return depnoRepo;
-    }
 
     @Override
     public CentitUserDetails loadUserDetailsByLoginName(String loginName) {
@@ -637,10 +558,49 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     @Override
-    public List<UserSetting> getAllSettings(){
-        return null;
+    public UserSetting getUserSetting(String userCode, String paramCode) {
+        CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
+        if(ud==null)
+            return null;
+        //userCode, String paramCode,String paramValue, String paramName
+        return new UserSetting(ud.getUserCode(),paramCode,
+            ud.getUserSettingValue(paramCode), "用户参数");
     }
 
+    @Override
+    public List<UserSetting> listUserSettings(String userCode){
+        CentitUserDetails ud =  loadUserDetailsByUserCode(userCode);
+        if(ud==null) {
+            return null;
+        }
+        //userCode, String paramCode,String paramValue, String paramName
+        Map<String, String> settingMap =  ud.getUserSettings();
+        if(settingMap==null){
+            return null;
+        }
+        List<UserSetting> userSettings = new ArrayList<>(settingMap.size()+1);
+        for(Map.Entry<String, String> ent : ud.getUserSettings().entrySet()){
+            userSettings.add( new UserSetting(ud.getUserCode(),
+                ent.getKey(),ent.getValue(),"用户参数"));
+        }
+        return userSettings;
+    }
+
+    @Override
+    public void updateUserInfo(IUserInfo userInfo) {
+        UserInfo ui = this.getUserInfoByUserCode(userInfo.getUserCode());
+        if(ui==null)
+            return;
+        ui.copyNotNullProperty(userInfo);
+    }
+
+    @Override
+    public void saveUserSetting(IUserSetting userSetting) {
+        CentitUserDetails ud =  loadUserDetailsByUserCode(userSetting.getUserCode());
+        if(ud==null)
+            return;
+        ud.setUserSettingValue(userSetting.getParamCode(),userSetting.getParamValue());
+    }
     /**
      * 新增菜单和操作
      * @param optInfos 菜单对象集合

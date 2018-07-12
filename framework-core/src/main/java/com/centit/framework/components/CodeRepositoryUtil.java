@@ -67,13 +67,54 @@ public abstract class CodeRepositoryUtil {
     }
 
     public static Map<String,? extends IUserInfo> getUserRepo() {
-        return  getPlatformEnvironment().getUserRepo();
+        Map<String,IUserInfo> userRepo = new HashMap<>();
+        List<? extends  IUserInfo> userinfos = getPlatformEnvironment().listAllUsers();
+        for(IUserInfo user:userinfos){
+            userRepo.put(user.getUserCode(), user);
+        }
+        return userRepo;
     }
 
     public static Map<String,? extends IUserInfo> getLoginRepo() {
-        return  getPlatformEnvironment().getLoginNameRepo();
+        Map<String,IUserInfo> userRepo = new HashMap<>();
+        List<? extends  IUserInfo> userinfos = getPlatformEnvironment().listAllUsers();
+        for(IUserInfo user : userinfos){
+            userRepo.put(user.getLoginName(), user);
+        }
+        return userRepo;
     }
 
+    public static Map<String,? extends IRoleInfo> getRoleRepo() {
+        List<? extends  IRoleInfo> roleinfos = getPlatformEnvironment().listAllRoleInfo();
+        Map<String,IRoleInfo> roleRepo = new HashMap<>();
+        for(IRoleInfo role:roleinfos){
+            roleRepo.put(role.getRoleCode(), role);
+        }
+        return roleRepo;
+    }
+
+    public static Map<String,? extends IOptInfo> getOptRepo() {
+        List<? extends  IOptInfo> optinfos = getPlatformEnvironment().listAllOptInfo();
+        Map<String,IOptInfo> optRepo = new HashMap<>();
+        for(IOptInfo opt:optinfos){
+            optRepo.put(opt.getOptId(), opt);
+        }
+        return optRepo;
+    }
+
+    /**
+     * 获取操作定义（权限的控制单位）
+     *
+     * @return Map 操作定义（权限的控制单位）
+     */
+    public static Map<String,? extends IOptMethod> getPowerRepo() {
+        List<? extends  IOptMethod> optmethods = getPlatformEnvironment().listAllOptMethod();
+        Map<String,IOptMethod> methodRepo = new HashMap<>();
+        for(IOptMethod method:optmethods){
+            methodRepo.put(method.getOptCode(), method);
+        }
+        return methodRepo;
+    }
 
     public static List<? extends IUnitInfo> getUnitAsTree() {
         List<? extends IUnitInfo> units = getPlatformEnvironment().listAllUnits();
@@ -101,23 +142,6 @@ public abstract class CodeRepositoryUtil {
             unitRepo.put(unit.getDepNo(), unit);
         }
         return unitRepo;
-    }
-
-    public static Map<String,? extends IRoleInfo> getRoleRepo() {
-        return getPlatformEnvironment().getRoleRepo();
-    }
-
-    public static Map<String,? extends IOptInfo> getOptRepo() {
-        return getPlatformEnvironment().getOptInfoRepo();
-    }
-
-    /**
-     * 获取操作定义（权限的控制单位）
-     *
-     * @return Map 操作定义（权限的控制单位）
-     */
-    public static Map<String,? extends IOptMethod> getPowerRepo() {
-        return getPlatformEnvironment().getOptMethodRepo();
     }
 
     /**
@@ -686,21 +710,41 @@ public abstract class CodeRepositoryUtil {
     }
 
     /**
+     * listRoleUserByRoleCode(roleCode);
      * 获取 拥有指定角色的所有用户
      * @param roleCode 角色代码
      * @return 返回拥有这个角色的所有用户
      */
     public static List<? extends IUserInfo> getUsersByRoleCode(String roleCode) {
-        return getPlatformEnvironment().listRoleUserByRoleCode(roleCode);
+        List<? extends IUserRole> userRoles = getPlatformEnvironment().listRoleUsers(roleCode);
+        if(userRoles==null){
+            return null;
+        }
+        Map<String,? extends IUserInfo> userRepo = getUserRepo();
+        List<IUserInfo> userInfos = new ArrayList<>(userRoles.size()+1);
+        for(IUserRole ur : userRoles){
+            userInfos.add(userRepo.get(ur.getUserCode()));
+        }
+        return userInfos;
     }
 
     /**
+     * listUserRolesByUserCode
      * 获取用户拥有的角色
      * @param userCode 用户代码
      * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
      */
     public static List<? extends IRoleInfo> getRolesByUserCode(String userCode) {
-        return getPlatformEnvironment().listUserRolesByUserCode(userCode);
+        List<? extends IUserRole> roleUsers = getPlatformEnvironment().listUserRoles(userCode);
+        if(roleUsers==null){
+            return null;
+        }
+        Map<String,? extends IRoleInfo> roeleRepo = getRoleRepo();
+        List<IRoleInfo> roleInfos = new ArrayList<>(roleUsers.size()+1);
+        for(IUserRole ur : roleUsers){
+            roleInfos.add(roeleRepo.get(ur.getRoleCode()));
+        }
+        return roleInfos;
     }
 
     /**
