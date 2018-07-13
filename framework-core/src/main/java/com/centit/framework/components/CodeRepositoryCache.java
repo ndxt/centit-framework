@@ -57,6 +57,58 @@ public abstract class CodeRepositoryCache {
         return platformEnvironment;
     }
 
+    public static void evictCache(String cacheName, String mapKey){
+        switch (cacheName){
+            case "UserInfo":
+                CodeRepositoryCache.userInfoRepo.evictObject();
+                CodeRepositoryCache.codeToUserMap.evictObject();
+                CodeRepositoryCache.loginNameToUserMap.evictObject();
+                CodeRepositoryCache.idcardToUserMap.evictObject();
+                CodeRepositoryCache.emailToUserMap.evictObject();
+                CodeRepositoryCache.phoneToUserMap.evictObject();
+                break;
+            case "UnitInfo":
+                CodeRepositoryCache.unitInfoRepo.evictObject();
+                CodeRepositoryCache.codeToUnitMap.evictObject();
+                CodeRepositoryCache.depNoToUnitMap.evictObject();
+                break;
+
+            case "UserUnit":
+                CodeRepositoryCache.userUnitRepo.evictObject();
+                CodeRepositoryCache.userUnitsMap.evictAll();
+                CodeRepositoryCache.unitUsersMap.evictAll();
+                break;
+            case "DataCatalog":
+                CodeRepositoryCache.catalogRepo.evictObject();
+                CodeRepositoryCache.codeToCatalogMap.evictObject();
+                break;
+            case "DataDictionary":
+                if(StringUtils.isNotBlank(mapKey)){
+                    CodeRepositoryCache.dictionaryRepo.evictObject(mapKey);
+                    CodeRepositoryCache.codeToDictionaryMap.evictObject(mapKey);
+                }else{
+                    CodeRepositoryCache.dictionaryRepo.evictAll();
+                    CodeRepositoryCache.codeToDictionaryMap.evictAll();
+                }
+                break;
+            case "OptInfo":
+                CodeRepositoryCache.optInfoRepo.evictObject();
+                CodeRepositoryCache.codeToOptMap.evictObject();
+                break;
+            case "OptMethod":
+                CodeRepositoryCache.optMethodRepo.evictObject();
+                CodeRepositoryCache.codeToMethodMap.evictObject();
+                break;
+            case "RoleInfo":
+                CodeRepositoryCache.roleInfoRepo.evictObject();
+                CodeRepositoryCache.codeToRoleMap.evictObject();
+                break;
+            case "RolePower":
+                CodeRepositoryCache.rolePowerRepo.evictObject();
+                break;
+        }
+    }
+
     public static void evictAllCache(){
         CodeRepositoryCache.catalogRepo.evictObject();
         CodeRepositoryCache.codeToCatalogMap.evictObject();
@@ -331,23 +383,21 @@ public abstract class CodeRepositoryCache {
 
     public static CachedMap<String, List<? extends IUserRole>> userRolesRepo =
         new CachedMap<>((sUserCode)-> getPlatformEnvironment().listUserRoles(sUserCode),
-            CACHE_FRESH_PERIOD_MINITES);
+            5);
 
     public static CachedMap<String, List<? extends IUserRole>> roleUsersRepo =
         new CachedMap<>((sRoleCode)-> getPlatformEnvironment().listRoleUsers(sRoleCode),
-            CACHE_FRESH_PERIOD_MINITES);
+            5);
 
     public static CachedMap<String, List<? extends IUnitRole>> unitRolesRepo =
         new CachedMap<>((sUnitCode)-> getPlatformEnvironment().listUnitRoles(sUnitCode),
-            CACHE_FRESH_PERIOD_MINITES);
+            5);
 
     public static CachedMap<String, List<? extends IUnitRole>> roleUnitsRepo =
         new CachedMap<>((sRoleCode)-> getPlatformEnvironment().listRoleUnits(sRoleCode),
-            CACHE_FRESH_PERIOD_MINITES);
+            5);
 
     public static CachedObject<List<? extends IRolePower>> rolePowerRepo =
         new CachedObject<>(()-> getPlatformEnvironment().listAllRolePower(),
             CACHE_FRESH_PERIOD_MINITES);
-
-
 }

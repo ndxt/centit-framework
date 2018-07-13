@@ -92,7 +92,6 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         }
     }
 
-
     /**
      * 修改用户密码
      *
