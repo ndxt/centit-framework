@@ -588,9 +588,8 @@ public abstract class CodeRepositoryUtil {
     public static List<IUnitInfo> getSortedSubUnits(String unitCode, String unitType) {
         List<IUnitInfo> units = new ArrayList<>();
 
-        IUnitInfo ui = getUnitRepo().get(unitCode);
-        for (IUnitInfo unit : ui.getSubUnits()) {
-            //IUnitInfo unit = getUnitRepo().get(uu);
+        IUnitInfo ui = CodeRepositoryUtil.getUnitRepo().get(unitCode);
+        for (IUnitInfo unit : CodeRepositoryUtil.getSubUnits(ui.getUnitCode())) {
             if (unit != null) {
                 if (CodeRepositoryUtil.T.equals(unit.getIsValid())
                         && (unitType == null || "A".equals(unitType)
@@ -600,7 +599,7 @@ public abstract class CodeRepositoryUtil {
             }
         }
 
-        Collections.sort(units, (o1, o2) ->
+        units.sort((o1, o2) ->
             (o1.getUnitOrder() == null && o2.getUnitOrder() == null) ? 0 :
                 (o1.getUnitOrder() == null ? 1 :
                     (o2.getUnitOrder() == null ? -1 :
@@ -617,10 +616,10 @@ public abstract class CodeRepositoryUtil {
      */
     public static Set<IUserInfo> getUnitUsers(String unitCode) {
 
-        List<? extends IUserUnit> uus = listUnitUsers(unitCode);
+        List<? extends IUserUnit> uus = CodeRepositoryUtil.listUnitUsers(unitCode);
         Set<IUserInfo> users = new HashSet<>();
         for (IUserUnit uu : uus) {
-            IUserInfo user = getUserRepo().get(uu.getUserCode());
+            IUserInfo user = CodeRepositoryUtil.getUserRepo().get(uu.getUserCode());
             if (user != null) {
                 if (CodeRepositoryUtil.T.equals(user.getIsValid())) {
                     users.add(user);
@@ -1357,7 +1356,7 @@ public abstract class CodeRepositoryUtil {
             String parentUnitCode) {
         if(StringUtils.isBlank(parentUnitCode) || allunits==null)
             return null;
-        List<IUnitInfo> units = new ArrayList<IUnitInfo>();
+        List<IUnitInfo> units = new ArrayList<>();
         for (IUnitInfo uc : allunits) {
             if ( parentUnitCode.equals(uc.getParentUnit()) &&
                     CodeRepositoryUtil.T.equals(uc.getIsValid())) {
