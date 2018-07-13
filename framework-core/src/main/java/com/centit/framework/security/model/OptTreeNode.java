@@ -7,31 +7,34 @@ import java.util.Map;
 
 
 public class OptTreeNode {
-    //public String urlWord;  
-    public String optCode; 
-    public Map<String,OptTreeNode> childList;  
-    
+    //public String urlWord;
+    public String optCode;
+    public Map<String,OptTreeNode> childList;
+
     public OptTreeNode(){
-        
+        optCode = null;
+        childList = null;
     }
-    
+
     public String getOptCode() {
         return optCode;
     }
+
     public void setOptCode(String optCode) {
         this.optCode = optCode;
     }
+
     public Map<String, OptTreeNode> getChildList() {
         return childList;
     }
-    
+
     public OptTreeNode getChild(String surl){
         if(childList==null)
             childList = new HashMap<String,OptTreeNode>();
         return childList.get(surl);
     }
-    
-    
+
+
     public OptTreeNode setChildPath(String surl){
         if(childList==null)
             childList = new HashMap<String,OptTreeNode>();
@@ -42,7 +45,7 @@ public class OptTreeNode {
         }
         return child;
     }
-    
+
     public OptTreeNode setChildOptCode(String surl,String optCode){
         if(childList==null)
             childList = new HashMap<String,OptTreeNode>();
@@ -54,13 +57,13 @@ public class OptTreeNode {
         child.setOptCode(optCode);
         return child;
     }
-    
+
     public void setChildList(Map<String, OptTreeNode> childList) {
         this.childList = childList;
     }
-    
+
     private void printTreeNode(OptTreeNode treeNode,int n){
-        
+
         if(treeNode.getChildList()==null)
             return;
         for(Map.Entry<String,OptTreeNode> child : treeNode.getChildList().entrySet()){
@@ -68,7 +71,7 @@ public class OptTreeNode {
             printTreeNode(child.getValue(),n+1);
         }
     }
-    
+
     public void printTreeNode(){
         System.out.println(this.optCode);
         printTreeNode(this,1);

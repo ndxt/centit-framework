@@ -1,7 +1,12 @@
 package com.centit.framework.security.model;
 
+import com.centit.framework.components.CodeRepositoryCache;
+import com.centit.framework.model.basedata.IOptInfo;
+import com.centit.framework.model.basedata.IOptMethod;
+import com.centit.framework.model.basedata.IRolePower;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.common.CachedObject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
@@ -13,10 +18,59 @@ import java.util.*;
 public class CentitSecurityMetadata {
     public static final String ROLE_PREFIX = "R_";
     public static boolean isForbiddenWhenAssigned = false;
-    public static final OptTreeNode optTreeNode = new OptTreeNode();
-    public static final Map<String/*optCode*/,List<ConfigAttribute/*roleCode*/>>
-            optMethodRoleMap = new HashMap<>();
 
+    public static final CachedObject<OptTreeNode > optTreeNodeCache =
+        new CachedObject<>( CentitSecurityMetadata ::reloadOptTreeNode,
+            CodeRepositoryCache.CACHE_FRESH_PERIOD_MINITES);
+
+    public static final CachedObject<Map<String/*optCode*/,List<ConfigAttribute/*roleCode*/>>>
+        optMethodRoleMapCache = new CachedObject<>( CentitSecurityMetadata ::reloadOptMethodRoleMap,
+            CodeRepositoryCache.CACHE_FRESH_PERIOD_MINITES);
+
+    public static void evictAllCache(){
+        optTreeNodeCache.evictObject();
+        optMethodRoleMapCache.evictObject();
+    }
+
+    public static OptTreeNode reloadOptTreeNode(){
+        OptTreeNode optTreeNode = new OptTreeNode();
+        for(IOptMethod ou : CodeRepositoryCache.optMethodRepo.getCachedObject()){
+            IOptInfo oi = CodeRepositoryCache.codeToOptMap.getCachedObject().get(ou.getOptId());
+            if(oi!=null){
+                String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());
+                List<List<String>> sOpt = CentitSecurityMetadata.parsePowerDefineUrl(
+                    optDefUrl,ou.getOptReq());
+
+                for(List<String> surls : sOpt){
+                    OptTreeNode opt = optTreeNode;
+                    for(String surl : surls)
+                        opt = opt.setChildPath(surl);
+                    opt.setOptCode(ou.getOptCode());
+                }
+            }
+        }
+        CentitSecurityMetadata.confirmLoginCasMustBeAuthed(optTreeNode, optMethodRoleMapCache.getCachedObject());
+        return optTreeNode;
+    }
+
+    public static Map<String/*optCode*/,List<ConfigAttribute/*roleCode*/>> reloadOptMethodRoleMap() {
+        Map<String/*optCode*/,List<ConfigAttribute/*roleCode*/>> optMethodRoleMap
+        = new HashMap<>(100);
+        List<? extends IRolePower> rolepowers =  CodeRepositoryCache.rolePowerRepo.getCachedObject();
+        if(rolepowers==null || rolepowers.size()==0)
+            return null;
+        for(IRolePower rp: rolepowers){
+            List<ConfigAttribute/*roleCode*/> roles = optMethodRoleMap.get(rp.getOptCode());
+            if(roles == null){
+                roles = new ArrayList</*roleCode*/>();
+            }
+            roles.add(new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + StringUtils.trim(rp.getRoleCode())));
+            optMethodRoleMap.put(rp.getOptCode(), roles);
+        }
+        //将操作和角色对应关系中的角色排序，便于权限判断中的比较
+        CentitSecurityMetadata.sortOptMethodRoleMap(optMethodRoleMap);
+        return optMethodRoleMap;
+    }
     /**
      * 设置为true时，将url分配到菜单后 该url需要授权才能访问；
      * 设置为false时，将url分配到菜单后不会对该url进行拦截，只有将该url分配给某个角色，其他角色才会被拦截
@@ -90,7 +144,7 @@ public class CentitSecurityMetadata {
 
     public static String matchUrlToOpt(String sUrl, String httpMethod){
         List<String> urls = parseRequestUrl(sUrl,httpMethod);
-        OptTreeNode curOpt = optTreeNode;
+        OptTreeNode curOpt = optTreeNodeCache.getCachedObject();
         for(String s: urls){
             if(curOpt.childList == null) {
                 return curOpt.optCode;
@@ -122,14 +176,15 @@ public class CentitSecurityMetadata {
         }
         List<ConfigAttribute> defaultRole = new ArrayList<>(2);
         defaultRole.add(new SecurityConfig(SecurityContextUtils.FORBIDDEN_ROLE_CODE));
-        if(optMethodRoleMap.get(sOptCode) == null && isForbiddenWhenAssigned){
+        Collection<ConfigAttribute> roles = optMethodRoleMapCache.getCachedObject().get(sOptCode);
+        if(roles == null && isForbiddenWhenAssigned){
             return defaultRole;
         }
-       return optMethodRoleMap.get(sOptCode);
+       return roles;
     }
 
     public static void printOptdefRoleMap(){
-        for(Map.Entry<String ,List<ConfigAttribute >> roleMap : optMethodRoleMap.entrySet()){
+        for(Map.Entry<String ,List<ConfigAttribute >> roleMap :  optMethodRoleMapCache.getCachedObject().entrySet()){
             if(roleMap.getValue().size()>1){
                 System.out.print(roleMap.getKey());
                 System.out.print(" : ");
@@ -146,7 +201,7 @@ public class CentitSecurityMetadata {
     /**
      * 将操作和角色对应关系中的角色排序，便于权限判断中的比较
      */
-    public static void sortOptMethodRoleMap(){
+    public static void sortOptMethodRoleMap(Map<String ,List<ConfigAttribute >> optMethodRoleMap){
         //测试比较排序效果
         for(Map.Entry<String ,List<ConfigAttribute >> roleMap : optMethodRoleMap.entrySet()){
           //排序便于后面比较
@@ -156,7 +211,8 @@ public class CentitSecurityMetadata {
         //测试比较排序效果
     }
 
-    public static void confirmLoginCasMustBeAuthed(){
+    public static void confirmLoginCasMustBeAuthed(OptTreeNode optTreeNode,
+                                                   Map<String ,List<ConfigAttribute >> optMethodRoleMap){
         /**
          * 添加 logincas 的角色定义
          */

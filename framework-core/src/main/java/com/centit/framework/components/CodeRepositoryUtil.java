@@ -122,7 +122,7 @@ public abstract class CodeRepositoryUtil {
     }
 
     public static List<? extends IUserUnit> listAllUserUnits() {
-        return CodeRepositoryCache.userUnitsRepo.getCachedObject();
+        return CodeRepositoryCache.userUnitRepo.getCachedObject();
     }
 
     public static List<? extends IUserUnit> listUserUnits(String userCode) {

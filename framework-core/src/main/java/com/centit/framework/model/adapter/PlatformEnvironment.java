@@ -8,17 +8,6 @@ import java.util.List;
 public interface PlatformEnvironment {
 
     /**
-     * 刷新数据字典
-     * @return 是否刷新
-     */
-    boolean reloadDictionary();
-    /**
-     * 刷新权限相关的元数据
-     * @return 是否刷新
-     */
-    boolean reloadSecurityMetadata();
-
-    /**
      * 获取用户所有菜单功能
      * @param userCode userCode
      * @param asAdmin 是否是作为管理员

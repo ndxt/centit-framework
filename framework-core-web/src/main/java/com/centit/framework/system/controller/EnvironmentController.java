@@ -2,6 +2,7 @@ package com.centit.framework.system.controller;
 
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseSingleData;
+import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import org.springframework.stereotype.Controller;
@@ -32,36 +33,21 @@ public class EnvironmentController extends BaseController {
     }
 
     @RequestMapping(value ="/reload/dictionary",method = RequestMethod.GET)
-    public void reloadDictionary(
-            HttpServletRequest request,HttpServletResponse response) {
-        if(platformEnvironment.reloadDictionary())
-            JsonResultUtils.writeSuccessJson(response);
-        else
-            JsonResultUtils.writeErrorMessageJson("reloadDictionary failed！", response);
+    public void reloadDictionary(HttpServletResponse response) {
+        CodeRepositoryCache.evictAllCache();
+        JsonResultUtils.writeMessageJson("系统数据字典全部失效！", response);
     }
 
     @RequestMapping(value ="/reload/securitymetadata",method = RequestMethod.GET)
-    public void reloadSecurityMetadata(
-            HttpServletRequest request,HttpServletResponse response) {
-        if(platformEnvironment.reloadSecurityMetadata())
-            JsonResultUtils.writeSuccessJson(response);
-        else
-            JsonResultUtils.writeErrorMessageJson("reloadSecurityMetadata failed！", response);
+    public void reloadSecurityMetadata(HttpServletResponse response) {
+        CodeRepositoryCache.evictAllCache();
+        JsonResultUtils.writeMessageJson("权限相关缓存失效！", response);
     }
 
-
     @RequestMapping(value ="/reload/refreshall",method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseSingleData environmentRefreshAll(
-            HttpServletRequest request,HttpServletResponse response) {
-        boolean reloadDc = platformEnvironment.reloadDictionary();
-        boolean reloadSm = platformEnvironment.reloadSecurityMetadata();
-        if(reloadDc && reloadSm)
-            return new ResponseSingleData();
-            //JsonResultUtils.writeSuccessJson(response);
-        else
-            return new ResponseSingleData( 500, "environmentRefreshAll failed！");
-        //JsonResultUtils.writeErrorMessageJson("environmentRefreshAll failed！", response);
+    public void environmentRefreshAll(HttpServletResponse response) {
+        CodeRepositoryCache.evictAllCache();
+        JsonResultUtils.writeMessageJson("缓存全部失效！", response);
     }
 
 }

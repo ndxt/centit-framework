@@ -19,11 +19,6 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
     private static Log logger = LogFactory.getLog(JsonPlatformEnvironment.class);
 
-    public void init(){
-        reloadDictionary();
-        reloadSecurityMetadata();
-    }
-
     protected String appHome;
 
     public void setAppHome(String appHome) {
@@ -54,7 +49,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         CodeRepositoryCache.unitInfoRepo.setFreshtDate(unitinfos);
 
         List<UserUnit> userunits = JSON.parseArray(json.getString("userUnits"), UserUnit.class);
-        CodeRepositoryCache.userUnitsRepo.setFreshtDate(userunits);
+        CodeRepositoryCache.userUnitRepo.setFreshtDate(userunits);
 
         List<DataCatalog> datacatalogs = JSON.parseArray(json.getString("dataCatalogs"), DataCatalog.class);
         CodeRepositoryCache.catalogRepo.setFreshtDate(datacatalogs);
@@ -76,8 +71,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
      *
      * @return boolean 刷新数据字典
      */
-    @Override
-    public boolean reloadDictionary() {
+    protected void reloadDictionary() {
         try {
             String jsonstr = loadJsonStringFormConfigFile("/static_system_config.json");
             loadConfigFromJSONString(jsonstr);
@@ -98,7 +92,6 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         } catch (IOException e) {
             logger.error(e.getMessage(),e);
         }
-        return true;
     }
 
 
@@ -148,7 +141,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
     @Override
     public List<? extends IUserUnit> listAllUserUnits() {
         reloadDictionary();
-        return CodeRepositoryCache.userUnitsRepo.getCachedObject();
+        return CodeRepositoryCache.userUnitRepo.getCachedObject();
     }
 
 

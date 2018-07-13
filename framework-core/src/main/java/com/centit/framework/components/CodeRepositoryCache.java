@@ -57,6 +57,36 @@ public abstract class CodeRepositoryCache {
         return platformEnvironment;
     }
 
+    public static void evictAllCache(){
+        CodeRepositoryCache.catalogRepo.evictObject();
+        CodeRepositoryCache.codeToCatalogMap.evictObject();
+        CodeRepositoryCache.codeToDictionaryMap.evictAll();
+        CodeRepositoryCache.codeToMethodMap.evictObject();
+        CodeRepositoryCache.codeToOptMap.evictObject();
+        CodeRepositoryCache.codeToRoleMap.evictObject();
+        CodeRepositoryCache.codeToUnitMap.evictObject();
+        CodeRepositoryCache.codeToUserMap.evictObject();
+        CodeRepositoryCache.depNoToUnitMap.evictObject();
+        CodeRepositoryCache.dictionaryRepo.evictAll();
+        CodeRepositoryCache.emailToUserMap.evictObject();
+        CodeRepositoryCache.idcardToUserMap.evictObject();
+        CodeRepositoryCache.loginNameToUserMap.evictObject();
+        CodeRepositoryCache.optInfoRepo.evictObject();
+        CodeRepositoryCache.optMethodRepo.evictObject();
+        CodeRepositoryCache.phoneToUserMap.evictObject();
+        CodeRepositoryCache.roleInfoRepo.evictObject();
+        CodeRepositoryCache.rolePowerRepo.evictObject();
+        CodeRepositoryCache.roleUnitsRepo.evictAll();
+        CodeRepositoryCache.roleUsersRepo.evictAll();
+        CodeRepositoryCache.unitInfoRepo.evictObject();
+        CodeRepositoryCache.unitRolesRepo.evictAll();
+        CodeRepositoryCache.unitUsersMap.evictAll();
+        CodeRepositoryCache.userInfoRepo.evictObject();
+        CodeRepositoryCache.userRolesRepo.evictAll();
+        CodeRepositoryCache.userUnitRepo.evictObject();
+        CodeRepositoryCache.userUnitsMap.evictAll();
+    }
+
     /**
      * 缓存用户信息
      */
@@ -171,7 +201,7 @@ public abstract class CodeRepositoryCache {
         },CACHE_FRESH_PERIOD_MINITES);
 
 
-    public static CachedObject<List<? extends IUserUnit>> userUnitsRepo =
+    public static CachedObject<List<? extends IUserUnit>> userUnitRepo =
         new CachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(),
             CACHE_FRESH_PERIOD_MINITES);
     /**
@@ -180,7 +210,7 @@ public abstract class CodeRepositoryCache {
     public static CachedMap<String, List<? extends IUserUnit>> userUnitsMap =
         new CachedMap<>(
             (userCode)-> {
-                List<? extends IUserUnit> userUnits = userUnitsRepo.getCachedObject();
+                List<? extends IUserUnit> userUnits = userUnitRepo.getCachedObject();
                 if(userUnits == null)
                     return null;
                 List<IUserUnit> uus = new ArrayList<>(16);
@@ -197,7 +227,7 @@ public abstract class CodeRepositoryCache {
      */
     public static CachedMap<String, List<IUserUnit>> unitUsersMap=
         new CachedMap<>((unitCode)-> {
-            List<? extends IUserUnit> userUnits = userUnitsRepo.getCachedObject();
+            List<? extends IUserUnit> userUnits = userUnitRepo.getCachedObject();
             if(userUnits == null)
                 return null;
             List<IUserUnit> uus = new ArrayList<>(16);

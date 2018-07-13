@@ -4,16 +4,11 @@ import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitPasswordEncoder;
-import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.framework.security.model.OptTreeNode;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.framework.staticsystem.security.StaticCentitUserDetails;
-import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.CachedObject;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
 
 import java.util.*;
 
@@ -39,6 +34,7 @@ public abstract class AbstractStaticPlatformEnvironment
         this.passwordEncoder = passwordEncoder;
     }
 
+    protected abstract void reloadDictionary();
     protected abstract List<DataDictionary> listAllDataDictionary();
     protected abstract List<UserRole> listAllUserRole();
 
@@ -90,7 +86,7 @@ public abstract class AbstractStaticPlatformEnvironment
             if (unit != null)
                 unit.addSubUnit((UnitInfo)ui);
         }
-        for (IUserUnit uu : CodeRepositoryCache.userUnitsRepo.getCachedObject()) {
+        for (IUserUnit uu : CodeRepositoryCache.userUnitRepo.getCachedObject()) {
             UserInfo user = (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedObject().get(uu.getUserCode());
             if (user != null)
                 user.addUserUnit((UserUnit)uu);
@@ -325,7 +321,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<UserUnit> listUserUnits(String userCode) {
         List<UserUnit> userUnits = new ArrayList<>(10);
-        for (IUserUnit uu : CodeRepositoryCache.userUnitsRepo.getCachedObject()) {
+        for (IUserUnit uu : CodeRepositoryCache.userUnitRepo.getCachedObject()) {
             if(StringUtils.equals(userCode,uu.getUserCode())){
                 userUnits.add((UserUnit)uu);
             }
@@ -336,7 +332,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<UserUnit> listUnitUsers(String unitCode) {
         List<UserUnit> unitUsers = new ArrayList<>(10);
-        for (IUserUnit uu : CodeRepositoryCache.userUnitsRepo.getCachedObject()) {
+        for (IUserUnit uu : CodeRepositoryCache.userUnitRepo.getCachedObject()) {
             if(StringUtils.equals(unitCode,uu.getUnitCode())){
                 unitUsers.add((UserUnit)uu);
             }
@@ -412,46 +408,6 @@ public abstract class AbstractStaticPlatformEnvironment
         return null;
     }
 
-    @Override
-    public boolean reloadSecurityMetadata() {
-        CentitSecurityMetadata.optMethodRoleMap.clear();
-        List<? extends IRolePower> rolepowers =  CodeRepositoryCache.rolePowerRepo.getCachedObject();
-        if(rolepowers==null || rolepowers.size()==0)
-            return false;
-        for(IRolePower rp: rolepowers){
-            List<ConfigAttribute/*roleCode*/> roles = CentitSecurityMetadata.optMethodRoleMap.get(rp.getOptCode());
-            if(roles == null){
-                roles = new ArrayList</*roleCode*/>();
-            }
-            roles.add(new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + StringUtils.trim(rp.getRoleCode())));
-            CentitSecurityMetadata.optMethodRoleMap.put(rp.getOptCode(), roles);
-        }
-        //将操作和角色对应关系中的角色排序，便于权限判断中的比较
-        CentitSecurityMetadata.sortOptMethodRoleMap();
-
-
-        CentitSecurityMetadata.optTreeNode.setChildList(null);
-        CentitSecurityMetadata.optTreeNode.setOptCode(null);
-        for(IOptMethod ou : CodeRepositoryCache.optMethodRepo.getCachedObject()){
-            IOptInfo oi = CodeRepositoryCache.codeToOptMap.getCachedObject().get(ou.getOptId());
-            if(oi!=null){
-                String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());
-                List<List<String>> sOpt = CentitSecurityMetadata.parsePowerDefineUrl(
-                        optDefUrl,ou.getOptReq());
-
-                for(List<String> surls : sOpt){
-                    OptTreeNode opt = CentitSecurityMetadata.optTreeNode;
-                    for(String surl : surls)
-                        opt = opt.setChildPath(surl);
-                    opt.setOptCode(ou.getOptCode());
-                }
-            }
-        }
-
-        CentitSecurityMetadata.confirmLoginCasMustBeAuthed();
-
-        return true;
-    }
 
     @Override
     public UserSetting getUserSetting(String userCode, String paramCode) {

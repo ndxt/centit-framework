@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.ExtendedQueryPool;
-import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.database.utils.DataSourceDescription;
@@ -36,12 +35,6 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
     public void close(Connection conn){
         DbcpConnectPools.closeConnect(conn);
-    }
-
-    public void init(){
-
-        reloadDictionary();
-        reloadSecurityMetadata();
     }
 
     private <T> List<T> jsonArrayToObjectList(JSONArray jsonArray, Class<T> clazz) {
@@ -97,7 +90,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             JSONArray userUnitJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                     CodeRepositoryUtil.getExtendedSql("LIST_ALL_USERUNIT"));
             List<UserUnit> userunits = jsonArrayToObjectList(userUnitJSONArray, UserUnit.class);
-            CodeRepositoryCache.userUnitsRepo.setFreshtDate(userunits);
+            CodeRepositoryCache.userUnitRepo.setFreshtDate(userunits);
 
             JSONArray dataCatalogsJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                     CodeRepositoryUtil.getExtendedSql("LIST_ALL_DATACATALOG"));
@@ -116,15 +109,13 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
      *
      * @return  boolean 刷新数据字典
      */
-    @Override
-    public boolean reloadDictionary() {
+    protected void reloadDictionary() {
         try {
             loadConfigFromJdbc();
         } catch (IOException | SQLException | DocumentException e) {
            logger.error(e.getLocalizedMessage());
         }
         organizeDictionaryData();
-        return true;
     }
 
     /**
