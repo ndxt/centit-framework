@@ -5,6 +5,7 @@ import com.centit.framework.common.ResponseSingleData;
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.PlatformEnvironment;
+import com.centit.framework.security.model.CentitSecurityMetadata;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,13 +41,14 @@ public class EnvironmentController extends BaseController {
 
     @RequestMapping(value ="/reload/securitymetadata",method = RequestMethod.GET)
     public void reloadSecurityMetadata(HttpServletResponse response) {
-        CodeRepositoryCache.evictAllCache();
+        CentitSecurityMetadata.evictAllCache();
         JsonResultUtils.writeMessageJson("权限相关缓存失效！", response);
     }
 
     @RequestMapping(value ="/reload/refreshall",method = RequestMethod.GET)
     public void environmentRefreshAll(HttpServletResponse response) {
         CodeRepositoryCache.evictAllCache();
+        CentitSecurityMetadata.evictAllCache();
         JsonResultUtils.writeMessageJson("缓存全部失效！", response);
     }
 

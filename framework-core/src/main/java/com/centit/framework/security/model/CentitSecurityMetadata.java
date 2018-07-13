@@ -9,6 +9,8 @@ import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.CachedObject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 
@@ -23,7 +25,7 @@ public class CentitSecurityMetadata {
         new CachedObject<>( CentitSecurityMetadata ::reloadOptTreeNode,
             CodeRepositoryCache.CACHE_FRESH_PERIOD_MINITES);
 
-    public static final CachedObject<Map<String/*optCode*/,List<ConfigAttribute/*roleCode*/>>>
+    public static final CachedObject<Map<String,List<ConfigAttribute>>>
         optMethodRoleMapCache = new CachedObject<>( CentitSecurityMetadata ::reloadOptMethodRoleMap,
             CodeRepositoryCache.CACHE_FRESH_PERIOD_MINITES);
 
@@ -32,7 +34,7 @@ public class CentitSecurityMetadata {
         optMethodRoleMapCache.evictObject();
     }
 
-    public static OptTreeNode reloadOptTreeNode(){
+    private static Pair<OptTreeNode, Map<String ,List<ConfigAttribute >>> reloadSecurityMetadata(){
         OptTreeNode optTreeNode = new OptTreeNode();
         for(IOptMethod ou : CodeRepositoryCache.optMethodRepo.getCachedObject()){
             IOptInfo oi = CodeRepositoryCache.codeToOptMap.getCachedObject().get(ou.getOptId());
@@ -49,11 +51,7 @@ public class CentitSecurityMetadata {
                 }
             }
         }
-        CentitSecurityMetadata.confirmLoginCasMustBeAuthed(optTreeNode, optMethodRoleMapCache.getCachedObject());
-        return optTreeNode;
-    }
 
-    public static Map<String/*optCode*/,List<ConfigAttribute/*roleCode*/>> reloadOptMethodRoleMap() {
         Map<String/*optCode*/,List<ConfigAttribute/*roleCode*/>> optMethodRoleMap
         = new HashMap<>(100);
         List<? extends IRolePower> rolepowers =  CodeRepositoryCache.rolePowerRepo.getCachedObject();
@@ -67,14 +65,38 @@ public class CentitSecurityMetadata {
             roles.add(new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + StringUtils.trim(rp.getRoleCode())));
             optMethodRoleMap.put(rp.getOptCode(), roles);
         }
+
+        CentitSecurityMetadata.confirmLoginCasMustBeAuthed(optTreeNode,optMethodRoleMap);
+
         //将操作和角色对应关系中的角色排序，便于权限判断中的比较
-        CentitSecurityMetadata.sortOptMethodRoleMap(optMethodRoleMap);
-        return optMethodRoleMap;
+        for(Map.Entry<String ,List<ConfigAttribute >> roleMap : optMethodRoleMap.entrySet()){
+            //排序便于后面比较
+            roleMap.getValue().sort(
+                Comparator.comparing(ConfigAttribute::getAttribute));
+        }
+        //测试比较排序效果
+        return new ImmutablePair<>( optTreeNode , optMethodRoleMap);
     }
+
     /**
-     * 设置为true时，将url分配到菜单后 该url需要授权才能访问；
+     * 这两个缓存式 耦合的 需要同时刷新
+     * @return 同时刷新缓存
+     */
+    private static OptTreeNode reloadOptTreeNode(){
+        Pair<OptTreeNode, Map<String ,List<ConfigAttribute >>>  securityData =  reloadSecurityMetadata();
+        optMethodRoleMapCache.setFreshtDate(securityData.getRight());
+        return securityData.getLeft();
+    }
+
+    private static Map<String,List<ConfigAttribute>>  reloadOptMethodRoleMap(){
+        Pair<OptTreeNode, Map<String ,List<ConfigAttribute >>>  securityData =  reloadSecurityMetadata();
+        optTreeNodeCache.setFreshtDate(securityData.getLeft());
+        return securityData.getRight();
+    }
+
+    /**
+     * @param isForbiddenWhenAssigned 设置为true时，将url分配到菜单后 该url需要授权才能访问；
      * 设置为false时，将url分配到菜单后不会对该url进行拦截，只有将该url分配给某个角色，其他角色才会被拦截
-     * @param isForbiddenWhenAssigned
      */
     public static void setIsForbiddenWhenAssigned(boolean isForbiddenWhenAssigned){
         CentitSecurityMetadata.isForbiddenWhenAssigned = isForbiddenWhenAssigned;
@@ -142,9 +164,8 @@ public class CentitSecurityMetadata {
         return swords;
     }
 
-    public static String matchUrlToOpt(String sUrl, String httpMethod){
+    private static String matchUrlToOpt(OptTreeNode curOpt , String sUrl, String httpMethod){
         List<String> urls = parseRequestUrl(sUrl,httpMethod);
-        OptTreeNode curOpt = optTreeNodeCache.getCachedObject();
         for(String s: urls){
             if(curOpt.childList == null) {
                 return curOpt.optCode;
@@ -162,6 +183,11 @@ public class CentitSecurityMetadata {
             return curOpt.optCode;
         }
         return null;
+    }
+
+
+    public static String matchUrlToOpt(String sUrl, String httpMethod){
+        return matchUrlToOpt(optTreeNodeCache.getCachedObject(), sUrl, httpMethod);
     }
     //public abstract void loadRoleSecurityMetadata();
     public static String matchUrlToOpt(String sUrl,HttpServletRequest request){
@@ -198,25 +224,14 @@ public class CentitSecurityMetadata {
         System.out.println("--------------------------------");
     }
 
-    /**
-     * 将操作和角色对应关系中的角色排序，便于权限判断中的比较
-     */
-    public static void sortOptMethodRoleMap(Map<String ,List<ConfigAttribute >> optMethodRoleMap){
-        //测试比较排序效果
-        for(Map.Entry<String ,List<ConfigAttribute >> roleMap : optMethodRoleMap.entrySet()){
-          //排序便于后面比较
-            Collections.sort(roleMap.getValue(),
-                    Comparator.comparing(ConfigAttribute::getAttribute));
-        }
-        //测试比较排序效果
-    }
 
-    public static void confirmLoginCasMustBeAuthed(OptTreeNode optTreeNode,
+
+    private static void confirmLoginCasMustBeAuthed(OptTreeNode optTreeNode,
                                                    Map<String ,List<ConfigAttribute >> optMethodRoleMap){
         /**
          * 添加 logincas 的角色定义
          */
-        String loginCasOptCode = matchUrlToOpt("/system/mainframe/logincas","GET");
+        String loginCasOptCode = matchUrlToOpt(optTreeNode,"/system/mainframe/logincas","GET");
         if(StringUtils.isBlank(loginCasOptCode)){
             loginCasOptCode = "logincas";
             List<List<String>> sOpt = parsePowerDefineUrl(
