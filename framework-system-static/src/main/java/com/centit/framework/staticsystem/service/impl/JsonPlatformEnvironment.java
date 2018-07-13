@@ -69,7 +69,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
     /**
      * 刷新数据字典
      */
-    protected synchronized void reloadDictionary() {
+    protected synchronized void reloadPlatformData() {
         try {
             CodeRepositoryCache.evictAllCache();
             String jsonstr = loadJsonStringFormConfigFile("/static_system_config.json");

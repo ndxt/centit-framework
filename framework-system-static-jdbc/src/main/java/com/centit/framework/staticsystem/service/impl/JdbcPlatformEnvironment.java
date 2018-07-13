@@ -106,7 +106,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
     /**
      * 刷新数据字典
      */
-    protected synchronized void reloadDictionary() {
+    protected synchronized void reloadPlatformData() {
         try {
             CodeRepositoryCache.evictAllCache();
             loadConfigFromJdbc();

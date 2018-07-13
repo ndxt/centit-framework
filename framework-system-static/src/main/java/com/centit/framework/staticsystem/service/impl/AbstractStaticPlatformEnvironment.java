@@ -25,7 +25,7 @@ public abstract class AbstractStaticPlatformEnvironment
             CodeRepositoryCache.CACHE_NEVER_EXPIRE );
 
     public CachedObject<List<StaticCentitUserDetails>> allUserDetailsRepo =
-        new CachedObject<>(()-> { this.reloadDictionary(); return null;},
+        new CachedObject<>(()-> { this.reloadPlatformData(); return null;},
             CodeRepositoryCache.CACHE_NEVER_EXPIRE );
 
     protected CentitPasswordEncoder passwordEncoder;
@@ -34,7 +34,7 @@ public abstract class AbstractStaticPlatformEnvironment
         this.passwordEncoder = passwordEncoder;
     }
 
-    protected abstract void reloadDictionary();
+    protected abstract void reloadPlatformData();
 
     @SuppressWarnings("unchecked")
     protected void organizeDictionaryData() {
@@ -457,25 +457,25 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public List<? extends IUserInfo> listAllUsers() {
-        reloadDictionary();
+        reloadPlatformData();
         return CodeRepositoryCache.userInfoRepo.getCachedObject();
     }
 
     @Override
     public List<? extends IUnitInfo> listAllUnits() {
-        reloadDictionary();
+        reloadPlatformData();
         return CodeRepositoryCache.unitInfoRepo.getCachedObject();
     }
 
     @Override
     public List<? extends IUserUnit> listAllUserUnits(){
-        reloadDictionary();
+        reloadPlatformData();
         return CodeRepositoryCache.userUnitRepo.getCachedObject();
     }
 
     @Override
     public List<? extends IDataCatalog> listAllDataCatalogs(){
-        reloadDictionary();
+        reloadPlatformData();
         return CodeRepositoryCache.catalogRepo.getCachedObject();
     }
 
@@ -486,7 +486,7 @@ public abstract class AbstractStaticPlatformEnvironment
      */
     @Override
     public List<? extends IRoleInfo> listAllRoleInfo() {
-        reloadDictionary();
+        reloadPlatformData();
         return CodeRepositoryCache.roleInfoRepo.getCachedObject();
     }
 
@@ -497,7 +497,7 @@ public abstract class AbstractStaticPlatformEnvironment
      */
     @Override
     public List<? extends IOptInfo> listAllOptInfo() {
-        reloadDictionary();
+        reloadPlatformData();
         return CodeRepositoryCache.optInfoRepo.getCachedObject();
     }
 
@@ -507,17 +507,17 @@ public abstract class AbstractStaticPlatformEnvironment
      */
     @Override
     public List<? extends IRolePower> listAllRolePower(){
-        reloadDictionary();
+        reloadPlatformData();
         return CodeRepositoryCache.rolePowerRepo.getCachedObject();
     }
 
     protected List<DataDictionary> listAllDataDictionary() {
-        reloadDictionary();
+        reloadPlatformData();
         return allDictionaryRepo.getCachedObject();
     }
 
     protected List<UserRole> listAllUserRole() {
-        reloadDictionary();
+        reloadPlatformData();
         return allUserRoleRepo.getCachedObject();
     }
     /**
@@ -526,7 +526,7 @@ public abstract class AbstractStaticPlatformEnvironment
      */
     @Override
     public List<? extends IOptMethod> listAllOptMethod(){
-        reloadDictionary();
+        reloadPlatformData();
         return CodeRepositoryCache.optMethodRepo.getCachedObject();
     }
 
