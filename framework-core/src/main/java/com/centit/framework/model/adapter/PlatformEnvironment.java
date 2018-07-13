@@ -64,26 +64,7 @@ public interface PlatformEnvironment {
      * @return  List 用户所有菜单功能
      */
     List<? extends IUnitRole> listRoleUnits(String roleCode);
-    /**
-     * 根据用户代码获取用户信息，
-     * @param userCode userCode
-     * @return 用户信息
-     */
-    IUserInfo getUserInfoByUserCode(String userCode);
 
-    /**
-     * 根据登录名获取用户信息，
-     * @param  loginName loginName
-     * @return 登录名获取用户信息
-     */
-    IUserInfo getUserInfoByLoginName(String loginName);
-
-    /**
-     * 根据用户代码获取用户信息，
-     * @param unitCode unitCode
-     * @return 用户信息
-     */
-    IUnitInfo getUnitInfoByUnitCode(String unitCode);
     /**
      * 修改用户密码
      * @param userCode userCode

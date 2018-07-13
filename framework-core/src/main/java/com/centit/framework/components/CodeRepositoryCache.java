@@ -2,6 +2,7 @@ package com.centit.framework.components;
 
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
+import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
 import org.apache.commons.lang3.StringUtils;
@@ -17,13 +18,15 @@ import java.util.Map;
 
 /**
  * cp标签实现类，并可以通过静态方法直接调用系统缓存
- *
+ * 框架所有数据缓存的地方  缓存时间默认为半小时
  * @author codefan@sina.com
- * 2015-11-3
+ * 2018-6-3
  */
 public abstract class CodeRepositoryCache {
 
-    private final static int CACHE_FRESH_PERIOD_MINITES = 15;
+    public final static int CACHE_FRESH_PERIOD_MINITES = 15;
+    public final static int CACHE_NEVER_EXPIRE = 365 * 24 * 60;
+
     private CodeRepositoryCache()
     {
         throw new IllegalAccessError("Utility class");
@@ -38,24 +41,32 @@ public abstract class CodeRepositoryCache {
         return ctx.getBean(beanName, clazz);
     }
 
+
     private static PlatformEnvironment platformEnvironment = null;
+
+    public static void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
+        if(platformEnvironment!=null) {
+            CodeRepositoryCache.platformEnvironment = platformEnvironment;
+        }
+    }
 
     private static PlatformEnvironment getPlatformEnvironment() {
         if(platformEnvironment==null)
             platformEnvironment = getCtxBean("platformEnvironment", PlatformEnvironment.class);
+        //Assert.checkNonNull(platformEnvironment);
         return platformEnvironment;
     }
 
     /**
      * 缓存用户信息
      */
-    private static CachedObject<List<? extends IUserInfo>> userInfoRepo =
+    public static CachedObject<List<? extends IUserInfo>> userInfoRepo =
         new CachedObject<>(()-> getPlatformEnvironment().listAllUsers(),
             CACHE_FRESH_PERIOD_MINITES);
     /**
      * 派生的缓存信息，派生缓存相当于索引
      */
-    private static CachedObject<Map<String, ? extends IUserInfo>> codeToUserMap =
+    public static CachedObject<Map<String, ? extends IUserInfo>> codeToUserMap =
         new CachedObject<>(()-> {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedObject();
             if(userInfos == null)
@@ -67,7 +78,7 @@ public abstract class CodeRepositoryCache {
             return codeToUser;
         },CACHE_FRESH_PERIOD_MINITES);
 
-    private static CachedObject<Map<String, ? extends IUserInfo>> loginNameToUserMap =
+    public static CachedObject<Map<String, ? extends IUserInfo>> loginNameToUserMap =
         new CachedObject<>(()-> {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedObject();
             if(userInfos == null)
@@ -79,7 +90,7 @@ public abstract class CodeRepositoryCache {
             return codeToUser;
         },CACHE_FRESH_PERIOD_MINITES);
 
-    private static CachedObject<Map<String, ? extends IUserInfo>> emailToUserMap  =
+    public static CachedObject<Map<String, ? extends IUserInfo>> emailToUserMap  =
         new CachedObject<>(()-> {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedObject();
             if(userInfos == null)
@@ -93,7 +104,7 @@ public abstract class CodeRepositoryCache {
             return codeToUser;
         },CACHE_FRESH_PERIOD_MINITES);
 
-    private static CachedObject<Map<String, ? extends IUserInfo>> phoneToUserMap =
+    public static CachedObject<Map<String, ? extends IUserInfo>> phoneToUserMap =
         new CachedObject<>(()-> {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedObject();
             if(userInfos == null)
@@ -107,7 +118,7 @@ public abstract class CodeRepositoryCache {
             return codeToUser;
         },CACHE_FRESH_PERIOD_MINITES);
 
-    private static CachedObject<Map<String, ? extends IUserInfo>> idcardToUserMap =
+    public static CachedObject<Map<String, ? extends IUserInfo>> idcardToUserMap =
         new CachedObject<>(()-> {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedObject();
             if(userInfos == null)
@@ -124,14 +135,18 @@ public abstract class CodeRepositoryCache {
     /**
      * 缓存机构信息
      */
-    private static CachedObject<List<? extends IUnitInfo>> unitInfoRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllUnits(),
-            CACHE_FRESH_PERIOD_MINITES);
+    public static CachedObject<List<? extends IUnitInfo>> unitInfoRepo =
+        new CachedObject<>(()->{
+            List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits();
+            CollectionsOpt.sortAsTree(allunits,
+                ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
+            return allunits;
+         }, CACHE_FRESH_PERIOD_MINITES);
 
     /**
      * 机构的派生缓存
      */
-    private static CachedObject<Map<String, ? extends IUnitInfo>> codeToUnitMap =
+    public static CachedObject<Map<String, ? extends IUnitInfo>> codeToUnitMap =
         new CachedObject<>(()-> {
             List<? extends IUnitInfo> unitInfos = unitInfoRepo.getCachedObject();
             if(unitInfos == null)
@@ -143,39 +158,68 @@ public abstract class CodeRepositoryCache {
             return codeToUnit;
         },CACHE_FRESH_PERIOD_MINITES);
 
-    private static CachedObject<List<? extends IUserUnit>> userUnitsRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(),
-            CACHE_FRESH_PERIOD_MINITES);
-
-    private static CachedMap<String, List<? extends IUserUnit>> userUnitsMap =
-        new CachedMap<>(
-            (key)-> getPlatformEnvironment().listUserUnits(key),
-            CACHE_FRESH_PERIOD_MINITES * 2, 300);
-
-    private static CachedObject<Map<String, List<IUserUnit>>> unitUsersMap=
+    public static CachedObject<Map<String, ? extends IUnitInfo>> depNoToUnitMap =
         new CachedObject<>(()-> {
-            List<? extends IUserUnit> userUnits = userUnitsRepo.getCachedObject();
-            if(userUnits == null)
+            List<? extends IUnitInfo> unitInfos = unitInfoRepo.getCachedObject();
+            if(unitInfos == null)
                 return null;
-            Map<String, List<IUserUnit>> unitToUser =
-                new HashMap<>(userUnits.size() >10 ? userUnits.size() : 10);
-            for(IUserUnit uu : userUnits){
-                List<IUserUnit> uus = unitToUser.get(uu.getUnitCode());
-                if(uus==null){
-                    uus = new ArrayList<>(16);
-                }
-                uus.add( uu );
-                unitToUser.put(uu.getUnitCode(), uus);
+            Map<String, IUnitInfo> codeToUnit = new HashMap<>(unitInfos.size());
+            for(IUnitInfo unitInfo : unitInfos){
+                codeToUnit.put(unitInfo.getDepNo(), unitInfo);
             }
-            return unitToUser;
+            return codeToUnit;
         },CACHE_FRESH_PERIOD_MINITES);
 
 
+    public static CachedObject<List<? extends IUserUnit>> userUnitsRepo =
+        new CachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(),
+            CACHE_FRESH_PERIOD_MINITES);
+    /**
+     * 派生缓存
+     */
+    public static CachedMap<String, List<? extends IUserUnit>> userUnitsMap =
+        new CachedMap<>(
+            (userCode)-> {
+                List<? extends IUserUnit> userUnits = userUnitsRepo.getCachedObject();
+                if(userUnits == null)
+                    return null;
+                List<IUserUnit> uus = new ArrayList<>(16);
+                for(IUserUnit uu : userUnits){
+                    if(StringUtils.equals(userCode, uu.getUserCode())){
+                        uus.add( uu );
+                    }
+                }
+                return uus;
+            },
+            CACHE_FRESH_PERIOD_MINITES, 300);
+    /**
+     * 派生缓存
+     */
+    public static CachedMap<String, List<IUserUnit>> unitUsersMap=
+        new CachedMap<>((unitCode)-> {
+            List<? extends IUserUnit> userUnits = userUnitsRepo.getCachedObject();
+            if(userUnits == null)
+                return null;
+            List<IUserUnit> uus = new ArrayList<>(16);
+            for(IUserUnit uu : userUnits){
+                if(StringUtils.equals(unitCode, uu.getUnitCode() )){
+                    uus.add( uu );
+                }
+            }
+            return uus;
+        },CACHE_FRESH_PERIOD_MINITES, 100);
 
+
+    public static CachedObject<List< ? extends IDataCatalog>> catalogRepo  =
+        new CachedObject<>(()-> getPlatformEnvironment().listAllDataCatalogs(),
+            CACHE_FRESH_PERIOD_MINITES);
+    /**
+     * 派生缓存，避免对象重复
+     */
     public static CachedObject<Map<String, ? extends IDataCatalog>> codeToCatalogMap  =
         new CachedObject<>(()-> {
                 Map<String, IDataCatalog> dataCatalogMap = new HashMap<>();
-                List<? extends IDataCatalog> dataCatalogs = getPlatformEnvironment().listAllDataCatalogs();
+                List<? extends IDataCatalog> dataCatalogs = catalogRepo.getCachedObject();
                 if(dataCatalogs==null)
                     return dataCatalogMap;
                 for( IDataCatalog dataCatalog : dataCatalogs){
@@ -185,11 +229,15 @@ public abstract class CodeRepositoryCache {
             },
             CACHE_FRESH_PERIOD_MINITES);
 
+
+    public static CachedMap<String, List<? extends IDataDictionary>> dictionaryRepo =
+        new CachedMap<>((sCatalog)->  getPlatformEnvironment().listDataDictionaries(sCatalog),
+            CACHE_FRESH_PERIOD_MINITES );
+
     public static CachedMap<String, Map<String,? extends IDataDictionary>> codeToDictionaryMap =
         new CachedMap<>((sCatalog)-> {
                 Map<String, IDataDictionary> dataDictionaryMap = new HashMap<>();
-                List<? extends IDataDictionary> dataDictionarys =
-                    getPlatformEnvironment().listDataDictionaries(sCatalog);
+                List<? extends IDataDictionary> dataDictionarys = dictionaryRepo.getCachedObject(sCatalog);
                 if(dataDictionarys==null)
                     return dataDictionaryMap;
                 for( IDataDictionary data : dataDictionarys){
@@ -199,28 +247,77 @@ public abstract class CodeRepositoryCache {
             },
             CACHE_FRESH_PERIOD_MINITES);
 
-    public static CachedMap<String, List<? extends IUserRole>> userRolesMapnew =
+
+    public static CachedObject<List<? extends IRoleInfo>> roleInfoRepo=
+        new CachedObject<>(()-> getPlatformEnvironment().listAllRoleInfo(),
+            CACHE_FRESH_PERIOD_MINITES);
+
+    public static CachedObject<Map<String, ? extends IRoleInfo>> codeToRoleMap=
+            new CachedObject<>(()-> {
+                Map<String, IRoleInfo> codeMap = new HashMap<>();
+                List<? extends IRoleInfo> roleInfos = roleInfoRepo.getCachedObject();
+                if(roleInfos==null)
+                    return codeMap;
+                for( IRoleInfo data : roleInfos){
+                    codeMap.put(data.getRoleCode(), data);
+                }
+                return codeMap;
+            },
+            CACHE_FRESH_PERIOD_MINITES);
+
+    public static CachedObject<List<? extends IOptInfo>> optInfoRepo=
+        new CachedObject<>(()-> getPlatformEnvironment().listAllOptInfo(),
+            CACHE_FRESH_PERIOD_MINITES);
+
+    public static CachedObject<Map<String, ? extends IOptInfo>> codeToOptMap=
+        new CachedObject<>(()-> {
+            Map<String, IOptInfo> codeMap = new HashMap<>();
+            List<? extends IOptInfo> optInfos = optInfoRepo.getCachedObject();
+            if(optInfos==null)
+                return codeMap;
+            for( IOptInfo data : optInfos){
+                codeMap.put(data.getOptId(), data);
+            }
+            return codeMap;
+        }, CACHE_FRESH_PERIOD_MINITES);
+
+
+    public static CachedObject<List<? extends IOptMethod>> optMethodRepo=
+        new CachedObject<>(()-> getPlatformEnvironment().listAllOptMethod(),
+            CACHE_FRESH_PERIOD_MINITES);
+
+    public static CachedObject<Map<String, ? extends IOptMethod>> codeToMethodMap=
+        new CachedObject<>(()-> {
+            Map<String, IOptMethod> codeMap = new HashMap<>();
+            List<? extends IOptMethod> methods = optMethodRepo.getCachedObject();
+            if(methods==null)
+                return codeMap;
+            for( IOptMethod data : methods){
+                codeMap.put(data.getOptCode(), data);
+            }
+            return codeMap;
+        }, CACHE_FRESH_PERIOD_MINITES);
+
+
+    public static CachedMap<String, List<? extends IUserRole>> userRolesRepo =
         new CachedMap<>((sUserCode)-> getPlatformEnvironment().listUserRoles(sUserCode),
             CACHE_FRESH_PERIOD_MINITES);
 
-    public static CachedMap<String, List<? extends IUserRole>> roleUsersMap=
+    public static CachedMap<String, List<? extends IUserRole>> roleUsersRepo =
         new CachedMap<>((sRoleCode)-> getPlatformEnvironment().listRoleUsers(sRoleCode),
             CACHE_FRESH_PERIOD_MINITES);
 
-    public static CachedMap<String, List<? extends IUnitRole>> unitRolesMap=
+    public static CachedMap<String, List<? extends IUnitRole>> unitRolesRepo =
         new CachedMap<>((sUnitCode)-> getPlatformEnvironment().listUnitRoles(sUnitCode),
             CACHE_FRESH_PERIOD_MINITES);
 
-    public static CachedMap<String, List<? extends IUnitRole>> roleUnitsMap=
+    public static CachedMap<String, List<? extends IUnitRole>> roleUnitsRepo =
         new CachedMap<>((sRoleCode)-> getPlatformEnvironment().listRoleUnits(sRoleCode),
             CACHE_FRESH_PERIOD_MINITES);
 
-    public static CachedObject<List<? extends IRolePower>> allRolePower=
-        new CachedObject<>( ()-> getPlatformEnvironment().listAllRolePower(),
+    public static CachedObject<List<? extends IRolePower>> rolePowerRepo =
+        new CachedObject<>(()-> getPlatformEnvironment().listAllRolePower(),
             CACHE_FRESH_PERIOD_MINITES);
 
-    public static CachedObject<List<? extends IOptMethod>> allOptMethod=
-        new CachedObject<>(()-> getPlatformEnvironment().listAllOptMethod(),
-            CACHE_FRESH_PERIOD_MINITES);
 
 }

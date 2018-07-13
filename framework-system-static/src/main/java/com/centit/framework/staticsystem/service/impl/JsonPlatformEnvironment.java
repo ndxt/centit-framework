@@ -2,9 +2,8 @@ package com.centit.framework.staticsystem.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.framework.model.basedata.IOptInfo;
-import com.centit.framework.model.basedata.IRoleInfo;
+import com.centit.framework.components.CodeRepositoryCache;
+import com.centit.framework.model.basedata.*;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.file.FileIOOpt;
 import com.centit.support.file.FileSystemOpt;
@@ -14,18 +13,15 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
-    implements PlatformEnvironment {
+public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
     private static Log logger = LogFactory.getLog(JsonPlatformEnvironment.class);
 
     public void init(){
         reloadDictionary();
         reloadSecurityMetadata();
-        //reloadIPEnvironmen();
     }
 
     protected String appHome;
@@ -34,18 +30,36 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
         this.appHome = appHome;
     }
 
-    public void loadConfigFromJSONString(String jsonStr){
+    private void loadConfigFromJSONString(String jsonStr){
         JSONObject json = JSON.parseObject(jsonStr);
-        userinfos = JSON.parseArray(json.getString("userInfos"), UserInfo.class);
-        optinfos = JSON.parseArray(json.getString("optInfos"), OptInfo.class);
-        optmethods = JSON.parseArray(json.getString("optMethods"), OptMethod.class);
-        roleinfos = JSON.parseArray(json.getString("roleInfos"), RoleInfo.class);
-        rolepowers = JSON.parseArray(json.getString("rolePowers"), RolePower.class);
-        userroles = JSON.parseArray(json.getString("userRoles"), UserRole.class);
-        unitinfos = JSON.parseArray(json.getString("unitInfos"), UnitInfo.class);
-        userunits = JSON.parseArray(json.getString("userUnits"), UserUnit.class);
-        datacatalogs = JSON.parseArray(json.getString("dataCatalogs"), DataCatalog.class);
-        datadictionaies = JSON.parseArray(json.getString("dataDictionaries"), DataDictionary.class);
+        List<UserInfo>  userinfos = JSON.parseArray(json.getString("userInfos"), UserInfo.class);
+        CodeRepositoryCache.userInfoRepo.setFreshtDate(userinfos);
+
+        List<OptInfo> optinfos = JSON.parseArray(json.getString("optInfos"), OptInfo.class);
+        CodeRepositoryCache.optInfoRepo.setFreshtDate(optinfos);
+
+        List<OptMethod> optmethods = JSON.parseArray(json.getString("optMethods"), OptMethod.class);
+        CodeRepositoryCache.optMethodRepo.setFreshtDate(optmethods);
+
+        List<RoleInfo> roleinfos = JSON.parseArray(json.getString("roleInfos"), RoleInfo.class);
+        CodeRepositoryCache.roleInfoRepo.setFreshtDate(roleinfos);
+
+        List<RolePower> rolepowers = JSON.parseArray(json.getString("rolePowers"), RolePower.class);
+        CodeRepositoryCache.rolePowerRepo.setFreshtDate(rolepowers);
+
+        List<UserRole> userroles = JSON.parseArray(json.getString("userRoles"), UserRole.class);
+        allUserRoleRepo.setFreshtDate(userroles);
+
+        List<UnitInfo> unitinfos = JSON.parseArray(json.getString("unitInfos"), UnitInfo.class);
+        CodeRepositoryCache.unitInfoRepo.setFreshtDate(unitinfos);
+
+        List<UserUnit> userunits = JSON.parseArray(json.getString("userUnits"), UserUnit.class);
+        CodeRepositoryCache.userUnitsRepo.setFreshtDate(userunits);
+
+        List<DataCatalog> datacatalogs = JSON.parseArray(json.getString("dataCatalogs"), DataCatalog.class);
+        CodeRepositoryCache.catalogRepo.setFreshtDate(datacatalogs);
+        List<DataDictionary> datadictionaies = JSON.parseArray(json.getString("dataDictionaries"), DataDictionary.class);
+        allDictionaryRepo.setFreshtDate(datadictionaies);
     }
 
     public String loadJsonStringFormConfigFile(String fileName) throws IOException {
@@ -53,10 +67,8 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
         if(FileSystemOpt.existFile(jsonFile)) {
             return FileIOOpt.readStringFromFile(jsonFile,"UTF-8");
         }else{
-
             return FileIOOpt.readStringFromInputStream(
                     new ClassPathResource(fileName).getInputStream(),"UTF-8");
-
         }
     }
     /**
@@ -70,28 +82,18 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
             String jsonstr = loadJsonStringFormConfigFile("/static_system_config.json");
             loadConfigFromJSONString(jsonstr);
         } catch (IOException e) {
-            userinfos = new ArrayList<>();
-            optinfos = new ArrayList<>();
-            optmethods = new ArrayList<>();
-            roleinfos = new ArrayList<>();
-            rolepowers = new ArrayList<>();
-            userroles = new ArrayList<>();
-            unitinfos = new ArrayList<>();
-            userunits = new ArrayList<>();
-            datacatalogs = new ArrayList<>();
-            datadictionaies = new ArrayList<>();
-            e.printStackTrace();
+            logger.error(e.getLocalizedMessage());
         }
         organizeDictionaryData();
-
         //static_system_user_pwd.json
         try {
             String jsonStr = loadJsonStringFormConfigFile("/static_system_user_pwd.json");
             JSONObject json = JSON.parseObject(jsonStr);
-            for(UserInfo u :userinfos){
+            for(IUserInfo u :CodeRepositoryCache.userInfoRepo.getCachedObject()){
+
                 String spwd = json.getString(u.getUserCode());
                 if(StringUtils.isNotBlank(spwd))
-                    u.setUserPin(spwd);
+                    ((UserInfo)u).setUserPin(spwd);
             }
         } catch (IOException e) {
             logger.error(e.getMessage(),e);
@@ -108,7 +110,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
      */
     @Override
     public void changeUserPassword(String userCode, String userPassword) {
-        UserInfo ui= getUserInfoByUserCode(userCode);
+        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedObject().get(userCode);
         if(ui==null)
             return;
         JSONObject json = null;
@@ -130,5 +132,95 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment
             logger.error(e.getMessage(),e);
         }
     }
+
+    @Override
+    public List<? extends IUserInfo> listAllUsers() {
+        reloadDictionary();
+        return CodeRepositoryCache.userInfoRepo.getCachedObject();
+    }
+
+    @Override
+    public List<? extends IUnitInfo> listAllUnits() {
+        reloadDictionary();
+        return CodeRepositoryCache.unitInfoRepo.getCachedObject();
+    }
+
+    @Override
+    public List<? extends IUserUnit> listAllUserUnits() {
+        reloadDictionary();
+        return CodeRepositoryCache.userUnitsRepo.getCachedObject();
+    }
+
+
+    @Override
+    public List<? extends IDataCatalog> listAllDataCatalogs() {
+        reloadDictionary();
+        return CodeRepositoryCache.catalogRepo.getCachedObject();
+    }
+
+    /**
+     * 获取所有角色信息
+     *
+     * @return List 操作方法信息
+     */
+    @Override
+    public List<? extends IRoleInfo> listAllRoleInfo() {
+        reloadDictionary();
+        return CodeRepositoryCache.roleInfoRepo.getCachedObject();
+    }
+
+    /**
+     * 获取业务操作信息
+     *
+     * @return List 业务信息
+     */
+    @Override
+    public List<? extends IOptInfo> listAllOptInfo() {
+        reloadDictionary();
+        return CodeRepositoryCache.optInfoRepo.getCachedObject();
+    }
+
+    /**
+     * 获取所有角色和权限对应关系
+     * @return List 操作方法信息
+     */
+    @Override
+    public List<? extends IRolePower> listAllRolePower(){
+        reloadDictionary();
+        return CodeRepositoryCache.rolePowerRepo.getCachedObject();
+    }
+
+    @Override
+    protected List<DataDictionary> listAllDataDictionary() {
+        reloadDictionary();
+        return allDictionaryRepo.getCachedObject();
+    }
+
+    @Override
+    protected List<UserRole> listAllUserRole() {
+        reloadDictionary();
+        return allUserRoleRepo.getCachedObject();
+    }
+    /**
+     * 获取操作方法信息
+     * @return List 操作方法信息
+     */
+    @Override
+    public List<? extends IOptMethod> listAllOptMethod(){
+        reloadDictionary();
+        return CodeRepositoryCache.optMethodRepo.getCachedObject();
+    }
+
+
+    @Override
+    public List<? extends IUnitRole> listUnitRoles(String unitCode) {
+        return null;
+    }
+
+    @Override
+    public List<? extends IUnitRole> listRoleUnits(String roleCode) {
+        return null;
+    }
+
 
 }
