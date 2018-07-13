@@ -113,7 +113,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         } catch (IOException | SQLException | DocumentException e) {
            logger.error(e.getLocalizedMessage());
         }
-        organizeDictionaryData();
+        organizePlatformData();
     }
 
     /**

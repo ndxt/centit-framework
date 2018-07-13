@@ -77,7 +77,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         } catch (IOException e) {
             logger.error(e.getLocalizedMessage());
         }
-        organizeDictionaryData();
+        organizePlatformData();
         //static_system_user_pwd.json
         try {
             String jsonStr = loadJsonStringFormConfigFile("/static_system_user_pwd.json");

@@ -37,7 +37,7 @@ public abstract class AbstractStaticPlatformEnvironment
     protected abstract void reloadPlatformData();
 
     @SuppressWarnings("unchecked")
-    protected void organizeDictionaryData() {
+    protected void organizePlatformData() {
         for (IDataCatalog dd :  CodeRepositoryCache.catalogRepo.getCachedObject()) {
             ((DataCatalog)dd).setDataDictionaries(
                 (List<DataDictionary>) listDataDictionaries(dd.getCatalogCode()));
