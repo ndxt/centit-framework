@@ -3,7 +3,7 @@ package com.centit.framework.staticsystem.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryCache;
-import com.centit.framework.model.basedata.*;
+import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.file.FileIOOpt;
 import com.centit.support.file.FileSystemOpt;
@@ -69,8 +69,9 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
     /**
      * 刷新数据字典
      */
-    protected void reloadDictionary() {
+    protected synchronized void reloadDictionary() {
         try {
+            CodeRepositoryCache.evictAllCache();
             String jsonstr = loadJsonStringFormConfigFile("/static_system_config.json");
             loadConfigFromJSONString(jsonstr);
         } catch (IOException e) {
@@ -82,7 +83,6 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             String jsonStr = loadJsonStringFormConfigFile("/static_system_user_pwd.json");
             JSONObject json = JSON.parseObject(jsonStr);
             for(IUserInfo u :CodeRepositoryCache.userInfoRepo.getCachedObject()){
-
                 String spwd = json.getString(u.getUserCode());
                 if(StringUtils.isNotBlank(spwd))
                     ((UserInfo)u).setUserPin(spwd);
@@ -122,95 +122,5 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             logger.error(e.getMessage(),e);
         }
     }
-
-    @Override
-    public List<? extends IUserInfo> listAllUsers() {
-        reloadDictionary();
-        return CodeRepositoryCache.userInfoRepo.getCachedObject();
-    }
-
-    @Override
-    public List<? extends IUnitInfo> listAllUnits() {
-        reloadDictionary();
-        return CodeRepositoryCache.unitInfoRepo.getCachedObject();
-    }
-
-    @Override
-    public List<? extends IUserUnit> listAllUserUnits() {
-        reloadDictionary();
-        return CodeRepositoryCache.userUnitRepo.getCachedObject();
-    }
-
-
-    @Override
-    public List<? extends IDataCatalog> listAllDataCatalogs() {
-        reloadDictionary();
-        return CodeRepositoryCache.catalogRepo.getCachedObject();
-    }
-
-    /**
-     * 获取所有角色信息
-     *
-     * @return List 操作方法信息
-     */
-    @Override
-    public List<? extends IRoleInfo> listAllRoleInfo() {
-        reloadDictionary();
-        return CodeRepositoryCache.roleInfoRepo.getCachedObject();
-    }
-
-    /**
-     * 获取业务操作信息
-     *
-     * @return List 业务信息
-     */
-    @Override
-    public List<? extends IOptInfo> listAllOptInfo() {
-        reloadDictionary();
-        return CodeRepositoryCache.optInfoRepo.getCachedObject();
-    }
-
-    /**
-     * 获取所有角色和权限对应关系
-     * @return List 操作方法信息
-     */
-    @Override
-    public List<? extends IRolePower> listAllRolePower(){
-        reloadDictionary();
-        return CodeRepositoryCache.rolePowerRepo.getCachedObject();
-    }
-
-    @Override
-    protected List<DataDictionary> listAllDataDictionary() {
-        reloadDictionary();
-        return allDictionaryRepo.getCachedObject();
-    }
-
-    @Override
-    protected List<UserRole> listAllUserRole() {
-        reloadDictionary();
-        return allUserRoleRepo.getCachedObject();
-    }
-    /**
-     * 获取操作方法信息
-     * @return List 操作方法信息
-     */
-    @Override
-    public List<? extends IOptMethod> listAllOptMethod(){
-        reloadDictionary();
-        return CodeRepositoryCache.optMethodRepo.getCachedObject();
-    }
-
-
-    @Override
-    public List<? extends IUnitRole> listUnitRoles(String unitCode) {
-        return null;
-    }
-
-    @Override
-    public List<? extends IUnitRole> listRoleUnits(String roleCode) {
-        return null;
-    }
-
 
 }

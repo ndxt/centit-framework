@@ -35,8 +35,6 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     protected abstract void reloadDictionary();
-    protected abstract List<DataDictionary> listAllDataDictionary();
-    protected abstract List<UserRole> listAllUserRole();
 
     @SuppressWarnings("unchecked")
     protected void organizeDictionaryData() {
@@ -55,9 +53,26 @@ public abstract class AbstractStaticPlatformEnvironment
                 }
             }
         }
+
+        for (IUnitInfo ui : CodeRepositoryCache.unitInfoRepo.getCachedObject()) {
+            UnitInfo unit = (UnitInfo)CodeRepositoryCache.codeToUnitMap.getCachedObject().get(ui.getParentUnit());
+            if (unit != null)
+                unit.addSubUnit((UnitInfo)ui);
+        }
+
+        for (IUserUnit uu : CodeRepositoryCache.userUnitRepo.getCachedObject()) {
+            UserInfo user = (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedObject().get(uu.getUserCode());
+            if (user != null)
+                user.addUserUnit((UserUnit)uu);
+            UnitInfo unit = (UnitInfo)CodeRepositoryCache.codeToUnitMap.getCachedObject().get(uu.getUnitCode());
+            if (unit != null)
+                unit.addUnitUser((UserUnit)uu);
+        }
+
         List<? extends IUserInfo> userinfos = CodeRepositoryCache.userInfoRepo.getCachedObject();
 
         List<StaticCentitUserDetails> userDetails = new ArrayList<>(userinfos.size());
+
         for (IUserInfo ui : userinfos) {
             List<RoleInfo> roles = new ArrayList<>();
             Map<String, String> userOptList = new HashMap<>();
@@ -80,20 +95,6 @@ public abstract class AbstractStaticPlatformEnvironment
             userDetails.add(ud);
         }
         allUserDetailsRepo.setFreshtDate(userDetails);
-
-        for (IUnitInfo ui : CodeRepositoryCache.unitInfoRepo.getCachedObject()) {
-            UnitInfo unit = (UnitInfo)CodeRepositoryCache.codeToUnitMap.getCachedObject().get(ui.getParentUnit());
-            if (unit != null)
-                unit.addSubUnit((UnitInfo)ui);
-        }
-        for (IUserUnit uu : CodeRepositoryCache.userUnitRepo.getCachedObject()) {
-            UserInfo user = (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedObject().get(uu.getUserCode());
-            if (user != null)
-                user.addUserUnit((UserUnit)uu);
-            UnitInfo unit = (UnitInfo)CodeRepositoryCache.codeToUnitMap.getCachedObject().get(uu.getUnitCode());
-            if (unit != null)
-                unit.addUnitUser((UserUnit)uu);
-        }
     }
 
 
@@ -453,6 +454,93 @@ public abstract class AbstractStaticPlatformEnvironment
             return;
         ud.setUserSettingValue(userSetting.getParamCode(),userSetting.getParamValue());
     }
+
+    @Override
+    public List<? extends IUserInfo> listAllUsers() {
+        reloadDictionary();
+        return CodeRepositoryCache.userInfoRepo.getCachedObject();
+    }
+
+    @Override
+    public List<? extends IUnitInfo> listAllUnits() {
+        reloadDictionary();
+        return CodeRepositoryCache.unitInfoRepo.getCachedObject();
+    }
+
+    @Override
+    public List<? extends IUserUnit> listAllUserUnits(){
+        reloadDictionary();
+        return CodeRepositoryCache.userUnitRepo.getCachedObject();
+    }
+
+    @Override
+    public List<? extends IDataCatalog> listAllDataCatalogs(){
+        reloadDictionary();
+        return CodeRepositoryCache.catalogRepo.getCachedObject();
+    }
+
+    /**
+     * 获取所有角色信息
+     *
+     * @return List 操作方法信息
+     */
+    @Override
+    public List<? extends IRoleInfo> listAllRoleInfo() {
+        reloadDictionary();
+        return CodeRepositoryCache.roleInfoRepo.getCachedObject();
+    }
+
+    /**
+     * 获取业务操作信息
+     *
+     * @return List 业务信息
+     */
+    @Override
+    public List<? extends IOptInfo> listAllOptInfo() {
+        reloadDictionary();
+        return CodeRepositoryCache.optInfoRepo.getCachedObject();
+    }
+
+    /**
+     * 获取所有角色和权限对应关系
+     * @return List 操作方法信息
+     */
+    @Override
+    public List<? extends IRolePower> listAllRolePower(){
+        reloadDictionary();
+        return CodeRepositoryCache.rolePowerRepo.getCachedObject();
+    }
+
+    protected List<DataDictionary> listAllDataDictionary() {
+        reloadDictionary();
+        return allDictionaryRepo.getCachedObject();
+    }
+
+    protected List<UserRole> listAllUserRole() {
+        reloadDictionary();
+        return allUserRoleRepo.getCachedObject();
+    }
+    /**
+     * 获取操作方法信息
+     * @return List 操作方法信息
+     */
+    @Override
+    public List<? extends IOptMethod> listAllOptMethod(){
+        reloadDictionary();
+        return CodeRepositoryCache.optMethodRepo.getCachedObject();
+    }
+
+
+    @Override
+    public List<? extends IUnitRole> listUnitRoles(String unitCode) {
+        return null;
+    }
+
+    @Override
+    public List<? extends IUnitRole> listRoleUnits(String roleCode) {
+        return null;
+    }
+
     /**
      * 新增菜单和操作
      * @param optInfos 菜单对象集合

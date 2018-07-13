@@ -36,8 +36,8 @@ public class CentitSecurityMetadata {
 
     private static Pair<OptTreeNode, Map<String ,List<ConfigAttribute >>> reloadSecurityMetadata(){
         OptTreeNode optTreeNode = new OptTreeNode();
-        Map<String, ? extends IOptInfo> codeToOptInfoMap = CodeRepositoryCache.codeToOptMap.getFreshObject();
-        for(IOptMethod ou : CodeRepositoryCache.optMethodRepo.getFreshObject()){
+        Map<String, ? extends IOptInfo> codeToOptInfoMap = CodeRepositoryCache.codeToOptMap.getCachedObject();
+        for(IOptMethod ou : CodeRepositoryCache.optMethodRepo.getCachedObject()){
             IOptInfo oi = codeToOptInfoMap.get(ou.getOptId());
             if(oi!=null){
                 String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());
@@ -54,7 +54,7 @@ public class CentitSecurityMetadata {
         }
 
         Map<String,List<ConfigAttribute>> optMethodRoleMap = new HashMap<>(100);
-        List<? extends IRolePower> rolepowers =  CodeRepositoryCache.rolePowerRepo.getFreshObject();
+        List<? extends IRolePower> rolepowers =  CodeRepositoryCache.rolePowerRepo.getCachedObject();
         if(rolepowers==null || rolepowers.size()==0)
             return null;
         for(IRolePower rp: rolepowers){
