@@ -106,8 +106,6 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
     }
     /**
      * 刷新数据字典
-     *
-     * @return  boolean 刷新数据字典
      */
     protected void reloadDictionary() {
         try {
