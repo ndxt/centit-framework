@@ -109,6 +109,10 @@ public abstract class CodeRepositoryCache {
         }
     }
 
+    public static void evictCache(String cacheName){
+        CodeRepositoryCache.evictCache(cacheName, null);
+    }
+
     public static void evictAllCache(){
         CodeRepositoryCache.catalogRepo.evictObject();
         CodeRepositoryCache.codeToCatalogMap.evictObject();
