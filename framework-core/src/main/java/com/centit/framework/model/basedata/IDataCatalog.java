@@ -1,7 +1,5 @@
 package com.centit.framework.model.basedata;
 
-import java.util.List;
-
 /**
  * @author codefan@hotmail.com
  */

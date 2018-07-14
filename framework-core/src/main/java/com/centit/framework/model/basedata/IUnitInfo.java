@@ -1,7 +1,5 @@
 package com.centit.framework.model.basedata;
 
-import java.util.List;
-
 /**
  * FUnitinfo entity.
  * 机构信息
