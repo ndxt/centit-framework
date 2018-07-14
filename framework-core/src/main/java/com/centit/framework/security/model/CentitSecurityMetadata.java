@@ -6,6 +6,7 @@ import com.centit.framework.model.basedata.IOptMethod;
 import com.centit.framework.model.basedata.IRolePower;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.common.AbstractCachedObject;
 import com.centit.support.common.CachedObject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,21 +24,23 @@ public class CentitSecurityMetadata {
 
     public static final CachedObject<OptTreeNode > optTreeNodeCache =
         new CachedObject<>( CentitSecurityMetadata ::reloadOptTreeNode,
-            CodeRepositoryCache.CACHE_FRESH_PERIOD_MINITES);
+            new AbstractCachedObject<?>[]{CodeRepositoryCache.codeToOptMap,
+                CodeRepositoryCache.optMethodRepo, CodeRepositoryCache.rolePowerRepo});
 
     public static final CachedObject<Map<String,List<ConfigAttribute>>>
         optMethodRoleMapCache = new CachedObject<>( CentitSecurityMetadata ::reloadOptMethodRoleMap,
-            CodeRepositoryCache.CACHE_FRESH_PERIOD_MINITES);
+            new AbstractCachedObject<?>[]{CodeRepositoryCache.codeToOptMap,
+                CodeRepositoryCache.optMethodRepo, CodeRepositoryCache.rolePowerRepo});
 
     public static void evictAllCache(){
-        optTreeNodeCache.evictObject();
-        optMethodRoleMapCache.evictObject();
+        optTreeNodeCache.evictCahce();
+        optMethodRoleMapCache.evictCahce();
     }
 
     private static Pair<OptTreeNode, Map<String ,List<ConfigAttribute >>> reloadSecurityMetadata(){
         OptTreeNode optTreeNode = new OptTreeNode();
-        Map<String, ? extends IOptInfo> codeToOptInfoMap = CodeRepositoryCache.codeToOptMap.getCachedObject();
-        for(IOptMethod ou : CodeRepositoryCache.optMethodRepo.getCachedObject()){
+        Map<String, ? extends IOptInfo> codeToOptInfoMap = CodeRepositoryCache.codeToOptMap.getCachedTarget();
+        for(IOptMethod ou : CodeRepositoryCache.optMethodRepo.getCachedTarget()){
             IOptInfo oi = codeToOptInfoMap.get(ou.getOptId());
             if(oi!=null){
                 String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());
@@ -54,7 +57,7 @@ public class CentitSecurityMetadata {
         }
 
         Map<String,List<ConfigAttribute>> optMethodRoleMap = new HashMap<>(100);
-        List<? extends IRolePower> rolepowers =  CodeRepositoryCache.rolePowerRepo.getCachedObject();
+        List<? extends IRolePower> rolepowers =  CodeRepositoryCache.rolePowerRepo.getCachedTarget();
         if(rolepowers==null || rolepowers.size()==0)
             return null;
         for(IRolePower rp: rolepowers){
@@ -187,7 +190,7 @@ public class CentitSecurityMetadata {
 
 
     public static String matchUrlToOpt(String sUrl, String httpMethod){
-        return matchUrlToOpt(optTreeNodeCache.getCachedObject(), sUrl, httpMethod);
+        return matchUrlToOpt(optTreeNodeCache.getCachedTarget(), sUrl, httpMethod);
     }
     //public abstract void loadRoleSecurityMetadata();
     public static String matchUrlToOpt(String sUrl,HttpServletRequest request){
@@ -202,7 +205,7 @@ public class CentitSecurityMetadata {
         }
         List<ConfigAttribute> defaultRole = new ArrayList<>(2);
         defaultRole.add(new SecurityConfig(SecurityContextUtils.FORBIDDEN_ROLE_CODE));
-        Collection<ConfigAttribute> roles = optMethodRoleMapCache.getCachedObject().get(sOptCode);
+        Collection<ConfigAttribute> roles = optMethodRoleMapCache.getCachedTarget().get(sOptCode);
         if(roles == null && isForbiddenWhenAssigned){
             return defaultRole;
         }
@@ -210,7 +213,7 @@ public class CentitSecurityMetadata {
     }
 
     public static void printOptdefRoleMap(){
-        for(Map.Entry<String ,List<ConfigAttribute >> roleMap :  optMethodRoleMapCache.getCachedObject().entrySet()){
+        for(Map.Entry<String ,List<ConfigAttribute >> roleMap :  optMethodRoleMapCache.getCachedTarget().entrySet()){
             if(roleMap.getValue().size()>1){
                 System.out.print(roleMap.getKey());
                 System.out.print(" : ");

@@ -48,19 +48,19 @@ public abstract class CodeRepositoryUtil {
     private static final Logger logger = LoggerFactory.getLogger(CodeRepositoryUtil.class);
 
     public static Map<String,? extends IUserInfo> getUserRepo() {
-        return CodeRepositoryCache.codeToUserMap.getCachedObject();
+        return CodeRepositoryCache.codeToUserMap.getCachedTarget();
     }
 
     public static Map<String,? extends IUserInfo> getLoginRepo() {
-        return CodeRepositoryCache.loginNameToUserMap.getCachedObject();
+        return CodeRepositoryCache.loginNameToUserMap.getCachedTarget();
     }
 
     public static Map<String,? extends IRoleInfo> getRoleRepo() {
-        return CodeRepositoryCache.codeToRoleMap.getCachedObject();
+        return CodeRepositoryCache.codeToRoleMap.getCachedTarget();
     }
 
     public static Map<String,? extends IOptInfo> getOptRepo() {
-        return CodeRepositoryCache.codeToOptMap.getCachedObject();
+        return CodeRepositoryCache.codeToOptMap.getCachedTarget();
     }
 
     /**
@@ -69,22 +69,22 @@ public abstract class CodeRepositoryUtil {
      * @return Map 操作定义（权限的控制单位）
      */
     public static Map<String,? extends IOptMethod> getPowerRepo() {
-        return CodeRepositoryCache.codeToMethodMap.getCachedObject();
+        return CodeRepositoryCache.codeToMethodMap.getCachedTarget();
     }
 
     public static List<? extends IUnitInfo> getUnitAsTree() {
-        List<? extends IUnitInfo> units = CodeRepositoryCache.unitInfoRepo.getCachedObject();
+        List<? extends IUnitInfo> units = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
         CollectionsOpt.sortAsTree( units,( p,  c) ->
             StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
         return units;
     }
 
     public static Map<String, ? extends IUnitInfo> getUnitRepo() {
-        return CodeRepositoryCache.codeToUnitMap.getCachedObject();
+        return CodeRepositoryCache.codeToUnitMap.getCachedTarget();
     }
 
     public static Map<String, ? extends IUnitInfo> getDepNo() {
-         return CodeRepositoryCache.depNoToUnitMap.getCachedObject();
+         return CodeRepositoryCache.depNoToUnitMap.getCachedTarget();
     }
 
     /**
@@ -94,7 +94,7 @@ public abstract class CodeRepositoryUtil {
      */
     protected static final Map<String,String> getDataCatalogMap() {
         Map<String, String> dataCatalogMap = new HashMap<>();
-        List<? extends IDataCatalog> dataCatalogs = CodeRepositoryCache.catalogRepo.getCachedObject();
+        List<? extends IDataCatalog> dataCatalogs = CodeRepositoryCache.catalogRepo.getCachedTarget();
         if(dataCatalogs==null)
             return dataCatalogMap;
         for(IDataCatalog dataCatalog:dataCatalogs){
@@ -110,27 +110,27 @@ public abstract class CodeRepositoryUtil {
      * @return List 数据字典
      */
     public static List<? extends IDataDictionary> getDictionary(String sCatalog) {
-        return CodeRepositoryCache.dictionaryRepo.getCachedObject(sCatalog);
+        return CodeRepositoryCache.dictionaryRepo.getCachedValue(sCatalog);
     }
 
     public static List<? extends IUnitInfo> listAllUnits() {
-        return CodeRepositoryCache.unitInfoRepo.getCachedObject();
+        return CodeRepositoryCache.unitInfoRepo.getCachedTarget();
     }
 
     public static List<? extends IUserInfo> listAllUsers() {
-        return CodeRepositoryCache.userInfoRepo.getCachedObject();
+        return CodeRepositoryCache.userInfoRepo.getCachedTarget();
     }
 
     public static List<? extends IUserUnit> listAllUserUnits() {
-        return CodeRepositoryCache.userUnitRepo.getCachedObject();
+        return CodeRepositoryCache.userUnitRepo.getCachedTarget();
     }
 
     public static List<? extends IUserUnit> listUserUnits(String userCode) {
-        return CodeRepositoryCache.userUnitsMap.getCachedObject(userCode);
+        return CodeRepositoryCache.userUnitsMap.getCachedValue(userCode);
     }
 
     public static List<? extends IUserUnit> listUnitUsers(String unitCode) {
-        return CodeRepositoryCache.unitUsersMap.getCachedObject(unitCode);
+        return CodeRepositoryCache.unitUsersMap.getCachedValue(unitCode);
     }
 
     /**
@@ -492,7 +492,7 @@ public abstract class CodeRepositoryUtil {
      * @return List 所有符合状态标记的用户
      */
     public static List<IUserInfo> getAllUsers(String sState) {
-        List<? extends IUserInfo> allusers = CodeRepositoryCache.userInfoRepo.getCachedObject();
+        List<? extends IUserInfo> allusers = CodeRepositoryCache.userInfoRepo.getCachedTarget();
         List<IUserInfo> users = new ArrayList<>();
 
         if("A".equals(sState)){
@@ -659,7 +659,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回拥有这个角色的所有用户
      */
     public static List<? extends IUserInfo> listUsersByRoleCode(String roleCode) {
-        List<? extends IUserRole> userRoles = CodeRepositoryCache.roleUsersRepo.getCachedObject(roleCode);
+        List<? extends IUserRole> userRoles = CodeRepositoryCache.roleUsersRepo.getCachedValue(roleCode);
         if(userRoles==null){
             return null;
         }
@@ -678,7 +678,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
      */
     public static List<? extends IRoleInfo> listRolesByUserCode(String userCode) {
-        List<? extends IUserRole> roleUsers =  CodeRepositoryCache.userRolesRepo.getCachedObject(userCode);
+        List<? extends IUserRole> roleUsers =  CodeRepositoryCache.userRolesRepo.getCachedValue(userCode);
         if(roleUsers==null){
             return null;
         }
@@ -696,7 +696,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回拥有这个角色的所有用户
      */
     public static List<? extends IUserRole> listRoleUsers(String roleCode) {
-        return CodeRepositoryCache.roleUsersRepo.getCachedObject(roleCode);
+        return CodeRepositoryCache.roleUsersRepo.getCachedValue(roleCode);
     }
 
     /**
@@ -705,7 +705,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
      */
     public static List<? extends IUserRole> listUserRoles(String userCode) {
-        return CodeRepositoryCache.userRolesRepo.getCachedObject(userCode);
+        return CodeRepositoryCache.userRolesRepo.getCachedValue(userCode);
     }
 
     /** 获取机构所有角色
@@ -713,7 +713,7 @@ public abstract class CodeRepositoryUtil {
      * @return  List 机构所有菜单功能
      * */
     public static List<? extends IRoleInfo> listUnitRolesByUnitCode(String unitCode){
-        List<? extends IUnitRole> urs = CodeRepositoryCache.unitRolesRepo.getCachedObject(unitCode);
+        List<? extends IUnitRole> urs = CodeRepositoryCache.unitRolesRepo.getCachedValue(unitCode);
         if(urs == null || urs.size()==0)
             return null;
         List<IRoleInfo> roleInfos = new ArrayList<>(urs.size());
@@ -731,7 +731,7 @@ public abstract class CodeRepositoryUtil {
      * @return  List
       * */
      public static List<? extends IUnitInfo> listRoleUnitByRoleCode(String roleCode){
-        List<? extends IUnitRole> urs = CodeRepositoryCache.roleUnitsRepo.getCachedObject(roleCode);
+        List<? extends IUnitRole> urs = CodeRepositoryCache.roleUnitsRepo.getCachedValue(roleCode);
         if(urs == null || urs.size()==0)
             return null;
         List<IUnitInfo> unitInfos = new ArrayList<>(urs.size());
@@ -748,7 +748,7 @@ public abstract class CodeRepositoryUtil {
      * @return  List 用户所有菜单功能
      */
     public static List<? extends IUnitRole> listUnitRoles(String unitCode){
-        return CodeRepositoryCache.unitRolesRepo.getCachedObject(unitCode);
+        return CodeRepositoryCache.unitRolesRepo.getCachedValue(unitCode);
     }
 
     /**
@@ -757,7 +757,7 @@ public abstract class CodeRepositoryUtil {
      * @return  List 用户所有菜单功能
      */
     public static List<? extends IUnitRole> listRoleUnits(String roleCode){
-        return CodeRepositoryCache.roleUnitsRepo.getCachedObject(roleCode);
+        return CodeRepositoryCache.roleUnitsRepo.getCachedValue(roleCode);
     }
 
     /**
@@ -771,7 +771,7 @@ public abstract class CodeRepositoryUtil {
     }
 
     public static IUserInfo getUserInfoByLoginName(String loginName) {
-        return CodeRepositoryCache.loginNameToUserMap.getCachedObject().get(loginName);
+        return CodeRepositoryCache.loginNameToUserMap.getCachedTarget().get(loginName);
     }
 
     public static IUserUnit getUserPrimaryUnit(String userCode) {
@@ -860,7 +860,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static List<IUnitInfo> getAllUnits(String sState) {
 
-        List<? extends IUnitInfo> allunits = CodeRepositoryCache.unitInfoRepo.getCachedObject();
+        List<? extends IUnitInfo> allunits = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
         /*缓存中已经排好序了
         CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );*/
@@ -1308,7 +1308,7 @@ public abstract class CodeRepositoryUtil {
      * @return 字典条目
      */
     public static IDataDictionary getDataPiece(String sCatalog, String sKey) {
-        return CodeRepositoryCache.codeToDictionaryMap.getCachedObject(sKey).get(sCatalog);
+        return CodeRepositoryCache.codeToDictionaryMap.getCachedValue(sKey).get(sCatalog);
     }
 
     /**
@@ -1374,7 +1374,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static List<IUnitInfo> getSubUnits(String unitCode) {
 
-        List<? extends IUnitInfo> units = CodeRepositoryCache.unitInfoRepo.getCachedObject();
+        List<? extends IUnitInfo> units = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
 
         return fetchSubUnits(units,unitCode);
     }
@@ -1387,7 +1387,7 @@ public abstract class CodeRepositoryUtil {
     public static List<IUnitInfo> getAllSubUnits(String unitCode) {
         if(StringUtils.isBlank(unitCode))
             return null;
-        List<? extends IUnitInfo> allunits = CodeRepositoryCache.unitInfoRepo.getCachedObject();
+        List<? extends IUnitInfo> allunits = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
 
         List<IUnitInfo> units = new ArrayList<>();
         List<IUnitInfo> subunits = fetchSubUnits(allunits,unitCode);
