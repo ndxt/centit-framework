@@ -124,7 +124,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
      */
     @Override
     public void changeUserPassword(String userCode, String userPassword) {
-        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedObject().get(userCode);
+        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedTarget().get(userCode);
         if(ui==null)
             return;
         String userNewPassword = passwordEncoder.createPassword(userPassword, userCode);

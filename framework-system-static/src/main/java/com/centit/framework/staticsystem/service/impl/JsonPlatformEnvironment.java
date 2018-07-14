@@ -82,7 +82,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         try {
             String jsonStr = loadJsonStringFormConfigFile("/static_system_user_pwd.json");
             JSONObject json = JSON.parseObject(jsonStr);
-            for(IUserInfo u :CodeRepositoryCache.userInfoRepo.getCachedObject()){
+            for(IUserInfo u :CodeRepositoryCache.userInfoRepo.getCachedTarget()){
                 String spwd = json.getString(u.getUserCode());
                 if(StringUtils.isNotBlank(spwd))
                     ((UserInfo)u).setUserPin(spwd);
@@ -100,7 +100,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
      */
     @Override
     public void changeUserPassword(String userCode, String userPassword) {
-        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedObject().get(userCode);
+        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedTarget().get(userCode);
         if(ui==null)
             return;
         JSONObject json = null;
