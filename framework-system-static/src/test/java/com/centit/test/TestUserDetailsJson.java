@@ -30,7 +30,7 @@ public class TestUserDetailsJson {
         uu.setUnitCode("U00002");
         uus.add(uu);
 
-        userInfo.setUserUnits(uus);
+        userDetails.setUserUnits(uus);
         List<RoleInfo> roles = new ArrayList<>(2);
         RoleInfo roleInfo = new RoleInfo("anonymous", "匿名用户角色","G",
                 "U00001","T","匿名用户角色");

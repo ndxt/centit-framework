@@ -7,7 +7,7 @@ import java.util.List;
  */
 
 public interface IDataCatalog{
- 
+
     /**
      * 类别代码
      * @return 类别代码
@@ -40,10 +40,4 @@ public interface IDataCatalog{
      * @return 字典明细字段描述
      */
      String getFieldDesc();
-    
-    /**
-     * 获取字典条目明细
-     * @return List 获取字典条目明细
-     */
-     List<? extends IDataDictionary> getDataDictionaries();
 }

@@ -118,13 +118,12 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
     /**
      * 修改用户密码
-     *
      * @param userCode userCode
      * @param userPassword userPassword
      */
     @Override
     public void changeUserPassword(String userCode, String userPassword) {
-        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedObject().get(userCode);
+        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedTarget().get(userCode);
         if(ui==null)
             return;
         String userNewPassword = passwordEncoder.createPassword(userPassword, userCode);
@@ -137,6 +136,4 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             //conn.rollback();
         }
     }
-
-
 }

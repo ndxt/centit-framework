@@ -380,36 +380,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitPath = unitPath;
     }
 
-
-    private List<UnitInfo> subUnits;
-
-    public UnitInfo addSubUnit(UnitInfo ui) {
-        getSubUnits().add(ui);
-        return this;
-    }
-
-
-    @Override
-    public List<UnitInfo> getSubUnits() {
-        if(subUnits==null)
-            subUnits = new ArrayList<UnitInfo>();
-        return subUnits;
-    }
-
-    private List<UserUnit> unitUsers;
-
-    public UnitInfo addUnitUser(UserUnit uu) {
-        getUnitUsers().add(uu);
-        return this;
-    }
-
-    @Override
-    public List<UserUnit> getUnitUsers() {
-        if(unitUsers==null)
-            unitUsers = new ArrayList<UserUnit>();
-        return unitUsers;
-    }
-
     public String getUnitManager() {
         return unitManager;
     }

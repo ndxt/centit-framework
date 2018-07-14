@@ -3,7 +3,6 @@ package com.centit.framework.model.basedata;
 import com.alibaba.fastjson.annotation.JSONField;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Userinfo entity.
@@ -96,11 +95,4 @@ public interface IUserInfo{
      * @return 用户描述
      */
     String getUserDesc();
-
-    /**
-    * 获取用户归属机构关系
-    * @return 获取用户归属机构关系
-    */
-    List<? extends IUserUnit> getUserUnits();
-
 }

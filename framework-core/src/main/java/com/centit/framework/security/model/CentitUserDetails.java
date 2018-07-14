@@ -30,14 +30,14 @@ public interface CentitUserDetails extends
      * @return 用户的参数，是个Map对，有系统参数也有业务系统自定义的参数
      */
     Map<String, String> getUserSettings();
-    
+
     /**
      * 设置到缓存中，并不是保存到数据库中，如果需要保存到数据库中请调用Dao持久化接口
      * @param paramCode paramCode
      * @param paramValue paramValue
      */
     void setUserSettingValue(String paramCode,String paramValue);
-    
+
     /**
      * 用户某个具体的参数值
      * @param paramCode    参数代码
@@ -58,7 +58,7 @@ public interface CentitUserDetails extends
      * @return 判断用户是否有某个具体的操作方法权限
      */
     boolean checkOptPower(String optId, String optMethod);
-    
+
     /**
      * 获得用户授权角色
      * @return 获得用户授权角色代码
@@ -98,4 +98,9 @@ public interface CentitUserDetails extends
         IUserUnit cs = getCurrentStation();
         return cs != null? cs.getUnitCode() : getUserInfo().getPrimaryUnit();
     }*/
+    /**
+     * 获取用户归属机构关系
+     * @return 获取用户归属机构关系
+     */
+    List<? extends IUserUnit> getUserUnits();
 }

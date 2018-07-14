@@ -74,8 +74,6 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
      */
     private String updator;
 
-    private List<UserUnit> userUnits;
-
     public String getUserPwd() {
         return userPwd;
     }
@@ -448,17 +446,6 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
 
 
 
-    public UserInfo addUserUnit(UserUnit uu) {
-        if(userUnits==null)
-            userUnits = new ArrayList<UserUnit>();
-        userUnits.add(uu);
-        return this;
-    }
-
-    @Override
-    public List<UserUnit> getUserUnits() {
-        return userUnits;
-    }
 
     /**
      * 获取创建时间
@@ -476,10 +463,6 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
      */
     public Date getLastModifyDate() {
         return DatetimeOpt.currentUtilDate();
-    }
-
-    public void setUserUnits( List<UserUnit> userUnits) {
-        this.userUnits = userUnits;
     }
 
     @Override

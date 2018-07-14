@@ -69,17 +69,4 @@ public interface IUnitInfo{
      * @return 机构第三发业务中的主键
      */
     String getUnitTag();
-
-    /**
-     * 获取下级机构
-     * @return 获取下级机构
-     */
-    List<? extends IUnitInfo> getSubUnits();
-
-    /**
-     * 获取机构用户下属用户关系
-     * @return 获取机构用户下属用户关系
-     */
-    List<? extends IUserUnit> getUnitUsers();
-
 }

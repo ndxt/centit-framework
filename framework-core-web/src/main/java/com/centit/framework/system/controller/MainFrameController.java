@@ -12,7 +12,6 @@ import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
@@ -488,7 +487,7 @@ public class MainFrameController extends BaseController {
         }
         JsonResultUtils.writeSingleDataJson(
                 DictionaryMapUtils.objectsToJSONArray(
-                    currentUser.getUserInfo().getUserUnits()),
+                    currentUser.getUserUnits()),
                 response);
     }
 

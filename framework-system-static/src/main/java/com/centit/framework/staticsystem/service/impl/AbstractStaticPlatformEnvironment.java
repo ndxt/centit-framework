@@ -38,13 +38,13 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @SuppressWarnings("unchecked")
     protected void organizePlatformData() {
-        for (IDataCatalog dd :  CodeRepositoryCache.catalogRepo.getCachedObject()) {
+        for (IDataCatalog dd :  CodeRepositoryCache.catalogRepo.getCachedTarget()) {
             ((DataCatalog)dd).setDataDictionaries(
                 (List<DataDictionary>) listDataDictionaries(dd.getCatalogCode()));
         }
 
-        for (IRoleInfo ri : CodeRepositoryCache.roleInfoRepo.getCachedObject()) {
-            for (IRolePower rp : CodeRepositoryCache.rolePowerRepo.getCachedObject()) {
+        for (IRoleInfo ri : CodeRepositoryCache.roleInfoRepo.getCachedTarget()) {
+            for (IRolePower rp : CodeRepositoryCache.rolePowerRepo.getCachedTarget()) {
                 if (StringUtils.equals(rp.getRoleCode(), ri.getRoleCode())) {
                     ((RoleInfo)ri).addRolePowers((RolePower)rp);
                     /*OptMethod om = getOptMethod(rp.getOptCode());
@@ -54,35 +54,21 @@ public abstract class AbstractStaticPlatformEnvironment
             }
         }
 
-        for (IUnitInfo ui : CodeRepositoryCache.unitInfoRepo.getCachedObject()) {
-            UnitInfo unit = (UnitInfo)CodeRepositoryCache.codeToUnitMap.getCachedObject().get(ui.getParentUnit());
-            if (unit != null)
-                unit.addSubUnit((UnitInfo)ui);
-        }
 
-        for (IUserUnit uu : CodeRepositoryCache.userUnitRepo.getCachedObject()) {
-            UserInfo user = (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedObject().get(uu.getUserCode());
-            if (user != null)
-                user.addUserUnit((UserUnit)uu);
-            UnitInfo unit = (UnitInfo)CodeRepositoryCache.codeToUnitMap.getCachedObject().get(uu.getUnitCode());
-            if (unit != null)
-                unit.addUnitUser((UserUnit)uu);
-        }
-
-        List<? extends IUserInfo> userinfos = CodeRepositoryCache.userInfoRepo.getCachedObject();
-
+        List<? extends IUserInfo> userinfos = CodeRepositoryCache.userInfoRepo.getCachedTarget();
         List<StaticCentitUserDetails> userDetails = new ArrayList<>(userinfos.size());
+        List<? extends IUserUnit> uus = CodeRepositoryCache.userUnitRepo.getCachedTarget();
 
         for (IUserInfo ui : userinfos) {
             List<RoleInfo> roles = new ArrayList<>();
             Map<String, String> userOptList = new HashMap<>();
-            for (UserRole ur : allUserRoleRepo.getCachedObject()) {
+            for (UserRole ur : allUserRoleRepo.getCachedTarget()) {
                 if (StringUtils.equals(ur.getUserCode(), ui.getUserCode())) {
-                    IRoleInfo ri = CodeRepositoryCache.codeToRoleMap.getCachedObject().get(ur.getRoleCode());
+                    IRoleInfo ri = CodeRepositoryCache.codeToRoleMap.getCachedTarget().get(ur.getRoleCode());
                     if (ri != null) {
                         roles.add((RoleInfo)ri);
                         for (IRolePower rp : ri.getRolePowers()) {
-                            IOptMethod om = CodeRepositoryCache.codeToMethodMap.getCachedObject().get(rp.getOptCode());
+                            IOptMethod om = CodeRepositoryCache.codeToMethodMap.getCachedTarget().get(rp.getOptCode());
                             if (om != null)
                                 userOptList.put(om.getOptId() + "-" + om.getOptMethod(), om.getOptMethod());
                         }
@@ -92,6 +78,11 @@ public abstract class AbstractStaticPlatformEnvironment
             StaticCentitUserDetails ud = new StaticCentitUserDetails((UserInfo) ui);
             ud.setAuthoritiesByRoles(roles);
             ud.setUserOptList(userOptList);
+            for(IUserUnit uu : uus) {
+                if (StringUtils.equals(uu.getUserCode(), ui.getUserCode())) {
+                    ud.addUserUnit((UserUnit) uu);
+                }
+            }
             userDetails.add(ud);
         }
         allUserDetailsRepo.setFreshtDate(userDetails);
@@ -100,7 +91,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public boolean checkUserPassword(String userCode,String userPassword){
-        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedObject().get(userCode);
+        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedTarget().get(userCode);
         if(ui==null)
             return false;
         return passwordEncoder.isPasswordValid(ui.getUserPin(),userPassword, userCode);
@@ -229,12 +220,12 @@ public abstract class AbstractStaticPlatformEnvironment
         List<OptInfo> userOptinfos = new ArrayList<>();
 
         Set<String> optIds = new HashSet<>(20);
-        for (UserRole ur : allUserRoleRepo.getCachedObject()) {
+        for (UserRole ur : allUserRoleRepo.getCachedTarget()) {
             if (StringUtils.equals(ur.getUserCode(), userCode)) {
-                RoleInfo ri = (RoleInfo)CodeRepositoryCache.codeToRoleMap.getCachedObject().get(ur.getRoleCode());
+                RoleInfo ri = (RoleInfo)CodeRepositoryCache.codeToRoleMap.getCachedTarget().get(ur.getRoleCode());
                 if (ri != null) {
                     for (RolePower rp : ri.getRolePowers()) {
-                        OptMethod om = (OptMethod)CodeRepositoryCache.codeToMethodMap.getCachedObject().get(rp.getOptCode());
+                        OptMethod om = (OptMethod)CodeRepositoryCache.codeToMethodMap.getCachedTarget().get(rp.getOptCode());
                         if (om != null)
                             optIds.add(om.getOptId());
                     }
@@ -243,7 +234,7 @@ public abstract class AbstractStaticPlatformEnvironment
         }
 
         for(String optId : optIds){
-            OptInfo oi = (OptInfo)CodeRepositoryCache.codeToOptMap.getCachedObject().get(optId);
+            OptInfo oi = (OptInfo)CodeRepositoryCache.codeToOptMap.getCachedTarget().get(optId);
             if("Y".equals(oi.getIsInToolbar())){
                 OptInfo soi = new OptInfo();
                 soi.copy(oi);
@@ -257,7 +248,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     protected List<OptInfo> getDirectOptInfo(){
         List<OptInfo> dirOptInfos = new ArrayList<>();
-        for(IOptInfo oi : CodeRepositoryCache.optInfoRepo.getCachedObject()){
+        for(IOptInfo oi : CodeRepositoryCache.optInfoRepo.getCachedTarget()){
             if(StringUtils.equals(oi.getOptUrl(),"...")){
                 OptInfo soi = new OptInfo();
                 soi.copy((OptInfo)oi);
@@ -311,7 +302,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<DataDictionary> listDataDictionaries(String catalogCode) {
         List<DataDictionary> dictionaries = new ArrayList<>(20);
-        for(DataDictionary data : allDictionaryRepo.getCachedObject()){
+        for(DataDictionary data : allDictionaryRepo.getCachedTarget()){
             if( StringUtils.equals(catalogCode,data.getCatalogCode())){
                 dictionaries.add(data);
             }
@@ -322,7 +313,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<UserUnit> listUserUnits(String userCode) {
         List<UserUnit> userUnits = new ArrayList<>(10);
-        for (IUserUnit uu : CodeRepositoryCache.userUnitRepo.getCachedObject()) {
+        for (IUserUnit uu : CodeRepositoryCache.userUnitRepo.getCachedTarget()) {
             if(StringUtils.equals(userCode,uu.getUserCode())){
                 userUnits.add((UserUnit)uu);
             }
@@ -333,7 +324,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<UserUnit> listUnitUsers(String unitCode) {
         List<UserUnit> unitUsers = new ArrayList<>(10);
-        for (IUserUnit uu : CodeRepositoryCache.userUnitRepo.getCachedObject()) {
+        for (IUserUnit uu : CodeRepositoryCache.userUnitRepo.getCachedTarget()) {
             if(StringUtils.equals(unitCode,uu.getUnitCode())){
                 unitUsers.add((UserUnit)uu);
             }
@@ -349,7 +340,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<UserRole> listUserRoles(String userCode){
         List<UserRole> roles = new ArrayList<>();
-        for (UserRole ur : allUserRoleRepo.getCachedObject()) {
+        for (UserRole ur : allUserRoleRepo.getCachedTarget()) {
             if (StringUtils.equals(ur.getUserCode(),userCode)) {
                 roles.add(ur);
             }
@@ -365,7 +356,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<UserRole> listRoleUsers(String roleCode){
         List<UserRole> users = new ArrayList<>();
-        for (UserRole ur : allUserRoleRepo.getCachedObject()) {
+        for (UserRole ur : allUserRoleRepo.getCachedTarget()) {
             if (StringUtils.equals(ur.getRoleCode(),roleCode)) {
                 users.add(ur);
             }
@@ -375,7 +366,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByLoginName(String loginName) {
-        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedObject()){
+        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
             if(StringUtils.equals(ud.getUserInfo().getLoginName(), loginName))
                 return ud;
         }
@@ -384,7 +375,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByUserCode(String userCode) {
-        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedObject()){
+        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
             if(StringUtils.equals(ud.getUserInfo().getUserCode(), userCode))
                 return ud;
         }
@@ -393,7 +384,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByRegEmail(String regEmail) {
-        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedObject()){
+        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
             if(StringUtils.equals(ud.getUserInfo().getRegEmail(), regEmail))
                 return ud;
         }
@@ -402,7 +393,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone) {
-        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedObject()){
+        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
             if(StringUtils.equals(ud.getUserInfo().getRegCellPhone(), regCellPhone))
                 return ud;
         }
@@ -441,7 +432,7 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public void updateUserInfo(IUserInfo userInfo) {
-        UserInfo ui = (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedObject().get(userInfo.getUserCode());
+        UserInfo ui = (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedTarget().get(userInfo.getUserCode());
         if(ui==null)
             return;
         ui.copyNotNullProperty(userInfo);
@@ -458,25 +449,25 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<? extends IUserInfo> listAllUsers() {
         reloadPlatformData();
-        return CodeRepositoryCache.userInfoRepo.getCachedObject();
+        return CodeRepositoryCache.userInfoRepo.getCachedTarget();
     }
 
     @Override
     public List<? extends IUnitInfo> listAllUnits() {
         reloadPlatformData();
-        return CodeRepositoryCache.unitInfoRepo.getCachedObject();
+        return CodeRepositoryCache.unitInfoRepo.getCachedTarget();
     }
 
     @Override
     public List<? extends IUserUnit> listAllUserUnits(){
         reloadPlatformData();
-        return CodeRepositoryCache.userUnitRepo.getCachedObject();
+        return CodeRepositoryCache.userUnitRepo.getCachedTarget();
     }
 
     @Override
     public List<? extends IDataCatalog> listAllDataCatalogs(){
         reloadPlatformData();
-        return CodeRepositoryCache.catalogRepo.getCachedObject();
+        return CodeRepositoryCache.catalogRepo.getCachedTarget();
     }
 
     /**
@@ -487,7 +478,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<? extends IRoleInfo> listAllRoleInfo() {
         reloadPlatformData();
-        return CodeRepositoryCache.roleInfoRepo.getCachedObject();
+        return CodeRepositoryCache.roleInfoRepo.getCachedTarget();
     }
 
     /**
@@ -498,7 +489,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<? extends IOptInfo> listAllOptInfo() {
         reloadPlatformData();
-        return CodeRepositoryCache.optInfoRepo.getCachedObject();
+        return CodeRepositoryCache.optInfoRepo.getCachedTarget();
     }
 
     /**
@@ -508,17 +499,17 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<? extends IRolePower> listAllRolePower(){
         reloadPlatformData();
-        return CodeRepositoryCache.rolePowerRepo.getCachedObject();
+        return CodeRepositoryCache.rolePowerRepo.getCachedTarget();
     }
 
     protected List<DataDictionary> listAllDataDictionary() {
         reloadPlatformData();
-        return allDictionaryRepo.getCachedObject();
+        return allDictionaryRepo.getCachedTarget();
     }
 
     protected List<UserRole> listAllUserRole() {
         reloadPlatformData();
-        return allUserRoleRepo.getCachedObject();
+        return allUserRoleRepo.getCachedTarget();
     }
     /**
      * 获取操作方法信息
@@ -527,7 +518,7 @@ public abstract class AbstractStaticPlatformEnvironment
     @Override
     public List<? extends IOptMethod> listAllOptMethod(){
         reloadPlatformData();
-        return CodeRepositoryCache.optMethodRepo.getCachedObject();
+        return CodeRepositoryCache.optMethodRepo.getCachedTarget();
     }
 
 

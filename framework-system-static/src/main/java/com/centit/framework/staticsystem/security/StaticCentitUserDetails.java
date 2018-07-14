@@ -36,6 +36,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     private Map<String, String> userSettings;
     private Map<String, String> userOptList;
     private List<RoleInfo> userRoles;
+    private List<UserUnit> userUnits;
 
     @JSONField(serialize = false)
     private List<GrantedAuthority> arrayAuths;
@@ -114,7 +115,7 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     @Override
     @JSONField(serialize = false)
     public IUserUnit getCurrentStation() {
-        List<UserUnit> uus = getUserInfo().getUserUnits();
+        List<UserUnit> uus = this.getUserUnits();
         if (uus != null) {
             for (UserUnit uu : uus) {
                 if (StringUtils.equals(currentStationId, uu.getUserUnitId())) {
@@ -266,12 +267,29 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
            return this.userInfo.getUserCode().equals(
                    ((CentitUserDetails) other).getUserInfo().getUserCode());
 
-       return false;            
+       return false;
     }
 
     @Override
     public int hashCode() {
         return this.userInfo.getUserCode().hashCode();
+    }
+
+    public StaticCentitUserDetails addUserUnit(UserUnit uu) {
+        if(userUnits==null) {
+            userUnits = new ArrayList<>(4);
+        }
+        userUnits.add(uu);
+        return this;
+    }
+
+    public void setUserUnits(List<UserUnit> userUnits) {
+        this.userUnits = userUnits;
+    }
+
+    @Override
+    public List<UserUnit> getUserUnits() {
+        return userUnits;
     }
 
 }
