@@ -54,7 +54,6 @@ public abstract class AbstractStaticPlatformEnvironment
             }
         }
 
-
         List<? extends IUserInfo> userinfos = CodeRepositoryCache.userInfoRepo.getCachedTarget();
         List<StaticCentitUserDetails> userDetails = new ArrayList<>(userinfos.size());
         List<? extends IUserUnit> uus = CodeRepositoryCache.userUnitRepo.getCachedTarget();
