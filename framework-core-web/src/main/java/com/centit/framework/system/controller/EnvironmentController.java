@@ -19,10 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/environment")
 public class EnvironmentController extends BaseController {
 
-    private String optId = "environment";
+    public String getOptId (){
+        return "environment";
+    }
 
-    @Resource
-    protected PlatformEnvironment platformEnvironment;
 
 
     @RequestMapping(value ="/test",method = RequestMethod.GET)
@@ -33,22 +33,9 @@ public class EnvironmentController extends BaseController {
         JsonResultUtils.writeSingleDataJson("test=zouwuyang", response);
     }
 
-    @RequestMapping(value ="/reload/dictionary",method = RequestMethod.GET)
-    public void reloadDictionary(HttpServletResponse response) {
-        CodeRepositoryCache.evictAllCache();
-        JsonResultUtils.writeMessageJson("系统数据字典全部失效！", response);
-    }
-
-    @RequestMapping(value ="/reload/securitymetadata",method = RequestMethod.GET)
-    public void reloadSecurityMetadata(HttpServletResponse response) {
-        CentitSecurityMetadata.evictAllCache();
-        JsonResultUtils.writeMessageJson("权限相关缓存失效！", response);
-    }
-
     @RequestMapping(value ="/reload/refreshall",method = RequestMethod.GET)
     public void environmentRefreshAll(HttpServletResponse response) {
         CodeRepositoryCache.evictAllCache();
-        CentitSecurityMetadata.evictAllCache();
         JsonResultUtils.writeMessageJson("缓存全部失效！", response);
     }
 

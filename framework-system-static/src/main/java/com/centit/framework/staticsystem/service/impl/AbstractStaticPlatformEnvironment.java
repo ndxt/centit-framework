@@ -306,7 +306,7 @@ public abstract class AbstractStaticPlatformEnvironment
                 dictionaries.add(data);
             }
         }
-        return dictionaries;
+        return dictionaries.isEmpty()?null:dictionaries;
     }
 
     @Override

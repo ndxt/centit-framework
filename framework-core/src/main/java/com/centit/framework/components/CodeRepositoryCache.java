@@ -307,9 +307,9 @@ public abstract class CodeRepositoryCache {
     public static DerivativeCachedMap<String,List<? extends IDataDictionary>,
             Map<String,? extends IDataDictionary>> codeToDictionaryMap =
         new DerivativeCachedMap<>( (dataDictionarys )-> {
-                Map<String, IDataDictionary> dataDictionaryMap = new HashMap<>();
                 if(dataDictionarys==null)
-                    return dataDictionaryMap;
+                    return null;
+                Map<String, IDataDictionary> dataDictionaryMap = new HashMap<>();
                 for( IDataDictionary data : dataDictionarys){
                     dataDictionaryMap.put(data.getDataCode(), data);
                 }

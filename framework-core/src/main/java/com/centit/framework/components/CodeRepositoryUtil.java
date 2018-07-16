@@ -1308,7 +1308,9 @@ public abstract class CodeRepositoryUtil {
      * @return 字典条目
      */
     public static IDataDictionary getDataPiece(String sCatalog, String sKey) {
-        return CodeRepositoryCache.codeToDictionaryMap.getCachedValue(sKey).get(sCatalog);
+        Map<String, ? extends IDataDictionary> dcMap =
+            CodeRepositoryCache.codeToDictionaryMap.getCachedValue(sCatalog);
+        return  dcMap==null?null:dcMap.get(sKey);
     }
 
     /**

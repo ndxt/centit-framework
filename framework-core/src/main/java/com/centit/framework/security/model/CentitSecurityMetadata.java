@@ -32,11 +32,6 @@ public class CentitSecurityMetadata {
             new AbstractCachedObject<?>[]{CodeRepositoryCache.codeToOptMap,
                 CodeRepositoryCache.optMethodRepo, CodeRepositoryCache.rolePowerRepo});
 
-    public static void evictAllCache(){
-        optTreeNodeCache.evictCahce();
-        optMethodRoleMapCache.evictCahce();
-    }
-
     private static Pair<OptTreeNode, Map<String ,List<ConfigAttribute >>> reloadSecurityMetadata(){
         OptTreeNode optTreeNode = new OptTreeNode();
         Map<String, ? extends IOptInfo> codeToOptInfoMap = CodeRepositoryCache.codeToOptMap.getCachedTarget();
