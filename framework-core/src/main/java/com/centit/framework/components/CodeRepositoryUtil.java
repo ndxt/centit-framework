@@ -1103,7 +1103,7 @@ public abstract class CodeRepositoryUtil {
      * @return 数据字典,忽略禁用的条目
      */
     public static Map<String,String> getLabelValueMap(String sCatalog, String localLang) {
-        Map<String,String> lbvs = new HashMap<String,String>();
+        Map<String,String> lbvs = new HashMap<>();
 
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.USER_CODE)) {
             for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
@@ -1416,7 +1416,7 @@ public abstract class CodeRepositoryUtil {
      * @return 操作方法的权限
      */
     public static Boolean checkUserOptPower(String optId, String IOptMethod) {
-        CentitUserDetails userDetails = (CentitUserDetails) WebOptUtils.getLoginUser(
+        CentitUserDetails userDetails = WebOptUtils.getLoginUser(
                 getLocalThreadWrapperRequest());
         if (null == userDetails) {
             return false;
@@ -1432,8 +1432,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回一个map，key为optid+‘-’+method value 为 'T'
      */
     public static Map<String,String> getUserAllOptPowers() {
-        CentitUserDetails userDetails = (CentitUserDetails)
-                WebOptUtils.getLoginUser(getLocalThreadWrapperRequest());
+        CentitUserDetails userDetails = WebOptUtils.getLoginUser(getLocalThreadWrapperRequest());
         if (null == userDetails) {
             return null;
         }
@@ -1447,7 +1446,7 @@ public abstract class CodeRepositoryUtil {
      * @return 用户参数设置
      */
     public static String getUserSettingValue(String paramCode) {
-        CentitUserDetails userDetails = (CentitUserDetails) WebOptUtils.getLoginUser(
+        CentitUserDetails userDetails = WebOptUtils.getLoginUser(
                 getLocalThreadWrapperRequest());
         if (null == userDetails) {
             return null;
@@ -1461,7 +1460,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回 key - value 对（map）
      */
     public static Map<String, String> getUserAllSettings() {
-        CentitUserDetails userDetails = (CentitUserDetails) WebOptUtils.getLoginUser(
+        CentitUserDetails userDetails = WebOptUtils.getLoginUser(
                 getLocalThreadWrapperRequest());
         if (null == userDetails) {
             return null;

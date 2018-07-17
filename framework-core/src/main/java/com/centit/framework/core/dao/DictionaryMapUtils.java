@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.support.algorithm.ReflectionOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.KeyValuePair;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -16,29 +17,25 @@ import java.util.*;
  * @author codefan
  *
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused","unchecked"})
 public class DictionaryMapUtils {
-    
+
     private DictionaryMapUtils(){
-        
+
     }
 
-    private static DictionaryMapColumn makeDictionaryMapColumn(DictionaryMap dictionary,String fieldName ){
+    private static DictionaryMapColumn makeDictionaryMapColumn(DictionaryMap dictionary, String fieldName ){
         Map<String,String> dm = CodeRepositoryUtil.getLabelValueMap(dictionary.value());
-        if(dm!=null)
-            return new DictionaryMapColumn(fieldName,
+        return new DictionaryMapColumn(fieldName,
                     dictionary.fieldName(),
                     dm);
-        return null;
     }
 
-    private static DictionaryMapColumn makeDictionaryMapColumn(String dictionaryFieldName  , String dataCatalog, String fieldName ){
+    private static DictionaryMapColumn makeDictionaryMapColumn(String dictionaryFieldName, String dataCatalog, String fieldName ){
         Map<String,String> dm = CodeRepositoryUtil.getLabelValueMap(dataCatalog);
-        if(dm!=null)
-            return new DictionaryMapColumn(fieldName,
+        return new DictionaryMapColumn(fieldName,
                     dictionaryFieldName,
                     dm);
-        return null;
     }
     /**
      * 检查objType属性上是否有DictionaryMap注解，如果有则获取对应的数据字典用于后面查询是转换编码
@@ -67,15 +64,10 @@ public class DictionaryMapUtils {
         for(Field field :objFields){
             if(fields==null || fields.length==0 ||
                     ArrayUtils.contains(fields,field.getName())) {
-
                 if (field.isAnnotationPresent(DictionaryMap.class)) {
-
                     DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
                             field.getAnnotation(DictionaryMap.class),field.getName());
-
-                    if(dictionaryMapColumn != null)
-                        fieldDictionaryMaps.add(dictionaryMapColumn);
-
+                    fieldDictionaryMaps.add(dictionaryMapColumn);
                 } else if (field.isAnnotationPresent(EmbeddedId.class)) {
                     fieldDictionaryMaps.addAll(
                         getDictionaryMapColumns(field.getType()));
@@ -111,7 +103,8 @@ public class DictionaryMapUtils {
 
             for(DictionaryMapColumn col:fieldDictionaryMaps){
                 newJsonObj.put(col.getMapFieldName(),
-                        col.getDictionaryMap().get(jsonObj.get(col.getFieldName())));
+                        col.mapDictionaryValue(
+                            StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
             }
             return newJsonObj;
         }
@@ -149,7 +142,8 @@ public class DictionaryMapUtils {
             for(DictionaryMapColumn col: fieldDictionaryMaps){
                 if( jsonObj.get(col.getFieldName()) !=null) {
                     jsonObj.put(col.getMapFieldName(),
-                            col.getDictionaryMap().get(jsonObj.get(col.getFieldName())));
+                            col.mapDictionaryValue(
+                                StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
                 }
             }
             return jsonObj;
@@ -234,7 +228,7 @@ public class DictionaryMapUtils {
         }
         return ja;
     }
-    
+
     /**
      * 将一个Po对象列表转换为JSONArray 同时检查对象上面的的属性是否有DictionaryMap注解，如果有转换数据字典
      * @param objs Collection Object
@@ -327,7 +321,7 @@ public class DictionaryMapUtils {
             return dictionaryMap;
         }
     }
-    
+
     /**
      * 创建 DictionaryMap的辅助类，这样就可以用一下代码创建一个 Map
      * 类型的参数放到  listObjectsBy?qlAsJson 函数的 dictionaryMap 变量中
@@ -358,10 +352,9 @@ public class DictionaryMapUtils {
 
         for(Map.Entry<String,KeyValuePair<String,String>> ent : mapInfo.entrySet()){
             DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
-                    ent.getValue().getLeft(),ent.getValue().getRight() , ent.getKey());
+                    ent.getValue().getLeft(), ent.getValue().getRight(), ent.getKey());
 
-            if(dictionaryMapColumn != null)
-                fieldDictionaryMaps.add(dictionaryMapColumn);
+            fieldDictionaryMaps.add(dictionaryMapColumn);
 
         }//end of for
         return fieldDictionaryMaps;
@@ -389,12 +382,12 @@ public class DictionaryMapUtils {
             for(DictionaryMapColumn col:fieldDictionaryMaps){
                 if( obj.get(col.getFieldName()) !=null) {
                     obj.put(col.getMapFieldName(),
-                            col.getDictionaryMap().get(obj.get(col.getFieldName())));
+                            col.mapDictionaryValue(
+                                StringBaseOpt.objectToString(obj.get(col.getFieldName()))));
                 }
             }
         }
         return objs;
-
     }
 
 
@@ -424,22 +417,20 @@ public class DictionaryMapUtils {
                 for (DictionaryMapColumn col : fieldDictionaryMaps) {
                     if (jsonObj.get(col.getFieldName()) != null) {
                         jsonObj.put(col.getMapFieldName(),
-                                col.getDictionaryMap().get(jsonObj.get(col.getFieldName())));
+                                col.mapDictionaryValue(
+                                    StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
                     }
                 }
             }
         }
         return objs;
-
     }
-
 
     public static  JSONArray mapJsonArray(JSONArray objs,Class<?> objType ) {
         if (objs == null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
         return mapJsonArray( objs, fieldDictionaryMaps);
-
     }
 
     public static  JSONArray mapJsonArray(JSONArray objs,
