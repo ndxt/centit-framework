@@ -77,7 +77,8 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         return casServiceProperties;
     }
 
-    public SingleSignOutFilter singleLogoutFilter() {
+    @Override
+    public SingleSignOutFilter singleSignOutFilter() {
         SingleSignOutFilter singleLogoutFilter = new SingleSignOutFilter();
         singleLogoutFilter.setCasServerUrlPrefix(env.getProperty("login.cas.casHome"));
         return singleLogoutFilter;
