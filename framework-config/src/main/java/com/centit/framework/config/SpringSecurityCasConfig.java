@@ -9,6 +9,7 @@ import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -77,10 +78,17 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         return casServiceProperties;
     }
 
-    @Override
-    public SingleSignOutFilter singleSignOutFilter() {
+
+    private SingleSignOutFilter singleSignOutFilter() {
         SingleSignOutFilter singleLogoutFilter = new SingleSignOutFilter();
         singleLogoutFilter.setCasServerUrlPrefix(env.getProperty("login.cas.casHome"));
         return singleLogoutFilter;
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        super.configure(http);
+        // 添加单点登出过滤器
+        http.addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
     }
 }

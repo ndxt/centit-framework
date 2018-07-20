@@ -92,4 +92,5 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
             new CookieClearingLogoutHandler("JSESSIONID","remember-me"),
             new SecurityContextLogoutHandler());
     }
+
 }
