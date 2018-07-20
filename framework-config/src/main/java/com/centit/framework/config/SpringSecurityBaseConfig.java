@@ -100,6 +100,9 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         http.addFilterAt(getAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(centitPowerFilter(), FilterSecurityInterceptor.class)
             .addFilterBefore(logoutFilter(), CasAuthenticationFilter.class);
+        if(singleSignOutFilter() != null) {
+            http.addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
+        }
     }
 
     protected String[] getAuthenticatedUrl(){
@@ -141,6 +144,9 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
     }
     protected abstract Filter logoutFilter();
 
+    protected Filter singleSignOutFilter(){
+        return null;
+    }
 
     protected AuthenticationManager createAuthenticationManager() {
         AuthenticationProvider authenticationProvider = getAuthenticationProvider();
