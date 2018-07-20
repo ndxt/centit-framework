@@ -141,7 +141,7 @@ public abstract class CodeRepositoryCache {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
             if(userInfos == null)
                 return null;
-            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size());
+            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
             for(IUserInfo userInfo : userInfos){
                 codeToUser.put(userInfo.getUserCode(), userInfo);
             }
@@ -153,7 +153,7 @@ public abstract class CodeRepositoryCache {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
             if(userInfos == null)
                 return null;
-            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size());
+            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
             for(IUserInfo userInfo : userInfos){
                 codeToUser.put(userInfo.getLoginName(), userInfo);
             }
@@ -165,7 +165,7 @@ public abstract class CodeRepositoryCache {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
             if(userInfos == null)
                 return null;
-            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size());
+            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
             for(IUserInfo userInfo : userInfos){
                 if(StringUtils.isNoneBlank(userInfo.getRegEmail())) {
                     codeToUser.put(userInfo.getRegEmail(), userInfo);
@@ -179,7 +179,7 @@ public abstract class CodeRepositoryCache {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
             if(userInfos == null)
                 return null;
-            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size());
+            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
             for(IUserInfo userInfo : userInfos){
                 if(StringUtils.isNoneBlank(userInfo.getRegCellPhone())) {
                     codeToUser.put(userInfo.getRegCellPhone(), userInfo);
@@ -193,7 +193,7 @@ public abstract class CodeRepositoryCache {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
             if(userInfos == null)
                 return null;
-            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size());
+            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
             for(IUserInfo userInfo : userInfos){
                 if(StringUtils.isNoneBlank(userInfo.getIdCardNo())) {
                     codeToUser.put(userInfo.getIdCardNo(), userInfo);
@@ -221,7 +221,7 @@ public abstract class CodeRepositoryCache {
             List<? extends IUnitInfo> unitInfos = unitInfoRepo.getCachedTarget();
             if(unitInfos == null)
                 return null;
-            Map<String, IUnitInfo> codeToUnit = new HashMap<>(unitInfos.size());
+            Map<String, IUnitInfo> codeToUnit = new HashMap<>(unitInfos.size()+5);
             for(IUnitInfo unitInfo : unitInfos){
                 codeToUnit.put(unitInfo.getUnitCode(), unitInfo);
             }
@@ -233,7 +233,7 @@ public abstract class CodeRepositoryCache {
             List<? extends IUnitInfo> unitInfos = unitInfoRepo.getCachedTarget();
             if(unitInfos == null)
                 return null;
-            Map<String, IUnitInfo> codeToUnit = new HashMap<>(unitInfos.size());
+            Map<String, IUnitInfo> codeToUnit = new HashMap<>(unitInfos.size()+5);
             for(IUnitInfo unitInfo : unitInfos){
                 codeToUnit.put(unitInfo.getDepNo(), unitInfo);
             }
@@ -288,10 +288,10 @@ public abstract class CodeRepositoryCache {
      */
     public static CachedObject<Map<String, ? extends IDataCatalog>> codeToCatalogMap  =
         new CachedObject<>(()-> {
-                Map<String, IDataCatalog> dataCatalogMap = new HashMap<>();
                 List<? extends IDataCatalog> dataCatalogs = catalogRepo.getCachedTarget();
                 if(dataCatalogs==null)
-                    return dataCatalogMap;
+                    return null;
+                Map<String, IDataCatalog> dataCatalogMap = new HashMap<>(dataCatalogs.size()+5);
                 for( IDataCatalog dataCatalog : dataCatalogs){
                     dataCatalogMap.put(dataCatalog.getCatalogCode(), dataCatalog);
                 }
@@ -309,7 +309,7 @@ public abstract class CodeRepositoryCache {
         new DerivativeCachedMap<>( (dataDictionarys )-> {
                 if(dataDictionarys==null)
                     return null;
-                Map<String, IDataDictionary> dataDictionaryMap = new HashMap<>();
+                Map<String, IDataDictionary> dataDictionaryMap = new HashMap<>(dataDictionarys.size()+5);
                 for( IDataDictionary data : dataDictionarys){
                     dataDictionaryMap.put(data.getDataCode(), data);
                 }
@@ -324,10 +324,10 @@ public abstract class CodeRepositoryCache {
 
     public static CachedObject<Map<String, ? extends IRoleInfo>> codeToRoleMap=
             new CachedObject<>(()-> {
-                Map<String, IRoleInfo> codeMap = new HashMap<>();
                 List<? extends IRoleInfo> roleInfos = roleInfoRepo.getCachedTarget();
                 if(roleInfos==null)
-                    return codeMap;
+                    return null;
+                Map<String, IRoleInfo> codeMap = new HashMap<>(roleInfos.size()+5);
                 for( IRoleInfo data : roleInfos){
                     codeMap.put(data.getRoleCode(), data);
                 }
@@ -340,10 +340,10 @@ public abstract class CodeRepositoryCache {
 
     public static CachedObject<Map<String, ? extends IOptInfo>> codeToOptMap=
         new CachedObject<>(()-> {
-            Map<String, IOptInfo> codeMap = new HashMap<>();
             List<? extends IOptInfo> optInfos = optInfoRepo.getCachedTarget();
             if(optInfos==null)
-                return codeMap;
+                return null;
+            Map<String, IOptInfo> codeMap = new HashMap<>(optInfos.size()+5);
             for( IOptInfo data : optInfos){
                 codeMap.put(data.getOptId(), data);
             }
@@ -357,10 +357,10 @@ public abstract class CodeRepositoryCache {
 
     public static CachedObject<Map<String, ? extends IOptMethod>> codeToMethodMap=
         new CachedObject<>(()-> {
-            Map<String, IOptMethod> codeMap = new HashMap<>();
             List<? extends IOptMethod> methods = optMethodRepo.getCachedTarget();
             if(methods==null)
-                return codeMap;
+                return null;
+            Map<String, IOptMethod> codeMap = new HashMap<>(methods.size()+5);
             for( IOptMethod data : methods){
                 codeMap.put(data.getOptCode(), data);
             }
