@@ -3,6 +3,7 @@ package com.centit.framework.common;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.support.algorithm.StringBaseOpt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,7 @@ public class ResponseJSON {
     /**
      * 返回的详细数据， 可能是需要回显的参数，也可能是验证的错误提示
      */
-    private JSONObject resJSON;    
+    private JSONObject resJSON;
 
     private ResponseJSON() {
     }
@@ -28,19 +29,19 @@ public class ResponseJSON {
     public boolean isNull() {
         return resJSON==null;
     }
-    
+
     public Integer getCode() {
         if(resJSON==null)
             return null;
         return resJSON.getInteger(ResponseData.RES_CODE_FILED);
     }
-    
+
     public String getMessage() {
         if(resJSON==null)
             return null;
         return resJSON.getString(ResponseData.RES_MSG_FILED);
     }
-    
+
     public Object getData() {
         if(resJSON==null)
             return null;
@@ -49,7 +50,11 @@ public class ResponseJSON {
 
 
     public String getDataAsString() {
-        return JSON.toJSONString(resJSON.get(ResponseData.RES_DATA_FILED));
+        Object obj = resJSON.get(ResponseData.RES_DATA_FILED);
+        if(obj instanceof JSON){
+            return ((JSON)obj).toJSONString();
+        }
+        return StringBaseOpt.objectToString(obj);
     }
 
 
@@ -92,13 +97,16 @@ public class ResponseJSON {
         return null;
     }
 
-
     public String getDataAsString(String skey) {
-        return  JSON.toJSONString(getData(skey));
+        Object obj = getData(skey);
+        if(obj instanceof JSON){
+            return ((JSON)obj).toJSONString();
+        }
+        return StringBaseOpt.objectToString(obj);
     }
 
 
-    
+
     public <T> T getDataAsObject(String sKey, Class<T> clazz) {
         Object data = getData();
         if(data==null)
@@ -118,14 +126,14 @@ public class ResponseJSON {
         }
         return null;
     }
-    
+
     public <T> Map<String,T> getDataAsMap(String sKey, Class<T> clazz) {
         Object data = getData(sKey);
         if(data==null || !(data instanceof JSONObject))
             return null;
         return convertJSONToMap((JSONObject)data,clazz);
     }
-    
+
     public static ResponseJSON valueOfJson(String jsonStr){
         if(jsonStr==null)
             return null;
@@ -133,7 +141,7 @@ public class ResponseJSON {
         ResponseJSON retJson = new ResponseJSON();
         retJson.resJSON = JSON.parseObject(jsonStr);
         return retJson;
-        //JSON.parseObject(jsonStr, ResponseJSON.class); 
+        //JSON.parseObject(jsonStr, ResponseJSON.class);
     }
 
     public JSONObject getOriginalJSON() {

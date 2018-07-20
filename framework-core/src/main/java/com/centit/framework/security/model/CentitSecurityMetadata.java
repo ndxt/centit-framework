@@ -163,6 +163,9 @@ public class CentitSecurityMetadata {
     }
 
     private static String matchUrlToOpt(OptTreeNode curOpt , String sUrl, String httpMethod){
+        if(curOpt==null){
+            return null;
+        }
         List<String> urls = parseRequestUrl(sUrl,httpMethod);
         for(String s: urls){
             if(curOpt.childList == null) {
