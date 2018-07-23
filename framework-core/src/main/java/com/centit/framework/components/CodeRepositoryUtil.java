@@ -165,6 +165,22 @@ public abstract class CodeRepositoryUtil {
         return result;
     }
 
+    /**
+     * 获取某个机构下某个岗位的用户组列表
+     * @param unitCode 机构代码
+     * @param station 岗位代码
+     * @return 用户组列表 当unitCode没有对应机构或station没有对应岗位时返回空列表
+     */
+    public static List<? extends IUserUnit> listUserUnitsByUnitStation(String unitCode, String station){
+        List<IUserUnit> result = new ArrayList<>();
+        for(IUserUnit un: listUnitUsers(unitCode)){
+            if(Objects.equals(un.getUserStation(),station)){
+                result.add(un);
+            }
+        }
+        return result;
+    }
+
     private static HttpServletRequest getLocalThreadWrapperRequest(){
         HttpThreadWrapper localThread = RequestThreadLocal.getHttpThreadWrapper();
         if(localThread!=null)
