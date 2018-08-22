@@ -170,6 +170,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         ajaxSuccessHandler.setRegistToken(BooleanBaseOpt.castObjectToBoolean(
                 env.getProperty("login.success.registToken"),false));
         ajaxSuccessHandler.setUserDetailsService(centitUserDetailsService);
+        ajaxSuccessHandler.setSessionRegistry(centitSessionRegistry);
         return ajaxSuccessHandler;
     }
 
