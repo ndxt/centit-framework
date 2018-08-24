@@ -1,6 +1,8 @@
 package com.centit.framework.staticsystem.security;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.centit.framework.components.CodeRepositoryUtil;
+import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitSecurityMetadata;
@@ -144,6 +146,25 @@ public class StaticCentitUserDetails implements CentitUserDetails, java.io.Seria
     public String getCurrentUnitCode(){
         IUserUnit cs = getCurrentStation();
         return cs != null? cs.getUnitCode() : getUserInfo().getPrimaryUnit();
+    }
+
+    /**
+     * 获取当前用户，当前机构的顶级机构，用于处理帐套
+     * @return 最上层机构代码，根据用户的当前结构设置可能有变化
+     */
+    @Override
+    @JSONField(serialize = false)
+    public String getTopUnitCode(){
+        IUserUnit cs = getCurrentStation();
+        IUnitInfo unitInfo = cs == null ?
+            CodeRepositoryUtil.getUnitInfoByCode(getUserInfo().getPrimaryUnit()):
+            CodeRepositoryUtil.getUnitInfoByCode(cs.getUnitCode());
+        if(unitInfo == null){
+            return cs == null ? getUserInfo().getPrimaryUnit() : cs.getUnitCode();
+        }
+        int pos = unitInfo.getUnitPath().indexOf('/');
+        return pos<1 ? unitInfo.getUnitPath() :
+            unitInfo.getUnitPath().substring(0,pos);
     }
 
     @Override

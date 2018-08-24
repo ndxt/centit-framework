@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>framework-snapshot-dependencies</artifactId>
+        <artifactId>framework-release-dependencies</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.1.1808</version>
     </parent>
 
     <groupId>com.centit.framework</groupId>

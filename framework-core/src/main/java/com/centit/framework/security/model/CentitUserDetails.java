@@ -85,6 +85,11 @@ public interface CentitUserDetails extends
     IUserUnit getCurrentStation();
 
     /**
+     * 获取当前用户，当前机构的顶级机构，用于处理帐套
+     * @return 最上层机构代码，根据用户的当前结构设置可能有变化
+     */
+    String getTopUnitCode();
+    /**
      * 设置当前用户机构
      * @param userUnitId 当前机构（单位）代码
      */
