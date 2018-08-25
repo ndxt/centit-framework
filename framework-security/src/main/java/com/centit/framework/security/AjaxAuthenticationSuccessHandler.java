@@ -72,8 +72,8 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
                 request.setAttribute(WebOptUtils.LOCAL_LANGUAGE_LABLE,lang);
             }
         }
-        ud.setLoginIp(request.getRemoteHost()+":"+request.getRemotePort());
-        ud.setActiveTime(DatetimeOpt.currentUtilDate());
+        //ud.setLoginIp(request.getRemoteHost()+":"+request.getRemotePort());
+        //ud.setActiveTime(DatetimeOpt.currentUtilDate());
         request.getSession().setAttribute(
                 SecurityContextUtils.SecurityContextUserdetail,ud);
         //ud.setAuthenticated(true);

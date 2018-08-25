@@ -13,7 +13,7 @@
     <groupId>com.centit.framework</groupId>
     <artifactId>framework-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.2.1808</version>
+    <version>4.2-SNAPSHOT</version>
     <name>com.centit.framework:framework-parent</name>
     <description>基于spring mvc的内部开发框架.
         包括了对 spring mvc, spring security, spring session, hibernate, mybatis, flyway 等等开源框架的整合；
@@ -170,12 +170,12 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
-            <!-- sonatype release :
-                mvn nexus-staging:release -->
+            &lt;!&ndash; sonatype release :
+                mvn nexus-staging:release&ndash;&gt;
 
-           <!-- <plugin>
+            <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
                 <version>1.6.8</version>
