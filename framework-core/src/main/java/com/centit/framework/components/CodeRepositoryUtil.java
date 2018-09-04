@@ -1491,16 +1491,18 @@ public abstract class CodeRepositoryUtil {
 
     private static Properties loadProperties() {
         Properties prop = new Properties();
-        try {
-            InputStream resource = CodeRepositoryUtil
-                    .class.getResourceAsStream("/system.properties");
-            //new ClassPathResource("system.properties").getInputStream();
-            if(resource==null)
-                resource = ClassLoader.getSystemResourceAsStream("/system.properties");
-            prop.load(resource);
+        try (InputStream resource = CodeRepositoryUtil.class.getResourceAsStream("/system.properties")){
+            if(resource == null) {
+                try(InputStream resource2 = ClassLoader.getSystemResourceAsStream("/system.properties")){
+                    if(resource2 != null) {
+                        prop.load(resource2);
+                    }
+                }
+            }else {
+                prop.load(resource);
+            }
         } catch (IOException e) {
             logger.error("获取系统参数出错！",e);
-            //e.printStackTrace();
         }
         return prop;
     }
