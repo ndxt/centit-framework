@@ -23,7 +23,7 @@ public class SysParametersUtils {
     private static Properties prop;
     private static String APP_HOME ="app.home";
 
-    
+    private static String APPLICATION_CONFIG_FILE_NAME ="/system.properties";
     /**
      * 获取应用的根目录
      *
@@ -33,7 +33,7 @@ public class SysParametersUtils {
         return getStringValue(APP_HOME) ;
     }
 
-    
+
     /**
      *  获取应用的临时目录
      *
@@ -60,7 +60,7 @@ public class SysParametersUtils {
     public static String getConfigHome() {
         return getAppHome() + "/config";
     }
-    
+
     /**
      * 获取日志目录
      *
@@ -104,28 +104,28 @@ public class SysParametersUtils {
     public static String getStringValue(String key,String defaultValue) {
         return loadProperties().getProperty(key,defaultValue);
     }
-    
+
     public static int getIntValue(String key) {
         return Integer.parseInt(loadProperties().getProperty(key));
     }
-    
+
     public static int getIntValue(String key,int defaultValue) {
        String s = loadProperties().getProperty(key);
        if(StringRegularOpt.isNumber(s))
            return NumberBaseOpt.parseInteger(s,defaultValue);
        return defaultValue;
     }
-    
+
     public static boolean getBoolean(String key) {
         return Boolean.parseBoolean(getStringValue(key));
     }
-    
+
     public static boolean getBoolean(String key,boolean defaultValue) {
         String sValue = getStringValue(key);
         return StringUtils.isNotBlank(sValue)?
              Boolean.parseBoolean(sValue):defaultValue;
     }
-    
+
 
     public static Properties loadProperties() {
         return loadProperties(false);
@@ -139,13 +139,18 @@ public class SysParametersUtils {
     public static Properties loadProperties(boolean forceReload) {
         if (forceReload || null == prop) {
             prop = new Properties();
-            try {
-                InputStream resource = SysParametersUtils
-                        .class.getResourceAsStream("/system.properties");
+            try(InputStream resource = SysParametersUtils
+                        .class.getResourceAsStream(APPLICATION_CONFIG_FILE_NAME)){
                 //new ClassPathResource("system.properties").getInputStream();
-                if(resource==null)
-                    resource = ClassLoader.getSystemResourceAsStream("/system.properties");
-                prop.load(resource);
+                if(resource==null) {
+                    try(InputStream resource2 = ClassLoader.getSystemResourceAsStream(APPLICATION_CONFIG_FILE_NAME)){
+                        if(resource2 != null) {
+                            prop.load(resource2);
+                        }
+                    }
+                }else {
+                    prop.load(resource);
+                }
             } catch (IOException e) {
                 logger.error("获取系统参数出错！",e);
                 //e.printStackTrace();
