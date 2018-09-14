@@ -6,7 +6,6 @@ import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
 import com.centit.support.common.DerivativeCachedMap;
-import com.centit.support.common.ICachedObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +24,19 @@ import java.util.Map;
  * 2018-6-3
  */
 public abstract class CodeRepositoryCache {
+    /**
+     * 默认15分钟，900秒
+     */
+    public final static int CACHE_FRESH_PERIOD_SECONDS = 900;
+    /**
+     * 用不过去，就把失效时间设定为一个月
+     */
+    public final static int CACHE_NEVER_EXPIRE = 30 * 24 * 60 * 60;
 
-    public final static int CACHE_FRESH_PERIOD_MINITES = 15;
-    public final static int CACHE_NEVER_EXPIRE = 365 * 24 * 60;
+    /**
+     * 短期缓存，就把失效时间设定为 5 秒
+     */
+    public final static int CACHE_KEEP_FRESH = 5;
 
     private CodeRepositoryCache()
     {
@@ -57,6 +66,42 @@ public abstract class CodeRepositoryCache {
             platformEnvironment = getCtxBean("platformEnvironment", PlatformEnvironment.class);
         //Assert.checkNonNull(platformEnvironment);
         return platformEnvironment;
+    }
+
+    /**
+     * 设置所有的缓存刷新时间 单位秒
+     * @param periodSeconds 缓存刷新时间 单位秒
+     */
+    public static void setAllCacheFreshPeriod(int periodSeconds){
+        CodeRepositoryCache.userInfoRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.codeToUserMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.loginNameToUserMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.idcardToUserMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.emailToUserMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.phoneToUserMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.unitInfoRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.codeToUnitMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.depNoToUnitMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.userUnitRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.userUnitsMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.unitUsersMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.catalogRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.codeToCatalogMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.dictionaryRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.codeToDictionaryMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.dictionaryRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.optInfoRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.codeToOptMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.optMethodRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.codeToMethodMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.roleInfoRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.codeToRoleMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.rolePowerRepo.setFreshPeriod(periodSeconds);
+
+        CodeRepositoryCache.userRolesRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.roleUsersRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.unitRolesRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.roleUnitsRepo.setFreshPeriod(periodSeconds);
     }
 
     public static void evictCache(String cacheName, String mapKey){
@@ -108,6 +153,18 @@ public abstract class CodeRepositoryCache {
             case "RolePower":
                 CodeRepositoryCache.rolePowerRepo.evictCahce();
                 break;
+            case "UserRoles":
+                CodeRepositoryCache.userRolesRepo.evictCahce();
+                break;
+            case "RoleUsers":
+                CodeRepositoryCache.roleUsersRepo.evictCahce();
+                break;
+            case "UnitRoles":
+                CodeRepositoryCache.unitRolesRepo.evictCahce();
+                break;
+            case "RoleUnits":
+                CodeRepositoryCache.roleUnitsRepo.evictCahce();
+                break;
         }
     }
 
@@ -125,14 +182,17 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.optMethodRepo.evictCahce();
         CodeRepositoryCache.roleInfoRepo.evictCahce();
         CodeRepositoryCache.rolePowerRepo.evictCahce();
+        CodeRepositoryCache.userRolesRepo.evictCahce();
+        CodeRepositoryCache.roleUsersRepo.evictCahce();
+        CodeRepositoryCache.unitRolesRepo.evictCahce();
+        CodeRepositoryCache.roleUnitsRepo.evictCahce();
     }
 
     /**
      * 缓存用户信息
      */
     public static CachedObject<List<? extends IUserInfo>> userInfoRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllUsers(),
-            CACHE_FRESH_PERIOD_MINITES);
+        new CachedObject<>(()-> getPlatformEnvironment().listAllUsers(), CACHE_FRESH_PERIOD_SECONDS);
     /**
      * 派生的缓存信息，派生缓存相当于索引
      */
@@ -211,7 +271,7 @@ public abstract class CodeRepositoryCache {
             CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
             return allunits;
-         }, CACHE_FRESH_PERIOD_MINITES);
+         }, CACHE_FRESH_PERIOD_SECONDS);
 
     /**
      * 机构的派生缓存
@@ -242,8 +302,7 @@ public abstract class CodeRepositoryCache {
 
 
     public static CachedObject<List<? extends IUserUnit>> userUnitRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(),
-            CACHE_FRESH_PERIOD_MINITES);
+        new CachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(), CACHE_FRESH_PERIOD_SECONDS);
     /**
      * 派生缓存
      */
@@ -281,8 +340,7 @@ public abstract class CodeRepositoryCache {
 
 
     public static CachedObject<List< ? extends IDataCatalog>> catalogRepo  =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllDataCatalogs(),
-            CACHE_FRESH_PERIOD_MINITES);
+        new CachedObject<>(()-> getPlatformEnvironment().listAllDataCatalogs(), CACHE_FRESH_PERIOD_SECONDS);
     /**
      * 派生缓存，避免对象重复
      */
@@ -301,8 +359,7 @@ public abstract class CodeRepositoryCache {
 
 
     public static CachedMap<String, List<? extends IDataDictionary>> dictionaryRepo =
-        new CachedMap<>((sCatalog)->  getPlatformEnvironment().listDataDictionaries(sCatalog),
-            CACHE_FRESH_PERIOD_MINITES );
+        new CachedMap<>((sCatalog)->  getPlatformEnvironment().listDataDictionaries(sCatalog), CACHE_FRESH_PERIOD_SECONDS);
 
     public static DerivativeCachedMap<String,List<? extends IDataDictionary>,
             Map<String,? extends IDataDictionary>> codeToDictionaryMap =
@@ -319,8 +376,7 @@ public abstract class CodeRepositoryCache {
 
 
     public static CachedObject<List<? extends IRoleInfo>> roleInfoRepo=
-        new CachedObject<>(()-> getPlatformEnvironment().listAllRoleInfo(),
-            CACHE_FRESH_PERIOD_MINITES);
+        new CachedObject<>(()-> getPlatformEnvironment().listAllRoleInfo(), CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedObject<Map<String, ? extends IRoleInfo>> codeToRoleMap=
             new CachedObject<>(()-> {
@@ -335,8 +391,7 @@ public abstract class CodeRepositoryCache {
             }, roleInfoRepo);
 
     public static CachedObject<List<? extends IOptInfo>> optInfoRepo=
-        new CachedObject<>(()-> getPlatformEnvironment().listAllOptInfo(),
-            CACHE_FRESH_PERIOD_MINITES);
+        new CachedObject<>(()-> getPlatformEnvironment().listAllOptInfo(), CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedObject<Map<String, ? extends IOptInfo>> codeToOptMap=
         new CachedObject<>(()-> {
@@ -352,8 +407,7 @@ public abstract class CodeRepositoryCache {
 
 
     public static CachedObject<List<? extends IOptMethod>> optMethodRepo=
-        new CachedObject<>(()-> getPlatformEnvironment().listAllOptMethod(),
-            CACHE_FRESH_PERIOD_MINITES);
+        new CachedObject<>(()-> getPlatformEnvironment().listAllOptMethod(), CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedObject<Map<String, ? extends IOptMethod>> codeToMethodMap=
         new CachedObject<>(()-> {
@@ -385,6 +439,5 @@ public abstract class CodeRepositoryCache {
             5);
 
     public static CachedObject<List<? extends IRolePower>> rolePowerRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllRolePower(),
-            CACHE_FRESH_PERIOD_MINITES);
+        new CachedObject<>(()-> getPlatformEnvironment().listAllRolePower(), CACHE_FRESH_PERIOD_SECONDS);
 }
