@@ -5,7 +5,7 @@
     <parent>
         <artifactId>framework-parent</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>4.2-SNAPSHOT</version>
+        <version>4.2.1808</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

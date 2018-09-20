@@ -1,5 +1,6 @@
 package com.centit.framework.appclient;
 
+import com.alibaba.fastjson.JSON;
 import com.centit.framework.common.ObjectException;
 import com.centit.framework.common.ResponseJSON;
 import com.centit.support.algorithm.DatetimeOpt;
@@ -81,13 +82,13 @@ public class AppSession {
     }
 
     public String completeQueryUrl(String queryUrl){
-
+        String baseUrl = queryUrl.indexOf("://") > 0? queryUrl : appServerUrl+queryUrl;
         return needAuthenticated
-                ?appServerUrl+queryUrl+
+                ?baseUrl+
                     (queryUrl.indexOf('?')>=0 ? "&":"?")+
                     /*SecurityContextUtils.*/SECURITY_CONTEXT_TOKENNAME+
                     "="+accessToken
-                :appServerUrl+queryUrl;
+                :baseUrl;
     }
 
     public CloseableHttpClient allocHttpClient() throws Exception{
@@ -96,6 +97,63 @@ public class AppSession {
 
     public void releaseHttpClient(CloseableHttpClient httpClient){
         httpClientPool.returnObject(httpClient);
+    }
+
+    public ResponseJSON  getResponseData(CloseableHttpClient httpClient,
+                                         String httpGetUrl, String queryParam)
+        throws IOException {
+
+        return ResponseJSON.valueOfJson(
+            HttpExecutor.simpleGet(HttpExecutorContext.create(httpClient),
+            completeQueryUrl(httpGetUrl), queryParam));
+    }
+
+    public ResponseJSON  getResponseData(CloseableHttpClient httpClient,
+                                         String httpGetUrl)
+        throws IOException {
+
+        return ResponseJSON.valueOfJson(
+            HttpExecutor.simpleGet(HttpExecutorContext.create(httpClient),
+                completeQueryUrl(httpGetUrl), ""));
+    }
+
+    public String postJosnForm(CloseableHttpClient httpClient, String httpPostUrl,
+                               Object formData , boolean asPut)
+        throws IOException {
+        return HttpExecutor.jsonPost(
+            HttpExecutorContext.create(httpClient),
+            completeQueryUrl(httpPostUrl), formData, asPut);
+    }
+
+    public String postJosnForm(CloseableHttpClient httpClient, String httpPostUrl,
+                               Object formData)
+        throws IOException {
+        return HttpExecutor.jsonPost(
+            HttpExecutorContext.create(httpClient),
+            completeQueryUrl(httpPostUrl), formData, false);
+    }
+
+    public String putJosnForm(CloseableHttpClient httpClient, String httpPutUrl, Object formData)
+        throws IOException {
+        String jsonString = null;
+        if(formData != null){
+            if( formData instanceof String){
+                jsonString = (String) formData;
+            }else{
+                jsonString = JSON.toJSONString(formData);
+            }
+        }
+        return HttpExecutor.jsonPut(
+            HttpExecutorContext.create(httpClient),
+            completeQueryUrl(httpPutUrl), jsonString);
+    }
+
+    public String doDelete(CloseableHttpClient httpClient, String httpDeleteUrl, String queryParam)
+        throws IOException {
+
+        return HttpExecutor.simpleDelete(
+            HttpExecutorContext.create(httpClient),
+            completeQueryUrl(httpDeleteUrl), queryParam);
     }
 
     public String getAppServerUrl() {
