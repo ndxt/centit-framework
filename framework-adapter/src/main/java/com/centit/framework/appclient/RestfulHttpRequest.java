@@ -2,13 +2,10 @@ package com.centit.framework.appclient;
 
 import com.alibaba.fastjson.JSON;
 import com.centit.framework.common.ResponseJSON;
-import com.centit.support.network.HttpExecutor;
-import com.centit.support.network.HttpExecutorContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -57,7 +54,6 @@ public class RestfulHttpRequest {
             if(httpClient!=null)
                 appSession.releaseHttpClient(httpClient);
         }
-
     }
 
     public static <T> T  getResponseObject(AppSession appSession,
@@ -83,14 +79,13 @@ public class RestfulHttpRequest {
 
 
 
-    public static String  postJosnForm (AppSession appSession,
+    public static String  jsonPost (AppSession appSession,
                                                  String httpPostUrl, Object formData , boolean asPut) {
         CloseableHttpClient httpClient = null;
         try {
             httpClient = appSession.allocHttpClient();
             appSession.checkAccessToken(httpClient);
-            return appSession.postJosnForm(httpClient,httpPostUrl, formData, asPut);
-
+            return appSession.jsonPost(httpClient,httpPostUrl, formData, asPut);
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(),e);
             return null;
@@ -100,13 +95,12 @@ public class RestfulHttpRequest {
         }
     }
 
-    public static String  postJosnForm (AppSession appSession,
+    public static String  jsonPost(AppSession appSession,
                                         String httpPostUrl, Object formData) {
-
-        return postJosnForm (appSession, httpPostUrl,  formData, false);
+        return jsonPost(appSession, httpPostUrl,  formData, false);
     }
 
-    public static String  putJosnForm (AppSession appSession,
+    public static String jsonPut(AppSession appSession,
                                         String httpPostUrl, Object formData) {
         String jsonString = null;
         if(formData != null){
@@ -121,7 +115,7 @@ public class RestfulHttpRequest {
         try {
             httpClient = appSession.allocHttpClient();
             appSession.checkAccessToken(httpClient);
-            return appSession.putJosnForm(httpClient,httpPostUrl, jsonString);
+            return appSession.jsonPut(httpClient,httpPostUrl, jsonString);
 
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(),e);
@@ -132,6 +126,43 @@ public class RestfulHttpRequest {
         }
     }
 
+
+    public static String  formPost (AppSession appSession,
+                                    String httpPostUrl, Object formData , boolean asPut) {
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = appSession.allocHttpClient();
+            appSession.checkAccessToken(httpClient);
+            return appSession.formPost(httpClient,httpPostUrl, formData, asPut);
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(),e);
+            return null;
+        } finally {
+            if(httpClient!=null)
+                appSession.releaseHttpClient(httpClient);
+        }
+    }
+
+    public static String  formPost(AppSession appSession,
+                                   String httpPostUrl, Object formData) {
+        return formPost(appSession, httpPostUrl,  formData, false);
+    }
+
+    public static String formPut(AppSession appSession,
+                                 String httpPostUrl, Object formData) {
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = appSession.allocHttpClient();
+            appSession.checkAccessToken(httpClient);
+            return appSession.formPut(httpClient,httpPostUrl, formData);
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(),e);
+            return null;
+        } finally {
+            if(httpClient!=null)
+                appSession.releaseHttpClient(httpClient);
+        }
+    }
 
     public String doDelete(AppSession appSession, String httpDeleteUrl, String queryParam){
         CloseableHttpClient httpClient = null;

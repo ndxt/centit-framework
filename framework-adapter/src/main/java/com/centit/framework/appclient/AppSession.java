@@ -117,7 +117,30 @@ public class AppSession {
                 completeQueryUrl(httpGetUrl), ""));
     }
 
-    public String postJosnForm(CloseableHttpClient httpClient, String httpPostUrl,
+    public String formPost(CloseableHttpClient httpClient, String httpPostUrl,
+                           Object formData , boolean asPut)
+        throws IOException {
+        return HttpExecutor.formPost(
+            HttpExecutorContext.create(httpClient),
+            completeQueryUrl(httpPostUrl), formData, asPut);
+    }
+
+    public String formPost(CloseableHttpClient httpClient, String httpPostUrl,
+                           Object formData)
+        throws IOException {
+        return HttpExecutor.formPost(
+            HttpExecutorContext.create(httpClient),
+            completeQueryUrl(httpPostUrl), formData, false);
+    }
+
+    public String formPut(CloseableHttpClient httpClient, String httpPutUrl, Object formData)
+        throws IOException {
+        return HttpExecutor.formPut(
+            HttpExecutorContext.create(httpClient),
+            completeQueryUrl(httpPutUrl), formData);
+    }
+
+    public String jsonPost(CloseableHttpClient httpClient, String httpPostUrl,
                                Object formData , boolean asPut)
         throws IOException {
         return HttpExecutor.jsonPost(
@@ -125,7 +148,7 @@ public class AppSession {
             completeQueryUrl(httpPostUrl), formData, asPut);
     }
 
-    public String postJosnForm(CloseableHttpClient httpClient, String httpPostUrl,
+    public String jsonPost(CloseableHttpClient httpClient, String httpPostUrl,
                                Object formData)
         throws IOException {
         return HttpExecutor.jsonPost(
@@ -133,7 +156,7 @@ public class AppSession {
             completeQueryUrl(httpPostUrl), formData, false);
     }
 
-    public String putJosnForm(CloseableHttpClient httpClient, String httpPutUrl, Object formData)
+    public String jsonPut(CloseableHttpClient httpClient, String httpPutUrl, Object formData)
         throws IOException {
         String jsonString = null;
         if(formData != null){
