@@ -528,7 +528,8 @@ public abstract class InnerUserUnitFilterCompileEngine {
             }
         }
     }
-
+    //R(U) / R(U-) / R(U-1) / R(U--) /R(U-1--)
+    //一共5种情况，上面的U为一个变量，也可以是一个 数字 常量
     private static boolean calcXzRank(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
         String w = ecc.getAWord();
         if (!"(".equals(w)) { // 语法错误
@@ -557,14 +558,14 @@ public abstract class InnerUserUnitFilterCompileEngine {
         }
         w = ecc.getAWord();
         if ("+".equals(w)) {
-            w = ecc.getAWord();
             gene.setRankPlus();
+            w = ecc.getAWord();
             if (!StringRegularOpt.isNumber(w)) {
                 if (!")".equals(w)) {
                     ecc.setLastErrMsg(w + " is unexpected, expect number or ')' ; calcXzRank +  .");
                     return false;
-                } else
-                    ecc.setPreword(w);
+                } /*else
+                    ecc.setPreword(w);*/
             } else {
                 if(rank>=0)
                     rank += Integer.valueOf(StringRegularOpt.trimString(w));
@@ -578,20 +579,26 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 if (!")".equals(w)) {
                     ecc.setLastErrMsg(w + " is unexpected, expect number or ')' ; calcXzRank -  .");
                     return false;
-                } else
-                    ecc.setPreword(w);
+                } /*else
+                    ecc.setPreword(w);*/
             } else {
                 if(rank>=0)
                     rank -= Integer.valueOf(StringRegularOpt.trimString(w));
                 w = ecc.getAWord();
             }
-        } else if ("++".equals(w)) {// 所有的下级
+        }
+        // 判断是否需要所有的
+        if ("++".equals(w)) {// 所有的下级
             gene.setRankAllSub();
+            w = ecc.getAWord();
         } else if ("--".equals(w)) {// 所有的上级
             gene.setRankAllTop();
+            w = ecc.getAWord();
         }
-        if (rank >= 0)
+
+        if (rank >= 0) {
             gene.setXzRank(rank);
+        }
 
         if (")".equals(w)) {
             return true;

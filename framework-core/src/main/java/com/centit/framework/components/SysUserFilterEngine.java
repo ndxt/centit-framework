@@ -124,10 +124,12 @@ public abstract class SysUserFilterEngine {
             }
 
             if (rf.isHasRankFilter()) {
+                //如果是 所有上下级，直接过滤
                 if (rf.isRankAllSub() || rf.isRankAllTop()) { // 所有下级
                     lsUserunit.removeIf(uu -> !rf.matchRank(ecc.getXzRank(uu.getUserRank())));
                 } else {
-                    Map<String, Integer> unitRank = new HashMap<String, Integer>();
+                    // 针对不同的部门，分别找出这个部门对应的等级
+                    Map<String, Integer> unitRank = new HashMap<>();
                     for (IUserUnit uu : lsUserunit) {
                         if (rf.matchRank(ecc.getXzRank(uu.getUserRank()))) {
                             Integer nR = unitRank.get(uu.getUnitCode());
