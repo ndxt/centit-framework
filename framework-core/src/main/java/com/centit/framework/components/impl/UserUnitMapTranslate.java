@@ -2,8 +2,6 @@ package com.centit.framework.components.impl;
 
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.support.algorithm.ReflectionOpt;
-import com.centit.support.algorithm.StringBaseOpt;
-import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.network.HtmlFormUtils;
 
 import java.util.HashSet;

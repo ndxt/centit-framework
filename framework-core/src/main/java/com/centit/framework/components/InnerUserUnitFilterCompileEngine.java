@@ -610,7 +610,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
 
     /**
      * D()GW()XZ()R()U()
-     * @return
+     * @return 过滤条件因素，这个可以认为是一个分析好的 filter 语句
      */
     public static UserUnitFilterGene makeUserUnitFilter(UserUnitFilterCalcContext ecc) {
         UserUnitFilterGene gene = new UserUnitFilterGene();
