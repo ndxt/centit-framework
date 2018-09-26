@@ -48,21 +48,25 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     public void clearError() {
         this.hasError = false;
     }
+
     @Override
     public String getLastErrMsg() {
         return lastErrMsg;
     }
+
     @Override
     public void setLastErrMsg(String lastErrMsg) {
         this.hasError = true;
         this.lastErrMsg = "Pos " + lexer.getCurrPos() + " : " + lastErrMsg;
     }
+
     @Override
     public void clearParams() {
         unitParams.clear();
         userParams.clear();
         rankParams.clear();
     }
+
     @Override
     public void addUnitParam(String paramName, String unitCode) {
         if (unitCode != null) {
@@ -71,15 +75,18 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
             unitParams.put(paramName, uSet);
         }
     }
+
     @Override
     public void addAllUnitParam(Map<String, Set<String>> unitParam) {
         this.unitParams.putAll(unitParam);
     }
+
     @Override
     public void addUnitParam(String paramName, Set<String> unitCodes) {
         if (unitCodes != null && unitCodes.size() > 0)
             unitParams.put(paramName, unitCodes);
     }
+
     @Override
     public void addUserParam(String paramName, String userCode) {
         if (userCode != null) {
@@ -88,23 +95,28 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
             userParams.put(paramName, uSet);
         }
     }
+
     @Override
     public void addAllUserParam(Map<String, Set<String>> userParam) {
         this.userParams.putAll(userParam);
     }
+
     @Override
     public void addUserParam(String paramName, Set<String> userCodes) {
         if (userCodes != null && userCodes.size() > 0)
             userParams.put(paramName, userCodes);
     }
+
     @Override
     public void addRankParam(String paramName, int r) {
         rankParams.put(paramName, r);
     }
+
     @Override
-    public void addAllRankParam(Map<String,Integer> rankParam) {
+    public void addAllRankParam(Map<String, Integer> rankParam) {
         this.rankParams.putAll(rankParam);
     }
+
     @Override
     public Set<String> getUnitCode(String paramName) {
         Set<String> uSet = unitParams.get(paramName);
@@ -116,10 +128,10 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
 
         if (uSet != null) {
             return uSet;
-        }
-        else
+        } else
             return null;
     }
+
     @Override
     public Set<String> getUserCode(String paramName) {
         Set<String> uSet = userParams.get(paramName);
@@ -133,30 +145,31 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
 
     @Override
     public int stringToRank(String srank) {
-        if( srank!=null )
+        if (StringUtils.isBlank(srank))
             return -1;
-        if(!StringRegularOpt.isNumber(srank))
+        if (!StringRegularOpt.isNumber(srank))
             return -1;
         return Integer.valueOf(StringRegularOpt.trimString(srank));
     }
+
     @Override
     public int getRank(String paramName) {
         Integer rank = rankParams.get(paramName);
-        if( rank!=null )
+        if (rank != null)
             return rank;
         String srank = StringBaseOpt.objectToString(
-                varTrans.getGeneralVariable(paramName));
+            varTrans.getGeneralVariable(paramName));
         return stringToRank(srank);
     }
 
     @Override
-    public int getUserRank(String userCode){
+    public int getUserRank(String userCode) {
         List<? extends IUserUnit> uus = listUserUnits(userCode);
         int nRank = CodeRepositoryUtil.MAXXZRANK;
-        if(uus!=null){
-            for(IUserUnit uu : uus){
+        if (uus != null) {
+            for (IUserUnit uu : uus) {
                 int nr = getXzRank(uu.getUserRank());
-                if(nr<nRank){
+                if (nr < nRank) {
                     nRank = nr;
                 }
             }
