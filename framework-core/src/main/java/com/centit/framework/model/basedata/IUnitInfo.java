@@ -11,20 +11,16 @@ public interface IUnitInfo{
      * @return 机构代码 是机构的主键
      */
      String getUnitCode();
-
-
     /**
      * 机构自编代码
      * @return 机构自编代码
      */
      String getDepNo();
-
     /**
      * 机构名称
      * @return 机构名称
      */
      String getUnitName();
-
     /**
      * 机构简称
      * @return 机构简称
@@ -46,7 +42,9 @@ public interface IUnitInfo{
      */
      String getIsValid();
     /**
-     * 机构路径
+     * 机构路径，为这个机构所有上级机构的代码 用'/'连接的字符串
+     * 通过这个机构可以查找其所有的上级机构代码， 用'/'分割这个字符串就可以
+     * 也可以从数据库中查找出所有他的下级机构，只要判断其 unitPath 是否已本机构的unitPath为前缀
      * @return 机构路径
      */
      String getUnitPath();
@@ -55,13 +53,11 @@ public interface IUnitInfo{
      * @return 机构排序
      */
      Long getUnitOrder();
-
     /**
      * 分管领导（机构管理员）
      * @return 分管领导（机构管理员）
      */
      String getUnitManager();
-
     /**
      * 获取和第三方对接数据，一般为第三方业务数据组件
      * @return 机构第三发业务中的主键

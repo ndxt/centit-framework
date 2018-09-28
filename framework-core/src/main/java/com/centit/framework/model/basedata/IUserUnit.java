@@ -22,8 +22,8 @@ public interface IUserUnit{
      */
     String getUnitCode();
     /**
-     * 是否为主机构 T:主机构 F：辅机构
-     * @return 是否为主机构 T:主机构 F：辅机构
+     * 是否为默认(主)机构 T:主机构 F：辅机构
+     * @return 是否为默认(主)机构 T:主机构 F：辅机构
      */
     String getIsPrimary();
     /**

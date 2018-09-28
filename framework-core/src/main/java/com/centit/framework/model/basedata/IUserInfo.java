@@ -17,8 +17,8 @@ public interface IUserInfo{
     String getUserCode();
 
     /**
-    *  String getUserPin()
-    * @return getUserPin
+    * 用户密码的密文， 密码为加盐的散列算法
+    * @return 密文
     */
     @JSONField(serialize = false)
     String getUserPin();
