@@ -9,6 +9,7 @@ import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.framework.security.model.CheckUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -42,6 +43,13 @@ public class MainFrameController extends BaseController {
 
     @Resource
     protected PlatformEnvironment platformEnvironment;
+
+    /**
+     * 这一用户自定义验证，可以为null
+     */
+    @Resource
+    protected CheckUserDetails checkUserDetails;
+
     //实施人员入口开关
     @Value("${app.deploy.enabled:false}")
     private boolean deploy;
@@ -236,7 +244,43 @@ public class MainFrameController extends BaseController {
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         JsonResultUtils.writeResponseDataAsJson(resData, response);
+    }
 
+
+    /**
+     * 这个方法用于和第三方对接的验证方式，需要注入名为 checkUserDetails 的bean 。
+     * @param request request
+     * @param response response
+     */
+    @RequestMapping(value="/loginasthird",method = RequestMethod.POST)
+    public void loginAsThird(HttpServletRequest request,HttpServletResponse response) {
+        if(checkUserDetails==null){
+            JsonResultUtils.writeErrorMessageJson("系统找不到名为 checkUserDetails 的 bean。", response);
+            return;
+        }
+        Map<String, Object> formValue = BaseController.collectRequestParameters(request);
+        String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
+        Object token = formValue.get("token");
+
+        CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
+        if(ud==null){
+            JsonResultUtils.writeErrorMessageJson("用户： "+userCode+"不存在。", response);
+            return;
+        }
+
+        boolean bo=checkUserDetails.check(ud, token);
+        if(!bo){
+            JsonResultUtils.writeErrorMessageJson("用户："+userCode+
+                " token:" + StringBaseOpt.objectToString(token) +" 校验不通过", response);
+            return;
+        }
+        String tokenKey = SecurityContextUtils.registerUserToken(ud);
+        // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
+        // SecurityContextUtils.setSecurityContext(ud,request.getSession());
+        //request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
+        ResponseMapData resData = new ResponseMapData();
+        resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
+        JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
     /**
