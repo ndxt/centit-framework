@@ -14,6 +14,7 @@ import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -47,7 +48,7 @@ public class MainFrameController extends BaseController {
     /**
      * 这一用户自定义验证，可以为null
      */
-    @Resource
+    @Autowired(required = false)
     protected CheckUserDetails checkUserDetails;
 
     //实施人员入口开关
