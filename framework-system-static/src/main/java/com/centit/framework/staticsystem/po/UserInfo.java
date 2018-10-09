@@ -42,9 +42,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
 
     private Date pwdExpiredTime; // 密码失效时间
 
-    private String loginIp; // 登录地址
-
-    private Long addrbookId; // 通讯id
+    private String topUnit; // 顶层机构
 
     private String regEmail; // 注册email
 
@@ -139,7 +137,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
 
     public UserInfo(String userCode, String userpin,String usertype, String userstate,
             String loginname, String username, String userdesc,
-            Long logintimes, Date activeime, String loginip, Long addrbookid) {
+            Long logintimes, Date activeime, String topUnit) {
             this.userCode = userCode;
             this.userPin = userpin;
             this.isValid = userstate;
@@ -148,9 +146,8 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
             this.userDesc = userdesc;
             this.loginTimes = logintimes;
             this.activeTime = activeime;
-            this.loginIp = loginip;
+            this.topUnit = topUnit;
             this.loginName = loginname;
-            this.addrbookId = addrbookid;
             // userUnits=null;
             primaryUnit = null;
             }
@@ -159,7 +156,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     public UserInfo(String userCode, String userpin,String usertype, String userstate,
                     String loginname, String username, String userdesc,
                     String usertag, String englishname,
-                    Long logintimes, Date activeime, String loginip, Long addrbookid) {
+                    Long logintimes, Date activeime, String topUnit) {
         this.userCode = userCode;
         this.userPin = userpin;
         this.isValid = userstate;
@@ -168,9 +165,8 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
         this.userDesc = userdesc;
         this.loginTimes = logintimes;
         this.activeTime = activeime;
-        this.loginIp = loginip;
+        this.topUnit = topUnit;
         this.loginName = loginname;
-        this.addrbookId = addrbookid;
         this.userTag = usertag;
         this.englishName = englishname;
         // userUnits=null;
@@ -263,12 +259,12 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
         this.loginTimes = logintimes;
     }
 
-    public String getLoginIp() {
-        return this.loginIp;
+    public String getTopUnit() {
+        return this.topUnit;
     }
 
-    public void setLoginIp(String loginip) {
-        this.loginIp = loginip;
+    public void setTopUnit(String topUnit) {
+        this.topUnit = topUnit;
     }
 
     public boolean isEnabled() {
@@ -302,14 +298,6 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
 
     public void setUserNamePinyin(String usernamepinyin) {
         this.userNamePinyin = usernamepinyin;
-    }
-
-    public Long getAddrbookId() {
-        return addrbookId;
-    }
-
-    public void setAddrbookId(Long addrbookid) {
-        this.addrbookId = addrbookid;
     }
 
     public void setRegEmail(String regEmail) {
@@ -362,8 +350,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
         this.primaryUnit=other.getPrimaryUnit();
         this.loginTimes = other.getLoginTimes();
         this.activeTime = other.getActiveTime();
-        this.loginIp = other.getLoginIp();
-        this.addrbookId = other.getAddrbookId();
+        this.topUnit = other.getTopUnit();
         this.regEmail = other.getRegEmail();
         this.regCellPhone = other.getRegCellPhone();
         this.userOrder = other.getUserOrder();
@@ -411,8 +398,7 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
         this.userDesc = null;
         this.loginTimes = null;
         this.activeTime = null;
-        this.loginIp = null;
-        this.addrbookId = null;
+        this.topUnit = null;
         this.primaryUnit=null;
         this.regEmail = null;
         this.userType = null;
@@ -442,10 +428,6 @@ public class UserInfo implements IUserInfo, java.io.Serializable{
     public void setUserOrder(Long userorder) {
         this.userOrder = userorder;
     }
-
-
-
-
 
     /**
      * 获取创建时间

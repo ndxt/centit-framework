@@ -49,9 +49,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
     private String unitDesc; // 机构描述
 
 
-    private Long addrbookId; // 通讯主体id
-
-
     private Long unitOrder; // 机构排序
 
 
@@ -100,7 +97,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
 
     public UnitInfo(String unitcode, String parentunit, String unittype,
                     String isvalid, String unitname, String unitshortname, String unitword,
-                    String unitdesc, Long addrbookid, Long grade, Long unitorder, String depno,
+                    String unitdesc, Long grade, Long unitorder, String depno,
                     Date createDate, Date lastModifyDate) {
         super();
         this.unitCode = unitcode;
@@ -111,7 +108,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitShortName = unitshortname;
         this.unitWord = unitword;
         this.unitDesc = unitdesc;
-        this.addrbookId = addrbookid;
         this.unitGrade = grade;
         this.unitOrder = unitorder;
         this.depNo = depno;
@@ -119,7 +115,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
 
     public UnitInfo(String unitcode, String parentunit, String unittype,
                     String unitstate, String unitname, String unitdesc,
-                    Long addrbookid, String unitshortname, String depno,
+                    String unitshortname, String depno,
                     String unittag, String englishname,String unitword, Long unitgrade) {
         this.unitCode = unitcode;
         this.parentUnit = parentunit;
@@ -127,7 +123,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.isValid = unitstate;
         this.unitName = unitname;
         this.unitDesc = unitdesc;
-        this.addrbookId = addrbookid;
         this.unitShortName = unitshortname;
         this.depNo = depno;
         this.unitWord = unitword;
@@ -217,14 +212,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitDesc = unitdesc;
     }
 
-    public Long getAddrbookId() {
-        return addrbookId;
-    }
-
-    public void setAddrbookId(Long addrbookid) {
-        this.addrbookId = addrbookid;
-    }
-
     /**
      * 获取创建时间
      *
@@ -278,7 +265,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitName = other.getUnitName();
         this.unitShortName = other.getUnitShortName();
         this.unitDesc = other.getUnitDesc();
-        this.addrbookId = other.getAddrbookId();
         this.unitOrder = other.getUnitOrder();
         this.depNo = other.getDepNo();
         this.unitWord = other.getUnitWord();
@@ -302,8 +288,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
             this.unitName = other.getUnitName();
         if (other.getUnitDesc() != null)
             this.unitDesc = other.getUnitDesc();
-        if (other.getAddrbookId() != null)
-            this.addrbookId = other.getAddrbookId();
         if (other.getUnitShortName() != null)
             this.unitShortName = other.getUnitShortName();
         if (other.getUnitOrder() != null)
