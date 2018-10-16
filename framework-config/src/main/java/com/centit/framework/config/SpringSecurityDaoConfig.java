@@ -4,11 +4,13 @@ import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -82,6 +84,16 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         authenticationProvider.setHideUserNotFoundExceptions(false);
         authenticationProvider.setUserDetailsService(centitUserDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
+        if( passwordEncoder instanceof org.springframework.security.authentication.encoding.PasswordEncoder) {
+            ReflectionSaltSource saltSource = new ReflectionSaltSource();
+            //UserInfo.salt 盐值数据字段
+            String propertyToUse = env.getProperty("login.dao.passwordEncoder.salt");
+            if(StringUtils.isBlank(propertyToUse)){
+                propertyToUse = "userCode";
+            }
+            saltSource.setUserPropertyToUse(propertyToUse);
+            authenticationProvider.setSaltSource(saltSource);
+        }
         return authenticationProvider;
     }
 
