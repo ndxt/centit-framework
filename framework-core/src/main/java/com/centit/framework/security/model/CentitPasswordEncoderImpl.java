@@ -14,6 +14,14 @@ import java.lang.reflect.Method;
 /**
  * Created by codefan on 17-1-20.
  * 采用Spring 推荐的 BCryptPasswordEncoder 加密方式，并进行改造，添加了自定义的盐，而不是随机的盐
+ *
+ * 这个密码的加密方式是：
+ * 1. 前端输入密码，在post之前用md5散列一次
+ * 2. 后端 验证是 需要用用户（userDetails）中获取一个主键（不能修改的属性)作为盐，（isPasswordValid）
+ * ------------------------------密码设置---------------------------------------
+ * 1. 用户修改密码时，新旧密码都在前端md 5 散列一次，所以在设置用户pin信息是需要调用 encodePassword
+ * 2. 后台设置密码时，最好也要对密码md5一次，如果没有md5 需要调用 createPassword
+ *
  */
 @SuppressWarnings("deprecation")
 public class CentitPasswordEncoderImpl implements CentitPasswordEncoder, PasswordEncoder {
