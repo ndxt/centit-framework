@@ -6,9 +6,9 @@ package com.centit.framework.security.model;
  */
 @SuppressWarnings("deprecation")
 public interface CentitPasswordEncoder {
-    String pretreatPassword(String rawPass);
+    //String pretreatPassword(String rawPass);
 
-    String pretreatPassword(String rawPass, Object salt);
+    //String pretreatPassword(String rawPass, Object salt);
 
     String createPassword(String rawPass, Object salt);
 
