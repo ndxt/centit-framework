@@ -83,7 +83,6 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setHideUserNotFoundExceptions(false);
         authenticationProvider.setUserDetailsService(centitUserDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
         if( passwordEncoder instanceof org.springframework.security.authentication.encoding.PasswordEncoder) {
             ReflectionSaltSource saltSource = new ReflectionSaltSource();
             //UserInfo.salt 盐值数据字段
@@ -94,6 +93,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
             saltSource.setUserPropertyToUse(propertyToUse);
             authenticationProvider.setSaltSource(saltSource);
         }
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
     }
 

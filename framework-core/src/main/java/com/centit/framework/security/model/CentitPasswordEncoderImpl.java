@@ -56,8 +56,9 @@ public class CentitPasswordEncoderImpl implements CentitPasswordEncoder, Passwor
                 encodedPassword,
                 CentitPasswordEncoderImpl.createPassword(rawPass, StringBaseOpt.castObjectToString(salt),strength));
     }
-
-    public static String createPassword(String password, String salt, int logRounds) {
+    //salt 可能为null
+    public static String createPassword(String password, String rawSalt, int logRounds) {
+        String salt = StringUtils.isBlank(rawSalt)?"salt":rawSalt;
         try {
             BCrypt b = new BCrypt();
             Method method = BCrypt.class.getDeclaredMethod("crypt_raw", byte[].class,byte[].class,int.class);
