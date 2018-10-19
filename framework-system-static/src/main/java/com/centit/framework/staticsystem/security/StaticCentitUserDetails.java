@@ -1,11 +1,9 @@
 package com.centit.framework.staticsystem.security;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.security.model.AbstractCentitUserDetails;
 import com.centit.framework.staticsystem.po.RoleInfo;
 import com.centit.framework.staticsystem.po.UserInfo;
 import com.centit.framework.staticsystem.po.UserUnit;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
 import java.util.List;
