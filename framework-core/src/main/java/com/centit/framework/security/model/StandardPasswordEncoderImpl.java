@@ -26,18 +26,8 @@ public class StandardPasswordEncoderImpl
     }
 
     @Override
-    public String pretreatPassword(String rawPass) {
-        return pretreatPassword(rawPass, null);
-    }
-
-    @Override
-    public String pretreatPassword(String rawPass, Object salt) {
-        return rawPass;
-    }
-
-    @Override
     public String createPassword(String rawPass, Object salt){
-        return passwordEncoder.encode(pretreatPassword(rawPass, salt));
+        return passwordEncoder.encode(rawPass);
     }
 
     @Override

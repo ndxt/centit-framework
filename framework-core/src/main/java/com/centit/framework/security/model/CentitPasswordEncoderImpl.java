@@ -38,19 +38,10 @@ public class CentitPasswordEncoderImpl implements CentitPasswordEncoder, Passwor
             this.strength = 11;
         }
     }
-    @Override
-    public String pretreatPassword(String rawPass) {
-        return Md5Encoder.encode(rawPass);
-    }
-
-    @Override
-    public String pretreatPassword(String rawPass, Object salt) {
-        return pretreatPassword(rawPass) ;
-    }
 
     @Override
     public String createPassword(String rawPass, Object salt) {
-        return encodePassword(pretreatPassword(rawPass), salt);
+        return encodePassword(rawPass, salt);
     }
 
     @Override
