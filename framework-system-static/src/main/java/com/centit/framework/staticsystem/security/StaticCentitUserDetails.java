@@ -30,9 +30,6 @@ public class StaticCentitUserDetails extends AbstractCentitUserDetails {
     private List<RoleInfo> userRoles;
     private List<UserUnit> userUnits;
 
-    @JSONField(serialize = false)
-    private List<GrantedAuthority> arrayAuths;
-
     public void setUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
     }

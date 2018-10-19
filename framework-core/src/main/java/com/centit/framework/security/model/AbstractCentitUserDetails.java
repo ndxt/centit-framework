@@ -250,6 +250,4 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
         return this.getUserInfo().getUserCode().hashCode();
     }
 
-
-
 }
