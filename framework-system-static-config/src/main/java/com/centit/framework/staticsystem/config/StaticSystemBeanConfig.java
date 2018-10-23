@@ -35,14 +35,14 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         return new AutowiredAnnotationBeanPostProcessor();
     }
 
-    /**
+    /* 这bean从框架中移除，由开发人员自行定义
      * 这个bean必须要有
      * @return CentitPasswordEncoder 密码加密算法
      */
-    @Bean("passwordEncoder")
+    /*@Bean("passwordEncoder")
     public StandardPasswordEncoderImpl passwordEncoder() {
         return  new StandardPasswordEncoderImpl();
-    }
+    }*/
 
     @Bean
     @Lazy(value = false)

@@ -5,6 +5,7 @@ import com.centit.framework.components.impl.TextOperationLogWriterImpl;
 import com.centit.framework.config.*;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
+import com.centit.framework.security.model.StandardPasswordEncoderImpl;
 import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
@@ -29,6 +30,15 @@ public class ServiceConfig {
     @Lazy(value = false)
     public InitialWebRuntimeEnvironment initialEnvironment() {
         return new InitialWebRuntimeEnvironment();
+    }
+
+    /**
+     * 这个bean必须要有
+     * @return CentitPasswordEncoder 密码加密算法
+     */
+    @Bean("passwordEncoder")
+    public StandardPasswordEncoderImpl passwordEncoder() {
+        return  new StandardPasswordEncoderImpl();
     }
 
     @Bean
