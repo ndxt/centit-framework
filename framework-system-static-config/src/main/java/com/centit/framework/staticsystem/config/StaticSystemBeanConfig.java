@@ -1,7 +1,10 @@
 package com.centit.framework.staticsystem.config;
 
 import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.framework.security.model.*;
+import com.centit.framework.security.model.CentitPasswordEncoder;
+import com.centit.framework.security.model.CentitSessionRegistry;
+import com.centit.framework.security.model.CentitUserDetailsService;
+import com.centit.framework.security.model.MemorySessionRegistryImpl;
 import com.centit.framework.staticsystem.service.impl.JdbcPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.JsonPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.UserDetailsServiceImpl;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -35,14 +39,14 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         return new AutowiredAnnotationBeanPostProcessor();
     }
 
-    /**
+    /* 这bean从框架中移除，由开发人员自行定义
      * 这个bean必须要有
      * @return CentitPasswordEncoder 密码加密算法
      */
-    @Bean("passwordEncoder")
+    /*@Bean("passwordEncoder")
     public StandardPasswordEncoderImpl passwordEncoder() {
         return  new StandardPasswordEncoderImpl();
-    }
+    }*/
 
     @Bean
     @Lazy(value = false)
@@ -68,7 +72,6 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         }
     }
 
-
     @Bean
     public CentitUserDetailsService centitUserDetailsService(@Autowired PlatformEnvironment platformEnvironment) {
         UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
@@ -80,7 +83,6 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
     public CentitSessionRegistry centitSessionRegistry(){
         return new MemorySessionRegistryImpl();
     }
-
 
     @Bean
     public CsrfTokenRepository csrfTokenRepository() {

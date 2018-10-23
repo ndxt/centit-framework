@@ -84,8 +84,6 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         return pretreatmentAuthenticationProcessingFilter;
     }
 
-
-
     @Override
     protected AuthenticationProvider getAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
