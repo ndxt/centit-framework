@@ -41,9 +41,8 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
                     + "从主机"+loginHost+"尝试登录,失败原因:"+exception.getMessage()+"。");
         }
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
-//        String ajax = request.getParameter("ajax");
-//        if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)) {
-        if(!"XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+        String ajax = request.getParameter("ajax");
+        if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)) {
             request.setAttribute("hasTriedTimes",tryTimes);
             super.onAuthenticationFailure(request, response, exception);
         }else {
