@@ -2,7 +2,6 @@ package com.centit.framework.config;
 
 import com.centit.framework.security.*;
 import com.centit.framework.security.model.CentitSecurityMetadata;
-import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.CentitUserDetailsService;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
@@ -16,6 +15,7 @@ import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -40,7 +40,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
     protected CsrfTokenRepository csrfTokenRepository;
 
     @Autowired
-    protected CentitSessionRegistry centitSessionRegistry;
+    protected SessionRegistry sessionRegistry;
 
     @Autowired
     protected CentitUserDetailsService centitUserDetailsService;
@@ -128,7 +128,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         securityInterceptor.setAuthenticationManager(authenticationManager);
         securityInterceptor.setAccessDecisionManager(createCentitAccessDecisionManager());
         securityInterceptor.setSecurityMetadataSource(createCentitSecurityMetadataSource());
-        securityInterceptor.setSessionRegistry(centitSessionRegistry);
+        securityInterceptor.setSessionRegistry(sessionRegistry);
 
         securityInterceptor.setAllResourceMustBeAudited(
             BooleanBaseOpt.castObjectToBoolean(
@@ -170,7 +170,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         ajaxSuccessHandler.setRegistToken(BooleanBaseOpt.castObjectToBoolean(
                 env.getProperty("login.success.registToken"),false));
         ajaxSuccessHandler.setUserDetailsService(centitUserDetailsService);
-        ajaxSuccessHandler.setSessionRegistry(centitSessionRegistry);
+        ajaxSuccessHandler.setSessionRegistry(sessionRegistry);
         return ajaxSuccessHandler;
     }
 

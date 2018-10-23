@@ -3,11 +3,12 @@ package com.centit.framework.security;
 import javax.servlet.http.HttpSession;
 
 import com.centit.framework.common.ObjectException;
-import com.centit.framework.security.model.CentitSessionRegistry;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.UuidOpt;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.context.ContextLoaderListener;
 
 public class SecurityContextUtils {
@@ -20,14 +21,14 @@ public class SecurityContextUtils {
     public final static String FORBIDDEN_ROLE_CODE = "forbidden";
     public final static String DEPLOYER_ROLE_CODE = "deploy";
 
-    public static CentitSessionRegistry getCentitSessionRegistry() {
+    public static SessionRegistry getSessionRegistry() {
         return ContextLoaderListener.getCurrentWebApplicationContext().
-                getBean("centitSessionRegistry",  CentitSessionRegistry.class);
+                getBean("sessionRegistry",  SessionRegistry.class);
     }
 
     public static String registerUserToken(CentitUserDetails ud){
         String tokenKey = UuidOpt.getUuidAsString();
-        CentitSessionRegistry registry = getCentitSessionRegistry();
+        SessionRegistry registry = getSessionRegistry();
         if(registry==null)
             throw new ObjectException(ud,"获取bean：centitSessionRegistry出错，请检查配置文件。");
         registry.registerNewSession(tokenKey,ud);
@@ -43,4 +44,12 @@ public class SecurityContextUtils {
         session.setAttribute(SecurityContextUserdetail, ud);
     }
 
+    public static CentitUserDetails  getCurrentUserDetails(SessionRegistry sessionRegistry, String /**sessionId*/ accessToken){
+
+        SessionInformation info = sessionRegistry.getSessionInformation(accessToken);
+        if(info==null){
+            return null;
+        }
+        return (CentitUserDetails)info.getPrincipal();
+    }
 }

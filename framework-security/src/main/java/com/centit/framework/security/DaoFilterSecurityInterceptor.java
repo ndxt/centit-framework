@@ -1,7 +1,6 @@
 package com.centit.framework.security;
 
 import com.centit.framework.common.WebOptUtils;
-import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.CentitUserDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.SecurityMetadataSource;
@@ -9,6 +8,7 @@ import org.springframework.security.access.intercept.AbstractSecurityInterceptor
 import org.springframework.security.access.intercept.InterceptorStatusToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 
@@ -20,9 +20,9 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
 
     private FilterInvocationSecurityMetadataSource securityMetadataSource;
 
-    private CentitSessionRegistry sessionRegistry;
+    private SessionRegistry sessionRegistry;
 
-    public void setSessionRegistry(CentitSessionRegistry sessionManger) {
+    public void setSessionRegistry(SessionRegistry sessionManger) {
         this.sessionRegistry = sessionManger;
     }
     // ~ Methods
@@ -85,7 +85,7 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
             String accessToken = fi.getHttpRequest().getParameter(SecurityContextUtils.SecurityContextTokenName);
             if(StringUtils.isBlank(accessToken))
                 accessToken = String.valueOf(fi.getHttpRequest().getAttribute(SecurityContextUtils.SecurityContextTokenName) );
-            CentitUserDetails ud = sessionRegistry.getCurrentUserDetails(accessToken);
+            CentitUserDetails ud = SecurityContextUtils.getCurrentUserDetails(sessionRegistry, accessToken);
             if(ud!=null){
                 alwaysReauthenticate = this.isAlwaysReauthenticate();
                 if(alwaysReauthenticate) {

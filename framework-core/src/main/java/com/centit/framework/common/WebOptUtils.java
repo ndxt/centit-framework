@@ -1,12 +1,12 @@
 package com.centit.framework.common;
 
 import com.centit.framework.security.SecurityContextUtils;
-import com.centit.framework.security.model.CentitSessionRegistry;
 import com.centit.framework.security.model.CentitUserDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -83,13 +83,14 @@ public class WebOptUtils {
         if(request==null)
             return ud;
          //根据token获取用户信息
-        if(ud==null){
-             String accessToken = request.getParameter(SecurityContextUtils.SecurityContextTokenName);
-             if(StringUtils.isBlank(accessToken))
-                 accessToken = String.valueOf(request.getAttribute(SecurityContextUtils.SecurityContextTokenName) );
-            CentitSessionRegistry registry = SecurityContextUtils.getCentitSessionRegistry();
-            if(registry!=null)
-                ud = registry.getCurrentUserDetails(accessToken);
+        if(ud==null) {
+            String accessToken = request.getParameter(SecurityContextUtils.SecurityContextTokenName);
+            if (StringUtils.isBlank(accessToken))
+                accessToken = String.valueOf(request.getAttribute(SecurityContextUtils.SecurityContextTokenName));
+            SessionRegistry registry = SecurityContextUtils.getSessionRegistry();
+            if (registry != null) {
+                ud = SecurityContextUtils.getCurrentUserDetails(registry, accessToken);
+            }
         }
         //在session中手动获得用户信息
         if(ud==null){

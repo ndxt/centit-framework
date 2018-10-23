@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.util.Assert;
 
 import java.util.*;
@@ -20,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
    org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration
    org.springframework.session.security.web.authentication.SpringSessionRememberMeServices
  */
-public class MemorySessionRegistryImpl implements CentitSessionRegistry,
+public class MemorySessionRegistryImpl implements SessionRegistry,
         ApplicationListener<SessionDestroyedEvent> {
 
     // ~ Instance fields
@@ -72,15 +73,6 @@ public class MemorySessionRegistryImpl implements CentitSessionRegistry,
     public SessionInformation getSessionInformation(String sessionId) {
         Assert.hasText(sessionId, "SessionId required as per interface contract");
         return sessionIds.get(sessionId);
-    }
-
-    @Override
-    public CentitUserDetails  getCurrentUserDetails(String /**sessionId*/ accessToken){
-        SessionInformation info = getSessionInformation(accessToken);
-        if(info==null){
-            return null;
-        }
-        return (CentitUserDetails)info.getPrincipal();
     }
 
     @Override
