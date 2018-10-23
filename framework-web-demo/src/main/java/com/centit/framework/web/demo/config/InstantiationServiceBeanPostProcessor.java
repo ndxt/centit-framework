@@ -13,8 +13,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 /**
  * Created by codefan on 17-7-6.
  */
-public class InstantiationServiceBeanPostProcessor implements ApplicationListener<ContextRefreshedEvent>
-{
+public class InstantiationServiceBeanPostProcessor
+    implements ApplicationListener<ContextRefreshedEvent>{
 
     @Autowired
     protected NotificationCenter notificationCenter;

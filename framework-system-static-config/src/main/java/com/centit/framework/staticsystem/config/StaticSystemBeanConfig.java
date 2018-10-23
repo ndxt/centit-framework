@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -71,7 +72,6 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         }
     }
 
-
     @Bean
     public CentitUserDetailsService centitUserDetailsService(@Autowired PlatformEnvironment platformEnvironment) {
         UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
@@ -83,7 +83,6 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
     public CentitSessionRegistry centitSessionRegistry(){
         return new MemorySessionRegistryImpl();
     }
-
 
     @Bean
     public CsrfTokenRepository csrfTokenRepository() {

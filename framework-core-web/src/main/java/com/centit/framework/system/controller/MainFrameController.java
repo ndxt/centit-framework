@@ -14,13 +14,13 @@ import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.ContextLoaderListener;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -48,8 +48,7 @@ public class MainFrameController extends BaseController {
     /**
      * 这一用户自定义验证，可以为null
      */
-    @Autowired(required = false)
-    protected CheckUserDetails checkUserDetails;
+    private CheckUserDetails checkUserDetails;
 
     //实施人员入口开关
     @Value("${app.deploy.enabled:false}")
@@ -255,6 +254,11 @@ public class MainFrameController extends BaseController {
      */
     @RequestMapping(value="/loginasthird",method = RequestMethod.POST)
     public void loginAsThird(HttpServletRequest request,HttpServletResponse response) {
+        if(checkUserDetails==null) {
+            checkUserDetails = ContextLoaderListener.getCurrentWebApplicationContext()
+                .getBean("checkUserDetails", CheckUserDetails.class);
+        }
+
         if(checkUserDetails==null){
             JsonResultUtils.writeErrorMessageJson("系统找不到名为 checkUserDetails 的 bean。", response);
             return;
@@ -269,7 +273,7 @@ public class MainFrameController extends BaseController {
             return;
         }
 
-        boolean bo=checkUserDetails.check(ud, token);
+        boolean bo = checkUserDetails.check(ud, token);
         if(!bo){
             JsonResultUtils.writeErrorMessageJson("用户："+userCode+
                 " token:" + StringBaseOpt.objectToString(token) +" 校验不通过", response);
