@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.logout.CookieClearingLogo
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CsrfLogoutHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Created by zou_wy on 2017/3/29.
@@ -75,8 +76,15 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
                 env.getProperty("http.filter.chain.continueBeforeSuccessfulAuthentication"),false));
         pretreatmentAuthenticationProcessingFilter.setAuthenticationFailureHandler(createAjaxFailureHandler());
         pretreatmentAuthenticationProcessingFilter.setAuthenticationSuccessHandler(createAjaxSuccessHandler());
+        String requiresAuthenticationUrl = env.getProperty("requires.authentication.request.url");
+        if(StringUtils.isNotBlank(requiresAuthenticationUrl)) {
+            pretreatmentAuthenticationProcessingFilter.setRequiresAuthenticationRequestMatcher(
+                new AntPathRequestMatcher(requiresAuthenticationUrl, "POST"));
+        }
         return pretreatmentAuthenticationProcessingFilter;
     }
+
+
 
     @Override
     protected AuthenticationProvider getAuthenticationProvider() {

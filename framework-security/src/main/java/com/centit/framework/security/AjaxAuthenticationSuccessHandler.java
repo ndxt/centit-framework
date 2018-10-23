@@ -91,8 +91,9 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
                     + "从主机"+request.getRemoteHost()+":"+request.getRemotePort()+"登录。");
         }
 
-        String ajax = request.getParameter("ajax");
-        if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)){
+//        String ajax = request.getParameter("ajax");
+//        if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)){
+        if(!"XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             super.onAuthenticationSuccess(request,response,authentication);
         }else{
             ResponseMapData resData = new ResponseMapData();
