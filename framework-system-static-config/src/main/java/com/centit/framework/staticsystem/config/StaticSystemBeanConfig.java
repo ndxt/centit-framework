@@ -1,7 +1,10 @@
 package com.centit.framework.staticsystem.config;
 
 import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.framework.security.model.*;
+import com.centit.framework.security.model.CentitPasswordEncoder;
+import com.centit.framework.security.model.CentitSessionRegistry;
+import com.centit.framework.security.model.CentitUserDetailsService;
+import com.centit.framework.security.model.MemorySessionRegistryImpl;
 import com.centit.framework.staticsystem.service.impl.JdbcPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.JsonPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.UserDetailsServiceImpl;
