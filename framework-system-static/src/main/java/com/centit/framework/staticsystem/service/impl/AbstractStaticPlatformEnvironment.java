@@ -15,7 +15,6 @@ import java.util.*;
 public abstract class AbstractStaticPlatformEnvironment
     implements PlatformEnvironment {
 
-
     public CachedObject<List<DataDictionary>> allDictionaryRepo =
         new CachedObject<>(this::listAllDataDictionary,
             CodeRepositoryCache.CACHE_NEVER_EXPIRE );
@@ -68,8 +67,10 @@ public abstract class AbstractStaticPlatformEnvironment
                         roles.add((RoleInfo)ri);
                         for (IRolePower rp : ri.getRolePowers()) {
                             IOptMethod om = CodeRepositoryCache.codeToMethodMap.getCachedTarget().get(rp.getOptCode());
-                            if (om != null)
-                                userOptList.put(om.getOptId() + "-" + om.getOptMethod(), om.getOptMethod());
+                            if (om != null && StringUtils.isNotBlank(om.getOptMethod())) {
+                                //om.getOptCode()
+                                userOptList.put(om.getOptId() + "-" + om.getOptMethod(), om.getOptCode());
+                            }
                         }
                     }
                 }
@@ -86,7 +87,6 @@ public abstract class AbstractStaticPlatformEnvironment
         }
         allUserDetailsRepo.setFreshtDate(userDetails);
     }
-
 
     @Override
     public boolean checkUserPassword(String userCode,String userPassword){

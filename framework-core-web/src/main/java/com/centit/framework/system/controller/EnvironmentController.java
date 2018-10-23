@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
@@ -32,6 +31,7 @@ public class EnvironmentController extends BaseController {
      * 刷新框架中的所有缓存信息
      * @param response 输出流
      */
+    //@PreAuthorize("hasPermission(#contact, 'admin')")
     @RequestMapping(value ="/reload/refreshall",method = RequestMethod.GET)
     public void environmentRefreshAll(HttpServletResponse response) {
         CodeRepositoryCache.evictAllCache();
