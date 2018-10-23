@@ -41,13 +41,14 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
                     + "从主机"+loginHost+"尝试登录,失败原因:"+exception.getMessage()+"。");
         }
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
-        String ajax = request.getParameter("ajax");
-        if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)) {
+//        String ajax = request.getParameter("ajax");
+//        if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)) {
+        if(!"XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             request.setAttribute("hasTriedTimes",tryTimes);
             super.onAuthenticationFailure(request, response, exception);
         }else {
             ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_LOGIN_ERROR,
-                    "login error:" + exception.getMessage() + "!");
+                    exception.getMessage() + "!");
             resData.addResponseData("hasTriedTimes",tryTimes);
             JsonResultUtils.writeResponseDataAsJson(resData, response);
         }
