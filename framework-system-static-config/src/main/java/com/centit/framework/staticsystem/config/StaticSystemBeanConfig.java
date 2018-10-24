@@ -3,7 +3,6 @@ package com.centit.framework.staticsystem.config;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitUserDetailsService;
-import com.centit.framework.security.model.MemorySessionRegistryImpl;
 import com.centit.framework.staticsystem.service.impl.JdbcPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.JsonPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.UserDetailsServiceImpl;
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
@@ -77,11 +75,11 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         userDetailsService.setPlatformEnvironment(platformEnvironment);
         return userDetailsService;
     }
-
-    @Bean
+    // 这bean从框架中移除，由开发人员自行定义; 可以定义不同的策略
+    /*@Bean
     public SessionRegistry sessionRegistry(){
         return new MemorySessionRegistryImpl();
-    }
+    }*/
 
     @Bean
     public CsrfTokenRepository csrfTokenRepository() {
