@@ -42,14 +42,15 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         }
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
         String ajax = request.getParameter("ajax");
-        if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)) {
-            request.setAttribute("hasTriedTimes",tryTimes);
-            super.onAuthenticationFailure(request, response, exception);
-        }else {
+        boolean isAjaxQuery = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        if(isAjaxQuery || "true".equalsIgnoreCase(ajax)){
             ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_LOGIN_ERROR,
                     exception.getMessage() + "!");
             resData.addResponseData("hasTriedTimes",tryTimes);
             JsonResultUtils.writeResponseDataAsJson(resData, response);
+        }else {
+            request.setAttribute("hasTriedTimes",tryTimes);
+            super.onAuthenticationFailure(request, response, exception);
         }
     }
 }

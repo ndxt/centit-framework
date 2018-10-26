@@ -91,9 +91,8 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         }
 
         String ajax = request.getParameter("ajax");
-        if(ajax==null || "".equals(ajax) || "null".equals(ajax)  || "false".equals(ajax)){
-            super.onAuthenticationSuccess(request, response, authentication);
-        }else{
+        boolean isAjaxQuery = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        if(isAjaxQuery || "true".equalsIgnoreCase(ajax)){
             ResponseMapData resData = new ResponseMapData();
             if(registToken) {
                 resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
@@ -102,6 +101,8 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             JsonResultUtils.writeResponseDataAsJson(resData, response);
             //request.getSession().setAttribute("SPRING_SECURITY_AUTHENTICATION", authentication);
             //JsonResultUtils.writeSingleErrorDataJson(0,authentication.getName() + " login ok！",request.getSession().getId(), response);
+        }else{
+            super.onAuthenticationSuccess(request, response, authentication);
         }
     }
 }
