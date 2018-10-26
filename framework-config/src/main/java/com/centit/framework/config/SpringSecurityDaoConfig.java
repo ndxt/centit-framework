@@ -7,7 +7,9 @@ import com.centit.support.algorithm.StringBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.context.support.DelegatingMessageSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.dao.ReflectionSaltSource;
@@ -32,6 +34,9 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
     @Autowired
     @Qualifier("passwordEncoder")
     protected Object passwordEncoder;
+
+    @Autowired(required = false)
+    private MessageSource messageSource;
 
     @Override
     protected String[] getAuthenticatedUrl() {
@@ -105,6 +110,9 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
             authenticationProvider.setSaltSource(saltSource);
         }
         authenticationProvider.setPasswordEncoder(passwordEncoder);
+        if(messageSource != null && !(messageSource instanceof DelegatingMessageSource)) {
+            authenticationProvider.setMessageSource(messageSource);
+        }
         return authenticationProvider;
     }
 
