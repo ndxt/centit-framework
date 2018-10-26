@@ -15,6 +15,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 
 import javax.servlet.Filter;
 
@@ -53,6 +54,10 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         casFilter.setAuthenticationManager(createAuthenticationManager());
         casFilter.setAuthenticationFailureHandler(createAjaxFailureHandler());
         casFilter.setAuthenticationSuccessHandler(createAjaxSuccessHandler());
+
+        casFilter.setSessionAuthenticationStrategy(
+            new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
+
         return casFilter;
     }
 

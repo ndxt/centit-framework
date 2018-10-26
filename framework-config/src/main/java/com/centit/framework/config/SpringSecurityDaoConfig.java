@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 import org.springframework.security.web.csrf.CsrfLogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -81,6 +82,10 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
             pretreatmentAuthenticationProcessingFilter.setRequiresAuthenticationRequestMatcher(
                 new AntPathRequestMatcher(requiresAuthenticationUrl, "POST"));
         }
+
+        pretreatmentAuthenticationProcessingFilter.setSessionAuthenticationStrategy(
+            new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
+
         return pretreatmentAuthenticationProcessingFilter;
     }
 

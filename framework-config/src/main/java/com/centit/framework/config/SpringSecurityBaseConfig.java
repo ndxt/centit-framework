@@ -22,6 +22,8 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.security.web.session.ConcurrentSessionFilter;
+import org.springframework.security.web.session.SimpleRedirectSessionInformationExpiredStrategy;
 import org.springframework.util.Assert;
 
 import javax.servlet.Filter;
@@ -57,6 +59,18 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         web.httpFirewall(httpFirewall());
     }
 
+    /**
+     * FIRST(Integer.MIN_VALUE), CHANNEL_FILTER, SECURITY_CONTEXT_FILTER, CONCURRENT_SESSION_FILTER,
+     * WEB_ASYNC_MANAGER_FILTER,HEADERS_FILTER,CORS_FILTER,CSRF_FILTER,LOGOUT_FILTER,X509_FILTER,
+     * PRE_AUTH_FILTER,CAS_FILTER,FORM_LOGIN_FILTER,OPENID_FILTER,LOGIN_PAGE_FILTER,DIGEST_AUTH_FILTER,
+     * BASIC_AUTH_FILTER,REQUEST_CACHE_FILTER,SERVLET_API_SUPPORT_FILTER,JAAS_API_SUPPORT_FILTER,
+     * REMEMBER_ME_FILTER,ANONYMOUS_FILTER,SESSION_MANAGEMENT_FILTER,EXCEPTION_TRANSLATION_FILTER,
+     * FILTER_SECURITY_INTERCEPTOR,SWITCH_USER_FILTER,
+    LAST(
+     *Integer.MAX_VALUE);
+     * @param http 过滤器
+     * @throws Exception 配置异常
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -100,6 +114,19 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         http.addFilterAt(getAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(centitPowerFilter(), FilterSecurityInterceptor.class)
             .addFilterBefore(logoutFilter(), CasAuthenticationFilter.class);
+
+        //http.rememberMe().alwaysRemember(true);
+        //http.logout().invalidateHttpSession(true);
+        //http.addFilterAt( null , ConcurrentSessionFilter.class);
+        String loginUrl = env.getProperty("login.failure.targetUrl");
+        if(StringUtils.isBlank(loginUrl)){
+            loginUrl = "/login";
+        }
+        http.addFilterAt(
+            new ConcurrentSessionFilter(sessionRegistry,
+                new SimpleRedirectSessionInformationExpiredStrategy(loginUrl)),
+            ConcurrentSessionFilter.class);
+        //http.sessionManagement().
     }
 
     protected abstract String[] getAuthenticatedUrl();
@@ -133,6 +160,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         securityInterceptor.setAllResourceMustBeAudited(
             BooleanBaseOpt.castObjectToBoolean(
                 env.getProperty("access.resource.notallowed.anonymous"),false));
+
         return securityInterceptor;
     }
     protected abstract Filter logoutFilter();

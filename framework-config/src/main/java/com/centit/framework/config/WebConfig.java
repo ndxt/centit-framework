@@ -3,8 +3,8 @@ package com.centit.framework.config;
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.filter.RequestThreadLocalFilter;
 import com.centit.support.algorithm.StringRegularOpt;
-import org.h2.server.web.WebServlet;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
@@ -58,6 +58,15 @@ public class WebConfig  {
                 properties.getProperty("login.cas.enable"))) {
             servletContext.addListener(SingleSignOutHttpSessionListener.class);
         }
+    }
+
+    /**
+     * 注册 Spring Session Event Listener
+     * Bean ApplicationListener &gt;SessionDestroyedEvent&lt; 会被调用
+     * @param servletContext ServletContext
+     */
+    public static void registerHttpSessionEventPublisher(ServletContext servletContext) {
+        servletContext.addListener(HttpSessionEventPublisher.class);
     }
 
     /*
@@ -135,7 +144,7 @@ public class WebConfig  {
      * @param servletContext ServletContext
      */
     public static void initializeH2Console(ServletContext servletContext){
-        ServletRegistration.Dynamic h2console  = servletContext.addServlet("h2console", WebServlet.class);
+        ServletRegistration.Dynamic h2console  = servletContext.addServlet("h2console", org.h2.server.web.WebServlet.class);
         h2console.setInitParameter("webAllowOthers", "");
         h2console.addMapping("/h2console/*");
         h2console.setLoadOnStartup(1);

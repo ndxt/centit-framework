@@ -14,8 +14,8 @@ import java.util.List;
  *
  * 需要添加 session 持久化的功能
  * 需要套维持两类Key - Value 对
- * 一、 token  -> SessionInformation
- * 二、 userCode -> token list
+ * 一、 token  - SessionInformation
+ * 二、 userCode - token list
  */
 public class RedisSessionRegistryImpl implements SessionRegistry,
         ApplicationListener<SessionDestroyedEvent> {

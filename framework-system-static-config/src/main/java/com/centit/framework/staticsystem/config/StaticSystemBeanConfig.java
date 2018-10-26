@@ -86,5 +86,4 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         return //new LazyCsrfTokenRepository(
                 new HttpSessionCsrfTokenRepository();
     }
-
 }
