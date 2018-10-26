@@ -27,11 +27,6 @@
             <version>${centit.commons.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-        </dependency>
-
         <!-- test library -->
         <dependency>
             <groupId>junit</groupId>

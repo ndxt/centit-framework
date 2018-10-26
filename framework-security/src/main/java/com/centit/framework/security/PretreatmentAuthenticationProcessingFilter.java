@@ -13,14 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 
 public class PretreatmentAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
 
-	private int checkCaptchaTime = 0 ; // 0 不验证, 1 登陆失败后 再次登陆验证, 2 始终验证
+    private int checkCaptchaTime = 0 ; // 0 不验证, 1 登陆失败后 再次登陆验证, 2 始终验证
     private int checkCaptchaType = 0;  // 0 不验证, 1 一起验证, 2 ajax 验证
 
-	public void setCheckCaptchaTime(int checkCaptchaTime) {
-		this.checkCaptchaTime = checkCaptchaTime;
-	}
+    public void setCheckCaptchaTime(int checkCaptchaTime) {
+        this.checkCaptchaTime = checkCaptchaTime;
+    }
 
-	public void setCheckCaptchaType(int checkCaptchaType) {
+    public void setCheckCaptchaType(int checkCaptchaType) {
         this.checkCaptchaType = checkCaptchaType;
     }
 
@@ -43,11 +43,11 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-	    if (CheckFailLogs.getMaxTryTimes() > 0 && CheckFailLogs.isLocked(request)) {
-		    throw new AuthenticationServiceException("User is locked, please try late!");
-	    }
+        if (CheckFailLogs.getMaxTryTimes() > 0 && CheckFailLogs.isLocked(request)) {
+            throw new AuthenticationServiceException("User is locked, please try late!");
+        }
 
-		int tryTimes = CheckFailLogs.getHasTriedTimes(request);
+        int tryTimes = CheckFailLogs.getHasTriedTimes(request);
         if(checkCaptchaType == 1 && ( checkCaptchaTime == 2 ||
                 (checkCaptchaTime == 1
                         //&& CheckFailLogs.getMaxTryTimes() >= 0
@@ -66,27 +66,28 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
             }
         }
 
-	    if(checkCaptchaType == 2 && ( checkCaptchaTime == 2 ||
-			    (checkCaptchaTime == 1
-					    //&& CheckFailLogs.getMaxTryTimes() >= 0
-					    && tryTimes > 0 ))) {
-		    if (!BooleanBaseOpt.castObjectToBoolean(
-				    request.getSession().getAttribute(
-				            SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
-				    false)) {
-			    throw new AuthenticationServiceException(
-					    "Captcha input is error, please try late!");
-		    }
-		    request.getSession().setAttribute(
+        if(checkCaptchaType == 2 && ( checkCaptchaTime == 2 ||
+                (checkCaptchaTime == 1
+                        //&& CheckFailLogs.getMaxTryTimes() >= 0
+                        && tryTimes > 0 ))) {
+            if (!BooleanBaseOpt.castObjectToBoolean(
+                    request.getSession().getAttribute(
+                            SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
+                    false)) {
+                throw new AuthenticationServiceException(
+                        "Captcha input is error, please try late!");
+            }
+            request.getSession().setAttribute(
                     SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
-	    }
-        Authentication auth = null;
+        }
+
         //if(!onlyPretreat || writeLog || CheckFailLogs.getMaxTryTimes() > 0){
         try{
-            auth = super.attemptAuthentication(request, response);
+            Authentication auth = super.attemptAuthentication(request, response);
             //if(CheckFailLogs.getMaxTryTimes() >= 0){
                 CheckFailLogs.removeCheckFail(request);
             //}
+            return auth;
         }catch (AuthenticationException failed) {
             //System.err.println(failed.getMessage());
             //if(CheckFailLogs.getMaxTryTimes() >= 0){
@@ -95,7 +96,16 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
             throw failed;
         }
         //}
-        return auth;
     }
-  
+
+   /*
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
+        super.successfulAuthentication(request, response, chain, authResult);
+        // 新建session
+        // 代替 AjaxAuthenticationSuccessHandler 中的
+    }*/
 }

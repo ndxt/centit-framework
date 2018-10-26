@@ -43,8 +43,6 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         this.userDetailsService = userDetailsService;
     }
 
-
-
     public AjaxAuthenticationSuccessHandler() {
     }
 
@@ -81,6 +79,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
 
         if(registToken){
             //tokenKey = UuidOpt.getUuidAsString();
+            // 这个代码应该迁移到 AuthenticationProcessingFilter 的 successfulAuthentication 方法中
             sessionRegistry.registerNewSession(tokenKey,ud);
             request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         }
@@ -97,8 +96,9 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             super.onAuthenticationSuccess(request,response,authentication);
         }else{
             ResponseMapData resData = new ResponseMapData();
-            if(registToken)
+            if(registToken) {
                 resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
+            }
             resData.addResponseData("userInfo", ud);
             JsonResultUtils.writeResponseDataAsJson(resData, response);
             //request.getSession().setAttribute("SPRING_SECURITY_AUTHENTICATION", authentication);
