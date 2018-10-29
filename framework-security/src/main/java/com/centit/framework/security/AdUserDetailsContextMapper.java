@@ -1,5 +1,6 @@
 package com.centit.framework.security;
 
+import com.centit.framework.security.model.AbstractCentitUserDetails;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +21,13 @@ public class AdUserDetailsContextMapper implements UserDetailsContextMapper {
     @Override
     public UserDetails mapUserFromContext(DirContextOperations ctx,
                                           String username,Collection<? extends GrantedAuthority> authority) {
-        return userDetailsService.loadUserByUsername(username);
+        AbstractCentitUserDetails ud = (AbstractCentitUserDetails) userDetailsService.loadUserByUsername(username);
+        if(authority!=null) {
+            for(GrantedAuthority gr : authority) {
+                ud.addAuthorities(gr);
+            }
+        }
+        return ud;
     }
     
     @Override

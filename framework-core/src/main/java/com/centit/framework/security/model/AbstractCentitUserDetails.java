@@ -58,8 +58,23 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
         }
 
         //排序便于后面比较
-        Collections.sort(arrayAuths,Comparator.comparing(GrantedAuthority::getAuthority));
+        Collections.sort(arrayAuths,
+            Comparator.comparing(GrantedAuthority::getAuthority));
         //lastUpdateRoleTime = new Date(System.currentTimeMillis());
+    }
+
+    public void addAuthorities(GrantedAuthority ga){
+        String sRole = ga.getAuthority();
+        if(!sRole.startsWith(CentitSecurityMetadata.ROLE_PREFIX )){
+            sRole = CentitSecurityMetadata.ROLE_PREFIX + sRole;
+        }
+        SimpleGrantedAuthority sga = new SimpleGrantedAuthority(sRole);
+        if(arrayAuths.contains( sga)){
+            return;
+        }
+        arrayAuths.add(sga);
+        Collections.sort(arrayAuths,
+            Comparator.comparing(GrantedAuthority::getAuthority));
     }
 
     @Override

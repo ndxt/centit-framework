@@ -413,7 +413,7 @@ public abstract class SysUnitFilterEngine {
     }
     /**
      * D()DT()DL()
-     * @return
+     * @return 机构表达式计算结果
      */
     private static Set<String> calcSimpleExp(UserUnitFilterCalcContext ecc) {
         UserUnitFilterGene gene = InnerUserUnitFilterCompileEngine.makeUserUnitFilter(ecc);
