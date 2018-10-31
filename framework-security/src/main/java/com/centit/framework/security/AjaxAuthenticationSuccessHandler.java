@@ -72,8 +72,8 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         }
         //ud.setLoginIp(request.getRemoteHost()+":"+request.getRemotePort());
         //ud.setActiveTime(DatetimeOpt.currentUtilDate());
-        request.getSession().setAttribute(
-                SecurityContextUtils.SecurityContextUserdetail,ud);
+        /*request.getSession().setAttribute(
+                SecurityContextUtils.SecurityContextUserdetail,ud);*/
         //ud.setAuthenticated(true);
         String tokenKey =request.getSession().getId();
 

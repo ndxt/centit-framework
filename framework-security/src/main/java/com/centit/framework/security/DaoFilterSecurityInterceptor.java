@@ -67,7 +67,7 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
         boolean alwaysReauthenticate = false;
 
         //从session中获取用户信息
-        if(authentication==null || "anonymousUser".equals(authentication.getName())){
+        /*if(authentication==null || "anonymousUser".equals(authentication.getName())){
             Object attr = fi.getHttpRequest().getSession().getAttribute(
                     SecurityContextUtils.SecurityContextUserdetail);
             if(attr!=null && attr instanceof CentitUserDetails){
@@ -78,13 +78,14 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
                 }
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        }
+        }*/
 
         //从token中获取用户信息
         if(authentication==null || "anonymousUser".equals(authentication.getName())){
             String accessToken = fi.getHttpRequest().getParameter(SecurityContextUtils.SecurityContextTokenName);
-            if(StringUtils.isBlank(accessToken))
-                accessToken = String.valueOf(fi.getHttpRequest().getAttribute(SecurityContextUtils.SecurityContextTokenName) );
+            if(StringUtils.isBlank(accessToken)) {
+                accessToken = String.valueOf(fi.getHttpRequest().getSession().getAttribute(SecurityContextUtils.SecurityContextTokenName));
+            }
             CentitUserDetails ud = SecurityContextUtils.getCurrentUserDetails(sessionRegistry, accessToken);
             if(ud!=null){
                 alwaysReauthenticate = this.isAlwaysReauthenticate();
