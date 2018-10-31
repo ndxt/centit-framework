@@ -86,6 +86,9 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
             if(StringUtils.isBlank(accessToken)) {
                 accessToken = String.valueOf(fi.getHttpRequest().getSession().getAttribute(SecurityContextUtils.SecurityContextTokenName));
             }
+            if(StringUtils.isBlank(accessToken)) {
+                accessToken = fi.getHttpRequest().getSession().getId();
+            }
             CentitUserDetails ud = SecurityContextUtils.getCurrentUserDetails(sessionRegistry, accessToken);
             if(ud!=null){
                 alwaysReauthenticate = this.isAlwaysReauthenticate();
