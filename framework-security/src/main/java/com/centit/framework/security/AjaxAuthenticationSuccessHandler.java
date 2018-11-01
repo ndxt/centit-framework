@@ -70,18 +70,13 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
                 request.setAttribute(WebOptUtils.LOCAL_LANGUAGE_LABLE,lang);
             }
         }
-        //ud.setLoginIp(request.getRemoteHost()+":"+request.getRemotePort());
-        //ud.setActiveTime(DatetimeOpt.currentUtilDate());
-        /*request.getSession().setAttribute(
-                SecurityContextUtils.SecurityContextUserdetail,ud);*/
-        //ud.setAuthenticated(true);
+
         String tokenKey =request.getSession().getId();
 
         if(registToken){
             //tokenKey = UuidOpt.getUuidAsString();
             // 这个代码应该迁移到 AuthenticationProcessingFilter 的 successfulAuthentication 方法中
             sessionRegistry.registerNewSession(tokenKey,ud);
-            request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         }
 
         if(writeLog){

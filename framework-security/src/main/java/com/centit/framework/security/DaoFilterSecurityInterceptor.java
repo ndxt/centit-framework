@@ -13,6 +13,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
@@ -66,49 +67,37 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
 
         boolean alwaysReauthenticate = false;
 
-        //从session中获取用户信息
-        /*if(authentication==null || "anonymousUser".equals(authentication.getName())){
-            Object attr = fi.getHttpRequest().getSession().getAttribute(
-                    SecurityContextUtils.SecurityContextUserdetail);
-            if(attr!=null && attr instanceof CentitUserDetails){
-                authentication = (CentitUserDetails)attr;
-                alwaysReauthenticate = this.isAlwaysReauthenticate();
-                if(alwaysReauthenticate) {
-                    this.setAlwaysReauthenticate(false);
-                }
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        }*/
+        if("XMLHttpRequest".equals(fi.getRequest().getHeader("X-Requested-With"))) {
+            //从token中获取用户信息
+            if(authentication==null || "anonymousUser".equals(authentication.getName())){
+                HttpServletRequest request = fi.getHttpRequest();
+                String accessToken = request.getParameter(SecurityContextUtils.SecurityContextTokenName);
 
-        //从token中获取用户信息
-        if(authentication==null || "anonymousUser".equals(authentication.getName())){
-            String accessToken = fi.getHttpRequest().getParameter(SecurityContextUtils.SecurityContextTokenName);
-            if(StringUtils.isBlank(accessToken)) {
-                accessToken = String.valueOf(fi.getHttpRequest().getSession().getAttribute(SecurityContextUtils.SecurityContextTokenName));
-            }
-            if(StringUtils.isBlank(accessToken)) {
-                accessToken = fi.getHttpRequest().getSession().getId();
-            }
-            CentitUserDetails ud = SecurityContextUtils.getCurrentUserDetails(sessionRegistry, accessToken);
-            if(ud!=null){
-                alwaysReauthenticate = this.isAlwaysReauthenticate();
-                if(alwaysReauthenticate) {
-                    this.setAlwaysReauthenticate(false);
+                if(StringUtils.isBlank(accessToken)) {
+                    accessToken = request.getHeader("Authorization");
                 }
-                SecurityContextHolder.getContext().setAuthentication(ud);
-                //设置用户默认语言
-                WebOptUtils.setCurrentLang(fi.getHttpRequest(),
+
+                if(StringUtils.isBlank(accessToken)) {
+                    accessToken = request.getSession().getId();
+                }
+
+                CentitUserDetails ud = SecurityContextUtils.getCurrentUserDetails(sessionRegistry, accessToken);
+                if(ud!=null){
+                    alwaysReauthenticate = this.isAlwaysReauthenticate();
+                    if(alwaysReauthenticate) {
+                        this.setAlwaysReauthenticate(false);
+                    }
+                    SecurityContextHolder.getContext().setAuthentication(ud);
+                    //设置用户默认语言
+                    WebOptUtils.setCurrentLang(fi.getHttpRequest(),
                         ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE));
+                }
             }
-        }
-
-        if(allResourceMustBeAudited && (authentication==null || "anonymousUser".equals(authentication.getName()))){
-            if("XMLHttpRequest".equals(fi.getRequest().getHeader("X-Requested-With"))){
+            if (allResourceMustBeAudited && (authentication == null || "anonymousUser".equals(authentication.getName()))) {
                 fi.getResponse().setStatus(401);
                 return;
             }
         }
-
         InterceptorStatusToken token = super.beforeInvocation(fi);
         try {
             fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
