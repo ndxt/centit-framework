@@ -17,6 +17,8 @@ import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.database.utils.DBType;
 import com.centit.support.file.FileSystemOpt;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,6 +44,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/cp")
+@Api(value="系统缓存接口",description="可以获取框架组织机构、权限体系、数据字典等等缓存数据")
 public class CacheController {
 
     private static Log logger = LogFactory.getLog(CacheController.class);
@@ -55,6 +58,7 @@ public class CacheController {
      * @param key      对应的变量值 或 数据字典中的 dataCode
      * @param response HttpServletResponse
      */
+    @ApiOperation(value="数据字典取值",notes="根据数据字典的类别和key获取对应的value。")
     @RequestMapping(value = "/mapvalue/{catalog}/{key}", method = RequestMethod.GET)
     //@RecordOperationLog(content = "查询字典{arg0}中{arg1}的值",timing = true, appendRequest = true)
     public void mapvalue(@PathVariable String catalog, @PathVariable String key,

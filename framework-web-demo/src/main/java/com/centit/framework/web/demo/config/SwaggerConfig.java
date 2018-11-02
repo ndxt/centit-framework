@@ -1,5 +1,6 @@
 package com.centit.framework.web.demo.config;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -23,7 +24,9 @@ public class SwaggerConfig extends WebMvcConfigurerAdapter {
         return new Docket(DocumentationType.SWAGGER_2)
             .apiInfo(buildApiInf())
             .select()
-            .apis(RequestHandlerSelectors.basePackage("com.otherpackage.controller"))//controller路径
+            //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class) )
+            .apis(RequestHandlerSelectors.basePackage("com.centit.framework.system.controller"))//controller路径
+            //.apis(RequestHandlerSelectors.basePackage("com.otherpackage.controller"))//controller路径
             .paths(PathSelectors.any())
             .build();
     }

@@ -14,6 +14,4 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
         useDefaultFilters = false)
 public class NormalSpringMvcConfig extends BaseSpringMvcConfig {
 
-
-
 }
