@@ -25,6 +25,7 @@ public class WebInitializer implements WebApplicationInitializer {
         initializeSpringConfig(servletContext);
         initializeSystemSpringMvcConfig(servletContext);
         initializeNormalSpringMvcConfig(servletContext);
+        initializeSwaggerMvcConfig(servletContext);
 
         WebConfig.registerSpringSessionRepositoryFilter(servletContext);
         //WebConfig.registerSpringContextLoaderListener(servletContext);
@@ -58,7 +59,7 @@ public class WebInitializer implements WebApplicationInitializer {
      */
     private void initializeSystemSpringMvcConfig(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(SystemSpringMvcConfig.class, SwaggerMvcConfig.class);
+        context.register(SystemSpringMvcConfig.class);
         Dynamic system  = servletContext.addServlet("system", new DispatcherServlet(context));
         system.addMapping("/system/*");
         system.setLoadOnStartup(1);
@@ -71,12 +72,20 @@ public class WebInitializer implements WebApplicationInitializer {
      */
     private void initializeNormalSpringMvcConfig(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(NormalSpringMvcConfig.class, SwaggerMvcConfig.class);
+        context.register(NormalSpringMvcConfig.class);
         ServletRegistration.Dynamic system  = servletContext.addServlet("service", new DispatcherServlet(context));
         system.addMapping("/service/*");
         system.setLoadOnStartup(1);
         system.setAsyncSupported(true);
     }
 
+    private void initializeSwaggerMvcConfig(ServletContext servletContext) {
+        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        context.register(SwaggerConfig.class);
+        ServletRegistration.Dynamic system  = servletContext.addServlet("docs", new DispatcherServlet(context));
+        system.addMapping("/docs/*");
+        system.setLoadOnStartup(1);
+        system.setAsyncSupported(true);
+    }
 
 }
