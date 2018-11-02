@@ -59,7 +59,7 @@ public class WebInitializer implements WebApplicationInitializer {
      */
     private void initializeSystemSpringMvcConfig(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(SystemSpringMvcConfig.class);
+        context.register(SystemSpringMvcConfig.class, SwaggerConfig.class);
         Dynamic system  = servletContext.addServlet("system", new DispatcherServlet(context));
         system.addMapping("/system/*");
         system.setLoadOnStartup(1);
@@ -72,7 +72,7 @@ public class WebInitializer implements WebApplicationInitializer {
      */
     private void initializeNormalSpringMvcConfig(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(NormalSpringMvcConfig.class);
+        context.register(NormalSpringMvcConfig.class, SwaggerConfig.class);
         ServletRegistration.Dynamic system  = servletContext.addServlet("service", new DispatcherServlet(context));
         system.addMapping("/service/*");
         system.setLoadOnStartup(1);
@@ -80,12 +80,12 @@ public class WebInitializer implements WebApplicationInitializer {
     }
 
     private void initializeSwaggerMvcConfig(ServletContext servletContext) {
-        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        /*AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(SwaggerConfig.class);
         ServletRegistration.Dynamic system  = servletContext.addServlet("docs", new DispatcherServlet(context));
         system.addMapping("/docs/*");
         system.setLoadOnStartup(1);
-        system.setAsyncSupported(true);
+        system.setAsyncSupported(true);*/
     }
 
 }

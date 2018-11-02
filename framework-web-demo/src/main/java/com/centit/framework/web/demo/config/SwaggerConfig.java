@@ -2,7 +2,6 @@ package com.centit.framework.web.demo.config;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -14,18 +13,17 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@Configuration
+//@Configuration
 @EnableSwagger2
-//@Import(Swagger2DocumentationConfiguration.class)
 public class SwaggerConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public Docket buildDocket(){
         return new Docket(DocumentationType.SWAGGER_2)
-            .apiInfo(buildApiInf())
+            .apiInfo(buildApiInf())//.pathMapping("../service")
             .select()
-            //.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class) )
-            .apis(RequestHandlerSelectors.basePackage("com.centit.framework.system.controller"))//controller路径
+            .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class) )
+            //.apis(RequestHandlerSelectors.basePackage("com.centit.framework.system.controller"))//controller路径
             //.apis(RequestHandlerSelectors.basePackage("com.otherpackage.controller"))//controller路径
             .paths(PathSelectors.any())
             .build();
