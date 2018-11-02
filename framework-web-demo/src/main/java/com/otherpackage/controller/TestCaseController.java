@@ -5,6 +5,9 @@ import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.common.ResponseSingleData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.support.algorithm.ByteBaseOpt;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +17,11 @@ import java.io.PrintWriter;
 import java.util.Random;
 
 @RestController
+@Api(value="测试controller",description="测试操作")
 @RequestMapping("/test")
 public class TestCaseController extends BaseController {
 
-
+    @ApiOperation(value="hello",notes="Say hello to somebody.")
     @GetMapping("/sayhello/{userName}")
     public ResponseData getLsh(@PathVariable String userName){
         return ResponseSingleData.makeResponseData("hello "+userName+" !");
@@ -25,6 +29,7 @@ public class TestCaseController extends BaseController {
 
     @GetMapping("/hex/{rawhex}")
     public ResponseData hexConvert(@PathVariable String rawhex,Boolean hf){
+
         try {
             String hexStr = rawhex.toUpperCase();
             if (hexStr.length() % 2 == 1) {

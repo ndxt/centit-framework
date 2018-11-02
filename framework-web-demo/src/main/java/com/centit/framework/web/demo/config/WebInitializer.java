@@ -2,12 +2,8 @@ package com.centit.framework.web.demo.config;
 
 import com.centit.framework.config.SystemSpringMvcConfig;
 import com.centit.framework.config.WebConfig;
-import com.centit.framework.security.model.MemorySessionRegistryImpl;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -31,6 +27,7 @@ public class WebInitializer implements WebApplicationInitializer {
         initializeNormalSpringMvcConfig(servletContext);
 
         WebConfig.registerSpringSessionRepositoryFilter(servletContext);
+        //WebConfig.registerSpringContextLoaderListener(servletContext);
         WebConfig.registerRequestContextListener(servletContext);
         WebConfig.registerSingleSignOutHttpSessionListener(servletContext);
         //WebConfig.registerResponseCorsFilter(servletContext);
@@ -50,6 +47,7 @@ public class WebInitializer implements WebApplicationInitializer {
     private void initializeSpringConfig(ServletContext servletContext){
         AnnotationConfigWebApplicationContext springContext = new AnnotationConfigWebApplicationContext();
         springContext.register(ServiceConfig.class);
+        //springContext.s
         servletContext.addListener(new ContextLoaderListener(springContext));
         //servletContext.addListener(new HttpSessionEventPublisher());
     }
@@ -79,4 +77,6 @@ public class WebInitializer implements WebApplicationInitializer {
         system.setLoadOnStartup(1);
         system.setAsyncSupported(true);
     }
+
+
 }

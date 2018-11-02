@@ -5,6 +5,7 @@ import com.centit.framework.filter.RequestThreadLocalFilter;
 import com.centit.support.algorithm.StringRegularOpt;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
@@ -40,6 +41,13 @@ public class WebConfig  {
         }
     }
 
+    /**
+     * 注册 org.springframework.web.context.ContextLoaderListener 监听器
+     * @param servletContext ServletContext
+     */
+    public static void registerSpringContextLoaderListener(ServletContext servletContext) {
+        servletContext.addListener(ContextLoaderListener.class);
+    }
     /**
      * 注册RequestContextListener监听器 （增加request、session和global session作用域）
      * @param servletContext ServletContext
