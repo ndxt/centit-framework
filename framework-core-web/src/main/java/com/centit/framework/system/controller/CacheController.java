@@ -18,6 +18,8 @@ import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.database.utils.DBType;
 import com.centit.support.file.FileSystemOpt;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -44,7 +46,8 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/cp")
-@Api(value="系统缓存接口",description="可以获取框架组织机构、权限体系、数据字典等等缓存数据")
+@Api(value="框架将所有的系统信息都缓存在内存中，这个类提供了大量的访问框架数据的接口",
+    tags= "框架数据缓存接口")
 public class CacheController {
 
     private static Log logger = LogFactory.getLog(CacheController.class);
@@ -59,6 +62,13 @@ public class CacheController {
      * @param response HttpServletResponse
      */
     @ApiOperation(value="数据字典取值",notes="根据数据字典的类别和key获取对应的value。")
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "catalog", value="数据字典的类别代码",
+        required=true, paramType = "path", dataType= "String"
+    ),@ApiImplicitParam(
+        name = "key", value="数据字典的条目代码",
+        required= true, paramType = "path", dataType= "String"
+    )})
     @RequestMapping(value = "/mapvalue/{catalog}/{key}", method = RequestMethod.GET)
     //@RecordOperationLog(content = "查询字典{arg0}中{arg1}的值",timing = true, appendRequest = true)
     public void mapvalue(@PathVariable String catalog, @PathVariable String key,
@@ -74,6 +84,7 @@ public class CacheController {
      * @param value    对应的变量值 或 数据字典中的 dataValue
      * @param response HttpServletResponse
      */
+    @ApiOperation(value="数据字典取健",notes="和mapvalue相反他是根据数据字典的类别和value获取对应的key。")
     @RequestMapping(value = "/mapcode/{catalog}/{value}", method = RequestMethod.GET)
     public void mapcode(@PathVariable String catalog, @PathVariable String value, HttpServletResponse response) {
         String key = CodeRepositoryUtil.getValue(catalog, value);

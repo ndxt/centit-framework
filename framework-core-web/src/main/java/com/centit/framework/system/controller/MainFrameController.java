@@ -1,6 +1,7 @@
 package com.centit.framework.system.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.*;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.controller.BaseController;
@@ -9,9 +10,13 @@ import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.framework.security.model.CheckUserDetails;
+import com.centit.framework.security.model.ThirdPartyCheckUserDetails;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +34,8 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
+@Api(value="框架中用户权限相关的接口，用户登录接口，第三方认证接口，安全接口",
+    tags= "登录、权限、安全控制等接口")
 @Controller
 @RequestMapping("/mainframe")
 public class MainFrameController extends BaseController {
@@ -48,7 +55,7 @@ public class MainFrameController extends BaseController {
     /**
      * 这一用户自定义验证，可以为null
      */
-    private CheckUserDetails checkUserDetails;
+    private ThirdPartyCheckUserDetails thirdPartyCheckUserDetails;
 
     //实施人员入口开关
     @Value("${app.deploy.enabled:false}")
@@ -248,22 +255,34 @@ public class MainFrameController extends BaseController {
 
 
     /**
-     * 这个方法用于和第三方对接的验证方式，需要注入名为 checkUserDetails 的bean 。
-     * @param request request
+     * 这个方法用于和第三方对接的验证方式，需要注入名为 thirdPartyCheckUserDetails 的bean 。
+     * @param formValue json格式的表单数据 {userCode:"u0000000", token:"231413241234"}
      * @param response response
      */
+    @ApiOperation(value="第三方认证接口",
+        notes="这时框架留的一个后门，系统如果要使用这个接口，必须配置一个名为thirdPartyCheckUserDetails的bean;" +
+        "该方法使用post调用，提交的对象中必须有userCode和token两个属性。")
+    @ApiImplicitParams(@ApiImplicitParam(
+        name = "formValue", value="json格式的表单数据,示例：{userCode:\"u0000000\", token:\"231413241234\"}",
+        required=true, paramType = "body", dataType= "String"
+    ))
     @RequestMapping(value="/loginasthird",method = RequestMethod.POST)
-    public void loginAsThird(HttpServletRequest request,HttpServletResponse response) {
-        if(checkUserDetails==null) {
-            checkUserDetails = ContextLoaderListener.getCurrentWebApplicationContext()
-                .getBean("checkUserDetails", CheckUserDetails.class);
-        }
-
-        if(checkUserDetails==null){
-            JsonResultUtils.writeErrorMessageJson("系统找不到名为 checkUserDetails 的 bean。", response);
+    public void loginAsThird(/*HttpServletRequest request,*/HttpServletResponse response,
+                    @RequestBody JSONObject formValue) {
+        try {
+            if (thirdPartyCheckUserDetails == null) {
+                thirdPartyCheckUserDetails = ContextLoaderListener.getCurrentWebApplicationContext()
+                    .getBean("thirdPartyCheckUserDetails", ThirdPartyCheckUserDetails.class);
+            }
+        }catch (RuntimeException e){
+            //thirdPartyCheckUserDetails = null;
+            JsonResultUtils.writeErrorMessageJson(e.getLocalizedMessage(), response);
             return;
         }
-        Map<String, Object> formValue = BaseController.collectRequestParameters(request);
+        if(thirdPartyCheckUserDetails == null){
+            JsonResultUtils.writeErrorMessageJson("系统找不到名为 thirdPartyCheckUserDetails 的 bean。", response);
+            return;
+        }
         String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
         Object token = formValue.get("token");
 
@@ -273,7 +292,7 @@ public class MainFrameController extends BaseController {
             return;
         }
 
-        boolean bo = checkUserDetails.check(ud, token);
+        boolean bo = thirdPartyCheckUserDetails.check(ud, token);
         if(!bo){
             JsonResultUtils.writeErrorMessageJson("用户："+userCode+
                 " token:" + StringBaseOpt.objectToString(token) +" 校验不通过", response);

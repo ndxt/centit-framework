@@ -7,6 +7,7 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.support.algorithm.ByteBaseOpt;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.codec.Hex;
@@ -17,16 +18,29 @@ import java.io.PrintWriter;
 import java.util.Random;
 
 @RestController
-@Api(value="测试controller",description="测试操作")
+@Api(value="测试controller",
+    tags="测试Http的新特性和ResponseData的结构")
 @RequestMapping("/test")
 public class TestCaseController extends BaseController {
 
     @ApiOperation(value="hello",notes="Say hello to somebody.")
+    @ApiImplicitParams(@ApiImplicitParam(
+        name = "userName", value="用户姓名，向某人说hello",
+        required=true, paramType = "path", dataType= "String"
+    ))
     @GetMapping("/sayhello/{userName}")
     public ResponseData getLsh(@PathVariable String userName){
         return ResponseSingleData.makeResponseData("hello "+userName+" !");
     }
 
+    @ApiOperation(value="测试16进制编码",notes="将一个字符串按照16进制编码。")
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "rawhex", value="用于编码的字符串",
+        required=true, paramType = "path", dataType= "String"
+    ),@ApiImplicitParam(
+        name = "hf", value="是否式高位在前面，high first",
+        required= false, paramType = "query", dataType= "Boolean"
+    )})
     @GetMapping("/hex/{rawhex}")
     public ResponseData hexConvert(@PathVariable String rawhex,Boolean hf){
 
