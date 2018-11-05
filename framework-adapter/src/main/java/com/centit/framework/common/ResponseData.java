@@ -1,10 +1,13 @@
 package com.centit.framework.common;
 
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 响应 http 请求 返回的数据，可以用Map返回多个数据
  */
+@ApiModel(description = "返回的json数据格式")
 public interface ResponseData{
     /**
      * HTTP协议状态码详解（HTTP Status Code）
@@ -246,12 +249,14 @@ public interface ResponseData{
     
     String RES_MSG_FILED="message";
     String RES_DATA_FILED="data";
-    
-   
+
+    @ApiModelProperty(value = "结果编码，0：成功，其他：错误编码")
     int getCode();
 
+    @ApiModelProperty(value = "code=0：消息：code!=0:错误信息")
     String getMessage();
 
+    @ApiModelProperty(value = "JSON格式的数据内容，可以是任何格式，根据业务的需要定义")
     Object getData();
 
     String toJSONString(PropertyPreFilter simplePropertyPreFilter);
