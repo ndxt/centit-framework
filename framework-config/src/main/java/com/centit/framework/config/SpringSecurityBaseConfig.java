@@ -4,6 +4,7 @@ import com.centit.framework.security.*;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.framework.security.model.CentitUserDetailsService;
 import com.centit.support.algorithm.BooleanBaseOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,6 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-import org.springframework.security.web.session.ConcurrentSessionFilter;
-import org.springframework.security.web.session.SimpleRedirectSessionInformationExpiredStrategy;
 import org.springframework.util.Assert;
 
 import javax.servlet.Filter;
@@ -120,13 +119,14 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         //http.addFilterAt( null , ConcurrentSessionFilter.class);
         String loginUrl = env.getProperty("login.failure.targetUrl");
         if(StringUtils.isBlank(loginUrl)){
-            loginUrl = "/login";
+            loginUrl = "/system/mainframe/login";
         }
-        http.addFilterAt(
-            new ConcurrentSessionFilter(sessionRegistry,
-                new SimpleRedirectSessionInformationExpiredStrategy(loginUrl)),
-            ConcurrentSessionFilter.class);
-        //http.sessionManagement().
+        int maximumSessions = NumberBaseOpt.parseInteger(env.getProperty("framework.maximum.concurrent.session"),-1);
+//        http.addFilterAt(
+//            new ConcurrentSessionFilter(sessionRegistry,
+//                new SimpleRedirectSessionInformationExpiredStrategy(loginUrl)),
+//            ConcurrentSessionFilter.class);
+        http.sessionManagement().maximumSessions(maximumSessions).sessionRegistry(sessionRegistry).expiredUrl(loginUrl);
     }
 
     protected abstract String[] getAuthenticatedUrl();
