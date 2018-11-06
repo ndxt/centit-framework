@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.JsonResultUtils;
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ViewDataTransform;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,7 +61,6 @@ public class CacheController {
      *                             unitcode,depno,rolecode,optid,optcode,optdesc,]
      *                             以及数据目录中的catalogCode变量值
      * @param key      对应的变量值 或 数据字典中的 dataCode
-     * @param response HttpServletResponse
      */
     @ApiOperation(value="数据字典取值",notes="根据数据字典的类别和key获取对应的value。")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -71,10 +72,10 @@ public class CacheController {
     )})
     @RequestMapping(value = "/mapvalue/{catalog}/{key}", method = RequestMethod.GET)
     //@RecordOperationLog(content = "查询字典{arg0}中{arg1}的值",timing = true, appendRequest = true)
-    public void mapvalue(@PathVariable String catalog, @PathVariable String key,
-            HttpServletResponse response) {
+    @ResponseBody
+    public ResponseData mapvalue(@PathVariable String catalog, @PathVariable String key) {
         String value = CodeRepositoryUtil.getValue(catalog, key);
-        JsonResultUtils.writeSingleDataJson(value, response);
+        return ResponseData.makeResponseData(value);
     }
 
     /**
@@ -82,26 +83,30 @@ public class CacheController {
      *
      * @param catalog  系统内置的类别 字符串[userCode,loginName,unitcode,depno,rolecode,optid,optcode,optdesc,]以及数据目录中的catalogCode变量值
      * @param value    对应的变量值 或 数据字典中的 dataValue
-     * @param response HttpServletResponse
      */
     @ApiOperation(value="数据字典取健",notes="和mapvalue相反他是根据数据字典的类别和value获取对应的key。")
     @RequestMapping(value = "/mapcode/{catalog}/{value}", method = RequestMethod.GET)
-    public void mapcode(@PathVariable String catalog, @PathVariable String value, HttpServletResponse response) {
+    @ResponseBody
+    public ResponseData mapcode(@PathVariable String catalog, @PathVariable String value) {
         String key = CodeRepositoryUtil.getValue(catalog, value);
-        JsonResultUtils.writeSingleDataJson(key, response);
+        return ResponseData.makeResponseData(key);
     }
 
 
     /**
      * cp标签中LVB实现，获取 数据字典 key value 对
      *
-     * @param catalog  系统内置的类别 字符串[userCode,loginName,unitcode,depno,rolecode,optid,optcode,optdesc,]，数据目录中的catalogCode变量值
-     * @param response HttpServletResponse
+     * @param catalog  系统内置的类别
+     *                 字符串[userCode,loginName,unitcode,depno,
+     *                 rolecode,optid,optcode,optdesc,]，
+     *                 数据目录中的catalogCode变量值
      */
+    @ApiOperation(value="获取数据字典明细",notes="根据数据字典类别代码获取数据字典明细。")
     @RequestMapping(value = "/lvb/{catalog}", method = RequestMethod.GET)
-    public void lvb(@PathVariable String catalog, HttpServletResponse response) {
+    @ResponseBody
+    public ResponseData lvb(@PathVariable String catalog) {
         Map<String,String> keyValueMap = CodeRepositoryUtil.getLabelValueMap(catalog);
-        JsonResultUtils.writeSingleDataJson(keyValueMap, response);
+        return ResponseData.makeResponseData(keyValueMap);
     }
 
     /**

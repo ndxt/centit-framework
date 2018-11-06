@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 响应 http 请求 返回的数据，可以用Map返回多个数据
+ * 作为 发送数据使用
  */
 @ApiModel(description = "返回的json数据格式")
 public interface ResponseData{
@@ -271,5 +272,9 @@ public interface ResponseData{
 
     static ResponseData makeErrorMessage(String message){
         return new ResponseSingleData(ERROR_INTERNAL_SERVER_ERROR, message);
+    }
+
+    static ResponseSingleData makeResponseData(Object objValue){
+        return ResponseSingleData.makeResponseData(objValue);
     }
 }

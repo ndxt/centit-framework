@@ -129,7 +129,7 @@ public abstract class BaseController {
 
                     }
                 }
-                responseData.setResponseMessage(errMsg.toString());
+                responseData.setMessage(errMsg.toString());
                 JsonResultUtils.writeResponseDataAsJson(responseData, response);
             }else{
                 // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误

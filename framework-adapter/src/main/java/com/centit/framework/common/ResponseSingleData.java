@@ -24,7 +24,7 @@ public class ResponseSingleData implements ResponseData{
     /**
      * 返回的详细数据， 可能是需要回显的参数，也可能是验证的错误提示
      */
-    private Object resData;
+    protected Object resData;
 
     public ResponseSingleData() {
         resCode = 0;
