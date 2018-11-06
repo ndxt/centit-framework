@@ -247,7 +247,7 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
         this.optRoute = optRoute;
     }
 
-	@Override
+    @Override
     public String getState() {
         return state;
     }

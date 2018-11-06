@@ -10,23 +10,23 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RecordOperationLog {
-	/**
-	 *
-	 * @return 记录操作内容，理论上这个不能为空
-	 */
+    /**
+     *
+     * @return 记录操作内容，理论上这个不能为空
+     */
     @AliasFor("value")
-	String content() default "";
+    String content() default "";
 
     /**
-	 * 是否记录操作时间
-	 * @return boolean
-	 */
-	boolean timing() default false;
+     * 是否记录操作时间
+     * @return boolean
+     */
+    boolean timing() default false;
 
-	/**
-	 * 是否将HttpRequest中的参数放入newValue中，
-	 * 一般查询都需要将这个 参数设置为true
-	 * @return boolean
-	 */
-	boolean appendRequest() default false;
+    /**
+     * 是否将HttpRequest中的参数放入newValue中，
+     * 一般查询都需要将这个 参数设置为true
+     * @return boolean
+     */
+    boolean appendRequest() default false;
 }

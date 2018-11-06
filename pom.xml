@@ -23,7 +23,7 @@
 
     <properties>
         <centit.persistence.version>1.1.1809</centit.persistence.version>
-        <centit.commons.version>2.2.1809</centit.commons.version>
+        <centit.commons.version>2.2-SNAPSHOT</centit.commons.version>
         <centit.ui.version>3.1.1809</centit.ui.version>
     </properties>
 
