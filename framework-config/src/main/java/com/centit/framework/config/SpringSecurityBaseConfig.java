@@ -121,7 +121,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         if(StringUtils.isBlank(loginUrl)){
             loginUrl = "/system/mainframe/login";
         }
-        int maximumSessions = NumberBaseOpt.parseInteger(env.getProperty("framework.maximum.concurrent.session"),-1);
+        int maximumSessions = NumberBaseOpt.parseInteger(env.getProperty("session.concurrent.maximum"),-1);
 //        http.addFilterAt(
 //            new ConcurrentSessionFilter(sessionRegistry,
 //                new SimpleRedirectSessionInformationExpiredStrategy(loginUrl)),
