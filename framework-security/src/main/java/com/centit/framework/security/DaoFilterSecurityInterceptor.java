@@ -83,13 +83,17 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
 
                 CentitUserDetails ud = SecurityContextUtils.getCurrentUserDetails(sessionRegistry, accessToken);
                 if(ud!=null){
+                    //检验客户端ip是否和session中的ip一致，不一致不能替换session
                     if(StringUtils.isBlank(ud.getLoginIp()) ||
                         ud.getLoginIp().equals(WebOptUtils.getRequestAddr(fi.getRequest()) )) {
+
                         alwaysReauthenticate = this.isAlwaysReauthenticate();
                         if (alwaysReauthenticate) {
                             this.setAlwaysReauthenticate(false);
                         }
-                        SecurityContextHolder.getContext().setAuthentication(ud);
+                        //设置当前用户信息，也就是替换session信息
+                        authentication = ud;
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
                         //设置用户默认语言
                         WebOptUtils.setCurrentLang(fi.getHttpRequest(),
                             ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE));
