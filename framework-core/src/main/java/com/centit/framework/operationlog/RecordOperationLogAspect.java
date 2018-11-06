@@ -6,6 +6,7 @@ import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.OperationLog;
+import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ParamName;
@@ -87,7 +88,7 @@ public class RecordOperationLogAspect {
     private static void writeOperationLog(JoinPoint joinPoint, RecordOperationLog operationLog, Throwable e ){
         Map<String, Object> map = getMethodDescription(joinPoint);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        IUserInfo userInfo = WebOptUtils.getLoginUser(request).getUserInfo();
+
         Map<String, Object> params = BaseController.collectRequestParameters(request);
         String newValue;
         if(operationLog.appendRequest()){
@@ -97,7 +98,11 @@ public class RecordOperationLogAspect {
             newValue = JSON.toJSONString(map);
             map.putAll(params);
         }
-        map.put("userInfo",userInfo);
+        CentitUserDetails userDetails = WebOptUtils.getLoginUser(request);
+        IUserInfo userInfo = userDetails.getUserInfo();
+        //map.put("userDetails", userDetails);
+        map.put("userInfo", userInfo);
+        map.put("loginIp", request.getRemoteHost()+":"+WebOptUtils.getRequestAddr(request));
         String optContent = Pretreatment.mapTemplateString(operationLog.content(),map);
 
         Object targetController = joinPoint.getTarget();

@@ -71,18 +71,15 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             }
         }
 
-        String tokenKey =request.getSession().getId();
-
-        if(registToken){
-            //tokenKey = UuidOpt.getUuidAsString();
-            // 这个代码应该迁移到 AuthenticationProcessingFilter 的 successfulAuthentication 方法中
-            sessionRegistry.registerNewSession(tokenKey,ud);
-        }
+        //tokenKey = UuidOpt.getUuidAsString();
+        // 这个代码应该迁移到 AuthenticationProcessingFilter 的 successfulAuthentication 方法中
+        ud.setLoginIp(WebOptUtils.getRequestAddr(request));
+        sessionRegistry.registerNewSession(request.getSession().getId() ,ud);
 
         if(writeLog){
             OperationLogCenter.log(ud.getUserInfo().getUserCode(),"login", "login",
                     "用户 ："+ud.getUserInfo().getUserName()+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
-                    + "从主机"+request.getRemoteHost()+":"+request.getRemotePort()+"登录。");
+                    + "从主机"+request.getRemoteHost()+":"+WebOptUtils.getRequestAddr(request)+"登录。");
         }
 
         String ajax = request.getParameter("ajax");
@@ -90,7 +87,8 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         if(isAjaxQuery || "true".equalsIgnoreCase(ajax)){
             ResponseMapData resData = new ResponseMapData();
             if(registToken) {
-                resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
+                resData.addResponseData(SecurityContextUtils.SecurityContextTokenName,
+                    request.getSession().getId());
             }
             resData.addResponseData("userInfo", ud);
             JsonResultUtils.writeResponseDataAsJson(resData, response);

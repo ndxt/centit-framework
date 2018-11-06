@@ -83,14 +83,17 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
 
                 CentitUserDetails ud = SecurityContextUtils.getCurrentUserDetails(sessionRegistry, accessToken);
                 if(ud!=null){
-                    alwaysReauthenticate = this.isAlwaysReauthenticate();
-                    if(alwaysReauthenticate) {
-                        this.setAlwaysReauthenticate(false);
+                    if(StringUtils.isBlank(ud.getLoginIp()) ||
+                        ud.getLoginIp().equals(WebOptUtils.getRequestAddr(fi.getRequest()) )) {
+                        alwaysReauthenticate = this.isAlwaysReauthenticate();
+                        if (alwaysReauthenticate) {
+                            this.setAlwaysReauthenticate(false);
+                        }
+                        SecurityContextHolder.getContext().setAuthentication(ud);
+                        //设置用户默认语言
+                        WebOptUtils.setCurrentLang(fi.getHttpRequest(),
+                            ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE));
                     }
-                    SecurityContextHolder.getContext().setAuthentication(ud);
-                    //设置用户默认语言
-                    WebOptUtils.setCurrentLang(fi.getHttpRequest(),
-                        ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE));
                 }
             }
             if (allResourceMustBeAudited && (authentication == null || "anonymousUser".equals(authentication.getName()))) {

@@ -20,6 +20,7 @@ import java.util.*;
 // 系统用户信息表
 public abstract class AbstractCentitUserDetails implements CentitUserDetails, java.io.Serializable{
 
+    private String loginIp;
     private String currentStationId;
     private Map<String, String> userSettings;
     private Map<String, String> userOptList;
@@ -109,6 +110,16 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
     public String getCurrentUnitCode(){
         IUserUnit cs = getCurrentStation();
         return cs != null? cs.getUnitCode() : getUserInfo().getPrimaryUnit();
+    }
+
+    @Override
+    public String getLoginIp() {
+        return loginIp;
+    }
+
+    @Override
+    public void setLoginIp(String loginIp) {
+        this.loginIp = loginIp;
     }
 
     /**

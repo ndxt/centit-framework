@@ -69,14 +69,13 @@ public interface CentitUserDetails extends
      * 设置用户登录机器IP
      * @param loginHost loginHost
      */
-
-    //void setLoginIp(String loginHost);
+    void setLoginIp(String loginHost);
 
     /**
      * 设置最新登录时间
-     * @param loginTime loginTime
+     * @return 用户登录时的IP
      */
-    //void setActiveTime(Date loginTime);
+    String getLoginIp();
 
     /**
      * 获取用户当前身份，用户有多个岗位时需要在首页上确定当前身份，默认为主机构

@@ -88,6 +88,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
                 new AntPathRequestMatcher(requiresAuthenticationUrl, "POST"));
         }
 
+        //pretreatmentAuthenticationProcessingFilter.setSessionRegistry(sessionRegistry);
         pretreatmentAuthenticationProcessingFilter.setSessionAuthenticationStrategy(
             new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
 

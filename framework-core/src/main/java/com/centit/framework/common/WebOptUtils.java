@@ -76,7 +76,14 @@ public class WebOptUtils {
         }
         return ud;
     }
-    
+
+    public static String getRequestAddr(HttpServletRequest request) {
+        String sHostIp = request.getHeader("x-forwarded-for");
+        if(StringUtils.isBlank(sHostIp)){
+            sHostIp = request.getRemoteAddr();
+        }
+        return sHostIp;
+    }
     
     public static CentitUserDetails getLoginUser(HttpServletRequest request) {
         CentitUserDetails ud = getLoginUser();

@@ -16,6 +16,12 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
     private int checkCaptchaTime = 0 ; // 0 不验证, 1 登陆失败后 再次登陆验证, 2 始终验证
     private int checkCaptchaType = 0;  // 0 不验证, 1 一起验证, 2 ajax 验证
 
+    /*private SessionRegistry sessionRegistry;
+
+    public void setSessionRegistry(SessionRegistry sessionManger) {
+        this.sessionRegistry = sessionManger;
+    }*/
+
     public void setCheckCaptchaTime(int checkCaptchaTime) {
         this.checkCaptchaTime = checkCaptchaTime;
     }
@@ -98,14 +104,19 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
         //}
     }
 
-   /*
-    @Override
+    // 新建session
+    // 代替 AjaxAuthenticationSuccessHandler 中的
+    /*@Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         super.successfulAuthentication(request, response, chain, authResult);
-        // 新建session
-        // 代替 AjaxAuthenticationSuccessHandler 中的
+
+        CentitUserDetails ud = (CentitUserDetails) authResult.getPrincipal();
+        //tokenKey = UuidOpt.getUuidAsString();
+        // 这个代码应该迁移到 AuthenticationProcessingFilter 的 successfulAuthentication 方法中
+        ud.setLoginIp(WebOptUtils.getRequestAddr(request));
+        sessionRegistry.registerNewSession(request.getSession().getId() ,ud);
     }*/
 }
