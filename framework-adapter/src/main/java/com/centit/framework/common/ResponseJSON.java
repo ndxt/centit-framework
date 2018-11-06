@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 获取http请求 返回的数据
+ * 获取http请求 返回的数据；这个应该命名为 receiveJson
  */
 @SuppressWarnings("unused")
 public class ResponseJSON {
