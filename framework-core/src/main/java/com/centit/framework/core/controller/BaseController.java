@@ -1,9 +1,6 @@
 package com.centit.framework.core.controller;
 
-import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.ResponseData;
-import com.centit.framework.common.ResponseMapData;
-import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.common.*;
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
@@ -108,6 +105,14 @@ public abstract class BaseController {
             throws IOException {
         logger.error(ex.getMessage(), ex);
         if (WebOptUtils.isAjax(request)) {
+            if (ex instanceof ObjectException){
+                ObjectException objex = (ObjectException)ex;
+                ResponseSingleData responseData = new ResponseSingleData(objex.getExceptionCode(),
+                    objex.getLocalizedMessage());
+                responseData.setData(objex.getObjectData());
+                JsonResultUtils.writeResponseDataAsJson(responseData, response);
+                return;
+            }
 
             BindingResult bindingResult = null;
             if(ex instanceof BindException){
@@ -115,7 +120,6 @@ public abstract class BaseController {
             }else if(ex instanceof MethodArgumentNotValidException){
                 bindingResult =((MethodArgumentNotValidException)ex).getBindingResult();
             }
-
             if(bindingResult!=null){
                 ResponseMapData responseData = new ResponseMapData(ResponseData.ERROR_BAD_REQUEST);
                 StringBuilder errMsg = new StringBuilder();
@@ -131,11 +135,11 @@ public abstract class BaseController {
                 }
                 responseData.setMessage(errMsg.toString());
                 JsonResultUtils.writeResponseDataAsJson(responseData, response);
-            }else{
-                // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误
-                JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
-                        StringUtils.isNotEmpty(ex.getMessage()) ? ex.getMessage() : ex.toString(), response);
+                return;
             }
+                // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
+                        StringUtils.isNotEmpty(ex.getMessage()) ? ex.getMessage() : ex.toString(), response);
         } else {
             response.sendRedirect(request.getContextPath() + "/system/exception/error/500");
         }

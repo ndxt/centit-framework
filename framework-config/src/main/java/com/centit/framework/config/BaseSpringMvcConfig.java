@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,28 +22,28 @@ import java.util.List;
 @EnableWebMvc
 public class BaseSpringMvcConfig extends WebMvcConfigurerAdapter {
 
-    private FastJsonHttpMessageConverter fastJsonHttpMessageConverter(){
-        FastJsonHttpMessageConverter fastJsonHttpMessageConverter =
+    private HttpMessageConverter<Object> fastJsonHttpMessageConverter(){
+        FastJsonHttpMessageConverter jsonHttpMessageConverter =
                 new FastJsonHttpMessageConverter();
         List<MediaType> supportedMediaTypes = new ArrayList<>();
         supportedMediaTypes.add(MediaType.APPLICATION_JSON);
         supportedMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
 
-        fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
+        jsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
 
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setFeatures(Feature.AllowArbitraryCommas,Feature.AllowUnQuotedFieldNames,
                 Feature.DisableCircularReferenceDetect);
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
-        return fastJsonHttpMessageConverter;
+        jsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
+        return jsonHttpMessageConverter;
     }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(fastJsonHttpMessageConverter());
-        converters.add(new StringHttpMessageConverter());
+        converters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
     }
 
     @Override
