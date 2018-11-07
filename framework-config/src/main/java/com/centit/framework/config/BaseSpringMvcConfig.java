@@ -3,9 +3,11 @@ package com.centit.framework.config;
 import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.centit.framework.core.controller.WrapUpResponseBodyMethodProcessor;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -22,21 +24,27 @@ import java.util.List;
 @EnableWebMvc
 public class BaseSpringMvcConfig extends WebMvcConfigurerAdapter {
 
+    private HttpMessageConverter<Object> jsonHttpMessageConverter = null;
+
     private HttpMessageConverter<Object> fastJsonHttpMessageConverter(){
-        FastJsonHttpMessageConverter jsonHttpMessageConverter =
+        if(jsonHttpMessageConverter != null){
+            return jsonHttpMessageConverter;
+        }
+        FastJsonHttpMessageConverter fastJsonHttpMessageConverter =
                 new FastJsonHttpMessageConverter();
         List<MediaType> supportedMediaTypes = new ArrayList<>();
         supportedMediaTypes.add(MediaType.APPLICATION_JSON);
         supportedMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
 
-        jsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
+        fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
 
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setFeatures(Feature.AllowArbitraryCommas,Feature.AllowUnQuotedFieldNames,
                 Feature.DisableCircularReferenceDetect);
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        jsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
+        fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
+        jsonHttpMessageConverter = fastJsonHttpMessageConverter;
         return jsonHttpMessageConverter;
     }
 
@@ -64,6 +72,11 @@ public class BaseSpringMvcConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("classpath:messagesource/base/messages/**");
     }
 
+    @Override
+    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
+        returnValueHandlers.add(
+            new WrapUpResponseBodyMethodProcessor(fastJsonHttpMessageConverter()));
+    }
     /*@Override
     public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
         SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();

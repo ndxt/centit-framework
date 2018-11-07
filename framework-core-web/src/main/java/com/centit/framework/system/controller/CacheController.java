@@ -12,6 +12,7 @@ import com.centit.framework.components.SysUnitFilterEngine;
 import com.centit.framework.components.SysUserFilterEngine;
 import com.centit.framework.components.impl.UserUnitMapTranslate;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
@@ -104,10 +105,10 @@ public class CacheController extends BaseController {
      */
     @ApiOperation(value="获取数据字典明细",notes="根据数据字典类别代码获取数据字典明细。")
     @RequestMapping(value = "/lvb/{catalog}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseData lvb(@PathVariable String catalog) {
-        Map<String,String> keyValueMap = CodeRepositoryUtil.getLabelValueMap(catalog);
-        return ResponseData.makeResponseData(keyValueMap);
+    @WrapUpResponseBody
+    public Map<String,String> lvb(@PathVariable String catalog) {
+        return CodeRepositoryUtil.getLabelValueMap(catalog);
+        //return ResponseData.makeResponseData(keyValueMap);
     }
 
     /**
