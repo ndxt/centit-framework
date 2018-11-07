@@ -11,6 +11,7 @@ import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.SysUnitFilterEngine;
 import com.centit.framework.components.SysUserFilterEngine;
 import com.centit.framework.components.impl.UserUnitMapTranslate;
+import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
@@ -50,7 +51,7 @@ import java.util.*;
 @RequestMapping("/cp")
 @Api(value="框架将所有的系统信息都缓存在内存中，这个类提供了大量的访问框架数据的接口",
     tags= "框架数据缓存接口")
-public class CacheController {
+public class CacheController extends BaseController {
 
     private static Log logger = LogFactory.getLog(CacheController.class);
     private String optId = "cache";

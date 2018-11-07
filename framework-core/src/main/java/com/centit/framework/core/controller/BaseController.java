@@ -133,7 +133,7 @@ public abstract class BaseController {
                 JsonResultUtils.writeResponseDataAsJson(responseData, response);
             }else{
                 // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误
-                JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
+                JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
                         StringUtils.isNotEmpty(ex.getMessage()) ? ex.getMessage() : ex.toString(), response);
             }
         } else {
