@@ -103,7 +103,7 @@ public abstract class BaseController {
     @ExceptionHandler
     public void exceptionHandler(Exception ex, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        logger.error(ex.getMessage(), ex);
+        logger.error(ex.getMessage());
         if (WebOptUtils.isAjax(request)) {
             if (ex instanceof ObjectException){
                 ObjectException objex = (ObjectException)ex;
