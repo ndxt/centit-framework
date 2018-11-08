@@ -251,13 +251,13 @@ public interface ResponseData{
     String RES_MSG_FILED="message";
     String RES_DATA_FILED="data";
 
-    @ApiModelProperty(value = "结果编码，0：成功，其他：错误编码")
+    @ApiModelProperty(value = "结果编码，0：成功，其他：错误编码。")
     int getCode();
 
-    @ApiModelProperty(value = "code=0：消息：code!=0:错误信息")
+    @ApiModelProperty(value = "code=0：消息：code!=0:错误信息。")
     String getMessage();
 
-    @ApiModelProperty(value = "JSON格式的数据内容，可以是任何格式，根据业务的需要定义")
+    @ApiModelProperty(value = "JSON格式的数据内容，根据业务的需要定义;前端可以通过在线调试查看详细信息。")
     Object getData();
 
     String toJSONString(PropertyPreFilter simplePropertyPreFilter);

@@ -88,10 +88,10 @@ public class CacheController extends BaseController {
      */
     @ApiOperation(value="数据字典取健",notes="和mapvalue相反他是根据数据字典的类别和value获取对应的key。")
     @RequestMapping(value = "/mapcode/{catalog}/{value}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseData mapcode(@PathVariable String catalog, @PathVariable String value) {
-        String key = CodeRepositoryUtil.getValue(catalog, value);
-        return ResponseData.makeResponseData(key);
+    @WrapUpResponseBody
+    public String mapcode(@PathVariable String catalog, @PathVariable String value) {
+        return CodeRepositoryUtil.getValue(catalog, value);
+        //return ResponseData.makeResponseData(key);
     }
 
 

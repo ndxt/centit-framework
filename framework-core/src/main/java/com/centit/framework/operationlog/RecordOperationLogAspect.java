@@ -101,7 +101,7 @@ public class RecordOperationLogAspect {
         CentitUserDetails userDetails = WebOptUtils.getLoginUser(request);
         IUserInfo userInfo = userDetails.getUserInfo();
         //map.put("userDetails", userDetails);
-        map.put("userInfo", userInfo);
+        map.put("loginUser", userInfo);
         map.put("loginIp", request.getRemoteHost()+":"+WebOptUtils.getRequestAddr(request));
         String optContent = Pretreatment.mapTemplateString(operationLog.content(),map);
 

@@ -17,7 +17,6 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import javax.annotation.Resource;
-
 @PropertySource("classpath:system.properties")
 public class StaticSystemBeanConfig implements EnvironmentAware {
 
@@ -31,11 +30,6 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         }
     }
 
-    @Bean
-    public AutowiredAnnotationBeanPostProcessor autowiredAnnotationBeanPostProcessor() {
-        return new AutowiredAnnotationBeanPostProcessor();
-    }
-
     /* 这bean从框架中移除，由开发人员自行定义
      * 这个bean必须要有
      * @return CentitPasswordEncoder 密码加密算法
@@ -43,6 +37,12 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
     /*@Bean("passwordEncoder")
     public StandardPasswordEncoderImpl passwordEncoder() {
         return  new StandardPasswordEncoderImpl();
+    }*/
+
+    // 这bean从框架中移除，由开发人员自行定义; 可以定义不同的策略
+    /*@Bean
+    public SessionRegistry sessionRegistry(){
+        return new MemorySessionRegistryImpl();
     }*/
 
     @Bean
@@ -75,15 +75,16 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         userDetailsService.setPlatformEnvironment(platformEnvironment);
         return userDetailsService;
     }
-    // 这bean从框架中移除，由开发人员自行定义; 可以定义不同的策略
-    /*@Bean
-    public SessionRegistry sessionRegistry(){
-        return new MemorySessionRegistryImpl();
-    }*/
 
     @Bean
     public CsrfTokenRepository csrfTokenRepository() {
         return //new LazyCsrfTokenRepository(
                 new HttpSessionCsrfTokenRepository();
     }
+
+    @Bean
+    public AutowiredAnnotationBeanPostProcessor autowiredAnnotationBeanPostProcessor() {
+        return new AutowiredAnnotationBeanPostProcessor();
+    }
+
 }

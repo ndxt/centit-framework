@@ -11,32 +11,18 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Resolves method arguments annotated with {@code @RequestBody} and handles return
- * values from methods annotated with {@code @WrapUpResponseBody} by reading and writing
- * to the body of the request or response with an {@link HttpMessageConverter}.
- *
- * <p>An {@code @RequestBody} method argument is also validated if it is annotated
- * with {@code @javax.validation.Valid}. In case of validation failure,
- * {@link MethodArgumentNotValidException} is raised and results in an HTTP 400
- * response status code if {@link DefaultHandlerExceptionResolver} is configured.
  * @see org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor
- * @author Arjen Poutsma
- * @author Rossen Stoyanchev
- * @author Juergen Hoeller
- * @since 3.1
  */
-public class WrapUpResponseBodyMethodProcessor implements HandlerMethodReturnValueHandler {
+public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturnValueHandler {
 
     protected final HttpMessageConverter<Object> messageConverter;
     /**
@@ -44,7 +30,7 @@ public class WrapUpResponseBodyMethodProcessor implements HandlerMethodReturnVal
      * {@code @RequestBody}. For handling {@code @WrapUpResponseBody} consider also
      * providing a {@code ContentNegotiationManager}.
      */
-    public WrapUpResponseBodyMethodProcessor(HttpMessageConverter<Object> converter) {
+    public WrapUpResponseBodyReturnValueHandler(HttpMessageConverter<Object> converter) {
         this.messageConverter = converter;
     }
 
