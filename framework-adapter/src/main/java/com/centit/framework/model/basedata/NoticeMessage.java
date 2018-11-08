@@ -6,17 +6,25 @@ public class NoticeMessage implements java.io.Serializable {
 
     private static final long serialVersionUID = 1;
     private static String defaultMsgType = "msg";
-    // 消息类别 默认值 msg
+    /**
+     * 消息类别 默认值 msg
+     * 客户端可以根据不同的消息类别提供不同的 响应方式 或者 展示方式
+      */
     private String msgType;
-    // 消息主题
+    /** 消息主题 这不是必须的
+     * */
     private String msgSubject;
-    // 消息内容
+    /** 消息内容，为一个文本，不同的消息类别 可以有不同的格式
+     */
     private String msgContent;
-    // 关联业务
+    /** 关联业务
+     */
     private String optId;
-    // 关联的 方法、功能、模块
+    /**关联业务中的 方法、功能、模块
+     */
     private String optMethod;
-    // 关联对象组件，多个主键用url参数的方式链接
+    /** 关联对象组件，多个主键用url参数的方式链接
+     */
     private String optTag;
 
     public static void setDefaultMsgType(String defaultMsgType) {

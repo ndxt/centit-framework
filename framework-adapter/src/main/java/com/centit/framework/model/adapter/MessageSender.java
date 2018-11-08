@@ -13,11 +13,10 @@ import com.centit.framework.model.basedata.NoticeMessage;
         NotNull
         private MessageSender emailMessageSender;
          注意：去掉@后的空格
- * @author ljy
+ * @author codefan
  */
 public interface MessageSender {
 
-    /**
      /**
      * 发送内部系统消息
      *

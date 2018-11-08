@@ -53,7 +53,6 @@ public class ServiceConfig {
         NotificationCenterImpl notificationCenter = new NotificationCenterImpl();
         //这个不是必须的,只是为了在没有真正的发送类时不报错
         notificationCenter.initDummyMsgSenders();
-        //notificationCenter.registerMessageSender("innerMsg",innerMessageManager);
         //打开消息推送服务日志
         notificationCenter.setWriteNoticeLog(true);
         return notificationCenter;
