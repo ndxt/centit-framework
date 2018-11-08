@@ -16,7 +16,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.nio.charset.Charset;
@@ -89,13 +88,17 @@ public class BaseSpringMvcConfig extends WebMvcConfigurerAdapter  implements App
 
         List<HandlerMethodReturnValueHandler> sortedHandlers = new ArrayList<>(20);
         List<HandlerMethodReturnValueHandler> defaultHandlers = requestMappingHandlerAdapter.getReturnValueHandlers();
-        // 放到 sortedHandlers 后面
-        for(HandlerMethodReturnValueHandler handler : defaultHandlers ){
+
+        // 建议都使用框架的这个注解处理，为了提高性能可以放在最前面：
+        sortedHandlers.add(new WrapUpResponseBodyReturnValueHandler(fastJsonHttpMessageConverter()));
+        sortedHandlers.addAll(defaultHandlers);
+        // 下面的代码式 放到 Spring 定义的  Annotation-based 组中 排在 sortedHandlers 后面
+        /*for(HandlerMethodReturnValueHandler handler : defaultHandlers ){
             sortedHandlers.add(handler);
             if(handler instanceof RequestResponseBodyMethodProcessor){
                 sortedHandlers.add(new WrapUpResponseBodyReturnValueHandler(fastJsonHttpMessageConverter()));
             }
-        }
+        }*/
         requestMappingHandlerAdapter.setReturnValueHandlers(sortedHandlers);
     }
 

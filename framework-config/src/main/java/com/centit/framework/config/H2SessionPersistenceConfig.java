@@ -1,6 +1,5 @@
 package com.centit.framework.config;
 
-import java.sql.Driver;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +14,7 @@ import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHtt
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.sql.Driver;
 
 /**
  * Created by zou_wy on 2017/6/14.

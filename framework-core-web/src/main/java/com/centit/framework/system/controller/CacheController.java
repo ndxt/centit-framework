@@ -90,7 +90,7 @@ public class CacheController extends BaseController {
     @RequestMapping(value = "/mapcode/{catalog}/{value}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public String mapcode(@PathVariable String catalog, @PathVariable String value) {
-        return CodeRepositoryUtil.getValue(catalog, value);
+        return CodeRepositoryUtil.getCode(catalog, value);
         //return ResponseData.makeResponseData(key);
     }
 
