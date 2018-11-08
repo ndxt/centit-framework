@@ -12,14 +12,16 @@ package com.centit.framework.common;
 public class ObjectException extends RuntimeException {
     private static final long serialVersionUID = 4050482305178810162L;
 
-    public static final int UNKNOWN_EXCEPTION = -1;
-    public static final int NULL_EXCEPTION = 2;
-    public static final int BLANK_EXCEPTION = 3;
-    public static final int FORMAT_DATE_EXCEPTION = 4;
-    public static final int FORMAT_NUMBER_EXCEPTION = 5;
-    public static final int DATABASE_OPERATE_EXCEPTION = 6;
-    public static final int DATABASE_OUT_SYNC_EXCEPTION = 7;
-    
+    public static final int UNKNOWN_EXCEPTION = 601;
+    public static final int NULL_EXCEPTION = 602;
+    public static final int BLANK_EXCEPTION = 603;
+    public static final int DATA_NOT_FOUND_EXCEPTION  = 604;
+    public static final int EMPTY_RESULT_EXCEPTION  = 605;
+    public static final int FORMAT_DATE_EXCEPTION = 606;
+    public static final int FORMAT_NUMBER_EXCEPTION = 607;
+
+    public static final int DATABASE_OPERATE_EXCEPTION = 620;
+    public static final int DATABASE_OUT_SYNC_EXCEPTION = 621;
     private int exceptionCode;
     private Object objectData;
     /**

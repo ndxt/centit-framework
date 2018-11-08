@@ -3,10 +3,7 @@ package com.centit.framework.system.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.ResponseData;
-import com.centit.framework.common.ViewDataTransform;
-import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.common.*;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.SysUnitFilterEngine;
 import com.centit.framework.components.SysUserFilterEngine;
@@ -107,8 +104,11 @@ public class CacheController extends BaseController {
     @RequestMapping(value = "/lvb/{catalog}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public Map<String,String> lvb(@PathVariable String catalog) {
-        return CodeRepositoryUtil.getLabelValueMap(catalog);
-        //return ResponseData.makeResponseData(keyValueMap);
+        Map<String,String> keyValueMap = CodeRepositoryUtil.getLabelValueMap(catalog);
+        if(keyValueMap==null || keyValueMap.isEmpty()){
+            throw new ObjectException(catalog,ObjectException.DATA_NOT_FOUND_EXCEPTION,"找不到对应的数据字典内容。");
+        }
+        return keyValueMap;
     }
 
     /**
