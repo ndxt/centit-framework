@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 import org.springframework.security.web.csrf.CsrfLogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
 /**
  * Created by zou_wy on 2017/3/29.
@@ -90,6 +91,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
         pretreatmentAuthenticationProcessingFilter.setSessionAuthenticationStrategy(
             new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
+        pretreatmentAuthenticationProcessingFilter.setRememberMeServices(new SpringSessionRememberMeServices());
 
         return pretreatmentAuthenticationProcessingFilter;
     }

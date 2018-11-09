@@ -1,5 +1,6 @@
 package com.centit.framework.config;
 
+import com.centit.framework.common.SysParametersUtils;
 import com.centit.support.algorithm.StringRegularOpt;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
@@ -15,8 +16,8 @@ public class RedisSessionPersistenceCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         Environment evn = context.getEnvironment();
-        String enable = evn.getProperty("session.persistence.enable");
-        String type = evn.getProperty("session.persistence.db.type");
+        String enable = SysParametersUtils.getStringValue("session.persistence.enable");
+        String type = SysParametersUtils.getStringValue("session.persistence.db.type");
         if(enable == null || type == null) {
             return false;
         }
