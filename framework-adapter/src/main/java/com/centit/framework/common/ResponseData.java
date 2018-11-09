@@ -274,6 +274,16 @@ public interface ResponseData{
         return new ResponseSingleData(ERROR_INTERNAL_SERVER_ERROR, message);
     }
 
+    static ResponseData makeErrorMessage(int errorCode, String message){
+        return new ResponseSingleData(errorCode, message);
+    }
+
+    static ResponseData makeErrorMessageWithData(Object obj, int errorCode, String message){
+        ResponseSingleData response = new ResponseSingleData(errorCode, message);
+        response.setData(obj);
+        return response;
+    }
+
     static ResponseSingleData makeResponseData(Object objValue){
         return ResponseSingleData.makeResponseData(objValue);
     }

@@ -1,14 +1,15 @@
 package com.otherpackage.controller;
 
-import com.centit.framework.common.ResponseData;
-import com.centit.framework.common.ResponseMapData;
-import com.centit.framework.common.ResponseSingleData;
+import com.centit.framework.common.*;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.support.algorithm.ByteBaseOpt;
+import com.otherpackage.po.Student;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.web.bind.annotation.*;
@@ -85,9 +86,49 @@ public class TestCaseController extends BaseController {
         }catch (RuntimeException re){
             return ResponseData.makeErrorMessage(re.getLocalizedMessage());
         }
-
-
     }
+
+    @ApiOperation(value="根据学号查询学生",notes="根据学号查询学生。")
+    @ApiImplicitParams(@ApiImplicitParam(
+        name = "studNo", value="学号必须是两位数",
+        required=true, paramType = "path", dataType ="String"
+    ))
+    @GetMapping("/student/{studNo}")
+    @WrapUpResponseBody
+    public Student findStudent(@PathVariable String studNo) {
+        if(StringUtils.length(studNo)!=2){
+            throw new ObjectException(studNo,
+                ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                "找不到对应学号的学生");
+        }
+        Student stud = new Student();
+        stud.setStudNo(studNo);
+        stud.setStudName("小强");
+        return stud;
+    }
+
+    @ApiOperation(value="根据学号查询学生2",notes="根据学号查询学生。")
+    @ApiImplicitParams(@ApiImplicitParam(
+        name = "studNo", value="学号必须是两位数",
+        required=true, paramType = "path", dataType ="String"
+    ))
+    @GetMapping("/student2/{studNo}")
+    @ResponseBody
+    public ResponseData findStudent2(@PathVariable String studNo) {
+        if(StringUtils.length(studNo)!=2){
+            /*throw new ObjectException(studNo,
+                ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                "找不到对应学号的学生");*/
+            return ResponseData.makeErrorMessageWithData(studNo,
+                ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                "找不到对应学号的学生");
+        }
+        Student stud = new Student();
+        stud.setStudNo(studNo);
+        stud.setStudName("小强");
+        return ResponseData.makeResponseData(stud);
+    }
+
     /**
      * 测试 H5 新特性 server-sent-event
      * @param response HttpServletResponse
