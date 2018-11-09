@@ -28,11 +28,15 @@ public class SecurityContextUtils {
 
     public static String registerUserToken(CentitUserDetails ud){
         String tokenKey = UuidOpt.getUuidAsString();
+        registerUserToken(tokenKey,ud);
+        return tokenKey;
+    }
+
+    public static void registerUserToken(String tokenKey, CentitUserDetails ud){
         SessionRegistry registry = getSessionRegistry();
         if(registry==null)
             throw new ObjectException(ud,"获取bean：centitSessionRegistry出错，请检查配置文件。");
         registry.registerNewSession(tokenKey,ud);
-        return tokenKey;
     }
 
     public static void setSecurityContext(CentitUserDetails ud){

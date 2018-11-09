@@ -6,6 +6,7 @@ import com.centit.framework.common.ResponseJSON;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.network.HttpExecutor;
 import com.centit.support.network.HttpExecutorContext;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.http.client.ClientProtocolException;
@@ -73,7 +74,7 @@ public class AppSession {
         Map<String,String> param = new HashMap<>();
         param.put("userCode", userCode);
         param.put("password", password);
-        String jsonStr = HttpExecutor.formPost(HttpExecutorContext.create(httpclient), appServerUrl + "/system/mainframe/loginasclient", param);
+        String jsonStr = HttpExecutor.formPost(createHttpExecutorContext(httpclient), appServerUrl + "/system/mainframe/loginasclient", param);
         ResponseJSON jsonData = ResponseJSON.valueOfJson(jsonStr);
         if(jsonData==null || jsonData.getCode()!=0){
             throw new ObjectException(jsonData==null?"访问服务器失败":jsonData.getMessage());
@@ -82,17 +83,28 @@ public class AppSession {
     }
 
     public String completeQueryUrl(String queryUrl){
-        String baseUrl = queryUrl.indexOf("://") > 0? queryUrl : appServerUrl+queryUrl;
-        return needAuthenticated
+        return queryUrl.indexOf("://") > 0? queryUrl : appServerUrl+queryUrl;
+        /*return needAuthenticated
                 ?baseUrl+
                     (queryUrl.indexOf('?')>=0 ? "&":"?")+
-                    /*SecurityContextUtils.*/SECURITY_CONTEXT_TOKENNAME+
+                    *//*SecurityContextUtils.*//*SECURITY_CONTEXT_TOKENNAME+
                     "="+accessToken
-                :baseUrl;
+                :baseUrl;*/
     }
 
     public CloseableHttpClient allocHttpClient() throws Exception{
         return httpClientPool.borrowObject();
+    }
+
+    public HttpExecutorContext createHttpExecutorContext(CloseableHttpClient httpClient) {
+        HttpExecutorContext httpExecutorContext = HttpExecutorContext.create(httpClient);
+        if(StringUtils.isNotBlank(accessToken)) {
+            httpExecutorContext.header("Authorization", accessToken);
+        }
+        return httpExecutorContext;
+    }
+    public HttpExecutorContext createHttpExecutorContext()  throws Exception{
+          return createHttpExecutorContext(httpClientPool.borrowObject());
     }
 
     public void releaseHttpClient(CloseableHttpClient httpClient){
@@ -104,7 +116,7 @@ public class AppSession {
         throws IOException {
 
         return ResponseJSON.valueOfJson(
-            HttpExecutor.simpleGet(HttpExecutorContext.create(httpClient),
+            HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
             completeQueryUrl(httpGetUrl), queryParam));
     }
 
@@ -113,7 +125,7 @@ public class AppSession {
         throws IOException {
 
         return ResponseJSON.valueOfJson(
-            HttpExecutor.simpleGet(HttpExecutorContext.create(httpClient),
+            HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
                 completeQueryUrl(httpGetUrl), ""));
     }
 
@@ -121,7 +133,7 @@ public class AppSession {
                            Object formData , boolean asPut)
         throws IOException {
         return HttpExecutor.formPost(
-            HttpExecutorContext.create(httpClient),
+            createHttpExecutorContext(httpClient),
             completeQueryUrl(httpPostUrl), formData, asPut);
     }
 
@@ -129,14 +141,14 @@ public class AppSession {
                            Object formData)
         throws IOException {
         return HttpExecutor.formPost(
-            HttpExecutorContext.create(httpClient),
+            createHttpExecutorContext(httpClient),
             completeQueryUrl(httpPostUrl), formData, false);
     }
 
     public String formPut(CloseableHttpClient httpClient, String httpPutUrl, Object formData)
         throws IOException {
         return HttpExecutor.formPut(
-            HttpExecutorContext.create(httpClient),
+            createHttpExecutorContext(httpClient),
             completeQueryUrl(httpPutUrl), formData);
     }
 
@@ -144,7 +156,7 @@ public class AppSession {
                                Object formData , boolean asPut)
         throws IOException {
         return HttpExecutor.jsonPost(
-            HttpExecutorContext.create(httpClient),
+            createHttpExecutorContext(httpClient),
             completeQueryUrl(httpPostUrl), formData, asPut);
     }
 
@@ -152,7 +164,7 @@ public class AppSession {
                                Object formData)
         throws IOException {
         return HttpExecutor.jsonPost(
-            HttpExecutorContext.create(httpClient),
+            createHttpExecutorContext(httpClient),
             completeQueryUrl(httpPostUrl), formData, false);
     }
 
@@ -167,7 +179,7 @@ public class AppSession {
             }
         }
         return HttpExecutor.jsonPut(
-            HttpExecutorContext.create(httpClient),
+            createHttpExecutorContext(httpClient),
             completeQueryUrl(httpPutUrl), jsonString);
     }
 
@@ -175,7 +187,7 @@ public class AppSession {
         throws IOException {
 
         return HttpExecutor.simpleDelete(
-            HttpExecutorContext.create(httpClient),
+            createHttpExecutorContext(httpClient),
             completeQueryUrl(httpDeleteUrl), queryParam);
     }
 
@@ -210,6 +222,5 @@ public class AppSession {
     public void setNeedAuthenticated(boolean needAuthenticated) {
         this.needAuthenticated = needAuthenticated;
     }
-
 
 }
