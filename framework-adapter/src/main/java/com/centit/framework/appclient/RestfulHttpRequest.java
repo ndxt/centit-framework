@@ -2,11 +2,13 @@ package com.centit.framework.appclient;
 
 import com.alibaba.fastjson.JSON;
 import com.centit.framework.common.ResponseJSON;
+import com.centit.support.network.UrlOptUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 如果一个方法只有一个请求，可以使用这个类中的方法，它对 请求的前后的资源申请和释放做了统一处理
@@ -16,8 +18,8 @@ public class RestfulHttpRequest {
 
     private static Logger logger = LoggerFactory.getLogger(RestfulHttpRequest.class);
 
-    public static ResponseJSON  getResponseData (AppSession appSession,
-                                                 String httpGetUrl) {
+    public static ResponseJSON getResponseData(AppSession appSession,
+                                                 String httpGetUrl){
         CloseableHttpClient httpClient = null;
         try {
             httpClient = appSession.allocHttpClient();
@@ -30,13 +32,14 @@ public class RestfulHttpRequest {
             logger.error(e.getLocalizedMessage(),e);
             return null;
         } finally {
-            if(httpClient!=null)
+            if(httpClient!=null) {
                 appSession.releaseHttpClient(httpClient);
+            }
         }
     }
 
     public static <T> List<T>  getResponseObjectList(AppSession appSession,
-                                                     String httpGetUrl,Class<T> clazz ) {
+                                                     String httpGetUrl,Class<T> clazz){
         CloseableHttpClient httpClient = null;
         try {
             httpClient = appSession.allocHttpClient();
@@ -51,8 +54,9 @@ public class RestfulHttpRequest {
             logger.error(e.getLocalizedMessage(),e);
             return null;
         } finally {
-            if(httpClient!=null)
+            if(httpClient!=null) {
                 appSession.releaseHttpClient(httpClient);
+            }
         }
     }
 
@@ -72,15 +76,34 @@ public class RestfulHttpRequest {
             logger.error(e.getLocalizedMessage(),e);
             return null;
         } finally {
-            if(httpClient!=null)
+            if(httpClient!=null) {
                 appSession.releaseHttpClient(httpClient);
+            }
         }
     }
 
+    public static ResponseJSON getResponseData(AppSession appSession,
+                          String httpGetUrl,Map<String,Object> queryParam){
+        return getResponseData(appSession,
+            UrlOptUtils.appendParamsToUrl( httpGetUrl,queryParam));
+    }
 
+    public static <T> List<T>  getResponseObjectList(AppSession appSession,
+                String httpGetUrl, Map<String,Object> queryParam,Class<T> clazz){
+       return getResponseObjectList(appSession,
+           UrlOptUtils.appendParamsToUrl( httpGetUrl,queryParam),
+           clazz);
+    }
 
-    public static String  jsonPost (AppSession appSession,
-                                                 String httpPostUrl, Object formData , boolean asPut) {
+    public static <T> T  getResponseObject(AppSession appSession,
+                        String httpGetUrl, Map<String,Object> queryParam,Class<T> clazz ) {
+        return getResponseObject(appSession,
+            UrlOptUtils.appendParamsToUrl( httpGetUrl,queryParam),
+            clazz);
+    }
+
+    public static String jsonPost(AppSession appSession,
+                                  String httpPostUrl, Object formData , boolean asPut) {
         CloseableHttpClient httpClient = null;
         try {
             httpClient = appSession.allocHttpClient();
@@ -90,13 +113,14 @@ public class RestfulHttpRequest {
             logger.error(e.getLocalizedMessage(),e);
             return null;
         } finally {
-            if(httpClient!=null)
+            if(httpClient!=null) {
                 appSession.releaseHttpClient(httpClient);
+            }
         }
     }
 
-    public static String  jsonPost(AppSession appSession,
-                                        String httpPostUrl, Object formData) {
+    public static String jsonPost(AppSession appSession,
+                                 String httpPostUrl, Object formData) {
         return jsonPost(appSession, httpPostUrl,  formData, false);
     }
 
@@ -121,8 +145,9 @@ public class RestfulHttpRequest {
             logger.error(e.getLocalizedMessage(),e);
             return null;
         } finally {
-            if(httpClient!=null)
+            if(httpClient!=null) {
                 appSession.releaseHttpClient(httpClient);
+            }
         }
     }
 
@@ -138,8 +163,9 @@ public class RestfulHttpRequest {
             logger.error(e.getLocalizedMessage(),e);
             return null;
         } finally {
-            if(httpClient!=null)
+            if(httpClient!=null) {
                 appSession.releaseHttpClient(httpClient);
+            }
         }
     }
 
@@ -159,8 +185,9 @@ public class RestfulHttpRequest {
             logger.error(e.getLocalizedMessage(),e);
             return null;
         } finally {
-            if(httpClient!=null)
+            if(httpClient!=null) {
                 appSession.releaseHttpClient(httpClient);
+            }
         }
     }
 
@@ -174,8 +201,9 @@ public class RestfulHttpRequest {
             logger.error(e.getLocalizedMessage(),e);
             return null;
         } finally {
-            if(httpClient!=null)
+            if(httpClient!=null) {
                 appSession.releaseHttpClient(httpClient);
+            }
         }
     }
 }

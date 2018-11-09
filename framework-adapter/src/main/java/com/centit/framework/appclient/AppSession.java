@@ -111,7 +111,23 @@ public class AppSession {
         httpClientPool.returnObject(httpClient);
     }
 
-    public ResponseJSON  getResponseData(CloseableHttpClient httpClient,
+    public String simpleGet(CloseableHttpClient httpClient,
+                                         String httpGetUrl, Map<String,Object> queryParam)
+        throws IOException {
+
+        return  HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
+                completeQueryUrl(httpGetUrl), queryParam);
+    }
+
+    public String simpleGet(CloseableHttpClient httpClient,
+                                         String httpGetUrl)
+        throws IOException {
+
+        return  HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
+                completeQueryUrl(httpGetUrl), "");
+    }
+    
+    public ResponseJSON getResponseData(CloseableHttpClient httpClient,
                                          String httpGetUrl, String queryParam)
         throws IOException {
 
@@ -120,7 +136,16 @@ public class AppSession {
             completeQueryUrl(httpGetUrl), queryParam));
     }
 
-    public ResponseJSON  getResponseData(CloseableHttpClient httpClient,
+    public ResponseJSON getResponseData(CloseableHttpClient httpClient,
+                                         String httpGetUrl, Map<String,Object> queryParam)
+        throws IOException {
+
+        return ResponseJSON.valueOfJson(
+            HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
+                completeQueryUrl(httpGetUrl), queryParam));
+    }
+
+    public ResponseJSON getResponseData(CloseableHttpClient httpClient,
                                          String httpGetUrl)
         throws IOException {
 
