@@ -3,7 +3,9 @@ package com.otherpackage.controller;
 import com.centit.framework.common.*;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
+import com.centit.framework.operationlog.RecordOperationLog;
 import com.centit.support.algorithm.ByteBaseOpt;
+import com.centit.support.common.ParamName;
 import com.otherpackage.po.Student;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -95,7 +97,8 @@ public class TestCaseController extends BaseController {
     ))
     @GetMapping("/student/{studNo}")
     @WrapUpResponseBody
-    public Student findStudent(@PathVariable String studNo) {
+    @RecordOperationLog(content = "查询学号为{studNo}学生")
+    public Student findStudent(@PathVariable @ParamName("studNo") String studNo) {
         if(StringUtils.length(studNo)!=2){
             throw new ObjectException(studNo,
                 ObjectException.DATA_NOT_FOUND_EXCEPTION,
@@ -150,6 +153,7 @@ public class TestCaseController extends BaseController {
             e.printStackTrace();
         }
     }
+
 
     //produces = "text/event-stream"
     @RequestMapping(value="/sse2",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
