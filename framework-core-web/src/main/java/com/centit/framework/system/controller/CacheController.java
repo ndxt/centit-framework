@@ -635,7 +635,7 @@ public class CacheController extends BaseController {
      * 获取用户信息
      * @param response HttpServletResponse
      */
-    @ApiOperation(value = "获取用户信息", notes = "获取当前登录用户信息")
+    @ApiOperation(value = "获取当前登录用户详情", notes = "获取当前登录用户详情，包括其组织机构、权限信息、用户设置等等")
     @RequestMapping(value = "/userdetails", method = RequestMethod.GET)
     public void getUserDetails(
             HttpServletResponse response) {
