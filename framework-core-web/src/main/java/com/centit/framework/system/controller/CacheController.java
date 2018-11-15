@@ -22,8 +22,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -51,7 +49,6 @@ import java.util.*;
     tags= "框架数据缓存接口")
 public class CacheController extends BaseController {
 
-    private static Log logger = LogFactory.getLog(CacheController.class);
     private String optId = "cache";
     /**
      * cp标签中MAPVALUE实现，获取数据字典对应的值
@@ -84,6 +81,13 @@ public class CacheController extends BaseController {
      * @param value    对应的变量值 或 数据字典中的 dataValue
      */
     @ApiOperation(value="数据字典取健",notes="和mapvalue相反他是根据数据字典的类别和value获取对应的key。")
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "catalog", value="数据字典的类别代码",
+        required=true, paramType = "path", dataType= "String"
+    ),@ApiImplicitParam(
+        name = "value", value="数据字典的值",
+        required= true, paramType = "path", dataType= "String"
+    )})
     @RequestMapping(value = "/mapcode/{catalog}/{value}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public String mapcode(@PathVariable String catalog, @PathVariable String value) {
@@ -101,6 +105,10 @@ public class CacheController extends BaseController {
      *                 数据目录中的catalogCode变量值
      */
     @ApiOperation(value="获取数据字典明细",notes="根据数据字典类别代码获取数据字典明细。")
+    @ApiImplicitParam(
+        name = "catalog", value="数据字典的类别代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/lvb/{catalog}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public Map<String,String> lvb(@PathVariable String catalog) {
@@ -119,6 +127,14 @@ public class CacheController extends BaseController {
      * @param expression 表达式
      * @param response   HttpServletResponse
      */
+    @ApiOperation(value = "将字典代码转字典值", notes = "根据字典代码转成对应的字典值，其他的字符位置不变")
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "catalog", value="数据字典的类别代码",
+        required=true, paramType = "path", dataType= "String"
+    ),@ApiImplicitParam(
+        name = "expression", value="表达式",
+        required= true, paramType = "path", dataType= "String"
+    )})
     @RequestMapping(value = "/mapexpression/{catalog}/{expression}", method = RequestMethod.GET)
     public void mapexpression(@PathVariable String catalog, String expression, HttpServletResponse response) {
         String s = CodeRepositoryUtil.transExpression(catalog, expression);
@@ -132,6 +148,14 @@ public class CacheController extends BaseController {
      * @param key      对应的变量值 或 数据字典中的 dataCode
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "获得数据字典条目的状态", notes = "根据字典代码和条目获取条目的状态")
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "catalog", value="数据字典的类别代码",
+        required=true, paramType = "path", dataType= "String"
+    ),@ApiImplicitParam(
+        name = "key", value="数据字典的条目代码",
+        required= true, paramType = "path", dataType= "String"
+    )})
     @RequestMapping(value = "/mapstate/{catalog}/{key}", method = RequestMethod.GET)
     public void mapstate(@PathVariable String catalog, @PathVariable String key, HttpServletResponse response) {
         String s = CodeRepositoryUtil.getItemState(catalog, key);
@@ -146,6 +170,14 @@ public class CacheController extends BaseController {
      * @param unitType 机构类别
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "获取机构下面的所有下级机构", notes = "获取机构下面的所有下级机构，并且排序")
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "unitCode", value="机构的代码",
+        required=true, paramType = "path", dataType= "String"
+    ),@ApiImplicitParam(
+        name = "unitType", value="机构类别",
+        required= true, paramType = "path", dataType= "String"
+    )})
     @RequestMapping(value = "/subunits/{unitCode}/{unitType}", method = RequestMethod.GET)
     public void subunits(@PathVariable String unitCode, @PathVariable String unitType, HttpServletResponse response) {
         List<IUnitInfo> listObjects = CodeRepositoryUtil.getSortedSubUnits(unitCode, unitType);
@@ -159,22 +191,60 @@ public class CacheController extends BaseController {
      * @param state    A表示所有状态
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "根据状态获取所有机构信息", notes = "根据状态获取所有机构信息")
+    @ApiImplicitParam(
+        name = "state", value="状态，A表示所有状态",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/allunits/{state}", method = RequestMethod.GET)
     public void allunits(@PathVariable String state, HttpServletResponse response) {
         List<IUnitInfo> listObjects = CodeRepositoryUtil.getAllUnits(state);
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
 
+    /**
+     * 根据用户编码获取用户信息
+     *
+     * @param userCode 用户编码
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "根据用户编码获取用户信息", notes = "根据用户编码获取用户详细信息")
+    @ApiImplicitParam(
+        name = "userCode", value="用户编码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/userinfo/{userCode}", method = RequestMethod.GET)
     public void getUserInfo(@PathVariable String userCode, HttpServletResponse response) {
         JsonResultUtils.writeSingleDataJson(CodeRepositoryUtil.getUserInfoByCode(userCode), response);
     }
 
+    /**
+     * 根据机构编码获取机构信息
+     *
+     * @param unitCode 机构代码
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "根据机构代码获取机构信息", notes = "根据机构代码获取机构详细信息")
+    @ApiImplicitParam(
+        name = "unitCode", value="机构代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/unitinfo/{unitCode}", method = RequestMethod.GET)
     public void getUintInfo(@PathVariable String unitCode, HttpServletResponse response) {
         JsonResultUtils.writeSingleDataJson(CodeRepositoryUtil.getUnitInfoByCode(unitCode), response);
     }
 
+    /**
+     * 根据机构代码获取父机构
+     *
+     * @param unitCode 机构代码
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "根据机构代码获取父机构", notes = "根据机构代码获取父机构详细信息")
+    @ApiImplicitParam(
+        name = "unitCode", value="机构代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/parentunit/{unitCode}", method = RequestMethod.GET)
     public void getParentUintInfo(@PathVariable String unitCode, HttpServletResponse response) {
         IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(unitCode);
@@ -186,6 +256,17 @@ public class CacheController extends BaseController {
         }
     }
 
+    /**
+     * 根据机构代码获取父机构路径
+     *
+     * @param unitCode 机构代码
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "根据机构代码获取父机构路径", notes = "根据机构代码获取父机构的机构路径")
+    @ApiImplicitParam(
+        name = "unitCode", value="机构代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/parentpath/{unitCode}", method = RequestMethod.GET)
     public void getParentUintPath(@PathVariable String unitCode, HttpServletResponse response) {
         IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(unitCode);
@@ -214,6 +295,11 @@ public class CacheController extends BaseController {
      * @param parentUnit 父级机构代码
      * @param response   HttpServletResponse
      */
+    @ApiOperation(value = "获得已知机构 下级的所有有效机构", notes = "获得已知机构 下级的所有有效机构并返回map，包括下级机构的下级机构")
+    @ApiImplicitParam(
+        name = "parentUnit", value="父级机构代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/recurseunits/{parentUnit}", method = RequestMethod.GET)
     public void recurseUnits(@PathVariable String parentUnit, HttpServletResponse response) {
         Map<String, IUnitInfo> objects = CodeRepositoryUtil.getUnitMapBuyParaentRecurse(parentUnit);
@@ -224,12 +310,20 @@ public class CacheController extends BaseController {
      * CP标签中DICTIONARY实现
      * 获取数据字典
      *
-     * @param catalog  数据目录代码
-     * @param extraCode  extraCode
-     * @param request  request
+     * @param catalog  数据目类别码
+     * @param extraCode  扩展代码
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
      *
      */
+    @ApiOperation(value = "获取数据字典", notes = "根据类别编码和扩展编码获取数据字典")
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "catalog", value="字典类别代码",
+        required= true, paramType = "path", dataType= "String"
+    ),@ApiImplicitParam(
+        name = "extraCode", value="扩展代码",
+        paramType = "query", dataType= "String"
+    )})
     @RequestMapping(value = "/dictionary/{catalog}", method = RequestMethod.GET)
     public void dictionary(@PathVariable String catalog, String extraCode,
             HttpServletRequest request,HttpServletResponse response) {
@@ -250,12 +344,17 @@ public class CacheController extends BaseController {
 
     /**
      * CP标签中DICTIONARY_D实现
-     * 获取数据字典 ，忽略 tag 为 'D'的条目 【delete】
+     * 根据字典类别编码获取数据字典 ，忽略 tag 为 'D'的条目 【delete】
      *
      * @param catalog  数据目录代码
-     * @param request  request
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "根据字典类别编码获取数据字典", notes = "根据字典类别编码获取数据字典 ，忽略 tag 为 'D'的条目 【delete】")
+    @ApiImplicitParam(
+        name = "catalog", value="字典类别编码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/dictionaryd/{catalog}", method = RequestMethod.GET)
     public void dictionaryd(@PathVariable String catalog,
             HttpServletRequest request,HttpServletResponse response) {
@@ -278,6 +377,11 @@ public class CacheController extends BaseController {
      * @param unitCode 机构代码
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "获取一个机构下面的所有用户", notes = "获取一个机构下面的所有用户，并且根据排序号排序")
+    @ApiImplicitParam(
+        name = "unitCode", value="机构代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/unituser/{unitCode}", method = RequestMethod.GET)
     public void unituser(@PathVariable String unitCode, HttpServletResponse response) {
         List<IUserInfo> listObjects = CodeRepositoryUtil.getSortedUnitUsers(unitCode);
@@ -291,6 +395,11 @@ public class CacheController extends BaseController {
      * @param state    用户状态， A 表示所有状态
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "获取所有符合状态标记的用户", notes = "根据状态获取所有用户")
+    @ApiImplicitParam(
+        name = "state", value="用户状态 A 表示所有状态",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/alluser/{state}", method = RequestMethod.GET)
     public void alluser(@PathVariable String state, HttpServletResponse response) {
         List<IUserInfo> listObjects = CodeRepositoryUtil.getAllUsers(state);
@@ -304,12 +413,28 @@ public class CacheController extends BaseController {
      * @param unitcode 机构代码
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "获取所有下级机构", notes = "根据机构代码获取所有下级机构")
+    @ApiImplicitParam(
+        name = "unitcode", value="机构代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/subunits/{unitcode}", method = RequestMethod.GET)
     public void getSubUnits(@PathVariable String unitcode, HttpServletResponse response) {
         List<IUnitInfo> listObjects = CodeRepositoryUtil.getSubUnits(unitcode);
         JsonResultUtils.writeSingleDataJson(listObjects, response);
     }
 
+    /**
+     * 获取机构的下级机构，并按照树形排列
+     *
+     * @param unitcode 机构代码
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "获取所有下级机构树形排列", notes = "根据机构代码获取所有下级机构，并按照树形排列")
+    @ApiImplicitParam(
+        name = "unitcode", value="机构代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/allsubunits/{unitcode}", method = RequestMethod.GET)
     public void getAllSubUnits(@PathVariable String unitcode, HttpServletResponse response) {
         List<IUnitInfo> listObjects = CodeRepositoryUtil.getAllSubUnits(unitcode);
@@ -321,9 +446,14 @@ public class CacheController extends BaseController {
      * 获取所有符合状态标记的用户，
      *
      * @param unitfilter 机构代码
-     * @param request request
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = " 根据机构获取所有符合状态标记的用户", notes = " 根据机构获取所有符合状态标记的用户")
+    @ApiImplicitParam(
+        name = "unitfilter", value="机构代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/unitfilter/{unitfilter}", method = RequestMethod.GET)
     public void unitfilter(@PathVariable String unitfilter,
                            //@RequestBody Map<String,Object> varMap,
@@ -352,11 +482,15 @@ public class CacheController extends BaseController {
      * 实现 机构表达式过滤
      * 获取所有符合状态标记的用户，
      *
-     * @param userfilter 机构代码
-     * varMap varMap
+     * @param userfilter 用户代码
      * @param request request
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "根据用户代码获取所有符合状态标记的用户", notes = "根据用户代码获取所有符合状态标记的用户")
+    @ApiImplicitParam(
+        name = "userfilter", value="用户代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/userfilter/{userfilter}", method = RequestMethod.GET)
     public void userfilter(@PathVariable String userfilter,
                            //@RequestBody Map<String,Object> varMap,
@@ -409,6 +543,11 @@ public class CacheController extends BaseController {
      * @param optType  业务类别
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "按类别获取业务菜单信息", notes = "按类别获取业务菜单信息")
+    @ApiImplicitParam(
+        name = "optType", value="业务类别",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/optinfo/{optType}", method = RequestMethod.GET)
     public void optinfoByTypeAsMenu(@PathVariable String optType, HttpServletResponse response) {
         List<IOptInfo> listObjects = CodeRepositoryUtil.getOptinfoList(optType);
@@ -424,6 +563,11 @@ public class CacheController extends BaseController {
      * @param optID    系统业务代码
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "获得业务下面的操作定义", notes = "获得一个业务下面的操作定义")
+    @ApiImplicitParam(
+        name = "optID", value="系统业务代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/optdef/{optID}", method = RequestMethod.GET)
     public void optdef(@PathVariable String optID, HttpServletResponse response) {
         List<? extends IOptMethod> listObjects = CodeRepositoryUtil.getOptMethodByOptID(optID);
@@ -434,9 +578,14 @@ public class CacheController extends BaseController {
      *
      * 根据角色类别获取角色
      *
-     * @param roleType   角色类别
+     * @param roleType 角色类别
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "根据角色类别获取角色", notes = "根据角色类别获取角色")
+    @ApiImplicitParam(
+        name = "roleType", value="角色类别",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/roleinfo/{roleType}", method = RequestMethod.GET)
     public void roleinfo(@PathVariable String roleType, HttpServletResponse response) {
         List<IRoleInfo> listObjects = CodeRepositoryUtil.getRoleinfoListByType(roleType);
@@ -445,10 +594,15 @@ public class CacheController extends BaseController {
 
     /**
      * CP标签中 SYS_VALUE 实现
-     * 获取系统设置的值
+     *  获取系统设置的值
      * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "获取系统设置的值", notes = "根据参数代码获取系统设置的值")
+    @ApiImplicitParam(
+        name = "paramCode", value="参数代码",
+        required= true,paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/sysconfig/{paramCode}", method = RequestMethod.GET)
     public void getSysConfigValue(HttpServletRequest request, HttpServletResponse response) {
         String uri = request.getRequestURI();
@@ -463,6 +617,11 @@ public class CacheController extends BaseController {
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      **/
+    @ApiOperation(value = "根据参数前缀获取系统设置", notes = "根据参数前缀获取系统设置")
+    @ApiImplicitParam(
+        name = "prefix", value="前缀",
+        required= true,paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/sysconfigbyprefix/{prefix}", method = RequestMethod.GET)
     public void getSysConfigByPrefix(HttpServletRequest request,
                                   HttpServletResponse response) {
@@ -476,6 +635,7 @@ public class CacheController extends BaseController {
      * 获取用户信息
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "获取用户信息", notes = "获取当前登录用户信息")
     @RequestMapping(value = "/userdetails", method = RequestMethod.GET)
     public void getUserDetails(
             HttpServletResponse response) {
@@ -491,6 +651,11 @@ public class CacheController extends BaseController {
      * @param paramCode 用户设置的参数
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "获取用户当前设置值", notes = "获取用户当前设置值")
+    @ApiImplicitParam(
+        name = "paramCode", value="用户设置的参数",
+        required= true,paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/usersetting/{paramCode}", method = RequestMethod.GET)
     public void getUserSettingValue(@PathVariable String paramCode,
             HttpServletResponse response) {
@@ -502,6 +667,7 @@ public class CacheController extends BaseController {
      * 获取用户所有设置
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "获取用户所有设置", notes = "获取用户所有设置")
     @RequestMapping(value = "/usersettings", method = RequestMethod.GET)
     public void getUserAllSettings(HttpServletResponse response) {
         JsonResultUtils.writeSingleDataJson(
@@ -509,11 +675,21 @@ public class CacheController extends BaseController {
     }
 
     /**
+     * 验证当前用户是否有某个操作方法的权限
      *
-     * @param optId optId
-     * @param method method
-     * @param response response
+     * @param optId 系统业务代码
+     * @param method 权限代码
+     * @param response HttpServletResponse
      */
+    @ApiOperation(value = "验证当前用户是否有某个操作方法的权限", notes = "验证当前用户是否有某个操作方法的权限")
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "optId", value="系统业务代码",
+            required= true,paramType = "path", dataType= "String"),
+        @ApiImplicitParam(
+        name = "method", value="操作方法",
+        required= true,paramType = "path", dataType= "String")
+    })
     @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = { RequestMethod.GET })
     public void checkUserOptPower(@PathVariable String optId,
             @PathVariable String method, HttpServletResponse response) {
@@ -527,6 +703,7 @@ public class CacheController extends BaseController {
      * 返回一个map，key为optid+‘-’+method value 为 'T'
      * @param response response
      */
+    @ApiOperation(value = "获取用户所有的 操作方法", notes = "获取用户所有的 操作方法")
     @RequestMapping(value = "/userallpowers", method = { RequestMethod.GET })
     public void getUserAllPowers( HttpServletResponse response) {
         JsonResultUtils.writeSingleDataJson(
@@ -555,6 +732,7 @@ public class CacheController extends BaseController {
      * 重新load Sql ExtendedMap
      * @param response response
      */
+    @ApiOperation(value = "重启加载数据", notes = "重启加载数据")
     @RequestMapping(value = "/reloadextendedsqlmap", method = { RequestMethod.GET })
     public void reloadExtendedSqlMap( HttpServletResponse response) {
         boolean hasError = false;
@@ -563,7 +741,7 @@ public class CacheController extends BaseController {
                 appHome +"/sqlscript","xml");
         DBType dbType = DBType.mapDBType(
                 StringUtils.isBlank(jdbcUrl)? springDatasourceUrl :jdbcUrl );
-        if(files!=null & files.size()>0){
+        if(files!=null && files.size()>0){
             for(File file:files) {
                 try {
                     ExtendedQueryPool.loadExtendedSqlMap(

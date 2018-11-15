@@ -77,19 +77,21 @@ public class MainFrameController extends BaseController {
      * @param session session
      * @return 登录首页链接
      */
-    @RequestMapping(value = "/index")
+    @ApiOperation(value = "登录首页链接", notes = "登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置")
+    @GetMapping(value = "/index")
     public String index(HttpServletRequest request, HttpSession session) {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
         return "sys/index";//"redirect:"+ firstpage;//
     }
 
     /**
-     *
+     * 跳往cas登录链接
      * @param request request
      * @param session session
      * @return 登录后首页URL
      */
-    @RequestMapping(value = "/logincas")
+    @ApiOperation(value = "跳往cas登录链接", notes = "使用cas登录系统")
+    @GetMapping(value = "/logincas")
     public String logincas(HttpServletRequest request, HttpSession session) {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
         return "redirect:"+firstpage;//"sys/mainframe/index";
@@ -101,7 +103,8 @@ public class MainFrameController extends BaseController {
      * @param request HttpServletRequest
      * @return 登录界面
      */
-    @RequestMapping("/login")
+    @GetMapping("/login")
+    @ApiOperation(value = "登录界面入口", notes = "登录界面入口")
     public String login(HttpServletRequest request, HttpSession session) {
         //不允许ajax强求登录页面
         if(WebOptUtils.isAjax(request)){
@@ -113,12 +116,13 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     *
+     * 以管理员登录界面
      * @param session session
      * @param request HttpServletRequest
      * @return 登录界面
      */
-    @RequestMapping("/loginasadmin")
+    @ApiOperation(value = "以管理员登录界面", notes = "以管理员身份登录界面")
+    @GetMapping("/loginasadmin")
     public String loginAsAdmin(HttpServletRequest request, HttpSession session) {
         //不允许ajax强求登录页面
         if(WebOptUtils.isAjax(request)){
@@ -133,12 +137,13 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     *
+     * 登录失败回到登录页
      * @param request HttpServletRequest
      * @param session session
      * @return 登录界面
      */
-    @RequestMapping("/login/error")
+    @ApiOperation(value = "登录失败回到登录页", notes = "登录失败回到登录页")
+    @GetMapping("/login/error")
     public String loginError(HttpServletRequest request,HttpSession session) {
         //在系统中设定Spring Security 相关的错误信息
         AuthenticationException authException = (AuthenticationException)
@@ -152,11 +157,12 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     *
+     * 退出登录
      * @param session session
      * @return 登出页面
      */
-    @RequestMapping("/logout")
+    @ApiOperation(value = "退出登录", notes = "退出登录")
+    @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
         session.removeAttribute(LOGIN_AUTH_ERROR_MSG);
@@ -171,12 +177,20 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     *
-     * @param password password
-     * @param newPassword newPassword
+     * 修改密码
+     * @param password 旧密码
+     * @param newPassword 新密码
      * @param request request
      * @param response response
      */
+    @ApiOperation(value = "修改密码", notes = "修改用户登录密码")
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "password", value="旧密码",
+        required=true, paramType = "query", dataType= "String"
+    ),@ApiImplicitParam(
+        name = "newPassword", value="新密码",
+        required= true, paramType = "query", dataType= "String"
+    )})
     @RequestMapping(value ="/changepwd",method = RequestMethod.PUT)
     public void changepassword(String password, String newPassword,
             HttpServletRequest request,HttpServletResponse response) {
@@ -202,11 +216,16 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     *
+     * 校验密码
      * @param password password
      * @param request request
      * @param response response
      */
+    @ApiOperation(value = "校验密码", notes = "校验密码是否正确")
+    @ApiImplicitParam(
+        name = "password", value="当前密码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value ="/checkpwd",method = RequestMethod.POST)
     public void checkpassword(String password,
             HttpServletRequest request,HttpServletResponse response) {
@@ -227,6 +246,7 @@ public class MainFrameController extends BaseController {
      * @param request request
      * @param response response
      */
+    @ApiOperation(value = "内部通讯的客户端程序使用接口", notes = "这个方法是个内部通讯的客户端程序使用的，客户端程序通过用户代码（注意不是用户名）和密码登录，这个密码建议随机生成")
     @RequestMapping(value="/loginasclient",method = RequestMethod.POST)
     public void loginAsClient(HttpServletRequest request,HttpServletResponse response) {
         Map<String, Object> formValue = BaseController.collectRequestParameters(request);
@@ -309,10 +329,11 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     *
+     * 防跨站请求伪造
      * @param request request
      * @param response response
      */
+    @ApiOperation(value = "防跨站请求伪造", notes = "防跨站请求伪造")
     @RequestMapping(value = "/login/csrf",method = RequestMethod.GET)
     public void getLoginCsrfToken(HttpServletRequest request,HttpServletResponse response) {
         if(csrfTokenRepository!=null){
@@ -334,20 +355,22 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     *
+     * 防跨站请求伪造
      * @param request request
      * @param response response
      */
+    @ApiOperation(value = "防跨站请求伪造", notes = "防跨站请求伪造")
     @RequestMapping(value = "/csrf",method = RequestMethod.GET)
     public void getCsrfToken(HttpServletRequest request,HttpServletResponse response) {
         getLoginCsrfToken(request, response);
     }
 
     /**
-     *
+     * 获取验证码
      * @param request request
      * @param response response
      */
+    @ApiOperation(value = "获取验证码", notes = "获取验证码")
     @RequestMapping(value = "/captchaimage",method = RequestMethod.GET)
     public void captchaImage( HttpServletRequest request, HttpServletResponse response) {
 
@@ -360,21 +383,27 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     *
+     * 获取登录验证码
      * @param request request
      * @param response response
      */
+    @ApiOperation(value = "获取登录验证码", notes = "获取登录验证码")
     @RequestMapping(value = "/login/captchaimage",method = RequestMethod.GET)
     public void loginCaptchaImage( HttpServletRequest request, HttpServletResponse response) {
         captchaImage(  request,  response);
     }
 
     /**
-     *
+     * 校验验证码
      * @param checkcode checkcode
      * @param request request
      * @param response response
      */
+    @ApiOperation(value = "校验验证码", notes = "校验验证码")
+    @ApiImplicitParam(
+        name = "checkcode", value="验证码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/checkcaptcha/{checkcode}",method = RequestMethod.GET)
     public void checkCaptchaImage(@PathVariable String checkcode, HttpServletRequest request, HttpServletResponse response) {
 
@@ -389,10 +418,12 @@ public class MainFrameController extends BaseController {
     }
 
     /**
+     * 当前登录用户
      * @param request request
      * @param response response
      */
-    @RequestMapping("/currentuserinfo")
+    @ApiOperation(value = "当前登录用户", notes = "获取当前登录用户详情")
+    @RequestMapping(value = "/currentuserinfo",method = RequestMethod.GET)
     public void getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null) {
@@ -404,10 +435,12 @@ public class MainFrameController extends BaseController {
         }
     }
     /**
+     * 当前登录者
      * @param request request
      * @param response response
      */
-    @RequestMapping("/currentuser")
+    @ApiOperation(value = "当前登录者", notes = "当前登录者，CentitUserDetails对象信息")
+    @RequestMapping(value = "/currentuser",method = RequestMethod.GET)
     public void getCurrentUserDetails(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null) {
@@ -419,10 +452,12 @@ public class MainFrameController extends BaseController {
         }
     }
     /**
+     * 检验是否登录
      * @param request request
      * @param response response
      */
-    @RequestMapping("/hasLogin")
+    @ApiOperation(value = "检验是否登录", notes = "检验当前用户用户是否登录")
+    @GetMapping("/hasLogin")
     public void hasLogin(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null) {
@@ -452,6 +487,7 @@ public class MainFrameController extends BaseController {
      * @param request  HttpServletRequest
      * @param response HttpServletResponse
      */
+    @ApiOperation(value = "首页菜单", notes = "获取首页菜单信息")
     @RequestMapping(value = "/menu" , method = RequestMethod.GET)
     public void getMenu(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails userDetails = super.getLoginUser(request);
@@ -480,6 +516,17 @@ public class MainFrameController extends BaseController {
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }
 
+    /**
+     * 获取子菜单
+     * @param optId 菜单代码
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "获取子菜单", notes = "获取子菜单详情")
+    @ApiImplicitParam(
+        name = "optId", value="菜单代码",
+        paramType = "query", dataType= "String"
+    )
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
     public void getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optId,
             HttpServletRequest request,HttpServletResponse response) {
@@ -502,6 +549,16 @@ public class MainFrameController extends BaseController {
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }
 
+    /**
+     * 获取用户有权限的菜单
+     * @param userCode 用户代码
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "获取用户有权限的菜单", notes = "根据用户代码获取用户有权限的菜单")
+    @ApiImplicitParam(
+        name = "userCode", value="用户代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @RequestMapping(value = "/userMenu/{userCode}" , method = RequestMethod.GET)
     public void getMemuByUsercode(@PathVariable String userCode,
            HttpServletResponse response) {
@@ -519,6 +576,20 @@ public class MainFrameController extends BaseController {
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }
 
+    /**
+     * 获取用户某个菜单下有权限的子菜单
+     * @param userCode 用户代码
+     * @param menuOptId 菜单代码
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "获取用户有权限的菜单", notes = "根据用户代码和菜单代码获取用户有权限的子菜单")
+    @ApiImplicitParams({@ApiImplicitParam(
+        name = "userCode", value="用户代码",
+        required=true, paramType = "path", dataType= "String"
+    ),@ApiImplicitParam(
+        name = "menuOptId", value="菜单代码",
+        required= true, paramType = "path", dataType= "String"
+    )})
     @RequestMapping(value = "/useSubrMenu/{userCode}/{menuOptId}" , method = RequestMethod.GET)
     public void getSubMemuByUsercode(@PathVariable String userCode,@PathVariable String menuOptId,
                                   HttpServletResponse response) {
@@ -527,6 +598,13 @@ public class MainFrameController extends BaseController {
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }
 
+    /**
+     * 校验session是否超时
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return 超时跳转异常
+     */
+    @ApiOperation(value = "校验session是否超时", notes = "校验session是否超时")
     @RequestMapping(value = "/expired" , method = RequestMethod.GET)
     public String sessionExpired(
             HttpServletRequest request,HttpServletResponse response) {
@@ -545,6 +623,7 @@ public class MainFrameController extends BaseController {
      * @param request {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
      */
+    @ApiOperation(value = "查询当前用户所有职位", notes = "查询当前用户所有职位")
     @GetMapping(value = "/userpositions")
     public void listCurrentUserUnits(
             HttpServletRequest request,HttpServletResponse response) {
@@ -565,6 +644,7 @@ public class MainFrameController extends BaseController {
      * @param request {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
      */
+    @ApiOperation(value = "查询当前用户当前职位", notes = "查询当前用户当前职位")
     @GetMapping(value = "/usercurrposition")
     public void getUserCurrentStaticn(
             HttpServletRequest request,HttpServletResponse response) {
@@ -586,6 +666,11 @@ public class MainFrameController extends BaseController {
      * @param request {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
      */
+    @ApiOperation(value = "设置当前用户当前职位", notes = "根据用户机构id设置当前用户当前职位")
+    @ApiImplicitParam(
+        name = "userUnitId", value="用户机构Id",
+        required= true, paramType = "path", dataType= "String"
+    )
     @PutMapping(value = "/setuserposition/{userUnitId}")
     public void setUserCurrentStaticn(@PathVariable String userUnitId,
             HttpServletRequest request,HttpServletResponse response) {
@@ -599,6 +684,21 @@ public class MainFrameController extends BaseController {
         JsonResultUtils.writeSuccessJson(response);
     }
 
+    /**
+     * 验证当前用户是否有某个操作方法的权限
+     * @param optId 业务菜单代码
+     * @param method 操作方法
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "验证当前用户是否有某个操作方法的权限", notes = "验证当前用户是否有某个操作方法的权限")
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "optId", value="系统业务代码",
+            required= true,paramType = "path", dataType= "String"),
+        @ApiImplicitParam(
+            name = "method", value="操作方法",
+            required= true,paramType = "path", dataType= "String")
+    })
     @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = { RequestMethod.GET })
     public void checkUserOptPower(@PathVariable String optId,
                                   @PathVariable String method, HttpServletResponse response) {
@@ -608,10 +708,15 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     * 查询当前用户在某岗位的所有职位信息
-     * @param rank 岗位代码
+     * 获取用户在某个职务的用户组列表
+     * @param rank 职务代码
      * @return json 结果
      */
+    @ApiOperation(value = "获取用户在某个职务的用户组列表", notes = "获取用户在某个职务的用户组列表")
+    @ApiImplicitParam(
+        name = "rank", value="职务代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @GetMapping(value = "userranks/{rank}")
     @ResponseBody
     public ResponseData listUserUnitsByRank(@PathVariable String rank){
@@ -624,10 +729,15 @@ public class MainFrameController extends BaseController {
                 CodeRepositoryUtil.listUserUnitsByRank(centitUserDetails.getUserCode(), rank)));
     }
     /**
-     * 查询当前用户在某职务的所有职位信息
-     * @param station 职务代码
+     * 获取用户在某个岗位的用户组列表
+     * @param station 岗位代码
      * @return json结果
      */
+    @ApiOperation(value = "获取用户在某个岗位的用户组列表", notes = "获取用户在某个岗位的用户组列表")
+    @ApiImplicitParam(
+        name = "station", value="岗位代码",
+        required= true, paramType = "path", dataType= "String"
+    )
     @GetMapping(value = "userstations/{station}")
     @ResponseBody
     public ResponseData listUserUnitsByStation(@PathVariable String station){
