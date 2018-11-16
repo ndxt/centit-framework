@@ -96,7 +96,7 @@ public class ExceptionController {
                     break;
             }
             
-            JsonResultUtils.writeAjaxErrorMessage(code, errorMessage, response);
+            JsonResultUtils.writeErrorMessageJson(code, errorMessage, response);
             return null;
             //throw new ObjectException(errorMessage, ObjectException.ExceptionType.SYSTEM);
         } else {

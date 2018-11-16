@@ -460,7 +460,7 @@ public class MainFrameController extends BaseController {
     public void hasLogin(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null) {
-            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录，请登录！", response);
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录，请登录！", response);
         }
         else {
             JsonResultUtils.writeSingleDataJson(ud, response);
@@ -491,7 +491,7 @@ public class MainFrameController extends BaseController {
     public void getMenu(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails userDetails = super.getLoginUser(request);
         if(userDetails==null){
-            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录，请重新登录！", response);
             return;
         }
@@ -508,7 +508,7 @@ public class MainFrameController extends BaseController {
         }
 
         if(menuFunsByUser==null){
-            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录,或者没有给用户任何权限，请重新登录！", response);
             return;
         }
@@ -532,7 +532,7 @@ public class MainFrameController extends BaseController {
 
         CentitUserDetails userDetails = super.getLoginUser(request);
         if(userDetails==null){
-            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录，请重新登录！", response);
             return;
         }
@@ -540,11 +540,10 @@ public class MainFrameController extends BaseController {
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(), optId, asAdmin);
         if(menuFunsByUser==null){
-            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录,或者没有给用户任何权限，请重新登录！", response);
             return;
         }
-
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
     }
 

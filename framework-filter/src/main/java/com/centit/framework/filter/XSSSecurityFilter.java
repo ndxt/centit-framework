@@ -58,7 +58,7 @@ public class XSSSecurityFilter implements Filter{
             if(WebOptUtils.isAjax(httpRequest)){
                 String ip = request.getRemoteAddr();
                 String url = httpRequest.getRequestURI();
-                JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_NOT_ACCEPTABLE,
+                JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_NOT_ACCEPTABLE,
                         "XSS IP:"+ip +" URL:" + url, httpResponse);
                 return;
             }

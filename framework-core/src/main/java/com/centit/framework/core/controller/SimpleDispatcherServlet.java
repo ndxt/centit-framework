@@ -37,7 +37,7 @@ public class SimpleDispatcherServlet extends DispatcherServlet {
 
         String header = request.getHeader("X-Requested-With");
         if ("XMLHttpRequest".equals(header)) {
-            JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_NOT_FOUND, "未找到此资源（"+requestUri+"）", response);
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_NOT_FOUND, "未找到此资源（"+requestUri+"）", response);
             return;
         }
         response.sendRedirect(request.getContextPath() + "/system/exception/error/404");

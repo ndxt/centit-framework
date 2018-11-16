@@ -237,7 +237,7 @@ public class JsonResultUtils {
             }
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-            throw new ObjectException(objValue, e.getMessage());
+            //throw new ObjectException(objValue, e.getMessage());
         }
     }
 
@@ -450,15 +450,16 @@ public class JsonResultUtils {
      * @param errorMessage 错误返回信息
      * @param response HttpServletResponse
      */
-    public static void writeAjaxErrorMessage(int errorCode, String errorMessage, HttpServletResponse response) {
+    public static void writeHttpErrorMessage(int errorCode, String errorMessage, HttpServletResponse response) {
         try {
             response.sendError(errorCode, errorMessage);
         } catch (IOException e) {
+            //writeSingleDataJson(errorCode,errorMessage,
+                //null, response, null);
             logger.error(e.getMessage(),e);
         }
 
-        writeSingleDataJson(errorCode,errorMessage,
-                null, response, null);
+
     }
     /**
      * 格式化Json数据输出 , 输出 业务提示的错误信息，http的状态仍然是 200 OK
@@ -467,17 +468,6 @@ public class JsonResultUtils {
      * @param response HttpServletResponse
      */
     public static void writeErrorMessageJson(int errorCode, String errorMessage, HttpServletResponse response) {
-        writeSingleDataJson(errorCode,errorMessage,
-                null, response, null);
-    }
-
-    /**
-     * 格式化Json数据输出 , 输出 业务提示的错误信息，http的状态仍然是 200 OK
-     * @param errorCode  错误返回码
-     * @param errorMessage 错误返回信息
-     * @param response HttpServletResponse
-     */
-    public static void writeCodeAndMessageJson(int errorCode, String errorMessage, HttpServletResponse response) {
         writeSingleDataJson(errorCode,errorMessage,
                 null, response, null);
     }
