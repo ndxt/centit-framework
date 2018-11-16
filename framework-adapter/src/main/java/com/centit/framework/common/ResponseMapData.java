@@ -33,7 +33,7 @@ public class ResponseMapData extends ResponseSingleData {
     }
 
     public Map<String, Object> getData() {
-        return (Map<String, Object>)resData;
+        return (Map<String, Object>) data;
     }
 
     @Deprecated
@@ -41,22 +41,22 @@ public class ResponseMapData extends ResponseSingleData {
         if(! (objValue instanceof Map)){
             throw new RuntimeException("参数必须式 Map<String, Object> 类型");
         }
-        Object oldObj = this.resData;
-        this.resData = objValue;
+        Object oldObj = this.data;
+        this.data = objValue;
         return oldObj;
     }
 
     public Map<String, Object> setData(Map<String, Object> objValue) {
-        Object oldObj =  resData;
-        this.resData = objValue;
+        Object oldObj = data;
+        this.data = objValue;
         return (Map<String, Object>)oldObj;
     }
 
     public void addResponseData(String sKey, Object objValue) {
-        if(resData == null ){
-            resData = new LinkedHashMap<>();
+        if(data == null ){
+            data = new LinkedHashMap<>();
         }
-        ((Map<String, Object>)resData).put(sKey, objValue);
+        ((Map<String, Object>) data).put(sKey, objValue);
     }
     
     public Object getResponseData(String sKey) {

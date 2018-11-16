@@ -10,20 +10,15 @@ import com.centit.framework.components.SysUserFilterEngine;
 import com.centit.framework.components.impl.UserUnitMapTranslate;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
-import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.database.utils.DBType;
-import com.centit.support.file.FileSystemOpt;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.DocumentException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -710,61 +702,4 @@ public class CacheController extends BaseController {
                 CodeRepositoryUtil.getUserAllOptPowers(), response);
     }
 
-
-    @Value("${app.home:./}")
-    private String appHome;
-
-    @Value("${jdbc.url:}")
-    private String jdbcUrl;
-
-    @Value("${spring.datasource.url:}")
-    private String springDatasourceUrl;
-
-    public void setAppHome(String appHome) {
-        this.appHome = appHome;
-    }
-
-    public void setJdbcUrl(String jdbcUrl) {
-        this.jdbcUrl = jdbcUrl;
-    }
-
-    /**
-     * 重新load Sql ExtendedMap
-     * @param response response
-     */
-    @ApiOperation(value = "重启加载数据", notes = "重启加载数据")
-    @RequestMapping(value = "/reloadextendedsqlmap", method = { RequestMethod.GET })
-    public void reloadExtendedSqlMap( HttpServletResponse response) {
-        boolean hasError = false;
-        StringBuilder errorMsg = new StringBuilder();
-        List<File> files = FileSystemOpt.findFilesByExt(
-                appHome +"/sqlscript","xml");
-        DBType dbType = DBType.mapDBType(
-                StringUtils.isBlank(jdbcUrl)? springDatasourceUrl :jdbcUrl );
-        if(files!=null && files.size()>0){
-            for(File file:files) {
-                try {
-                    ExtendedQueryPool.loadExtendedSqlMap(
-                            new FileInputStream(file),dbType
-                    );
-                } catch (DocumentException | IOException e) {
-                    hasError = true;
-                    errorMsg.append(e.getMessage());
-                    logger.error(e.getMessage(),e);
-                }
-            }
-        }
-        try {
-            ExtendedQueryPool.loadResourceExtendedSqlMap(dbType);
-        } catch (DocumentException | IOException e) {
-            hasError = true;
-            errorMsg.append(e.getMessage());
-            logger.error(e.getMessage(),e);
-        }
-        if(hasError){
-            JsonResultUtils.writeErrorMessageJson(errorMsg.toString(), response );
-        }else {
-            JsonResultUtils.writeSingleDataJson("Reload Extended Sql Map succeed！", response);
-        }
-    }
 }

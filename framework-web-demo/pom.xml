@@ -39,18 +39,6 @@
             <artifactId>framework-config</artifactId>
         </dependency>
 
-        <!--<dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <version>6.1.1</version>
-        </dependency>-->
-
-        <!--<dependency>
-            <groupId>com.centit.framework</groupId>
-            <artifactId>framework-security</artifactId>
-            <version>${centit.framework.version}</version>
-        </dependency>-->
-
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-system-static</artifactId>
@@ -59,6 +47,11 @@
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-system-static-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
         </dependency>
 
         <dependency>

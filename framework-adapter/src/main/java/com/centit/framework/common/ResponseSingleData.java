@@ -14,36 +14,36 @@ public class ResponseSingleData implements ResponseData{
     /**
      * 返回代码，0 表示正确，其他的为错误代码
      */
-    private int resCode;
+    private int code;
 
     /**
      * 返回消息提示 ，code为0时是提示，其他为 错误提示
      */
-    private String resMessage;
+    private String message;
 
     /**
      * 返回的详细数据， 可能是需要回显的参数，也可能是验证的错误提示
      */
-    protected Object resData;
+    protected Object data;
 
     public ResponseSingleData() {
-        resCode = 0;
-        resMessage = "OK";
+        code = 0;
+        message = "OK";
     }
 
     public ResponseSingleData(int nCode) {
-        resCode = nCode;
-        resMessage = nCode==0?"OK":"ERROR";
+        code = nCode;
+        message = nCode==0?"OK":"ERROR";
     }
 
     public ResponseSingleData(String message) {
-        resCode = 0;
-        resMessage = message;
+        code = 0;
+        this.message = message;
     }
 
     public ResponseSingleData(int nCode, String message) {
-        resCode = nCode;
-        resMessage = message;
+        code = nCode;
+        this.message = message;
     }
 
     public static ResponseSingleData makeResponseData(Object objValue){
@@ -53,37 +53,37 @@ public class ResponseSingleData implements ResponseData{
     }
 
     public int getCode() {
-        return resCode;
+        return code;
     }
 
     public void setCode(int resCode) {
-        this.resCode = resCode;
+        this.code = resCode;
     }
 
     public String getMessage() {
-        return resMessage;
+        return message;
     }
 
     public void setMessage(String resMessage) {
-        this.resMessage = resMessage;
+        this.message = resMessage;
     }
 
     public Object getData() {
-        return resData;
+        return data;
     }
 
     public Object setData(Object objValue) {
-        Object oldObj = this.resData;
-        this.resData = objValue;
+        Object oldObj = this.data;
+        this.data = objValue;
         return oldObj;
     }
 
     public String toJSONString(PropertyPreFilter simplePropertyPreFilter){
         Map<String, Object> param = new HashMap<>();
-        param.put(ResponseData.RES_CODE_FILED, resCode );
-        param.put(ResponseData.RES_MSG_FILED,  resMessage );
-        if(resData!=null)
-            param.put(ResponseData.RES_DATA_FILED, resData);
+        param.put(ResponseData.RES_CODE_FILED, code);
+        param.put(ResponseData.RES_MSG_FILED, message);
+        if(data !=null)
+            param.put(ResponseData.RES_DATA_FILED, data);
         if(simplePropertyPreFilter==null)
             return JSONObject.toJSONString(param);
         return JSONObject.toJSONString(param,simplePropertyPreFilter);

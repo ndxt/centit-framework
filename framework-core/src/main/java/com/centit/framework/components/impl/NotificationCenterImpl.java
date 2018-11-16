@@ -55,15 +55,6 @@ public class NotificationCenterImpl implements NotificationCenter {
         defautlMsgSender = DummyMessageSenderImpl.instance;
     }
 
-    public void initEmailMsgSenders(String hostName, int smtpPort, String userName,
-                                    String userPassword, String serverEmail) {
-        EmailMessageSenderImpl emailMessageSender = new EmailMessageSenderImpl(hostName, smtpPort);
-        emailMessageSender.setUserName(userName);
-        emailMessageSender.setUserPassword(userPassword);
-        emailMessageSender.setServerEmail(serverEmail);
-        msgSenders.put("email", emailMessageSender);
-        defautlMsgSender = emailMessageSender;
-    }
     /**
      * 如果 MessageSender 是spring托管类请
      * MessageSender msgManager =

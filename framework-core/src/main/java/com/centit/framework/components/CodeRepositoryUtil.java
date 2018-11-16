@@ -3,7 +3,6 @@ package com.centit.framework.components;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.common.WebOptUtils;
-import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.filter.HttpThreadWrapper;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
@@ -1521,10 +1520,6 @@ public abstract class CodeRepositoryUtil {
             }
         }
         return map;
-    }
-
-    public static String getExtendedSql(String extendedSqlId){
-           return ExtendedQueryPool.getExtendedSql(extendedSqlId);
     }
 
 }

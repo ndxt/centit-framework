@@ -22,9 +22,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.centit.framework</groupId>
-            <artifactId>centit-persistence-core</artifactId>
-            <version>${centit.persistence.version}</version>
+            <groupId>com.centit.support</groupId>
+            <artifactId>centit-compiler</artifactId>
+            <version>${centit.commons.version}</version>
         </dependency>
 
         <dependency>

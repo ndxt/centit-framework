@@ -2,7 +2,6 @@ package com.centit.framework.staticsystem.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.components.CodeRepositoryCache;
-import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.database.utils.DataSourceDescription;
@@ -52,52 +51,52 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
         try(Connection conn = getConnection()) {
             JSONArray userJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
-                    CodeRepositoryUtil.getExtendedSql("LIST_ALL_USER"));
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_USER"));
             List<UserInfo> userinfos = jsonArrayToObjectList(userJSONArray, UserInfo.class);
             CodeRepositoryCache.userInfoRepo.setFreshtDate(userinfos);
 
             JSONArray optInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
-                    CodeRepositoryUtil.getExtendedSql("LIST_ALL_OPTINFO"));
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_OPTINFO"));
             List<OptInfo> optinfos = jsonArrayToObjectList(optInfoJSONArray,  OptInfo.class);
             CodeRepositoryCache.optInfoRepo.setFreshtDate(optinfos);
 
             JSONArray optMethodsJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
-                    CodeRepositoryUtil.getExtendedSql("LIST_ALL_OPTMETHOD"));
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_OPTMETHOD"));
             List<OptMethod> optmethods = jsonArrayToObjectList(optMethodsJSONArray,  OptMethod.class);
             CodeRepositoryCache.optMethodRepo.setFreshtDate(optmethods);
 
             JSONArray roleInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
-                    CodeRepositoryUtil.getExtendedSql("LIST_ALL_ROLEINFO"));
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_ROLEINFO"));
             List<RoleInfo> roleinfos = jsonArrayToObjectList(roleInfoJSONArray,  RoleInfo.class);
             CodeRepositoryCache.roleInfoRepo.setFreshtDate(roleinfos);
 
             JSONArray rolePowerJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
-                    CodeRepositoryUtil.getExtendedSql("LIST_ALL_ROLEPOWER"));
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_ROLEPOWER"));
             List<RolePower>  rolepowers = jsonArrayToObjectList(rolePowerJSONArray,  RolePower.class);
             CodeRepositoryCache.rolePowerRepo.setFreshtDate(rolepowers);
 
             JSONArray userRoleJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
-                    CodeRepositoryUtil.getExtendedSql("LIST_ALL_USERROLE"));
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_USERROLE"));
             List<UserRole> userroles = jsonArrayToObjectList(userRoleJSONArray, UserRole.class);
             allUserRoleRepo.setFreshtDate(userroles);
 
             JSONArray UnitInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
-                    CodeRepositoryUtil.getExtendedSql("LIST_ALL_UNITINFO"));
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_UNITINFO"));
             List<UnitInfo> unitinfos = jsonArrayToObjectList(UnitInfoJSONArray, UnitInfo.class);
             CodeRepositoryCache.unitInfoRepo.setFreshtDate(unitinfos);
 
             JSONArray userUnitJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
-                    CodeRepositoryUtil.getExtendedSql("LIST_ALL_USERUNIT"));
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_USERUNIT"));
             List<UserUnit> userunits = jsonArrayToObjectList(userUnitJSONArray, UserUnit.class);
             CodeRepositoryCache.userUnitRepo.setFreshtDate(userunits);
 
             JSONArray dataCatalogsJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
-                    CodeRepositoryUtil.getExtendedSql("LIST_ALL_DATACATALOG"));
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_DATACATALOG"));
             List<DataCatalog> datacatalogs = jsonArrayToObjectList(dataCatalogsJSONArray, DataCatalog.class);
             CodeRepositoryCache.catalogRepo.setFreshtDate(datacatalogs);
 
             JSONArray dataDictionaryJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
-                    CodeRepositoryUtil.getExtendedSql("LIST_ALL_DICTIONARY"));
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_DICTIONARY"));
             List<DataDictionary> datadictionaies = jsonArrayToObjectList(dataDictionaryJSONArray, DataDictionary.class);
             allDictionaryRepo.setFreshtDate(datadictionaies);
         }
@@ -129,7 +128,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         String userNewPassword = passwordEncoder.createPassword(userPassword, userCode);
         try(Connection conn = getConnection()) {
             DatabaseAccess.doExecuteSql(conn,
-                    CodeRepositoryUtil.getExtendedSql("UPDATE_USER_PASSWORD"),
+                ExtendedQueryPool.getExtendedSql("UPDATE_USER_PASSWORD"),
                     new Object []{ userNewPassword, userCode });
             conn.commit();
         }catch (Exception e){

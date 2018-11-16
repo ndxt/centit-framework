@@ -8,7 +8,6 @@ import com.centit.framework.security.SecurityContextUtils;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.AbstractCachedObject;
 import com.centit.support.common.CachedObject;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -250,10 +249,11 @@ public class CentitSecurityMetadata {
         }
 
         List<ConfigAttribute/*roleCode*/> roles = optMethodRoleMap.get(loginCasOptCode);
-        if(CollectionUtils.isEmpty(roles)){
-            if(roles == null){
-                roles = new ArrayList</*roleCode*/>(2);
-            }
+
+        if(roles == null){
+            roles = new ArrayList</*roleCode*/>(2);
+        }
+        if(roles.size() == 0) {
             roles.add(new SecurityConfig(ROLE_PREFIX + SecurityContextUtils.PUBLIC_ROLE_CODE));
             optMethodRoleMap.put(loginCasOptCode, roles);
         }

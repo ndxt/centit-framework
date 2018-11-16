@@ -1,11 +1,6 @@
 package com.centit.framework.test;
 
-import com.alibaba.fastjson.JSON;
 import com.centit.framework.common.ResponseJSON;
-import com.centit.framework.common.ResponseMapData;
-import com.centit.support.algorithm.StringBaseOpt;
-
-import java.util.List;
 
 /**
  * Created by codefan on 17-8-4.

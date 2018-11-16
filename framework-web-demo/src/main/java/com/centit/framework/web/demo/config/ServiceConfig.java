@@ -7,6 +7,7 @@ import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.security.model.MemorySessionRegistryImpl;
 import com.centit.framework.security.model.StandardPasswordEncoderImpl;
+import com.centit.framework.service.impl.EmailMessageSenderImpl;
 import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
@@ -46,6 +47,24 @@ public class ServiceConfig {
     @Bean
     public SessionRegistry sessionRegistry(){
         return new MemorySessionRegistryImpl();
+    }
+
+
+    //@Value("${message.sender.email.hostName:}")
+    //@Value("${message.sender.email.smtpPort:25}")
+    //@Value("${message.sender.email.userName:}")
+    //@Value("${message.sender.email.userPassword:}")
+    //@Value("${message.sender.email.serverEmail:}")
+
+    @Bean
+    public EmailMessageSenderImpl emailMessageManager(){
+        EmailMessageSenderImpl messageManager = new EmailMessageSenderImpl();
+        messageManager.setHostName("mail.centit.com");
+        messageManager.setSmtpPort(25);
+        messageManager.setUserName("accounts");
+        messageManager.setUserPassword("yhs@yhs1");
+        messageManager.setServerEmail("noreplay@centit.com");
+        return messageManager;
     }
 
     @Bean

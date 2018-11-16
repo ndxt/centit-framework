@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.centit.framework.components.impl;
+package com.centit.framework.service.impl;
 
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.MessageSender;
@@ -11,9 +11,6 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-
-import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -24,21 +21,21 @@ public class EmailMessageSenderImpl implements MessageSender {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailMessageSenderImpl.class);
 
-    @Value("${message.sender.email.hostName:}")
-    @NotNull
+    //@Value("${message.sender.email.hostName:}")
+    //@NotNull
     private String hostName;
 
-    @Value("${message.sender.email.smtpPort:25}")
-    @NotNull
+    //@Value("${message.sender.email.smtpPort:25}")
+    //@NotNull
     private int smtpPort;
 
-    @Value("${message.sender.email.userName:}")
+    //@Value("${message.sender.email.userName:}")
     private String userName;
 
-    @Value("${message.sender.email.userPassword:}")
+    //@Value("${message.sender.email.userPassword:}")
     private String userPassword;
 
-    @Value("${message.sender.email.serverEmail:}")
+    //@Value("${message.sender.email.serverEmail:}")
     private String serverEmail;
 
     public EmailMessageSenderImpl(){

@@ -17,7 +17,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
@@ -504,7 +503,7 @@ public class MainFrameController extends BaseController {
             menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(), topOptId, asAdmin);
         }
 
-        if(CollectionUtils.isEmpty( menuFunsByUser) ){
+        if(menuFunsByUser == null || menuFunsByUser.size()==0 ){
             menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(), asAdmin);
         }
 
@@ -569,7 +568,7 @@ public class MainFrameController extends BaseController {
             menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, topOptId, false);
         }
 
-        if(CollectionUtils.isEmpty( menuFunsByUser) ){
+        if(menuFunsByUser==null || menuFunsByUser.size() == 0){
             menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userCode, false);
         }
 

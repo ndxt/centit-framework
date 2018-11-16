@@ -1,7 +1,6 @@
 package com.centit.framework.core.controller;
 
 import com.centit.framework.common.*;
-import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
@@ -36,31 +35,26 @@ public abstract class BaseController {
     /**
      * 转换查询参数为字符串，用于 = 或者 like 查询
      */
-    public static final String SEARCH_STRING_PREFIX = "s_";
-
-    public static final int SEARCH_STRING_PREFIX_LEN = 2;
+    private static final String SEARCH_STRING_PREFIX = "s_";
+    private static final int SEARCH_STRING_PREFIX_LEN = 2;
 
     /**
      * 转换查询参数为字符串数组，用于 in 查询
      */
-    public static final String SEARCH_ARRAY_PREFIX = "a_";
-
-    public static final int SEARCH_ARRAY_PREFIX_LEN = 2;
+    private static final String SEARCH_ARRAY_PREFIX = "a_";
+    private static final int SEARCH_ARRAY_PREFIX_LEN = 2;
 
     /**
      * 转换查询参数为数字，用于 Long 类型的 = 或者 like 查询
      */
-    public static final String SEARCH_NUMBER_PREFIX = "n_";
-
-    public static final int SEARCH_NUMBER_PREFIX_LEN = 2;
+    private static final String SEARCH_NUMBER_PREFIX = "n_";
+    private static final int SEARCH_NUMBER_PREFIX_LEN = 2;
 
     /**
      * 转换查询参数为数字数组，用于 Long 类型的 in 查询
      */
-    public static final String SEARCH_NUMBER_ARRAY_PREFIX = "na_";
-
-    public static final int SEARCH_NUMBER_ARRAY_PREFIX_LEN = 3;
-
+    private static final String SEARCH_NUMBER_ARRAY_PREFIX = "na_";
+    private static final int SEARCH_NUMBER_ARRAY_PREFIX_LEN = 3;
 
     protected Logger logger = LoggerFactory.getLogger(BaseController.class);
     /**
@@ -186,15 +180,15 @@ public abstract class BaseController {
         //map.put("isValid", "T");
         for (Map.Entry<String, String[]> ent : parameterMap.entrySet()) {
             String key = ent.getKey();
-
             // 查询字符串 s_
             if (key.startsWith(SEARCH_STRING_PREFIX)) {
                 String sKey = key.substring(SEARCH_STRING_PREFIX_LEN);
                 String sValue = HtmlFormUtils.getParameterString(ent.getValue());
                 if (sValue != null) {
                     if ("isAll".equals(sKey)) {
-                        if ("true".equalsIgnoreCase(sValue) || "1".equals(sValue))
+                        if ("true".equalsIgnoreCase(sValue) || "1".equals(sValue)) {
                             map.remove("isvalid");
+                        }
                     } else
                         map.put(sKey, sValue);
                 }
@@ -226,22 +220,17 @@ public abstract class BaseController {
                     map.put(sKey, ll);
                 }
             }
-            else if (StringUtils.equals(key, CodeBook.SELF_ORDER_BY)) {
-                map.put(key, HtmlFormUtils.getParameterString(ent.getValue()));
-            }
-            else if (StringUtils.equals(key, CodeBook.TABLE_SORT_FIELD)) {
-                map.put(key, HtmlFormUtils.getParameterString(ent.getValue()));
-            }
-            else if (StringUtils.equals(key, CodeBook.TABLE_SORT_ORDER)) {
-                map.put(key, HtmlFormUtils.getParameterString(ent.getValue()));
-            }else {
-                map.put(key, ent.getValue());
+            else if(! key.startsWith("_")){
+                String[] values = CollectionsOpt.removeBlankString(ent.getValue());
+                if(values!=null) {
+                    if (values.length == 1) {
+                        map.put(key, values[0]);
+                    } else {
+                        map.put(key, values);
+                    }
+                }
             }
         }
-        // log.error("规则化后参数表：" + map.toString());
-        // 回写查询变量
-        // setbackSearchColumn(map, request);
-
         return map;
     }
     /**
@@ -254,15 +243,16 @@ public abstract class BaseController {
         Map<String, Object> map = new HashMap<>();
         //map.put("isValid", "T");
         for (Map.Entry<String, String[]> ent : parameterMap.entrySet()) {
-            if(ent.getKey().startsWith("_"))
+            String key = ent.getKey();
+            if(key.startsWith("_"))
                 continue;
             String[] values = CollectionsOpt.removeBlankString(ent.getValue());
             if(values==null)
                 continue;
             if(values.length==1){
-                map.put(ent.getKey(), values[0]);
+                map.put(key, values[0]);
             }else{
-                map.put(ent.getKey(), values);
+                map.put(key, values);
             }
         }
         return map;
