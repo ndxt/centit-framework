@@ -2,7 +2,6 @@ package com.centit.framework.staticsystem.po;
 
 import com.centit.framework.model.basedata.IDataCatalog;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
@@ -185,7 +184,7 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
     public void addAllDataPiece(List<DataDictionary> dataDictionaries) {
         getDataDictionaries().clear();
 
-        if (CollectionUtils.isEmpty(dataDictionaries)) {
+        if (dataDictionaries==null ||dataDictionaries.size()==0) {
             return;
         }
 
