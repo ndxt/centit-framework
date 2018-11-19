@@ -68,13 +68,17 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
         boolean alwaysReauthenticate = false;
 
         if("XMLHttpRequest".equals(fi.getRequest().getHeader("X-Requested-With"))) {
+            /**
+             * TODO： 这个地方请用 Spring Session 替代
+             * 参见 https://www.jianshu.com/p/a566861fc886
+             */
             //从token中获取用户信息
             if(authentication==null || "anonymousUser".equals(authentication.getName())){
                 HttpServletRequest request = fi.getHttpRequest();
                 String accessToken = request.getParameter(SecurityContextUtils.SecurityContextTokenName);
 
                 if(StringUtils.isBlank(accessToken)) {
-                    accessToken = request.getHeader("Authorization");
+                    accessToken = request.getHeader("x-auth-token");
                 }
 
                 if(StringUtils.isBlank(accessToken)) {

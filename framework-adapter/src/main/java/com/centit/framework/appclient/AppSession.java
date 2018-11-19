@@ -99,7 +99,7 @@ public class AppSession {
     public HttpExecutorContext createHttpExecutorContext(CloseableHttpClient httpClient) {
         HttpExecutorContext httpExecutorContext = HttpExecutorContext.create(httpClient);
         if(StringUtils.isNotBlank(accessToken)) {
-            httpExecutorContext.header("Authorization", accessToken);
+            httpExecutorContext.header("x-auth-token", accessToken);
         }
         return httpExecutorContext;
     }

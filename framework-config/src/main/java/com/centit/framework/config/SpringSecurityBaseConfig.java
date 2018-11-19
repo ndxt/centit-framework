@@ -126,7 +126,8 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
 //            new ConcurrentSessionFilter(sessionRegistry,
 //                new SimpleRedirectSessionInformationExpiredStrategy(loginUrl)),
 //            ConcurrentSessionFilter.class);
-        http.sessionManagement().maximumSessions(maximumSessions).sessionRegistry(sessionRegistry).expiredUrl(loginUrl);
+        http.sessionManagement().maximumSessions(maximumSessions)
+            .sessionRegistry(sessionRegistry).expiredUrl(loginUrl);
     }
 
     protected abstract String[] getAuthenticatedUrl();
