@@ -216,6 +216,9 @@ public abstract class SysUserFilterEngine {
      */
     private static Set<String> calcSimpleExp(UserUnitFilterCalcContext ecc) {
         UserUnitFilterGene gene = InnerUserUnitFilterCompileEngine.makeUserUnitFilter(ecc);
+        if(gene==null){
+            return null;
+        }
         return getUsersByFilter(ecc,gene);
     }
 

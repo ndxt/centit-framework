@@ -14,10 +14,12 @@ import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.network.HtmlFormUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -441,9 +443,10 @@ public class CacheController extends BaseController {
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
-    @ApiOperation(value = " 根据机构获取所有符合状态标记的用户", notes = " 根据机构获取所有符合状态标记的用户")
+    @ApiOperation(value = "根据机构表达式获取符合条件的机构",
+        notes = "根据机构表达式获取符合条件的结构，系统通过机构规则引擎计算;表达式完整式 D()DT()DL()")
     @ApiImplicitParam(
-        name = "unitfilter", value="机构代码",
+        name = "unitfilter", value="机构表达式，示例：D('D111' - 2)",
         required= true, paramType = "path", dataType= "String"
     )
     @RequestMapping(value = "/unitfilter/{unitfilter}", method = RequestMethod.GET)
@@ -462,7 +465,8 @@ public class CacheController extends BaseController {
             }
         }
         Set<String> units =  SysUnitFilterEngine.calcSystemUnitsByExp(
-                unitfilter,unitParams, new UserUnitMapTranslate());
+            StringEscapeUtils.unescapeHtml4(unitfilter),
+            unitParams, new UserUnitMapTranslate());
         /*List<IUnitInfo> listObjects = new ArrayList<>();
         for(String uc : units){
             listObjects.add( CodeRepositoryUtil.getUnitInfoByCode(uc) );
@@ -478,9 +482,10 @@ public class CacheController extends BaseController {
      * @param request request
      * @param response HttpServletResponse
      */
-    @ApiOperation(value = "根据用户代码获取所有符合状态标记的用户", notes = "根据用户代码获取所有符合状态标记的用户")
+    @ApiOperation(value = "根据用户表达式计算符合条件的用户",
+        notes = "根据用户表达式计算符合条件的用户; 表达式完整式 D()DT()DL()GW()XZ()R()UT()UL()U()")
     @ApiImplicitParam(
-        name = "userfilter", value="用户代码",
+        name = "userfilter", value="用户表达式，示例：D(all)DT('D')xz('部门经理')",
         required= true, paramType = "path", dataType= "String"
     )
     @RequestMapping(value = "/userfilter/{userfilter}", method = RequestMethod.GET)
@@ -502,7 +507,8 @@ public class CacheController extends BaseController {
                 unitParams.put("U", CollectionsOpt.createHashSet(userUnit));
             }
         }
-        Set<String> users =  SysUserFilterEngine.calcSystemOperators(userfilter,
+        Set<String> users =  SysUserFilterEngine.calcSystemOperators(
+                StringEscapeUtils.unescapeHtml4(userfilter),
                 unitParams,userParams,null, new UserUnitMapTranslate());
         /*List<IUserInfo> listObjects = new ArrayList<>();
         for(String uc : users){

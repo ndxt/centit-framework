@@ -137,7 +137,6 @@ public abstract class SysUnitFilterEngine {
 
     /**
      * D(U+5)
-     *
      * @param ecc UserUnitFilterCalcContext
      * @param units Set units
      * @param nTiers int
@@ -160,6 +159,51 @@ public abstract class SysUnitFilterEngine {
         return midUnits;
     }
 
+    private static boolean matchUnitTag(String unitTag, String unitTags){
+        if(StringUtils.isBlank(unitTags)) {
+            return false;
+        }
+        String [] tags = unitTags.split(",");
+        for(String tag : tags){
+            if(StringUtils.equals(tag,unitTag)){
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * D(U+"tag or type")
+     * @param ecc UserUnitFilterCalcContext
+     * @param units Set units
+     * @param typeOrTag 类型或者标记
+     * @return subUnits 下层机构
+     */
+    public static Set<String> subUnits(UserUnitFilterCalcContext ecc, Set<String> units, String typeOrTag) {
+        if (typeOrTag == null || units == null || units.size() == 0)
+            return units;
+        Set<String> resUnits =  new HashSet<>();
+        for (String suc : units) {
+            List<IUnitInfo> midUnits =  new ArrayList<>();
+            midUnits.add(ecc.getUnitInfoByCode(suc));
+            while(midUnits.size()>0) {
+                boolean hasFound = false;
+                List<IUnitInfo> tempUnits = new ArrayList<>();
+                for (IUnitInfo ui : midUnits) {
+                    if(typeOrTag.equals(ui.getUnitType()) || matchUnitTag(typeOrTag, ui.getUnitTag())){
+                        resUnits.add(ui.getUnitCode());
+                        hasFound = true;
+                    }
+                    tempUnits.addAll( ecc.listSubUnit(ui.getUnitCode()));
+                }
+                if(hasFound){
+                    break;
+                }
+                midUnits = tempUnits;
+            }
+        }
+        return resUnits;
+    }
+
     /**
      * D(U-5)
      *
@@ -173,7 +217,7 @@ public abstract class SysUnitFilterEngine {
             return units;
         Set<String> midUnits = units;
         for (int i = 0; i < nTiers; i++) {
-            Set<String> retUnits = new HashSet<String>();
+            Set<String> retUnits = new HashSet<>();
             for (String suc : midUnits) {
                 IUnitInfo u = ecc.getUnitInfoByCode(suc);
                 String puc = u.getParentUnit();
@@ -185,6 +229,34 @@ public abstract class SysUnitFilterEngine {
         return midUnits;
     }
 
+    /**
+     * D(U-"tag or type")
+     *
+     * @param ecc UserUnitFilterCalcContext
+     * @param units Set units
+     * @param typeOrTag 类型或者标记
+     * @return parentUnits Set 上层机构
+     */
+    public static Set<String> parentUnits(UserUnitFilterCalcContext ecc, Set<String> units, String typeOrTag) {
+        if (typeOrTag == null || units == null || units.size() == 0)
+            return units;
+        Set<String> midUnits =  new HashSet<>();
+        for (String suc : units) {
+            IUnitInfo u = ecc.getUnitInfoByCode(suc);
+            while(u != null) {
+                if(typeOrTag.equals(u.getUnitType()) || matchUnitTag(typeOrTag, u.getUnitTag())){
+                    midUnits.add(u.getUnitCode());
+                    break;
+                }
+                String puc = u.getParentUnit();
+                if ((puc == null) || ("0".equals(puc)) || ("".equals(puc))) {
+                    break;
+                }
+                u = ecc.getUnitInfoByCode(puc);
+            }
+        }
+        return midUnits;
+    }
 
 
     /**
@@ -218,7 +290,7 @@ public abstract class SysUnitFilterEngine {
     public static Set<String> topUnits(UserUnitFilterCalcContext ecc, Set<String> units, int nTiers) {
         if (nTiers < 1)
             return units;
-        Set<String> retUnits = new HashSet<String>();
+        Set<String> retUnits = new HashSet<>();
         for (String unitCode : units) {
             String tu = topUnit(ecc,unitCode);
             if (tu != null)
@@ -389,7 +461,7 @@ public abstract class SysUnitFilterEngine {
                     for (Iterator<IUnitInfo> it = lsUnitInfo.iterator(); it.hasNext(); ) {
                         IUnitInfo unit = it.next();
                         boolean hasTag = false;
-                        if (StringUtils.isNoneBlank(unit.getUnitTag())) {
+                        if (StringUtils.isNotBlank(unit.getUnitTag())) {
                             String tags[] = unit.getUnitTag().split(",");
                             for (String tag : tags) {
                                 if (rf.getUnitTags().contains(tag)) {
@@ -417,6 +489,9 @@ public abstract class SysUnitFilterEngine {
      */
     private static Set<String> calcSimpleExp(UserUnitFilterCalcContext ecc) {
         UserUnitFilterGene gene = InnerUserUnitFilterCompileEngine.makeUserUnitFilter(ecc);
+        if(gene==null){
+            return null;
+        }
         return getUnitsByFilter(ecc,gene);
     }
 
@@ -438,8 +513,9 @@ public abstract class SysUnitFilterEngine {
         ecc.addAllUnitParam(unitParams);
         Set<String> untis = calcUnitsExp(ecc);
 
-        if (ecc.hasError())
+        if (ecc.hasError()) {
             logger.error(ecc.getLastErrMsg());
+        }
 
         return untis;
     }

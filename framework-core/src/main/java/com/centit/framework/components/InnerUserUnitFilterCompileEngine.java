@@ -1,8 +1,10 @@
 package com.centit.framework.components;
 
+import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
+import com.centit.support.compiler.Lexer;
 import com.centit.support.compiler.VariableFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +73,25 @@ public abstract class InnerUserUnitFilterCompileEngine {
 
     private static final Logger logger = LoggerFactory.getLogger(InnerUserUnitFilterCompileEngine.class);
 
+    private static Object mapVariable(UserUnitFilterCalcContext ecc, String w){
+        if(StringRegularOpt.isNumber(w) ){
+            return Integer.valueOf(StringRegularOpt.trimString(w));
+        }
+        if(ecc.isLabel(w)){
+            UserUnitVariableTranslate variableTranslate = ecc.getVarTrans();
+            if(variableTranslate != null){
+                Object obj = ecc.getVarTrans().getGeneralVariable(w);
+                if(obj != null){
+                    return obj;
+                }
+            }
+            return w;
+        }
+        if(w.charAt(0)=='"' || w.charAt(0)=='\'') {
+            return StringRegularOpt.trimString(w);
+        }
+        return null;
+    }
     /**
      * D(null) =>null D(all) => D1,D2,D11,D12,D111,D112,D1111,D1112 D("D12")
      * =>D12 D(null+1) =>D1,D2 D(all+1) => D11,D12,D111,D112,D1111,D1112 D(A) =>
@@ -89,23 +110,12 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 }
             } else if ("empty".equalsIgnoreCase(w)) {
                 w = ecc.getAWord();
-                if ("-".equals(w)) {
-                    w = ecc.getAWord();
-                    if (!StringRegularOpt.isNumber(w)) {
-                        ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit null- .");
-                        return null;
-                    }
-                    units = SysUnitFilterEngine.nullParentUnits(ecc,Integer.valueOf(w));
-
-                } else if ("+".equals(w)) {
-                    w = ecc.getAWord();
-                    if (!StringRegularOpt.isNumber(w)) {
-                        ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit null+ . ");
-                        return null;
-                    }
-                    units = SysUnitFilterEngine.nullSubUnits(ecc,Integer.valueOf(w));
-                } else
-                    ecc.setPreword(w);
+                if ("-".equals(w)) { // 获取所有 叶子 机构
+                    units = SysUnitFilterEngine.nullParentUnits(ecc,1);
+                } else if ("+".equals(w)) {  // 获取所有 根 机构
+                    units = SysUnitFilterEngine.nullSubUnits(ecc,1);
+                }
+                ecc.setPreword(w);
             } else {
                 Set<String> us = ecc.getUnitCode(w);
                 if (us != null)
@@ -129,62 +139,76 @@ public abstract class InnerUserUnitFilterCompileEngine {
         if ("-".equals(w)) {
             ecc.setCanAcceptOpt(true);
             w = ecc.getAWord();
-            if (!StringRegularOpt.isNumber(w)) {
+            Object objTiers = mapVariable(ecc, w);
+            if( objTiers instanceof Integer ){
+                units = SysUnitFilterEngine.parentUnits(ecc,units, (Integer)objTiers);
+            }else if(objTiers instanceof String) {
+                units = SysUnitFilterEngine.parentUnits(ecc,units, (String)objTiers);
+            } else  {
                 ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - . ");
                 return null;
             }
-            units = SysUnitFilterEngine.parentUnits(ecc,units, Integer.valueOf(w));
+
             w = ecc.getAWord();
             if("+".equals(w)){
                 w = ecc.getAWord();
-                if (!StringRegularOpt.isNumber(w)) {
+                objTiers = mapVariable(ecc, w);
+                if( objTiers instanceof Integer ){
+                    units = SysUnitFilterEngine.subUnits(ecc,units, (Integer)objTiers);
+                }else if(objTiers instanceof String) {
+                    units = SysUnitFilterEngine.subUnits(ecc,units, (String)objTiers);
+                } else {
                     ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - A + B . ");
                     return null;
                 }
-                units = SysUnitFilterEngine.subUnits(ecc,units, Integer.valueOf(w));
             }else
                 ecc.setPreword(w);
 
         } else if ("+".equals(w)) {
             w = ecc.getAWord();
-            if (!StringRegularOpt.isNumber(w)) {
+            Object objTiers = mapVariable(ecc, w);
+            if( objTiers instanceof Integer ){
+                units = SysUnitFilterEngine.subUnits(ecc, units, (Integer)objTiers);
+            }else if(objTiers instanceof String) {
+                units = SysUnitFilterEngine.subUnits(ecc, units, (String)objTiers);
+            } else  {
                 ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit + . ");
                 return null;
             }
-            units = SysUnitFilterEngine.subUnits(ecc,units, Integer.valueOf(w));
-
         } else if ("*".equals(w)) {
             ecc.setCanAcceptOpt(true);
             w = ecc.getAWord();
             if ("+".equals(w)) {// 所有同一系列 同一层节点
                 w = ecc.getAWord();
-                if (!StringRegularOpt.isNumber(w)) {
+                Object objTiers = mapVariable(ecc, w);
+                if (objTiers instanceof Integer) {
+                    units = SysUnitFilterEngine.topUnits(ecc, units, (Integer)objTiers);
+                }else {
                     ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *+.");
                     return null;
                 }
-                units = SysUnitFilterEngine.topUnits(ecc,units, Integer.valueOf(w));
 
             } else if ("-".equals(w)) {// 所有节点的上层节点中， 指定层次的节点
-
                 w = ecc.getAWord();
-                if (!StringRegularOpt.isNumber(w)) {
+                Object objTiers = mapVariable(ecc, w);
+                if (objTiers instanceof Integer) {
+                    Set<String> parUnits = SysUnitFilterEngine.allParentUnits(ecc,units);
+                    units = SysUnitFilterEngine.topUnits(ecc, units, (Integer)objTiers);
+                    units.retainAll(parUnits);
+                }else {
                     ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *-.");
                     return null;
                 }
-                Set<String> parUnits = SysUnitFilterEngine.allParentUnits(ecc,units);
-                units = SysUnitFilterEngine.topUnits(ecc,units, Integer.valueOf(w));
-                units.retainAll(parUnits);
-
-            } else{
-                if (!StringRegularOpt.isNumber(w)) {
+            } else{  //所有同一系列最上面几层节点
+                Object objTiers = mapVariable(ecc, w);
+                if (objTiers instanceof Integer) {
+                    units = SysUnitFilterEngine.seriesUnits(ecc, units,(Integer)objTiers);
+                }else{
                     ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *.");
                     return null;
-                }else
-                    //所有同一系列最上面几层节点
-                    units = SysUnitFilterEngine.seriesUnits(ecc,units, Integer.valueOf(w));
+                }
             }
         } else if ("++".equals(w)) {// 所有的下层节点
-
             units = SysUnitFilterEngine.allSubUnits(ecc,units);
         } else if ("--".equals(w)) {// 所有的上层节点
             units = SysUnitFilterEngine.allParentUnits(ecc,units);
@@ -356,7 +380,6 @@ public abstract class InnerUserUnitFilterCompileEngine {
 
     /**
      * gw("角色代码常量" [,"角色代码常量"]* )
-     *
      * @param ecc 运行环境
      * @param gene 过滤条件
      * @return 是否正确运行
@@ -400,7 +423,6 @@ public abstract class InnerUserUnitFilterCompileEngine {
 
     /**
      * xz("角色代码常量" [,"角色代码常量"]* )
-     *
      * @param ecc
      * @param gene
      * @return
@@ -444,8 +466,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
     }
 
     /**
-     * UT("角色代码常量" [,"角色代码常量"]* )
-     *
+     * UT("用户类型常量" [,"用户类型常量"]* )
      * @param ecc 运行环境
      * @param gene 过滤条件
      * @return 是否正确运行
@@ -487,8 +508,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
     }
 
     /**
-     * UL("角色代码常量" [,"角色代码常量"]* )
-     *
+     * UL("用户标记常量" [,"用户标记常量"]* )
      * @param ecc 运行环境
      * @param gene 过滤条件
      * @return 是否正确运行
@@ -609,7 +629,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
     }
 
     /**
-     * D()GW()XZ()R()U()
+     * D()DT()DL()GW()XZ()R()UT()UL()U()
      * @return 过滤条件因素，这个可以认为是一个分析好的 filter 语句
      */
     public static UserUnitFilterGene makeUserUnitFilter(UserUnitFilterCalcContext ecc) {
