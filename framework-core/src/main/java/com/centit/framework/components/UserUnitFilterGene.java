@@ -33,7 +33,7 @@ public class UserUnitFilterGene {
     private boolean rankAllSub;
 
     public UserUnitFilterGene() {
-        hasUnitTypeFilter = hasUnitTagFilter
+        hasUnitTypeFilter = hasUnitTagFilter = onlyGetPrimaryUser
             = hasUserTypeFilter = hasUserTagFilter = hasUnitFilter = hasUserFilter
             = hasGWFilter = hasXZFilter = hasRankFilter = rankPlus
             = rankMinus = rankAllTop = rankAllSub = false;
