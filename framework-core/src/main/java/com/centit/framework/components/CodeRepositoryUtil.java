@@ -785,6 +785,20 @@ public abstract class CodeRepositoryUtil {
         return getUserRepo().get(userCode);
     }
 
+    /**
+     * 根据用户代码获取机构信息
+     * @param sUsers 用户代码集合
+     * @return 用户信息
+     */
+    public static List<IUserInfo>  getUserInfosByCodes(Collection<String> sUsers) {
+        Map<String, ? extends IUserInfo> allUsers = getUserRepo();
+        List<IUserInfo> users = new ArrayList<>();
+        for(String uc : sUsers){
+            users.add(allUsers.get(uc));
+        }
+        return users;
+    }
+
     public static IUserInfo getUserInfoByLoginName(String loginName) {
         return CodeRepositoryCache.loginNameToUserMap.getCachedTarget().get(loginName);
     }
@@ -865,6 +879,20 @@ public abstract class CodeRepositoryUtil {
      */
     public static IUnitInfo getUnitInfoByCode(String sUnit) {
         return getUnitRepo().get(sUnit);
+    }
+
+    /**
+     * 根据机构代码获取机构信息
+     * @param sUnits sUnit 机构代码集合
+     * @return 机构信息
+     */
+    public static List<IUnitInfo>  getUnitInfosByCodes(Collection<String> sUnits) {
+        Map<String, ? extends IUnitInfo> allUnts = getUnitRepo();
+        List<IUnitInfo> units = new ArrayList<>();
+        for(String uc : sUnits){
+            units.add(allUnts.get(uc));
+        }
+        return units;
     }
 
     /**

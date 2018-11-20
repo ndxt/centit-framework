@@ -90,18 +90,15 @@ public abstract class SysUnitFilterEngine {
     public static Set<String> allSubUnits(UserUnitFilterCalcContext ecc, Set<String> units) {
         if (units == null || units.size() == 0)
             return units;
-        int preSize = 0;
         Set<String> retUnits = new HashSet<>();
         Set<String> midUnits = units;
-        while (midUnits != null && midUnits.size() != 0) {
-            retUnits.addAll(midUnits);
-            // 排除机构层级设置中的循环问题
-            if (preSize == retUnits.size())
-                break;
-            preSize = retUnits.size();
+        while(true) {
             midUnits = subUnits(ecc, midUnits, 1);
+            if(midUnits==null || midUnits.size()==0){
+                break;
+            }
+            retUnits.addAll(midUnits);
         }
-
         return retUnits;
     }
 
@@ -127,10 +124,9 @@ public abstract class SysUnitFilterEngine {
             }
             if(retUnits.size()<1)
                 break;
-            parUnits.addAll(midUnits);
+            parUnits.addAll(retUnits);
             midUnits = retUnits;
         }
-        parUnits.addAll(midUnits);
         return parUnits;
     }
 

@@ -471,7 +471,8 @@ public class CacheController extends BaseController {
         for(String uc : units){
             listObjects.add( CodeRepositoryUtil.getUnitInfoByCode(uc) );
         }*/
-        JsonResultUtils.writeSingleDataJson(units, response);
+        JsonResultUtils.writeSingleDataJson(
+            CodeRepositoryUtil.getUnitInfosByCodes(units), response);
     }
 
     /**
@@ -514,7 +515,8 @@ public class CacheController extends BaseController {
         for(String uc : users){
             listObjects.add( CodeRepositoryUtil.getUserInfoByCode(uc));
         }*/
-        JsonResultUtils.writeSingleDataJson(users, response);
+        JsonResultUtils.writeSingleDataJson(
+            CodeRepositoryUtil.getUserInfosByCodes(users), response);
     }
 
 
