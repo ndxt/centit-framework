@@ -506,7 +506,9 @@ public abstract class SysUnitFilterEngine {
         UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
         ecc.setFormula(unitExp);
         ecc.setVarTrans(varTrans);
-        ecc.addAllUnitParam(unitParams);
+        if(unitParams!=null) {
+            ecc.addAllUnitParam(unitParams);
+        }
         Set<String> untis = calcUnitsExp(ecc);
 
         if (ecc.hasError()) {
