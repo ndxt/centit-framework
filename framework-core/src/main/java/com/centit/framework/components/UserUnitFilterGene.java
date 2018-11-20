@@ -7,6 +7,7 @@ public class UserUnitFilterGene {
 
     private boolean hasUserTypeFilter;
     private boolean hasUserTagFilter;
+    private boolean hasUserRoleFilter;
     private boolean hasUnitTypeFilter;
     private boolean hasUnitTagFilter;
     private boolean hasUnitFilter;
@@ -25,6 +26,7 @@ public class UserUnitFilterGene {
     private Set<String> users;
     private Set<String> xzRoles;
     private Set<String> gwRoles;
+    private Set<String> optRoles;
 
     private int xzRank;
     private boolean rankPlus;
@@ -35,7 +37,7 @@ public class UserUnitFilterGene {
     public UserUnitFilterGene() {
         hasUnitTypeFilter = hasUnitTagFilter = onlyGetPrimaryUser
             = hasUserTypeFilter = hasUserTagFilter = hasUnitFilter = hasUserFilter
-            = hasGWFilter = hasXZFilter = hasRankFilter = rankPlus
+            = hasGWFilter = hasXZFilter = hasRankFilter = rankPlus = hasUserRoleFilter
             = rankMinus = rankAllTop = rankAllSub = false;
 
         userTypes = new HashSet<>();
@@ -46,6 +48,7 @@ public class UserUnitFilterGene {
         users = new HashSet<>();
         xzRoles = new HashSet<>();
         gwRoles = new HashSet<>();
+        optRoles = new HashSet<>();
         xzRank = 0;
     }
 
@@ -63,10 +66,6 @@ public class UserUnitFilterGene {
 
     public Set<String> getUnitTags() {
         return unitTags;
-    }
-
-    public int getXzRank() {
-        return xzRank;
     }
 
     public boolean isHasUserTypeFilter() {
@@ -119,6 +118,10 @@ public class UserUnitFilterGene {
         return xzRoles;
     }
 
+    public Set<String> getOptRoles() {
+        return optRoles;
+    }
+
     public Set<String> getGwRoles() {
         return gwRoles;
     }
@@ -146,6 +149,10 @@ public class UserUnitFilterGene {
 
     public boolean isHasRankFilter() {
         return hasRankFilter;
+    }
+
+    public boolean isHasRoleFilter() {
+        return hasUserRoleFilter;
     }
 
     public boolean isRankMinus() {
@@ -223,6 +230,11 @@ public class UserUnitFilterGene {
     public void addXzRole(String rc) {
         xzRoles.add(rc);
         hasXZFilter = true;
+    }
+
+    public void addOptRole(String rc) {
+        optRoles.add(rc);
+        hasUserRoleFilter = true;
     }
 
     public void addGwRole(String rc) {

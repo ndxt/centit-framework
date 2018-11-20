@@ -25,7 +25,6 @@ public class WebInitializer implements WebApplicationInitializer {
         initializeSpringConfig(servletContext);
         initializeSystemSpringMvcConfig(servletContext);
         initializeNormalSpringMvcConfig(servletContext);
-        initializeSwaggerMvcConfig(servletContext);
 
         WebConfig.registerSpringSessionRepositoryFilter(servletContext);
         //WebConfig.registerSpringContextLoaderListener(servletContext);
@@ -77,15 +76,6 @@ public class WebInitializer implements WebApplicationInitializer {
         system.addMapping("/service/*");
         system.setLoadOnStartup(1);
         system.setAsyncSupported(true);
-    }
-
-    private void initializeSwaggerMvcConfig(ServletContext servletContext) {
-        /*AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(SwaggerConfig.class);
-        ServletRegistration.Dynamic system  = servletContext.addServlet("docs", new DispatcherServlet(context));
-        system.addMapping("/docs/*");
-        system.setLoadOnStartup(1);
-        system.setAsyncSupported(true);*/
     }
 
 }

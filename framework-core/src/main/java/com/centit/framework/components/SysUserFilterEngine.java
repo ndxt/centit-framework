@@ -4,6 +4,7 @@ import com.centit.framework.components.impl.SystemUserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
+import com.centit.framework.model.basedata.IUserRole;
 import com.centit.framework.model.basedata.IUserUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -91,7 +92,8 @@ public abstract class SysUserFilterEngine {
         boolean hasUnitFilter = rf.isHasGWFilter() || rf.isHasRankFilter()
             || rf.isHasXZFilter() || rf.isHasUnitFilter() ;
 
-        boolean hasTypeTagFilter = rf.isHasUserTagFilter() || rf.isHasUserTypeFilter();
+        boolean hasTypeTagFilter =
+            rf.isHasUserTagFilter() || rf.isHasUserTypeFilter() || rf.isHasRoleFilter();
         //获取机构列表
         SysUnitFilterEngine.getUnitsByFilter(ecc, rf);
 
@@ -162,18 +164,18 @@ public abstract class SysUserFilterEngine {
 
         if(hasTypeTagFilter) {
             List<IUserInfo> lsUserInfo = null;
-            if(rf.getUsers() != null && rf.getUsers().size()>0){
-                lsUserInfo = new ArrayList<>(rf.getUsers().size()+1);
-                for (String userCode  : rf.getUsers()) {
+            if (rf.getUsers() != null && rf.getUsers().size() > 0) {
+                lsUserInfo = new ArrayList<>(rf.getUsers().size() + 1);
+                for (String userCode : rf.getUsers()) {
                     lsUserInfo.add(ecc.getUserInfoByCode(userCode));
                 }
-            }else if(!hasUnitFilter){
+            } else if (!hasUnitFilter) {
                 List<? extends IUserInfo> extUserInfo = ecc.listAllUserInfo();
-                lsUserInfo = new ArrayList<>(extUserInfo.size()+1);
-                lsUserInfo.addAll( extUserInfo);
+                lsUserInfo = new ArrayList<>(extUserInfo.size() + 1);
+                lsUserInfo.addAll(extUserInfo);
             }
 
-            if(lsUserInfo!=null) {
+            if (lsUserInfo != null) {
                 if (rf.isHasUserTypeFilter()) {
                     // 过滤掉不符合要求的岗位
                     lsUserInfo.removeIf(user -> !rf.getUserTypes().contains(user.getUserType()));
@@ -183,7 +185,7 @@ public abstract class SysUserFilterEngine {
                     for (Iterator<IUserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
                         IUserInfo user = it.next();
                         boolean hasTag = false;
-                        if (StringUtils.isNoneBlank(user.getUserTag())) {
+                        if (StringUtils.isNotBlank(user.getUserTag())) {
                             String tags[] = user.getUserTag().split(",");
                             for (String tag : tags) {
                                 if (rf.getUserTags().contains(tag)) {
@@ -192,25 +194,41 @@ public abstract class SysUserFilterEngine {
                                 }
                             }
                         }
-                        if (!hasTag)
+                        if (!hasTag) {
                             it.remove();
+                        }
                     }
                 }
 
+                if (rf.isHasRoleFilter()) {
+                    for (Iterator<IUserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
+                        IUserInfo user = it.next();
+                        boolean hasRole = false;
+                        List<? extends IUserRole> userRoles = CodeRepositoryUtil.listUserRoles(user.getUserCode());
+                        if (userRoles != null) {
+                            for (IUserRole ur : userRoles) {
+                                if (rf.getOptRoles().contains(ur.getRoleCode())) {
+                                    hasRole = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!hasRole) {
+                            it.remove();
+                        }
+                    }
+                }
                 rf.getUsers().clear();
                 for (IUserInfo user : lsUserInfo) {
                     rf.addUser(user.getUserCode());
                 }
             }
         }
-
         return rf.getUsers();
-
     }
 
-
     /**
-     * D()DT()DL()GW()XZ()R()U()UT()UL()
+     * D()DT()DL()GW()XZ()R()U()UT()UL()RO()
      * @param ecc UserUnitFilterCalcContext
      * @return calcSimpleExp
      */

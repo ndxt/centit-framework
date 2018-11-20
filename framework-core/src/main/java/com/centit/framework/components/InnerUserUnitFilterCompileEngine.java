@@ -39,6 +39,10 @@ public abstract class InnerUserUnitFilterCompileEngine {
      */
     public static final String USER_FILTER_ROLE_TYPE_XZ = "XZ";
     /**
+     * 按照系统角色过滤
+     */
+    public static final String USER_FILTER_SYSTEM_ROLE = "RO";
+    /**
      * 按照行政角色等级过滤
      */
     public static final String USER_FILTER_ROLE_RANK = "R";
@@ -64,7 +68,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
     /**
      * 所有过滤方式
      */
-    public static final String ALL_USER_FILTER_ROLE_RANK = "'D'、'P'、'U'、'GW'、'XZ'、'R'、'DT'、'DL'、'UT'、'UL'";
+    public static final String ALL_USER_FILTER_ROLE_RANK = "'D'、'P'、'U'、'GW'、'XZ'、'R'、'DT'、'DL'、'UT'、'UL'、'RO'";
 
     private InnerUserUnitFilterCompileEngine()
     {
@@ -136,86 +140,73 @@ public abstract class InnerUserUnitFilterCompileEngine {
         }
         // --------------------------------------------------------------//
         w = ecc.getAWord();
-        if ("-".equals(w)) {
-            ecc.setCanAcceptOpt(true);
-            w = ecc.getAWord();
-            Object objTiers = mapVariable(ecc, w);
-            if( objTiers instanceof Integer ){
-                units = SysUnitFilterEngine.parentUnits(ecc,units, (Integer)objTiers);
-            }else if(objTiers instanceof String) {
-                units = SysUnitFilterEngine.parentUnits(ecc,units, (String)objTiers);
-            } else  {
-                ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - . ");
-                return null;
-            }
-
-            w = ecc.getAWord();
-            if("+".equals(w)){
+        while(w != null && ! "".equals(w) && ! ")".equals(w)) {
+            if ("-".equals(w)) {
+                ecc.setCanAcceptOpt(true);
                 w = ecc.getAWord();
-                objTiers = mapVariable(ecc, w);
-                if( objTiers instanceof Integer ){
-                    units = SysUnitFilterEngine.subUnits(ecc,units, (Integer)objTiers);
-                }else if(objTiers instanceof String) {
-                    units = SysUnitFilterEngine.subUnits(ecc,units, (String)objTiers);
+                Object objTiers = mapVariable(ecc, w);
+                if (objTiers instanceof Integer) {
+                    units = SysUnitFilterEngine.parentUnits(ecc, units, (Integer) objTiers);
+                } else if (objTiers instanceof String) {
+                    units = SysUnitFilterEngine.parentUnits(ecc, units, (String) objTiers);
                 } else {
-                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - A + B . ");
+                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit - . ");
                     return null;
                 }
-            }else
-                ecc.setPreword(w);
-
-        } else if ("+".equals(w)) {
-            w = ecc.getAWord();
-            Object objTiers = mapVariable(ecc, w);
-            if( objTiers instanceof Integer ){
-                units = SysUnitFilterEngine.subUnits(ecc, units, (Integer)objTiers);
-            }else if(objTiers instanceof String) {
-                units = SysUnitFilterEngine.subUnits(ecc, units, (String)objTiers);
-            } else  {
-                ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit + . ");
-                return null;
-            }
-        } else if ("*".equals(w)) {
-            ecc.setCanAcceptOpt(true);
-            w = ecc.getAWord();
-            if ("+".equals(w)) {// 所有同一系列 同一层节点
+            }else if ("+".equals(w)) {
                 w = ecc.getAWord();
                 Object objTiers = mapVariable(ecc, w);
                 if (objTiers instanceof Integer) {
-                    units = SysUnitFilterEngine.topUnits(ecc, units, (Integer)objTiers);
-                }else {
-                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *+.");
+                    units = SysUnitFilterEngine.subUnits(ecc, units, (Integer) objTiers);
+                } else if (objTiers instanceof String) {
+                    units = SysUnitFilterEngine.subUnits(ecc, units, (String) objTiers);
+                } else {
+                    ecc.setLastErrMsg(w + " is unexpected, expect number; calcSimpleUnit + . ");
                     return null;
                 }
-
-            } else if ("-".equals(w)) {// 所有节点的上层节点中， 指定层次的节点
+            } else if ("*".equals(w)) {
+                ecc.setCanAcceptOpt(true);
                 w = ecc.getAWord();
-                Object objTiers = mapVariable(ecc, w);
-                if (objTiers instanceof Integer) {
-                    Set<String> parUnits = SysUnitFilterEngine.allParentUnits(ecc,units);
-                    units = SysUnitFilterEngine.topUnits(ecc, units, (Integer)objTiers);
-                    units.retainAll(parUnits);
-                }else {
-                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *-.");
-                    return null;
+                if ("+".equals(w)) {// 所有同一系列 同一层节点
+                    w = ecc.getAWord();
+                    Object objTiers = mapVariable(ecc, w);
+                    if (objTiers instanceof Integer) {
+                        units = SysUnitFilterEngine.topUnits(ecc, units, (Integer) objTiers);
+                    } else {
+                        ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *+.");
+                        return null;
+                    }
+
+                } else if ("-".equals(w)) {// 所有节点的上层节点中， 指定层次的节点
+                    w = ecc.getAWord();
+                    Object objTiers = mapVariable(ecc, w);
+                    if (objTiers instanceof Integer) {
+                        Set<String> parUnits = SysUnitFilterEngine.allParentUnits(ecc, units);
+                        units = SysUnitFilterEngine.topUnits(ecc, units, (Integer) objTiers);
+                        units.retainAll(parUnits);
+                    } else {
+                        ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *-.");
+                        return null;
+                    }
+                } else {  //所有同一系列最上面几层节点
+                    Object objTiers = mapVariable(ecc, w);
+                    if (objTiers instanceof Integer) {
+                        units = SysUnitFilterEngine.seriesUnits(ecc, units, (Integer) objTiers);
+                    } else {
+                        ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *.");
+                        return null;
+                    }
                 }
-            } else{  //所有同一系列最上面几层节点
-                Object objTiers = mapVariable(ecc, w);
-                if (objTiers instanceof Integer) {
-                    units = SysUnitFilterEngine.seriesUnits(ecc, units,(Integer)objTiers);
-                }else{
-                    ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *.");
-                    return null;
-                }
+            } else if ("++".equals(w)) {// 所有的下层节点
+                units = SysUnitFilterEngine.allSubUnits(ecc, units);
+            } else if ("--".equals(w)) {// 所有的上层节点
+                units = SysUnitFilterEngine.allParentUnits(ecc, units);
+            } else if ("**".equals(w)) {// 所有同一系列节点
+                units = SysUnitFilterEngine.allSeriesUnits(ecc, units);
             }
-        } else if ("++".equals(w)) {// 所有的下层节点
-            units = SysUnitFilterEngine.allSubUnits(ecc,units);
-        } else if ("--".equals(w)) {// 所有的上层节点
-            units = SysUnitFilterEngine.allParentUnits(ecc,units);
-        } else if ("**".equals(w)) {// 所有同一系列节点
-            units = SysUnitFilterEngine.allSeriesUnits(ecc,units);
-        } else
-            ecc.setPreword(w);
+            w = ecc.getAWord();
+        }
+        ecc.setPreword(w);
         // w = ecc.getAWord();
         // if(")".equals(w)){ //语句结束
         return units;
@@ -265,15 +256,12 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 ecc.setLastErrMsg(w + " is unexpected, expect ')' ; calcUnitTypeFilter end .");
                 return false;
             }
-
             if (")".equals(w)) { // 逗号后没有变量 或略这个错误
                 return true;
             }
-            if (ecc.isLabel(w)) { // 变量
-                Object obj = ecc.getVarTrans().getGeneralVariable(w);
-                gene.addUnitType(obj==null?w:StringBaseOpt.castObjectToString(obj));
-            } else if (StringRegularOpt.isString(w)) { // 常量
-                gene.addUnitType(StringRegularOpt.trimString(w));
+            Object obj = mapVariable(ecc,w);
+            if (obj instanceof String) { // 变量
+                gene.addUnitType((String)obj);
             } else { // 语法错误
                 ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Type]; calcUnitTypeFilter label . ");
                 return false;
@@ -311,11 +299,9 @@ public abstract class InnerUserUnitFilterCompileEngine {
             if (")".equals(w)) { // 逗号后没有变量 或略这个错误
                 return true;
             }
-            if (ecc.isLabel(w)) { // 变量
-                Object obj = ecc.getVarTrans().getGeneralVariable(w);
-                gene.addUnitTag(obj==null?w:StringBaseOpt.castObjectToString(obj));
-            } else if (StringRegularOpt.isString(w)) { // 常量
-                gene.addUnitTag(StringRegularOpt.trimString(w));
+            Object obj = mapVariable(ecc,w);
+            if (obj instanceof String){ // 变量
+                gene.addUnitTag((String)obj);
             } else { // 语法错误
                 ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Tag]; calcUnitTagFilter label . ");
                 return false;
@@ -400,12 +386,9 @@ public abstract class InnerUserUnitFilterCompileEngine {
             if (")".equals(w)) { // 逗号后没有变量 或略这个错误
                 return true;
             }
-            if (ecc.isLabel(w)) { // 变量
-                Object obj = ecc.getVarTrans().getGeneralVariable(w);
-                gene.addUserTag(obj==null?w:StringBaseOpt.castObjectToString(obj));
-            } else if (StringRegularOpt.isString(w)) { // 常量
-                String roleCode = StringRegularOpt.trimString(w);
-                gene.addGwRole(roleCode);
+            Object obj = mapVariable(ecc,w);
+            if (obj instanceof String){ // 变量
+                gene.addGwRole((String)obj);
             } else { // 语法错误
                 ecc.setLastErrMsg(w + " is unexpected, expect label or string [rolecode]; calcGwRoles label . ");
                 return false;
@@ -421,6 +404,43 @@ public abstract class InnerUserUnitFilterCompileEngine {
         }
     }
 
+    /**
+     * ro("系统角色代码常量" [,"系统角色代码常量"]* )
+     * @param ecc
+     * @param gene
+     * @return
+     */
+    private static boolean calcOptRoles(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
+        String w = ecc.getAWord();
+        if (!"(".equals(w)) { // 语法错误
+            ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcOptRoles begin . ");
+            return false;
+        }
+        while (true) {
+            w = ecc.getAWord();
+            if (w == null || "".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')'  ; calcOptRoles end .");
+                return false;
+            }
+            if (")".equals(w)) {// 逗号后没有变量 或略这个错误
+                return true;
+            }
+            Object obj = mapVariable(ecc,w);
+            if (obj instanceof String){ // 变量
+                gene.addOptRole((String)obj);
+            } else { // 语法错误
+                ecc.setLastErrMsg(w + " is unexpected, expect label or string [rolecode]; calcOptRoles label . ");
+                return false;
+            }
+            w = ecc.getAWord();
+            if (")".equals(w)) {
+                return true;
+            } else if (!",".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' or ',' ; calcOptRoles , .");
+                return false;
+            }
+        }
+    }
     /**
      * xz("角色代码常量" [,"角色代码常量"]* )
      * @param ecc
@@ -443,13 +463,9 @@ public abstract class InnerUserUnitFilterCompileEngine {
             if (")".equals(w)) {// 逗号后没有变量 或略这个错误
                 return true;
             }
-
-            if (ecc.isLabel(w)) { // 变量
-                Object obj = ecc.getVarTrans().getGeneralVariable(w);
-                gene.addUserTag(obj==null?w:StringBaseOpt.castObjectToString(obj));
-            } else if (StringRegularOpt.isString(w)) { // 常量
-                String roleCode = StringRegularOpt.trimString(w);
-                gene.addXzRole(roleCode);
+            Object obj = mapVariable(ecc,w);
+            if (obj instanceof String){ // 变量
+                gene.addXzRole((String)obj);
             } else { // 语法错误
                 ecc.setLastErrMsg(w + " is unexpected, expect label or string [rolecode]; calcXzRoles label . ");
                 return false;
@@ -487,11 +503,9 @@ public abstract class InnerUserUnitFilterCompileEngine {
             if (")".equals(w)) { // 逗号后没有变量 或略这个错误
                 return true;
             }
-            if (ecc.isLabel(w)) { // 变量
-                Object obj = ecc.getVarTrans().getGeneralVariable(w);
-                gene.addUserTag(obj==null?w:StringBaseOpt.castObjectToString(obj));
-            } else if (StringRegularOpt.isString(w)) { // 常量
-                gene.addUserType(StringRegularOpt.trimString(w));
+            Object obj = mapVariable(ecc,w);
+            if (obj instanceof String){ // 变量
+                gene.addUserType((String)obj);
             } else { // 语法错误
                 ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Type]; calcUserTypeFilter label . ");
                 return false;
@@ -529,11 +543,9 @@ public abstract class InnerUserUnitFilterCompileEngine {
             if (")".equals(w)) { // 逗号后没有变量 或略这个错误
                 return true;
             }
-            if (ecc.isLabel(w)) { // 变量
-                Object obj = ecc.getVarTrans().getGeneralVariable(w);
-                gene.addUserTag(obj==null?w:StringBaseOpt.castObjectToString(obj));
-            } else if (StringRegularOpt.isString(w)) { // 常量
-                gene.addUserTag(StringRegularOpt.trimString(w));
+            Object obj = mapVariable(ecc,w);
+            if (obj instanceof String){ // 变量
+                gene.addUserTag((String)obj);
             } else { // 语法错误
                 ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Tag]; calcUserTagFilter label . ");
                 return false;
@@ -629,7 +641,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
     }
 
     /**
-     * D()DT()DL()GW()XZ()R()UT()UL()U()
+     * D()DT()DL()GW()XZ()R()UT()UL()U()RO()
      * @return 过滤条件因素，这个可以认为是一个分析好的 filter 语句
      */
     public static UserUnitFilterGene makeUserUnitFilter(UserUnitFilterCalcContext ecc) {
@@ -663,6 +675,9 @@ public abstract class InnerUserUnitFilterCompileEngine {
                     return null;
             } else /*根据行政角色过滤*/if (USER_FILTER_ROLE_TYPE_XZ.equalsIgnoreCase(w)) {
                 if (!calcXzRoles(ecc, gene))
+                    return null;
+            } else /*根据行政角色过滤*/if (USER_FILTER_SYSTEM_ROLE.equalsIgnoreCase(w)) {
+                if (!calcOptRoles(ecc, gene))
                     return null;
             } else /*根据行政角色等级过滤*/if (USER_FILTER_ROLE_RANK.equalsIgnoreCase(w)) {
                 if (!calcXzRank(ecc, gene))
