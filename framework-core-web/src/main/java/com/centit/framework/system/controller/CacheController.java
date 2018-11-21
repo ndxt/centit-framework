@@ -14,7 +14,6 @@ import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.network.HtmlFormUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -51,6 +50,7 @@ public class CacheController extends BaseController {
      *                             unitcode,depno,rolecode,optid,optcode,optdesc,]
      *                             以及数据目录中的catalogCode变量值
      * @param key      对应的变量值 或 数据字典中的 dataCode
+     * @return ResponseData
      */
     @ApiOperation(value="数据字典取值",notes="根据数据字典的类别和key获取对应的value。")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -73,6 +73,7 @@ public class CacheController extends BaseController {
      *
      * @param catalog  系统内置的类别 字符串[userCode,loginName,unitcode,depno,rolecode,optid,optcode,optdesc,]以及数据目录中的catalogCode变量值
      * @param value    对应的变量值 或 数据字典中的 dataValue
+     * @return String 数据字典代码
      */
     @ApiOperation(value="数据字典取健",notes="和mapvalue相反他是根据数据字典的类别和value获取对应的key。")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -97,6 +98,7 @@ public class CacheController extends BaseController {
      *                 字符串[userCode,loginName,unitcode,depno,
      *                 rolecode,optid,optcode,optdesc,]，
      *                 数据目录中的catalogCode变量值
+     * @return Map 数据字典对应表
      */
     @ApiOperation(value="获取数据字典明细",notes="根据数据字典类别代码获取数据字典明细。")
     @ApiImplicitParam(
@@ -441,7 +443,7 @@ public class CacheController extends BaseController {
      *
      * @param unitfilter 机构代码
      * @param request HttpServletRequest
-     * @param response HttpServletResponse
+     * @return IUnitInfo 机构列表
      */
     @ApiOperation(value = "根据机构表达式获取符合条件的机构",
         notes = "根据机构表达式获取符合条件的结构，系统通过机构规则引擎计算;表达式完整式 D()DT()DL()")
@@ -449,10 +451,13 @@ public class CacheController extends BaseController {
         name = "unitfilter", value="机构表达式，示例：D('D111' - 2)",
         required= true, paramType = "path", dataType= "String"
     )
+    //@RecordOperationLog(content = "查询机构表达式为{unitfilter}的机构")
+    // @ParamName("unitfilter")
     @RequestMapping(value = "/unitfilter/{unitfilter}", method = RequestMethod.GET)
-    public void unitfilter(@PathVariable String unitfilter,
+    @WrapUpResponseBody
+    public List<IUnitInfo> unitfilter(@PathVariable String unitfilter,
                            //@RequestBody Map<String,Object> varMap,
-                           HttpServletRequest request, HttpServletResponse response) {
+                           HttpServletRequest request) {
 
         Map<String, Set<String>> unitParams = null;
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
@@ -471,8 +476,7 @@ public class CacheController extends BaseController {
         for(String uc : units){
             listObjects.add( CodeRepositoryUtil.getUnitInfoByCode(uc) );
         }*/
-        JsonResultUtils.writeSingleDataJson(
-            CodeRepositoryUtil.getUnitInfosByCodes(units), response);
+        return CodeRepositoryUtil.getUnitInfosByCodes(units);
     }
 
     /**
@@ -482,6 +486,7 @@ public class CacheController extends BaseController {
      * @param userfilter 用户代码
      * @param request request
      * @param response HttpServletResponse
+     * @return IUserInfo 用户列表
      */
     @ApiOperation(value = "根据用户表达式计算符合条件的用户",
         notes = "根据用户表达式计算符合条件的用户; 表达式完整式 D()DT()DL()GW()XZ()R()UT()UL()U()")
@@ -490,7 +495,8 @@ public class CacheController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )
     @RequestMapping(value = "/userfilter/{userfilter}", method = RequestMethod.GET)
-    public void userfilter(@PathVariable String userfilter,
+    @WrapUpResponseBody
+    public  List<IUserInfo> userfilter(@PathVariable String userfilter,
                            //@RequestBody Map<String,Object> varMap,
                            HttpServletRequest request, HttpServletResponse response) {
         Map<String, Set<String>> unitParams = null;
@@ -515,8 +521,7 @@ public class CacheController extends BaseController {
         for(String uc : users){
             listObjects.add( CodeRepositoryUtil.getUserInfoByCode(uc));
         }*/
-        JsonResultUtils.writeSingleDataJson(
-            CodeRepositoryUtil.getUserInfosByCodes(users), response);
+        return CodeRepositoryUtil.getUserInfosByCodes(users);
     }
 
 

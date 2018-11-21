@@ -99,15 +99,16 @@ public class RecordOperationLogAspect {
             map.putAll(params);
         }
         CentitUserDetails userDetails = WebOptUtils.getLoginUser(request);
-        IUserInfo userInfo = userDetails.getUserInfo();
-        //map.put("userDetails", userDetails);
-        map.put("loginUser", userInfo);
+        IUserInfo userInfo = (userDetails==null)?null:userDetails.getUserInfo();
+        if(userInfo!=null) {
+            map.put("loginUser", userInfo);
+        }
         map.put("loginIp", request.getRemoteHost()+":"+WebOptUtils.getRequestAddr(request));
         String optContent = Pretreatment.mapTemplateString(operationLog.content(),map);
 
         Object targetController = joinPoint.getTarget();
-        String optId = StringBaseOpt.objectToString(
-                ReflectionOpt.getFieldValue(targetController,"optId"));
+        String optId = StringBaseOpt.castObjectToString(
+                ReflectionOpt.getFieldValue(targetController,"optId"),"UNKNOWN");
         String logLevel = OperationLog.LEVEL_INFO;
         if(e != null){
             logLevel = OperationLog.LEVEL_ERROR;
@@ -131,7 +132,6 @@ public class RecordOperationLogAspect {
     @AfterThrowing(pointcut = "logAspect() && @annotation(operationLog)", throwing = "e")
     public  void doAfterThrowing(JoinPoint joinPoint, RecordOperationLog operationLog, Throwable e) {
         writeOperationLog(joinPoint, operationLog, e);
-
     }
 
     /**

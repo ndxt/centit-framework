@@ -2,7 +2,6 @@ package com.centit.framework.web.demo.config;
 
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.components.OperationLogCenter;
-import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.adapter.PlatformEnvironment;
@@ -21,7 +20,7 @@ public class InstantiationServiceBeanPostProcessor
     protected NotificationCenter notificationCenter;
 
     @Autowired
-    private OperationLogWriter optLogManager;
+    private OperationLogWriter operationLogWriter;
 
     @Autowired(required = false)
     private EmailMessageSenderImpl emailMessageManager;
@@ -38,8 +37,8 @@ public class InstantiationServiceBeanPostProcessor
             notificationCenter.registerMessageSender("email", emailMessageManager);
             notificationCenter.appointDefaultSendType("email");
         }
-        if(optLogManager!=null) {
-            OperationLogCenter.registerOperationLogWriter(optLogManager);
+        if(operationLogWriter!=null) {
+            OperationLogCenter.registerOperationLogWriter(operationLogWriter);
         }
     }
 

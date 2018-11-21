@@ -790,7 +790,7 @@ public abstract class CodeRepositoryUtil {
      * @param sUsers 用户代码集合
      * @return 用户信息
      */
-    public static List<IUserInfo>  getUserInfosByCodes(Collection<String> sUsers) {
+    public static List<IUserInfo> getUserInfosByCodes(Collection<String> sUsers) {
         Map<String, ? extends IUserInfo> allUsers = getUserRepo();
         List<IUserInfo> users = new ArrayList<>();
         for(String uc : sUsers){
