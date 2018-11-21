@@ -9,7 +9,6 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class ResponseMapData extends ResponseSingleData {
 
-
     public ResponseMapData() {
         super();
     }

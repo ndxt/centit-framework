@@ -7,6 +7,7 @@ import com.centit.framework.core.controller.WrapUpResponseBodyReturnValueHandler
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -26,6 +27,7 @@ import java.util.List;
  * Created by zou_wy on 2017/3/29.
  */
 @EnableWebMvc
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class BaseSpringMvcConfig extends WebMvcConfigurerAdapter  implements ApplicationContextAware {
 
     private HttpMessageConverter<Object> jsonHttpMessageConverter = null;

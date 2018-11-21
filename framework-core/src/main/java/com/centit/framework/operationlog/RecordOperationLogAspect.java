@@ -121,11 +121,11 @@ public class RecordOperationLogAspect {
             Long beforeRun = (Long)request.getAttribute("_before_method_run");
             optContent += " 耗时：" + (System.currentTimeMillis() - beforeRun);
         }
-        String oldValue=null;{
-            if(operationLog.returnValueAsOld() && retObj!=null){
-                oldValue = JSON.toJSONString(retObj);
-            }
+        String oldValue=null;
+        if(operationLog.returnValueAsOld() && retObj!=null){
+            oldValue = JSON.toJSONString(retObj);
         }
+
         OperationLogCenter.log(logLevel, userInfo==null? loginIp : userInfo.getUserCode(),
                 optId, null ,joinPoint.getSignature().getName(),
                 optContent, newValue, oldValue);
