@@ -63,7 +63,11 @@ public class EmailMessageSenderImpl implements MessageSender {
             multMail.setFrom(mailFrom);
             multMail.addTo(mailTo);
             multMail.setSubject(msgSubject);
-            multMail.setMsg(msgContent);
+            if(msgContent.endsWith("</html>") || msgContent.endsWith("</HTML>")){
+                multMail.addPart(msgContent, "text/html;charset=utf-8");
+            }else{
+                multMail.setMsg(msgContent);
+            }
             multMail.send();
             return "OK";
         } catch (EmailException e) {
