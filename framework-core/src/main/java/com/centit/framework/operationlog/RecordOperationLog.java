@@ -29,4 +29,10 @@ public @interface RecordOperationLog {
      * @return boolean
      */
     boolean appendRequest() default false;
+
+    /**
+     * 将方法的返回值放到 old 字段
+     * @return boolean
+     */
+    boolean returnValueAsOld() default false;
 }

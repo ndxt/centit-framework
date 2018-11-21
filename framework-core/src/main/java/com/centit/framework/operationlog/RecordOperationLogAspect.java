@@ -60,6 +60,7 @@ public class RecordOperationLogAspect {
 
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
+
         Parameter[] parameters = method.getParameters();
         Object[] arguments = joinPoint.getArgs();
         int nps = parameters.length;
@@ -85,9 +86,10 @@ public class RecordOperationLogAspect {
      * @param operationLog 注解
      * @param e 如果为null没有异常说明执行成功，否在记录异常信息
      */
-    private static void writeOperationLog(JoinPoint joinPoint, RecordOperationLog operationLog, Throwable e ){
+    private static void writeOperationLog(JoinPoint joinPoint, RecordOperationLog operationLog, Object retObj, Throwable e ){
         Map<String, Object> map = getMethodDescription(joinPoint);
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes)
+            RequestContextHolder.getRequestAttributes()).getRequest();
 
         Map<String, Object> params = BaseController.collectRequestParameters(request);
         String newValue;
@@ -118,9 +120,14 @@ public class RecordOperationLogAspect {
             Long beforeRun = (Long)request.getAttribute("_before_method_run");
             optContent += " 耗时：" + (System.currentTimeMillis() - beforeRun);
         }
+        String oldValue=null;{
+            if(operationLog.returnValueAsOld() && retObj!=null){
+                oldValue = JSON.toJSONString(retObj);
+            }
+        }
         OperationLogCenter.log(logLevel, userInfo==null?"anonymous":userInfo.getUserCode(),
                 optId, null ,joinPoint.getSignature().getName(),
-                optContent, newValue, null);
+                optContent, newValue, oldValue);
     }
 
     /**
@@ -131,7 +138,7 @@ public class RecordOperationLogAspect {
      */
     @AfterThrowing(pointcut = "logAspect() && @annotation(operationLog)", throwing = "e")
     public  void doAfterThrowing(JoinPoint joinPoint, RecordOperationLog operationLog, Throwable e) {
-        writeOperationLog(joinPoint, operationLog, e);
+        writeOperationLog(joinPoint, operationLog,null, e);
     }
 
     /**
@@ -139,8 +146,8 @@ public class RecordOperationLogAspect {
      * @param joinPoint joinPoint 切入点
      * @param operationLog  RecordOperationLog 注解
      */
-    @AfterReturning(pointcut = "logAspect() && @annotation(operationLog)")
-    public  void doAfterReturning(JoinPoint joinPoint, RecordOperationLog operationLog) {
-        writeOperationLog(joinPoint, operationLog, null);
+    @AfterReturning(pointcut = "logAspect() && @annotation(operationLog)", returning = "returningValue")
+    public  void doAfterReturning(JoinPoint joinPoint, RecordOperationLog operationLog, Object returningValue) {
+        writeOperationLog(joinPoint, operationLog, returningValue, null);
     }
 }

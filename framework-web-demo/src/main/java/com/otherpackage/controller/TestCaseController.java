@@ -32,8 +32,10 @@ public class TestCaseController extends BaseController {
         required=true, paramType = "path", dataType= "String"
     ))
     @GetMapping("/sayhello/{userName}")
-    public ResponseData getLsh(@PathVariable String userName){
-        return ResponseSingleData.makeResponseData("hello "+userName+" !");
+    @RecordOperationLog(content = "Say hello to {userName}.", returnValueAsOld = true)
+    public void sayHello(@PathVariable @ParamName("userName") String userName,
+                         HttpServletResponse response){
+        JsonResultUtils.writeSingleDataJson("hello "+userName+" !",response);
     }
 
     @ApiOperation(value="测试16进制编码",notes="将一个字符串按照16进制编码。")
@@ -97,7 +99,7 @@ public class TestCaseController extends BaseController {
     ))
     @GetMapping("/student/{studNo}")
     @WrapUpResponseBody
-    @RecordOperationLog(content = "查询学号为{studNo}学生")
+    @RecordOperationLog(content = "查询学号为{studNo}学生", returnValueAsOld = true)
     public Student findStudent(@PathVariable @ParamName("studNo") String studNo) {
         if(StringUtils.length(studNo)!=2){
             throw new ObjectException(studNo,
