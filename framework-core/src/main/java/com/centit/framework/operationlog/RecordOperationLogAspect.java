@@ -105,7 +105,8 @@ public class RecordOperationLogAspect {
         if(userInfo!=null) {
             map.put("loginUser", userInfo);
         }
-        map.put("loginIp", request.getRemoteHost()+":"+WebOptUtils.getRequestAddr(request));
+        String loginIp = request.getRemoteHost()+":"+WebOptUtils.getRequestAddr(request);
+        map.put("loginIp", loginIp);
         String optContent = Pretreatment.mapTemplateString(operationLog.content(),map);
 
         Object targetController = joinPoint.getTarget();
@@ -125,7 +126,7 @@ public class RecordOperationLogAspect {
                 oldValue = JSON.toJSONString(retObj);
             }
         }
-        OperationLogCenter.log(logLevel, userInfo==null?"anonymous":userInfo.getUserCode(),
+        OperationLogCenter.log(logLevel, userInfo==null? loginIp : userInfo.getUserCode(),
                 optId, null ,joinPoint.getSignature().getName(),
                 optContent, newValue, oldValue);
     }
