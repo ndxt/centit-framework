@@ -73,8 +73,8 @@ public abstract class CodeRepositoryUtil {
 
     public static List<? extends IUnitInfo> getUnitAsTree() {
         List<? extends IUnitInfo> units = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
-        CollectionsOpt.sortAsTree( units,( p,  c) ->
-            StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
+        CollectionsOpt.sortAsTree(units,
+            ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
         return units;
     }
 
@@ -1446,7 +1446,8 @@ public abstract class CodeRepositoryUtil {
             }
             subunits = subunits1;
         }
-        CollectionsOpt.sortAsTree(units, (p,c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()));
+        CollectionsOpt.sortAsTree(units,
+            (p,c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()));
         return units;
     }
 
