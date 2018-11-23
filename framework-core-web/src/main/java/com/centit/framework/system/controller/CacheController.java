@@ -476,7 +476,10 @@ public class CacheController extends BaseController {
         for(String uc : units){
             listObjects.add( CodeRepositoryUtil.getUnitInfoByCode(uc) );
         }*/
-        return CodeRepositoryUtil.getUnitInfosByCodes(units);
+        List<IUnitInfo> retUntis = CodeRepositoryUtil.getUnitInfosByCodes(units);
+        CollectionsOpt.sortAsTree(retUntis,
+            ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
+        return retUntis;
     }
 
     /**
@@ -558,8 +561,6 @@ public class CacheController extends BaseController {
         List<IOptInfo> listObjects = CodeRepositoryUtil.getOptinfoList(optType);
         JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(listObjects), response);
     }
-
-
 
     /**
      * CP标签中OPTDEF实现
