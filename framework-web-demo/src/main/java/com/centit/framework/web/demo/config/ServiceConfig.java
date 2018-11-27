@@ -54,13 +54,13 @@ public class ServiceConfig {
     /* Spring Session 中的session 管理
     import org.springframework.session.security.SpringSessionBackedSessionRegistry;
     */
-    /*@Autowired
-    private FindByIndexNameSessionRepository<ExpiringSession> sessionRepository;
 
-    protected SessionRegistry intSessionRegistry;
+    /*@Autowired
+    private JdbcOperationsSessionRepository sessionRepository;
+
+    @Bean
     public SessionRegistry sessionRegistry() {
-        intSessionRegistry =  new SpringSessionBackedSessionRegistry(sessionRepository);
-        return intSessionRegistry;
+        return new SpringSessionBackedSessionRegistry(sessionRepository);
     }*/
     //@Value("${message.sender.email.hostName:}")
     //@Value("${message.sender.email.smtpPort:25}")
