@@ -2,12 +2,8 @@ package com.centit.framework.web.demo.config;
 
 import com.centit.framework.config.SystemSpringMvcConfig;
 import com.centit.framework.config.WebConfig;
-import com.centit.framework.security.model.MemorySessionRegistryImpl;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -41,6 +37,7 @@ public class WebInitializer implements WebApplicationInitializer {
         WebConfig.registerSpringSecurityFilter(servletContext);
         //servletContext.
         WebConfig.registerHttpSessionEventPublisher(servletContext);
+        WebConfig.initializeH2Console(servletContext);
     }
 
     /**
