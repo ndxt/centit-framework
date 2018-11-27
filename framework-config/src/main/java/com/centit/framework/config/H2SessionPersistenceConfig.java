@@ -1,5 +1,6 @@
 package com.centit.framework.config;
 
+import com.centit.support.database.utils.DBType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -23,7 +24,7 @@ import java.sql.Driver;
  * Created by zou_wy on 2017/6/14.
  */
 @Conditional(H2SessionPersistenceCondition.class)
-@EnableJdbcHttpSession
+@EnableJdbcHttpSession(maxInactiveIntervalInSeconds = -1)
 public class H2SessionPersistenceConfig {
 
     private Logger logger = LoggerFactory.getLogger("session持久化");
@@ -40,9 +41,6 @@ public class H2SessionPersistenceConfig {
     @Value("${session.jdbc.password:}")
     private String password;
 
-    @Value("${session.jdbc.drive:}")
-    private String drive;
-
     @Bean
     public EmbeddedDatabase h2SessiondataSource() {
         return new EmbeddedDatabaseBuilder()
@@ -50,35 +48,41 @@ public class H2SessionPersistenceConfig {
                 .continueOnError(true)
                 .setDataSourceFactory(new DataSourceFactory() {
 
-                    private final SimpleDriverDataSource dataSource = new SimpleDriverDataSource(
-                            BeanUtils.instantiateClass(org.h2.Driver.class),
-                            "jdbc:h2:" + filePath + ";DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false", "sa", "");
+                    private final SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
 
                     @Override
                     public ConnectionProperties getConnectionProperties() {
                         return new ConnectionProperties() {
                             @Override
                             public void setDriverClass(Class<? extends Driver> driverClass) {
-//                                try {
-//                                    dataSource.setDriverClass(Class.forName(drive));
-//                                }catch (ClassNotFoundException e){
-//                                    logger.error("找不到数据库驱动类", e);
-//                                }
+                                DBType type = DBType.mapDBType(url);
+                                switch (type){
+                                    case H2:
+                                        dataSource.setDriverClass(org.h2.Driver.class);
+                                        break;
+                                    case MySql:
+                                        dataSource.setDriverClass(com.mysql.jdbc.Driver.class);
+                                        break;
+                                    case Oracle:
+                                        dataSource.setDriverClass(oracle.jdbc.driver.OracleDriver.class);
+                                        break;
+                                    default:
+                                }
                             }
 
                             @Override
-                            public void setUrl(String url) {
-//                                dataSource.setUrl(url);
+                            public void setUrl(String u) {
+                                dataSource.setUrl(url);
                             }
 
                             @Override
-                            public void setUsername(String username) {
-//                                dataSource.setUsername(username);
+                            public void setUsername(String u) {
+                                dataSource.setUsername(username);
                             }
 
                             @Override
-                            public void setPassword(String password) {
-//                                dataSource.setPassword(password);
+                            public void setPassword(String p) {
+                                dataSource.setPassword(password);
                             }
                         };
                     }
@@ -88,7 +92,7 @@ public class H2SessionPersistenceConfig {
                         return this.dataSource;
                     }
                 })
-                .addScript("org/springframework/session/jdbc/schema-h2.sql").build();
+                .addScript("org/springframework/session/jdbc/schema-mysql.sql").build();
     }
 
     @Bean(name = "springSessionJdbcOperations")
@@ -107,6 +111,7 @@ public class H2SessionPersistenceConfig {
         @Qualifier("sessionTransactionManager")PlatformTransactionManager transactionManager) {
         JdbcOperationsSessionRepository sessionRepository =
             new JdbcOperationsSessionRepository(jdbcOperations, transactionManager);
+        sessionRepository.setDefaultMaxInactiveInterval(-1);
 //        String tableName = getTableName();
 //        if (StringUtils.hasText(tableName)) {
 //            sessionRepository.setTableName(tableName);
