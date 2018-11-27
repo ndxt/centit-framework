@@ -12,7 +12,6 @@ import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 /**
  * Created by codefan on 17-7-18.
@@ -45,13 +44,24 @@ public class ServiceConfig {
         return  new StandardPasswordEncoderImpl();
     }
     //这个bean必须要有 可以配置不同策略的session保存方案
+
+
     @Bean
     public SessionRegistry sessionRegistry(){
         //SpringSessionBackedSessionRegistry
         return new MemorySessionRegistryImpl();
     }
+    /* Spring Session 中的session 管理
+    import org.springframework.session.security.SpringSessionBackedSessionRegistry;
+    */
+    /*@Autowired
+    private FindByIndexNameSessionRepository<ExpiringSession> sessionRepository;
 
-
+    protected SessionRegistry intSessionRegistry;
+    public SessionRegistry sessionRegistry() {
+        intSessionRegistry =  new SpringSessionBackedSessionRegistry(sessionRepository);
+        return intSessionRegistry;
+    }*/
     //@Value("${message.sender.email.hostName:}")
     //@Value("${message.sender.email.smtpPort:25}")
     //@Value("${message.sender.email.userName:}")
