@@ -1,5 +1,6 @@
 package com.centit.framework.config;
 
+import com.centit.framework.common.SysParametersUtils;
 import com.centit.support.algorithm.StringRegularOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Condition;
@@ -10,12 +11,12 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 /**
  * Created by zou_wy on 2017/6/15.
  */
-public class H2SessionPersistenceCondition implements Condition {
+public class JdbcSessionPersistenceCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         Environment evn = context.getEnvironment();
-        String enable = evn.getProperty("session.persistence.enable");
-        String type = evn.getProperty("session.persistence.db.type");
+        String enable = SysParametersUtils.getStringValue("session.persistence.enable");
+        String type = SysParametersUtils.getStringValue("session.persistence.db.type");
         if(enable == null || type == null) {
             return false;
         }

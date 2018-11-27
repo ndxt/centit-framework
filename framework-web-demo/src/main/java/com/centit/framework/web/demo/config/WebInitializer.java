@@ -38,6 +38,7 @@ public class WebInitializer implements WebApplicationInitializer {
         WebConfig.registerSpringSecurityFilter(servletContext);
         //Session
         WebConfig.registerHttpSessionEventPublisher(servletContext);
+        WebConfig.initializeH2Console(servletContext);
     }
 
     /**
