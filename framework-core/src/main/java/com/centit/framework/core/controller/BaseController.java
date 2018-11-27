@@ -101,10 +101,16 @@ public abstract class BaseController {
         if (WebOptUtils.isAjax(request)) {
             if (ex instanceof ObjectException){
                 ObjectException objex = (ObjectException)ex;
-                ResponseSingleData responseData = new ResponseSingleData(objex.getExceptionCode(),
-                    objex.getLocalizedMessage());
-                responseData.setData(objex.getObjectData());
-                JsonResultUtils.writeResponseDataAsJson(responseData, response);
+                if( objex.getExceptionCode() == ResponseData.ERROR_USER_NOT_LOGIN ||
+                    objex.getExceptionCode() == ResponseData.ERROR_UNAUTHORIZED ){
+                    JsonResultUtils.writeHttpErrorMessage(objex.getExceptionCode(),
+                        objex.getLocalizedMessage(), response);
+                }else {
+                    ResponseSingleData responseData = new ResponseSingleData(objex.getExceptionCode(),
+                        objex.getLocalizedMessage());
+                    responseData.setData(objex.getObjectData());
+                    JsonResultUtils.writeResponseDataAsJson(responseData, response);
+                }
                 return;
             }
 
@@ -135,7 +141,13 @@ public abstract class BaseController {
             JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
                         StringUtils.isNotEmpty(ex.getMessage()) ? ex.getMessage() : ex.toString(), response);
         } else {
-            response.sendRedirect(request.getContextPath() + "/system/exception/error/500");
+            if (ex instanceof ObjectException) {
+                ObjectException objex = (ObjectException) ex;
+                response.sendRedirect(request.getContextPath()
+                    + "/system/exception/error/" + objex.getExceptionCode());
+            }else {
+                response.sendRedirect(request.getContextPath() + "/system/exception/error/500");
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.*;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
@@ -484,16 +485,16 @@ public class MainFrameController extends BaseController {
      * 首页菜单
      *
      * @param request  HttpServletRequest
-     * @param response HttpServletResponse
      */
     @ApiOperation(value = "首页菜单", notes = "获取首页菜单信息")
     @RequestMapping(value = "/menu" , method = RequestMethod.GET)
-    public void getMenu(HttpServletRequest request, HttpServletResponse response) {
+    @WrapUpResponseBody
+    public JSONArray getMenu(HttpServletRequest request) {
         CentitUserDetails userDetails = super.getLoginUser(request);
         if(userDetails==null){
-            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录，请重新登录！", response);
-            return;
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+                "用户没有登录，请重新登录！");
+
         }
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
@@ -508,11 +509,10 @@ public class MainFrameController extends BaseController {
         }
 
         if(menuFunsByUser==null){
-            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录,或者没有给用户任何权限，请重新登录！", response);
-            return;
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+                "用户没有登录,或者没有给用户任何权限，请重新登录！");
         }
-        JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
+        return makeMenuFuncsJson(menuFunsByUser);
     }
 
     /**
@@ -527,24 +527,23 @@ public class MainFrameController extends BaseController {
         paramType = "query", dataType= "String"
     )
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
-    public void getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optId,
+    @WrapUpResponseBody
+    public JSONArray getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optId,
             HttpServletRequest request,HttpServletResponse response) {
 
         CentitUserDetails userDetails = super.getLoginUser(request);
         if(userDetails==null){
-            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录，请重新登录！", response);
-            return;
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+                "用户没有登录，请重新登录！");
         }
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(), optId, asAdmin);
         if(menuFunsByUser==null){
-            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录,或者没有给用户任何权限，请重新登录！", response);
-            return;
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+                "用户没有登录,或者没有给用户任何权限，请重新登录！");
         }
-        JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
+        return makeMenuFuncsJson(menuFunsByUser);
     }
 
     /**
