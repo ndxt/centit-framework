@@ -26,7 +26,6 @@ public class WebInitializer implements WebApplicationInitializer {
         initializeSystemSpringMvcConfig(servletContext);
         initializeNormalSpringMvcConfig(servletContext);
 
-        WebConfig.registerSpringSessionRepositoryFilter(servletContext);
         //WebConfig.registerSpringContextLoaderListener(servletContext);
         WebConfig.registerRequestContextListener(servletContext);
         WebConfig.registerSingleSignOutHttpSessionListener(servletContext);

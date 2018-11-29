@@ -144,7 +144,8 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
 
     protected abstract AbstractAuthenticationProcessingFilter getAuthenticationFilter();
 
-    protected DaoFilterSecurityInterceptor centitPowerFilter(){
+    protected FilterSecurityInterceptor centitPowerFilter(){
+        FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
         AuthenticationManager authenticationManager = createAuthenticationManager();
         Assert.notNull(authenticationManager, "authenticationManager不能为空");
         AjaxAuthenticationSuccessHandler successHandler = createAjaxSuccessHandler();
@@ -152,17 +153,15 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         AjaxAuthenticationFailureHandler failureHandler = createAjaxFailureHandler();
         Assert.notNull(failureHandler, "failureHandler不能为空");
 
-        DaoFilterSecurityInterceptor securityInterceptor = new DaoFilterSecurityInterceptor();
-        securityInterceptor.setAuthenticationManager(authenticationManager);
-        securityInterceptor.setAccessDecisionManager(createCentitAccessDecisionManager());
-        securityInterceptor.setSecurityMetadataSource(createCentitSecurityMetadataSource());
-        securityInterceptor.setSessionRegistry(sessionRegistry);
-
-        securityInterceptor.setAllResourceMustBeAudited(
+        interceptor.setAuthenticationManager(authenticationManager);
+        interceptor.setAccessDecisionManager(createCentitAccessDecisionManager());
+        interceptor.setSecurityMetadataSource(createCentitSecurityMetadataSource());
+        //访问受保护的资源 总是需要重新验证身份
+        interceptor.setAlwaysReauthenticate(
             BooleanBaseOpt.castObjectToBoolean(
                 env.getProperty("access.resource.notallowed.anonymous"),false));
 
-        return securityInterceptor;
+        return interceptor;
     }
     protected abstract Filter logoutFilter();
 
