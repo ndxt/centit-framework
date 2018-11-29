@@ -63,52 +63,6 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
     public void invoke(FilterInvocation fi) throws IOException,
             ServletException {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        boolean alwaysReauthenticate = false;
-
-        if("XMLHttpRequest".equals(fi.getRequest().getHeader("X-Requested-With"))) {
-            /**
-             * TODO： 这个地方请用 Spring Session 替代
-             * 参见 https://www.jianshu.com/p/a566861fc886
-             */
-            //从token中获取用户信息
-            if(authentication==null || "anonymousUser".equals(authentication.getName())){
-                HttpServletRequest request = fi.getHttpRequest();
-                String accessToken = request.getParameter(SecurityContextUtils.SecurityContextTokenName);
-
-                if(StringUtils.isBlank(accessToken)) {
-                    accessToken = request.getHeader("x-auth-token");
-                }
-
-                if(StringUtils.isBlank(accessToken)) {
-                    accessToken = request.getSession().getId();
-                }
-
-                CentitUserDetails ud = SecurityContextUtils.getCurrentUserDetails(sessionRegistry, accessToken);
-                if(ud!=null){
-                    //检验客户端ip是否和session中的ip一致，不一致不能替换session
-                    if(StringUtils.isBlank(ud.getLoginIp()) ||
-                        ud.getLoginIp().equals(WebOptUtils.getRequestAddr(fi.getRequest()) )) {
-
-                        alwaysReauthenticate = this.isAlwaysReauthenticate();
-                        if (alwaysReauthenticate) {
-                            this.setAlwaysReauthenticate(false);
-                        }
-                        //设置当前用户信息，也就是替换session信息
-                        authentication = ud;
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        //设置用户默认语言
-                        WebOptUtils.setCurrentLang(fi.getHttpRequest(),
-                            ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE));
-                    }
-                }
-            }
-            if (allResourceMustBeAudited && (authentication == null || "anonymousUser".equals(authentication.getName()))) {
-                fi.getResponse().setStatus(401);
-                return;
-            }
-        }
         InterceptorStatusToken token = super.beforeInvocation(fi);
         try {
             fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
@@ -116,9 +70,6 @@ public class DaoFilterSecurityInterceptor extends AbstractSecurityInterceptor
             super.afterInvocation(token, null);
         }
 
-        if(alwaysReauthenticate) {
-            this.setAlwaysReauthenticate(true);
-        }
     }
 
     public SecurityMetadataSource obtainSecurityMetadataSource() {

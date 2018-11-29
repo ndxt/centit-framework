@@ -73,9 +73,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
 
         //tokenKey = UuidOpt.getUuidAsString();
         // 这个代码应该迁移到 AuthenticationProcessingFilter 的 successfulAuthentication 方法中
-        // TODO 登录成功 spring session 应该可以自动写入，这个代码应该去掉
         ud.setLoginIp(WebOptUtils.getRequestAddr(request));
-        sessionRegistry.registerNewSession(request.getSession().getId() ,ud);
 
         if(writeLog){
             OperationLogCenter.log(ud.getUserInfo().getUserCode(),"login", "login",

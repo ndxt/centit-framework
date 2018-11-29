@@ -2,7 +2,9 @@ package com.centit.framework.web.demo.config;
 
 import com.centit.framework.components.impl.NotificationCenterImpl;
 import com.centit.framework.components.impl.TextOperationLogWriterImpl;
-import com.centit.framework.config.*;
+import com.centit.framework.config.InitialWebRuntimeEnvironment;
+import com.centit.framework.config.SpringSecurityCasConfig;
+import com.centit.framework.config.SpringSecurityDaoConfig;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.security.model.MemorySessionRegistryImpl;
@@ -19,8 +21,7 @@ import org.springframework.security.core.session.SessionRegistry;
 @Configuration
 @ComponentScan(basePackages = {"com.centit","com.otherpackage"},
         excludeFilters = @ComponentScan.Filter(value = org.springframework.stereotype.Controller.class))
-@Import({RedisSessionPersistenceConfig.class,
-        H2SessionPersistenceConfig.class,
+@Import({
         SpringSecurityDaoConfig.class,
         SpringSecurityCasConfig.class,
         StaticSystemBeanConfig.class})

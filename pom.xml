@@ -99,6 +99,7 @@
         <module>framework-core-web</module>
         <module>framework-system-static-config</module>
         <module>framework-system-static-jdbc</module>
+        <module>framework-session</module>
     </modules>
 
     <build>

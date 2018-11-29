@@ -26,6 +26,12 @@
 
         <dependency>
             <groupId>com.centit.framework</groupId>
+            <artifactId>framework-session</artifactId>
+            <version>4.3-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.centit.framework</groupId>
             <artifactId>framework-base-view-easyui</artifactId>
         </dependency>
 

@@ -31,8 +31,8 @@ public class SecurityContextUtils {
         registerUserToken(tokenKey,ud);
         return tokenKey;
     }
-    // TODO 这个需要调用到 Spring Seesion sessionRegistry
     // 也不能使用我们自己的
+    @Deprecated
     public static void registerUserToken(String tokenKey, CentitUserDetails ud){
         SessionRegistry registry = getSessionRegistry();
         if(registry==null)

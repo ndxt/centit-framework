@@ -32,13 +32,10 @@ public class WebConfig  {
      */
     public static void registerSpringSessionRepositoryFilter(ServletContext servletContext) {
         Properties properties = SysParametersUtils.loadProperties();
-        if( StringRegularOpt.isTrue(
-                properties.getProperty("session.persistence.enable"))) {
-            javax.servlet.FilterRegistration.Dynamic springSessionRepositoryFilter
-                    = servletContext.addFilter("springSessionRepositoryFilter", DelegatingFilterProxy.class);
-            springSessionRepositoryFilter.addMappingForUrlPatterns(
-                    EnumSet.allOf(DispatcherType.class), false, "/*");
-        }
+        javax.servlet.FilterRegistration.Dynamic springSessionRepositoryFilter
+                = servletContext.addFilter("springSessionRepositoryFilter", DelegatingFilterProxy.class);
+        springSessionRepositoryFilter.addMappingForUrlPatterns(
+                EnumSet.allOf(DispatcherType.class), false, "/*");
     }
 
     /**

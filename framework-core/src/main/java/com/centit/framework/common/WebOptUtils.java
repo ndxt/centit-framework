@@ -90,20 +90,10 @@ public class WebOptUtils {
         if(request==null)
             return ud;
          //根据token获取用户信息
-        if(ud==null) {
-            String accessToken = request.getParameter(SecurityContextUtils.SecurityContextTokenName);
-            if (StringUtils.isBlank(accessToken))
-                accessToken = String.valueOf(request.getAttribute(SecurityContextUtils.SecurityContextTokenName));
-            SessionRegistry registry = SecurityContextUtils.getSessionRegistry();
-            if (registry != null) {
-                ud = SecurityContextUtils.getCurrentUserDetails(registry, accessToken);
-            }
-        }
         //在session中手动获得用户信息
         if(ud==null){
             ud = innerGetLoginUser(request.getSession());
         }
-
         return ud;
     }
 

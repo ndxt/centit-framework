@@ -11,5 +11,5 @@ package com.centit.framework.config;
  *      session.jdbc.password = 数据库密码
  */
 @Deprecated
-public class RedisSessionPersistenceConfig {
+public class H2SessionPersistenceConfig {
 }

@@ -94,7 +94,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
             new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
         SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
         rememberMeServices.setAlwaysRemember(BooleanBaseOpt.castObjectToBoolean(
-            env.getProperty("session.rememberme.always.remember"), false));
+            env.getProperty("session.always.rememberme"), false));
         pretreatmentAuthenticationProcessingFilter.setRememberMeServices(rememberMeServices);
 
         return pretreatmentAuthenticationProcessingFilter;

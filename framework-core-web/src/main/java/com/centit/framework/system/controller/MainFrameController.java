@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.stereotype.Controller;
@@ -264,13 +265,12 @@ public class MainFrameController extends BaseController {
             JsonResultUtils.writeErrorMessageJson("用户 名和密码不匹配。", response);
             return;
         }
-        String tokenKey = request.getSession().getId();
-        SecurityContextUtils.registerUserToken(tokenKey, ud);
+        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, ud);
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
         // SecurityContextUtils.setSecurityContext(ud,request.getSession());
         //request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         ResponseMapData resData = new ResponseMapData();
-        resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
+        resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
@@ -288,7 +288,7 @@ public class MainFrameController extends BaseController {
         required=true, paramType = "body", dataType= "String"
     ))
     @RequestMapping(value="/loginasthird",method = RequestMethod.POST)
-    public void loginAsThird(/*HttpServletRequest request,*/HttpServletResponse response,
+    public void loginAsThird(HttpServletRequest request,HttpServletResponse response,
                     @RequestBody JSONObject formValue) {
         try {
             if (thirdPartyCheckUserDetails == null) {
@@ -319,12 +319,12 @@ public class MainFrameController extends BaseController {
                 " token:" + StringBaseOpt.objectToString(token) +" 校验不通过", response);
             return;
         }
-        String tokenKey = SecurityContextUtils.registerUserToken(ud);
+        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, ud);
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
         // SecurityContextUtils.setSecurityContext(ud,request.getSession());
         //request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         ResponseMapData resData = new ResponseMapData();
-        resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, tokenKey);
+        resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
