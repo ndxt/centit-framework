@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 /**
  * Created by zou_wy on 2017/6/14.
@@ -22,5 +25,10 @@ public class RedisSessionPersistenceConfig {
     @Bean
     public LettuceConnectionFactory connectionFactory() {
         return new LettuceConnectionFactory(host,port);
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry(FindByIndexNameSessionRepository sessionRepository){
+        return new SpringSessionBackedSessionRegistry(sessionRepository);
     }
 }

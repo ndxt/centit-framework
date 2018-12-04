@@ -88,10 +88,12 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
             pretreatmentAuthenticationProcessingFilter.setRequiresAuthenticationRequestMatcher(
                 new AntPathRequestMatcher(requiresAuthenticationUrl, "POST"));
         }
-
-        //pretreatmentAuthenticationProcessingFilter.setSessionRegistry(sessionRegistry);
-        pretreatmentAuthenticationProcessingFilter.setSessionAuthenticationStrategy(
-            new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
+        if(sessionRegistry != null) {
+            ConcurrentSessionControlAuthenticationStrategy strategy =
+                new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
+            strategy.setMaximumSessions(NumberBaseOpt.parseInteger(env.getProperty("session.concurrent.maximum"), -1));
+            pretreatmentAuthenticationProcessingFilter.setSessionAuthenticationStrategy(strategy);
+        }
         SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
         rememberMeServices.setAlwaysRemember(BooleanBaseOpt.castObjectToBoolean(
             env.getProperty("session.always.rememberme"), false));

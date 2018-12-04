@@ -32,12 +32,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
     }
 
 
-    private SessionRegistry sessionRegistry;
     private CentitUserDetailsService userDetailsService;
-
-    public void setSessionRegistry(SessionRegistry sessionManger) {
-        this.sessionRegistry = sessionManger;
-    }
 
     public void setUserDetailsService(CentitUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;

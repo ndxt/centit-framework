@@ -40,7 +40,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
     @Autowired
     protected CsrfTokenRepository csrfTokenRepository;
 
-    @Autowired
+    @Autowired(required = false)
     protected SessionRegistry sessionRegistry;
 
     @Autowired
@@ -110,7 +110,8 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         http.logout().logoutSuccessUrl(StringBaseOpt.emptyValue(defaultTargetUrl,"/"));
 
 
-        http.addFilterAt(getAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+        http
+            .addFilterAt(getAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(centitPowerFilter(), FilterSecurityInterceptor.class)
             .addFilterBefore(logoutFilter(), CasAuthenticationFilter.class);
 
@@ -122,12 +123,9 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
             loginUrl = "/system/mainframe/login";
         }
         int maximumSessions = NumberBaseOpt.parseInteger(env.getProperty("session.concurrent.maximum"),-1);
-//        http.addFilterAt(
-//            new ConcurrentSessionFilter(sessionRegistry,
-//                new SimpleRedirectSessionInformationExpiredStrategy(loginUrl)),
-//            ConcurrentSessionFilter.class);
-        http.sessionManagement().maximumSessions(maximumSessions)
-            .sessionRegistry(sessionRegistry).expiredUrl(loginUrl);
+
+        //添加了 ConcurrentSessionFilter
+        http.sessionManagement().maximumSessions(maximumSessions).sessionRegistry(sessionRegistry).expiredUrl(loginUrl);
     }
 
     protected abstract String[] getAuthenticatedUrl();
@@ -198,7 +196,6 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         ajaxSuccessHandler.setRegistToken(BooleanBaseOpt.castObjectToBoolean(
                 env.getProperty("login.success.registToken"),false));
         ajaxSuccessHandler.setUserDetailsService(centitUserDetailsService);
-        ajaxSuccessHandler.setSessionRegistry(sessionRegistry);
         return ajaxSuccessHandler;
     }
 

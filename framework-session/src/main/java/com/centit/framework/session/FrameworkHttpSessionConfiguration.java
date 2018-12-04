@@ -18,4 +18,5 @@ public class FrameworkHttpSessionConfiguration {
     public MapSessionRepository sessionRepository(){
         return new MapSessionRepository();
     }
+
 }

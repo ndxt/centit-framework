@@ -5,6 +5,7 @@ import com.centit.support.database.utils.DBType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,8 +14,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.embedded.*;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.jdbc.JdbcOperationsSessionRepository;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -28,10 +32,10 @@ public class JdbcSessionPersistenceConfig {
 
     private Logger logger = LoggerFactory.getLogger("session持久化");
 
-    @Value("${session.jdbc.url:}")
+    @Value("${session.jdbc.url:jdbc:h2:mem:framework_session;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false}")
     private String url;
 
-    @Value("${session.jdbc.username:}")
+    @Value("${session.jdbc.username:sa}")
     private String username;
 
     @Value("${session.jdbc.password:}")
@@ -101,5 +105,10 @@ public class JdbcSessionPersistenceConfig {
         JdbcOperationsSessionRepository sessionRepository =
             new JdbcOperationsSessionRepository(new JdbcTemplate(dataSource), new DataSourceTransactionManager(dataSource));
         return sessionRepository;
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry(FindByIndexNameSessionRepository sessionRepository){
+        return new SpringSessionBackedSessionRegistry(sessionRepository);
     }
 }

@@ -39,12 +39,6 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
         return  new StandardPasswordEncoderImpl();
     }*/
 
-    // 这bean从框架中移除，由开发人员自行定义; 可以定义不同的策略
-    /*@Bean
-    public SessionRegistry sessionRegistry(){
-        return new MemorySessionRegistryImpl();
-    }*/
-
     @Bean
     @Lazy(value = false)
     public PlatformEnvironment platformEnvironment(

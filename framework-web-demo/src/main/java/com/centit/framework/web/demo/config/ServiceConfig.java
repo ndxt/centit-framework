@@ -46,23 +46,6 @@ public class ServiceConfig {
     }
     //这个bean必须要有 可以配置不同策略的session保存方案
 
-
-    @Bean
-    public SessionRegistry sessionRegistry(){
-        //SpringSessionBackedSessionRegistry
-        return new MemorySessionRegistryImpl();
-    }
-    /* Spring Session 中的session 管理
-    import org.springframework.session.security.SpringSessionBackedSessionRegistry;
-    */
-
-    /*@Autowired
-    private JdbcOperationsSessionRepository sessionRepository;
-
-    @Bean
-    public SessionRegistry sessionRegistry() {
-        return new SpringSessionBackedSessionRegistry(sessionRepository);
-    }*/
     //@Value("${message.sender.email.hostName:}")
     //@Value("${message.sender.email.smtpPort:25}")
     //@Value("${message.sender.email.userName:}")
