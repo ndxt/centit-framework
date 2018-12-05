@@ -33,11 +33,13 @@ public class WebConfig  {
      */
     @Deprecated
     public static void registerSpringSessionRepositoryFilter(ServletContext servletContext) {
-        Properties properties = SysParametersUtils.loadProperties();
-        javax.servlet.FilterRegistration.Dynamic springSessionRepositoryFilter
-                = servletContext.addFilter("springSessionRepositoryFilter", DelegatingFilterProxy.class);
-        springSessionRepositoryFilter.addMappingForUrlPatterns(
-                EnumSet.allOf(DispatcherType.class), false, "/*");
+        //无用的方法
+        //添加framework-session依赖 自动注册spring session过滤器
+//        Properties properties = SysParametersUtils.loadProperties();
+//        javax.servlet.FilterRegistration.Dynamic springSessionRepositoryFilter
+//            = servletContext.addFilter("springSessionRepositoryFilter", DelegatingFilterProxy.class);
+//        springSessionRepositoryFilter.addMappingForUrlPatterns(
+//            EnumSet.allOf(DispatcherType.class), false, "/*");
     }
 
     /**
