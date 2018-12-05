@@ -13,7 +13,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.embedded.*;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.session.ExpiringSession;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.jdbc.JdbcOperationsSessionRepository;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
@@ -41,7 +40,7 @@ public class JdbcSessionPersistenceConfig {
     private String password;
 
     @Bean
-    public EmbeddedDatabase h2SessionDataSource() {
+    public EmbeddedDatabase jdbcSessionDataSource() {
         String schema = "org/springframework/session/jdbc/schema-%s.sql";
         Class<? extends Driver> driverClass;
         DBType type = DBType.mapDBType(url);
@@ -99,8 +98,8 @@ public class JdbcSessionPersistenceConfig {
     }
 
     @Bean
-    public FindByIndexNameSessionRepository<? extends ExpiringSession> sessionRepository(
-        @Autowired @Qualifier(value = "h2SessionDataSource") EmbeddedDatabase dataSource) {
+    public FindByIndexNameSessionRepository sessionRepository(
+        @Autowired @Qualifier(value = "jdbcSessionDataSource") EmbeddedDatabase dataSource) {
         JdbcOperationsSessionRepository sessionRepository =
             new JdbcOperationsSessionRepository(new JdbcTemplate(dataSource), new DataSourceTransactionManager(dataSource));
         return sessionRepository;
@@ -108,8 +107,7 @@ public class JdbcSessionPersistenceConfig {
 
     @Bean
     public SessionRegistry sessionRegistry(
-        @Autowired FindByIndexNameSessionRepository<? extends ExpiringSession> sessionRepository){
-        return new SpringSessionBackedSessionRegistry(
-            (FindByIndexNameSessionRepository<ExpiringSession>) sessionRepository);
+        @Autowired FindByIndexNameSessionRepository sessionRepository){
+        return new SpringSessionBackedSessionRegistry(sessionRepository);
     }
 }
