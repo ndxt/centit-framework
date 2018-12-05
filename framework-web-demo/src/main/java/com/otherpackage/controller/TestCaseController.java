@@ -221,4 +221,18 @@ public class TestCaseController extends BaseController {
         File file = new File("static_system_config.json");
         return file;
     }
+
+    @ApiOperation(value="测试 bool型",notes="测试 bool型。")
+    @GetMapping("/bool")
+    @WrapUpResponseBody(contentType = WrapUpContentType.RAW)
+    public boolean getBoolean() {
+        return true;
+    }
+
+    @ApiOperation(value="测试整型",notes="测试 整型。")
+    @GetMapping("/int")
+    @WrapUpResponseBody(contentType = WrapUpContentType.RAW)
+    public int getInt() {
+        return 100;
+    }
 }

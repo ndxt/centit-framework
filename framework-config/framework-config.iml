@@ -44,7 +44,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" scope="PROVIDED" name="Maven: io.swagger:swagger-annotations:1.5.20" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.swagger:swagger-annotations:1.5.21" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.centit.support:centit-compiler:2.2-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.validation:validation-api:2.0.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-web:4.3.20.RELEASE" level="project" />
