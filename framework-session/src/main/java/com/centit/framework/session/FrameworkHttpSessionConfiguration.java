@@ -14,9 +14,4 @@ public class FrameworkHttpSessionConfiguration {
         return new SmartHttpSessionStrategy();
     }
 
-    @Bean
-    public MapSessionRepository sessionRepository(){
-        return new MapSessionRepository();
-    }
-
 }

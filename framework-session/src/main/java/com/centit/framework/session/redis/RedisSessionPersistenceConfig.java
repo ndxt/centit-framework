@@ -1,5 +1,6 @@
 package com.centit.framework.session.redis;
 
+import com.centit.framework.session.FrameworkHttpSessionConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -14,7 +15,7 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry;
  */
 @Conditional(RedisSessionPersistenceCondition.class)
 @EnableRedisHttpSession
-public class RedisSessionPersistenceConfig {
+public class RedisSessionPersistenceConfig extends FrameworkHttpSessionConfiguration {
 
     @Value("${session.redis.host:}")
     private String host;
