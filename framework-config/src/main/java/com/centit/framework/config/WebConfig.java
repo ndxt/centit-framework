@@ -27,20 +27,6 @@ import java.util.Properties;
 public class WebConfig  {
 
     /**
-     * 注册RequestContextListener监听器 （增加request、session和global session作用域）
-     * @param servletContext ServletContext
-     * 添加framework-session依赖 自动注册spring session过滤器
-     */
-    @Deprecated
-    public static void registerSpringSessionRepositoryFilter(ServletContext servletContext) {
-        Properties properties = SysParametersUtils.loadProperties();
-        javax.servlet.FilterRegistration.Dynamic springSessionRepositoryFilter
-                = servletContext.addFilter("springSessionRepositoryFilter", DelegatingFilterProxy.class);
-        springSessionRepositoryFilter.addMappingForUrlPatterns(
-                EnumSet.allOf(DispatcherType.class), false, "/*");
-    }
-
-    /**
      * 注册 org.springframework.web.context.ContextLoaderListener 监听器
      * @param servletContext ServletContext
      */
