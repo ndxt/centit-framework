@@ -343,11 +343,10 @@ public class JsonResultUtils {
 
     /**
      * 直接文本数据输出
-     * @param <T> 类型通配符
      * @param objValue T
      * @param response HttpServletResponse
      */
-    public static <T> void writeOriginalObject(T objValue, HttpServletResponse response) {
+    public static void writeOriginalObject(Object objValue, HttpServletResponse response) {
         if(ReflectionOpt.isScalarType(objValue.getClass())){
             writeOriginalResponse("text/plain; charset=utf-8",
                     JSON.toJSONString(objValue), response);
@@ -564,43 +563,4 @@ public class JsonResultUtils {
         writeBlankJson(response);
     }
 
-    public static <T> T getDataAsObject(String jsonResult,String key, Class<T> clazz) {
-        JSONObject jobj = JSON.parseObject(jsonResult);
-        JSONObject dataObj = (JSONObject)jobj.get("data");
-        if(dataObj==null) {
-            return null;
-        }
-        Object rsObj = dataObj.get(key);
-        if(rsObj==null) {
-            return null;
-        }
-        //这个地方重复解释字符串效率较低，应该可以优化
-        return JSON.parseObject(rsObj.toString(), clazz);
-    }
-
-    public static <T> T getDataAsObject(String jsonResult, Class<T> clazz) {
-        JSONObject jobj = JSON.parseObject(jsonResult);
-        //这个地方重复解释字符串效率较低，应该可以优化
-        return JSON.parseObject(jobj.get("data").toString(), clazz);
-    }
-
-    public static <T> List<T> getDataAsArray(String jsonResult,String key, Class<T> clazz) {
-        JSONObject jobj = JSON.parseObject(jsonResult);
-        JSONObject dataObj = (JSONObject)jobj.get("data");
-        if(dataObj==null) {
-            return null;
-        }
-        Object rsObj = dataObj.get(key);
-        if(rsObj==null) {
-            return null;
-        }
-        //这个地方重复解释字符串效率较低，应该可以优化
-        return JSON.parseArray(rsObj.toString(), clazz);
-    }
-
-    public static <T> List<T> getDataAsArray(String jsonResult, Class<T> clazz) {
-        JSONObject jobj = JSON.parseObject(jsonResult);
-        //这个地方重复解释字符串效率较低，应该可以优化
-        return JSON.parseArray(jobj.get("data").toString(), clazz);
-    }
 }

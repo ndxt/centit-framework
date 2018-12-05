@@ -1,8 +1,6 @@
 package com.centit.framework.session.jdbc;
 
-import com.centit.framework.session.FrameworkHttpSessionConfiguration;
 import com.centit.support.database.utils.DBType;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.embedded.*;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.session.ExpiringSession;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.jdbc.JdbcOperationsSessionRepository;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
@@ -100,15 +99,17 @@ public class JdbcSessionPersistenceConfig {
     }
 
     @Bean
-    public JdbcOperationsSessionRepository sessionRepository(
-        @Qualifier(value = "h2SessionDataSource") EmbeddedDatabase dataSource) {
+    public FindByIndexNameSessionRepository<? extends ExpiringSession> sessionRepository(
+        @Autowired @Qualifier(value = "h2SessionDataSource") EmbeddedDatabase dataSource) {
         JdbcOperationsSessionRepository sessionRepository =
             new JdbcOperationsSessionRepository(new JdbcTemplate(dataSource), new DataSourceTransactionManager(dataSource));
         return sessionRepository;
     }
 
     @Bean
-    public SessionRegistry sessionRegistry(FindByIndexNameSessionRepository sessionRepository){
-        return new SpringSessionBackedSessionRegistry(sessionRepository);
+    public SessionRegistry sessionRegistry(
+        @Autowired FindByIndexNameSessionRepository<? extends ExpiringSession> sessionRepository){
+        return new SpringSessionBackedSessionRegistry(
+            (FindByIndexNameSessionRepository<ExpiringSession>) sessionRepository);
     }
 }

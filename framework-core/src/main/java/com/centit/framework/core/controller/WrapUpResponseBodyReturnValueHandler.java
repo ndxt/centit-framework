@@ -1,7 +1,13 @@
 package com.centit.framework.core.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.centit.framework.common.JsonResultUtils;
+import com.centit.framework.common.ObjectException;
 import com.centit.framework.common.ResponseData;
+import com.centit.support.algorithm.ReflectionOpt;
+import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.xml.XMLObject;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.HttpInputMessage;
@@ -17,7 +23,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.RenderedImage;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @see org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor
@@ -75,15 +84,67 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
         writeWithMessageConverters(returnValue, returnType, outputMessage);
     }
 
-    protected <T> void writeWithMessageConverters(T value, MethodParameter returnType, ServletServerHttpResponse outputMessage)
+    protected <T> void writeWithMessageConverters(T value,
+                                                  MethodParameter returnType,
+                                                  ServletServerHttpResponse outputMessage)
         throws IOException, HttpMessageNotWritableException {
 
-        Object outputValue = value;
-        if(!(outputValue instanceof ResponseData)){
-            outputValue = ResponseData.makeResponseData(outputValue);
+        WrapUpResponseBody wrap = returnType.getMethodAnnotation(WrapUpResponseBody.class);
+        WrapUpContentType wrapUpType =  wrap != null ? wrap.contentType()
+                            : WrapUpContentType.DATA;
+        switch (wrapUpType) {
+            case RAW:
+                JsonResultUtils.writeOriginalObject(value,outputMessage.getServletResponse());
+                break;
+            case JAVASCRIPT:
+                String scriptValue;
+                if(ReflectionOpt.isScalarType(value.getClass())){
+                    scriptValue = StringBaseOpt.objectToString(value);
+                }else {
+                    scriptValue = JSON.toJSONString(value);
+                }
+                JsonResultUtils.writeJavaScript(scriptValue,outputMessage.getServletResponse());
+                break;
+            case IMAGE:
+                if(value instanceof RenderedImage){
+                    JsonResultUtils.writeOriginalImage((RenderedImage)value,
+                        outputMessage.getServletResponse());
+                }else{
+                    throw new ObjectException(500, "需要image/gif格式的RenderedImage对象。");
+                }
+                break;
+            case XML:
+                String xmlValue;
+                if(ReflectionOpt.isScalarType(value.getClass())){
+                    xmlValue = StringBaseOpt.objectToString(value);
+                }else {
+                    xmlValue = XMLObject.objectToXMLString("response", value);
+                }
+                JsonResultUtils.writeOriginalXml(xmlValue,outputMessage.getServletResponse());
+                break;
+            case HTML:
+                JsonResultUtils.writeOriginalHtml(value,outputMessage.getServletResponse());
+                break;
+            case FILE:
+                if(value instanceof File){
+                    JsonResultUtils.writeOriginalFile((File) value,
+                        outputMessage.getServletResponse());
+                } else if(value instanceof InputStream){
+                    JsonResultUtils.writeOriginalFile((InputStream) value, "未命名文件",
+                        outputMessage.getServletResponse());
+                } else {
+                    throw new ObjectException(500, "需要File对象。");
+                }
+                break;
+            default:
+                Object outputValue = value;
+                if (!(outputValue instanceof ResponseData)) {
+                    outputValue = ResponseData.makeResponseData(outputValue);
+                }
+                messageConverter.write(
+                    outputValue, MediaType.APPLICATION_JSON_UTF8, outputMessage);
+            break;
         }
-        messageConverter.write(
-            outputValue, MediaType.APPLICATION_JSON_UTF8, outputMessage);
     }
 
 }

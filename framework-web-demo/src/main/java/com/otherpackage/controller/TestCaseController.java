@@ -2,10 +2,12 @@ package com.otherpackage.controller;
 
 import com.centit.framework.common.*;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.controller.WrapUpContentType;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.operationlog.RecordOperationLog;
 import com.centit.support.algorithm.ByteBaseOpt;
 import com.centit.support.common.ParamName;
+import com.centit.support.image.CaptchaImageUtil;
 import com.otherpackage.po.Student;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -17,6 +19,8 @@ import org.springframework.security.crypto.codec.Hex;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.RenderedImage;
+import java.io.File;
 import java.io.PrintWriter;
 import java.util.Random;
 
@@ -168,5 +172,53 @@ public class TestCaseController extends BaseController {
         }
         //这里需要\n\n，必须要，不然前台接收不到值,键必须为data
         return "data:Testing 1,2,3" + r.nextInt() +"\n\n";
+    }
+
+    @ApiOperation(value="测试获取js",notes="测试获取js。")
+    @GetMapping("/js")
+    @WrapUpResponseBody(contentType = WrapUpContentType.JAVASCRIPT)
+    public String getJs() {
+       return "define(function(require) {\n" +
+           "    var Page = require('core/page');\n" +
+           "\n" +
+           "    // 删除流程定义阶段删除\n" +
+           "    var FlowDefineRoleRemove = Page.extend(function() {\n" +
+           "\n" +
+           "        // @override\n" +
+           "        this.submit = function(table, row) {\n" +
+           "            var index = table.datagrid('getRowIndex', row);\n" +
+           "            table.datagrid('deleteRow', index);\n" +
+           "        };\n" +
+           "    });\n" +
+           "\n" +
+           "    return FlowDefineRoleRemove;\n" +
+           "});";
+    }
+
+    @ApiOperation(value="测试获取xml",notes="测试获取xml。")
+    @GetMapping("/xml")
+    @WrapUpResponseBody(contentType = WrapUpContentType.XML)
+    public Student getXML() {
+        Student stud = new Student();
+        stud.setStudNo("35");
+        stud.setStudName("小强2");
+        return stud;
+    }
+
+    @ApiOperation(value="测试获取图像",notes="测试获取图像。")
+    @GetMapping("/img")
+    @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
+    public RenderedImage getImage() {
+        String checkcode = CaptchaImageUtil.getRandomString();
+        RenderedImage image = CaptchaImageUtil.generateCaptchaImage(checkcode);
+        return image;
+    }
+
+    @ApiOperation(value="测试下载文件",notes="测试下载文件。")
+    @GetMapping("/file")
+    @WrapUpResponseBody(contentType = WrapUpContentType.FILE)
+    public File getFile() {
+        File file = new File("static_system_config.json");
+        return file;
     }
 }

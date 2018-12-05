@@ -10,7 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>framework-session</artifactId>
-
+    <name>com.centit.framework:framework-session</name>
+    <packaging>jar</packaging>
+    <description>框架的Session管理包</description>
     <dependencies>
         <dependency>
             <groupId>com.centit.support</groupId>
