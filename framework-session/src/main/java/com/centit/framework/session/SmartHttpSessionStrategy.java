@@ -1,14 +1,12 @@
 package com.centit.framework.session;
 
+import com.centit.framework.common.SysParametersUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.session.Session;
-import org.springframework.session.web.http.CookieHttpSessionStrategy;
-import org.springframework.session.web.http.HeaderHttpSessionStrategy;
-import org.springframework.session.web.http.HttpSessionStrategy;
-import org.springframework.session.web.http.MultiHttpSessionStrategy;
+import org.springframework.session.web.http.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * 同时支持cookie和header的session映射策略
  */
 public class SmartHttpSessionStrategy implements MultiHttpSessionStrategy {
+
     private HttpSessionStrategy browser = new CookieHttpSessionStrategy();
 
     private HttpSessionStrategy api = new HeaderHttpSessionStrategy();
@@ -37,6 +36,11 @@ public class SmartHttpSessionStrategy implements MultiHttpSessionStrategy {
 //    }
 
     public SmartHttpSessionStrategy() {
+        DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+        cookieSerializer.setCookiePath(SysParametersUtils.getStringValue("session.cookie.path"));
+        CookieHttpSessionStrategy cookieHttpSessionStrategy = new CookieHttpSessionStrategy();
+        cookieHttpSessionStrategy.setCookieSerializer(cookieSerializer);
+        browser = cookieHttpSessionStrategy;
     }
 
     public SmartHttpSessionStrategy(HttpSessionStrategy browser, HttpSessionStrategy api) {

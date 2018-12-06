@@ -101,14 +101,14 @@ public class JdbcSessionPersistenceConfig extends FrameworkHttpSessionConfigurat
     @Bean
     public FindByIndexNameSessionRepository sessionRepository(
         @Qualifier(value = "jdbcSessionDataSource") EmbeddedDatabase dataSource) {
-        JdbcOperationsSessionRepository sessionRepository =
+        JdbcOperationsSessionRepository repository =
             new JdbcOperationsSessionRepository(new JdbcTemplate(dataSource), new DataSourceTransactionManager(dataSource));
-        return sessionRepository;
+        return repository;
     }
 
     @Bean
     public SessionRegistry sessionRegistry(
         @Autowired FindByIndexNameSessionRepository sessionRepository){
-        return new SpringSessionBackedSessionRegistry( sessionRepository);
+        return new SpringSessionBackedSessionRegistry(sessionRepository);
     }
 }
