@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.RenderedImage;
 import java.io.File;
@@ -37,9 +38,114 @@ public class TestCaseController extends BaseController {
     ))
     @GetMapping("/sayhello/{userName}")
     @RecordOperationLog(content = "Say hello to {userName}.", returnValueAsOld = true)
-    public void sayHello(@PathVariable @ParamName("userName") String userName,
-                         HttpServletResponse response){
-        JsonResultUtils.writeSingleDataJson("hello "+userName+" !",response);
+    @WrapUpResponseBody
+    public String sayHello(@PathVariable @ParamName("userName") String userName){
+        return "hello "+userName+" !";
+    }
+
+    @ApiOperation(value="根据学号查询学生",notes="根据学号查询学生。")
+    @ApiImplicitParams(@ApiImplicitParam(
+        name = "studNo", value="学号必须是两位数",
+        required=true, paramType = "path", dataType ="String"
+    ))
+    @GetMapping("/student/{studNo}")
+    @WrapUpResponseBody
+    @RecordOperationLog(content = "查询学号为{studNo}学生", returnValueAsOld = true)
+    public Student findStudent(@PathVariable @ParamName("studNo") String studNo) {
+        if(StringUtils.length(studNo)!=2){
+            throw new ObjectException(studNo,
+                ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                "找不到对应学号的学生");
+        }
+        Student stud = new Student();
+        stud.setStudNo(studNo);
+        stud.setStudName("小强");
+        return stud;
+    }
+
+    @ApiOperation(value="根据学号查询学生2",notes="根据学号查询学生。")
+    @ApiImplicitParams(@ApiImplicitParam(
+        name = "studNo", value="学号必须是两位数",
+        required=true, paramType = "path", dataType ="String"
+    ))
+    @GetMapping("/student2/{studNo}")
+    @ResponseBody
+    public ResponseData findStudent2(@PathVariable String studNo) {
+        if(StringUtils.length(studNo)!=2){
+            /*throw new ObjectException(studNo,
+                ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                "找不到对应学号的学生");*/
+            return ResponseData.makeErrorMessageWithData(studNo,
+                ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                "找不到对应学号的学生");
+        }
+        Student stud = new Student();
+        stud.setStudNo(studNo);
+        stud.setStudName("小强");
+        return ResponseData.makeResponseData(stud);
+    }
+
+    @ApiOperation(value="测试获取js",notes="测试获取js。")
+    @GetMapping("/js")
+    @WrapUpResponseBody(contentType = WrapUpContentType.JAVASCRIPT)
+    public String getJs() {
+       return "define(function(require) {\n" +
+           "    var Page = require('core/page');\n" +
+           "\n" +
+           "    // 删除流程定义阶段删除\n" +
+           "    var FlowDefineRoleRemove = Page.extend(function() {\n" +
+           "\n" +
+           "        // @override\n" +
+           "        this.submit = function(table, row) {\n" +
+           "            var index = table.datagrid('getRowIndex', row);\n" +
+           "            table.datagrid('deleteRow', index);\n" +
+           "        };\n" +
+           "    });\n" +
+           "\n" +
+           "    return FlowDefineRoleRemove;\n" +
+           "});";
+    }
+
+    @ApiOperation(value="测试获取xml",notes="测试获取xml。")
+    @GetMapping("/xml")
+    @WrapUpResponseBody(contentType = WrapUpContentType.XML)
+    public Student getXML() {
+        Student stud = new Student();
+        stud.setStudNo("35");
+        stud.setStudName("小强2");
+        return stud;
+    }
+
+    @ApiOperation(value="测试获取图像",notes="测试获取图像。")
+    @GetMapping("/img")
+    @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
+    public RenderedImage getImage() {
+        String checkcode = CaptchaImageUtil.getRandomString();
+        RenderedImage image = CaptchaImageUtil.generateCaptchaImage(checkcode);
+        return image;
+    }
+
+    @ApiOperation(value="测试下载文件",notes="测试下载文件。")
+    @GetMapping("/file")
+    @WrapUpResponseBody(contentType = WrapUpContentType.FILE)
+    public File getFile(HttpServletRequest request) {
+        String url = request.getSession().getServletContext().getRealPath("/");
+        File file = new File(url + "WEB-INF/classes/static_system_config.json");
+        return file;
+    }
+
+    @ApiOperation(value="测试 bool型",notes="测试 bool型。")
+    @GetMapping("/bool")
+    @WrapUpResponseBody(contentType = WrapUpContentType.RAW)
+    public boolean getBoolean() {
+        return true;
+    }
+
+    @ApiOperation(value="测试整型",notes="测试 整型。")
+    @GetMapping("/int")
+    @WrapUpResponseBody(contentType = WrapUpContentType.RAW)
+    public int getInt() {
+        return 100;
     }
 
     @ApiOperation(value="测试16进制编码",notes="将一个字符串按照16进制编码。")
@@ -96,53 +202,12 @@ public class TestCaseController extends BaseController {
         }
     }
 
-    @ApiOperation(value="根据学号查询学生",notes="根据学号查询学生。")
-    @ApiImplicitParams(@ApiImplicitParam(
-        name = "studNo", value="学号必须是两位数",
-        required=true, paramType = "path", dataType ="String"
-    ))
-    @GetMapping("/student/{studNo}")
-    @WrapUpResponseBody
-    @RecordOperationLog(content = "查询学号为{studNo}学生", returnValueAsOld = true)
-    public Student findStudent(@PathVariable @ParamName("studNo") String studNo) {
-        if(StringUtils.length(studNo)!=2){
-            throw new ObjectException(studNo,
-                ObjectException.DATA_NOT_FOUND_EXCEPTION,
-                "找不到对应学号的学生");
-        }
-        Student stud = new Student();
-        stud.setStudNo(studNo);
-        stud.setStudName("小强");
-        return stud;
-    }
-
-    @ApiOperation(value="根据学号查询学生2",notes="根据学号查询学生。")
-    @ApiImplicitParams(@ApiImplicitParam(
-        name = "studNo", value="学号必须是两位数",
-        required=true, paramType = "path", dataType ="String"
-    ))
-    @GetMapping("/student2/{studNo}")
-    @ResponseBody
-    public ResponseData findStudent2(@PathVariable String studNo) {
-        if(StringUtils.length(studNo)!=2){
-            /*throw new ObjectException(studNo,
-                ObjectException.DATA_NOT_FOUND_EXCEPTION,
-                "找不到对应学号的学生");*/
-            return ResponseData.makeErrorMessageWithData(studNo,
-                ObjectException.DATA_NOT_FOUND_EXCEPTION,
-                "找不到对应学号的学生");
-        }
-        Student stud = new Student();
-        stud.setStudNo(studNo);
-        stud.setStudName("小强");
-        return ResponseData.makeResponseData(stud);
-    }
-
     /**
      * 测试 H5 新特性 server-sent-event
      * @param response HttpServletResponse
      */
-    @RequestMapping(value = "/sse")
+    @ApiOperation(value="测试H5 SSE",notes="测试H5 SSE。")
+    @GetMapping(value = "/sse")
     public void serverSentEvent(HttpServletResponse response)
     {
         response.setContentType("text/event-stream");
@@ -160,9 +225,9 @@ public class TestCaseController extends BaseController {
         }
     }
 
-
+    @ApiOperation(value="测试H5 SSE 2",notes="测试H5 SSE 2。")
     //produces = "text/event-stream"
-    @RequestMapping(value="/sse2",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value="/sse2",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public @ResponseBody String serverSentEvent2() {
         Random r = new Random();
         try {
@@ -172,67 +237,5 @@ public class TestCaseController extends BaseController {
         }
         //这里需要\n\n，必须要，不然前台接收不到值,键必须为data
         return "data:Testing 1,2,3" + r.nextInt() +"\n\n";
-    }
-
-    @ApiOperation(value="测试获取js",notes="测试获取js。")
-    @GetMapping("/js")
-    @WrapUpResponseBody(contentType = WrapUpContentType.JAVASCRIPT)
-    public String getJs() {
-       return "define(function(require) {\n" +
-           "    var Page = require('core/page');\n" +
-           "\n" +
-           "    // 删除流程定义阶段删除\n" +
-           "    var FlowDefineRoleRemove = Page.extend(function() {\n" +
-           "\n" +
-           "        // @override\n" +
-           "        this.submit = function(table, row) {\n" +
-           "            var index = table.datagrid('getRowIndex', row);\n" +
-           "            table.datagrid('deleteRow', index);\n" +
-           "        };\n" +
-           "    });\n" +
-           "\n" +
-           "    return FlowDefineRoleRemove;\n" +
-           "});";
-    }
-
-    @ApiOperation(value="测试获取xml",notes="测试获取xml。")
-    @GetMapping("/xml")
-    @WrapUpResponseBody(contentType = WrapUpContentType.XML)
-    public Student getXML() {
-        Student stud = new Student();
-        stud.setStudNo("35");
-        stud.setStudName("小强2");
-        return stud;
-    }
-
-    @ApiOperation(value="测试获取图像",notes="测试获取图像。")
-    @GetMapping("/img")
-    @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
-    public RenderedImage getImage() {
-        String checkcode = CaptchaImageUtil.getRandomString();
-        RenderedImage image = CaptchaImageUtil.generateCaptchaImage(checkcode);
-        return image;
-    }
-
-    @ApiOperation(value="测试下载文件",notes="测试下载文件。")
-    @GetMapping("/file")
-    @WrapUpResponseBody(contentType = WrapUpContentType.FILE)
-    public File getFile() {
-        File file = new File("static_system_config.json");
-        return file;
-    }
-
-    @ApiOperation(value="测试 bool型",notes="测试 bool型。")
-    @GetMapping("/bool")
-    @WrapUpResponseBody(contentType = WrapUpContentType.RAW)
-    public boolean getBoolean() {
-        return true;
-    }
-
-    @ApiOperation(value="测试整型",notes="测试 整型。")
-    @GetMapping("/int")
-    @WrapUpResponseBody(contentType = WrapUpContentType.RAW)
-    public int getInt() {
-        return 100;
     }
 }

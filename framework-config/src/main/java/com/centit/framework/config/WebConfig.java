@@ -3,6 +3,7 @@ package com.centit.framework.config;
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.filter.RequestThreadLocalFilter;
 import com.centit.support.algorithm.StringRegularOpt;
+import org.apache.commons.lang3.StringUtils;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.context.ContextLoaderListener;
@@ -151,12 +152,29 @@ public class WebConfig  {
     /**
      * 访问 h2 console
      * @param servletContext ServletContext
+     * @param force 是否强制启动H2数据库 控制台
      */
+    public static void initializeH2Console(ServletContext servletContext, boolean force){
+        boolean startH2Console = force;
+        if(!startH2Console) {
+            String type = SysParametersUtils.getStringValue("session.persistence.db.type");
+            startH2Console = type == null || StringUtils.equals("jdbc", type);
+            if(startH2Console){
+                String dbUrl = SysParametersUtils.getStringValue("session.jdbc.url");
+                startH2Console = StringUtils.isBlank(dbUrl) || dbUrl.contains("jdbc:h2:");
+            }
+        }
+
+        if(startH2Console) {
+            ServletRegistration.Dynamic h2console = servletContext.addServlet("h2console", org.h2.server.web.WebServlet.class);
+            h2console.setInitParameter("webAllowOthers", "");
+            h2console.addMapping("/h2console/*");
+            h2console.setLoadOnStartup(1);
+            h2console.setAsyncSupported(true);
+        }
+    }
+
     public static void initializeH2Console(ServletContext servletContext){
-        ServletRegistration.Dynamic h2console  = servletContext.addServlet("h2console", org.h2.server.web.WebServlet.class);
-        h2console.setInitParameter("webAllowOthers", "");
-        h2console.addMapping("/h2console/*");
-        h2console.setLoadOnStartup(1);
-        h2console.setAsyncSupported(true);
+        initializeH2Console(servletContext, false);
     }
 }
