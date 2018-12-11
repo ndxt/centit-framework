@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.*;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.controller.WrapUpContentType;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
@@ -32,6 +33,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.awt.image.RenderedImage;
 import java.util.List;
 import java.util.Map;
 
@@ -193,7 +195,8 @@ public class MainFrameController extends BaseController {
         required= true, paramType = "query", dataType= "String"
     )})
     @RequestMapping(value ="/changepwd",method = RequestMethod.PUT)
-    public void changepassword(String password, String newPassword,
+    @WrapUpResponseBody
+    public ResponseData changepassword(String password, String newPassword,
             HttpServletRequest request,HttpServletResponse response) {
         if(StringUtils.isBlank(password)) {
             password = request.getParameter("password");
@@ -204,14 +207,17 @@ public class MainFrameController extends BaseController {
 
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null){
-            JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
+//            JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
+            return ResponseData.makeErrorMessage("用户没有登录，不能修改密码！");
         }else{
             boolean bo=platformEnvironment.checkUserPassword(ud.getUserInfo().getUserCode(), password);
             if(!bo){
-                JsonResultUtils.writeErrorMessageJson("用户输入的密码错误，不能修改密码！", response);
+//                JsonResultUtils.writeErrorMessageJson("用户输入的密码错误，不能修改密码！", response);
+                return ResponseData.makeErrorMessage("用户输入的密码错误，不能修改密码！");
             }else{
                 platformEnvironment.changeUserPassword(ud.getUserInfo().getUserCode(), newPassword);
-                JsonResultUtils.writeSuccessJson(response);
+//                JsonResultUtils.writeSuccessJson(response);
+                return ResponseData.makeSuccessResponse();
             }
         }
     }
@@ -220,7 +226,6 @@ public class MainFrameController extends BaseController {
      * 校验密码
      * @param password password
      * @param request request
-     * @param response response
      */
     @ApiOperation(value = "校验密码", notes = "校验密码是否正确")
     @ApiImplicitParam(
@@ -228,28 +233,28 @@ public class MainFrameController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )
     @RequestMapping(value ="/checkpwd",method = RequestMethod.POST)
-    public void checkpassword(String password,
-            HttpServletRequest request,HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData checkpassword(String password, HttpServletRequest request) {
         if(StringUtils.isBlank(password)) {
             password = request.getParameter("password");
         }
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null){
-            JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
+            return ResponseData.makeErrorMessage(ResponseData.ERROR_UNAUTHORIZED,"用户没有登录，不能修改密码！");
         }else{
             boolean bo=platformEnvironment.checkUserPassword(ud.getUserInfo().getUserCode(), password);
-            JsonResultUtils.writeOriginalObject(bo, response);
+            return ResponseData.makeResponseData(bo);
         }
     }
 
     /**
      * 这个方法是个内部通讯的客户端程序使用的，客户端程序通过用户代码（注意不是用户名）和密码登录，这个密码建议随机生成
      * @param request request
-     * @param response response
      */
     @ApiOperation(value = "内部通讯的客户端程序使用接口", notes = "这个方法是个内部通讯的客户端程序使用的，客户端程序通过用户代码（注意不是用户名）和密码登录，这个密码建议随机生成")
     @RequestMapping(value="/loginasclient",method = RequestMethod.POST)
-    public void loginAsClient(HttpServletRequest request,HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData loginAsClient(HttpServletRequest request) {
         Map<String, Object> formValue = BaseController.collectRequestParameters(request);
 
         String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
@@ -257,13 +262,13 @@ public class MainFrameController extends BaseController {
 
         CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
         if(ud==null){
-            JsonResultUtils.writeErrorMessageJson("用户： "+userCode+"不存在。", response);
-            return;
+//            JsonResultUtils.writeErrorMessageJson("用户： "+userCode+"不存在。", response);
+            return ResponseData.makeErrorMessage("用户： "+userCode+"不存在。");
         }
         boolean bo=platformEnvironment.checkUserPassword(ud.getUserInfo().getUserCode(), userPwd);
         if(!bo){
-            JsonResultUtils.writeErrorMessageJson("用户 名和密码不匹配。", response);
-            return;
+//            JsonResultUtils.writeErrorMessageJson("用户 名和密码不匹配。", response);
+            return ResponseData.makeErrorMessage("用户 名和密码不匹配。");
         }
         request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, ud);
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
@@ -271,7 +276,8 @@ public class MainFrameController extends BaseController {
         //request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
-        JsonResultUtils.writeResponseDataAsJson(resData, response);
+//        JsonResultUtils.writeResponseDataAsJson(resData, response);
+        return ResponseData.makeResponseData(resData);
     }
 
 
@@ -288,7 +294,8 @@ public class MainFrameController extends BaseController {
         required=true, paramType = "body", dataType= "String"
     ))
     @RequestMapping(value="/loginasthird",method = RequestMethod.POST)
-    public void loginAsThird(HttpServletRequest request,HttpServletResponse response,
+    @WrapUpResponseBody
+    public ResponseData loginAsThird(HttpServletRequest request,HttpServletResponse response,
                     @RequestBody JSONObject formValue) {
         try {
             if (thirdPartyCheckUserDetails == null) {
@@ -297,27 +304,22 @@ public class MainFrameController extends BaseController {
             }
         }catch (RuntimeException e){
             //thirdPartyCheckUserDetails = null;
-            JsonResultUtils.writeErrorMessageJson(e.getLocalizedMessage(), response);
-            return;
+            return ResponseData.makeErrorMessage(e.getLocalizedMessage());
         }
         if(thirdPartyCheckUserDetails == null){
-            JsonResultUtils.writeErrorMessageJson("系统找不到名为 thirdPartyCheckUserDetails 的 bean。", response);
-            return;
+            return ResponseData.makeErrorMessage("系统找不到名为 thirdPartyCheckUserDetails 的 bean。");
         }
         String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
         Object token = formValue.get("token");
 
         CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
         if(ud==null){
-            JsonResultUtils.writeErrorMessageJson("用户： "+userCode+"不存在。", response);
-            return;
+            return ResponseData.makeErrorMessage("用户： "+userCode+"不存在。");
         }
 
         boolean bo = thirdPartyCheckUserDetails.check(ud, token);
         if(!bo){
-            JsonResultUtils.writeErrorMessageJson("用户："+userCode+
-                " token:" + StringBaseOpt.objectToString(token) +" 校验不通过", response);
-            return;
+            return ResponseData.makeErrorMessage("用户："+userCode+ " token:" + StringBaseOpt.objectToString(token) +" 校验不通过");
         }
         request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, ud);
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
@@ -325,7 +327,7 @@ public class MainFrameController extends BaseController {
         //request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
-        JsonResultUtils.writeResponseDataAsJson(resData, response);
+        return ResponseData.makeResponseData(resData);
     }
 
     /**
@@ -335,22 +337,20 @@ public class MainFrameController extends BaseController {
      */
     @ApiOperation(value = "防跨站请求伪造", notes = "防跨站请求伪造")
     @RequestMapping(value = "/login/csrf",method = RequestMethod.GET)
-    public void getLoginCsrfToken(HttpServletRequest request,HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData getLoginCsrfToken(HttpServletRequest request,HttpServletResponse response) {
         if(csrfTokenRepository!=null){
             CsrfToken token = csrfTokenRepository.loadToken(request);
             if(token == null){
                 token = csrfTokenRepository.generateToken(request);
-                csrfTokenRepository.saveToken( token,  request,
-                        response);
+                csrfTokenRepository.saveToken( token,  request, response);
             }
             response.setHeader("_csrf_parameter", token.getParameterName());
             response.setHeader("_csrf_header", token.getHeaderName());
             response.setHeader("_csrf", token.getToken());
-            JsonResultUtils.writeSingleDataJson
-                (token, response);
+            return ResponseData.makeResponseData(token);
         }else{
-            JsonResultUtils.writeErrorMessageJson(
-                    "Bean csrfTokenRepository not found!", response);
+            return ResponseData.makeErrorMessage("Bean csrfTokenRepository not found!");
         }
     }
 
@@ -361,8 +361,9 @@ public class MainFrameController extends BaseController {
      */
     @ApiOperation(value = "防跨站请求伪造", notes = "防跨站请求伪造")
     @RequestMapping(value = "/csrf",method = RequestMethod.GET)
-    public void getCsrfToken(HttpServletRequest request,HttpServletResponse response) {
-        getLoginCsrfToken(request, response);
+    @WrapUpResponseBody
+    public ResponseData getCsrfToken(HttpServletRequest request,HttpServletResponse response) {
+       return getLoginCsrfToken(request, response);
     }
 
     /**
@@ -372,14 +373,14 @@ public class MainFrameController extends BaseController {
      */
     @ApiOperation(value = "获取验证码", notes = "获取验证码")
     @RequestMapping(value = "/captchaimage",method = RequestMethod.GET)
-    public void captchaImage( HttpServletRequest request, HttpServletResponse response) {
+    @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
+    public RenderedImage captchaImage(HttpServletRequest request, HttpServletResponse response) {
 
         String checkcode = CaptchaImageUtil.getRandomString();
         request.getSession().setAttribute(
                 CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
         response.setHeader("Cache-Control", "no-cache");
-        JsonResultUtils.writeOriginalImage(
-                CaptchaImageUtil.generateCaptchaImage(checkcode), response );
+        return CaptchaImageUtil.generateCaptchaImage(checkcode);
     }
 
     /**
@@ -389,15 +390,15 @@ public class MainFrameController extends BaseController {
      */
     @ApiOperation(value = "获取登录验证码", notes = "获取登录验证码")
     @RequestMapping(value = "/login/captchaimage",method = RequestMethod.GET)
-    public void loginCaptchaImage( HttpServletRequest request, HttpServletResponse response) {
-        captchaImage(  request,  response);
+    @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
+    public RenderedImage loginCaptchaImage( HttpServletRequest request, HttpServletResponse response) {
+        return captchaImage(  request,  response);
     }
 
     /**
      * 校验验证码
      * @param checkcode checkcode
      * @param request request
-     * @param response response
      */
     @ApiOperation(value = "校验验证码", notes = "校验验证码")
     @ApiImplicitParam(
@@ -405,7 +406,8 @@ public class MainFrameController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )
     @RequestMapping(value = "/checkcaptcha/{checkcode}",method = RequestMethod.GET)
-    public void checkCaptchaImage(@PathVariable String checkcode, HttpServletRequest request, HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData checkCaptchaImage(@PathVariable String checkcode, HttpServletRequest request) {
 
         String sessionCode = StringBaseOpt.objectToString(
                     request.getSession().getAttribute(
@@ -414,7 +416,7 @@ public class MainFrameController extends BaseController {
         request.getSession().setAttribute(
                 SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT,
                 checkResult);
-        JsonResultUtils.writeOriginalObject(checkResult, response);
+        return ResponseData.makeResponseData(checkResult);
     }
 
     /**
@@ -424,31 +426,32 @@ public class MainFrameController extends BaseController {
      */
     @ApiOperation(value = "当前登录用户", notes = "获取当前登录用户详情")
     @RequestMapping(value = "/currentuserinfo",method = RequestMethod.GET)
-    public void getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null) {
-            JsonResultUtils.writeMessageAndData(
-                "No user login on current session!", request.getSession().getId(), response);
+            return ResponseData.makeErrorMessageWithData(
+                request.getSession().getId(),ResponseData.ERROR_UNAUTHORIZED,"No user login on current session!");
         }
         else {
-            JsonResultUtils.writeSingleDataJson(ud.getUserInfo(), response);
+            return ResponseData.makeResponseData(ud.getUserInfo());
         }
     }
     /**
      * 当前登录者
      * @param request request
-     * @param response response
      */
     @ApiOperation(value = "当前登录者", notes = "当前登录者，CentitUserDetails对象信息")
     @RequestMapping(value = "/currentuser",method = RequestMethod.GET)
-    public void getCurrentUserDetails(HttpServletRequest request, HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData getCurrentUserDetails(HttpServletRequest request) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null) {
-            JsonResultUtils.writeMessageAndData(
-                "No user login on current session!", request.getSession().getId(), response);
+            return ResponseData.makeErrorMessageWithData(
+                request.getSession().getId(),ResponseData.ERROR_UNAUTHORIZED,"No user login on current session!");
         }
         else {
-            JsonResultUtils.writeSingleDataJson(ud, response);
+            return ResponseData.makeResponseData(ud);
         }
     }
     /**
@@ -458,13 +461,14 @@ public class MainFrameController extends BaseController {
      */
     @ApiOperation(value = "检验是否登录", notes = "检验当前用户用户是否登录")
     @GetMapping("/hasLogin")
-    public void hasLogin(HttpServletRequest request, HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData hasLogin(HttpServletRequest request, HttpServletResponse response) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud==null) {
-            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录，请登录！", response);
+            return ResponseData.makeErrorMessage(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录，请登录！");
         }
         else {
-            JsonResultUtils.writeSingleDataJson(ud, response);
+            return ResponseData.makeResponseData(ud);
         }
     }
 
@@ -519,7 +523,6 @@ public class MainFrameController extends BaseController {
      * 获取子菜单
      * @param optId 菜单代码
      * @param request HttpServletRequest
-     * @param response HttpServletResponse
      */
     @ApiOperation(value = "获取子菜单", notes = "获取子菜单详情")
     @ApiImplicitParam(
@@ -529,7 +532,7 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
     @WrapUpResponseBody
     public JSONArray getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optId,
-            HttpServletRequest request,HttpServletResponse response) {
+            HttpServletRequest request) {
 
         CentitUserDetails userDetails = super.getLoginUser(request);
         if(userDetails==null){
@@ -549,7 +552,6 @@ public class MainFrameController extends BaseController {
     /**
      * 获取用户有权限的菜单
      * @param userCode 用户代码
-     * @param response HttpServletResponse
      */
     @ApiOperation(value = "获取用户有权限的菜单", notes = "根据用户代码获取用户有权限的菜单")
     @ApiImplicitParam(
@@ -557,8 +559,8 @@ public class MainFrameController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )
     @RequestMapping(value = "/userMenu/{userCode}" , method = RequestMethod.GET)
-    public void getMemuByUsercode(@PathVariable String userCode,
-           HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData getMemuByUsercode(@PathVariable String userCode) {
 
         List<? extends IOptInfo> menuFunsByUser = null;
 
@@ -570,14 +572,13 @@ public class MainFrameController extends BaseController {
             menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userCode, false);
         }
 
-        JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
+        return ResponseData.makeResponseData(makeMenuFuncsJson(menuFunsByUser));
     }
 
     /**
      * 获取用户某个菜单下有权限的子菜单
      * @param userCode 用户代码
      * @param menuOptId 菜单代码
-     * @param response HttpServletResponse
      */
     @ApiOperation(value = "获取用户有权限的菜单", notes = "根据用户代码和菜单代码获取用户有权限的子菜单")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -588,11 +589,11 @@ public class MainFrameController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )})
     @RequestMapping(value = "/useSubrMenu/{userCode}/{menuOptId}" , method = RequestMethod.GET)
-    public void getSubMemuByUsercode(@PathVariable String userCode,@PathVariable String menuOptId,
-                                  HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData getSubMemuByUsercode(@PathVariable String userCode,@PathVariable String menuOptId) {
         List<? extends IOptInfo> menuFunsByUser  = platformEnvironment
             .listUserMenuOptInfosUnderSuperOptId(userCode, menuOptId, false);
-        JsonResultUtils.writeSingleDataJson(makeMenuFuncsJson(menuFunsByUser), response);
+        return ResponseData.makeResponseData(makeMenuFuncsJson(menuFunsByUser));
     }
 
     /**
@@ -618,43 +619,31 @@ public class MainFrameController extends BaseController {
     /**
      * 查询当前用户所有职位
      * @param request {@link HttpServletRequest}
-     * @param response {@link HttpServletResponse}
      */
     @ApiOperation(value = "查询当前用户所有职位", notes = "查询当前用户所有职位")
     @GetMapping(value = "/userpositions")
-    public void listCurrentUserUnits(
-            HttpServletRequest request,HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData listCurrentUserUnits(HttpServletRequest request) {
         CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
         if(currentUser==null){
-            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
-                    "用户没有登录或者超时，请重新登录。", response);
-            return;
+            return ResponseData.makeErrorMessage(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
-        JsonResultUtils.writeSingleDataJson(
-                DictionaryMapUtils.objectsToJSONArray(
-                    currentUser.getUserUnits()),
-                response);
+        return ResponseData.makeResponseData(DictionaryMapUtils.objectsToJSONArray(currentUser.getUserUnits()));
     }
 
     /**
      * 查询当前用户当前职位
      * @param request {@link HttpServletRequest}
-     * @param response {@link HttpServletResponse}
      */
     @ApiOperation(value = "查询当前用户当前职位", notes = "查询当前用户当前职位")
     @GetMapping(value = "/usercurrposition")
-    public void getUserCurrentStaticn(
-            HttpServletRequest request,HttpServletResponse response) {
+    @WrapUpResponseBody
+    public ResponseData getUserCurrentStaticn(HttpServletRequest request) {
         CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
         if(currentUser==null){
-            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
-                    "用户没有登录或者超时，请重新登录。", response);
-            return;
+            return ResponseData.makeErrorMessage(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
-        JsonResultUtils.writeSingleDataJson(
-                DictionaryMapUtils.objectToJSON(
-                        currentUser.getCurrentStation()),
-                response);
+        return ResponseData.makeResponseData(DictionaryMapUtils.objectToJSON(currentUser.getCurrentStation()));
     }
 
     /**
@@ -669,16 +658,15 @@ public class MainFrameController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )
     @PutMapping(value = "/setuserposition/{userUnitId}")
-    public void setUserCurrentStaticn(@PathVariable String userUnitId,
+    @WrapUpResponseBody
+    public ResponseData setUserCurrentStaticn(@PathVariable String userUnitId,
             HttpServletRequest request,HttpServletResponse response) {
         CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
         if(currentUser==null){
-            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
-                    "用户没有登录或者超时，请重新登录。", response);
-            return;
+            return ResponseData.makeErrorMessage(ResponseData.ERROR_SESSION_TIMEOUT,"用户没有登录或者超时，请重新登录。");
         }
         currentUser.setCurrentStationId(userUnitId);
-        JsonResultUtils.writeSuccessJson(response);
+        return ResponseData.makeSuccessResponse();
     }
 
     /**
@@ -697,11 +685,10 @@ public class MainFrameController extends BaseController {
             required= true,paramType = "path", dataType= "String")
     })
     @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = { RequestMethod.GET })
-    public void checkUserOptPower(@PathVariable String optId,
-                                  @PathVariable String method, HttpServletResponse response) {
-        boolean s = CodeRepositoryUtil
-                .checkUserOptPower(optId,method);
-        JsonResultUtils.writeSingleDataJson(s, response);
+    @WrapUpResponseBody
+    public ResponseData checkUserOptPower(@PathVariable String optId,@PathVariable String method) {
+        boolean s = CodeRepositoryUtil.checkUserOptPower(optId,method);
+        return ResponseData.makeResponseData(s);
     }
 
     /**
