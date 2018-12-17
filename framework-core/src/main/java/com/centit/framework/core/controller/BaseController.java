@@ -68,6 +68,13 @@ public abstract class BaseController {
 
     protected static final String OBJLIST = "objList";
 
+    protected static boolean loginUserNotLoginExceptionAshHttpError = true;
+
+    public static void setLoginUserNotLoginExceptionAshHttpError(
+        boolean loginUserNotLoginExceptionAshHttpError) {
+        BaseController.loginUserNotLoginExceptionAshHttpError = loginUserNotLoginExceptionAshHttpError;
+    }
+
     /*public  String getOptId(){
         return "NOT_DEFINED";
     }*/
@@ -101,8 +108,9 @@ public abstract class BaseController {
         if (WebOptUtils.isAjax(request)) {
             if (ex instanceof ObjectException){
                 ObjectException objex = (ObjectException)ex;
-                if( objex.getExceptionCode() == ResponseData.ERROR_USER_NOT_LOGIN ||
-                    objex.getExceptionCode() == ResponseData.ERROR_UNAUTHORIZED ){
+                if(loginUserNotLoginExceptionAshHttpError &&
+                    (objex.getExceptionCode() == ResponseData.ERROR_USER_NOT_LOGIN ||
+                    objex.getExceptionCode() == ResponseData.ERROR_UNAUTHORIZED ) ){
                     JsonResultUtils.writeHttpErrorMessage(objex.getExceptionCode(),
                         objex.getLocalizedMessage(), response);
                 }else {

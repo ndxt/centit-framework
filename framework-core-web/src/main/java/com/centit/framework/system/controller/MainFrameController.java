@@ -673,7 +673,7 @@ public class MainFrameController extends BaseController {
      * 验证当前用户是否有某个操作方法的权限
      * @param optId 业务菜单代码
      * @param method 操作方法
-     * @param response HttpServletResponse
+     * @return ResponseData
      */
     @ApiOperation(value = "验证当前用户是否有某个操作方法的权限", notes = "验证当前用户是否有某个操作方法的权限")
     @ApiImplicitParams({
