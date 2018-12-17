@@ -90,8 +90,9 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         } else {
             http.csrf().disable();
         }
-
-        http.exceptionHandling().accessDeniedPage("/system/exception/error/403");
+        AjaxAccessDeniedHandlerImpl ajaxAccessDeniedHandler = new AjaxAccessDeniedHandlerImpl();
+        ajaxAccessDeniedHandler.setErrorPage("/system/exception/error/403");
+        http.exceptionHandling().accessDeniedHandler(ajaxAccessDeniedHandler);
 
         http.httpBasic().authenticationEntryPoint(getAuthenticationEntryPoint());
 

@@ -1,12 +1,10 @@
 package com.centit.framework.common;
 
-import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -25,8 +23,8 @@ public class WebOptUtils {
     public static final String LOCAL_LANGUAGE_LABLE="LOCAL_LANG";
 
     public static boolean isAjax(HttpServletRequest request) {
-        
-        return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        return "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) ||
+            request.getHeader("accept").contains("application/json");
     }
 
     public static CentitUserDetails getLoginUser() {

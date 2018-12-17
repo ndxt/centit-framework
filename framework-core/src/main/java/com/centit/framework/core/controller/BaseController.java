@@ -68,7 +68,7 @@ public abstract class BaseController {
 
     protected static final String OBJLIST = "objList";
 
-    protected static boolean loginUserNotLoginExceptionAshHttpError = true;
+    public static boolean loginUserNotLoginExceptionAshHttpError = true;
 
     public static void setLoginUserNotLoginExceptionAshHttpError(
         boolean loginUserNotLoginExceptionAshHttpError) {
