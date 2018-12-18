@@ -1,5 +1,6 @@
 package com.centit.framework.config;
 
+import com.centit.framework.security.CentitAuthenticationEntryPoint;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
@@ -16,7 +17,6 @@ import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -54,7 +54,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Override
     protected AuthenticationEntryPoint getAuthenticationEntryPoint() {
-        return new LoginUrlAuthenticationEntryPoint("/system/mainframe/login");
+        return new CentitAuthenticationEntryPoint("/system/mainframe/login");
     }
 
     @Override

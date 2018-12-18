@@ -36,12 +36,12 @@ public class AjaxAccessDeniedHandlerImpl implements AccessDeniedHandler {
         if(WebOptUtils.isAjax(request)){
             if(BaseController.loginUserNotLoginExceptionAshHttpError){
                 JsonResultUtils.writeHttpErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
-                    "用户没有登录，请登录！", response);
+                    "无权限访问！", response);
             }else {
                 ResponseSingleData responseData =
                     new ResponseSingleData(ResponseData.ERROR_USER_NOT_LOGIN,
-                        "用户没有登录，请登录！");
-                responseData.setData("用户没有登录，请登录！");
+                        "无权限访问！");
+                responseData.setData("无权限访问！");
                 JsonResultUtils.writeResponseDataAsJson(responseData, response);
             }
         } else {
