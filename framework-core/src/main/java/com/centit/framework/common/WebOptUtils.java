@@ -21,6 +21,12 @@ import java.util.Locale;
  */
 public class WebOptUtils {
     public static final String LOCAL_LANGUAGE_LABLE="LOCAL_LANG";
+    //不使用http的状态码来标识错误状态
+    public static boolean exceptionNotAsHttpError = false;
+
+    public static void setExceptionNotAsHttpError(boolean exceptionNotAsHttpError) {
+        WebOptUtils.exceptionNotAsHttpError = exceptionNotAsHttpError;
+    }
 
     public static boolean isAjax(HttpServletRequest request) {
         return "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) ||

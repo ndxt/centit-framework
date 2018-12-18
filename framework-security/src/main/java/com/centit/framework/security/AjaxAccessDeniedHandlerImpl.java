@@ -4,7 +4,6 @@ import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseSingleData;
 import com.centit.framework.common.WebOptUtils;
-import com.centit.framework.core.controller.BaseController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -34,12 +33,12 @@ public class AjaxAccessDeniedHandlerImpl implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException) throws IOException,
         ServletException {
         if(WebOptUtils.isAjax(request)){
-            if(BaseController.loginUserNotLoginExceptionAshHttpError){
-                JsonResultUtils.writeHttpErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
+            if(!WebOptUtils.exceptionNotAsHttpError){
+                JsonResultUtils.writeHttpErrorMessage(ResponseData.ERROR_UNAUTHORIZED,
                     "无权限访问！", response);
             }else {
                 ResponseSingleData responseData =
-                    new ResponseSingleData(ResponseData.ERROR_USER_NOT_LOGIN,
+                    new ResponseSingleData(ResponseData.ERROR_UNAUTHORIZED,
                         "无权限访问！");
                 responseData.setData("无权限访问！");
                 JsonResultUtils.writeResponseDataAsJson(responseData, response);

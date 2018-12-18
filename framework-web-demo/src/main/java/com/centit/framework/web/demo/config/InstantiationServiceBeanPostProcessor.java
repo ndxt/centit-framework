@@ -1,8 +1,8 @@
 package com.centit.framework.web.demo.config;
 
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.components.OperationLogCenter;
-import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.adapter.PlatformEnvironment;
@@ -30,14 +30,14 @@ public class InstantiationServiceBeanPostProcessor
     @Autowired(required = false)
     protected PlatformEnvironment platformEnvironment;
 
-    @Value("${login.nouser.exception.ashttperror:true}")
-    protected boolean loginUserNotLoginExceptionAshHttpError;
+    @Value("${exception.not.as.httpError:false}")
+    protected boolean exceptionNotAsHttpError;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event){
         CodeRepositoryCache.setPlatformEnvironment(platformEnvironment);
         CodeRepositoryCache.setAllCacheFreshPeriod(CodeRepositoryCache.CACHE_KEEP_FRESH);
-        BaseController.setLoginUserNotLoginExceptionAshHttpError(loginUserNotLoginExceptionAshHttpError);
+        WebOptUtils.setExceptionNotAsHttpError(exceptionNotAsHttpError);
         if(emailMessageManager!=null) {
             notificationCenter.registerMessageSender("email", emailMessageManager);
             notificationCenter.appointDefaultSendType("email");

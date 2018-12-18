@@ -1,6 +1,6 @@
 package com.centit.framework.config;
 
-import com.centit.framework.security.CentitAuthenticationEntryPoint;
+import com.centit.framework.security.AjaxAuthenticationEntryPoint;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
@@ -54,7 +54,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Override
     protected AuthenticationEntryPoint getAuthenticationEntryPoint() {
-        return new CentitAuthenticationEntryPoint("/system/mainframe/login");
+        return new AjaxAuthenticationEntryPoint("/system/mainframe/login");
     }
 
     @Override
