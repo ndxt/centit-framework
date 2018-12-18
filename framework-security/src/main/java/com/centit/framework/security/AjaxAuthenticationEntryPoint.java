@@ -16,11 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AjaxAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    private AuthenticationEntryPoint browse = new LoginUrlAuthenticationEntryPoint("/system/mainframe/login");
+    private AuthenticationEntryPoint browse;
     private AuthenticationEntryPoint api = new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
-
-    public AjaxAuthenticationEntryPoint() {
-    }
 
     public AjaxAuthenticationEntryPoint(String loginFormUrl) {
         this.browse = new LoginUrlAuthenticationEntryPoint(loginFormUrl);
@@ -29,13 +26,13 @@ public class AjaxAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         if(WebOptUtils.isAjax(request)){
-            if(!WebOptUtils.exceptionNotAsHttpError) {
-                api.commence(request, response, authException);
-            }else {
+            if(WebOptUtils.exceptionNotAsHttpError) {
                 ResponseSingleData responseData =
                     new ResponseSingleData(ResponseData.ERROR_UNAUTHORIZED,
                         "未登录！");
                 JsonResultUtils.writeResponseDataAsJson(responseData, response);
+            } else {
+                api.commence(request, response, authException);
             }
         }else {
             browse.commence(request, response, authException);

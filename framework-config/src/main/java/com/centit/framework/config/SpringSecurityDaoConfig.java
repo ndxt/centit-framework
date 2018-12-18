@@ -83,7 +83,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
                 env.getProperty("http.filter.chain.continueBeforeSuccessfulAuthentication"),false));
         pretreatmentAuthenticationProcessingFilter.setAuthenticationFailureHandler(createAjaxFailureHandler());
         pretreatmentAuthenticationProcessingFilter.setAuthenticationSuccessHandler(createAjaxSuccessHandler());
-        String requiresAuthenticationUrl = env.getProperty("requires.authentication.request.url");
+        String requiresAuthenticationUrl = env.getProperty("login.authentication.url");
         if(StringUtils.isNotBlank(requiresAuthenticationUrl)) {
             pretreatmentAuthenticationProcessingFilter.setRequiresAuthenticationRequestMatcher(
                 new AntPathRequestMatcher(requiresAuthenticationUrl, "POST"));

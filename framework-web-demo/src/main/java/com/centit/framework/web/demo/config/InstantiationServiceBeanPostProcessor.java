@@ -30,7 +30,7 @@ public class InstantiationServiceBeanPostProcessor
     @Autowired(required = false)
     protected PlatformEnvironment platformEnvironment;
 
-    @Value("${exception.not.as.httpError:false}")
+    @Value("${http.exception.notAsHttpError:false}")
     protected boolean exceptionNotAsHttpError;
 
     @Override
