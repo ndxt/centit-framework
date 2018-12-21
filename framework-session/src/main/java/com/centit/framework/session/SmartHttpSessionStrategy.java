@@ -50,8 +50,8 @@ public class SmartHttpSessionStrategy implements MultiHttpSessionStrategy {
 
     @Override
     public String getRequestedSessionId(HttpServletRequest request) {
-        String sessionId = browser.getRequestedSessionId(request);
-        return StringUtils.isNotBlank(sessionId) ? sessionId : api.getRequestedSessionId(request);
+        String sessionId = api.getRequestedSessionId(request);
+        return StringUtils.isNotBlank(sessionId) ? sessionId : browser.getRequestedSessionId(request);
     }
 
     @Override
