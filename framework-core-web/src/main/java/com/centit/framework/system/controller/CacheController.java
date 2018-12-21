@@ -508,7 +508,7 @@ public class CacheController extends BaseController {
         Map<String, Set<String>> userParams = null;
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
         if(ud!=null){
-            String userCode = ud.getUserInfo().getUserCode();
+            String userCode = ud.getUserCode();
             if(userCode!=null){
                 unitParams = new HashMap<>();
                 unitParams.put("O", CollectionsOpt.createHashSet(userCode));

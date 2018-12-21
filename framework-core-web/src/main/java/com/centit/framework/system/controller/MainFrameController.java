@@ -210,12 +210,12 @@ public class MainFrameController extends BaseController {
 //            JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
             return ResponseData.makeErrorMessage("用户没有登录，不能修改密码！");
         }else{
-            boolean bo=platformEnvironment.checkUserPassword(ud.getUserInfo().getUserCode(), password);
+            boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), password);
             if(!bo){
 //                JsonResultUtils.writeErrorMessageJson("用户输入的密码错误，不能修改密码！", response);
                 return ResponseData.makeErrorMessage("用户输入的密码错误，不能修改密码！");
             }else{
-                platformEnvironment.changeUserPassword(ud.getUserInfo().getUserCode(), newPassword);
+                platformEnvironment.changeUserPassword(ud.getUserCode(), newPassword);
 //                JsonResultUtils.writeSuccessJson(response);
                 return ResponseData.makeSuccessResponse();
             }
@@ -242,7 +242,7 @@ public class MainFrameController extends BaseController {
         if(ud==null){
             return ResponseData.makeErrorMessage(ResponseData.ERROR_UNAUTHORIZED,"用户没有登录，不能修改密码！");
         }else{
-            boolean bo=platformEnvironment.checkUserPassword(ud.getUserInfo().getUserCode(), password);
+            boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), password);
             return ResponseData.makeResponseData(bo);
         }
     }
@@ -265,7 +265,7 @@ public class MainFrameController extends BaseController {
 //            JsonResultUtils.writeErrorMessageJson("用户： "+userCode+"不存在。", response);
             return ResponseData.makeErrorMessage("用户： "+userCode+"不存在。");
         }
-        boolean bo=platformEnvironment.checkUserPassword(ud.getUserInfo().getUserCode(), userPwd);
+        boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), userPwd);
         if(!bo){
 //            JsonResultUtils.writeErrorMessageJson("用户 名和密码不匹配。", response);
             return ResponseData.makeErrorMessage("用户 名和密码不匹配。");
@@ -505,11 +505,11 @@ public class MainFrameController extends BaseController {
         List<? extends IOptInfo> menuFunsByUser = null;
 
         if(StringUtils.isNotBlank(topOptId)) {
-            menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(), topOptId, asAdmin);
+            menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserCode(), topOptId, asAdmin);
         }
 
         if(menuFunsByUser == null || menuFunsByUser.size()==0 ){
-            menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserInfo().getUserCode(), asAdmin);
+            menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserCode(), asAdmin);
         }
 
         if(menuFunsByUser==null){
@@ -541,7 +541,7 @@ public class MainFrameController extends BaseController {
         }
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
-        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserInfo().getUserCode(), optId, asAdmin);
+        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserCode(), optId, asAdmin);
         if(menuFunsByUser==null){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录,或者没有给用户任何权限，请重新登录！");

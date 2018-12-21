@@ -177,7 +177,7 @@ public abstract class BaseController {
         CentitUserDetails ud = getLoginUser(request);
         if(ud==null)
             return null;
-        return ud.getUserInfo().getUserCode();
+        return ud.getUserCode();
     }
 
     /**

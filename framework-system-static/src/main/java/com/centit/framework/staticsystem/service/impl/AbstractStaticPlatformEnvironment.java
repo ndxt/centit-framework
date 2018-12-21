@@ -1,12 +1,15 @@
 package com.centit.framework.staticsystem.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.framework.security.model.JsonCentitUserDetails;
 import com.centit.framework.staticsystem.po.*;
-import com.centit.framework.staticsystem.security.StaticCentitUserDetails;
 import com.centit.support.common.CachedObject;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,7 +26,7 @@ public abstract class AbstractStaticPlatformEnvironment
         new CachedObject<>(this::listAllUserRole,
             CodeRepositoryCache.CACHE_NEVER_EXPIRE );
 
-    public CachedObject<List<StaticCentitUserDetails>> allUserDetailsRepo =
+    public CachedObject<List<JsonCentitUserDetails>> allUserDetailsRepo =
         new CachedObject<>(()-> { this.reloadPlatformData(); return null;},
             CodeRepositoryCache.CACHE_NEVER_EXPIRE );
 
@@ -54,7 +57,7 @@ public abstract class AbstractStaticPlatformEnvironment
         }
 
         List<? extends IUserInfo> userinfos = CodeRepositoryCache.userInfoRepo.getCachedTarget();
-        List<StaticCentitUserDetails> userDetails = new ArrayList<>(userinfos.size());
+        List<JsonCentitUserDetails> userDetails = new ArrayList<>(userinfos.size());
         List<? extends IUserUnit> uus = CodeRepositoryCache.userUnitRepo.getCachedTarget();
 
         for (IUserInfo ui : userinfos) {
@@ -75,14 +78,17 @@ public abstract class AbstractStaticPlatformEnvironment
                     }
                 }
             }
-            StaticCentitUserDetails ud = new StaticCentitUserDetails((UserInfo) ui);
-            ud.setAuthoritiesByRoles(roles);
+            JsonCentitUserDetails ud = new JsonCentitUserDetails();
+            ud.setUserInfo((JSONObject) JSON.toJSON(ui));
+            ud.setAuthoritiesByRoles((JSONArray) JSON.toJSON(roles));
             ud.setUserOptList(userOptList);
+            List<UserUnit> uulist = new ArrayList<>(10);
             for(IUserUnit uu : uus) {
                 if (StringUtils.equals(uu.getUserCode(), ui.getUserCode())) {
-                    ud.addUserUnit((UserUnit) uu);
+                    uulist.add((UserUnit) uu);
                 }
             }
+            ud.setUserUnits((JSONArray) JSON.toJSON(uulist));
             userDetails.add(ud);
         }
         allUserDetailsRepo.setFreshtDate(userDetails);
@@ -365,8 +371,8 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByLoginName(String loginName) {
-        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
-            if(StringUtils.equals(ud.getUserInfo().getLoginName(), loginName))
+        for(JsonCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
+            if(StringUtils.equals(ud.getUserInfo().getString("loginName"), loginName))
                 return ud;
         }
         return null;
@@ -374,8 +380,8 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByUserCode(String userCode) {
-        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
-            if(StringUtils.equals(ud.getUserInfo().getUserCode(), userCode))
+        for(JsonCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
+            if(StringUtils.equals(ud.getUserInfo().getString("userCode"), userCode))
                 return ud;
         }
         return null;
@@ -383,8 +389,8 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByRegEmail(String regEmail) {
-        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
-            if(StringUtils.equals(ud.getUserInfo().getRegEmail(), regEmail))
+        for(JsonCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
+            if(StringUtils.equals(ud.getUserInfo().getString("regEmail"), regEmail))
                 return ud;
         }
         return null;
@@ -392,8 +398,8 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone) {
-        for(StaticCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
-            if(StringUtils.equals(ud.getUserInfo().getRegCellPhone(), regCellPhone))
+        for(JsonCentitUserDetails ud : allUserDetailsRepo.getCachedTarget()){
+            if(StringUtils.equals(ud.getUserInfo().getString("regCellPhone"), regCellPhone))
                 return ud;
         }
         return null;

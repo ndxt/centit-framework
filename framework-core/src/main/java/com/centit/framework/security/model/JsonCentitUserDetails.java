@@ -1,10 +1,10 @@
 package com.centit.framework.security.model;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.model.basedata.IRoleInfo;
 import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.SecurityContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,13 +18,16 @@ import java.util.*;
  * @author MyEclipse Persistence Tools
  */
 // 系统用户信息表
-public abstract class AbstractCentitUserDetails implements CentitUserDetails, java.io.Serializable{
+public class JsonCentitUserDetails implements CentitUserDetails, java.io.Serializable{
 
     private String loginIp;
     private String currentStationId;
     private Map<String, String> userSettings;
     private Map<String, String> userOptList;
 
+    protected JSONObject userInfo;
+    private JSONArray userRoles;
+    private JSONArray userUnits;
 
     @JSONField(serialize = false)
     private List<GrantedAuthority> arrayAuths;
@@ -32,12 +35,12 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
     @Override
     @JSONField(serialize = false)
     public String getUserCode(){
-        return getUserInfo().getUserCode();
+        return getUserInfo().getString("userCode");
     }
 
     @Override
     public boolean isEnabled() {
-        return "T".equals(getUserInfo().getIsValid());
+        return "T".equals(getUserInfo().getString("isValid"));
     }
 
     protected void makeUserAuthorities(){
@@ -46,10 +49,11 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
             return;
 
         boolean havePublicRole = false;
-        for (IRoleInfo role : this.getUserRoles()) {
+        for (Object obj : this.getUserRoles()) {
+            JSONObject role  =(JSONObject) obj;
             arrayAuths.add(new SimpleGrantedAuthority(CentitSecurityMetadata.ROLE_PREFIX
-                    + StringUtils.trim(role.getRoleCode())));
-            if(SecurityContextUtils.PUBLIC_ROLE_CODE.equalsIgnoreCase(role.getRoleCode())){
+                    + StringUtils.trim(role.getString("roleCode"))));
+            if(SecurityContextUtils.PUBLIC_ROLE_CODE.equalsIgnoreCase(role.getString("roleCode"))){
                 havePublicRole = true;
             }
         }
@@ -80,16 +84,18 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
 
     @Override
     @JSONField(serialize = false)
-    public IUserUnit getCurrentStation() {
-        List<? extends IUserUnit> uus = this.getUserUnits();
+    public JSONObject getCurrentStation() {
+        JSONArray uus = this.getUserUnits();
         if (uus != null) {
-            for (IUserUnit uu : uus) {
-                if (StringUtils.equals(currentStationId, uu.getUserUnitId())) {
-                    return uu;
+            for (Object uu : uus) {
+                JSONObject userUnit = (JSONObject) uu;
+                if (StringUtils.equals(currentStationId, userUnit.getString("userUnitId"))) {
+                    return userUnit;
                 }
 
-                if (StringUtils.isBlank(currentStationId) && "T".equals(uu.getIsPrimary())) {
-                    return uu;
+                if (StringUtils.isBlank(currentStationId) &&
+                    "T".equals(userUnit.getString("isPrimary"))) {
+                    return userUnit;
                 }
             }
         }
@@ -108,8 +114,8 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
     @Override
     @JSONField(serialize = false)
     public String getCurrentUnitCode(){
-        IUserUnit cs = getCurrentStation();
-        return cs != null? cs.getUnitCode() : getUserInfo().getPrimaryUnit();
+        JSONObject cs = getCurrentStation();
+        return cs != null? cs.getString("unitCode"): getUserInfo().getString("primaryUnit");
     }
 
     @Override
@@ -129,12 +135,12 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
     @Override
     @JSONField(serialize = false)
     public String getTopUnitCode(){
-        IUserUnit cs = getCurrentStation();
+        JSONObject cs = getCurrentStation();
         IUnitInfo unitInfo = cs == null ?
-            CodeRepositoryUtil.getUnitInfoByCode(getUserInfo().getPrimaryUnit()):
-            CodeRepositoryUtil.getUnitInfoByCode(cs.getUnitCode());
+            CodeRepositoryUtil.getUnitInfoByCode(getUserInfo().getString("primaryUnit")):
+            CodeRepositoryUtil.getUnitInfoByCode(cs.getString("unitCode"));
         if(unitInfo == null){
-            return cs == null ? getUserInfo().getPrimaryUnit() : cs.getUnitCode();
+            return cs == null ? getUserInfo().getString("primaryUnit") : cs.getString("unitCode");
         }
         int pos = unitInfo.getUnitPath().indexOf('/');
         return pos<1 ? unitInfo.getUnitPath() :
@@ -150,13 +156,13 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
     @Override
     @JSONField(serialize = false)
     public String getPassword() {
-        return this.getUserInfo().getUserPin();
+        return this.getUserInfo().getString("userPin");
     }
 
     @Override
     public String getUsername() {
 
-        return this.getUserInfo().getLoginName();
+        return this.getUserInfo().getString("loginName");
     }
 
     @Override
@@ -232,7 +238,7 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
     @Override
     @JSONField(serialize = false)
     public Object getCredentials() {
-        return this.getUserInfo().getUserPin();
+        return this.getUserInfo().getString("userPin");
     }
 
     @Override
@@ -259,21 +265,53 @@ public abstract class AbstractCentitUserDetails implements CentitUserDetails, ja
 
     @Override
     public String getName() {
-        return this.getUserInfo().getLoginName();
+        return this.getUserInfo().getString("loginName");
     }
 
     @Override
     public boolean equals(Object other) {
        if(other instanceof CentitUserDetails)
-           return this.getUserInfo().getUserCode().equals(
-                   ((CentitUserDetails) other).getUserInfo().getUserCode());
+           return this.getUserInfo().getString("userCode").equals(
+                   ((CentitUserDetails) other).getUserInfo().getString("userCode"));
 
        return false;
     }
 
     @Override
     public int hashCode() {
-        return this.getUserInfo().getUserCode().hashCode();
+        return this.getUserInfo().getString("userCode").hashCode();
     }
 
+    @Override
+    public JSONObject getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(JSONObject userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    /**
+     * 获得用户授权角色
+     *
+     * @return 获得用户授权角色代码
+     */
+    @Override
+    public JSONArray getUserRoles() {
+        return this.userRoles;
+    }
+
+    public void setAuthoritiesByRoles(JSONArray roles) {
+        this.userRoles = roles;
+        makeUserAuthorities();
+    }
+
+    @Override
+    public JSONArray getUserUnits() {
+        return userUnits;
+    }
+
+    public void setUserUnits(JSONArray userUnits) {
+        this.userUnits = userUnits;
+    }
 }

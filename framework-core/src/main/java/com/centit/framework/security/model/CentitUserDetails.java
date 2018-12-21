@@ -1,13 +1,10 @@
 package com.centit.framework.security.model;
 
-import com.centit.framework.model.basedata.IRoleInfo;
-import com.centit.framework.model.basedata.IUserInfo;
-import com.centit.framework.model.basedata.IUserUnit;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 public interface CentitUserDetails extends
@@ -23,7 +20,7 @@ public interface CentitUserDetails extends
      * 获取用户基本信息，将用户信息 有继承 重构为组合
      * @return IUserInfo
      */
-    IUserInfo getUserInfo();
+    JSONObject getUserInfo();
 
     /**
      * 用户的参数，是个Map对，有系统参数也有业务系统自定义的参数
@@ -63,7 +60,7 @@ public interface CentitUserDetails extends
      * 获得用户授权角色
      * @return 获得用户授权角色代码
      */
-    List<? extends IRoleInfo> getUserRoles();
+    JSONArray getUserRoles();
 
     /**
      * 设置用户登录机器IP
@@ -81,7 +78,7 @@ public interface CentitUserDetails extends
      * 获取用户当前身份，用户有多个岗位时需要在首页上确定当前身份，默认为主机构
      * @return 当前生
      */
-    IUserUnit getCurrentStation();
+    JSONObject getCurrentStation();
 
     /**
      * 获取当前用户，当前机构的顶级机构，用于处理帐套
@@ -106,5 +103,5 @@ public interface CentitUserDetails extends
      * 获取用户归属机构关系
      * @return 获取用户归属机构关系
      */
-    List<? extends IUserUnit> getUserUnits();
+    JSONArray getUserUnits();
 }

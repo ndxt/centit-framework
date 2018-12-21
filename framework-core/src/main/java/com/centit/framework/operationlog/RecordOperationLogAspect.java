@@ -1,6 +1,7 @@
 package com.centit.framework.operationlog;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.controller.BaseController;
@@ -74,7 +75,7 @@ public class RecordOperationLogAspect {
             if(parameters[i].isAnnotationPresent(ParamName.class)){
                 ParamName param =  parameters[i].getAnnotation(ParamName.class);
                 paramName = param.value();
-            }            
+            }
             map.put(paramName,arguments[i]);
         }
         return map;
@@ -101,7 +102,7 @@ public class RecordOperationLogAspect {
             map.putAll(params);
         }
         CentitUserDetails userDetails = WebOptUtils.getLoginUser(request);
-        IUserInfo userInfo = (userDetails==null)?null:userDetails.getUserInfo();
+        JSONObject userInfo = (userDetails==null)?null:userDetails.getUserInfo();
         if(userInfo!=null) {
             map.put("loginUser", userInfo);
         }
@@ -126,7 +127,7 @@ public class RecordOperationLogAspect {
             oldValue = JSON.toJSONString(retObj);
         }
 
-        OperationLogCenter.log(logLevel, userInfo==null? loginIp : userInfo.getUserCode(),
+        OperationLogCenter.log(logLevel, userInfo==null? loginIp : userInfo.getString("userCode"),
                 optId, null ,joinPoint.getSignature().getName(),
                 optContent, newValue, oldValue);
     }

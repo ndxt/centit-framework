@@ -16,34 +16,34 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class OperationLogCenter {
-    
+
     private OperationLogCenter()
     {
-        
+
     }
 
     private static final Logger logger = LoggerFactory.getLogger(OperationLogCenter.class);
-    
+
     private static OperationLogWriter logWriter = null;
-    
+
     /**
      * 设置默认的写入器，如果用户调用  registerOperationLogWriter 则不执行
      * @param optLogWriter optLogWriter
      */
-    public static void initOperationLogWriter(OperationLogWriter optLogWriter){ 
+    public static void initOperationLogWriter(OperationLogWriter optLogWriter){
         if(logWriter == null)
             logWriter = optLogWriter;
     }
-    
+
     /**
      * 个用户设置自己的日志写入器
      * @param optLogWriter optLogWriter
      */
-    public static void registerOperationLogWriter(OperationLogWriter optLogWriter){        
+    public static void registerOperationLogWriter(OperationLogWriter optLogWriter){
         logWriter = optLogWriter;
     }
 
-  
+
     private static BlockingQueue<OperationLog> waitingForWriteLogs = new LinkedBlockingQueue<OperationLog>();
     private static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(3);
 
@@ -79,7 +79,7 @@ public class OperationLogCenter {
    }
 
    /**
-    * 记录日志内容 
+    * 记录日志内容
     * @param loglevel 操作日志还是错误提示
     * @param userCode 操作人员
     * @param optId    业务代码（类别）
@@ -95,57 +95,57 @@ public class OperationLogCenter {
        optLog.setOptTime(new Date());
        log(optLog);
    }
-   
+
    /**
-    * 记录日志内容 
+    * 记录日志内容
     * @param userCode 操作人员
     * @param optId    业务代码（类别）
     * 对象主键 可以没有
     * @param optMethod 操作方法
     * @param optContent 者操作说明
     */
-   public static void log(String userCode, String optId, String optMethod, String optContent) {       
+   public static void log(String userCode, String optId, String optMethod, String optContent) {
        log(OperationLog.LEVEL_INFO,userCode, optId, null, optMethod,  optContent,null,null);
    }
 
    /**
-    * 记录日志内容 
+    * 记录日志内容
     * @param userCode 操作人员
     * @param optId    业务代码（类别）
     * 对象主键  可以没有
-    * @param optMethod 操作方法  
-    * 操作前原始值 可以没有 
+    * @param optMethod 操作方法
+    * 操作前原始值 可以没有
     * @param optContent 者操作说明
     * @param newValue 详细参数json
     */
    public static void log(String userCode, String optId, String optMethod,
-           String optContent,String newValue) {       
+           String optContent,String newValue) {
        log(OperationLog.LEVEL_INFO,userCode, optId, null, optMethod,  optContent,newValue, null);
    }
-   
+
    /**
-    * 记录日志内容 
+    * 记录日志内容
     * @param userCode 操作人员
     * @param optId    业务代码（类别）
     * @param optTag 对象主键  可以没有
-    * @param optMethod 操作方法  
+    * @param optMethod 操作方法
     * @param optContent 者操作说明
     * @param newValue 新增json
     * @param oldValue 旧值json
     */
    public static void log(String userCode, String optId,String optTag, String optMethod,
-           String optContent,String newValue,String oldValue) {       
+           String optContent,String newValue,String oldValue) {
        log(OperationLog.LEVEL_INFO,userCode, optId, optTag, optMethod,  optContent,newValue, oldValue);
    }
 
-   
+
    /**
-    * 记录日志内容 
+    * 记录日志内容
     * @param userCode 操作人员
     * @param optId    业务代码（类别）
     * @param optMethod 操作方法
     * @param optContent 操作说明
-    */  
+    */
    public static void logError(String userCode, String optId, String optMethod, String optContent) {
            log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent,null, null);
    }
@@ -186,9 +186,9 @@ public class OperationLogCenter {
                                 String optContent,String newValue) {
         log(OperationLog.LEVEL_WARN,userCode, optId, null, optMethod,  optContent,newValue, null);
     }
-   
+
    /**
-    * 记录日志内容 
+    * 记录日志内容
     * @param request 获取当前用户
     * @param optId    业务代码（类别）
     * @param optTag   对象主键
@@ -199,13 +199,13 @@ public class OperationLogCenter {
     */
    public static void log(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent, String newValue, String oldValue ) {
-       log(OperationLog.LEVEL_INFO, WebOptUtils.getLoginUser(request).getUserInfo().getUserCode(),
-                optId, optTag, optMethod, optContent,newValue ,oldValue );
-      
+       log(OperationLog.LEVEL_INFO, WebOptUtils.getLoginUser(request).getUserCode(),
+                optId, optTag, optMethod, optContent,newValue ,oldValue);
+
    }
-   
+
    /**
-    * 记录日志内容 
+    * 记录日志内容
     * @param request 获取当前用户
     * @param optId    业务代码（类别）
     * @param optMethod 操作方法
@@ -216,18 +216,18 @@ public class OperationLogCenter {
           String optMethod,String optContent, String newValue) {
        log(request, optId, null, optMethod, optContent, newValue,null);
    }
-  
+
    /**
-    * 记录日志内容 
+    * 记录日志内容
     * @param request 获取当前用户
     * @param optId    业务代码（类别）
     * @param optMethod 操作方法
     * @param optContent 操作说明
     */
-   public static void log(HttpServletRequest request, String optId, String optMethod,String optContent ) {       
+   public static void log(HttpServletRequest request, String optId, String optMethod,String optContent ) {
        log(request, optId, null, optMethod, optContent, null,null);
    }
-  
+
 
    /**
     * 新建对象日志
@@ -242,9 +242,9 @@ public class OperationLogCenter {
            String optContent, Object newObject ) {
        log(OperationLog.LEVEL_INFO, userCode,
                 optId, optTag, optMethod, optContent,JSON.toJSONString(newObject) ,null );
-      
+
    }
-   
+
    /**
     * 删除对象日志
     * @param userCode 操作人员
@@ -258,9 +258,9 @@ public class OperationLogCenter {
            String optContent, Object oldObject ) {
        log(OperationLog.LEVEL_INFO, userCode,
                 optId, optTag, optMethod, optContent,null,JSON.toJSONString(oldObject)  );
-      
+
    }
-   
+
    /**
     * 更新对对象日志
     * @param userCode 操作人员
@@ -293,11 +293,11 @@ public class OperationLogCenter {
     */
    public static void logNewObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent, Object newObject ) {
-       logNewObject( WebOptUtils.getLoginUser(request).getUserInfo().getUserCode(),
+       logNewObject( WebOptUtils.getLoginUser(request).getUserCode(),
                 optId, optTag, optMethod, optContent,newObject );
-      
+
    }
-   
+
    /**
     * 查询数据日志
     * @param userCode 获取操作人员
@@ -311,13 +311,13 @@ public class OperationLogCenter {
        log(OperationLog.LEVEL_INFO, userCode,
                optId, null, optMethod, queryDesc,JSON.toJSONString(queryMap),null);
    }
-   
+
    public static void logQuery(HttpServletRequest request, String optId, String optMethod,
                String queryDesc, Map<String,Object> queryMap ) {
-           logQuery( WebOptUtils.getLoginUser(request).getUserInfo().getUserCode(),
+           logQuery( WebOptUtils.getLoginUser(request).getUserCode(),
                 optId,  optMethod, queryDesc,queryMap);
    }
-   
+
    /**
     * 删除对象日志
     * @param request 获取操作人员
@@ -329,11 +329,11 @@ public class OperationLogCenter {
     */
    public static void logDeleteObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent, Object oldObject ) {
-       logDeleteObject( WebOptUtils.getLoginUser(request).getUserInfo().getUserCode(),
+       logDeleteObject( WebOptUtils.getLoginUser(request).getUserCode(),
                 optId, optTag, optMethod, optContent,oldObject);
-      
+
    }
-   
+
    /**
     * 更新对对象日志
     * @param request 获取操作人员
@@ -347,7 +347,7 @@ public class OperationLogCenter {
    public static void logUpdateObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent,Object newObject , Object oldObject ) {
 
-       logUpdateObject( WebOptUtils.getLoginUser(request).getUserInfo().getUserCode(),
+       logUpdateObject( WebOptUtils.getLoginUser(request).getUserCode(),
                optId, optTag, optMethod, optContent,newObject,oldObject);
    }
  }

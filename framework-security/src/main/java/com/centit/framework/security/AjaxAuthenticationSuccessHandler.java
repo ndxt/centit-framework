@@ -9,7 +9,6 @@ import com.centit.framework.security.model.CentitUserDetailsService;
 import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import javax.servlet.ServletException;
@@ -53,7 +52,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             if(! lang.equals(userLang)){
                 ud.setUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE, userLang);
                 if(userDetailsService!=null){
-                    userDetailsService.saveUserSetting(ud.getUserInfo().getUserCode(),
+                    userDetailsService.saveUserSetting(ud.getUserCode(),
                             WebOptUtils.LOCAL_LANGUAGE_LABLE, lang, "SYS", "用户默认区域语言");
                 }
             }
@@ -71,8 +70,8 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         ud.setLoginIp(WebOptUtils.getRequestAddr(request));
 
         if(writeLog){
-            OperationLogCenter.log(ud.getUserInfo().getUserCode(),"login", "login",
-                    "用户 ："+ud.getUserInfo().getUserName()+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
+            OperationLogCenter.log(ud.getUserCode(),"login", "login",
+                    "用户 ："+ud.getUserInfo().getString("userName")+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
                     + "从主机"+request.getRemoteHost()+":"+WebOptUtils.getRequestAddr(request)+"登录。");
         }
 
