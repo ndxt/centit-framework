@@ -80,6 +80,7 @@ public abstract class AbstractStaticPlatformEnvironment
             }
             JsonCentitUserDetails ud = new JsonCentitUserDetails();
             ud.setUserInfo((JSONObject) JSON.toJSON(ui));
+            ud.getUserInfo().put("userPin", ui.getUserPin());
             ud.setAuthoritiesByRoles((JSONArray) JSON.toJSON(roles));
             ud.setUserOptList(userOptList);
             List<UserUnit> uulist = new ArrayList<>(10);
