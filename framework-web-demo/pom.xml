@@ -27,7 +27,6 @@
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-session</artifactId>
-            <version>4.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -125,6 +124,12 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.1.0</version>
         </dependency>
 
     </dependencies>

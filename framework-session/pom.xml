@@ -53,6 +53,12 @@
             <artifactId>ojdbc6</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>biz.paluch.redis</groupId>
+            <artifactId>lettuce</artifactId>
+            <version>3.5.0.Final</version>
+        </dependency>
     </dependencies>
 
 
