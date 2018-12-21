@@ -1,5 +1,6 @@
 package com.centit.framework.web.demo.config;
 
+import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.config.SystemSpringMvcConfig;
 import com.centit.framework.config.WebConfig;
 import org.springframework.web.WebApplicationInitializer;
@@ -73,7 +74,8 @@ public class WebInitializer implements WebApplicationInitializer {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(NormalSpringMvcConfig.class, SwaggerConfig.class);
         ServletRegistration.Dynamic system  = servletContext.addServlet("service", new DispatcherServlet(context));
-        system.addMapping("/service/*");
+        String servletName = SysParametersUtils.getStringValue("app.servlet.name","service");
+        system.addMapping("/"+ servletName+"/*");
         system.setLoadOnStartup(1);
         system.setAsyncSupported(true);
     }
