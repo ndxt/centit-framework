@@ -17,23 +17,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SmartHttpSessionStrategy implements MultiHttpSessionStrategy {
 
-    private HttpSessionStrategy browser = new CookieHttpSessionStrategy();
+    private HttpSessionStrategy browser;//= new CookieHttpSessionStrategy();
 
-    private HttpSessionStrategy api = new HeaderHttpSessionStrategy();
-
-    private RequestMatcher browserMatcher;
-
-//    @Autowired
-//    public SmartHttpSessionStrategy(ContentNegotiationStrategy contentNegotiationStrategy) {
-//        this(new CookieHttpSessionStrategy(), new HeaderHttpSessionStrategy());
-//        MediaTypeRequestMatcher matcher = new MediaTypeRequestMatcher(contentNegotiationStrategy,
-//            Arrays.asList(MediaType.TEXT_HTML));
-//        matcher.setIgnoredMediaTypes(Collections.singleton(MediaType.ALL));
-//
-//        RequestHeaderRequestMatcher javascript = new RequestHeaderRequestMatcher("X-Requested-With");
-//
-//        this.browserMatcher = new OrRequestMatcher(Arrays.asList(matcher, javascript));
-//    }
+    private HttpSessionStrategy api; // = new HeaderHttpSessionStrategy();
 
     public SmartHttpSessionStrategy() {
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
@@ -41,12 +27,9 @@ public class SmartHttpSessionStrategy implements MultiHttpSessionStrategy {
         CookieHttpSessionStrategy cookieHttpSessionStrategy = new CookieHttpSessionStrategy();
         cookieHttpSessionStrategy.setCookieSerializer(cookieSerializer);
         browser = cookieHttpSessionStrategy;
+        api = new HeaderHttpSessionStrategy();
     }
 
-    public SmartHttpSessionStrategy(HttpSessionStrategy browser, HttpSessionStrategy api) {
-        this.browser = browser;
-        this.api = api;
-    }
 
     @Override
     public String getRequestedSessionId(HttpServletRequest request) {
@@ -68,15 +51,8 @@ public class SmartHttpSessionStrategy implements MultiHttpSessionStrategy {
         api.onInvalidateSession(request, response);
     }
 
-    private HttpSessionStrategy getStrategy(HttpServletRequest request) {
-        return this.browserMatcher.matches(request) ? this.browser : this.api;
-    }
-
     @Override
     public HttpServletRequest wrapRequest(HttpServletRequest request, HttpServletResponse response) {
-//        HttpSessionStrategy sessionStrategy = getStrategy(request);
-//        return sessionStrategy instanceof MultiHttpSessionStrategy ?
-//            ((MultiHttpSessionStrategy)sessionStrategy).wrapRequest(request, response) : request;
         try {
             return ((MultiHttpSessionStrategy) browser).wrapRequest(request, response);
         } catch (Exception e){
@@ -86,25 +62,10 @@ public class SmartHttpSessionStrategy implements MultiHttpSessionStrategy {
 
     @Override
     public HttpServletResponse wrapResponse(HttpServletRequest request, HttpServletResponse response) {
-//        HttpSessionStrategy sessionStrategy = getStrategy(request);
-//        return sessionStrategy instanceof MultiHttpSessionStrategy ?
-//            ((MultiHttpSessionStrategy)sessionStrategy).wrapResponse(request, response) : response;
         try {
             return ((MultiHttpSessionStrategy) browser).wrapResponse(request, response);
         } catch (Exception e){
             return response;
         }
-    }
-
-    @Autowired(required = false)
-    @Qualifier(value = "browserHttpSessionStrategy")
-    public void setBrowser(HttpSessionStrategy httpSessionStrategy){
-        browser = httpSessionStrategy;
-    }
-
-    @Autowired(required = false)
-    @Qualifier(value = "apiHttpSessionStrategy")
-    public void setApi(HttpSessionStrategy httpSessionStrategy){
-        api = httpSessionStrategy;
     }
 }
