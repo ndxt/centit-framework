@@ -45,11 +45,15 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
 
     protected void makeUserAuthorities(){
         arrayAuths = new ArrayList<>();
-        if (this.getUserRoles().size() < 1)
+        JSONArray rolesJson = this.getUserRoles();
+        if (rolesJson == null || rolesJson.size() < 1) {
+            arrayAuths.add(new SimpleGrantedAuthority(CentitSecurityMetadata.ROLE_PREFIX
+                + SecurityContextUtils.PUBLIC_ROLE_CODE));
             return;
+        }
 
         boolean havePublicRole = false;
-        for (Object obj : this.getUserRoles()) {
+        for (Object obj : rolesJson) {
             JSONObject role  =(JSONObject) obj;
             arrayAuths.add(new SimpleGrantedAuthority(CentitSecurityMetadata.ROLE_PREFIX
                     + StringUtils.trim(role.getString("roleCode"))));
@@ -303,6 +307,10 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
     @Override
     public JSONArray getUserRoles() {
         return this.userRoles;
+    }
+
+    public void setUserRoles(JSONArray roles) {
+        this.setAuthoritiesByRoles(roles);
     }
 
     public void setAuthoritiesByRoles(JSONArray roles) {
