@@ -48,7 +48,7 @@ public class WebOptUtils {
         }
         return ud;
     }
-       
+
     private static CentitUserDetails innerGetLoginUser(HttpSession session) {
         Object attr = session.getAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
@@ -72,7 +72,7 @@ public class WebOptUtils {
         }
         return ud;
     }
-    
+
     public static CentitUserDetails getLoginUser(HttpSession session) {
         CentitUserDetails ud = getLoginUser();
         if(ud==null){
@@ -88,17 +88,16 @@ public class WebOptUtils {
         }
         return sHostIp;
     }
-    
+
     public static CentitUserDetails getLoginUser(HttpServletRequest request) {
         CentitUserDetails ud = getLoginUser();
-        if(request==null)
+        if(request == null || ud != null) {
             return ud;
-         //根据token获取用户信息
-        //在session中手动获得用户信息
-        if(ud==null){
-            ud = innerGetLoginUser(request.getSession());
         }
-        return ud;
+        //根据token获取用户信息
+        //在session中手动获得用户信息
+        return innerGetLoginUser(request.getSession());
+
     }
 
     public static String getLocalLangParameter(HttpServletRequest request) {
@@ -114,7 +113,7 @@ public class WebOptUtils {
         }
         return null;
     }
-    
+
     /**
      * 获取请求端希望的语言，策略是
      *     1，首先看请求中有没有通过 LOCAL_LANGUAGE_LABLE="LOCAL_LANG" 参数指定语言
@@ -151,7 +150,7 @@ public class WebOptUtils {
 
         return "zh_CN";
     }
-    
+
     public static void setCurrentLang(HttpSession session ,String localLang){
         if(StringUtils.isBlank(localLang))
             return;
@@ -171,7 +170,7 @@ public class WebOptUtils {
     public static void setCurrentLang(HttpServletRequest request,String localLang){
         setCurrentLang(request.getSession(),localLang);
     }
-    
+
     public static String getLoginUserName(HttpServletRequest request) {
         UserDetails ud = getLoginUser(request);
         if (ud == null)
