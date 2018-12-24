@@ -7,7 +7,7 @@
     <parent>
         <artifactId>centit-framework-dependencies</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>1.1.1811</version>
+        <version>1.1.1812</version>
     </parent>
 
     <groupId>com.centit.framework</groupId>

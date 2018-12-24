@@ -159,6 +159,10 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
         return this.getUserInfo().getString("userPin");
     }
 
+    /**
+     * 这儿的username是用户的登录名，userInfo中的userName是用户的中文名称
+     * @return 登录名
+     */
     @Override
     public String getUsername() {
 
