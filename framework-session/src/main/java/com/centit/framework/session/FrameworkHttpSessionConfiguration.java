@@ -1,5 +1,6 @@
 package com.centit.framework.session;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.MapSessionRepository;
@@ -9,9 +10,13 @@ import org.springframework.session.config.annotation.web.http.EnableSpringHttpSe
 @EnableSpringHttpSession
 public class FrameworkHttpSessionConfiguration {
 
+    @Value("${session.strategy.cookie.first:true}")
+    private boolean cookieFist;
+
     @Bean
     public SmartHttpSessionStrategy smartHttpSessionStrategy(){
-        return new SmartHttpSessionStrategy();
+        SmartHttpSessionStrategy sessionStrategy =  new SmartHttpSessionStrategy();
+        sessionStrategy.setCookieFirst(cookieFist);
+        return sessionStrategy;
     }
-
 }

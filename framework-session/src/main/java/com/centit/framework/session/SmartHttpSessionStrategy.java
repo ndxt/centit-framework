@@ -18,8 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 public class SmartHttpSessionStrategy implements MultiHttpSessionStrategy {
 
     private HttpSessionStrategy browser;//= new CookieHttpSessionStrategy();
-
     private HttpSessionStrategy api; // = new HeaderHttpSessionStrategy();
+
+    public void setCookieFirst(boolean cookieFirst) {
+        this.cookieFirst = cookieFirst;
+    }
+
+    private boolean cookieFirst;
 
     public SmartHttpSessionStrategy() {
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
@@ -28,13 +33,22 @@ public class SmartHttpSessionStrategy implements MultiHttpSessionStrategy {
         cookieHttpSessionStrategy.setCookieSerializer(cookieSerializer);
         browser = cookieHttpSessionStrategy;
         api = new HeaderHttpSessionStrategy();
+        cookieFirst = true;
     }
-
 
     @Override
     public String getRequestedSessionId(HttpServletRequest request) {
-        String sessionId = api.getRequestedSessionId(request);
-        return StringUtils.isNotBlank(sessionId) ? sessionId : browser.getRequestedSessionId(request);
+        if(cookieFirst){
+            String sessionId = browser.getRequestedSessionId(request);
+            if(StringUtils.isNotBlank(sessionId))
+                return sessionId;
+            return api.getRequestedSessionId(request);
+        }else {
+            String sessionId = api.getRequestedSessionId(request);
+            if(StringUtils.isNotBlank(sessionId))
+                return sessionId;
+            return browser.getRequestedSessionId(request);
+        }
     }
 
     @Override

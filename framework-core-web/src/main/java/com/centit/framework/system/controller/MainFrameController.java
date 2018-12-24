@@ -457,19 +457,13 @@ public class MainFrameController extends BaseController {
     /**
      * 检验是否登录
      * @param request request
-     * @param response response
      */
     @ApiOperation(value = "检验是否登录", notes = "检验当前用户用户是否登录")
     @GetMapping("/hasLogin")
-    @WrapUpResponseBody
-    public ResponseData hasLogin(HttpServletRequest request, HttpServletResponse response) {
+    @WrapUpResponseBody(contentType = WrapUpContentType.RAW)
+    public Boolean hasLogin(HttpServletRequest request) {
         CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-        if(ud==null) {
-            return ResponseData.makeErrorMessage(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录，请登录！");
-        }
-        else {
-            return ResponseData.makeResponseData(ud);
-        }
+        return ud!=null;
     }
 
     private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser){
