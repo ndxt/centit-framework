@@ -20,6 +20,8 @@ import java.util.*;
 // 系统用户信息表
 public class JsonCentitUserDetails implements CentitUserDetails, java.io.Serializable{
 
+    private static final long serialVersionUID = 1L;
+
     private String loginIp;
     private String currentStationId;
     private Map<String, String> userSettings;
