@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
-import com.centit.support.common.KeyValuePair;
+import com.centit.support.common.LeftRightPair;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.persistence.EmbeddedId;
@@ -92,7 +92,7 @@ public abstract class DictionaryMapUtils {
 
         List<DictionaryMapColumn> tempDictionaryMaps = new ArrayList<>(10);
 
-        for(DictionaryMapColumn field :tempDictionaryMaps){
+        for(DictionaryMapColumn field : fieldDictionaryMaps){
             if( ArrayUtils.contains(fields,field.getFieldName())){
                 tempDictionaryMaps.add(field);
             }
@@ -316,7 +316,7 @@ public abstract class DictionaryMapUtils {
      *
      */
     static public class DictionaryMapBuilder{
-        private Map<String,KeyValuePair<String,String>> dictionaryMap;
+        private Map<String,LeftRightPair<String,String>> dictionaryMap;
         private DictionaryMapBuilder(){
             dictionaryMap = new HashMap<>();
         }
@@ -331,7 +331,7 @@ public abstract class DictionaryMapUtils {
         public DictionaryMapBuilder addDictionaryDesc(
                 String codeField,String valueField,String dictCatalog){
             dictionaryMap.put(codeField,
-                    new KeyValuePair<>(valueField,dictCatalog));
+                    new LeftRightPair<>(valueField,dictCatalog));
             return this;
         }
 
@@ -339,7 +339,7 @@ public abstract class DictionaryMapUtils {
          * 直接返回内置的 Map类型变量
          * @return  Map
          */
-        public  Map<String,KeyValuePair<String,String>> create(){
+        public  Map<String,LeftRightPair<String,String>> create(){
             return dictionaryMap;
         }
     }
@@ -368,11 +368,11 @@ public abstract class DictionaryMapUtils {
      * @return DictionaryMapColumn 字段名包括数据字典相关信息
      */
     private static List<DictionaryMapColumn> getDictionaryMapColumns
-    (Map<String,KeyValuePair<String,String>> mapInfo){
+    (Map<String,LeftRightPair<String,String>> mapInfo){
         List<DictionaryMapColumn> fieldDictionaryMaps =
                 new ArrayList<>();
 
-        for(Map.Entry<String,KeyValuePair<String,String>> ent : mapInfo.entrySet()){
+        for(Map.Entry<String,LeftRightPair<String,String>> ent : mapInfo.entrySet()){
             DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
                     ent.getValue().getLeft(), ent.getValue().getRight(), ent.getKey());
 
@@ -390,7 +390,7 @@ public abstract class DictionaryMapUtils {
     }
 
     public static Map<String,Object>  mapJsonObject(Map<String,Object> obj,
-                                                          Map<String,KeyValuePair<String,String>> mapInfo) {
+                                                          Map<String,LeftRightPair<String,String>> mapInfo) {
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
     }
@@ -422,7 +422,7 @@ public abstract class DictionaryMapUtils {
     }
 
     public static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,
-                                                         Map<String,KeyValuePair<String,String>> mapInfo ) {
+                                                         Map<String,LeftRightPair<String,String>> mapInfo ) {
         if (objs == null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
@@ -456,7 +456,7 @@ public abstract class DictionaryMapUtils {
     }
 
     public static  JSONArray mapJsonArray(JSONArray objs,
-              Map<String,KeyValuePair<String,String>> mapInfo ) {
+              Map<String,LeftRightPair<String,String>> mapInfo ) {
         if (objs == null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
