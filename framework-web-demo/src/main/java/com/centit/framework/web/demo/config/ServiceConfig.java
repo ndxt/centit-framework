@@ -9,7 +9,6 @@ import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.security.model.StandardPasswordEncoderImpl;
 import com.centit.framework.service.impl.EmailMessageSenderImpl;
-import com.centit.framework.session.jdbc.JdbcSessionPersistenceConfig;
 import com.centit.framework.staticsystem.config.StaticSystemBeanConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
@@ -20,8 +19,7 @@ import org.springframework.context.annotation.*;
 @Configuration
 @ComponentScan(basePackages = {"com.centit","com.otherpackage"},
         excludeFilters = @ComponentScan.Filter(value = org.springframework.stereotype.Controller.class))
-@Import({JdbcSessionPersistenceConfig.class,
-        SpringSecurityDaoConfig.class,
+@Import({SpringSecurityDaoConfig.class,
         SpringSecurityCasConfig.class,
         StaticSystemBeanConfig.class})
 public class ServiceConfig {
