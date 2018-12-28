@@ -247,7 +247,7 @@ public interface ResponseData{
     int ERROR_OPERATION=800;
 
     String RES_CODE_FILED="code";
-    
+
     String RES_MSG_FILED="message";
     String RES_DATA_FILED="data";
 
@@ -282,6 +282,10 @@ public interface ResponseData{
         ResponseSingleData response = new ResponseSingleData(errorCode, message);
         response.setData(obj);
         return response;
+    }
+
+    static ResponseSingleData makeResponseData(Object objValue, Class<?> clazz){
+        return ResponseSingleData.makeResponseData(objValue);
     }
 
     static ResponseSingleData makeResponseData(Object objValue){

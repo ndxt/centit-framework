@@ -1,11 +1,15 @@
 package com.otherpackage.controller;
 
-import com.centit.framework.common.*;
+import com.centit.framework.common.ObjectException;
+import com.centit.framework.common.ResponseData;
+import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpContentType;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.operationlog.RecordOperationLog;
 import com.centit.support.algorithm.ByteBaseOpt;
+import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.common.LeftRightPair;
 import com.centit.support.common.ParamName;
 import com.centit.support.image.CaptchaImageUtil;
 import com.otherpackage.po.Student;
@@ -23,6 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @RestController
@@ -83,6 +90,63 @@ public class TestCaseController extends BaseController {
         stud.setStudNo(studNo);
         stud.setStudName("小强");
         return ResponseData.makeResponseData(stud);
+    }
+
+    @ApiOperation(value="根据学号查询学生(Map)",notes="根据学号查询学生。")
+    @ApiImplicitParams(@ApiImplicitParam(
+        name = "studNo", value="学号必须是两位数",
+        required=true, paramType = "path", dataType ="String"
+    ))
+    @GetMapping("/student3/{studNo}")
+    @WrapUpResponseBody(contentType = WrapUpContentType.MAP_DICT)
+    @RecordOperationLog(content = "查询学号为{studNo}学生", returnValueAsOld = true)
+    public Student findStudent3(@PathVariable @ParamName("studNo") String studNo) {
+        Student stud = new Student();
+        stud.setIsMan("Y");
+        stud.setStudNo(studNo);
+        stud.setStudName("小强");
+        return stud;
+    }
+
+    @ApiOperation(value="返回所有学生(Map)",notes="返回所有学生(Map)")
+    @GetMapping("/student")
+    @WrapUpResponseBody(contentType = WrapUpContentType.MAP_DICT)
+    @RecordOperationLog(content = "返回所有学生", returnValueAsOld = true)
+    public List<Student> listStudent() {
+        List<Student> listStud = new ArrayList<>(4);
+        Student stud = new Student();
+        stud.setIsMan("Y");
+        stud.setStudNo("1");
+        stud.setStudName("小强");
+        listStud.add(stud);
+        stud = new Student();
+        stud.setIsMan("N");
+        stud.setStudNo("2");
+        stud.setStudName("小红");
+        listStud.add(stud);
+        return listStud;
+    }
+
+    @ApiOperation(value="返回所有学生(pageQuery)",notes="返回所有学生(pageQuery)")
+    @GetMapping("/pagestudent")
+    @WrapUpResponseBody(contentType = WrapUpContentType.MAP_DICT_PAGE_QUERY)
+    @RecordOperationLog(content = "返回所有学生", returnValueAsOld = true)
+    public LeftRightPair<List<Student>, Map<String,Object>> listStudentPage() {
+        List<Student> listStud = new ArrayList<>(4);
+        Student stud = new Student();
+        stud.setIsMan("Y");
+        stud.setStudNo("1");
+        stud.setStudName("小强");
+        listStud.add(stud);
+        stud = new Student();
+        stud.setIsMan("N");
+        stud.setStudNo("2");
+        stud.setStudName("小红");
+        listStud.add(stud);
+        return new LeftRightPair<>(
+            listStud,
+            CollectionsOpt.createHashMap("totalRows",2,"pageSize",10,"pageNo",1)
+        );
     }
 
     @ApiOperation(value="测试获取js",notes="测试获取js。")

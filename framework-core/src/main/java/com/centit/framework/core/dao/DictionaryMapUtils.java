@@ -12,13 +12,18 @@ import org.apache.commons.lang3.ArrayUtils;
 import javax.persistence.EmbeddedId;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 作为DatabaseOptUtils的补充，添加的主要内容是和数据字典管理，包括对 DictionaryMap注解的处理
  * @author codefan
  *
  */
 @SuppressWarnings({"unused","unchecked"})
-public class DictionaryMapUtils {
+public abstract class DictionaryMapUtils {
+
+    private static final ConcurrentHashMap<String , List<DictionaryMapColumn>> DICTIONARY_MAP_METADATA_CLASSPATH =
+        new ConcurrentHashMap<>(100);
 
     private DictionaryMapUtils(){
 
@@ -37,6 +42,22 @@ public class DictionaryMapUtils {
                     dictionaryFieldName,
                     dm);
     }
+
+    public static List<DictionaryMapColumn> innerFetchDictionaryMapColumns(Class<?> objType){
+        List<DictionaryMapColumn> fieldDictionaryMaps = new ArrayList<>(10);
+        Field[] objFields = objType.getDeclaredFields();
+        for(Field field :objFields){
+            if (field.isAnnotationPresent(DictionaryMap.class)) {
+                DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
+                    field.getAnnotation(DictionaryMap.class),field.getName());
+                fieldDictionaryMaps.add(dictionaryMapColumn);
+            } else if (field.isAnnotationPresent(EmbeddedId.class)) {
+                fieldDictionaryMaps.addAll(
+                    innerFetchDictionaryMapColumns(field.getType()));
+            }
+        }
+        return fieldDictionaryMaps;
+    }
     /**
      * 检查objType属性上是否有DictionaryMap注解，如果有则获取对应的数据字典用于后面查询是转换编码
      * @param objType po对象类型
@@ -44,7 +65,13 @@ public class DictionaryMapUtils {
      */
     public static List<DictionaryMapColumn> getDictionaryMapColumns
             (Class<?> objType){
-        return getDictionaryMapColumns(null,objType);
+        String className = objType.getName();
+        List<DictionaryMapColumn> fieldDictionaryMaps = DICTIONARY_MAP_METADATA_CLASSPATH.get(className);
+        if(fieldDictionaryMaps == null){
+            fieldDictionaryMaps = innerFetchDictionaryMapColumns(objType);
+            DICTIONARY_MAP_METADATA_CLASSPATH.put(className, fieldDictionaryMaps);
+        }//end of for
+        return fieldDictionaryMaps;
     }
 
     /**
@@ -58,24 +85,19 @@ public class DictionaryMapUtils {
     (String[] fields,Class<?> objType){
 
         Field[] objFields = objType.getDeclaredFields();
-        List<DictionaryMapColumn> fieldDictionaryMaps =
-                new ArrayList<>(10);
+        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
+        if(fields==null || fields.length==0 || fieldDictionaryMaps.size()<1){
+            return fieldDictionaryMaps;
+        }
 
-        for(Field field :objFields){
-            if(fields==null || fields.length==0 ||
-                    ArrayUtils.contains(fields,field.getName())) {
-                if (field.isAnnotationPresent(DictionaryMap.class)) {
-                    DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
-                            field.getAnnotation(DictionaryMap.class),field.getName());
-                    fieldDictionaryMaps.add(dictionaryMapColumn);
-                } else if (field.isAnnotationPresent(EmbeddedId.class)) {
-                    fieldDictionaryMaps.addAll(
-                        getDictionaryMapColumns(field.getType()));
-                }
+        List<DictionaryMapColumn> tempDictionaryMaps = new ArrayList<>(10);
+
+        for(DictionaryMapColumn field :tempDictionaryMaps){
+            if( ArrayUtils.contains(fields,field.getFieldName())){
+                tempDictionaryMaps.add(field);
             }
-
         }//end of for
-        return fieldDictionaryMaps;
+        return tempDictionaryMaps;
     }
 
     /**

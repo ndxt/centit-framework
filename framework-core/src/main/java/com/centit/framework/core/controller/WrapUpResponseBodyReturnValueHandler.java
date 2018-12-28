@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSON;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ObjectException;
 import com.centit.framework.common.ResponseData;
+import com.centit.framework.common.ResponseMapData;
+import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.common.LeftRightPair;
 import com.centit.support.xml.XMLObject;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -27,6 +30,7 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 
 /**
  * @see org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor
@@ -113,14 +117,15 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                     throw new ObjectException(500, "需要image/gif格式的RenderedImage对象。");
                 }
                 break;
-            case XML:
-                String xmlValue;
-                if(ReflectionOpt.isScalarType(value.getClass())){
-                    xmlValue = StringBaseOpt.objectToString(value);
-                }else {
-                    xmlValue = XMLObject.objectToXMLString("response", value);
+            case XML: {
+                    String xmlValue;
+                    if (ReflectionOpt.isScalarType(value.getClass())) {
+                        xmlValue = StringBaseOpt.objectToString(value);
+                    } else {
+                        xmlValue = XMLObject.objectToXMLString("response", value);
+                    }
+                    JsonResultUtils.writeOriginalXml(xmlValue, outputMessage.getServletResponse());
                 }
-                JsonResultUtils.writeOriginalXml(xmlValue,outputMessage.getServletResponse());
                 break;
             case HTML:
                 JsonResultUtils.writeOriginalHtml(value,outputMessage.getServletResponse());
@@ -136,13 +141,62 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                     throw new ObjectException(500, "需要File对象。");
                 }
                 break;
-            default:
+            case MAP_DICT:{
+                    Object outputValue;
+                    if (value instanceof Collection) {
+                        outputValue =
+                            DictionaryMapUtils.objectsToJSONArray((Collection<? extends Object>)value);
+                    } else {
+                        outputValue = DictionaryMapUtils.objectToJSON(value);
+                    }
+                    messageConverter.write(
+                        ResponseData.makeResponseData(outputValue), MediaType.APPLICATION_JSON_UTF8, outputMessage);
+                }
+                break;
+            case PAGE_QUERY: {
+                    if (!(value instanceof LeftRightPair)) {
+                        messageConverter.write(
+                            ResponseData.makeErrorMessage("返回的数据必须为Pair类型，左边为objList，右边为pageDesc "),
+                            MediaType.APPLICATION_JSON_UTF8, outputMessage);
+                    }else {
+                        ResponseMapData respData = new ResponseMapData();
+                        respData.addResponseData(BaseController.OBJLIST, ((LeftRightPair) value).getLeft());
+                        respData.addResponseData(BaseController.PAGE_DESC, ((LeftRightPair) value).getRight());
+                        messageConverter.write(
+                            respData, MediaType.APPLICATION_JSON_UTF8, outputMessage);
+                    }
+                }
+                break;
+            case MAP_DICT_PAGE_QUERY: {
+                    if (!(value instanceof LeftRightPair)) {
+                        messageConverter.write(
+                            ResponseData.makeErrorMessage("返回的数据必须为Pair类型，左边为objList，右边为pageDesc "),
+                            MediaType.APPLICATION_JSON_UTF8, outputMessage);
+                    }else {
+                        ResponseMapData respData = new ResponseMapData();
+                        Object objlist = ((LeftRightPair) value).getLeft();
+                        if(! (objlist instanceof Collection)){
+                            messageConverter.write(
+                                ResponseData.makeErrorMessage("返回的数据必须为Pair类型，左边为objList，右边为pageDesc "),
+                                MediaType.APPLICATION_JSON_UTF8, outputMessage);
+                        }else {
+                            respData.addResponseData(BaseController.OBJLIST,
+                                DictionaryMapUtils.objectsToJSONArray((Collection<? extends Object>) objlist));
+                            respData.addResponseData(BaseController.PAGE_DESC, ((LeftRightPair) value).getRight());
+                            messageConverter.write(
+                                respData, MediaType.APPLICATION_JSON_UTF8, outputMessage);
+                        }
+                    }
+                }
+                break;
+            default: {
                 Object outputValue = value;
                 if (!(outputValue instanceof ResponseData)) {
                     outputValue = ResponseData.makeResponseData(outputValue);
                 }
                 messageConverter.write(
                     outputValue, MediaType.APPLICATION_JSON_UTF8, outputMessage);
+            }
             break;
         }
     }
