@@ -1,6 +1,8 @@
 package com.centit.framework.session.redis;
 
 import com.centit.framework.session.FrameworkHttpSessionConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -16,6 +18,8 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 @Conditional(RedisSessionPersistenceCondition.class)
 @EnableRedisHttpSession
 public class RedisSessionPersistenceConfig extends FrameworkHttpSessionConfiguration {
+    private Logger logger = LoggerFactory.getLogger(RedisSessionPersistenceConfig.class);
+
 
     @Value("${session.redis.host:}")
     private String host;
@@ -25,6 +29,7 @@ public class RedisSessionPersistenceConfig extends FrameworkHttpSessionConfigura
 
     @Bean
     public LettuceConnectionFactory connectionFactory() {
+        logger.info("已启用 [redis] session 持久化");
         return new LettuceConnectionFactory(host,port);
     }
 

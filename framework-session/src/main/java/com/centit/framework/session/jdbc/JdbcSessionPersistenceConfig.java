@@ -29,7 +29,7 @@ import java.sql.Driver;
 @EnableJdbcHttpSession(maxInactiveIntervalInSeconds = -1)
 public class JdbcSessionPersistenceConfig extends FrameworkHttpSessionConfiguration {
 
-    private Logger logger = LoggerFactory.getLogger("session持久化");
+    private Logger logger = LoggerFactory.getLogger(JdbcSessionPersistenceConfig.class);
 
     @Value("${session.jdbc.url:jdbc:h2:mem:framework_session;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false}")
     private String url;
@@ -58,7 +58,7 @@ public class JdbcSessionPersistenceConfig extends FrameworkHttpSessionConfigurat
                 schema = String.format(schema, "h2");
                 driverClass = org.h2.Driver.class;
         }
-
+        logger.info("已启用 jdbc [{}] session持久化", type.toString());
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
                 .continueOnError(true)
