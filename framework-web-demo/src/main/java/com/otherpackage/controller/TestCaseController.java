@@ -38,6 +38,10 @@ import java.util.Random;
 @RequestMapping("/test")
 public class TestCaseController extends BaseController {
 
+    public String getOptId(){
+        return "testCtrl";
+    }
+
     @ApiOperation(value="hello",notes="Say hello to somebody.")
     @ApiImplicitParams(@ApiImplicitParam(
         name = "userName", value="用户姓名，向某人说hello",
@@ -102,7 +106,7 @@ public class TestCaseController extends BaseController {
     @RecordOperationLog(content = "查询学号为{studNo}学生", returnValueAsOld = true)
     public Student findStudent3(@PathVariable @ParamName("studNo") String studNo) {
         Student stud = new Student();
-        stud.setIsMan("Y");
+        stud.setMan(true);
         stud.setStudNo(studNo);
         stud.setStudName("小强");
         return stud;
@@ -115,12 +119,12 @@ public class TestCaseController extends BaseController {
     public List<Student> listStudent() {
         List<Student> listStud = new ArrayList<>(4);
         Student stud = new Student();
-        stud.setIsMan("Y");
+        stud.setMan(true);
         stud.setStudNo("1");
         stud.setStudName("小强");
         listStud.add(stud);
         stud = new Student();
-        stud.setIsMan("N");
+        stud.setMan(false);
         stud.setStudNo("2");
         stud.setStudName("小红");
         listStud.add(stud);
@@ -134,12 +138,12 @@ public class TestCaseController extends BaseController {
     public LeftRightPair<List<Student>, Map<String,Object>> listStudentPage() {
         List<Student> listStud = new ArrayList<>(4);
         Student stud = new Student();
-        stud.setIsMan("Y");
+        stud.setMan(true);
         stud.setStudNo("1");
         stud.setStudName("小强");
         listStud.add(stud);
         stud = new Student();
-        stud.setIsMan("N");
+        stud.setMan(false);
         stud.setStudNo("2");
         stud.setStudName("小红");
         listStud.add(stud);

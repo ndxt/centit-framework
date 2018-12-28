@@ -14,8 +14,8 @@ public class Student {
     /**
      * Y / N 是否为男的
      */
-    @DictionaryMap(value=  "YesOrNo", fieldName = "isManText")
-    private String isMan;
+    @DictionaryMap(value=  "TrueOrFalse", fieldName = "isManText")
+    private boolean man;
 
     public String getStudNo() {
         return studNo;
@@ -33,11 +33,11 @@ public class Student {
         this.studName = studName;
     }
 
-    public String getIsMan() {
-        return isMan;
+    public boolean isMan() {
+        return man;
     }
 
-    public void setIsMan(String isMan) {
-        this.isMan = isMan;
+    public void setMan(boolean man) {
+        this.man = man;
     }
 }
