@@ -22,11 +22,10 @@ public class HttpReceiveJSON {
 
     /**
      * 返回的详细数据， 可能是需要回显的参数，也可能是验证的错误提示
-     * resObj resJSON  resJSONObject  resJSONOArray 这四个是同一个对象
+     * resObj resJSONObject  resJSONOArray 这几个个是同一个对象
      * isResponseData 表示 resJSONObject 中含有 code data message，是框架的标准回复
      */
     private Object resObj;
-    private JSON resJSON;
     private JSONObject resJSONObject;
     private JSONArray resJSONOArray;
 
@@ -94,13 +93,14 @@ public class HttpReceiveJSON {
 
 
     public <T> T getDataAsObject( Class<T> clazz) {
-        if(resJSON==null)
+        if(resObj==null) {
             return null;
+        }
         if( isResponseData ) {
             return resJSONObject.getObject(ResponseData.RES_DATA_FILED, clazz);
         }
-        if(isJSON){
-            return JSON.toJavaObject(resJSON, clazz);
+        if(this.isJSONObject()){
+            return JSON.toJavaObject(resJSONObject, clazz);
         }
         if( clazz.isAssignableFrom(resObj.getClass())){
             return (T) resObj;
@@ -109,7 +109,7 @@ public class HttpReceiveJSON {
     }
 
     public <T> List<T> getDataAsArray(Class<T> clazz) {
-        if(resJSON==null)
+        if(resObj==null)
             return null;
         JSONArray jsonArray = null;
         if( isResponseData ) {
@@ -194,20 +194,18 @@ public class HttpReceiveJSON {
         recvJson.resObj = JSON.parse(jsonStr);
         recvJson.isJSON = recvJson.resObj instanceof JSON;
         if(recvJson.isJSON) {
-            recvJson.resJSON = (JSON) recvJson.resObj;
-            if (recvJson.resJSON instanceof JSONObject) {
-                recvJson.resJSONObject = (JSONObject) recvJson.resJSON;
+            JSON resJSON = (JSON) recvJson.resObj;
+            if (resJSON instanceof JSONObject) {
+                recvJson.resJSONObject = (JSONObject) resJSON;
                 recvJson.isArray = false;
                 recvJson.isResponseData =
                     recvJson.resJSONObject.containsKey(ResponseData.RES_CODE_FILED)
                         && recvJson.resJSONObject.containsKey(ResponseData.RES_MSG_FILED)
                         && recvJson.resJSONObject.containsKey(ResponseData.RES_DATA_FILED);
-            } else {
+            } else /* if(resJSON instanceof JSONArray) */{
                 recvJson.isResponseData = false;
-                recvJson.isArray = recvJson.resJSON instanceof JSONArray;
-                if (recvJson.isArray) {
-                    recvJson.resJSONOArray = (JSONArray) recvJson.resJSON;
-                }
+                recvJson.isArray = true; // resJSON instanceof JSONArray;
+                recvJson.resJSONOArray = (JSONArray) resJSON;
             }
         }else{
             recvJson.isResponseData = false;
@@ -217,6 +215,9 @@ public class HttpReceiveJSON {
     }
 
     public JSON getOriginalJSON() {
-        return resJSON;
+        if(isJSON){
+            return (JSON)resObj;
+        }
+        return null;
     }
 }
