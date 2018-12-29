@@ -124,9 +124,11 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
             loginUrl = "/system/mainframe/login";
         }
         int maximumSessions = NumberBaseOpt.parseInteger(env.getProperty("session.concurrent.maximum"),-1);
-
         //添加了 ConcurrentSessionFilter
-        http.sessionManagement().maximumSessions(maximumSessions).sessionRegistry(sessionRegistry).expiredUrl(loginUrl);
+        if(maximumSessions>0 && sessionRegistry != null) {
+            http.sessionManagement().maximumSessions(maximumSessions)
+                .sessionRegistry(sessionRegistry).expiredUrl(loginUrl);
+        }
     }
 
     protected abstract String[] getAuthenticatedUrl();
