@@ -387,14 +387,13 @@ public abstract class DictionaryMapUtils {
         return builder.addDictionaryDesc(codeField, valueField, dictCatalog);
     }
 
-
     /**
      * 检查objType属性上是否有DictionaryMap注解，如果有则获取对应的数据字典用于后面查询是转换编码
      * @param mapInfo po对象类型
      * @return DictionaryMapColumn 字段名包括数据字典相关信息
      */
     private static List<DictionaryMapColumn> getDictionaryMapColumns
-    (Map<String,LeftRightPair<String,String>> mapInfo){
+            (Map<String,LeftRightPair<String,String>> mapInfo){
         List<DictionaryMapColumn> fieldDictionaryMaps =
                 new ArrayList<>();
 
@@ -421,8 +420,7 @@ public abstract class DictionaryMapUtils {
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
     }
 
-
-    private static List<Map<String,Object>>
+    public static List<Map<String,Object>>
         mapJsonArray(List<Map<String,Object>> objs, List<DictionaryMapColumn> fieldDictionaryMaps  ) {
         if(fieldDictionaryMaps==null | fieldDictionaryMaps.size()<1)
             return objs;
@@ -455,8 +453,8 @@ public abstract class DictionaryMapUtils {
         return mapJsonArray( objs, fieldDictionaryMaps);
     }
 
-    private static JSONArray
-    mapJsonArray(JSONArray objs, List<DictionaryMapColumn> fieldDictionaryMaps  ) {
+    public static JSONArray
+        mapJsonArray(JSONArray objs, List<DictionaryMapColumn> fieldDictionaryMaps  ) {
         if(fieldDictionaryMaps==null | fieldDictionaryMaps.size()<1)
             return objs;
         for(Object obj : objs){
@@ -474,14 +472,14 @@ public abstract class DictionaryMapUtils {
         return objs;
     }
 
-    public static  JSONArray mapJsonArray(JSONArray objs,Class<?> objType ) {
+    public static JSONArray mapJsonArray(JSONArray objs,Class<?> objType ) {
         if (objs == null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
         return mapJsonArray( objs, fieldDictionaryMaps);
     }
 
-    public static  JSONArray mapJsonArray(JSONArray objs,
+    public static JSONArray mapJsonArray(JSONArray objs,
               Map<String,LeftRightPair<String,String>> mapInfo ) {
         if (objs == null)
             return null;

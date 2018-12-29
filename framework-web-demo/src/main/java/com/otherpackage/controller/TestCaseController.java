@@ -8,8 +8,6 @@ import com.centit.framework.core.controller.WrapUpContentType;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.operationlog.RecordOperationLog;
 import com.centit.support.algorithm.ByteBaseOpt;
-import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.common.LeftRightPair;
 import com.centit.support.common.ParamName;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.support.image.CaptchaImageUtil;
@@ -30,7 +28,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 @RestController
@@ -148,6 +145,7 @@ public class TestCaseController extends BaseController {
         stud.setStudNo("2");
         stud.setStudName("小红");
         listStud.add(stud);
+        //JSONArray ja =  DictionaryMapUtils.objectsToJSONArray(listStud);
         return PageQueryResultSample.createResultMapDict(
             listStud,
             new PageDesc(1,10,2)
