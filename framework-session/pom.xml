@@ -17,7 +17,6 @@
         <dependency>
             <groupId>com.centit.support</groupId>
             <artifactId>centit-database</artifactId>
-            <version>${centit.commons.version}</version>
         </dependency>
 
         <dependency>

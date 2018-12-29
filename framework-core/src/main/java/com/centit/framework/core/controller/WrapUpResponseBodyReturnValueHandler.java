@@ -2,10 +2,7 @@ package com.centit.framework.core.controller;
 
 
 import com.alibaba.fastjson.JSON;
-import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.ObjectException;
-import com.centit.framework.common.ResponseData;
-import com.centit.framework.common.ResponseMapData;
+import com.centit.framework.common.*;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
@@ -153,46 +150,15 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                         ResponseData.makeResponseData(outputValue), MediaType.APPLICATION_JSON_UTF8, outputMessage);
                 }
                 break;
-            case PAGE_QUERY: {
-                    if (!(value instanceof LeftRightPair)) {
-                        messageConverter.write(
-                            ResponseData.makeErrorMessage("返回的数据必须为Pair类型，左边为objList，右边为pageDesc "),
-                            MediaType.APPLICATION_JSON_UTF8, outputMessage);
-                    }else {
-                        ResponseMapData respData = new ResponseMapData();
-                        respData.addResponseData(BaseController.OBJLIST, ((LeftRightPair) value).getLeft());
-                        respData.addResponseData(BaseController.PAGE_DESC, ((LeftRightPair) value).getRight());
-                        messageConverter.write(
-                            respData, MediaType.APPLICATION_JSON_UTF8, outputMessage);
-                    }
-                }
-                break;
-            case MAP_DICT_PAGE_QUERY: {
-                    if (!(value instanceof LeftRightPair)) {
-                        messageConverter.write(
-                            ResponseData.makeErrorMessage("返回的数据必须为Pair类型，左边为objList，右边为pageDesc "),
-                            MediaType.APPLICATION_JSON_UTF8, outputMessage);
-                    }else {
-                        ResponseMapData respData = new ResponseMapData();
-                        Object objlist = ((LeftRightPair) value).getLeft();
-                        if(! (objlist instanceof Collection)){
-                            messageConverter.write(
-                                ResponseData.makeErrorMessage("返回的数据必须为Pair类型，左边为objList，右边为pageDesc "),
-                                MediaType.APPLICATION_JSON_UTF8, outputMessage);
-                        }else {
-                            respData.addResponseData(BaseController.OBJLIST,
-                                DictionaryMapUtils.objectsToJSONArray((Collection<? extends Object>) objlist));
-                            respData.addResponseData(BaseController.PAGE_DESC, ((LeftRightPair) value).getRight());
-                            messageConverter.write(
-                                respData, MediaType.APPLICATION_JSON_UTF8, outputMessage);
-                        }
-                    }
-                }
-                break;
+
             default: {
-                Object outputValue = value;
-                if (!(outputValue instanceof ResponseData)) {
-                    outputValue = ResponseData.makeResponseData(outputValue);
+                ResponseData outputValue;
+                if (value instanceof ToResponseData){
+                    outputValue = ((ToResponseData)value).toResponseData();
+                } else if (value instanceof ResponseData) {
+                    outputValue = (ResponseData)value;
+                } else {
+                    outputValue = ResponseData.makeResponseData(value);
                 }
                 messageConverter.write(
                     outputValue, MediaType.APPLICATION_JSON_UTF8, outputMessage);

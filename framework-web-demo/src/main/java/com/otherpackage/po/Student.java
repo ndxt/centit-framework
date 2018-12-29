@@ -14,6 +14,7 @@ public class Student {
     /**
      * Y / N 是否为男的
      */
+    @ApiModelProperty(value = "是否为男性，测试数据字典")
     @DictionaryMap(value=  "TrueOrFalse", fieldName = "isManText")
     private boolean man;
 

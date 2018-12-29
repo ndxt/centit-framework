@@ -11,6 +11,7 @@ import com.centit.support.algorithm.ByteBaseOpt;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.LeftRightPair;
 import com.centit.support.common.ParamName;
+import com.centit.support.database.utils.PageDesc;
 import com.centit.support.image.CaptchaImageUtil;
 import com.otherpackage.po.Student;
 import io.swagger.annotations.Api;
@@ -133,9 +134,9 @@ public class TestCaseController extends BaseController {
 
     @ApiOperation(value="返回所有学生(pageQuery)",notes="返回所有学生(pageQuery)")
     @GetMapping("/pagestudent")
-    @WrapUpResponseBody(contentType = WrapUpContentType.MAP_DICT_PAGE_QUERY)
+    @WrapUpResponseBody
     @RecordOperationLog(content = "返回所有学生", returnValueAsOld = true)
-    public LeftRightPair<List<Student>, Map<String,Object>> listStudentPage() {
+    public PageQueryResultSample<Student> listStudentPage() {
         List<Student> listStud = new ArrayList<>(4);
         Student stud = new Student();
         stud.setMan(true);
@@ -147,9 +148,9 @@ public class TestCaseController extends BaseController {
         stud.setStudNo("2");
         stud.setStudName("小红");
         listStud.add(stud);
-        return new LeftRightPair<>(
+        return PageQueryResultSample.createResultMapDict(
             listStud,
-            CollectionsOpt.createHashMap("totalRows",2,"pageSize",10,"pageNo",1)
+            new PageDesc(1,10,2)
         );
     }
 
