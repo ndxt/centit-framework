@@ -407,10 +407,13 @@ public abstract class DictionaryMapUtils {
         return fieldDictionaryMaps;
     }
 
-    public static Map<String,Object>  mapJsonObject(Map<String,Object> obj,Class<?> objType ) {
+    public static Map<String,Object>  mapJsonObject(Map<String,Object> obj,Class<?>... objTypes) {
         if (obj == null)
             return null;
-        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
+        List<DictionaryMapColumn> fieldDictionaryMaps = new ArrayList<>();
+        for(Class<?> objType : objTypes) {
+            fieldDictionaryMaps.addAll(DictionaryMapUtils.getDictionaryMapColumns(objType));
+        }
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
     }
 
@@ -437,10 +440,13 @@ public abstract class DictionaryMapUtils {
     }
 
 
-    public static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,Class<?> objType ) {
+    public static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,Class<?>... objTypes) {
         if (objs == null)
             return null;
-        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
+        List<DictionaryMapColumn> fieldDictionaryMaps = new ArrayList<>();
+        for(Class<?> objType : objTypes) {
+            fieldDictionaryMaps.addAll(DictionaryMapUtils.getDictionaryMapColumns(objType));
+        }
         return mapJsonArray( objs, fieldDictionaryMaps);
 
     }
@@ -454,7 +460,7 @@ public abstract class DictionaryMapUtils {
     }
 
     public static JSONArray
-        mapJsonArray(JSONArray objs, List<DictionaryMapColumn> fieldDictionaryMaps  ) {
+        mapJsonArray(JSONArray objs, List<DictionaryMapColumn> fieldDictionaryMaps) {
         if(fieldDictionaryMaps==null | fieldDictionaryMaps.size()<1)
             return objs;
         for(Object obj : objs){
@@ -472,10 +478,13 @@ public abstract class DictionaryMapUtils {
         return objs;
     }
 
-    public static JSONArray mapJsonArray(JSONArray objs,Class<?> objType ) {
+    public static JSONArray mapJsonArray(JSONArray objs, Class<?> ...objTypes) {
         if (objs == null)
             return null;
-        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
+        List<DictionaryMapColumn> fieldDictionaryMaps = new ArrayList<>();
+        for(Class<?> objType : objTypes) {
+            fieldDictionaryMaps.addAll(DictionaryMapUtils.getDictionaryMapColumns(objType));
+        }
         return mapJsonArray( objs, fieldDictionaryMaps);
     }
 
