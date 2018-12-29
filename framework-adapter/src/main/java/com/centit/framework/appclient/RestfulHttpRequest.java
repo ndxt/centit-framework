@@ -1,7 +1,6 @@
 package com.centit.framework.appclient;
 
 import com.alibaba.fastjson.JSON;
-import com.centit.framework.common.ResponseJSON;
 import com.centit.support.network.UrlOptUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
@@ -18,7 +17,7 @@ public class RestfulHttpRequest {
 
     private static Logger logger = LoggerFactory.getLogger(RestfulHttpRequest.class);
 
-    public static ResponseJSON getResponseData(AppSession appSession,
+    public static HttpReceiveJSON getResponseData(AppSession appSession,
                                                  String httpGetUrl){
         CloseableHttpClient httpClient = null;
         try {
@@ -44,7 +43,7 @@ public class RestfulHttpRequest {
         try {
             httpClient = appSession.allocHttpClient();
             appSession.checkAccessToken(httpClient);
-            ResponseJSON resJson =  appSession.getResponseData(
+            HttpReceiveJSON resJson =  appSession.getResponseData(
                 httpClient,httpGetUrl);
             if(resJson==null)
                 return null;
@@ -66,7 +65,7 @@ public class RestfulHttpRequest {
         try {
             httpClient = appSession.allocHttpClient();
             appSession.checkAccessToken(httpClient);
-            ResponseJSON resJson =  appSession.getResponseData(
+            HttpReceiveJSON resJson =  appSession.getResponseData(
                     httpClient,httpGetUrl);
             if(resJson==null)
                 return null;
@@ -82,7 +81,7 @@ public class RestfulHttpRequest {
         }
     }
 
-    public static ResponseJSON getResponseData(AppSession appSession,
+    public static HttpReceiveJSON getResponseData(AppSession appSession,
                           String httpGetUrl,Map<String,Object> queryParam){
         return getResponseData(appSession,
             UrlOptUtils.appendParamsToUrl( httpGetUrl,queryParam));

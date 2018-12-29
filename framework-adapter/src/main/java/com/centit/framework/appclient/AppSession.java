@@ -2,7 +2,6 @@ package com.centit.framework.appclient;
 
 import com.alibaba.fastjson.JSON;
 import com.centit.framework.common.ObjectException;
-import com.centit.framework.common.ResponseJSON;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.network.HttpExecutor;
 import com.centit.support.network.HttpExecutorContext;
@@ -75,7 +74,7 @@ public class AppSession {
         param.put("userCode", userCode);
         param.put("password", password);
         String jsonStr = HttpExecutor.formPost(createHttpExecutorContext(httpclient), appServerUrl + "/system/mainframe/loginasclient", param);
-        ResponseJSON jsonData = ResponseJSON.valueOfJson(jsonStr);
+        HttpReceiveJSON jsonData = HttpReceiveJSON.valueOfJson(jsonStr);
         if(jsonData==null || jsonData.getCode()!=0){
             throw new ObjectException(jsonData==null?"访问服务器失败":jsonData.getMessage());
         }
@@ -126,30 +125,30 @@ public class AppSession {
         return  HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
                 completeQueryUrl(httpGetUrl), "");
     }
-    
-    public ResponseJSON getResponseData(CloseableHttpClient httpClient,
+
+    public HttpReceiveJSON getResponseData(CloseableHttpClient httpClient,
                                          String httpGetUrl, String queryParam)
         throws IOException {
 
-        return ResponseJSON.valueOfJson(
+        return HttpReceiveJSON.valueOfJson(
             HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
             completeQueryUrl(httpGetUrl), queryParam));
     }
 
-    public ResponseJSON getResponseData(CloseableHttpClient httpClient,
+    public HttpReceiveJSON getResponseData(CloseableHttpClient httpClient,
                                          String httpGetUrl, Map<String,Object> queryParam)
         throws IOException {
 
-        return ResponseJSON.valueOfJson(
+        return HttpReceiveJSON.valueOfJson(
             HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
                 completeQueryUrl(httpGetUrl), queryParam));
     }
 
-    public ResponseJSON getResponseData(CloseableHttpClient httpClient,
+    public HttpReceiveJSON getResponseData(CloseableHttpClient httpClient,
                                          String httpGetUrl)
         throws IOException {
 
-        return ResponseJSON.valueOfJson(
+        return HttpReceiveJSON.valueOfJson(
             HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
                 completeQueryUrl(httpGetUrl), ""));
     }
