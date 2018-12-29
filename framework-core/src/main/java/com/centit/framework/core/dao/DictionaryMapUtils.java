@@ -120,7 +120,7 @@ public abstract class DictionaryMapUtils {
             for(String fieldName : fields ){
                 newJsonObj.put(fieldName, jsonObj.get(fieldName));
             }
-            if(fieldDictionaryMaps==null||fieldDictionaryMaps.size()==0)
+            if(fieldDictionaryMaps==null || fieldDictionaryMaps.size()==0)
                 return newJsonObj;
 
             for(DictionaryMapColumn col:fieldDictionaryMaps){
@@ -146,6 +146,17 @@ public abstract class DictionaryMapUtils {
         return objectToJSON(obj, fields, fieldDictionaryMaps);
     }
 
+    /**
+     * 将一个Po对象转换为JSONObject 不检查对象上面的的属性是否有DictionaryMap注解，只做fields的过滤
+     * @param obj Object
+     * @param fields 过滤相关字段
+     * @return Po对象转换为JSONObject
+     */
+    public static Object objectToJSONNotMapDict(Object obj, String[] fields){
+        if(obj==null)
+            return null;
+        return objectToJSON(obj, fields, null);
+    }
 
     /**
      * 将一个Po对象转换为JSONObject 同时检查对象上面的的属性是否有DictionaryMap注解，如果有转换数据字典
@@ -272,6 +283,21 @@ public abstract class DictionaryMapUtils {
         return ja;
     }
 
+    /**
+     * 将一个Po对象列表转换为JSONArray 不检查对象上面的的属性是否有DictionaryMap注解，只做fields的过滤
+     * @param objs Collection Object
+     * @param fields 过滤相关字段
+     * @return Po对象列表转换为JSONArray
+     */
+    public static JSONArray objectsToJSONArrayNotMapDict(Collection<? extends Object> objs, String[] fields){
+        JSONArray ja = new JSONArray();
+        if(objs==null||objs.isEmpty())
+            return ja;
+        for(Object obj : objs){
+            ja.add(objectToJSON(obj, fields, null));
+        }
+        return ja;
+    }
 
     /**
      * 将一个Po对象数组转换为JSONArray 同时检查对象上面的的属性是否有DictionaryMap注解，如果有转换数据字典
