@@ -150,20 +150,19 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                         ResponseData.makeResponseData(outputValue), MediaType.APPLICATION_JSON_UTF8, outputMessage);
                 }
                 break;
-
             default: {
-                ResponseData outputValue;
-                if (value instanceof ToResponseData){
-                    outputValue = ((ToResponseData)value).toResponseData();
-                } else if (value instanceof ResponseData) {
-                    outputValue = (ResponseData)value;
-                } else {
-                    outputValue = ResponseData.makeResponseData(value);
+                    ResponseData outputValue;
+                    if (value instanceof ToResponseData){
+                        outputValue = ((ToResponseData)value).toResponseData();
+                    } else if (value instanceof ResponseData) {
+                        outputValue = (ResponseData)value;
+                    } else {
+                        outputValue = ResponseData.makeResponseData(value);
+                    }
+                    messageConverter.write(
+                        outputValue, MediaType.APPLICATION_JSON_UTF8, outputMessage);
                 }
-                messageConverter.write(
-                    outputValue, MediaType.APPLICATION_JSON_UTF8, outputMessage);
-            }
-            break;
+                break;
         }
     }
 
