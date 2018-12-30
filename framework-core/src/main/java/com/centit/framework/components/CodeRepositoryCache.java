@@ -52,13 +52,23 @@ public abstract class CodeRepositoryCache {
         return ctx.getBean(beanName, clazz);
     }
 
+    public interface EvictCacheExtOpt{
+        void evictCache(String cacheName, String mapKey);
+        void evictCache(String cacheName);
+        void evictAllCache();
+    }
 
+    private static EvictCacheExtOpt evictCacheExtOpt = null;
     private static PlatformEnvironment platformEnvironment = null;
 
     public static void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
         if(platformEnvironment!=null) {
             CodeRepositoryCache.platformEnvironment = platformEnvironment;
         }
+    }
+
+    public static void setEvictCacheExtOpt(EvictCacheExtOpt evictCacheExtOpt) {
+        CodeRepositoryCache.evictCacheExtOpt = evictCacheExtOpt;
     }
 
     private static PlatformEnvironment getPlatformEnvironment() {
@@ -166,10 +176,17 @@ public abstract class CodeRepositoryCache {
                 CodeRepositoryCache.roleUnitsRepo.evictCahce();
                 break;
         }
+        if(CodeRepositoryCache.evictCacheExtOpt != null){
+            CodeRepositoryCache.evictCacheExtOpt.evictCache(cacheName, mapKey);
+        }
     }
 
     public static void evictCache(String cacheName){
         CodeRepositoryCache.evictCache(cacheName, null);
+
+        if(CodeRepositoryCache.evictCacheExtOpt != null){
+            CodeRepositoryCache.evictCacheExtOpt.evictCache(cacheName);
+        }
     }
 
     public static void evictAllCache(){
@@ -186,6 +203,10 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.roleUsersRepo.evictCahce();
         CodeRepositoryCache.unitRolesRepo.evictCahce();
         CodeRepositoryCache.roleUnitsRepo.evictCahce();
+
+        if(CodeRepositoryCache.evictCacheExtOpt != null){
+            CodeRepositoryCache.evictCacheExtOpt.evictAllCache();
+        }
     }
 
     /**

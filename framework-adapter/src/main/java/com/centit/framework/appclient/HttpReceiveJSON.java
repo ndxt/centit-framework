@@ -200,8 +200,9 @@ public class HttpReceiveJSON {
                 recvJson.isArray = false;
                 recvJson.isResponseData =
                     recvJson.resJSONObject.containsKey(ResponseData.RES_CODE_FILED)
-                        && recvJson.resJSONObject.containsKey(ResponseData.RES_MSG_FILED)
-                        && recvJson.resJSONObject.containsKey(ResponseData.RES_DATA_FILED);
+                        && recvJson.resJSONObject.containsKey(ResponseData.RES_MSG_FILED);
+                        // ResponseData 可能没有data部分，但是code和message一定是有的。
+                        // && recvJson.resJSONObject.containsKey(ResponseData.RES_DATA_FILED);
             } else /* if(resJSON instanceof JSONArray) */{
                 recvJson.isResponseData = false;
                 recvJson.isArray = true; // resJSON instanceof JSONArray;
