@@ -11,6 +11,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import javax.persistence.EmbeddedId;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,8 +57,17 @@ public abstract class DictionaryMapUtils {
                     innerFetchDictionaryMapColumns(field.getType()));
             }
         }
+        List<Method> getter = ReflectionOpt.getAllGetterMethod(objType);
+        for(Method method : getter){
+            if (method.isAnnotationPresent(DictionaryMap.class)) {
+                DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
+                    method.getAnnotation(DictionaryMap.class),ReflectionOpt.mapGetter2Field(method));
+                fieldDictionaryMaps.add(dictionaryMapColumn);
+            }
+        }
         return fieldDictionaryMaps;
     }
+
     /**
      * 检查objType属性上是否有DictionaryMap注解，如果有则获取对应的数据字典用于后面查询是转换编码
      * @param objType po对象类型
@@ -495,4 +505,6 @@ public abstract class DictionaryMapUtils {
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
         return mapJsonArray( objs, fieldDictionaryMaps);
     }
+
+
 }

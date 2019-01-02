@@ -10,6 +10,7 @@ import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
+import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.ThirdPartyCheckUserDetails;
@@ -617,12 +618,13 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "查询当前用户所有职位", notes = "查询当前用户所有职位")
     @GetMapping(value = "/userpositions")
     @WrapUpResponseBody
-    public ResponseData listCurrentUserUnits(HttpServletRequest request) {
+    public JSONArray listCurrentUserUnits(HttpServletRequest request) {
         CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
         if(currentUser==null){
-            return ResponseData.makeErrorMessage(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
+            throw new ObjectException("用户没有登录或者超时，请重新登录。");
         }
-        return ResponseData.makeResponseData(DictionaryMapUtils.objectsToJSONArray(currentUser.getUserUnits()));
+
+        return DictionaryMapUtils.mapJsonArray(currentUser.getUserUnits(), IUserUnit.class);
     }
 
     /**
