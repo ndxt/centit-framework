@@ -16,9 +16,15 @@ public class TestJson {
         System.out.println(JSON.toJSONString(true));
 */
         String jsonStr = "{\"code\":0,\"message\":\"ok\"," +
-            "\"data\":[1,'hello',3,4,5]}";
+            "\"data\":{\"hello\":\"Say Hello to\", \"world\":\" json world!\"," +
+            "\"int\":1024, \"bool\":false, \"intArr\":[1,2,3,4]}}";
         HttpReceiveJSON json = HttpReceiveJSON.valueOfJson(jsonStr);
         System.out.println(json.getDataAsString());
+        System.out.println(json.getDataAsString("hello")+ json.getDataAsString("world"));
+        System.out.println(json.getDataAsObject("int", Integer.class));
+        System.out.println(json.getDataAsObject("bool", Boolean.class));
+        System.out.println(json.getDataAsArray("intArr", Integer.class));
+        System.out.println(json.getOriginalJSON());
 
         json = HttpReceiveJSON.valueOfJson( "[1,2,3,4,5]");
         //Integer ints = json.getDataAsObject(Integer.class);
@@ -37,6 +43,7 @@ public class TestJson {
             "\"d\":[1,'hello',3,4,5]}";
         json = HttpReceiveJSON.valueOfJson(jsonStr);
         System.out.println(json.getDataAsString());
+        System.out.println(json.getMessage());
 
         System.out.println(json.getDataAsString("d"));
 

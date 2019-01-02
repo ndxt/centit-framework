@@ -16,22 +16,19 @@ import java.util.Map;
  * 获取http请求 返回的数据；这个应该命名为 receiveJson
  * 作为接收数据使用
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused","unchecked"})
 public class HttpReceiveJSON {
     private static final Logger logger = LoggerFactory.getLogger(HttpReceiveJSON.class);
 
     /**
      * 返回的详细数据， 可能是需要回显的参数，也可能是验证的错误提示
-     * resObj resJSONObject  resJSONOArray 这几个个是同一个对象
+     * resObj resJSONObject  这两个是同一个对象
      * isResponseData 表示 resJSONObject 中含有 code data message，是框架的标准回复
      */
     private Object resObj;
-    private JSONObject resJSONObject;
-    private JSONArray resJSONOArray;
 
-    private boolean isJSON;
     private boolean isResponseData;
-    private boolean isArray;
+    private JSONObject resJSONObject;
 
     private HttpReceiveJSON() {
     }
@@ -41,42 +38,34 @@ public class HttpReceiveJSON {
     }
 
     public boolean isJSON() {
-        return isJSON;
-    }
-
-    public boolean isJSONObject() {
-        return isJSON && !isArray && !isResponseData;
+        return resObj instanceof JSON;
     }
 
     public boolean isResponseData() {
         return isResponseData;
     }
 
-    public boolean isArray() {
-        return isArray;
-    }
-
     public int getCode() {
-        if(resObj == null || !isResponseData)
-            return 0;
-        Integer retCode = resJSONObject.getInteger(ResponseData.RES_CODE_FILED);
-        return retCode==null ? 0 : retCode;
+        if(isResponseData) {
+            Integer retCode = resJSONObject.getInteger(ResponseData.RES_CODE_FILED);
+            return retCode == null ? 0 : retCode;
+        }
+        return 0;
     }
 
     public String getMessage() {
-        if(resObj == null|| !isResponseData)
-            return "OK";
-        return resJSONObject.getString(ResponseData.RES_MSG_FILED);
+        return isResponseData?
+            resJSONObject.getString(ResponseData.RES_MSG_FILED) :
+            "OK";
     }
 
     public Object getData() {
-        if(resObj==null)
+        if(resObj == null)
             return null;
         return isResponseData ?
             resJSONObject.get(ResponseData.RES_DATA_FILED) :
             resObj;
     }
-
 
     public String getDataAsString() {
         if(resObj==null)
@@ -84,7 +73,6 @@ public class HttpReceiveJSON {
         Object obj = isResponseData ?
             resJSONObject.get(ResponseData.RES_DATA_FILED) :
             resObj;
-
         if(obj instanceof JSON){
             return ((JSON)obj).toJSONString();
         }
@@ -93,33 +81,28 @@ public class HttpReceiveJSON {
 
 
     public <T> T getDataAsObject( Class<T> clazz) {
-        if(resObj==null) {
+        Object data = getData();
+        if(data==null) {
             return null;
         }
-        if( isResponseData ) {
-            return resJSONObject.getObject(ResponseData.RES_DATA_FILED, clazz);
+        if(data instanceof JSONObject) {
+            return JSON.toJavaObject((JSONObject)data, clazz);
         }
-        if(this.isJSONObject()){
-            return JSON.toJavaObject(resJSONObject, clazz);
-        }
-        if( clazz.isAssignableFrom(resObj.getClass())){
-            return (T) resObj;
+        if(clazz.isAssignableFrom(data.getClass())){
+            return (T) data;
         }
         return null;
     }
 
     public <T> List<T> getDataAsArray(Class<T> clazz) {
-        if(resObj==null)
+        Object data = getData();
+        if(data==null) {
             return null;
-        JSONArray jsonArray = null;
-        if( isResponseData ) {
-            jsonArray = resJSONObject.getJSONArray(ResponseData.RES_DATA_FILED);
-        }else if(isArray){
-            jsonArray = resJSONOArray;
         }
-        if(jsonArray==null)
-            return null;
-        return jsonArray.toJavaList(clazz);
+        if(data instanceof JSONArray) {
+            return ((JSONArray)data).toJavaList(clazz);
+        }
+        return null;
     }
 
     public static <T> Map<String,T> convertJSONToMap(JSONObject jsonMap, Class<T> clazz) {
@@ -132,8 +115,9 @@ public class HttpReceiveJSON {
 
     public <T> Map<String,T> getDataAsMap( Class<T> clazz) {
         Object data = getData();
-        if(data==null)
+        if(data==null) {
             return null;
+        }
         if(data instanceof JSONObject){
             return convertJSONToMap((JSONObject)data,clazz);
         }
@@ -142,8 +126,9 @@ public class HttpReceiveJSON {
 
     public Object getData(String skey) {
         Object data = getData();
-        if(data==null)
+        if(data==null) {
             return null;
+        }
         if(data instanceof JSONObject) {
             return ((JSONObject) data).get(skey);
         }
@@ -158,22 +143,22 @@ public class HttpReceiveJSON {
         return StringBaseOpt.objectToString(obj);
     }
 
-
-
     public <T> T getDataAsObject(String sKey, Class<T> clazz) {
         Object data = getData();
-        if(data==null)
+        if(data==null) {
             return null;
+        }
         if(data instanceof JSONObject) {
-            return ((JSONObject) data).getObject(sKey,clazz);
+            return ((JSONObject) data).getObject(sKey, clazz);
         }
         return null;
     }
 
     public <T> List<T> getDataAsArray(String sKey, Class<T> clazz) {
         Object data = getData(sKey);
-        if(data==null/* || !(data instanceof Map)*/)
+        if(data==null) {
             return null;
+        }
         if(data instanceof JSONArray) {
             return ((JSONArray)data).toJavaList(clazz);
         }
@@ -182,9 +167,10 @@ public class HttpReceiveJSON {
 
     public <T> Map<String,T> getDataAsMap(String sKey, Class<T> clazz) {
         Object data = getData(sKey);
-        if(data==null || !(data instanceof JSONObject))
-            return null;
-        return convertJSONToMap((JSONObject)data,clazz);
+        if(data instanceof JSONObject) {
+            return convertJSONToMap((JSONObject) data, clazz);
+        }
+        return null;
     }
 
     public static HttpReceiveJSON valueOfJson(String jsonStr){
@@ -192,12 +178,11 @@ public class HttpReceiveJSON {
             return null;
         HttpReceiveJSON recvJson = new HttpReceiveJSON();
         recvJson.resObj = JSON.parse(jsonStr);
-        recvJson.isJSON = recvJson.resObj instanceof JSON;
-        if(recvJson.isJSON) {
+        boolean isJSON = recvJson.resObj instanceof JSON;
+        if(isJSON) {
             JSON resJSON = (JSON) recvJson.resObj;
             if (resJSON instanceof JSONObject) {
                 recvJson.resJSONObject = (JSONObject) resJSON;
-                recvJson.isArray = false;
                 recvJson.isResponseData =
                     recvJson.resJSONObject.containsKey(ResponseData.RES_CODE_FILED)
                         && recvJson.resJSONObject.containsKey(ResponseData.RES_MSG_FILED);
@@ -205,18 +190,15 @@ public class HttpReceiveJSON {
                         // && recvJson.resJSONObject.containsKey(ResponseData.RES_DATA_FILED);
             } else /* if(resJSON instanceof JSONArray) */{
                 recvJson.isResponseData = false;
-                recvJson.isArray = true; // resJSON instanceof JSONArray;
-                recvJson.resJSONOArray = (JSONArray) resJSON;
             }
         }else{
             recvJson.isResponseData = false;
-            recvJson.isArray = false;
         }
         return recvJson;
     }
 
     public JSON getOriginalJSON() {
-        if(isJSON){
+        if(isJSON()){
             return (JSON)resObj;
         }
         return null;
