@@ -8,7 +8,6 @@ import com.centit.support.network.HttpExecutorContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
@@ -36,9 +35,11 @@ public class AppSession {
         this.userCode = userCode;
         this.password = password;
 
-        GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        GenericObjectPoolConfig<CloseableHttpClient> config =
+            new GenericObjectPoolConfig<>();
 
-        httpClientPool =  new GenericObjectPool<>(new PooledHttpClientFactory(),
+        httpClientPool =  new GenericObjectPool<>(
+            new PooledHttpClientFactory(),
                 config);
     }
 
@@ -55,7 +56,7 @@ public class AppSession {
     }
 
     public boolean checkAccessToken(CloseableHttpClient httpclient)
-            throws ClientProtocolException, ObjectException, IOException{
+            throws ObjectException, IOException{
         if(!needAuthenticated){
             return true;
         }
@@ -69,7 +70,7 @@ public class AppSession {
     }
 
     public void askAccessToken(CloseableHttpClient httpclient)
-            throws ClientProtocolException, IOException,ObjectException{
+            throws IOException,ObjectException{
         Map<String,String> param = new HashMap<>();
         param.put("userCode", userCode);
         param.put("password", password);
