@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.ResponseData;
 import com.centit.support.algorithm.StringBaseOpt;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +16,7 @@ import java.util.Map;
  */
 @SuppressWarnings({"unused","unchecked"})
 public class HttpReceiveJSON {
-    private static final Logger logger = LoggerFactory.getLogger(HttpReceiveJSON.class);
-
+    //private static final Logger logger = LoggerFactory.getLogger(HttpReceiveJSON.class);
     /**
      * 返回的详细数据， 可能是需要回显的参数，也可能是验证的错误提示
      * resObj resJSONObject  这两个是同一个对象
@@ -178,21 +175,14 @@ public class HttpReceiveJSON {
             return null;
         HttpReceiveJSON recvJson = new HttpReceiveJSON();
         recvJson.resObj = JSON.parse(jsonStr);
-        boolean isJSON = recvJson.resObj instanceof JSON;
-        if(isJSON) {
-            JSON resJSON = (JSON) recvJson.resObj;
-            if (resJSON instanceof JSONObject) {
-                recvJson.resJSONObject = (JSONObject) resJSON;
-                recvJson.isResponseData =
-                    recvJson.resJSONObject.containsKey(ResponseData.RES_CODE_FILED)
-                        && recvJson.resJSONObject.containsKey(ResponseData.RES_MSG_FILED);
-                        // ResponseData 可能没有data部分，但是code和message一定是有的。
-                        // && recvJson.resJSONObject.containsKey(ResponseData.RES_DATA_FILED);
-            } else /* if(resJSON instanceof JSONArray) */{
-                recvJson.isResponseData = false;
-            }
-        }else{
-            recvJson.isResponseData = false;
+        recvJson.isResponseData = false;
+        if (recvJson.resObj instanceof JSONObject) {
+            recvJson.resJSONObject = (JSONObject) recvJson.resObj;
+            recvJson.isResponseData =
+                recvJson.resJSONObject.containsKey(ResponseData.RES_CODE_FILED) &&
+                recvJson.resJSONObject.containsKey(ResponseData.RES_MSG_FILED);
+                // ResponseData 可能没有data部分，但是code和message一定是有的。
+                // && recvJson.resJSONObject.containsKey(ResponseData.RES_DATA_FILED);
         }
         return recvJson;
     }
