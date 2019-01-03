@@ -55,8 +55,10 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         casFilter.setAuthenticationFailureHandler(createAjaxFailureHandler());
         casFilter.setAuthenticationSuccessHandler(createAjaxSuccessHandler());
 
-        casFilter.setSessionAuthenticationStrategy(
-            new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
+        if(sessionRegistry != null) {
+            casFilter.setSessionAuthenticationStrategy(
+                new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
+        }
 
         return casFilter;
     }
