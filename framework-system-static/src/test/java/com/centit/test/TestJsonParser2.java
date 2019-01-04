@@ -1,20 +1,33 @@
 package com.centit.test;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.components.CodeRepositoryCache;
+import com.centit.framework.core.dao.DictionaryMapColumn;
+import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.staticsystem.po.OptInfo;
+import com.centit.framework.staticsystem.po.UserUnit;
+import com.centit.framework.staticsystem.service.impl.JsonPlatformEnvironment;
 import com.centit.support.file.FileIOOpt;
 
 public class TestJsonParser2 {
 
     public static void main(String[] args) {
-        toOptInfo2();
+        JsonPlatformEnvironment plat =  new JsonPlatformEnvironment();
+        plat.setAppHome("/home/codefan/projects/framework/centit-framework/framework-web-demo/src/main/resources");
+        CodeRepositoryCache.setPlatformEnvironment(plat);
+        List<DictionaryMapColumn> maps = DictionaryMapUtils.getDictionaryMapColumns(UserUnit.class);
+        for(DictionaryMapColumn dmc : maps){
+            System.out.println(dmc.getFieldName()+":" +dmc.getMapFieldName());
+        }
+        //toOptInfo2();
     }
-    
+
     public static void toOptInfo3(){
-        
+
         String jsonStr2="{"+
 "    'icon':'icon-base icon-base-user',"+
 "    'text':'下属部门管理',"+
@@ -69,7 +82,7 @@ public class TestJsonParser2 {
         OptInfo opt = JSON.parseObject(jsonStr2, OptInfo.class);
         System.out.println(opt.getOptName());
     }
-    
+
     public static void toOptInfo(){
         try {
             String text = FileIOOpt.readStringFromFile("D:\\Projects\\RunData\\optinfo.josn");
@@ -97,5 +110,5 @@ public class TestJsonParser2 {
         }
 
     }
-    
+
 }
