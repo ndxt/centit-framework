@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class EnvironmentController extends BaseController {
 
     public String getOptId (){
-        return "environment";
+        return "mainframe";
     }
 
     /**

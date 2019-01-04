@@ -42,7 +42,9 @@ import java.util.*;
     tags= "框架数据缓存接口")
 public class CacheController extends BaseController {
 
-    private String optId = "cache";
+    public String getOptId (){
+        return "mainframe";
+    }
     /**
      * cp标签中MAPVALUE实现，获取数据字典对应的值
      *

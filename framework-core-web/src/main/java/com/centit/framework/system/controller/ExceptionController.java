@@ -27,13 +27,17 @@ import java.io.IOException;
 public class ExceptionController {
 
     private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
+    public String getOptId (){
+        return "mainframe";
+    }
+
     /**
      * 访问当前无权限URL请求后返回地址
      * @return 访问当前无权限URL请求后返回地址
      */
     @RequestMapping(value = "/accessDenied")
     public String accessDenied() {
-        return "forward:/system/exception/error/403";          
+        return "forward:/system/exception/error/403";
     }
 
     /**
@@ -53,7 +57,7 @@ public class ExceptionController {
         if (WebOptUtils.isAjax(request)) {
             //框架前端AngularJs均由Ajax请求接收数据
             String errorMessage;
-            
+
             switch (code) {
                 case 404:
                     errorMessage = "未找到此资源";
@@ -69,7 +73,7 @@ public class ExceptionController {
                             //触发异常的类
                             if (null != ex) {
                                 errorMessage = ex.getMessage();
-                            }else                           
+                            }else
                                 errorMessage = "无权限访问此资源 !";
                         }
                     }
@@ -95,7 +99,7 @@ public class ExceptionController {
                     }
                     break;
             }
-            
+
             JsonResultUtils.writeErrorMessageJson(code, errorMessage, response);
             return null;
             //throw new ObjectException(errorMessage, ObjectException.ExceptionType.SYSTEM);

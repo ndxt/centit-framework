@@ -70,9 +70,14 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         ud.setLoginIp(WebOptUtils.getRequestAddr(request));
 
         if(writeLog){
-            OperationLogCenter.log(ud.getUserCode(),"login", "login",
+            String remoteHost = request.getRemoteHost();
+            String loginIp = WebOptUtils.getRequestAddr(request);
+            if(!loginIp.startsWith(remoteHost)){
+                loginIp = remoteHost + ":" + loginIp;
+            }
+            OperationLogCenter.log(ud.getUserCode(),"mainframe", "login",
                     "用户 ："+ud.getUserInfo().getString("userName")+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
-                    + "从主机"+request.getRemoteHost()+":"+WebOptUtils.getRequestAddr(request)+"登录。");
+                    + "从主机"+loginIp+"登录。");
         }
 
         String ajax = request.getParameter("ajax");

@@ -251,8 +251,9 @@ public abstract class CodeRepositoryUtil {
                 }
                 case CodeRepositoryUtil.OPT_ID:{
                     IOptInfo oi= getOptRepo().get(sKey);
-                    if(oi==null)
+                    if(oi==null) {
                         return sKey;
+                    }
                     return oi.getOptName();
                 }
                 case CodeRepositoryUtil.OPT_CODE:{
@@ -1039,93 +1040,7 @@ public abstract class CodeRepositoryUtil {
      * @return Map  数据字典
      */
     public static Map<String,String> getAllLabelValueMap(String sCatalog, String localLang) {
-        Map<String,String> lbvs = new HashMap<>();
-
-        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.USER_CODE)) {
-            for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
-                IUserInfo value = ent.getValue();
-                //if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
-                    lbvs.put(value.getUserCode(),value.getUserName());
-                //}
-            }
-            return lbvs;
-        }
-
-        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.LOGIN_NAME)) {
-            for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
-                IUserInfo value = ent.getValue();
-                //if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
-                lbvs.put(value.getUserCode(),value.getLoginName());
-                //}
-            }
-            return lbvs;
-        }
-
-        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.UNIT_CODE)) {
-            for (IUnitInfo value : getUnitAsTree()) {
-                //if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
-                    lbvs.put(value.getUnitCode(),value.getUnitName());
-                //}
-            }
-            return lbvs;
-        }
-
-        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.DEP_NO)) {
-            for (Map.Entry<String, ? extends IUnitInfo> ent : getDepNo().entrySet()) {
-                IUnitInfo value = ent.getValue();
-                // System.out.println(value.getIsvalid());
-                //if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
-                    lbvs.put(value.getDepNo(),value.getUnitName());
-                //}
-            }
-            return lbvs;
-        }
-
-        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.ROLE_CODE)) {
-            for (Map.Entry<String,? extends IRoleInfo> ent : getRoleRepo().entrySet()) {
-                IRoleInfo value = ent.getValue();
-                //if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
-                    lbvs.put(value.getRoleCode(),value.getRoleName());
-                //}
-            }
-            return lbvs;
-        }
-
-        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.OPT_ID)) {
-            for (Map.Entry<String,? extends IOptInfo> ent : getOptRepo().entrySet()) {
-                IOptInfo value = ent.getValue();
-                lbvs.put(value.getOptId(),value.getOptName());
-            }
-            return lbvs;
-        }
-
-        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.OPT_CODE)) {
-            for (Map.Entry<String,? extends IOptMethod> ent : getPowerRepo().entrySet()) {
-                IOptMethod value = ent.getValue();
-                lbvs.put(value.getOptCode(),value.getOptName());
-            }
-            return lbvs;
-        }
-
-        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.OPT_DESC)) {
-            for (Map.Entry<String,? extends IOptMethod> ent : getPowerRepo().entrySet()) {
-                IOptMethod optdef = ent.getValue();
-                IOptInfo value = getOptRepo().get(optdef.getOptId());
-                lbvs.put(optdef.getOptCode(), value.getOptName() + "-" + optdef.getOptName());
-            }
-            return lbvs;
-        }
-
-        List<? extends IDataDictionary> dcMap = getDictionary(sCatalog);
-        if (dcMap != null) {
-            for (IDataDictionary value : dcMap) {
-                //if (value.getDataTag() != null && !"D".equals(value.getDataTag())) {
-                lbvs.put(value.getDataCode(),value.getLocalDataValue(localLang));
-                //}
-            }
-
-        }
-        return lbvs;
+        return innterGetLabelValueMap(sCatalog, localLang, true);
     }
 
 
@@ -1138,8 +1053,10 @@ public abstract class CodeRepositoryUtil {
      * @return  数据字典,忽略禁用的条目
      */
     public static Map<String,String> getLabelValueMap(String sCatalog){
-        return getLabelValueMap(sCatalog,WebOptUtils.getCurrentLang(getLocalThreadWrapperRequest()));
+        return innterGetLabelValueMap(sCatalog,
+            WebOptUtils.getCurrentLang(getLocalThreadWrapperRequest()),false);
     }
+
     /**
      * 获取 数据字典 key value 对， 忽略 禁用的 条目
      *
@@ -1148,12 +1065,16 @@ public abstract class CodeRepositoryUtil {
      * @return 数据字典,忽略禁用的条目
      */
     public static Map<String,String> getLabelValueMap(String sCatalog, String localLang) {
+        return innterGetLabelValueMap(sCatalog, localLang, false);
+    }
+
+    private static Map<String,String> innterGetLabelValueMap(String sCatalog, String localLang, boolean allItem) {
         Map<String,String> lbvs = new HashMap<>();
 
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.USER_CODE)) {
             for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
                 IUserInfo value = ent.getValue();
-                if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                if (allItem || CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.put(value.getUserCode(),value.getUserName());
                 }
             }
@@ -1162,7 +1083,7 @@ public abstract class CodeRepositoryUtil {
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.LOGIN_NAME)) {
             for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
                 IUserInfo value = ent.getValue();
-                if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                if (allItem || CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.put(value.getUserCode(),value.getLoginName());
                 }
             }
@@ -1170,7 +1091,7 @@ public abstract class CodeRepositoryUtil {
         }
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.UNIT_CODE)) {
             for (IUnitInfo value : getUnitAsTree()) {
-                if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                if (allItem || CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.put(value.getUnitCode(),value.getUnitName());
                 }
             }
@@ -1181,7 +1102,7 @@ public abstract class CodeRepositoryUtil {
             for (Map.Entry<String, ? extends IUnitInfo> ent : getDepNo().entrySet()) {
                 IUnitInfo value = ent.getValue();
                 // System.out.println(value.getIsvalid());
-                if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                if (allItem || CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.put(value.getDepNo(),value.getUnitName());
                 }
             }
@@ -1191,7 +1112,7 @@ public abstract class CodeRepositoryUtil {
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.ROLE_CODE)) {
             for (Map.Entry<String,? extends IRoleInfo> ent : getRoleRepo().entrySet()) {
                 IRoleInfo value = ent.getValue();
-                if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                if (allItem || CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.put(value.getRoleCode(),value.getRoleName());
                 }
             }
@@ -1203,6 +1124,7 @@ public abstract class CodeRepositoryUtil {
                 IOptInfo value = ent.getValue();
                 lbvs.put(value.getOptId(),value.getOptName());
             }
+            lbvs.put("mainframe", "框架平台");
             return lbvs;
         }
 
@@ -1226,7 +1148,7 @@ public abstract class CodeRepositoryUtil {
         List<? extends IDataDictionary> dcMap = getDictionary(sCatalog);
         if (dcMap != null) {
             for (IDataDictionary value : dcMap) {
-                if (value.getDataTag() != null && !"D".equals(value.getDataTag())) {
+                if (allItem || (value.getDataTag() != null && !"D".equals(value.getDataTag()))) {
                     lbvs.put(value.getDataCode(),value.getLocalDataValue(localLang));
                 }
             }
