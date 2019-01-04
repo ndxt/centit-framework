@@ -145,8 +145,8 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
 
     protected abstract AbstractAuthenticationProcessingFilter getAuthenticationFilter();
 
-    protected FilterSecurityInterceptor centitPowerFilter(){
-        FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
+    protected DaoFilterSecurityInterceptor centitPowerFilter(){
+        DaoFilterSecurityInterceptor interceptor = new DaoFilterSecurityInterceptor();
         AuthenticationManager authenticationManager = createAuthenticationManager();
         Assert.notNull(authenticationManager, "authenticationManager不能为空");
         AjaxAuthenticationSuccessHandler successHandler = createAjaxSuccessHandler();
