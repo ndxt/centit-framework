@@ -32,14 +32,14 @@ public abstract class DictionaryMapUtils {
     }
 
     private static DictionaryMapColumn makeDictionaryMapColumn(DictionaryMap dictionary, String fieldName ){
-        Map<String,String> dm = CodeRepositoryUtil.getLabelValueMap(dictionary.value());
+        Map<String,String> dm = CodeRepositoryUtil.getAllLabelValueMap(dictionary.value());
         return new DictionaryMapColumn(fieldName,
                     dictionary.fieldName(),
                     dm);
     }
 
     private static DictionaryMapColumn makeDictionaryMapColumn(String dictionaryFieldName, String dataCatalog, String fieldName ){
-        Map<String,String> dm = CodeRepositoryUtil.getLabelValueMap(dataCatalog);
+        Map<String,String> dm = CodeRepositoryUtil.getAllLabelValueMap(dataCatalog);
         return new DictionaryMapColumn(fieldName,
                     dictionaryFieldName,
                     dm);

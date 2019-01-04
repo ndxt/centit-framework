@@ -1022,19 +1022,17 @@ public abstract class CodeRepositoryUtil {
 
     /**
      * 获取 数据字典 key value 对
-     *
      * @param sCatalog 数据字典类别，或者系统内置的类别
      *         userCode 用户信息 unitCode机构信息
      *         roleCode 角色信息 optId 业务信息
      * @return Map  数据字典
      */
     public static Map<String,String> getAllLabelValueMap(String sCatalog){
-        return getAllLabelValueMap(sCatalog,WebOptUtils.getCurrentLang(
-                getLocalThreadWrapperRequest()));
+        return innterGetLabelValueMap(sCatalog,WebOptUtils.getCurrentLang(
+                getLocalThreadWrapperRequest()), true);
     }
     /**
      * 获取 数据字典 key value
-     *
      * @param sCatalog 数据字典类别，或者系统内置的类别
      * @param localLang localLang
      * @return Map  数据字典
