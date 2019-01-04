@@ -73,8 +73,10 @@ public abstract class CodeRepositoryUtil {
 
     public static List<? extends IUnitInfo> getUnitAsTree() {
         List<? extends IUnitInfo> units = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
-        CollectionsOpt.sortAsTree(units,
-            ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
+        if(units!=null) {
+            CollectionsOpt.sortAsTree(units,
+                (p, c) -> StringUtils.equals(p.getUnitCode(), c.getParentUnit()));
+        }
         return units;
     }
 

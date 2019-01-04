@@ -10,6 +10,7 @@ import com.centit.support.common.LeftRightPair;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.persistence.EmbeddedId;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -44,6 +45,20 @@ public abstract class DictionaryMapUtils {
                     dm);
     }
 
+    public static void mergeDictionaryMapColumn(List<DictionaryMapColumn> des, Class<?> objType){
+        if( objType !=null
+            && ! objType.equals(Object.class)
+            && ! objType.equals(Serializable.class)) {
+            List<DictionaryMapColumn> mapCols = getDictionaryMapColumns(objType);
+            if (mapCols != null) {
+                for (DictionaryMapColumn mc : mapCols) {
+                    if (!des.contains(mc)) {
+                        des.add(mc);
+                    }
+                }
+            }
+        }
+    }
     public static List<DictionaryMapColumn> innerFetchDictionaryMapColumns(Class<?> objType){
         List<DictionaryMapColumn> fieldDictionaryMaps = new ArrayList<>(10);
         Field[] objFields = objType.getDeclaredFields();
@@ -62,9 +77,22 @@ public abstract class DictionaryMapUtils {
             if (method.isAnnotationPresent(DictionaryMap.class)) {
                 DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
                     method.getAnnotation(DictionaryMap.class),ReflectionOpt.mapGetter2Field(method));
-                fieldDictionaryMaps.add(dictionaryMapColumn);
+                //FIXED 不能简单的 add 需要去重
+                if(!fieldDictionaryMaps.contains(dictionaryMapColumn)) {
+                    fieldDictionaryMaps.add(dictionaryMapColumn);
+                }
             }
         }
+
+        Class<?> superClass = objType.getSuperclass();
+        mergeDictionaryMapColumn(fieldDictionaryMaps, superClass);
+        Class<?> interfaces[] = objType.getInterfaces();
+        if(interfaces !=null) {
+            for (Class<?> intf : interfaces){
+                mergeDictionaryMapColumn(fieldDictionaryMaps, intf);
+            }
+        }
+
         return fieldDictionaryMaps;
     }
 
@@ -92,7 +120,7 @@ public abstract class DictionaryMapUtils {
      * @return DictionaryMapColumn 字段名包括数据字典相关信息
      */
     public static List<DictionaryMapColumn> getDictionaryMapColumns
-    (String[] fields,Class<?> objType){
+            (String[] fields,Class<?> objType){
 
         Field[] objFields = objType.getDeclaredFields();
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);

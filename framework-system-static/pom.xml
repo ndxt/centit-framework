@@ -22,6 +22,11 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- test library -->
         <dependency>
             <groupId>junit</groupId>

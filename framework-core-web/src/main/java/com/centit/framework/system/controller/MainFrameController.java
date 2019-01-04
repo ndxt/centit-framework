@@ -639,7 +639,8 @@ public class MainFrameController extends BaseController {
         if(currentUser==null){
             return ResponseData.makeErrorMessage(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
-        return ResponseData.makeResponseData(DictionaryMapUtils.objectToJSON(currentUser.getCurrentStation()));
+        return ResponseData.makeResponseData(
+            DictionaryMapUtils.objectToJSON(currentUser.getCurrentStation()), IUserUnit.class);
     }
 
     /**

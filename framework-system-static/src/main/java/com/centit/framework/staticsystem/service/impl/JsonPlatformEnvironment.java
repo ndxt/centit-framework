@@ -71,7 +71,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
      */
     protected synchronized void reloadPlatformData() {
         try {
-            CodeRepositoryCache.evictAllCache();
+            //CodeRepositoryCache.evictAllCache();
             String jsonstr = loadJsonStringFormConfigFile("/static_system_config.json");
             loadConfigFromJSONString(jsonstr);
         } catch (IOException e) {
