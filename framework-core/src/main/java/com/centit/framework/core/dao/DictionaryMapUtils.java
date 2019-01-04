@@ -279,7 +279,11 @@ public abstract class DictionaryMapUtils {
     public static Object objectToJSONCascade(Object obj){
         if(obj==null)
             return null;
-        return mapJsonObjectCascade((JSONObject)JSON.toJSON(obj), obj);
+        Object json = JSON.toJSON(obj);
+        if(json instanceof JSONObject) {
+            return mapJsonObjectCascade((JSONObject)json, obj);
+        }
+        return json;
     }
 
     /**
@@ -445,7 +449,7 @@ public abstract class DictionaryMapUtils {
         return fieldDictionaryMaps;
     }
 
-    public static Map<String,Object>  mapJsonObject(Map<String,Object> obj,Class<?>... objTypes) {
+    public static Map<String,Object>  mapJsonObject(Map<String,Object> obj, Class<?>... objTypes) {
         if (obj == null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = new ArrayList<>();
@@ -533,6 +537,4 @@ public abstract class DictionaryMapUtils {
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
         return mapJsonArray( objs, fieldDictionaryMaps);
     }
-
-
 }
