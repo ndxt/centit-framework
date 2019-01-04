@@ -106,10 +106,14 @@ public class RecordOperationLogAspect {
         if(userInfo!=null) {
             map.put("loginUser", userInfo);
         }
-        String loginIp = request.getRemoteHost()+":"+WebOptUtils.getRequestAddr(request);
+
+        String remoteHost = request.getRemoteHost();
+        String loginIp = WebOptUtils.getRequestAddr(request);
+        if(!loginIp.startsWith(remoteHost)){
+            loginIp = remoteHost + ":" + loginIp;
+        }
         map.put("loginIp", loginIp);
         String optContent = Pretreatment.mapTemplateString(operationLog.content(),map);
-
         Object targetController = joinPoint.getTarget();
         String optId = StringBaseOpt.castObjectToString(
                 ReflectionOpt.getFieldValue(targetController,"optId"),"UNKNOWN");
