@@ -72,12 +72,16 @@ public abstract class CodeRepositoryUtil {
     }
 
     public static List<? extends IUnitInfo> getUnitAsTree() {
-        List<? extends IUnitInfo> units = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
-        if(units!=null) {
-            CollectionsOpt.sortAsTree(units,
+        /* 缓存中已经排好序了*/
+        return CodeRepositoryCache.unitInfoRepo.getCachedTarget();
+        /*if(units!=null && units.size() > 1) {
+            List<IUnitInfo> sortedUnits = new ArrayList<>(units.size());
+            sortedUnits.addAll(units);
+            CollectionsOpt.sortAsTree(sortedUnits,
                 (p, c) -> StringUtils.equals(p.getUnitCode(), c.getParentUnit()));
+            return sortedUnits;
         }
-        return units;
+        return units;*/
     }
 
     public static Map<String, ? extends IUnitInfo> getUnitRepo() {
@@ -85,7 +89,7 @@ public abstract class CodeRepositoryUtil {
     }
 
     public static Map<String, ? extends IUnitInfo> getDepNo() {
-         return CodeRepositoryCache.depNoToUnitMap.getCachedTarget();
+        return CodeRepositoryCache.depNoToUnitMap.getCachedTarget();
     }
 
     /**
@@ -111,52 +115,27 @@ public abstract class CodeRepositoryUtil {
      * @return List 数据字典
      */
     public static List<? extends IDataDictionary> getDictionary(String sCatalog) {
-        List<? extends IDataDictionary> cachedList =
-            CodeRepositoryCache.dictionaryRepo.getCachedValue(sCatalog);
-        if(cachedList==null){
-            return null;
-        }
-        return Collections.unmodifiableList(cachedList);
+        return CodeRepositoryCache.dictionaryRepo.getCachedValue(sCatalog);
     }
 
     public static List<? extends IUnitInfo> listAllUnits() {
-        List<? extends IUnitInfo> cachedList = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
-        if(cachedList==null){
-            return null;
-        }
-        return Collections.unmodifiableList(cachedList);
+        return CodeRepositoryCache.unitInfoRepo.getCachedTarget();
     }
 
     public static List<? extends IUserInfo> listAllUsers() {
-        List<? extends IUserInfo> cachedList = CodeRepositoryCache.userInfoRepo.getCachedTarget();
-        if(cachedList==null){
-            return null;
-        }
-        return Collections.unmodifiableList(cachedList);
+        return CodeRepositoryCache.userInfoRepo.getCachedTarget();
     }
 
     public static List<? extends IUserUnit> listAllUserUnits() {
-        List<? extends IUserUnit> cachedList = CodeRepositoryCache.userUnitRepo.getCachedTarget();
-        if(cachedList==null){
-            return null;
-        }
-        return Collections.unmodifiableList(cachedList);
+        return CodeRepositoryCache.userUnitRepo.getCachedTarget();
     }
 
     public static List<? extends IUserUnit> listUserUnits(String userCode) {
-        List<? extends IUserUnit> cachedList = CodeRepositoryCache.userUnitsMap.getCachedValue(userCode);
-        if(cachedList==null){
-            return null;
-        }
-        return Collections.unmodifiableList(cachedList);
+        return CodeRepositoryCache.userUnitsMap.getCachedValue(userCode);
     }
 
     public static List<? extends IUserUnit> listUnitUsers(String unitCode) {
-        List<? extends IUserUnit> cachedList = CodeRepositoryCache.unitUsersMap.getCachedValue(unitCode);
-        if(cachedList==null){
-            return null;
-        }
-        return Collections.unmodifiableList(cachedList);
+        return CodeRepositoryCache.unitUsersMap.getCachedValue(unitCode);
     }
 
     /**
@@ -446,21 +425,21 @@ public abstract class CodeRepositoryUtil {
      * @return List 业务定义信息
      */
     public static List<IOptInfo> getOptinfoList(String sOptType) {
-        List<IOptInfo> optList = new ArrayList<IOptInfo>();
+        List<IOptInfo> optList = new ArrayList<>();
         for (Map.Entry<String,? extends IOptInfo> ent : getOptRepo().entrySet()) {
             IOptInfo value = ent.getValue();
             if  ( "A".equals(sOptType) || sOptType.equals(value.getOptType())
-                    || ("M".equals(sOptType) && "Y".equals(value.getIsInToolbar()))) {
+                || ("M".equals(sOptType) && "Y".equals(value.getIsInToolbar()))) {
                 optList.add(value);
             }
         }
 
         Collections.sort(optList, (o1,o2) -> // Long.compare(o1.getOrderInd() , o2.getOrderInd())) ;
-                ( o2.getOrderInd() == null && o1.getOrderInd() == null)? 0 :
-                    ( (o2.getOrderInd() == null)? 1 :
-                            (( o1.getOrderInd() == null)? -1 :
-                                    ((o1.getOrderInd() > o2.getOrderInd())? 1:(
-                                            o1.getOrderInd() < o2.getOrderInd()?-1:0 ) ))));
+            ( o2.getOrderInd() == null && o1.getOrderInd() == null)? 0 :
+                ( (o2.getOrderInd() == null)? 1 :
+                    (( o1.getOrderInd() == null)? -1 :
+                        ((o1.getOrderInd() > o2.getOrderInd())? 1:(
+                            o1.getOrderInd() < o2.getOrderInd()?-1:0 ) ))));
         return optList;
     }
 
@@ -495,7 +474,7 @@ public abstract class CodeRepositoryUtil {
         for (Map.Entry<String,? extends IRoleInfo> ent : getRoleRepo().entrySet()) {
             IRoleInfo value = ent.getValue();
             if (StringUtils.equals(roleType,value.getRoleType())
-                    && CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                && CodeRepositoryUtil.T.equals(value.getIsValid())) {
                 roleList.add(value);
             }
         }
@@ -512,7 +491,7 @@ public abstract class CodeRepositoryUtil {
         for (Map.Entry<String,? extends IRoleInfo> ent : getRoleRepo().entrySet()) {
             IRoleInfo value = ent.getValue();
             if ("D".equals(value.getRoleType())
-                    && StringUtils.equals(unitCode, value.getRoleOwner())) {
+                && StringUtils.equals(unitCode, value.getRoleOwner())) {
                 roleList.add(value);
             }
         }
@@ -583,7 +562,7 @@ public abstract class CodeRepositoryUtil {
                 ((o1.getUserOrder() == null) ? 1 :
                     ((o2.getUserOrder() == null) ? -1 :
                         ((o1.getUserOrder() > o2.getUserOrder()) ? 1 :
-                                ((o1.getUserOrder() < o2.getUserOrder()) ? -1 : 0)))));
+                            ((o1.getUserOrder() < o2.getUserOrder()) ? -1 : 0)))));
 
         return users;
     }
@@ -635,8 +614,8 @@ public abstract class CodeRepositoryUtil {
         for (IUnitInfo unit : CodeRepositoryUtil.getSubUnits(ui.getUnitCode())) {
             if (unit != null) {
                 if (CodeRepositoryUtil.T.equals(unit.getIsValid())
-                        && (unitType == null || "A".equals(unitType)
-                        || unitType.contains(unit.getUnitType()))) {
+                    && (unitType == null || "A".equals(unitType)
+                    || unitType.contains(unit.getUnitType()))) {
                     units.add(unit);
                 }
             }
@@ -739,11 +718,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回拥有这个角色的所有用户
      */
     public static List<? extends IUserRole> listRoleUsers(String roleCode) {
-        List<? extends IUserRole> cachedList = CodeRepositoryCache.roleUsersRepo.getCachedValue(roleCode);
-        if(cachedList==null){
-            return null;
-        }
-        return Collections.unmodifiableList(cachedList);
+        return CodeRepositoryCache.roleUsersRepo.getCachedValue(roleCode);
     }
 
     /**
@@ -752,11 +727,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
      */
     public static List<? extends IUserRole> listUserRoles(String userCode) {
-        List<? extends IUserRole> cachedList = CodeRepositoryCache.userRolesRepo.getCachedValue(userCode);
-        if(cachedList==null){
-            return null;
-        }
-        return Collections.unmodifiableList(cachedList);
+        return CodeRepositoryCache.userRolesRepo.getCachedValue(userCode);
     }
 
     /** 获取机构所有角色
@@ -769,7 +740,7 @@ public abstract class CodeRepositoryUtil {
             return null;
         List<IRoleInfo> roleInfos = new ArrayList<>(urs.size());
         Map<String, ? extends IRoleInfo> roleMap =
-                CodeRepositoryUtil.getRoleRepo();
+            CodeRepositoryUtil.getRoleRepo();
         for(IUnitRole ur : urs){
             roleInfos.add( roleMap.get(ur.getRoleCode()));
         }
@@ -777,11 +748,11 @@ public abstract class CodeRepositoryUtil {
     }
 
 
-     /** 获取拥有该角色的所有用户
+    /** 获取拥有该角色的所有用户
      * @param roleCode 角色代码
      * @return  List
-      * */
-     public static List<? extends IUnitInfo> listRoleUnitByRoleCode(String roleCode){
+     * */
+    public static List<? extends IUnitInfo> listRoleUnitByRoleCode(String roleCode){
         List<? extends IUnitRole> urs = CodeRepositoryCache.roleUnitsRepo.getCachedValue(roleCode);
         if(urs == null || urs.size()==0)
             return null;
@@ -799,11 +770,7 @@ public abstract class CodeRepositoryUtil {
      * @return  List 用户所有菜单功能
      */
     public static List<? extends IUnitRole> listUnitRoles(String unitCode){
-        List<? extends IUnitRole> cachedList = CodeRepositoryCache.unitRolesRepo.getCachedValue(unitCode);
-        if(cachedList==null){
-            return null;
-        }
-        return Collections.unmodifiableList(cachedList);
+        return CodeRepositoryCache.unitRolesRepo.getCachedValue(unitCode);
     }
 
     /**
@@ -812,11 +779,7 @@ public abstract class CodeRepositoryUtil {
      * @return  List 用户所有菜单功能
      */
     public static List<? extends IUnitRole> listRoleUnits(String roleCode){
-        List<? extends IUnitRole> cachedList = CodeRepositoryCache.roleUnitsRepo.getCachedValue(roleCode);
-        if(cachedList==null){
-            return null;
-        }
-        return Collections.unmodifiableList(cachedList);
+        return CodeRepositoryCache.roleUnitsRepo.getCachedValue(roleCode);
     }
 
     /**
@@ -890,7 +853,7 @@ public abstract class CodeRepositoryUtil {
         Integer nRank = MAXXZRANK;
         for (IUserUnit uu : uus) {
             if (StringUtils.equals(rankUnitCode,uu.getUnitCode())
-                    && getXzRank(uu.getUserRank()) < nRank) {
+                && getXzRank(uu.getUserRank()) < nRank) {
                 nRank = getXzRank(uu.getUserRank());
             }
         }
@@ -1070,7 +1033,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static Map<String,String> getAllLabelValueMap(String sCatalog){
         return innterGetLabelValueMap(sCatalog,WebOptUtils.getCurrentLang(
-                getLocalThreadWrapperRequest()), true);
+            getLocalThreadWrapperRequest()), true);
     }
     /**
      * 获取 数据字典 key value
@@ -1204,14 +1167,14 @@ public abstract class CodeRepositoryUtil {
      * @return 数据字典,忽略禁用的条目
      */
     public static List<OptionItem> getOptionForSelect(String sCatalog, String localLang) {
-         List<OptionItem> lbvs = new ArrayList<OptionItem>();
+        List<OptionItem> lbvs = new ArrayList<OptionItem>();
 
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.USER_CODE)) {
             for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
                 IUserInfo value = ent.getValue();
                 if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.add(new OptionItem(value.getUserName(),
-                             value.getUserCode(), value.getPrimaryUnit()));
+                        value.getUserCode(), value.getPrimaryUnit()));
                 }
             }
             return lbvs;
@@ -1222,7 +1185,7 @@ public abstract class CodeRepositoryUtil {
                 IUserInfo value = ent.getValue();
                 if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.add(new OptionItem(value.getLoginName(),
-                            value.getUserCode(), value.getPrimaryUnit()));
+                        value.getUserCode(), value.getPrimaryUnit()));
                 }
             }
             return lbvs;
@@ -1232,7 +1195,7 @@ public abstract class CodeRepositoryUtil {
             for (IUnitInfo value : getUnitAsTree()) {
                 if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.add(new OptionItem(value.getUnitName(),
-                            value.getUnitCode(), value.getParentUnit()));
+                        value.getUnitCode(), value.getParentUnit()));
                 }
             }
             return lbvs;
@@ -1245,8 +1208,8 @@ public abstract class CodeRepositoryUtil {
                 if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     IUnitInfo parentUnit = CodeRepositoryUtil.getUnitInfoByCode(value.getParentUnit());
                     lbvs.add(new OptionItem(value.getUnitName(),
-                               value.getDepNo(),
-                              parentUnit==null?null:parentUnit.getDepNo()));
+                        value.getDepNo(),
+                        parentUnit==null?null:parentUnit.getDepNo()));
                 }
             }
             return lbvs;
@@ -1283,7 +1246,7 @@ public abstract class CodeRepositoryUtil {
                 IOptMethod optdef = ent.getValue();
                 IOptInfo value = getOptRepo().get(optdef.getOptId());
                 lbvs.add(new OptionItem(value.getOptName() + "-" + optdef.getOptName(),
-                        optdef.getOptCode(),optdef.getOptId()));
+                    optdef.getOptCode(),optdef.getOptId()));
             }
             return lbvs;
         }
@@ -1292,8 +1255,8 @@ public abstract class CodeRepositoryUtil {
         if (dcMap != null) {
             for (IDataDictionary value : dcMap) {
                 if (value.getDataTag() != null && !"D".equals(value.getDataTag())) {
-                     lbvs.add(new OptionItem(value.getLocalDataValue(localLang) ,
-                             value.getDataCode(),value.getExtraCode()));
+                    lbvs.add(new OptionItem(value.getLocalDataValue(localLang) ,
+                        value.getDataCode(),value.getExtraCode()));
                 }
             }
         }
@@ -1302,8 +1265,8 @@ public abstract class CodeRepositoryUtil {
 
     public static List<OptionItem> getOptionForSelect(String sCatalog) {
         return getOptionForSelect(sCatalog,
-                WebOptUtils.getCurrentLang(
-                    getLocalThreadWrapperRequest()));
+            WebOptUtils.getCurrentLang(
+                getLocalThreadWrapperRequest()));
     }
 
     /**
@@ -1361,14 +1324,14 @@ public abstract class CodeRepositoryUtil {
      * @return 机构的下级机构
      */
     private static List<IUnitInfo> fetchSubUnits(List<? extends IUnitInfo> allunits,
-            String parentUnitCode) {
+                                                 String parentUnitCode) {
         if(StringUtils.isBlank(parentUnitCode) || allunits==null)
             return null;
         List<IUnitInfo> units = new ArrayList<>();
         for (IUnitInfo uc : allunits) {
             if ( parentUnitCode.equals(uc.getParentUnit()) &&
-                    CodeRepositoryUtil.T.equals(uc.getIsValid())) {
-                        units.add(uc);
+                CodeRepositoryUtil.T.equals(uc.getIsValid())) {
+                units.add(uc);
             }
         }
         return units;
@@ -1424,7 +1387,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static Boolean checkUserOptPower(String optId, String IOptMethod) {
         CentitUserDetails userDetails = WebOptUtils.getLoginUser(
-                getLocalThreadWrapperRequest());
+            getLocalThreadWrapperRequest());
         if (null == userDetails) {
             return false;
         }
@@ -1454,7 +1417,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static String getUserSettingValue(String paramCode) {
         CentitUserDetails userDetails = WebOptUtils.getLoginUser(
-                getLocalThreadWrapperRequest());
+            getLocalThreadWrapperRequest());
         if (null == userDetails) {
             return null;
         }
@@ -1468,7 +1431,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static Map<String, String> getUserAllSettings() {
         CentitUserDetails userDetails = WebOptUtils.getLoginUser(
-                getLocalThreadWrapperRequest());
+            getLocalThreadWrapperRequest());
         if (null == userDetails) {
             return null;
         }
@@ -1513,5 +1476,4 @@ public abstract class CodeRepositoryUtil {
         }
         return map;
     }
-
 }
