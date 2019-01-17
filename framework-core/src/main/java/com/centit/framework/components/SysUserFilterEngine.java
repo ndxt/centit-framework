@@ -229,6 +229,16 @@ public abstract class SysUserFilterEngine {
 
     /**
      * D()DT()DL()GW()XZ()R()U()UT()UL()RO()
+     * D 根据 机构代码 过滤
+     * DT 根据 机构类型 过滤
+     * DL 根据 机构标签 过滤
+     * GW 根据 岗位过滤
+     * XZ 根据 行政职务过滤
+     * R 根据 行政职务等级 过滤
+     * U 根据 用户代码过滤
+     * UT 根据 用户类型过滤
+     * UL 根据 用户标签 过滤
+     * RO 根据 用户角色 过滤
      * @param ecc UserUnitFilterCalcContext
      * @return calcSimpleExp
      */
