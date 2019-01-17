@@ -111,27 +111,52 @@ public abstract class CodeRepositoryUtil {
      * @return List 数据字典
      */
     public static List<? extends IDataDictionary> getDictionary(String sCatalog) {
-        return CodeRepositoryCache.dictionaryRepo.getCachedValue(sCatalog);
+        List<? extends IDataDictionary> cachedList =
+            CodeRepositoryCache.dictionaryRepo.getCachedValue(sCatalog);
+        if(cachedList==null){
+            return null;
+        }
+        return Collections.unmodifiableList(cachedList);
     }
 
     public static List<? extends IUnitInfo> listAllUnits() {
-        return CodeRepositoryCache.unitInfoRepo.getCachedTarget();
+        List<? extends IUnitInfo> cachedList = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
+        if(cachedList==null){
+            return null;
+        }
+        return Collections.unmodifiableList(cachedList);
     }
 
     public static List<? extends IUserInfo> listAllUsers() {
-        return CodeRepositoryCache.userInfoRepo.getCachedTarget();
+        List<? extends IUserInfo> cachedList = CodeRepositoryCache.userInfoRepo.getCachedTarget();
+        if(cachedList==null){
+            return null;
+        }
+        return Collections.unmodifiableList(cachedList);
     }
 
     public static List<? extends IUserUnit> listAllUserUnits() {
-        return CodeRepositoryCache.userUnitRepo.getCachedTarget();
+        List<? extends IUserUnit> cachedList = CodeRepositoryCache.userUnitRepo.getCachedTarget();
+        if(cachedList==null){
+            return null;
+        }
+        return Collections.unmodifiableList(cachedList);
     }
 
     public static List<? extends IUserUnit> listUserUnits(String userCode) {
-        return CodeRepositoryCache.userUnitsMap.getCachedValue(userCode);
+        List<? extends IUserUnit> cachedList = CodeRepositoryCache.userUnitsMap.getCachedValue(userCode);
+        if(cachedList==null){
+            return null;
+        }
+        return Collections.unmodifiableList(cachedList);
     }
 
     public static List<? extends IUserUnit> listUnitUsers(String unitCode) {
-        return CodeRepositoryCache.unitUsersMap.getCachedValue(unitCode);
+        List<? extends IUserUnit> cachedList = CodeRepositoryCache.unitUsersMap.getCachedValue(unitCode);
+        if(cachedList==null){
+            return null;
+        }
+        return Collections.unmodifiableList(cachedList);
     }
 
     /**
@@ -714,7 +739,11 @@ public abstract class CodeRepositoryUtil {
      * @return 返回拥有这个角色的所有用户
      */
     public static List<? extends IUserRole> listRoleUsers(String roleCode) {
-        return CodeRepositoryCache.roleUsersRepo.getCachedValue(roleCode);
+        List<? extends IUserRole> cachedList = CodeRepositoryCache.roleUsersRepo.getCachedValue(roleCode);
+        if(cachedList==null){
+            return null;
+        }
+        return Collections.unmodifiableList(cachedList);
     }
 
     /**
@@ -723,7 +752,11 @@ public abstract class CodeRepositoryUtil {
      * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
      */
     public static List<? extends IUserRole> listUserRoles(String userCode) {
-        return CodeRepositoryCache.userRolesRepo.getCachedValue(userCode);
+        List<? extends IUserRole> cachedList = CodeRepositoryCache.userRolesRepo.getCachedValue(userCode);
+        if(cachedList==null){
+            return null;
+        }
+        return Collections.unmodifiableList(cachedList);
     }
 
     /** 获取机构所有角色
@@ -766,7 +799,11 @@ public abstract class CodeRepositoryUtil {
      * @return  List 用户所有菜单功能
      */
     public static List<? extends IUnitRole> listUnitRoles(String unitCode){
-        return CodeRepositoryCache.unitRolesRepo.getCachedValue(unitCode);
+        List<? extends IUnitRole> cachedList = CodeRepositoryCache.unitRolesRepo.getCachedValue(unitCode);
+        if(cachedList==null){
+            return null;
+        }
+        return Collections.unmodifiableList(cachedList);
     }
 
     /**
@@ -775,7 +812,11 @@ public abstract class CodeRepositoryUtil {
      * @return  List 用户所有菜单功能
      */
     public static List<? extends IUnitRole> listRoleUnits(String roleCode){
-        return CodeRepositoryCache.roleUnitsRepo.getCachedValue(roleCode);
+        List<? extends IUnitRole> cachedList = CodeRepositoryCache.roleUnitsRepo.getCachedValue(roleCode);
+        if(cachedList==null){
+            return null;
+        }
+        return Collections.unmodifiableList(cachedList);
     }
 
     /**
