@@ -350,7 +350,8 @@ public abstract class SysUserFilterEngine {
         }
     }
 
-    public static Set<String> calcSystemOperators(String roleExp, Map<String, Set<String>> unitParams,
+    public static Set<String> calcSystemOperators(String roleExp,
+                                                Map<String, Set<String>> unitParams,
                                                 Map<String, Set<String>> userParams,
                                                 Map<String, Integer> rankParams,
                                                 UserUnitVariableTranslate varTrans) {

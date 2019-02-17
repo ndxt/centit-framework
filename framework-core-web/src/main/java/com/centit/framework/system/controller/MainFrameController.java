@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.*;
 import com.centit.framework.components.CodeRepositoryUtil;
+import com.centit.framework.components.SysUnitFilterEngine;
+import com.centit.framework.components.SysUserFilterEngine;
+import com.centit.framework.components.impl.UserUnitMapTranslate;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpContentType;
 import com.centit.framework.core.controller.WrapUpResponseBody;
@@ -35,8 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.RenderedImage;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Api(value="框架中用户权限相关的接口，用户登录接口，第三方认证接口，安全接口",
     tags= "登录、权限、安全控制等接口")
@@ -693,7 +695,7 @@ public class MainFrameController extends BaseController {
      * @param rank 职务代码
      * @return json 结果
      */
-    @ApiOperation(value = "获取用户在某个职务的用户组列表", notes = "获取用户在某个职务的用户组列表")
+    @ApiOperation(value = "获取当前用户具有某个行政职务的任职信息", notes = "获取当前用户具有某个行政职务的任职信息")
     @ApiImplicitParam(
         name = "rank", value="职务代码",
         required= true, paramType = "path", dataType= "String"
@@ -714,7 +716,7 @@ public class MainFrameController extends BaseController {
      * @param station 岗位代码
      * @return json结果
      */
-    @ApiOperation(value = "获取用户在某个岗位的用户组列表", notes = "获取用户在某个岗位的用户组列表")
+    @ApiOperation(value = "获取当前用户具有某个岗位的任职信息", notes = "获取当前用户具有某个岗位的任职信息")
     @ApiImplicitParam(
         name = "station", value="岗位代码",
         required= true, paramType = "path", dataType= "String"
@@ -729,6 +731,76 @@ public class MainFrameController extends BaseController {
         return ResponseSingleData.makeResponseData(
                 DictionaryMapUtils.objectsToJSONArray(
                 CodeRepositoryUtil.listUserUnitsByStation(centitUserDetails.getUserCode(), station)));
+    }
+
+    private static Map<String, Object> makeCalcParam(CentitUserDetails userDetails){
+        Map<String, Object> dpf = new HashMap<>();
+        if(userDetails == null){
+            return dpf;
+        }
+        //当前用户信息
+        dpf.put("currentUser", userDetails.getUserInfo());
+        dpf.put("currentStation", userDetails.getCurrentStation());
+        //当前用户主机构信息
+        dpf.put("primaryUnit", CodeRepositoryUtil
+            .getUnitInfoByCode(userDetails.getUserInfo().getString("primaryUnit")));
+        //当前用户所有机构关联关系信息
+        List<? extends IUserUnit>  userUnits = CodeRepositoryUtil
+            .listUserUnits(userDetails.getUserCode());
+        if(userUnits!=null) {
+            dpf.put("userUnits", userUnits);
+            Map<String, List<IUserUnit>> rankUnits = new HashMap<>(5);
+            Map<String, List<IUserUnit>> stationUnits = new HashMap<>(5);
+            for(IUserUnit uu : userUnits ){
+                List<IUserUnit> rankUnit = rankUnits.get(uu.getUserRank());
+                if(rankUnit==null){
+                    rankUnit = new ArrayList<>(4);
+                }
+                rankUnit.add(uu);
+                rankUnits.put(uu.getUserRank(),rankUnit);
+
+                List<IUserUnit> stationUnit = stationUnits.get(uu.getUserStation());
+                if(stationUnit==null){
+                    stationUnit = new ArrayList<>(4);
+                }
+                stationUnit.add(uu);
+                stationUnits.put(uu.getUserStation(),rankUnit);
+            }
+            dpf.put("rankUnits", rankUnits);
+            dpf.put("stationUnits", stationUnits);
+        }
+        //当前用户的角色信息
+        dpf.put("userRoles", userDetails.getUserRoles());
+        return dpf;
+    }
+
+    @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
+    @ApiImplicitParam(
+        name = "formula", value="表达式",
+        required= true, paramType = "body", dataType= "String"
+    )
+    @PostMapping(value = "testUserEngine")
+    @WrapUpResponseBody
+    public Set<String> testUserEngine(@RequestBody String formula){
+        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
+        return SysUserFilterEngine.calcSystemOperators(
+            formula,null,null,null,
+            new UserUnitMapTranslate(makeCalcParam(centitUserDetails))
+        );
+    }
+
+    @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
+    @ApiImplicitParam(
+        name = "formula", value="表达式",
+        required= true, paramType = "body", dataType= "String"
+    )
+    @PostMapping(value = "testUnitEngine")
+    @WrapUpResponseBody
+    public Set<String> testUnitEngine(@RequestBody String formula){
+        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
+        return SysUnitFilterEngine.calcSystemUnitsByExp(
+            formula,null, new UserUnitMapTranslate(makeCalcParam(centitUserDetails))
+        );
     }
 
 }
