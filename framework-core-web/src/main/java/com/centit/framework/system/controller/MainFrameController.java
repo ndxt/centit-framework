@@ -17,6 +17,8 @@ import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.ThirdPartyCheckUserDetails;
+import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
 import io.swagger.annotations.Api;
@@ -776,30 +778,50 @@ public class MainFrameController extends BaseController {
 
     @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
     @ApiImplicitParam(
-        name = "formula", value="表达式",
+        name = "jsonStr", value="{formula:\"\",unitParams:{U:[]},userParams:{U:[]},rankParams:{U:[]}}",
         required= true, paramType = "body", dataType= "String"
     )
     @PostMapping(value = "testUserEngine")
     @WrapUpResponseBody
-    public Set<String> testUserEngine(@RequestBody String formula){
+    public Set<String> testUserEngine(@RequestBody String jsonStr){
         CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
+        JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
+        Object unitParams = jsonObject.getJSONObject("unitParams");
+        Object userParams = jsonObject.getJSONObject("userParams");
+        Object rankParams = jsonObject.getJSONObject("rankParams");
+        Map<String, Integer> rankMap = null;
+        if(rankParams!=null) {
+            Map<String, Object> objMap = CollectionsOpt.objectToMap(rankParams);
+            rankMap = new HashMap<>(objMap.size() + 1);
+            for (Map.Entry<String, Object> ent : objMap.entrySet()) {
+                rankMap.put(ent.getKey(), NumberBaseOpt.castObjectToInteger(ent.getValue()));
+            }
+        }
+
         return SysUserFilterEngine.calcSystemOperators(
-            formula,null,null,null,
+            jsonObject.getString("formula"),
+            unitParams==null?null:StringBaseOpt.objectToMapStrSet(unitParams),
+            userParams==null?null:StringBaseOpt.objectToMapStrSet(userParams),
+            rankMap,
             new UserUnitMapTranslate(makeCalcParam(centitUserDetails))
         );
     }
 
     @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
     @ApiImplicitParam(
-        name = "formula", value="表达式",
+        name = "jsonStr", value="{formula:\"\",unitParams:{U:[]}}",
         required= true, paramType = "body", dataType= "String"
     )
     @PostMapping(value = "testUnitEngine")
     @WrapUpResponseBody
-    public Set<String> testUnitEngine(@RequestBody String formula){
+    public Set<String> testUnitEngine(@RequestBody String jsonStr){
         CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
+        JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
+        Object unitParams = jsonObject.getJSONObject("unitParams");
         return SysUnitFilterEngine.calcSystemUnitsByExp(
-            formula,null, new UserUnitMapTranslate(makeCalcParam(centitUserDetails))
+            jsonObject.getString("formula"),
+            unitParams==null?null:StringBaseOpt.objectToMapStrSet(unitParams),
+            new UserUnitMapTranslate(makeCalcParam(centitUserDetails))
         );
     }
 
