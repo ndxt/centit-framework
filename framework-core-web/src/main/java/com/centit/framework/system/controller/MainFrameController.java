@@ -1,5 +1,6 @@
 package com.centit.framework.system.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.*;
@@ -27,7 +28,9 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
@@ -275,10 +278,12 @@ public class MainFrameController extends BaseController {
 //            JsonResultUtils.writeErrorMessageJson("用户 名和密码不匹配。", response);
             return ResponseData.makeErrorMessage("用户 名和密码不匹配。");
         }
-        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, ud);
+//        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+//            new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
+
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
         // SecurityContextUtils.setSecurityContext(ud,request.getSession());
-        //request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
 //        JsonResultUtils.writeResponseDataAsJson(resData, response);
@@ -326,10 +331,10 @@ public class MainFrameController extends BaseController {
         if(!bo){
             return ResponseData.makeErrorMessage("用户："+userCode+ " token:" + StringBaseOpt.objectToString(token) +" 校验不通过");
         }
-        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, ud);
+        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+            new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
         // SecurityContextUtils.setSecurityContext(ud,request.getSession());
-        //request.getSession().setAttribute(SecurityContextUtils.SecurityContextTokenName, tokenKey);
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
         return ResponseData.makeResponseData(resData);
@@ -644,7 +649,7 @@ public class MainFrameController extends BaseController {
             return ResponseData.makeErrorMessage(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
         return ResponseData.makeResponseData(
-            DictionaryMapUtils.objectToJSON(currentUser.getCurrentStation()), IUserUnit.class);
+            DictionaryMapUtils.objectToJSON(currentUser.getCurrentStation().toJavaObject(IUserUnit.class)), IUserUnit.class);
     }
 
     /**
