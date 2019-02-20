@@ -22,8 +22,8 @@
     <url>https://github.com/ndxt/centit-framework</url>
 
     <properties>
-        <centit.persistence.version>1.1-SNAPSHOT</centit.persistence.version>
-        <centit.commons.version>2.2-SNAPSHOT</centit.commons.version>
+        <centit.persistence.version>1.1.1812</centit.persistence.version>
+        <centit.commons.version>2.2.1812</centit.commons.version>
         <centit.ui.version>3.1.1809</centit.ui.version>
     </properties>
 
@@ -172,10 +172,8 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!-- sonatype release :
                 mvn nexus-staging:release-->
-
             <!--<plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
