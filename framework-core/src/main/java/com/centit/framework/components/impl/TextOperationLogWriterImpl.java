@@ -40,9 +40,10 @@ public class TextOperationLogWriterImpl implements OperationLogWriter{
         String logFilePath = getCurrentLogPath();
         TxtLogFile logger = new TxtLogFile();
         logger.openLogFile(logFilePath);
-        for(OperationLog optLog : optLogs)
+        for(OperationLog optLog : optLogs) {
             logger.writeLog(JSON.toJSONString(optLog),
-                true,true);
+                true, true);
+        }
         logger.closeLogFile();
     }
 }

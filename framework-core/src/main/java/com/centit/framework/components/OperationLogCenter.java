@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -17,13 +18,10 @@ import java.util.concurrent.TimeUnit;
 
 public class OperationLogCenter {
 
-    private OperationLogCenter()
-    {
-
+    private OperationLogCenter(){
     }
 
     private static final Logger logger = LoggerFactory.getLogger(OperationLogCenter.class);
-
     private static OperationLogWriter logWriter = null;
 
     /**
@@ -43,31 +41,38 @@ public class OperationLogCenter {
         logWriter = optLogWriter;
     }
 
-
-    private static BlockingQueue<OperationLog> waitingForWriteLogs = new LinkedBlockingQueue<OperationLog>();
+    private static BlockingQueue<OperationLog> waitingForWriteLogs = new LinkedBlockingQueue<>();
     private static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(3);
 
     /**
      * 异步写入日志
      */
     static {
-       executor.scheduleWithFixedDelay(
-          () -> {
-                  if(logWriter == null)
-                       return;
-                  while(!waitingForWriteLogs.isEmpty()) { //true){//
-                       try {
-                           OperationLog optLog = waitingForWriteLogs.take();
-                           //logger.error("logWriter +++++ " + optLog.getOptContent());
-                           logWriter.save(optLog);
-                       } catch (Exception e) {
-                           logger.error(e.getMessage(),e);
-                       }
-                   }
-               }, 30, 10, TimeUnit.SECONDS);
-       //默认执行时间间隔为10秒
+       // 5秒写入一次
+       executor.scheduleWithFixedDelay(() ->
+          {
+              if(logWriter == null)
+                   return;
+              int nCount = 100;
+              // 每一百条日志批量写入一次
+              while(nCount > 99) {
+                  nCount = 0;
+                  ArrayList<OperationLog> optLogs = new ArrayList<>(100);
+                  do { //true){//
+                      OperationLog optLog = waitingForWriteLogs.poll();
+                      if (optLog == null) {
+                          break;
+                      }
+                      optLogs.add(optLog);
+                      nCount++;
+                  } while (nCount > 99);
+                  if (nCount > 0) {
+                      logWriter.save(optLogs);
+                  }
+              }
+           }, 30, 5, TimeUnit.SECONDS);
+       //默认执行时间间隔为5秒
    }
-
 
    public static void log(OperationLog optLog) {
        try {
