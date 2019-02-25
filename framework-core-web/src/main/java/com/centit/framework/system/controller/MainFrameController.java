@@ -1,6 +1,5 @@
 package com.centit.framework.system.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.*;
@@ -28,10 +27,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.stereotype.Controller;
@@ -278,18 +275,14 @@ public class MainFrameController extends BaseController {
 //            JsonResultUtils.writeErrorMessageJson("用户 名和密码不匹配。", response);
             return ResponseData.makeErrorMessage("用户 名和密码不匹配。");
         }
-//        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-//            new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
+        SecurityContextHolder.getContext().setAuthentication(ud);
+            //new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
 
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
-        // SecurityContextUtils.setSecurityContext(ud,request.getSession());
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
-//        JsonResultUtils.writeResponseDataAsJson(resData, response);
         return ResponseData.makeResponseData(resData);
     }
-
 
     /**
      * 这个方法用于和第三方对接的验证方式，需要注入名为 thirdPartyCheckUserDetails 的bean 。
@@ -331,8 +324,9 @@ public class MainFrameController extends BaseController {
         if(!bo){
             return ResponseData.makeErrorMessage("用户："+userCode+ " token:" + StringBaseOpt.objectToString(token) +" 校验不通过");
         }
-        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-            new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
+        SecurityContextHolder.getContext().setAuthentication(ud);
+        /*request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+            new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));*/
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
         // SecurityContextUtils.setSecurityContext(ud,request.getSession());
         ResponseMapData resData = new ResponseMapData();
@@ -649,7 +643,9 @@ public class MainFrameController extends BaseController {
             return ResponseData.makeErrorMessage(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
         return ResponseData.makeResponseData(
-            DictionaryMapUtils.objectToJSON(currentUser.getCurrentStation().toJavaObject(IUserUnit.class)), IUserUnit.class);
+                DictionaryMapUtils.mapJsonObject(
+                    currentUser.getCurrentStation(),
+                    IUserUnit.class));
     }
 
     /**
@@ -783,7 +779,7 @@ public class MainFrameController extends BaseController {
 
     @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
     @ApiImplicitParam(
-        name = "jsonStr", value="{formula:\"\",unitParams:{U:[]},userParams:{U:[]},rankParams:{U:[]}}",
+        name = "jsonStr", value="\u007Bformula:unitParams:\u007B U: \u005B \u005D \u007D,userParams:\u007BU:\u005B \u005D\u007D,rankParams:\u007BU:\u005B \u005D\u007D\u007D",
         required= true, paramType = "body", dataType= "String"
     )
     @PostMapping(value = "testUserEngine")
@@ -814,7 +810,7 @@ public class MainFrameController extends BaseController {
 
     @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
     @ApiImplicitParam(
-        name = "jsonStr", value="{formula:\"\",unitParams:{U:[]}}",
+        name = "jsonStr", value="\u007Bformula:\"\",unitParams:\u007BU:\u005B \u005D\u007D\u007D",
         required= true, paramType = "body", dataType= "String"
     )
     @PostMapping(value = "testUnitEngine")
