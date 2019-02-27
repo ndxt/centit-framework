@@ -65,7 +65,7 @@ public class OperationLogCenter {
                       }
                       optLogs.add(optLog);
                       nCount++;
-                  } while (nCount > 99);
+                  } while (nCount < 100);
                   if (nCount > 0) {
                       logWriter.save(optLogs);
                   }
