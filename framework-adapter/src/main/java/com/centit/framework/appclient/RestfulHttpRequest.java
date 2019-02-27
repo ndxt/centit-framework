@@ -190,12 +190,28 @@ public class RestfulHttpRequest {
         }
     }
 
-    public String doDelete(AppSession appSession, String httpDeleteUrl, String queryParam){
+    public String doDelete(AppSession appSession, String httpDeleteUrl){
         CloseableHttpClient httpClient = null;
         try {
             httpClient = appSession.allocHttpClient();
             appSession.checkAccessToken(httpClient);
-            return appSession.doDelete(httpClient,httpDeleteUrl,queryParam);
+            return appSession.doDelete(httpClient,httpDeleteUrl);
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(),e);
+            return null;
+        } finally {
+            if(httpClient!=null) {
+                appSession.releaseHttpClient(httpClient);
+            }
+        }
+    }
+
+    public String doDelete(AppSession appSession, String httpDeleteUrl, Map<String,Object> queryParam){
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = appSession.allocHttpClient();
+            appSession.checkAccessToken(httpClient);
+            return appSession.doDelete(httpClient,httpDeleteUrl, queryParam);
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(),e);
             return null;

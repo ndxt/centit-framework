@@ -123,6 +123,7 @@ public class CacheController extends BaseController {
      *
      * @param catalog    数据字典代码
      * @param expression 表达式
+     * @return ResponseData
      */
     @ApiOperation(value = "将字典代码转字典值", notes = "根据字典代码转成对应的字典值，其他的字符位置不变")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -144,6 +145,7 @@ public class CacheController extends BaseController {
      *
      * @param catalog  系统内置的类别 字符串[userCode,loginName,unitcode,rolecode,]以及数据目录中的catalogCode变量值
      * @param key      对应的变量值 或 数据字典中的 dataCode
+     * @return ResponseData
      */
     @ApiOperation(value = "获得数据字典条目的状态", notes = "根据字典代码和条目获取条目的状态")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -166,6 +168,7 @@ public class CacheController extends BaseController {
      *
      * @param unitCode 机构代码
      * @param unitType 机构类别
+     * @return ResponseData
      */
     @ApiOperation(value = "获取机构下面的所有下级机构", notes = "获取机构下面的所有下级机构，并且排序")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -187,6 +190,7 @@ public class CacheController extends BaseController {
      * 根据状态获取所有机构信息，
      *
      * @param state    A表示所有状态
+     * @return ResponseData
      */
     @ApiOperation(value = "根据状态获取所有机构信息", notes = "根据状态获取所有机构信息")
     @ApiImplicitParam(
@@ -205,6 +209,7 @@ public class CacheController extends BaseController {
      * 根据用户编码获取用户信息
      *
      * @param userCode 用户编码
+     * @return ResponseData
      */
     @ApiOperation(value = "根据用户编码获取用户信息", notes = "根据用户编码获取用户详细信息")
     @ApiImplicitParam(
@@ -221,6 +226,7 @@ public class CacheController extends BaseController {
      * 根据机构编码获取机构信息
      *
      * @param unitCode 机构代码
+     * @return ResponseData
      */
     @ApiOperation(value = "根据机构代码获取机构信息", notes = "根据机构代码获取机构详细信息")
     @ApiImplicitParam(
@@ -237,6 +243,7 @@ public class CacheController extends BaseController {
      * 根据机构代码获取父机构
      *
      * @param unitCode 机构代码
+     * @return ResponseData
      */
     @ApiOperation(value = "根据机构代码获取父机构", notes = "根据机构代码获取父机构详细信息")
     @ApiImplicitParam(
@@ -258,6 +265,7 @@ public class CacheController extends BaseController {
      * 根据机构代码获取父机构路径
      *
      * @param unitCode 机构代码
+     * @return ResponseData
      */
     @ApiOperation(value = "根据机构代码获取父机构路径", notes = "根据机构代码获取父机构的机构路径")
     @ApiImplicitParam(
@@ -289,8 +297,9 @@ public class CacheController extends BaseController {
     /**
      * cp标签中RECURSEUNITS实现
      * 获得已知机构 下级的所有有效机构并返回map，包括下级机构的下级机构
-     *  @param parentUnit 父级机构代码
+     * @param parentUnit 父级机构代码
      * @param response   HttpServletResponse
+     * @return ResponseData
      */
     @ApiOperation(value = "获得已知机构 下级的所有有效机构", notes = "获得已知机构 下级的所有有效机构并返回map，包括下级机构的下级机构")
     @ApiImplicitParam(
@@ -311,6 +320,7 @@ public class CacheController extends BaseController {
      * @param catalog  数据目类别码
      * @param extraCode  扩展代码
      * @param request  HttpServletRequest
+     * @return ResponseData
      *
      */
     @ApiOperation(value = "获取数据字典", notes = "根据类别编码和扩展编码获取数据字典")
@@ -346,6 +356,7 @@ public class CacheController extends BaseController {
      *
      * @param catalog  数据目录代码
      * @param request  HttpServletRequest
+     * @return ResponseData
      */
     @ApiOperation(value = "根据字典类别编码获取数据字典", notes = "根据字典类别编码获取数据字典 ，忽略 tag 为 'D'的条目 【delete】")
     @ApiImplicitParam(
@@ -373,6 +384,7 @@ public class CacheController extends BaseController {
      * 获取一个机构下面的所有用户，并且根据排序号排序
      *
      * @param unitCode 机构代码
+     * @return ResponseData
      */
     @ApiOperation(value = "获取一个机构下面的所有用户", notes = "获取一个机构下面的所有用户，并且根据排序号排序")
     @ApiImplicitParam(
@@ -391,6 +403,7 @@ public class CacheController extends BaseController {
      * 获取所有符合状态标记的用户，
      *
      * @param state    用户状态， A 表示所有状态
+     * @return ResponseData
      */
     @ApiOperation(value = "获取所有符合状态标记的用户", notes = "根据状态获取所有用户")
     @ApiImplicitParam(
@@ -409,6 +422,7 @@ public class CacheController extends BaseController {
      * 获取所有下级机构，
      *
      * @param unitcode 机构代码
+     * @return ResponseData
      */
     @ApiOperation(value = "获取所有下级机构", notes = "根据机构代码获取所有下级机构")
     @ApiImplicitParam(
@@ -428,6 +442,7 @@ public class CacheController extends BaseController {
      *
      * @param unitcode 机构代码
      * @param response HttpServletResponse
+     * @return ResponseData
      */
     @ApiOperation(value = "获取所有下级机构树形排列", notes = "根据机构代码获取所有下级机构，并按照树形排列")
     @ApiImplicitParam(
@@ -553,6 +568,7 @@ public class CacheController extends BaseController {
      * 按类别获取 业务定义信息
      *    S:实施业务, O:普通业务, W:流程业务, I:项目业务  , M:菜单   A: 为所有
      * @param optType  业务类别
+     * @return ResponseData
      */
     @ApiOperation(value = "按类别获取业务菜单信息", notes = "按类别获取业务菜单信息")
     @ApiImplicitParam(
@@ -571,6 +587,7 @@ public class CacheController extends BaseController {
      * 获得一个业务下面的操作定义
      *
      * @param optID    系统业务代码
+     * @return ResponseData
      */
     @ApiOperation(value = "获得业务下面的操作定义", notes = "获得一个业务下面的操作定义")
     @ApiImplicitParam(
@@ -589,6 +606,7 @@ public class CacheController extends BaseController {
      * 根据角色类别获取角色
      *
      * @param roleType 角色类别
+     * @return ResponseData
      */
     @ApiOperation(value = "根据角色类别获取角色", notes = "根据角色类别获取角色")
     @ApiImplicitParam(
@@ -606,7 +624,7 @@ public class CacheController extends BaseController {
      * CP标签中 SYS_VALUE 实现
      *  获取系统设置的值
      * @param request  HttpServletRequest
-     * @param response HttpServletResponse
+     * @return ResponseData
      */
     @ApiOperation(value = "获取系统设置的值", notes = "根据参数代码获取系统设置的值")
     @ApiImplicitParam(
@@ -615,7 +633,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/sysconfig/{paramCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getSysConfigValue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseData getSysConfigValue(HttpServletRequest request) {
         String uri = request.getRequestURI();
         String paramCode = uri.substring(uri.lastIndexOf('/')+1);
         String pv =  CodeRepositoryUtil.getSysConfigValue(paramCode);
@@ -626,6 +644,7 @@ public class CacheController extends BaseController {
      * CP标签中 SYS_VALUE 实现
      * 系统设置的参数的前缀
      * @param request HttpServletRequest
+     * @return ResponseData
      **/
     @ApiOperation(value = "根据参数前缀获取系统设置", notes = "根据参数前缀获取系统设置")
     @ApiImplicitParam(
@@ -643,6 +662,7 @@ public class CacheController extends BaseController {
 
     /**
      * 获取用户信息
+     * @return ResponseData
      */
     @ApiOperation(value = "获取当前登录用户详情", notes = "获取当前登录用户详情，包括其组织机构、权限信息、用户设置等等")
     @RequestMapping(value = "/userdetails", method = RequestMethod.GET)
@@ -658,6 +678,7 @@ public class CacheController extends BaseController {
      * 获取用户当前设置值
      *
      * @param paramCode 用户设置的参数
+     * @return ResponseData
      */
     @ApiOperation(value = "获取用户当前设置值", notes = "获取用户当前设置值")
     @ApiImplicitParam(
@@ -673,6 +694,7 @@ public class CacheController extends BaseController {
 
     /**
      * 获取用户所有设置
+     * @return ResponseData
      */
     @ApiOperation(value = "获取用户所有设置", notes = "获取用户所有设置")
     @RequestMapping(value = "/usersettings", method = RequestMethod.GET)
@@ -686,6 +708,7 @@ public class CacheController extends BaseController {
      *
      * @param optId 系统业务代码
      * @param method 权限代码
+     * @return ResponseData
      */
     @ApiOperation(value = "验证当前用户是否有某个操作方法的权限", notes = "验证当前用户是否有某个操作方法的权限")
     @ApiImplicitParams({
@@ -706,6 +729,7 @@ public class CacheController extends BaseController {
     /**
      * 获取用户所有的 操作方法
      * 返回一个map，key为optid+‘-’+method value 为 'T'
+     * @return ResponseData
      */
     @ApiOperation(value = "获取用户所有的 操作方法", notes = "获取用户所有的 操作方法")
     @RequestMapping(value = "/userallpowers", method = { RequestMethod.GET })

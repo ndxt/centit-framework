@@ -208,9 +208,15 @@ public class AppSession {
             completeQueryUrl(httpPutUrl), jsonString);
     }
 
-    public String doDelete(CloseableHttpClient httpClient, String httpDeleteUrl, String queryParam)
+    public String doDelete(CloseableHttpClient httpClient, String httpDeleteUrl)
         throws IOException {
+        return HttpExecutor.simpleDelete(
+            createHttpExecutorContext(httpClient),
+            completeQueryUrl(httpDeleteUrl), "" );
+    }
 
+    public String doDelete(CloseableHttpClient httpClient, String httpDeleteUrl, Map<String,Object> queryParam)
+        throws IOException {
         return HttpExecutor.simpleDelete(
             createHttpExecutorContext(httpClient),
             completeQueryUrl(httpDeleteUrl), queryParam);

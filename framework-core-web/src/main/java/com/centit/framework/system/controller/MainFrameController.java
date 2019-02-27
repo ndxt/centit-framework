@@ -190,6 +190,7 @@ public class MainFrameController extends BaseController {
      * @param newPassword 新密码
      * @param request request
      * @param response response
+     * @return ResponseData
      */
     @ApiOperation(value = "修改密码", notes = "修改用户登录密码")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -231,6 +232,7 @@ public class MainFrameController extends BaseController {
      * 校验密码
      * @param password password
      * @param request request
+     * @return ResponseData
      */
     @ApiOperation(value = "校验密码", notes = "校验密码是否正确")
     @ApiImplicitParam(
@@ -255,6 +257,7 @@ public class MainFrameController extends BaseController {
     /**
      * 这个方法是个内部通讯的客户端程序使用的，客户端程序通过用户代码（注意不是用户名）和密码登录，这个密码建议随机生成
      * @param request request
+     * @return ResponseData
      */
     @ApiOperation(value = "内部通讯的客户端程序使用接口", notes = "这个方法是个内部通讯的客户端程序使用的，客户端程序通过用户代码（注意不是用户名）和密码登录，这个密码建议随机生成")
     @RequestMapping(value="/loginasclient",method = RequestMethod.POST)
@@ -287,7 +290,8 @@ public class MainFrameController extends BaseController {
     /**
      * 这个方法用于和第三方对接的验证方式，需要注入名为 thirdPartyCheckUserDetails 的bean 。
      * @param formValue json格式的表单数据 {userCode:"u0000000", token:"231413241234"}
-     * @param response response
+     * @param request HttpServletRequest
+     * @return ResponseData
      */
     @ApiOperation(value="第三方认证接口",
         notes="这时框架留的一个后门，系统如果要使用这个接口，必须配置一个名为thirdPartyCheckUserDetails的bean;" +
@@ -298,7 +302,7 @@ public class MainFrameController extends BaseController {
     ))
     @RequestMapping(value="/loginasthird",method = RequestMethod.POST)
     @WrapUpResponseBody
-    public ResponseData loginAsThird(HttpServletRequest request,HttpServletResponse response,
+    public ResponseData loginAsThird(HttpServletRequest request,
                     @RequestBody JSONObject formValue) {
         try {
             if (thirdPartyCheckUserDetails == null) {
@@ -338,6 +342,7 @@ public class MainFrameController extends BaseController {
      * 防跨站请求伪造
      * @param request request
      * @param response response
+     * @return ResponseData
      */
     @ApiOperation(value = "防跨站请求伪造", notes = "防跨站请求伪造")
     @RequestMapping(value = "/login/csrf",method = RequestMethod.GET)
@@ -362,6 +367,7 @@ public class MainFrameController extends BaseController {
      * 防跨站请求伪造
      * @param request request
      * @param response response
+     * @return ResponseData
      */
     @ApiOperation(value = "防跨站请求伪造", notes = "防跨站请求伪造")
     @RequestMapping(value = "/csrf",method = RequestMethod.GET)
@@ -374,6 +380,7 @@ public class MainFrameController extends BaseController {
      * 获取验证码
      * @param request request
      * @param response response
+     * @return RenderedImage
      */
     @ApiOperation(value = "获取验证码", notes = "获取验证码")
     @RequestMapping(value = "/captchaimage",method = RequestMethod.GET)
@@ -391,6 +398,7 @@ public class MainFrameController extends BaseController {
      * 获取登录验证码
      * @param request request
      * @param response response
+     * @return RenderedImage
      */
     @ApiOperation(value = "获取登录验证码", notes = "获取登录验证码")
     @RequestMapping(value = "/login/captchaimage",method = RequestMethod.GET)
@@ -403,6 +411,7 @@ public class MainFrameController extends BaseController {
      * 校验验证码
      * @param checkcode checkcode
      * @param request request
+     * @return ResponseData
      */
     @ApiOperation(value = "校验验证码", notes = "校验验证码")
     @ApiImplicitParam(
@@ -427,6 +436,7 @@ public class MainFrameController extends BaseController {
      * 当前登录用户
      * @param request request
      * @param response response
+     * @return ResponseData
      */
     @ApiOperation(value = "当前登录用户", notes = "获取当前登录用户详情")
     @RequestMapping(value = "/currentuserinfo",method = RequestMethod.GET)
@@ -444,6 +454,7 @@ public class MainFrameController extends BaseController {
     /**
      * 当前登录者
      * @param request request
+     * @return ResponseData
      */
     @ApiOperation(value = "当前登录者", notes = "当前登录者，CentitUserDetails对象信息")
     @RequestMapping(value = "/currentuser",method = RequestMethod.GET)
@@ -461,6 +472,7 @@ public class MainFrameController extends BaseController {
     /**
      * 检验是否登录
      * @param request request
+     * @return Boolean
      */
     @ApiOperation(value = "检验是否登录", notes = "检验当前用户用户是否登录")
     @GetMapping("/hasLogin")
@@ -485,8 +497,8 @@ public class MainFrameController extends BaseController {
 
     /**
      * 首页菜单
-     *
      * @param request  HttpServletRequest
+     * @return JSONArray
      */
     @ApiOperation(value = "首页菜单", notes = "获取首页菜单信息")
     @RequestMapping(value = "/menu" , method = RequestMethod.GET)
@@ -521,6 +533,7 @@ public class MainFrameController extends BaseController {
      * 获取子菜单
      * @param optId 菜单代码
      * @param request HttpServletRequest
+     * @return JSONArray
      */
     @ApiOperation(value = "获取子菜单", notes = "获取子菜单详情")
     @ApiImplicitParam(
@@ -550,6 +563,7 @@ public class MainFrameController extends BaseController {
     /**
      * 获取用户有权限的菜单
      * @param userCode 用户代码
+     * @return ResponseData
      */
     @ApiOperation(value = "获取用户有权限的菜单", notes = "根据用户代码获取用户有权限的菜单")
     @ApiImplicitParam(
@@ -577,6 +591,7 @@ public class MainFrameController extends BaseController {
      * 获取用户某个菜单下有权限的子菜单
      * @param userCode 用户代码
      * @param menuOptId 菜单代码
+     * @return ResponseData
      */
     @ApiOperation(value = "获取用户有权限的菜单", notes = "根据用户代码和菜单代码获取用户有权限的子菜单")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -617,6 +632,7 @@ public class MainFrameController extends BaseController {
     /**
      * 查询当前用户所有职位
      * @param request {@link HttpServletRequest}
+     * @return JSONArray
      */
     @ApiOperation(value = "查询当前用户所有职位", notes = "查询当前用户所有职位")
     @GetMapping(value = "/userpositions")
@@ -633,6 +649,7 @@ public class MainFrameController extends BaseController {
     /**
      * 查询当前用户当前职位
      * @param request {@link HttpServletRequest}
+     * @return ResponseData
      */
     @ApiOperation(value = "查询当前用户当前职位", notes = "查询当前用户当前职位")
     @GetMapping(value = "/usercurrposition")
@@ -653,6 +670,7 @@ public class MainFrameController extends BaseController {
      * @param userUnitId 用户机构Id
      * @param request {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
+     * @return ResponseData
      */
     @ApiOperation(value = "设置当前用户当前职位", notes = "根据用户机构id设置当前用户当前职位")
     @ApiImplicitParam(
@@ -779,7 +797,7 @@ public class MainFrameController extends BaseController {
 
     @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
     @ApiImplicitParam(
-        name = "jsonStr", value="\u007Bformula:unitParams:\u007B U: \u005B \u005D \u007D,userParams:\u007BU:\u005B \u005D\u007D,rankParams:\u007BU:\u005B \u005D\u007D\u007D",
+        name = "jsonStr", value="参数格式josn示例: \u007B formula:unitParams:\u007BU: \u005B \u005D \u007D,userParams:\u007BU:\u005B \u005D\u007D,rankParams:\u007BU:\u005B \u005D\u007D\u007D",
         required= true, paramType = "body", dataType= "String"
     )
     @PostMapping(value = "testUserEngine")
@@ -810,7 +828,7 @@ public class MainFrameController extends BaseController {
 
     @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
     @ApiImplicitParam(
-        name = "jsonStr", value="\u007Bformula:\"\",unitParams:\u007BU:\u005B \u005D\u007D\u007D",
+        name = "jsonStr", value="参数格式josn示例: \u007Bformula:\"\",unitParams:\u007BU:\u005B \u005D\u007D\u007D",
         required= true, paramType = "body", dataType= "String"
     )
     @PostMapping(value = "testUnitEngine")

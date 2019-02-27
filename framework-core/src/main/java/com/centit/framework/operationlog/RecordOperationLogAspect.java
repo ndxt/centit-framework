@@ -151,6 +151,7 @@ public class RecordOperationLogAspect {
      * 正常完成时记录日志
      * @param joinPoint joinPoint 切入点
      * @param operationLog  RecordOperationLog 注解
+     * @param returningValue Object 函数返回的结果
      */
     @AfterReturning(pointcut = "logAspect() && @annotation(operationLog)", returning = "returningValue")
     public  void doAfterReturning(JoinPoint joinPoint, RecordOperationLog operationLog, Object returningValue) {

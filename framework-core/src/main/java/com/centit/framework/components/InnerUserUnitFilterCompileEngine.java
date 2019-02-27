@@ -642,6 +642,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
 
     /**
      * D()DT()DL()GW()XZ()R()UT()UL()U()RO()
+     * @param ecc 表达式运行上下文环境
      * @return 过滤条件因素，这个可以认为是一个分析好的 filter 语句
      */
     public static UserUnitFilterGene makeUserUnitFilter(UserUnitFilterCalcContext ecc) {

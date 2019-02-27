@@ -23,6 +23,7 @@ public class EnvironmentController extends BaseController {
 
     /**
      * 系统心跳，有回复说明系统没有死机
+     * @return ResponseData
      */
     @ApiOperation(value="系统心跳",notes="系统心跳，有回复说明系统没有死机")
     @RequestMapping(value ="/heartbeat",method = RequestMethod.GET)
@@ -33,6 +34,7 @@ public class EnvironmentController extends BaseController {
 
     /**
      * 刷新框架中的所有缓存信息
+     * @return ResponseData
      */
     @ApiOperation(value="刷新框架中的所有缓存信息",notes="刷新框架中的所有缓存信息")
     //@PreAuthorize("hasPermission(#contact, 'admin')")
@@ -46,6 +48,7 @@ public class EnvironmentController extends BaseController {
     /**
      * 刷新指定的缓存
      * @param cacheCode 缓存名称
+     * @return ResponseData
      */
     @ApiOperation(value = "刷新指定的缓存", notes = "根据缓存名称刷新指定的缓存")
     @ApiImplicitParam(
@@ -61,6 +64,7 @@ public class EnvironmentController extends BaseController {
 
     /**
      * 刷新框架中和权限有关的缓存
+     * @return ResponseData
      */
     @ApiOperation(value = "刷新框架中和权限有关的缓存", notes = "刷新框架中和权限有关的缓存")
     @RequestMapping(value ="/reload/refreshpower",method = RequestMethod.GET)

@@ -39,6 +39,7 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
      * Basic constructor with converters only. Suitable for resolving
      * {@code @RequestBody}. For handling {@code @WrapUpResponseBody} consider also
      * providing a {@code ContentNegotiationManager}.
+     * @param converter 编码转换器，默认使用fastjson转换器
      */
     public WrapUpResponseBodyReturnValueHandler(HttpMessageConverter<Object> converter) {
         this.messageConverter = converter;
