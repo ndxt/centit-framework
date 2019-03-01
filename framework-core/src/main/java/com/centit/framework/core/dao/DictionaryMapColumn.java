@@ -9,25 +9,17 @@ public class DictionaryMapColumn implements Serializable {
 
     private String fieldName;
     private String mapFieldName;
-
-    private Map<String,String> dictionaryMap;
+    private String dictCatalog;
 
     public DictionaryMapColumn(){
         fieldName = null;
-        dictionaryMap = null;
         mapFieldName = null;
     }
 
-    public DictionaryMapColumn(String fn){
+    public DictionaryMapColumn(String fn, String mfn, String catalog){
         fieldName = fn;
-        dictionaryMap = null;
-        mapFieldName = null;
-    }
-
-    public DictionaryMapColumn(String fn,String mfn,Map<String,String> dm){
-        fieldName = fn;
-        dictionaryMap = dm;
         mapFieldName = mfn;
+        dictCatalog = catalog;
     }
 
     @Override
@@ -60,16 +52,11 @@ public class DictionaryMapColumn implements Serializable {
         this.mapFieldName = mapFieldName;
     }
 
-    public String mapDictionaryValue(String key) {
-        if(dictionaryMap==null){
-            return key;
-        }
-        String value = dictionaryMap.get(key);
-        return value==null?key:value;
+    public String getDictCatalog() {
+        return dictCatalog;
     }
 
-    public void setDictionaryMap(Map<String, String> dictionaryMap) {
-        this.dictionaryMap = dictionaryMap;
+    public void setDictCatalog(String dictCatalog) {
+        this.dictCatalog = dictCatalog;
     }
-
 }

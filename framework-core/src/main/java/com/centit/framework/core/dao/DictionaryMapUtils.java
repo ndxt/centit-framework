@@ -35,14 +35,15 @@ public abstract class DictionaryMapUtils {
         Map<String,String> dm = CodeRepositoryUtil.getAllLabelValueMap(dictionary.value());
         return new DictionaryMapColumn(fieldName,
                     dictionary.fieldName(),
-                    dm);
+                    dictionary.value());
     }
 
-    private static DictionaryMapColumn makeDictionaryMapColumn(String dictionaryFieldName, String dataCatalog, String fieldName ){
-        Map<String,String> dm = CodeRepositoryUtil.getAllLabelValueMap(dataCatalog);
+    private static DictionaryMapColumn makeDictionaryMapColumn(String dictionaryFieldName,
+                                                               String dataCatalog, String fieldName ){
+        //Map<String,String> dm = CodeRepositoryUtil.getAllLabelValueMap(dataCatalog);
         return new DictionaryMapColumn(fieldName,
                     dictionaryFieldName,
-                    dm);
+                    dataCatalog);
     }
 
     public static void mergeDictionaryMapColumn(List<DictionaryMapColumn> des, Class<?> objType){
@@ -163,8 +164,8 @@ public abstract class DictionaryMapUtils {
 
             for(DictionaryMapColumn col:fieldDictionaryMaps){
                 newJsonObj.put(col.getMapFieldName(),
-                        col.mapDictionaryValue(
-                            StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
+                    CodeRepositoryUtil.getValue( col.getDictCatalog(),
+                        StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
             }
             return newJsonObj;
         }
@@ -213,8 +214,8 @@ public abstract class DictionaryMapUtils {
             for(DictionaryMapColumn col: fieldDictionaryMaps){
                 if( jsonObj.get(col.getFieldName()) !=null) {
                     jsonObj.put(col.getMapFieldName(),
-                            col.mapDictionaryValue(
-                                StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
+                        CodeRepositoryUtil.getValue( col.getDictCatalog(),
+                            StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
                 }
             }
             return jsonObj;
@@ -473,8 +474,8 @@ public abstract class DictionaryMapUtils {
             for(DictionaryMapColumn col:fieldDictionaryMaps){
                 if( obj.get(col.getFieldName()) !=null) {
                     obj.put(col.getMapFieldName(),
-                            col.mapDictionaryValue(
-                                StringBaseOpt.objectToString(obj.get(col.getFieldName()))));
+                        CodeRepositoryUtil.getValue( col.getDictCatalog(),
+                            StringBaseOpt.objectToString(obj.get(col.getFieldName()))));
                 }
             }
         }
@@ -511,8 +512,8 @@ public abstract class DictionaryMapUtils {
                 for (DictionaryMapColumn col : fieldDictionaryMaps) {
                     if (jsonObj.get(col.getFieldName()) != null) {
                         jsonObj.put(col.getMapFieldName(),
-                                col.mapDictionaryValue(
-                                    StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
+                            CodeRepositoryUtil.getValue( col.getDictCatalog(),
+                                StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
                     }
                 }
             }
