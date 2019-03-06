@@ -1,14 +1,15 @@
 package com.centit.framework.core.dao;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Objects;
 
 public class DictionaryMapColumn implements Serializable {
     private static final long serialVersionUID = 1L;
-
+    /**原始数据字段名*/
     private String fieldName;
+    /**新增数据字段名*/
     private String mapFieldName;
+    /**数据字典类别代码*/
     private String dictCatalog;
 
     public DictionaryMapColumn(){
@@ -16,6 +17,11 @@ public class DictionaryMapColumn implements Serializable {
         mapFieldName = null;
     }
 
+    /**
+     * @param fn 原始数据字段名
+     * @param mfn 新增数据字段名
+     * @param catalog 数据字典类别代码
+     */
     public DictionaryMapColumn(String fn, String mfn, String catalog){
         fieldName = fn;
         mapFieldName = mfn;

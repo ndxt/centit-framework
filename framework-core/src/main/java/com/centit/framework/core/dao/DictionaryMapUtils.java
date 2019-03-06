@@ -8,6 +8,8 @@ import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.LeftRightPair;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.MutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.persistence.EmbeddedId;
 import java.io.Serializable;
@@ -38,13 +40,7 @@ public abstract class DictionaryMapUtils {
                     dictionary.value());
     }
 
-    private static DictionaryMapColumn makeDictionaryMapColumn(String dictionaryFieldName,
-                                                               String dataCatalog, String fieldName ){
-        //Map<String,String> dm = CodeRepositoryUtil.getAllLabelValueMap(dataCatalog);
-        return new DictionaryMapColumn(fieldName,
-                    dictionaryFieldName,
-                    dataCatalog);
-    }
+
 
     public static void mergeDictionaryMapColumn(List<DictionaryMapColumn> des, Class<?> objType){
         if( objType !=null
@@ -385,9 +381,9 @@ public abstract class DictionaryMapUtils {
      *
      */
     static public class DictionaryMapBuilder{
-        private Map<String,LeftRightPair<String,String>> dictionaryMap;
+        private List<Triple<String,String,String>> dictionaryMap;
         private DictionaryMapBuilder(){
-            dictionaryMap = new HashMap<>();
+            dictionaryMap = new ArrayList<>();
         }
 
         /**
@@ -399,8 +395,7 @@ public abstract class DictionaryMapUtils {
          */
         public DictionaryMapBuilder addDictionaryDesc(
                 String codeField,String valueField,String dictCatalog){
-            dictionaryMap.put(codeField,
-                    new LeftRightPair<>(valueField,dictCatalog));
+            dictionaryMap.add(new MutableTriple<>(codeField,valueField,dictCatalog));
             return this;
         }
 
@@ -408,7 +403,7 @@ public abstract class DictionaryMapUtils {
          * 直接返回内置的 Map类型变量
          * @return  Map
          */
-        public  Map<String,LeftRightPair<String,String>> create(){
+        public  List<Triple<String,String,String>> create(){
             return dictionaryMap;
         }
     }
@@ -430,19 +425,35 @@ public abstract class DictionaryMapUtils {
         return builder.addDictionaryDesc(codeField, valueField, dictCatalog);
     }
 
-    /**
-     * 检查objType属性上是否有DictionaryMap注解，如果有则获取对应的数据字典用于后面查询是转换编码
-     * @param mapInfo po对象类型
-     * @return DictionaryMapColumn 字段名包括数据字典相关信息
-     */
-    private static List<DictionaryMapColumn> getDictionaryMapColumns
-            (Map<String,LeftRightPair<String,String>> mapInfo){
+
+    /*private static List<DictionaryMapColumn> getDictionaryMapColumns
+            (List<Triple<String,String,String>> mapInfo){
         List<DictionaryMapColumn> fieldDictionaryMaps =
                 new ArrayList<>();
 
+        for(Triple<String,String,String> ent : mapInfo){
+            DictionaryMapColumn dictionaryMapColumn = new DictionaryMapColumn(
+                    ent.getLeft(), ent.getMiddle(), ent.getRight());
+
+            fieldDictionaryMaps.add(dictionaryMapColumn);
+
+        }//end of for
+        return fieldDictionaryMaps;
+    }*/
+
+    /**
+     * 检查objType属性上是否有DictionaryMap注解，如果有则获取对应的数据字典用于后面查询是转换编码
+     * @param mapInfo po对象类型 fieldName ， newFieldName， catalog
+     * @return DictionaryMapColumn 字段名包括数据字典相关信息
+     */
+    private static List<DictionaryMapColumn> getDictionaryMapColumns
+        (Map<String,LeftRightPair<String,String>> mapInfo){
+        List<DictionaryMapColumn> fieldDictionaryMaps =
+            new ArrayList<>();
+
         for(Map.Entry<String,LeftRightPair<String,String>> ent : mapInfo.entrySet()){
-            DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
-                    ent.getValue().getLeft(), ent.getValue().getRight(), ent.getKey());
+            DictionaryMapColumn dictionaryMapColumn = new DictionaryMapColumn(
+                ent.getKey(), ent.getValue().getLeft(), ent.getValue().getRight());
 
             fieldDictionaryMaps.add(dictionaryMapColumn);
 
@@ -531,6 +542,12 @@ public abstract class DictionaryMapUtils {
         return mapJsonArray( objs, fieldDictionaryMaps);
     }
 
+    /**
+     *
+     * @param objs 转换前的对象
+     * @param mapInfo Map<String,LeftRightPair<String,String>>  fieldName ， newFieldName， catalog
+     * @return 转换后的对象
+     */
     public static JSONArray mapJsonArray(JSONArray objs,
               Map<String,LeftRightPair<String,String>> mapInfo ) {
         if (objs == null)
@@ -538,4 +555,5 @@ public abstract class DictionaryMapUtils {
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
         return mapJsonArray( objs, fieldDictionaryMaps);
     }
+
 }
