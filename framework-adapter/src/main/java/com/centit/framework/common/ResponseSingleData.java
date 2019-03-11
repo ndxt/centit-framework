@@ -94,4 +94,19 @@ public class ResponseSingleData implements ResponseData{
     public String toString(){
         return toJSONString();
     }
+
+    /*public ResponseSingleData code(int resCode){
+        this.code = resCode;
+        return this;
+    }
+
+    public ResponseSingleData message(String resMessage){
+        this.message = resMessage;
+        return this;
+    }
+
+    public ResponseSingleData data(Object objValue) {
+        this.data = objValue;
+        return this;
+    }*/
 }
