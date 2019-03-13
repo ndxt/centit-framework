@@ -138,9 +138,8 @@ public abstract class SysUserFilterEngine {
                             if (nR == null) {
                                 unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
                             } else {
-                                if (rf.isRankPlus() && nR > ecc.getXzRank(uu.getUserRank()))
-                                    unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
-                                else if (rf.isRankMinus() && nR < ecc.getXzRank(uu.getUserRank()))
+                                if(  (rf.isRankPlus() && nR > ecc.getXzRank(uu.getUserRank()))
+                                   ||(rf.isRankMinus() && nR < ecc.getXzRank(uu.getUserRank())) )
                                     unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
                             }
                         }

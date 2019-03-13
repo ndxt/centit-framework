@@ -88,18 +88,16 @@ public class ExceptionController {
                     //触发异常的类
                     if (null != ex) {
                         errorMessage = ex.getMessage();
-                    }
-
-                    HandlerMethod handler = (HandlerMethod) request.getAttribute("CENTIT_SYSTEM_ERROR_HANDLER");
-                    if (null != handler) {
-                        errorMessage = "异常信息由 " + handler.getBean().getClass().getName()
+                        HandlerMethod handler = (HandlerMethod) request.getAttribute("CENTIT_SYSTEM_ERROR_HANDLER");
+                        if (null != handler) {
+                            errorMessage = "异常信息由 " + handler.getBean().getClass().getName()
                                 + " 类 " + handler.getMethod().getName() + " 方法触发异常，异常类型为 "
                                 + ex.getClass().getName() + " 异常信息为 " + ex.getMessage();
-                        logger.error(errorMessage);
+                            logger.error(errorMessage);
+                        }
                     }
                     break;
             }
-
             JsonResultUtils.writeErrorMessageJson(code, errorMessage, response);
             return null;
             //throw new ObjectException(errorMessage, ObjectException.ExceptionType.SYSTEM);
