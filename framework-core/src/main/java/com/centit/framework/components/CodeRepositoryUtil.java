@@ -13,6 +13,8 @@ import com.centit.support.compiler.Lexer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.util.PropertyPlaceholderHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -1444,34 +1446,45 @@ public abstract class CodeRepositoryUtil {
      */
 
     private static Properties loadProperties() {
-        Properties prop = new Properties();
-        try (InputStream resource = CodeRepositoryUtil.class.getResourceAsStream("/system.properties")){
-            if(resource == null) {
-                try(InputStream resource2 = ClassLoader.getSystemResourceAsStream("/system.properties")){
-                    if(resource2 != null) {
-                        prop.load(resource2);
-                    }
-                }
-            }else {
-                prop.load(resource);
-            }
+        try{
+            return PropertiesLoaderUtils.loadAllProperties("system.properties");
         } catch (IOException e) {
-            logger.error("获取系统参数出错！",e);
+            Properties prop = new Properties();
+            try (InputStream resource = CodeRepositoryUtil.class.getResourceAsStream("/system.properties")){
+                if(resource == null) {
+                    try(InputStream resource2 = ClassLoader.getSystemResourceAsStream("/system.properties")){
+                        if(resource2 != null) {
+                            prop.load(resource2);
+                        }
+                    }
+                }else {
+                    prop.load(resource);
+                }
+            } catch (IOException e2) {
+                logger.error("获取系统参数出错！",e);
+            }
+            return prop;
         }
-        return prop;
     }
 
     public static String getSysConfigValue(String key) {
-        return loadProperties().getProperty(key);
+        Properties properties = loadProperties();//.getProperty(key);
+        PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${","}");
+        return helper.replacePlaceholders(properties.getProperty(key) , properties);
     }
 
     public static Map<String, Object> getSysConfigByPrefix(String prefix){
         Properties properties = loadProperties();
         Map<String, Object> map = new HashMap<>(16);
+        PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${","}");
         for(Map.Entry<Object,Object> ent :  properties.entrySet()){
             String paramName = StringBaseOpt.castObjectToString(ent.getKey());
             if(StringUtils.startsWithIgnoreCase(paramName, prefix)){
-                map.put(paramName, ent.getValue());
+                if(ent.getValue() instanceof String) {
+                    map.put(paramName, helper.replacePlaceholders((String)ent.getValue(), properties));
+                } else {
+                    map.put(paramName, ent.getValue());
+                }
             }
         }
         return map;

@@ -12,6 +12,7 @@ import java.lang.reflect.Parameter;
  */
 public class TestRefection {
     public static void main(String[] args) {
+        //System.out.println(CodeRepositoryUtil.getSysConfigValue("server.path"));
         ParameterNameDiscoverer pd = new StandardReflectionParameterNameDiscoverer();
         Method[] mths = NotificationCenterImpl.class.getMethods();
         for (Method mth : mths) {
