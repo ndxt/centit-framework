@@ -545,7 +545,7 @@ public abstract class DictionaryMapUtils {
     /**
      *
      * @param objs 转换前的对象
-     * @param mapInfo Map<String,LeftRightPair<String,String>>  fieldName ， newFieldName， catalog
+     * @param mapInfo Map&lt;String,LeftRightPair&lt;String,String&gt;&gt;  fieldName ， newFieldName， catalog
      * @return 转换后的对象
      */
     public static JSONArray mapJsonArray(JSONArray objs,
