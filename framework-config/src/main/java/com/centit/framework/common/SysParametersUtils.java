@@ -5,6 +5,7 @@ import com.centit.support.algorithm.StringRegularOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.PropertyPlaceholderHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +13,6 @@ import java.util.Properties;
 
 /**
  * 系统外置目录路径工具类
- *
  * @author sx
  * date 2012-12-7
  */
@@ -98,11 +98,19 @@ public class SysParametersUtils {
     }
 
     public static String getStringValue(String key) {
-        return loadProperties().getProperty(key);
+        return getStringValue(key, null);
     }
 
     public static String getStringValue(String key,String defaultValue) {
-        return loadProperties().getProperty(key,defaultValue);
+
+        Properties properties = loadProperties();
+        String value= properties.getProperty(key,defaultValue);
+        if(StringUtils.isBlank(value)){
+            return value;
+        }
+        PropertyPlaceholderHelper helper =
+            new PropertyPlaceholderHelper("${","}");
+        return helper.replacePlaceholders(value , properties);
     }
 
     public static int getIntValue(String key) {
