@@ -1446,25 +1446,25 @@ public abstract class CodeRepositoryUtil {
      */
 
     private static Properties loadProperties() {
-        try{
+        /*try{
             return PropertiesLoaderUtils.loadAllProperties("system.properties");
-        } catch (IOException e) {
-            Properties prop = new Properties();
-            try (InputStream resource = CodeRepositoryUtil.class.getResourceAsStream("/system.properties")){
-                if(resource == null) {
-                    try(InputStream resource2 = ClassLoader.getSystemResourceAsStream("/system.properties")){
-                        if(resource2 != null) {
-                            prop.load(resource2);
-                        }
+        } catch (IOException e) {*/
+        Properties prop = new Properties();
+        try (InputStream resource = CodeRepositoryUtil.class.getResourceAsStream("/system.properties")){
+            if(resource == null) {
+                try(InputStream resource2 = ClassLoader.getSystemResourceAsStream("/system.properties")){
+                    if(resource2 != null) {
+                        prop.load(resource2);
                     }
-                }else {
-                    prop.load(resource);
                 }
-            } catch (IOException e2) {
-                logger.error("获取系统参数出错！",e);
+            }else {
+                prop.load(resource);
             }
-            return prop;
+        } catch (IOException e2) {
+            logger.error("获取系统参数出错！",e2);
         }
+        return prop;
+        //}
     }
 
     public static String getSysConfigValue(String key) {
