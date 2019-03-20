@@ -13,7 +13,6 @@ import com.centit.support.compiler.Lexer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.PropertyPlaceholderHelper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +98,7 @@ public abstract class CodeRepositoryUtil {
      *
      * @return Map 所有数据字典类别
      */
-    protected static final Map<String,String> getDataCatalogMap() {
+    public static final Map<String,String> getDataCatalogMap() {
         Map<String, String> dataCatalogMap = new HashMap<>();
         List<? extends IDataCatalog> dataCatalogs = CodeRepositoryCache.catalogRepo.getCachedTarget();
         if(dataCatalogs==null)
@@ -444,8 +443,6 @@ public abstract class CodeRepositoryUtil {
                             o1.getOrderInd() < o2.getOrderInd()?-1:0 ) ))));
         return optList;
     }
-
-
 
     /**
      * 获得一个业务下面的操作定义
@@ -1469,8 +1466,12 @@ public abstract class CodeRepositoryUtil {
 
     public static String getSysConfigValue(String key) {
         Properties properties = loadProperties();//.getProperty(key);
-        PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${","}");
-        return helper.replacePlaceholders(properties.getProperty(key) , properties);
+        String value= properties.getProperty(key);
+        if(StringUtils.isNotBlank(value)){
+            PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${","}");
+            value = helper.replacePlaceholders(value, properties);
+        }
+        return value;
     }
 
     public static Map<String, Object> getSysConfigByPrefix(String prefix){
