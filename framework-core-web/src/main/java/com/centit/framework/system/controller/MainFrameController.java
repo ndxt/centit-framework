@@ -723,8 +723,8 @@ public class MainFrameController extends BaseController {
     )
     @GetMapping(value = "userranks/{rank}")
     @ResponseBody
-    public ResponseData listUserUnitsByRank(@PathVariable String rank){
-        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
+    public ResponseData listUserUnitsByRank(@PathVariable String rank, HttpServletRequest request){
+        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser(request);
         if(centitUserDetails == null){
             return new ResponseSingleData(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录或者超时，请重新登录");
         }
@@ -744,8 +744,8 @@ public class MainFrameController extends BaseController {
     )
     @GetMapping(value = "userstations/{station}")
     @ResponseBody
-    public ResponseData listUserUnitsByStation(@PathVariable String station){
-        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
+    public ResponseData listUserUnitsByStation(@PathVariable String station, HttpServletRequest request){
+        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser(request);
         if(centitUserDetails == null){
             return new ResponseSingleData("用户没有登录或者超时，请重新登录");
         }
@@ -802,8 +802,8 @@ public class MainFrameController extends BaseController {
     )
     @PostMapping(value = "testUserEngine")
     @WrapUpResponseBody
-    public Set<String> testUserEngine(@RequestBody String jsonStr){
-        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
+    public Set<String> testUserEngine(@RequestBody String jsonStr, HttpServletRequest request){
+        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
         Object userParams = jsonObject.getJSONObject("userParams");
@@ -833,8 +833,8 @@ public class MainFrameController extends BaseController {
     )
     @PostMapping(value = "testUnitEngine")
     @WrapUpResponseBody
-    public Set<String> testUnitEngine(@RequestBody String jsonStr){
-        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser();
+    public Set<String> testUnitEngine(@RequestBody String jsonStr, HttpServletRequest request){
+        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
         return SysUnitFilterEngine.calcSystemUnitsByExp(

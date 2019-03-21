@@ -33,6 +33,12 @@ public class WebOptUtils {
             request.getHeader("accept").contains("application/json");
     }
 
+    /**
+     *  获取当前用户 不建议用这个函数，这个可能获取不到用户信息，推荐使用
+     *  getLoginUser(HttpServletRequest request)
+     * @return CentitUserDetails
+     */
+    @Deprecated
     public static CentitUserDetails getLoginUser() {
         SecurityContext sch = SecurityContextHolder.getContext();
         if (sch == null)
