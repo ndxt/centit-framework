@@ -56,7 +56,7 @@
         <description>get all vaild unit under an unitcode include unvalid</description>
         <name>ALLUNITS</name>
         <function-class>com.centit.framework.components.CodeRepositoryUtil</function-class>
-        <function-signature>Map&lt;java.lang.String,com.centit.framework.model.basedata.IUnitInfo&gt; getAllUnits(java.lang.String)
+        <function-signature>List&lt;com.centit.framework.model.basedata.IUnitInfo&gt; getAllUnits(java.lang.String)
         </function-signature>
     </function>
     <function>
@@ -71,7 +71,7 @@
         <description>get one dictionary's item by catalogcode</description>
         <name>DICTIONARY</name>
         <function-class>com.centit.framework.components.CodeRepositoryUtil</function-class>
-        <function-signature>List&lt;com.centit.framework.model.basedata.IDataDictionary&gt; getDictionary(java.lang.String)
+        <function-signature>List&lt;? extends com.centit.framework.model.basedata.IDataDictionary&gt; getDictionary(java.lang.String)
         </function-signature>
     </function>
     <function>
@@ -100,13 +100,7 @@
         <function-class>com.centit.framework.components.CodeRepositoryUtil</function-class>
         <function-signature>List&lt;com.centit.framework.model.basedata.IUserInfo&gt; getAllUsers(java.lang.String)</function-signature>
     </function>
-    <function>
-        <description>get all vaild unit list</description>
-        <name>UNITSLIST</name>
-        <function-class>com.centit.framework.components.CodeRepositoryUtil</function-class>
-        <function-signature>List&lt;java.lang.String,com.centit.framework.model.basedata.IUnitInfo&gt; getUnitList(java.lang.String)
-        </function-signature>
-    </function>
+
     <function>
         <description>get all optinfo by opttype</description>
         <name>OPTINFO</name>
@@ -117,14 +111,14 @@
         <description>get all optdef by optid</description>
         <name>OPTDEF</name>
         <function-class>com.centit.framework.components.CodeRepositoryUtil</function-class>
-        <function-signature>List&lt;com.centit.framework.model.basedata.IOptMethod&gt; getOptMethodByOptID(java.lang.String)
+        <function-signature>List&lt;? extends com.centit.framework.model.basedata.IOptMethod&gt; getOptMethodByOptID(java.lang.String)
         </function-signature>
     </function>
     <function>
         <description>get roleinfo list by prefix</description>
         <name>ROLEINFO</name>
         <function-class>com.centit.framework.components.CodeRepositoryUtil</function-class>
-        <function-signature>List&lt;com.centit.framework.model.basedata.IRoleInfo&gt; getRoleinfoList(java.lang.String)
+        <function-signature>List&lt;com.centit.framework.model.basedata.IRoleInfo&gt; getRoleinfoListByType(java.lang.String)
         </function-signature>
     </function>
 
@@ -135,13 +129,13 @@
         <function-signature>java.lang.Boolean checkUserOptPower(java.lang.String, java.lang.String)</function-signature>
     </function>
 
-	<function>
+    <function>
         <description>获取用户设置的参数值 </description>
         <name>USERSETTING</name>
         <function-class>com.centit.framework.components.CodeRepositoryUtil</function-class>
         <function-signature>java.lang.String getUserSettingValue(java.lang.String)</function-signature>
     </function>
-    
+
     <function>
         <description>获取System.properties文件属性值</description>
         <name>SYS_VALUE</name>
