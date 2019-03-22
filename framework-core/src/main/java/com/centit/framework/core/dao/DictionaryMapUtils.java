@@ -35,12 +35,8 @@ public abstract class DictionaryMapUtils {
 
     private static DictionaryMapColumn makeDictionaryMapColumn(DictionaryMap dictionary, String fieldName ){
         Map<String,String> dm = CodeRepositoryUtil.getAllLabelValueMap(dictionary.value());
-        return new DictionaryMapColumn(fieldName,
-                    dictionary.fieldName(),
-                    dictionary.value());
+        return new DictionaryMapColumn(fieldName,dictionary);
     }
-
-
 
     public static void mergeDictionaryMapColumn(List<DictionaryMapColumn> des, Class<?> objType){
         if( objType !=null
@@ -135,6 +131,13 @@ public abstract class DictionaryMapUtils {
         return tempDictionaryMaps;
     }
 
+    private final static String mapDictinaryValue(DictionaryMapColumn col, Object obj){
+        return col.isExpression()?
+            CodeRepositoryUtil.transExpression( col.getDictCatalog(),
+                StringBaseOpt.objectToString(obj)) :
+            CodeRepositoryUtil.getValue( col.getDictCatalog(),
+                StringBaseOpt.objectToString(obj));
+    }
     /**
      * 将一个Po对象转换为JSONObject 同时检查对象上面的的属性是否有DictionaryMap注解，如果有转换数据字典
      * @param obj Object
@@ -160,8 +163,7 @@ public abstract class DictionaryMapUtils {
 
             for(DictionaryMapColumn col:fieldDictionaryMaps){
                 newJsonObj.put(col.getMapFieldName(),
-                    CodeRepositoryUtil.getValue( col.getDictCatalog(),
-                        StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
+                    mapDictinaryValue(col, jsonObj.get(col.getFieldName())));
             }
             return newJsonObj;
         }
@@ -210,8 +212,7 @@ public abstract class DictionaryMapUtils {
             for(DictionaryMapColumn col: fieldDictionaryMaps){
                 if( jsonObj.get(col.getFieldName()) !=null) {
                     jsonObj.put(col.getMapFieldName(),
-                        CodeRepositoryUtil.getValue( col.getDictCatalog(),
-                            StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
+                        mapDictinaryValue(col, jsonObj.get(col.getFieldName())));
                 }
             }
             return jsonObj;
@@ -485,8 +486,7 @@ public abstract class DictionaryMapUtils {
             for(DictionaryMapColumn col:fieldDictionaryMaps){
                 if( obj.get(col.getFieldName()) !=null) {
                     obj.put(col.getMapFieldName(),
-                        CodeRepositoryUtil.getValue( col.getDictCatalog(),
-                            StringBaseOpt.objectToString(obj.get(col.getFieldName()))));
+                        mapDictinaryValue(col, obj.get(col.getFieldName())));
                 }
             }
         }
@@ -523,8 +523,7 @@ public abstract class DictionaryMapUtils {
                 for (DictionaryMapColumn col : fieldDictionaryMaps) {
                     if (jsonObj.get(col.getFieldName()) != null) {
                         jsonObj.put(col.getMapFieldName(),
-                            CodeRepositoryUtil.getValue( col.getDictCatalog(),
-                                StringBaseOpt.objectToString(jsonObj.get(col.getFieldName()))));
+                            mapDictinaryValue(col, jsonObj.get(col.getFieldName())));
                     }
                 }
             }

@@ -7,7 +7,6 @@ import java.lang.annotation.Target;
 
 /**
  * 方法 HibernateOptUtils.listObjectsAsJson 配合这个查询工作
- * 
  * @author codefan
  * 2015年12月16日
  */
@@ -21,7 +20,7 @@ public @interface DictionaryMap {
      * @return String  value
      */
     String value() default "";
-    
+
     /**
      * (Must be assigned) The name of the Field Name.
      * Defaults to the field name.
@@ -29,4 +28,10 @@ public @interface DictionaryMap {
      * @return String fieldName
      */
      String fieldName() default "";
+
+    /**
+     * 是否作为表达式解释，可能有多个字典数据
+     * @return isExpress
+     */
+    boolean isExpression() default false;
 }

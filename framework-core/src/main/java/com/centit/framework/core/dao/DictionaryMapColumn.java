@@ -12,9 +12,12 @@ public class DictionaryMapColumn implements Serializable {
     /**数据字典类别代码*/
     private String dictCatalog;
 
+    private boolean isExpression;
+
     public DictionaryMapColumn(){
         fieldName = null;
         mapFieldName = null;
+        isExpression = false;
     }
 
     /**
@@ -26,6 +29,14 @@ public class DictionaryMapColumn implements Serializable {
         fieldName = fn;
         mapFieldName = mfn;
         dictCatalog = catalog;
+        isExpression = false;
+    }
+
+    public DictionaryMapColumn(String fn, DictionaryMap dictionaryMap){
+        fieldName = fn;
+        mapFieldName = dictionaryMap.fieldName();
+        dictCatalog = dictionaryMap.value();
+        isExpression = dictionaryMap.isExpression();
     }
 
     @Override
@@ -64,5 +75,13 @@ public class DictionaryMapColumn implements Serializable {
 
     public void setDictCatalog(String dictCatalog) {
         this.dictCatalog = dictCatalog;
+    }
+
+    public boolean isExpression() {
+        return isExpression;
+    }
+
+    public void setExpression(boolean expression) {
+        isExpression = expression;
     }
 }
