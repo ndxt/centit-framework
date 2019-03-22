@@ -19,6 +19,8 @@ import java.util.Map;
 public class AppSession {
 
     public final static String SECURITY_CONTEXT_TOKENNAME = "accessToken";
+
+    private String appLoginUrl;
     private String appServerUrl;
     private String userCode;
     private String password;
@@ -74,7 +76,8 @@ public class AppSession {
         Map<String,String> param = new HashMap<>();
         param.put("userCode", userCode);
         param.put("password", password);
-        String jsonStr = HttpExecutor.formPost(createHttpExecutorContext(httpclient), appServerUrl + "/mainframe/loginasclient", param);
+        String jsonStr = HttpExecutor.formPost(createHttpExecutorContext(httpclient),
+            getAppLoginUrl() + "/mainframe/loginasclient", param);
         HttpReceiveJSON jsonData = HttpReceiveJSON.valueOfJson(jsonStr);
         if(jsonData==null || jsonData.getCode()!=0){
             throw new ObjectException(jsonData==null?"访问服务器失败":jsonData.getMessage());
@@ -254,4 +257,14 @@ public class AppSession {
         this.needAuthenticated = needAuthenticated;
     }
 
+    public String getAppLoginUrl() {
+        if(StringUtils.isBlank(appLoginUrl)){
+            return this.appServerUrl;
+        }
+        return appLoginUrl;
+    }
+
+    public void setAppLoginUrl(String appLoginUrl) {
+        this.appLoginUrl = appLoginUrl;
+    }
 }
