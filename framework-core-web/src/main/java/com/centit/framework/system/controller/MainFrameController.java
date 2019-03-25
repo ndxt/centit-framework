@@ -17,6 +17,7 @@ import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.ThirdPartyCheckUserDetails;
+import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
@@ -53,7 +54,9 @@ public class MainFrameController extends BaseController {
     public static final String DEPLOY_LOGIN = "DEPLOY";
     public static final String LOGIN_AUTH_ERROR_MSG = "LOGIN_ERROR_MSG";
 
-    private static String optId = "mainframe";
+    public String getOptId (){
+        return "mainframe";
+    }
     @Resource
     protected CsrfTokenRepository csrfTokenRepository;
 
@@ -531,18 +534,19 @@ public class MainFrameController extends BaseController {
 
     /**
      * 获取子菜单
-     * @param optId 菜单代码
+     * @param optid 菜单代码
      * @param request HttpServletRequest
      * @return JSONArray
      */
     @ApiOperation(value = "获取子菜单", notes = "获取子菜单详情")
     @ApiImplicitParam(
-        name = "optId", value="菜单代码",
+        name = "optid", value="菜单代码",
         paramType = "query", dataType= "String"
     )
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
     @WrapUpResponseBody
-    public JSONArray getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optId,
+    public JSONArray getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optid,
+                                       @RequestParam(value="optid", required=false)  String asadmin,
             HttpServletRequest request) {
 
         CentitUserDetails userDetails = super.getLoginUser(request);
@@ -550,9 +554,10 @@ public class MainFrameController extends BaseController {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录，请重新登录！");
         }
-        Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
-        boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
-        List<? extends IOptInfo> menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserCode(), optId, asAdmin);
+        //Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
+        boolean asAdmin = BooleanBaseOpt.castObjectToBoolean(asadmin,false);
+        List<? extends IOptInfo> menuFunsByUser = platformEnvironment
+            .listUserMenuOptInfosUnderSuperOptId(userDetails.getUserCode(), optid, asAdmin);
         if(menuFunsByUser==null){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录,或者没有给用户任何权限，请重新登录！");

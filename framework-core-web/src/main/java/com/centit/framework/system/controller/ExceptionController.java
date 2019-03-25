@@ -28,7 +28,7 @@ public class ExceptionController {
 
     private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
     public String getOptId (){
-        return "mainframe";
+        return "exception";
     }
 
     /**

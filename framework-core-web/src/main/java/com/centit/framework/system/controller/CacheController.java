@@ -43,7 +43,7 @@ import java.util.*;
 public class CacheController extends BaseController {
 
     public String getOptId (){
-        return "mainframe";
+        return "cp";
     }
     /**
      * cp标签中MAPVALUE实现，获取数据字典对应的值

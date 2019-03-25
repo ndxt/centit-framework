@@ -84,10 +84,10 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         boolean isAjaxQuery = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         if(isAjaxQuery || "true".equalsIgnoreCase(ajax)){
             ResponseMapData resData = new ResponseMapData();
-            if(registToken) {
-                resData.addResponseData(SecurityContextUtils.SecurityContextTokenName,
-                    request.getSession().getId());
-            }
+            //if(registToken) {
+            resData.addResponseData(SecurityContextUtils.SecurityContextTokenName,
+                request.getSession().getId());
+            //}
             resData.addResponseData("userInfo", ud);
             JsonResultUtils.writeResponseDataAsJson(resData, response);
             //request.getSession().setAttribute("SPRING_SECURITY_AUTHENTICATION", authentication);
