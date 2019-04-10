@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>framework-security</artifactId>
-    <name>com.centit.framework:framework-security</name>
+    <artifactId>framework-security-ldap</artifactId>
+    <name>com.centit.framework:framework-security-ldap</name>
     <packaging>jar</packaging>
     <description>框架安全配置类</description>
 
@@ -22,14 +22,10 @@
         </dependency>
 
         <!-- Spring security family -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-taglibs</artifactId>
+            <artifactId>spring-security-ldap</artifactId>
         </dependency>
 
         <dependency>
@@ -38,5 +34,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
 </project>

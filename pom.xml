@@ -100,6 +100,7 @@
         <module>framework-system-static-config</module>
         <module>framework-system-static-jdbc</module>
         <module>framework-session</module>
+        <module>framework-security-ldap</module>
     </modules>
 
     <build>
