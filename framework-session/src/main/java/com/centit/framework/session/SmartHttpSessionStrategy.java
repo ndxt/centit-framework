@@ -2,9 +2,6 @@ package com.centit.framework.session;
 
 import com.centit.framework.common.SysParametersUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.session.Session;
 import org.springframework.session.web.http.*;
 
