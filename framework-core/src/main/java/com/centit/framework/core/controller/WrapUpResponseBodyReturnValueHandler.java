@@ -153,7 +153,9 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                 break;
             default: {
                     ResponseData outputValue;
-                    if (value instanceof ToResponseData){
+                    if(value == null) {
+                        outputValue = ResponseData.makeSuccessResponse();
+                    } else if (value instanceof ToResponseData){
                         outputValue = ((ToResponseData)value).toResponseData();
                     } else if (value instanceof ResponseData) {
                         outputValue = (ResponseData)value;

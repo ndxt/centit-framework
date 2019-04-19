@@ -215,6 +215,13 @@ public class TestCaseController extends BaseController {
         return 100;
     }
 
+    @ApiOperation(value="测试Void",notes="测试 void。")
+    @GetMapping("/void")
+    @WrapUpResponseBody
+    public void testVoid() {
+
+    }
+
     @ApiOperation(value="测试16进制编码",notes="将一个字符串按照16进制编码。")
     @ApiImplicitParams({@ApiImplicitParam(
         name = "rawhex", value="用于编码的字符串",
