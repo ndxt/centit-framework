@@ -614,26 +614,12 @@ public class MainFrameController extends BaseController {
         return ResponseData.makeResponseData(makeMenuFuncsJson(menuFunsByUser));
     }
 
-    /**
-     * 校验session是否超时
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @return 超时跳转异常
-     */
-    @ApiOperation(value = "校验session是否超时", notes = "校验session是否超时")
-    @RequestMapping(value = "/expired" , method = RequestMethod.GET)
-    public String sessionExpired(
-            HttpServletRequest request,HttpServletResponse response) {
-
-        if (WebOptUtils.isAjax(request)) {
-            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
-                    "session超时，请重新登录。", response);
-            return null;
-        }else{
-            return "exception/timeout";
-        }
+    @ApiOperation(value = "获取当前session", notes = "获取当前session")
+    @RequestMapping(value = "/session" , method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public String getSession(HttpServletRequest request) {
+        return request.getSession().getId();
     }
-
     /**
      * 查询当前用户所有职位
      * @param request {@link HttpServletRequest}

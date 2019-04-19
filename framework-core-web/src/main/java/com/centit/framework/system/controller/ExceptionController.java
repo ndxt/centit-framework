@@ -1,7 +1,9 @@
 package com.centit.framework.system.controller;
 
 import com.centit.framework.common.JsonResultUtils;
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
@@ -106,5 +109,22 @@ public class ExceptionController {
         }
     }
 
-
+    /**
+     * 校验session是否超时
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return 超时跳转异常
+     */
+    @ApiOperation(value = "校验session是否超时", notes = "校验session是否超时")
+    @RequestMapping(value = "/timeout" , method = RequestMethod.GET)
+    public String sessionExpired(
+        HttpServletRequest request,HttpServletResponse response) {
+        if (WebOptUtils.isAjax(request)) {
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
+                "session超时，请重新登录。", response);
+            return null;
+        }else{
+            return "exception/timeout";
+        }
+    }
 }
