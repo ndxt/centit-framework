@@ -5,7 +5,7 @@
     <parent>
         <artifactId>framework-parent</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>4.4-SNAPSHOT</version>
+        <version>4.5.1901</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session</artifactId>
+            <artifactId>spring-session-core</artifactId>
         </dependency>
 
         <dependency>
@@ -57,6 +57,11 @@
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-jdbc</artifactId>
         </dependency>
 
         <dependency>

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>framework-parent</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>4.4-SNAPSHOT</version>
+        <version>4.5.1901</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -47,7 +47,7 @@
         <!--引入h2嵌入式数据库来管理session的持久化问题-->
         <dependency>
             <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session</artifactId>
+            <artifactId>spring-session-core</artifactId>
         </dependency>
 
         <dependency>

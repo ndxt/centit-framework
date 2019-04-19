@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.support.DelegatingMessageSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
@@ -34,7 +34,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Autowired
     @Qualifier("passwordEncoder")
-    protected Object passwordEncoder;
+    protected PasswordEncoder passwordEncoder;
 
     @Autowired(required = false)
     private MessageSource messageSource;
@@ -107,7 +107,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setHideUserNotFoundExceptions(false);
         authenticationProvider.setUserDetailsService(centitUserDetailsService);
-        if( passwordEncoder instanceof org.springframework.security.authentication.encoding.PasswordEncoder) {
+        /*if( passwordEncoder instanceof org.springframework.security.authentication.encoding.PasswordEncoder) {
             ReflectionSaltSource saltSource = new ReflectionSaltSource();
             //UserInfo.salt 盐值数据字段
             String propertyToUse = env.getProperty("login.dao.passwordEncoder.salt");
@@ -116,7 +116,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
             }
             saltSource.setUserPropertyToUse(propertyToUse);
             authenticationProvider.setSaltSource(saltSource);
-        }
+        }*/
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         if(messageSource != null && !(messageSource instanceof DelegatingMessageSource)) {
             authenticationProvider.setMessageSource(messageSource);

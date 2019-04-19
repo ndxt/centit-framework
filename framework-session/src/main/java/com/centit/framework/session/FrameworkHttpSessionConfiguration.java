@@ -11,11 +11,11 @@ public class FrameworkHttpSessionConfiguration {
 
     @Value("${session.strategy.cookie.first:true}")
     private boolean cookieFist;
+    @Value("${session.strategy.cookie.path:/}")
+    private String cookiePath;
 
     @Bean
-    public SmartHttpSessionStrategy smartHttpSessionStrategy(){
-        SmartHttpSessionStrategy sessionStrategy =  new SmartHttpSessionStrategy();
-        sessionStrategy.setCookieFirst(cookieFist);
-        return sessionStrategy;
+    public SmartHttpSessionResolver smartHttpSessionStrategy(){
+        return new SmartHttpSessionResolver(cookieFist, cookiePath);
     }
 }

@@ -535,18 +535,24 @@ public class MainFrameController extends BaseController {
     /**
      * 获取子菜单
      * @param optid 菜单代码
+     * @param asadmin 作为管理员
      * @param request HttpServletRequest
      * @return JSONArray
      */
     @ApiOperation(value = "获取子菜单", notes = "获取子菜单详情")
-    @ApiImplicitParam(
-        name = "optid", value="菜单代码",
-        paramType = "query", dataType= "String"
-    )
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "optid", value="菜单代码",
+            paramType = "query", dataType= "String"
+        ),
+        @ApiImplicitParam(
+            name = "asadmin", value="作为管理员 t/f",
+            paramType = "query", dataType= "String"
+        )})
     @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
     @WrapUpResponseBody
     public JSONArray getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optid,
-                                       @RequestParam(value="optid", required=false)  String asadmin,
+                                       @RequestParam(value="asadmin", required=false)  String asadmin,
             HttpServletRequest request) {
 
         CentitUserDetails userDetails = super.getLoginUser(request);
@@ -705,6 +711,7 @@ public class MainFrameController extends BaseController {
     /**
      * 获取用户在某个职务的用户组列表
      * @param rank 职务代码
+     * @param request HttpServletRequest
      * @return json 结果
      */
     @ApiOperation(value = "获取当前用户具有某个行政职务的任职信息", notes = "获取当前用户具有某个行政职务的任职信息")
@@ -726,6 +733,7 @@ public class MainFrameController extends BaseController {
     /**
      * 获取用户在某个岗位的用户组列表
      * @param station 岗位代码
+     * @param request HttpServletRequest
      * @return json结果
      */
     @ApiOperation(value = "获取当前用户具有某个岗位的任职信息", notes = "获取当前用户具有某个岗位的任职信息")
