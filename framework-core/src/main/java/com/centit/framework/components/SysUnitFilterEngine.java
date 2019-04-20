@@ -155,7 +155,7 @@ public abstract class SysUnitFilterEngine {
         return midUnits;
     }
 
-    private static boolean matchUnitTag(String unitTag, String unitTags){
+    public static boolean matchUnitTag(String unitTag, String unitTags){
         if(StringUtils.isBlank(unitTags)) {
             return false;
         }

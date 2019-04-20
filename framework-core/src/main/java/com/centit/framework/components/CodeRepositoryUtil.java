@@ -902,6 +902,40 @@ public abstract class CodeRepositoryUtil {
     }
 
     /**
+     * 根据机构代码获取本机构的上级机构信息
+     * @param sUnit sUnit 机构代码
+     * @return 上级结构机构信息
+     */
+    public static IUnitInfo getParentUnitInfo(String sUnit) {
+        IUnitInfo uinfo = getUnitRepo().get(sUnit);
+        if(uinfo==null){
+            return null;
+        }
+        return getUnitRepo().get(uinfo.getParentUnit());
+    }
+
+    /**
+     * 根据机构代码获取本机构的符合要求（类别或者标签相符）的上级机构信息
+     * @param sUnit sUnit 机构代码
+     * @param typeOrTag 结构类别或者标签
+     * @return 上级结构机构信息
+     */
+    public static IUnitInfo getParentUnitInfo(String sUnit,String typeOrTag) {
+        IUnitInfo uinfo = getUnitRepo().get(sUnit);
+        while(uinfo!=null){
+            if(typeOrTag.equals(uinfo.getUnitType()) ||
+                SysUnitFilterEngine.matchUnitTag(typeOrTag, uinfo.getUnitTag())){
+                return uinfo;
+            }
+            String puc = uinfo.getParentUnit();
+            if ((puc == null) || ("0".equals(puc)) || ("".equals(puc))) {
+                return null;
+            }
+            uinfo = getUnitRepo().get(puc);
+        }
+        return getUnitRepo().get(uinfo.getParentUnit());
+    }
+    /**
      * 根据状态获取所有机构信息，
      *
      * @param sState A表示所有状态
