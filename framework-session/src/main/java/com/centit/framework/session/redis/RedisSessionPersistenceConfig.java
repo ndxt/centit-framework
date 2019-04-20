@@ -1,12 +1,13 @@
 package com.centit.framework.session.redis;
 
 import com.centit.framework.session.FrameworkHttpSessionConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
@@ -18,8 +19,7 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 @Conditional(RedisSessionPersistenceCondition.class)
 @EnableRedisHttpSession
 public class RedisSessionPersistenceConfig extends FrameworkHttpSessionConfiguration {
-    private Logger logger = LoggerFactory.getLogger(RedisSessionPersistenceConfig.class);
-
+    //private Logger logger = LoggerFactory.getLogger(RedisSessionPersistenceConfig.class);
 
     @Value("${session.redis.host:}")
     private String host;
@@ -28,13 +28,15 @@ public class RedisSessionPersistenceConfig extends FrameworkHttpSessionConfigura
     private Integer port;
 
     @Bean
-    public LettuceConnectionFactory connectionFactory() {
-        logger.info("已启用 [redis] session 持久化");
-        return new LettuceConnectionFactory(host,port);
+    public RedisConnectionFactory redisConnectionFactory() {
+        JedisConnectionFactory connection = new JedisConnectionFactory(
+            new RedisStandaloneConfiguration(host,port));
+        return connection;
     }
 
     @Bean
-    public SessionRegistry sessionRegistry(FindByIndexNameSessionRepository sessionRepository){
+    public SessionRegistry sessionRegistry(
+        @Autowired FindByIndexNameSessionRepository sessionRepository){
         return new SpringSessionBackedSessionRegistry(sessionRepository);
     }
 }

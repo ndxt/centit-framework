@@ -65,8 +65,8 @@
         </dependency>
 
         <dependency>
-            <groupId>biz.paluch.redis</groupId>
-            <artifactId>lettuce</artifactId>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
         </dependency>
 
     </dependencies>
