@@ -1,6 +1,7 @@
 package com.centit.framework.security.model;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -65,5 +66,15 @@ public class StandardPasswordEncoderImpl
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword,encodedPassword);
+    }
+
+    @Override
+    public boolean isCorrectPasswordFormat(String password){
+        if(StringUtils.isBlank(password) || password.length()<48){
+            return false;
+        }
+        return password.charAt(0) == '$'
+            && password.charAt(3) == '$'
+            && password.charAt(6) == '$';
     }
 }
