@@ -1,7 +1,6 @@
 package com.centit.framework.core.controller;
 
 import com.centit.framework.common.*;
-import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.network.HtmlFormUtils;
