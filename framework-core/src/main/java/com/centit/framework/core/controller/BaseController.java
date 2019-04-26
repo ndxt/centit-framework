@@ -153,34 +153,6 @@ public abstract class BaseController {
     }
 
     /**
-     * 获取当前用户信息
-     * @param request request
-     * @return 当前用户信息
-     */
-    protected CentitUserDetails getLoginUser(HttpServletRequest request) {
-        return WebOptUtils.getLoginUser(request);
-    }
-
-    protected String getLoginUserName(HttpServletRequest request) {
-        CentitUserDetails ud = getLoginUser(request);
-        if(ud==null)
-            return null;
-        return ud.getUsername();
-    }
-
-    /**
-     *
-     * @param request request
-     * @return 登录用户code
-     */
-    protected String getLoginUserCode(HttpServletRequest request) {
-        CentitUserDetails ud = getLoginUser(request);
-        if(ud==null)
-            return null;
-        return ud.getUserCode();
-    }
-
-    /**
      * 将查询条件转换为Dao中hql语句的参数变量
      * 这个中的规则是为了兼容以前的版本，新的版本不需要添加任何前缀
      * @param request request

@@ -462,7 +462,7 @@ public abstract class DictionaryMapUtils {
         return fieldDictionaryMaps;
     }
 
-    public static Map<String,Object>  mapJsonObject(Map<String,Object> obj, Class<?>... objTypes) {
+    public static Map<String,Object> mapJsonObject(Map<String,Object> obj, Class<?>... objTypes) {
         if (obj == null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = new ArrayList<>();

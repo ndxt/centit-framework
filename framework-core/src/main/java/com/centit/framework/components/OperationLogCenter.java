@@ -204,7 +204,7 @@ public class OperationLogCenter {
     */
    public static void log(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent, String newValue, String oldValue ) {
-       log(OperationLog.LEVEL_INFO, WebOptUtils.getLoginUser(request).getUserCode(),
+       log(OperationLog.LEVEL_INFO, WebOptUtils.getCurrentUserCode(request),
                 optId, optTag, optMethod, optContent,newValue ,oldValue);
 
    }
@@ -298,7 +298,7 @@ public class OperationLogCenter {
     */
    public static void logNewObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent, Object newObject ) {
-       logNewObject( WebOptUtils.getLoginUser(request).getUserCode(),
+       logNewObject(WebOptUtils.getCurrentUserCode(request),
                 optId, optTag, optMethod, optContent,newObject );
 
    }
@@ -319,7 +319,7 @@ public class OperationLogCenter {
 
    public static void logQuery(HttpServletRequest request, String optId, String optMethod,
                String queryDesc, Map<String,Object> queryMap ) {
-           logQuery( WebOptUtils.getLoginUser(request).getUserCode(),
+           logQuery(WebOptUtils.getCurrentUserCode(request),
                 optId,  optMethod, queryDesc,queryMap);
    }
 
@@ -334,7 +334,7 @@ public class OperationLogCenter {
     */
    public static void logDeleteObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent, Object oldObject ) {
-       logDeleteObject( WebOptUtils.getLoginUser(request).getUserCode(),
+       logDeleteObject(WebOptUtils.getCurrentUserCode(request),
                 optId, optTag, optMethod, optContent,oldObject);
 
    }
@@ -352,7 +352,7 @@ public class OperationLogCenter {
    public static void logUpdateObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent,Object newObject , Object oldObject ) {
 
-       logUpdateObject( WebOptUtils.getLoginUser(request).getUserCode(),
+       logUpdateObject(WebOptUtils.getCurrentUserCode(request),
                optId, optTag, optMethod, optContent,newObject,oldObject);
    }
  }

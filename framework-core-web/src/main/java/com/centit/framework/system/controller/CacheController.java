@@ -10,7 +10,6 @@ import com.centit.framework.components.SysUserFilterEngine;
 import com.centit.framework.components.impl.UserUnitMapTranslate;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
-import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
@@ -457,6 +456,62 @@ public class CacheController extends BaseController {
 
     }
 
+    static Map<String, Object> makeCalcParam(Object ud){
+        Map<String, Object> dpf = new HashMap<>();
+        if(ud == null){
+            return dpf;
+        }
+        JSONObject userInfo = null;
+        CentitUserDetails userDetails = null;
+        String userCode = null;
+        if(ud instanceof CentitUserDetails){
+            userDetails = (CentitUserDetails) ud;
+            userInfo = userDetails.getUserInfo();
+            userCode = userDetails.getUserCode();
+        }else if(ud instanceof IUserInfo){
+            userInfo = (JSONObject) JSON.toJSON(ud);
+            userCode = ((IUserInfo)ud).getUserCode();
+        }
+        //当前用户信息
+        dpf.put("currentUser", userInfo);
+        if(userDetails!=null) {
+            dpf.put("currentStation", userDetails.getCurrentStation());
+            //当前用户主机构信息
+            dpf.put("primaryUnit", CodeRepositoryUtil
+                .getUnitInfoByCode(userDetails.getUserInfo().getString("primaryUnit")));
+            //当前用户的角色信息
+            dpf.put("userRoles", userDetails.getUserRoles());
+        }
+        //当前用户所有机构关联关系信息
+        if(StringUtils.isNotBlank(userCode)) {
+            List<? extends IUserUnit> userUnits = CodeRepositoryUtil
+                .listUserUnits(userCode);
+            if (userUnits != null) {
+                dpf.put("userUnits", userUnits);
+                Map<String, List<IUserUnit>> rankUnits = new HashMap<>(5);
+                Map<String, List<IUserUnit>> stationUnits = new HashMap<>(5);
+                for (IUserUnit uu : userUnits) {
+                    List<IUserUnit> rankUnit = rankUnits.get(uu.getUserRank());
+                    if (rankUnit == null) {
+                        rankUnit = new ArrayList<>(4);
+                    }
+                    rankUnit.add(uu);
+                    rankUnits.put(uu.getUserRank(), rankUnit);
+
+                    List<IUserUnit> stationUnit = stationUnits.get(uu.getUserStation());
+                    if (stationUnit == null) {
+                        stationUnit = new ArrayList<>(4);
+                    }
+                    stationUnit.add(uu);
+                    stationUnits.put(uu.getUserStation(), rankUnit);
+                }
+                dpf.put("rankUnits", rankUnits);
+                dpf.put("stationUnits", stationUnits);
+            }
+        }
+        return dpf;
+    }
+
     /**
      * 实现 机构表达式过滤
      * 获取所有符合状态标记的用户，
@@ -476,26 +531,13 @@ public class CacheController extends BaseController {
     @RequestMapping(value = "/unitfilter/{unitfilter}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public List<IUnitInfo> unitfilter(@PathVariable String unitfilter,
-                           //@RequestBody Map<String,Object> varMap,
                            HttpServletRequest request) {
+        Object centitUserDetails = WebOptUtils.getLoginUser(request);
+        Set<String> units = SysUnitFilterEngine.calcSystemUnitsByExp(
+            StringEscapeUtils.unescapeHtml4(unitfilter), null,
+            new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
+        );
 
-        Map<String, Set<String>> unitParams = null;
-        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-        if(ud!=null){
-            //String usercode = ud.getUserCode();
-            String userUnit = ud.getCurrentUnitCode();
-            if(userUnit!=null){
-                unitParams = new HashMap<>();
-                unitParams.put("U", CollectionsOpt.createHashSet(userUnit));
-            }
-        }
-        Set<String> units =  SysUnitFilterEngine.calcSystemUnitsByExp(
-            StringEscapeUtils.unescapeHtml4(unitfilter),
-            unitParams, new UserUnitMapTranslate());
-        /*List<IUnitInfo> listObjects = new ArrayList<>();
-        for(String uc : units){
-            listObjects.add( CodeRepositoryUtil.getUnitInfoByCode(uc) );
-        }*/
         List<IUnitInfo> retUntis = CodeRepositoryUtil.getUnitInfosByCodes(units);
         CollectionsOpt.sortAsTree(retUntis,
             ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
@@ -521,31 +563,13 @@ public class CacheController extends BaseController {
     public  List<IUserInfo> userfilter(@PathVariable String userfilter,
                            //@RequestBody Map<String,Object> varMap,
                            HttpServletRequest request) {
-        Map<String, Set<String>> unitParams = null;
-        Map<String, Set<String>> userParams = null;
-        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-        if(ud!=null){
-            String userCode = ud.getUserCode();
-            if(userCode!=null){
-                unitParams = new HashMap<>();
-                unitParams.put("O", CollectionsOpt.createHashSet(userCode));
-            }
-            String userUnit = ud.getCurrentUnitCode();
-            if(userUnit!=null){
-                unitParams = new HashMap<>();
-                unitParams.put("U", CollectionsOpt.createHashSet(userUnit));
-            }
-        }
-        Set<String> users =  SysUserFilterEngine.calcSystemOperators(
+        Object centitUserDetails = WebOptUtils.getLoginUser(request);
+        Set<String> users = SysUserFilterEngine.calcSystemOperators(
                 StringEscapeUtils.unescapeHtml4(userfilter),
-                unitParams,userParams,null, new UserUnitMapTranslate());
-        /*List<IUserInfo> listObjects = new ArrayList<>();
-        for(String uc : users){
-            listObjects.add( CodeRepositoryUtil.getUserInfoByCode(uc));
-        }*/
+            null,null,null,
+            new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails)));
         return CodeRepositoryUtil.getUserInfosByCodes(users);
     }
-
 
     private JSONArray makeMenuFuncsJson(List<IOptInfo> menuFunsByUser) {
         return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
@@ -660,20 +684,7 @@ public class CacheController extends BaseController {
         return ResponseData.makeResponseData(pv);
     }
 
-    /**
-     * 获取用户信息
-     * @return ResponseData
-     */
-    @ApiOperation(value = "获取当前登录用户详情", notes = "获取当前登录用户详情，包括其组织机构、权限信息、用户设置等等")
-    @RequestMapping(value = "/userdetails", method = RequestMethod.GET)
-    @WrapUpResponseBody
-    public ResponseData getUserDetails() {
-        CentitUserDetails userDetails = WebOptUtils.getLoginUser(RequestThreadLocal.getHttpThreadWrapper()
-                .getRequest());
-        return ResponseData.makeResponseData(userDetails);
-    }
-
-    /**
+     /**
      * CP标签中USERSETTING实现
      * 获取用户当前设置值
      *

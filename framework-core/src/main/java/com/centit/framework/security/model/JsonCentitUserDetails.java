@@ -171,7 +171,6 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
      */
     @Override
     public String getUsername() {
-
         return this.getUserInfo().getString("loginName");
     }
 

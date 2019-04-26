@@ -1419,15 +1419,15 @@ public abstract class CodeRepositoryUtil {
      * @return 操作方法的权限
      */
     public static Boolean checkUserOptPower(String optId, String IOptMethod) {
-        CentitUserDetails userDetails = WebOptUtils.getLoginUser(
-            getLocalThreadWrapperRequest());
-        if (null == userDetails) {
-            return false;
-        }
 
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        CentitUserDetailsImpl userDetails = (CentitUserDetailsImpl) principal;
-        return userDetails.checkOptPower(optId, IOptMethod);
+        Object userDetails = WebOptUtils.getLoginUser(
+            getLocalThreadWrapperRequest());
+        if (userDetails instanceof CentitUserDetails) {
+            return ((CentitUserDetails)userDetails).checkOptPower(optId, IOptMethod);
+        }
+        return false;
+
+
     }
 
     /**
@@ -1435,11 +1435,12 @@ public abstract class CodeRepositoryUtil {
      * @return 返回一个map，key为optid+‘-’+method value 为 'T'
      */
     public static Map<String,String> getUserAllOptPowers() {
-        CentitUserDetails userDetails = WebOptUtils.getLoginUser(getLocalThreadWrapperRequest());
-        if (null == userDetails) {
-            return null;
+        Object userDetails = WebOptUtils.getLoginUser(
+            getLocalThreadWrapperRequest());
+        if (userDetails instanceof CentitUserDetails) {
+            return ((CentitUserDetails)userDetails).getUserOptList();
         }
-        return userDetails.getUserOptList();
+        return null;
     }
 
     /**
@@ -1449,13 +1450,12 @@ public abstract class CodeRepositoryUtil {
      * @return 用户参数设置
      */
     public static String getUserSettingValue(String paramCode) {
-        CentitUserDetails userDetails = WebOptUtils.getLoginUser(
+        Object userDetails = WebOptUtils.getLoginUser(
             getLocalThreadWrapperRequest());
-        if (null == userDetails) {
-            return null;
+        if (userDetails instanceof CentitUserDetails) {
+            return ((CentitUserDetails)userDetails).getUserSettingValue(paramCode);
         }
-
-        return userDetails.getUserSettingValue(paramCode);
+        return null;
     }
 
     /**
@@ -1463,12 +1463,12 @@ public abstract class CodeRepositoryUtil {
      * @return 返回 key - value 对（map）
      */
     public static Map<String, String> getUserAllSettings() {
-        CentitUserDetails userDetails = WebOptUtils.getLoginUser(
+        Object userDetails = WebOptUtils.getLoginUser(
             getLocalThreadWrapperRequest());
-        if (null == userDetails) {
-            return null;
+        if (userDetails instanceof CentitUserDetails) {
+            return ((CentitUserDetails)userDetails).getUserSettings();
         }
-        return userDetails.getUserSettings();
+        return null;
     }
 
     /**

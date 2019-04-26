@@ -1,5 +1,9 @@
 package com.centit.framework.common;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.components.CodeRepositoryUtil;
+import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.security.model.CentitUserDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
@@ -21,11 +25,20 @@ import java.util.Locale;
  */
 public class WebOptUtils {
     public static final String LOCAL_LANGUAGE_LABLE="LOCAL_LANG";
+    public static final String CURRENT_USER_CODE_TAG   = "cnt-current-user-code";
+    public static final String CURRENT_UNIT_CODE_TAG   = "cnt-current-uint-code";
+    public static final String CURRENT_STATION_ID_TAG   = "cnt-current-station-id";
     //不使用http的状态码来标识错误状态
     public static boolean exceptionNotAsHttpError = false;
 
     public static void setExceptionNotAsHttpError(boolean exceptionNotAsHttpError) {
         WebOptUtils.exceptionNotAsHttpError = exceptionNotAsHttpError;
+    }
+
+    public static boolean requestInSpringCloud = false;
+
+    public static void setRequestInSpringCloud(boolean requestInSpringCloud) {
+        WebOptUtils.requestInSpringCloud = requestInSpringCloud;
     }
 
     public static boolean isAjax(HttpServletRequest request) {
@@ -38,8 +51,7 @@ public class WebOptUtils {
      *  getLoginUser(HttpServletRequest request)
      * @return CentitUserDetails
      */
-    @Deprecated
-    public static CentitUserDetails getLoginUser() {
+    private static CentitUserDetails getLoginUser() {
         SecurityContext sch = SecurityContextHolder.getContext();
         if (sch == null)
             return null;
@@ -58,33 +70,53 @@ public class WebOptUtils {
     private static CentitUserDetails innerGetLoginUser(HttpSession session) {
         Object attr = session.getAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
-        if(attr!=null && attr instanceof CentitUserDetails){
+        if(attr==null){
+            return null;
+        }
+        if(attr instanceof CentitUserDetails){
             return (CentitUserDetails)attr;
         }
-
-        SecurityContext scontext = (SecurityContext) session.getAttribute(
-                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
-
-        if(scontext==null)
-            return null;
-        Authentication auth = scontext.getAuthentication();
-        if (auth == null)
-            return null;
-
         CentitUserDetails ud = null;
-        Object o = auth.getPrincipal();
-        if (o instanceof CentitUserDetails) {
-            ud = (CentitUserDetails) o;// auth.getPrincipal();
+        if(attr instanceof SecurityContext) {
+            Authentication auth = ((SecurityContext) attr).getAuthentication();
+            if (auth == null)
+                return null;
+            Object o = auth.getPrincipal();
+            if (o instanceof CentitUserDetails) {
+                ud = (CentitUserDetails) o;// auth.getPrincipal();
+            }
         }
         return ud;
     }
 
+    @Deprecated
     public static CentitUserDetails getLoginUser(HttpSession session) {
         CentitUserDetails ud = getLoginUser();
-        if(ud==null){
-             ud = innerGetLoginUser(session);
+        if(ud!=null){
+             return ud;
         }
-        return ud;
+        return innerGetLoginUser(session);
+    }
+
+    /**
+     * 返回IUserInfo or CentitUserDetails
+     * @param request HttpServletRequest
+     * @return IUserInfo or CentitUserDetails
+     */
+    public static Object getLoginUser(HttpServletRequest request) {
+        if(WebOptUtils.requestInSpringCloud){
+            String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
+            if(userCode!=null){
+                return CodeRepositoryUtil.getUserInfoByCode(userCode);
+            }
+        }
+        CentitUserDetails ud = getLoginUser();
+        if(ud != null) {
+            return ud;
+        }
+        //根据token获取用户信息
+        //在session中手动获得用户信息
+        return innerGetLoginUser(request.getSession());
     }
 
     public static String getRequestAddr(HttpServletRequest request) {
@@ -93,17 +125,6 @@ public class WebOptUtils {
             sHostIp = request.getRemoteAddr();
         }
         return sHostIp;
-    }
-
-    public static CentitUserDetails getLoginUser(HttpServletRequest request) {
-        CentitUserDetails ud = getLoginUser();
-        if(request == null || ud != null) {
-            return ud;
-        }
-        //根据token获取用户信息
-        //在session中手动获得用户信息
-        return innerGetLoginUser(request.getSession());
-
     }
 
     public static String getLocalLangParameter(HttpServletRequest request) {
@@ -177,11 +198,78 @@ public class WebOptUtils {
         setCurrentLang(request.getSession(),localLang);
     }
 
-    public static String getLoginUserName(HttpServletRequest request) {
-        UserDetails ud = getLoginUser(request);
-        if (ud == null)
-            return "";
-        return ud.getUsername();
+    public static JSONObject getCurrentUserInfo(HttpServletRequest request) {
+        Object ud = getLoginUser(request);
+        if(ud instanceof CentitUserDetails) {
+            return ((CentitUserDetails)ud).getUserInfo();
+        }
+
+        if(ud instanceof IUserInfo) {
+            return (JSONObject)JSON.toJSON(ud);
+        }
+        return null;
     }
 
+    public static String getCurrentUserCode(HttpServletRequest request) {
+        if(WebOptUtils.requestInSpringCloud){
+            String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
+            if(StringUtils.isNotBlank(userCode)){
+                return userCode;
+            }
+        }
+
+        Object ud = getLoginUser(request);
+        if (ud == null)
+            return "";
+        if(ud instanceof CentitUserDetails) {
+            return ((CentitUserDetails)ud).getUserCode();
+        }
+
+        return "";
+    }
+
+    public static String getCurrentUserName(HttpServletRequest request) {
+        Object ud = getLoginUser(request);
+        if (ud == null)
+            return "";
+        if(ud instanceof CentitUserDetails) {
+            return ((CentitUserDetails)ud).getUserInfo().getString("userName");
+        }
+
+        if(ud instanceof IUserInfo) {
+            return ((IUserInfo)ud).getUserName();
+        }
+        return "";
+    }
+
+    public static String getCurrentUserLoginName(HttpServletRequest request) {
+        Object ud = getLoginUser(request);
+        if (ud == null)
+            return "";
+        if(ud instanceof CentitUserDetails) {
+            return ((CentitUserDetails)ud).getUsername();
+        }
+
+        if(ud instanceof IUserInfo) {
+            return ((IUserInfo)ud).getLoginName();
+        }
+        return "";
+    }
+
+    public static String getCurrentUnitCode(HttpServletRequest request) {
+        if(WebOptUtils.requestInSpringCloud){
+            String unitCode = request.getHeader(WebOptUtils.CURRENT_UNIT_CODE_TAG);
+            if(StringUtils.isNotBlank(unitCode)){
+                return unitCode;
+            }
+        }
+
+        Object ud = getLoginUser(request);
+        if (ud == null)
+            return "";
+        if(ud instanceof CentitUserDetails) {
+            return ((CentitUserDetails)ud).getCurrentUnitCode();
+        }
+        return "";
+    }
 }

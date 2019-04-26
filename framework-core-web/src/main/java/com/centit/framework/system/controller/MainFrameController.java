@@ -1,5 +1,6 @@
 package com.centit.framework.system.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.*;
@@ -13,6 +14,7 @@ import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
+import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
@@ -214,17 +216,17 @@ public class MainFrameController extends BaseController {
             newPassword = request.getParameter("newPassword");
         }
 
-        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-        if(ud==null){
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if(StringUtils.isBlank(userCode)){
 //            JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
             return ResponseData.makeErrorMessage("用户没有登录，不能修改密码！");
         }else{
-            boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), password);
+            boolean bo=platformEnvironment.checkUserPassword(userCode, password);
             if(!bo){
 //                JsonResultUtils.writeErrorMessageJson("用户输入的密码错误，不能修改密码！", response);
                 return ResponseData.makeErrorMessage("用户输入的密码错误，不能修改密码！");
             }else{
-                platformEnvironment.changeUserPassword(ud.getUserCode(), newPassword);
+                platformEnvironment.changeUserPassword(userCode, newPassword);
 //                JsonResultUtils.writeSuccessJson(response);
                 return ResponseData.makeSuccessResponse();
             }
@@ -248,11 +250,11 @@ public class MainFrameController extends BaseController {
         if(StringUtils.isBlank(password)) {
             password = request.getParameter("password");
         }
-        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-        if(ud==null){
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if(StringUtils.isBlank(userCode)){
             return ResponseData.makeErrorMessage(ResponseData.ERROR_UNAUTHORIZED,"用户没有登录，不能修改密码！");
         }else{
-            boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), password);
+            boolean bo=platformEnvironment.checkUserPassword(userCode, password);
             return ResponseData.makeResponseData(bo);
         }
     }
@@ -389,7 +391,6 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/captchaimage",method = RequestMethod.GET)
     @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
     public RenderedImage captchaImage(HttpServletRequest request, HttpServletResponse response) {
-
         String checkcode = CaptchaImageUtil.getRandomString();
         request.getSession().setAttribute(
                 CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
@@ -445,13 +446,13 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/currentuserinfo",method = RequestMethod.GET)
     @WrapUpResponseBody
     public ResponseData getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
-        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-        if(ud==null) {
+        JSONObject userInfo = WebOptUtils.getCurrentUserInfo(request);
+        if(userInfo==null) {
             return ResponseData.makeErrorMessageWithData(
                 request.getSession().getId(),ResponseData.ERROR_UNAUTHORIZED,"No user login on current session!");
         }
         else {
-            return ResponseData.makeResponseData(ud.getUserInfo());
+            return ResponseData.makeResponseData(userInfo);
         }
     }
     /**
@@ -463,7 +464,7 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/currentuser",method = RequestMethod.GET)
     @WrapUpResponseBody
     public ResponseData getCurrentUserDetails(HttpServletRequest request) {
-        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
+        Object ud = WebOptUtils.getLoginUser(request);
         if(ud==null) {
             return ResponseData.makeErrorMessageWithData(
                 request.getSession().getId(),ResponseData.ERROR_UNAUTHORIZED,"No user login on current session!");
@@ -481,8 +482,8 @@ public class MainFrameController extends BaseController {
     @GetMapping("/hasLogin")
     @WrapUpResponseBody(contentType = WrapUpContentType.RAW)
     public Boolean hasLogin(HttpServletRequest request) {
-        CentitUserDetails ud = WebOptUtils.getLoginUser(request);
-        return ud!=null;
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        return StringUtils.isNotBlank(userCode);
     }
 
     private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser){
@@ -507,8 +508,8 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/menu" , method = RequestMethod.GET)
     @WrapUpResponseBody
     public JSONArray getMenu(HttpServletRequest request) {
-        CentitUserDetails userDetails = super.getLoginUser(request);
-        if(userDetails==null){
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if(StringUtils.isBlank(userCode)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录，请重新登录！");
 
@@ -518,11 +519,11 @@ public class MainFrameController extends BaseController {
         List<? extends IOptInfo> menuFunsByUser = null;
 
         if(StringUtils.isNotBlank(topOptId)) {
-            menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userDetails.getUserCode(), topOptId, asAdmin);
+            menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, topOptId, asAdmin);
         }
 
         if(menuFunsByUser == null || menuFunsByUser.size()==0 ){
-            menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userDetails.getUserCode(), asAdmin);
+            menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userCode, asAdmin);
         }
 
         if(menuFunsByUser==null){
@@ -555,15 +556,15 @@ public class MainFrameController extends BaseController {
                                        @RequestParam(value="asadmin", required=false)  String asadmin,
             HttpServletRequest request) {
 
-        CentitUserDetails userDetails = super.getLoginUser(request);
-        if(userDetails==null){
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if(StringUtils.isBlank(userCode)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录，请重新登录！");
         }
         //Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
         boolean asAdmin = BooleanBaseOpt.castObjectToBoolean(asadmin,false);
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment
-            .listUserMenuOptInfosUnderSuperOptId(userDetails.getUserCode(), optid, asAdmin);
+            .listUserMenuOptInfosUnderSuperOptId(userCode, optid, asAdmin);
         if(menuFunsByUser==null){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录,或者没有给用户任何权限，请重新登录！");
@@ -635,12 +636,15 @@ public class MainFrameController extends BaseController {
     @GetMapping(value = "/userpositions")
     @WrapUpResponseBody
     public JSONArray listCurrentUserUnits(HttpServletRequest request) {
-        CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
+        Object currentUser = WebOptUtils.getLoginUser(request);
         if(currentUser==null){
             throw new ObjectException("用户没有登录或者超时，请重新登录。");
         }
-
-        return DictionaryMapUtils.mapJsonArray(currentUser.getUserUnits(), IUserUnit.class);
+        if(currentUser instanceof CentitUserDetails) {
+            return DictionaryMapUtils.mapJsonArray(
+                ((CentitUserDetails)currentUser).getUserUnits(), IUserUnit.class);
+        }
+        return null;
     }
 
     /**
@@ -651,15 +655,17 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "查询当前用户当前职位", notes = "查询当前用户当前职位")
     @GetMapping(value = "/usercurrposition")
     @WrapUpResponseBody
-    public ResponseData getUserCurrentStaticn(HttpServletRequest request) {
-        CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
+    public Map<String,Object> getUserCurrentStaticn(HttpServletRequest request) {
+        Object currentUser = WebOptUtils.getLoginUser(request);
         if(currentUser==null){
-            return ResponseData.makeErrorMessage(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
+            throw new ObjectException("用户没有登录或者超时，请重新登录。");
         }
-        return ResponseData.makeResponseData(
-                DictionaryMapUtils.mapJsonObject(
-                    currentUser.getCurrentStation(),
-                    IUserUnit.class));
+        if(currentUser instanceof CentitUserDetails) {
+            return DictionaryMapUtils.mapJsonObject(
+                    ((CentitUserDetails)currentUser).getCurrentStation(),
+                    IUserUnit.class);
+        }
+        return null;
     }
 
     /**
@@ -667,7 +673,6 @@ public class MainFrameController extends BaseController {
      * @param userUnitId 用户机构Id
      * @param request {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
-     * @return ResponseData
      */
     @ApiOperation(value = "设置当前用户当前职位", notes = "根据用户机构id设置当前用户当前职位")
     @ApiImplicitParam(
@@ -676,14 +681,15 @@ public class MainFrameController extends BaseController {
     )
     @PutMapping(value = "/setuserposition/{userUnitId}")
     @WrapUpResponseBody
-    public ResponseData setUserCurrentStaticn(@PathVariable String userUnitId,
+    public void setUserCurrentStaticn(@PathVariable String userUnitId,
             HttpServletRequest request,HttpServletResponse response) {
-        CentitUserDetails currentUser = WebOptUtils.getLoginUser(request);
+        Object currentUser = WebOptUtils.getLoginUser(request);
         if(currentUser==null){
-            return ResponseData.makeErrorMessage(ResponseData.ERROR_SESSION_TIMEOUT,"用户没有登录或者超时，请重新登录。");
+            throw new ObjectException("用户没有登录或者超时，请重新登录。");
         }
-        currentUser.setCurrentStationId(userUnitId);
-        return ResponseData.makeSuccessResponse();
+        if(currentUser instanceof CentitUserDetails) {
+            ((CentitUserDetails)currentUser).setCurrentStationId(userUnitId);
+        }
     }
 
     /**
@@ -720,15 +726,14 @@ public class MainFrameController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )
     @GetMapping(value = "userranks/{rank}")
-    @ResponseBody
-    public ResponseData listUserUnitsByRank(@PathVariable String rank, HttpServletRequest request){
-        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser(request);
-        if(centitUserDetails == null){
-            return new ResponseSingleData(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录或者超时，请重新登录");
+    @WrapUpResponseBody
+    public JSONArray listUserUnitsByRank(@PathVariable String rank, HttpServletRequest request){
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if(StringUtils.isBlank(userCode)){
+            throw new ObjectException("用户没有登录或者超时，请重新登录。");
         }
-        return ResponseSingleData.makeResponseData(
-                DictionaryMapUtils.objectsToJSONArray(
-                CodeRepositoryUtil.listUserUnitsByRank(centitUserDetails.getUserCode(), rank)));
+        return DictionaryMapUtils.objectsToJSONArray(
+                    CodeRepositoryUtil.listUserUnitsByRank(userCode, rank));
     }
     /**
      * 获取用户在某个岗位的用户组列表
@@ -742,57 +747,17 @@ public class MainFrameController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )
     @GetMapping(value = "userstations/{station}")
-    @ResponseBody
+    @WrapUpResponseBody
     public ResponseData listUserUnitsByStation(@PathVariable String station, HttpServletRequest request){
-        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser(request);
-        if(centitUserDetails == null){
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if(StringUtils.isBlank(userCode)){
             return new ResponseSingleData("用户没有登录或者超时，请重新登录");
         }
         return ResponseSingleData.makeResponseData(
                 DictionaryMapUtils.objectsToJSONArray(
-                CodeRepositoryUtil.listUserUnitsByStation(centitUserDetails.getUserCode(), station)));
+                CodeRepositoryUtil.listUserUnitsByStation(userCode, station)));
     }
 
-    private static Map<String, Object> makeCalcParam(CentitUserDetails userDetails){
-        Map<String, Object> dpf = new HashMap<>();
-        if(userDetails == null){
-            return dpf;
-        }
-        //当前用户信息
-        dpf.put("currentUser", userDetails.getUserInfo());
-        dpf.put("currentStation", userDetails.getCurrentStation());
-        //当前用户主机构信息
-        dpf.put("primaryUnit", CodeRepositoryUtil
-            .getUnitInfoByCode(userDetails.getUserInfo().getString("primaryUnit")));
-        //当前用户所有机构关联关系信息
-        List<? extends IUserUnit>  userUnits = CodeRepositoryUtil
-            .listUserUnits(userDetails.getUserCode());
-        if(userUnits!=null) {
-            dpf.put("userUnits", userUnits);
-            Map<String, List<IUserUnit>> rankUnits = new HashMap<>(5);
-            Map<String, List<IUserUnit>> stationUnits = new HashMap<>(5);
-            for(IUserUnit uu : userUnits ){
-                List<IUserUnit> rankUnit = rankUnits.get(uu.getUserRank());
-                if(rankUnit==null){
-                    rankUnit = new ArrayList<>(4);
-                }
-                rankUnit.add(uu);
-                rankUnits.put(uu.getUserRank(),rankUnit);
-
-                List<IUserUnit> stationUnit = stationUnits.get(uu.getUserStation());
-                if(stationUnit==null){
-                    stationUnit = new ArrayList<>(4);
-                }
-                stationUnit.add(uu);
-                stationUnits.put(uu.getUserStation(),rankUnit);
-            }
-            dpf.put("rankUnits", rankUnits);
-            dpf.put("stationUnits", stationUnits);
-        }
-        //当前用户的角色信息
-        dpf.put("userRoles", userDetails.getUserRoles());
-        return dpf;
-    }
 
     @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
     @ApiImplicitParam(
@@ -802,7 +767,7 @@ public class MainFrameController extends BaseController {
     @PostMapping(value = "testUserEngine")
     @WrapUpResponseBody
     public Set<String> testUserEngine(@RequestBody String jsonStr, HttpServletRequest request){
-        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser(request);
+        Object centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
         Object userParams = jsonObject.getJSONObject("userParams");
@@ -821,7 +786,7 @@ public class MainFrameController extends BaseController {
             unitParams==null?null:StringBaseOpt.objectToMapStrSet(unitParams),
             userParams==null?null:StringBaseOpt.objectToMapStrSet(userParams),
             rankMap,
-            new UserUnitMapTranslate(makeCalcParam(centitUserDetails))
+            new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
     }
 
@@ -833,14 +798,13 @@ public class MainFrameController extends BaseController {
     @PostMapping(value = "testUnitEngine")
     @WrapUpResponseBody
     public Set<String> testUnitEngine(@RequestBody String jsonStr, HttpServletRequest request){
-        CentitUserDetails centitUserDetails = WebOptUtils.getLoginUser(request);
+        Object centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
         return SysUnitFilterEngine.calcSystemUnitsByExp(
             jsonObject.getString("formula"),
             unitParams==null?null:StringBaseOpt.objectToMapStrSet(unitParams),
-            new UserUnitMapTranslate(makeCalcParam(centitUserDetails))
+            new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
     }
-
 }

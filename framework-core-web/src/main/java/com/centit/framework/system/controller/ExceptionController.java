@@ -3,7 +3,6 @@ package com.centit.framework.system.controller;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +114,7 @@ public class ExceptionController {
      * @param response HttpServletResponse
      * @return 超时跳转异常
      */
-    @ApiOperation(value = "校验session是否超时", notes = "校验session是否超时")
+    //@ApiOperation(value = "校验session是否超时", notes = "校验session是否超时")
     @RequestMapping(value = "/timeout" , method = RequestMethod.GET)
     public String sessionExpired(
         HttpServletRequest request,HttpServletResponse response) {
