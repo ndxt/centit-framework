@@ -28,6 +28,10 @@ public class WebOptUtils {
     public static final String CURRENT_USER_CODE_TAG   = "cnt-current-user-code";
     public static final String CURRENT_UNIT_CODE_TAG   = "cnt-current-uint-code";
     public static final String CURRENT_STATION_ID_TAG   = "cnt-current-station-id";
+    public static final String CORRELATION_ID = "cnt-correlation-id";
+    public static final String AUTHORIZATION_TOKEN  = "Authorization";
+    public static final String SESSION_ID_TOKEN     = "x-auth-token";
+
     //不使用http的状态码来标识错误状态
     public static boolean exceptionNotAsHttpError = false;
 
