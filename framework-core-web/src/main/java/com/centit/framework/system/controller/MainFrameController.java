@@ -463,14 +463,14 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "当前登录者", notes = "当前登录者，CentitUserDetails对象信息")
     @RequestMapping(value = "/currentuser",method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getCurrentUserDetails(HttpServletRequest request) {
+    public Object getCurrentUserDetails(HttpServletRequest request) {
         Object ud = WebOptUtils.getLoginUser(request);
         if(ud==null) {
-            return ResponseData.makeErrorMessageWithData(
-                request.getSession().getId(),ResponseData.ERROR_UNAUTHORIZED,"No user login on current session!");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+                "用户没有登录，请重新登录！");
         }
         else {
-            return ResponseData.makeResponseData(ud);
+            return ud;
         }
     }
     /**
@@ -633,12 +633,12 @@ public class MainFrameController extends BaseController {
      * @return JSONArray
      */
     @ApiOperation(value = "查询当前用户所有职位", notes = "查询当前用户所有职位")
-    @GetMapping(value = "/userpositions")
+    @GetMapping(value = "/userstations")
     @WrapUpResponseBody
     public JSONArray listCurrentUserUnits(HttpServletRequest request) {
         Object currentUser = WebOptUtils.getLoginUser(request);
         if(currentUser==null){
-            throw new ObjectException("用户没有登录或者超时，请重新登录。");
+            throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
         if(currentUser instanceof CentitUserDetails) {
             return DictionaryMapUtils.mapJsonArray(
@@ -647,49 +647,66 @@ public class MainFrameController extends BaseController {
         return null;
     }
 
+    @Deprecated
+    @GetMapping(value = "/userpositions")
+    @WrapUpResponseBody
+    public JSONArray listCurrentUserPostions(HttpServletRequest request) {
+        return listCurrentUserUnits(request);
+    }
+
     /**
      * 查询当前用户当前职位
      * @param request {@link HttpServletRequest}
      * @return ResponseData
      */
     @ApiOperation(value = "查询当前用户当前职位", notes = "查询当前用户当前职位")
-    @GetMapping(value = "/usercurrposition")
+    @GetMapping(value = "/usercurrstation")
     @WrapUpResponseBody
     public Map<String,Object> getUserCurrentStaticn(HttpServletRequest request) {
         Object currentUser = WebOptUtils.getLoginUser(request);
-        if(currentUser==null){
-            throw new ObjectException("用户没有登录或者超时，请重新登录。");
-        }
         if(currentUser instanceof CentitUserDetails) {
             return DictionaryMapUtils.mapJsonObject(
-                    ((CentitUserDetails)currentUser).getCurrentStation(),
-                    IUserUnit.class);
+                ((CentitUserDetails) currentUser).getCurrentStation(),
+                IUserUnit.class);
         }
-        return null;
+        throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
+    }
+
+    @Deprecated
+    @GetMapping(value = "/usercurrposition")
+    @WrapUpResponseBody
+    public Map<String,Object> getUserCurrentPosition(HttpServletRequest request) {
+        return getUserCurrentStaticn(request);
     }
 
     /**
      * 设置当前用户当前职位
      * @param userUnitId 用户机构Id
      * @param request {@link HttpServletRequest}
-     * @param response {@link HttpServletResponse}
      */
     @ApiOperation(value = "设置当前用户当前职位", notes = "根据用户机构id设置当前用户当前职位")
     @ApiImplicitParam(
         name = "userUnitId", value="用户机构Id",
         required= true, paramType = "path", dataType= "String"
     )
-    @PutMapping(value = "/setuserposition/{userUnitId}")
+    @PutMapping(value = "/setuserstation/{userUnitId}")
     @WrapUpResponseBody
     public void setUserCurrentStaticn(@PathVariable String userUnitId,
-            HttpServletRequest request,HttpServletResponse response) {
+                                      HttpServletRequest request) {
         Object currentUser = WebOptUtils.getLoginUser(request);
-        if(currentUser==null){
-            throw new ObjectException("用户没有登录或者超时，请重新登录。");
-        }
         if(currentUser instanceof CentitUserDetails) {
-            ((CentitUserDetails)currentUser).setCurrentStationId(userUnitId);
+            ((CentitUserDetails) currentUser).setCurrentStationId(userUnitId);
         }
+
+        throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
+    }
+
+    @Deprecated
+    @PutMapping(value = "/setuserposition/{userUnitId}")
+    @WrapUpResponseBody
+    public void setUserCurrentPosition(@PathVariable String userUnitId,
+            HttpServletRequest request) {
+        setUserCurrentStaticn(userUnitId, request);
     }
 
     /**
