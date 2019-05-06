@@ -1,8 +1,11 @@
 package com.centit.framework.common;
 
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
+import com.centit.support.algorithm.CollectionsOpt;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Map;
 
 /**
  * 响应 http 请求 返回的数据，可以用Map返回多个数据
@@ -284,11 +287,15 @@ public interface ResponseData{
         return response;
     }
 
-    static ResponseSingleData makeResponseData(Object objValue, Class<?> clazz){
+    static ResponseSingleData makeResponseData(Object objValue){
         return ResponseSingleData.makeResponseData(objValue);
     }
 
-    static ResponseSingleData makeResponseData(Object objValue){
-        return ResponseSingleData.makeResponseData(objValue);
+    static ResponseMapData makeResponseData(String key, Object objValue){
+        return ResponseMapData.makeResponseData(CollectionsOpt.createHashMap(key, objValue));
+    }
+
+    static ResponseMapData makeResponseData(Map<String, Object> resMapData){
+        return ResponseMapData.makeResponseData(resMapData);
     }
 }

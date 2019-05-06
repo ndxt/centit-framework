@@ -1,5 +1,6 @@
 package com.centit.framework.system.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.*;
@@ -286,16 +287,14 @@ public class MainFrameController extends BaseController {
         }
         SecurityContextHolder.getContext().setAuthentication(ud);
             //new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
-
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
-        ResponseMapData resData = new ResponseMapData();
-        resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
-        return ResponseData.makeResponseData(resData);
+        return ResponseData.makeResponseData(
+            SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
     }
 
     /**
      * 这个方法用于和第三方对接的验证方式，需要注入名为 thirdPartyCheckUserDetails 的bean 。
-     * @param formValue json格式的表单数据 {userCode:"u0000000", token:"231413241234"}
+     * @param formJson json格式的表单数据 {userCode:"u0000000", token:"231413241234"}
      * @param request HttpServletRequest
      * @return ResponseData
      */
@@ -309,7 +308,7 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value="/loginasthird",method = RequestMethod.POST)
     @WrapUpResponseBody
     public ResponseData loginAsThird(HttpServletRequest request,
-                    @RequestBody JSONObject formValue) {
+                    @RequestBody String formJson) {
         try {
             if (thirdPartyCheckUserDetails == null) {
                 thirdPartyCheckUserDetails = ContextLoaderListener.getCurrentWebApplicationContext()
@@ -322,26 +321,19 @@ public class MainFrameController extends BaseController {
         if(thirdPartyCheckUserDetails == null){
             return ResponseData.makeErrorMessage("系统找不到名为 thirdPartyCheckUserDetails 的 bean。");
         }
-        String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
-        Object token = formValue.get("token");
 
-        CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
+        CentitUserDetails ud = thirdPartyCheckUserDetails.check(platformEnvironment, JSON.parseObject(formJson));
         if(ud==null){
-            return ResponseData.makeErrorMessage("用户： "+userCode+"不存在。");
+            return ResponseData.makeErrorMessage("第三方验证失败: "+ formJson);
         }
 
-        boolean bo = thirdPartyCheckUserDetails.check(ud, token);
-        if(!bo){
-            return ResponseData.makeErrorMessage("用户："+userCode+ " token:" + StringBaseOpt.objectToString(token) +" 校验不通过");
-        }
         SecurityContextHolder.getContext().setAuthentication(ud);
         /*request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
             new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));*/
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
         // SecurityContextUtils.setSecurityContext(ud,request.getSession());
-        ResponseMapData resData = new ResponseMapData();
-        resData.addResponseData(SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
-        return ResponseData.makeResponseData(resData);
+        return ResponseData.makeResponseData(
+            SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
     }
 
     /**
