@@ -51,11 +51,6 @@ public class FrameworkBeanConfiguation {
         return fastJsonHttpMessageConverter;
     }
 
-    @Bean({"passwordEncoder"})
-    public CentitPasswordEncoder passwordEncoder() {
-        return new StandardPasswordEncoderImpl();
-    }
-
     @Bean
     @Lazy(value = false)
     public PlatformEnvironment platformEnvironment(

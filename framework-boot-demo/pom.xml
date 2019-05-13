@@ -16,6 +16,7 @@
     <version>4.5-SNAPSHOT</version>
 
     <properties>
+        <jdk.version>1.8</jdk.version>
         <centit.framework.version>4.5.1901</centit.framework.version>
         <centit.persistence.version>1.2.1901</centit.persistence.version>
         <centit.commons.version>2.2.1901</centit.commons.version>
@@ -31,19 +32,8 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.centit.support</groupId>
-            <artifactId>centit-database</artifactId>
-            <version>${centit.commons.version}</version>
         </dependency>
 
         <dependency>
@@ -70,17 +60,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.centit.framework</groupId>
-            <artifactId>framework-system-static-config</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-            <version>2.2</version>
-        </dependency>
         <!-- server runtime library -->
         <dependency>
             <groupId>com.sun</groupId>
@@ -135,14 +114,8 @@
             <version>0.16</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.15</version>
-        </dependency>
-
     </dependencies>
+
     <build>
         <plugins>
             <!--<plugin>

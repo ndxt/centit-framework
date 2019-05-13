@@ -25,7 +25,6 @@ public class FrameworkDemoApplication  extends WebMvcConfigurerAdapter implement
     @Autowired
     private FastJsonHttpMessageConverter fastJsonHttpMessageConverter;
 
-
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(fastJsonHttpMessageConverter);
