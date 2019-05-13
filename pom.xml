@@ -103,6 +103,7 @@
         <module>framework-security-ldap</module>
         <module>framework-boot-config</module>
         <module>framework-boot-demo</module>
+        <module>framework-security-boot-config</module>
     </modules>
 
     <build>

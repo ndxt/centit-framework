@@ -50,6 +50,12 @@
 
         <dependency>
             <groupId>com.centit.framework</groupId>
+            <artifactId>framework-security-boot-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.centit.framework</groupId>
             <artifactId>framework-core-web</artifactId>
             <version>${project.version}</version>
         </dependency>

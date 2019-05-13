@@ -6,7 +6,6 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitUserDetailsService;
-import com.centit.framework.security.model.StandardPasswordEncoderImpl;
 import com.centit.framework.staticsystem.service.impl.JsonPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +14,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @EnableConfigurationProperties(FrameworkProperties.class)
-@Configuration("environmentConfiguation")
+@Configuration("frameworkBeanConfiguation")
 public class FrameworkBeanConfiguation {
 
     @Autowired
     private FrameworkProperties frameworkProperties;
+
+    @Autowired
+    private CentitPasswordEncoder passwordEncoder;
 
     @Bean
     public FastJsonHttpMessageConverter fastJsonHttpMessageConverter(){
@@ -53,9 +49,7 @@ public class FrameworkBeanConfiguation {
 
     @Bean
     @Lazy(value = false)
-    public PlatformEnvironment platformEnvironment(
-            @Autowired CentitPasswordEncoder passwordEncoder) {
-
+    public PlatformEnvironment platformEnvironment() {
 
         JsonPlatformEnvironment jsonPlatformEnvironment = new JsonPlatformEnvironment();
         jsonPlatformEnvironment.setAppHome(frameworkProperties.getApp().getHome());
@@ -70,24 +64,5 @@ public class FrameworkBeanConfiguation {
         return userDetailsService;
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-        @Autowired CentitUserDetailsService centitUserDetailsService,
-        @Autowired StandardPasswordEncoderImpl passwordEncoder) {
-
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setHideUserNotFoundExceptions(false);
-        authenticationProvider.setUserDetailsService(centitUserDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
-
-        List<AuthenticationProvider> providerList = new ArrayList<>();
-        providerList.add(authenticationProvider);
-        return new ProviderManager(providerList);
-    }
-
-    @Bean
-    public CsrfTokenRepository csrfTokenRepository() {
-        return new HttpSessionCsrfTokenRepository();
-    }
 
 }
