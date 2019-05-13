@@ -101,6 +101,8 @@
         <module>framework-system-static-jdbc</module>
         <module>framework-session</module>
         <module>framework-security-ldap</module>
+        <module>framework-boot-config</module>
+        <module>framework-boot-demo</module>
     </modules>
 
     <build>
