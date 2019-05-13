@@ -6,11 +6,9 @@ spring:
   application:
     name: framework
 
-
 framework:
   app:
     home: D:/Projects/RunData/webim_home
-
 
 security:
   login:
