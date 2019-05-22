@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @RestController
@@ -220,6 +221,13 @@ public class TestCaseController extends BaseController {
     @WrapUpResponseBody
     public void testVoid() {
 
+    }
+
+    @ApiOperation(value="测试url query param",notes="测试url query param。")
+    @GetMapping("/urlparam")
+    @WrapUpResponseBody
+    public Map<String, Object> testUrlParam(HttpServletRequest request) {
+        return collectRequestParameters(request);
     }
 
     @ApiOperation(value="测试16进制编码",notes="将一个字符串按照16进制编码。")

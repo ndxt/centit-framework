@@ -3,6 +3,7 @@ package com.centit.framework.core.controller;
 import com.centit.framework.common.*;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
+import com.centit.support.database.utils.QueryUtils;
 import com.centit.support.network.HtmlFormUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -157,6 +158,7 @@ public abstract class BaseController {
      * @param request request
      * @return map 将查询条件转换为Dao中hql语句的参数变量
      */
+    @Deprecated
     public static Map<String, Object> convertSearchColumn(HttpServletRequest request) {
         // log.error("规则化前参数表：" + paramMap.toString());
         Map<String, String[]> parameterMap = request.getParameterMap();
@@ -233,11 +235,24 @@ public abstract class BaseController {
             String[] values = CollectionsOpt.removeBlankString(ent.getValue());
             if(values==null)
                 continue;
-            if(values.length==1){
-                map.put(key, values[0]);
-            }else{
-                map.put(key, values);
+            Object paramValue = values.length==1 ? values[0] : values;
+            String paramAlias = key;
+            /*int e = key.indexOf('-');
+            if (e > 0) {
+                String pretreatment = key.substring(0, e).trim();
+                paramAlias = key.substring(e + 1).trim();
+                paramValue = QueryUtils.pretreatParameter(pretreatment,paramValue);
+            }*/
+            //和 QueryUtils 中的语法保存一致
+            if(key.charAt(0)=='('){
+                int e = key.indexOf(')');
+                if(e>0){
+                    String pretreatment = key.substring(1, e).trim();
+                    paramAlias =  key.substring(e+1).trim();
+                    paramValue = QueryUtils.pretreatParameter(pretreatment,paramValue);
+                }
             }
+            map.put(paramAlias, paramValue);
         }
         return map;
     }
