@@ -20,15 +20,11 @@ public class UserRole implements IUserRole, java.io.Serializable {
 
     private String userCode;// 用户代码
 
-
     private String roleCode; // 角色代码
 
     private Date obtainDate; // 获得角色时间
 
-
-
     private String changeDesc; // 说明
-
 
     protected Date createDate;
 

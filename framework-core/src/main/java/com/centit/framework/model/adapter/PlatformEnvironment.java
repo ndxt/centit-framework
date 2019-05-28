@@ -4,6 +4,7 @@ import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PlatformEnvironment {
 
@@ -126,6 +127,10 @@ public interface PlatformEnvironment {
     List<? extends IOptMethod> listAllOptMethod();
 
     /**
+     * @return 所有的数据范围定义表达式
+     */
+    List<? extends IOptDataScope> listAllOptDataScope();
+    /**
      * 获取所有数据字典类别信息
      * @return List 所有数据字典类别信息
      */
@@ -200,5 +205,14 @@ public interface PlatformEnvironment {
     void insertOrUpdateMenu(List<? extends IOptInfo> optInfos,
                             List<? extends IOptMethod> optMethods);
 
+    /**
+     * 获得用户摸个功能方法的数据范围权限，返回null或者size==0表示拥有所有权限
+     * @param sUserCode sUserCode
+     * @param sOptId sOptid
+     * @param sOptMethod sOptMethod
+     * @return 用户摸个功能方法的数据范围权限
+     */
+    List<String> listUserDataFiltersByOptIdAndMethod
+    (String sUserCode, String sOptId, String sOptMethod);
 }
 

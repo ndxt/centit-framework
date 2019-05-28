@@ -14,7 +14,6 @@ public class RolePower implements IRolePower, java.io.Serializable{
     // Fields
     private static final long serialVersionUID = 1L;
 
-
     private String optScopeCodes;// 操作代码
     // Constructors
 
@@ -24,13 +23,9 @@ public class RolePower implements IRolePower, java.io.Serializable{
      */
     private String roleCode; //角色代码
 
-
     private String optCode; //操作代码
 
-
-
     // Property accessors
-
     public String getRoleCode() {
         return this.roleCode;
     }
@@ -57,7 +52,7 @@ public class RolePower implements IRolePower, java.io.Serializable{
             return null;
         return optScopeCodes.split(",");
     }
-    
+
     public void setOptScopeCodes(String optScopeCodes) {
         this.optScopeCodes = optScopeCodes;
     }
@@ -71,6 +66,4 @@ public class RolePower implements IRolePower, java.io.Serializable{
         this.optScopeCodes = other.getOptScopeCodes();
 
     }
-    
-
 }

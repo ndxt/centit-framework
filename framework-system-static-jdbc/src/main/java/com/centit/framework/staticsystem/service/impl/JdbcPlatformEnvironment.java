@@ -3,6 +3,7 @@ package com.centit.framework.staticsystem.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.core.dao.ExtendedQueryPool;
+import com.centit.framework.model.basedata.IOptDataScope;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.database.utils.DataSourceDescription;
 import com.centit.support.database.utils.DatabaseAccess;
@@ -15,7 +16,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
@@ -59,6 +62,10 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_OPTINFO"));
             List<OptInfo> optinfos = jsonArrayToObjectList(optInfoJSONArray,  OptInfo.class);
             CodeRepositoryCache.optInfoRepo.setFreshtDate(optinfos);
+
+            JSONArray optDataScopesJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_OPTDATASCOPE"));
+            optDataScopes = jsonArrayToObjectList(optDataScopesJSONArray, OptDataScope.class);
 
             JSONArray optMethodsJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_OPTMETHOD"));

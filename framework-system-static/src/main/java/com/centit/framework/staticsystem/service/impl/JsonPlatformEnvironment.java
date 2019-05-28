@@ -1,8 +1,10 @@
 package com.centit.framework.staticsystem.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryCache;
+import com.centit.framework.model.basedata.IOptDataScope;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.file.FileIOOpt;
@@ -13,7 +15,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
@@ -27,34 +32,68 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
     private void loadConfigFromJSONString(String jsonStr){
         JSONObject json = JSON.parseObject(jsonStr);
-        List<UserInfo>  userinfos = JSON.parseArray(json.getString("userInfos"), UserInfo.class);
-        CodeRepositoryCache.userInfoRepo.setFreshtDate(userinfos);
+        JSONArray tempJa= json.getJSONArray("userInfos");
+        if(tempJa!=null) {
+            List<UserInfo> userinfos = tempJa.toJavaList(UserInfo.class);
+            CodeRepositoryCache.userInfoRepo.setFreshtDate(userinfos);
+        }
+        tempJa= json.getJSONArray("optInfos");
+        if(tempJa!=null) {
+            List<OptInfo> optinfos = tempJa.toJavaList(OptInfo.class);
+            CodeRepositoryCache.optInfoRepo.setFreshtDate(optinfos);
+        }
+        tempJa= json.getJSONArray("optMethods");
+        if(tempJa!=null) {
+            List<OptMethod> optmethods = tempJa.toJavaList(OptMethod.class);
+            CodeRepositoryCache.optMethodRepo.setFreshtDate(optmethods);
+        }
 
-        List<OptInfo> optinfos = JSON.parseArray(json.getString("optInfos"), OptInfo.class);
-        CodeRepositoryCache.optInfoRepo.setFreshtDate(optinfos);
+        tempJa= json.getJSONArray("optDataScopes");
+        if(tempJa!=null) {
+            optDataScopes = tempJa.toJavaList(OptDataScope.class);
+        }
 
-        List<OptMethod> optmethods = JSON.parseArray(json.getString("optMethods"), OptMethod.class);
-        CodeRepositoryCache.optMethodRepo.setFreshtDate(optmethods);
+        tempJa= json.getJSONArray("roleInfos");
+        if(tempJa!=null) {
+            List<RoleInfo> roleinfos = tempJa.toJavaList(RoleInfo.class);
+            CodeRepositoryCache.roleInfoRepo.setFreshtDate(roleinfos);
+        }
 
-        List<RoleInfo> roleinfos = JSON.parseArray(json.getString("roleInfos"), RoleInfo.class);
-        CodeRepositoryCache.roleInfoRepo.setFreshtDate(roleinfos);
+        tempJa= json.getJSONArray("rolePowers");
+        if(tempJa!=null) {
+            List<RolePower> rolepowers = tempJa.toJavaList(RolePower.class);
+            CodeRepositoryCache.rolePowerRepo.setFreshtDate(rolepowers);
+        }
 
-        List<RolePower> rolepowers = JSON.parseArray(json.getString("rolePowers"), RolePower.class);
-        CodeRepositoryCache.rolePowerRepo.setFreshtDate(rolepowers);
+        tempJa = json.getJSONArray("userRoles");
+        if (tempJa != null) {
+            List<UserRole> userroles = tempJa.toJavaList(UserRole.class);
+            allUserRoleRepo.setFreshtDate(userroles);
+        }
 
-        List<UserRole> userroles = JSON.parseArray(json.getString("userRoles"), UserRole.class);
-        allUserRoleRepo.setFreshtDate(userroles);
+        tempJa = json.getJSONArray("unitInfos");
+        if (tempJa != null) {
+            List<UnitInfo> unitinfos = tempJa.toJavaList(UnitInfo.class);
+            CodeRepositoryCache.unitInfoRepo.setFreshtDate(unitinfos);
+        }
 
-        List<UnitInfo> unitinfos = JSON.parseArray(json.getString("unitInfos"), UnitInfo.class);
-        CodeRepositoryCache.unitInfoRepo.setFreshtDate(unitinfos);
+        tempJa = json.getJSONArray("userUnits");
+        if (tempJa != null) {
+            List<UserUnit> userunits = tempJa.toJavaList(UserUnit.class);
+            CodeRepositoryCache.userUnitRepo.setFreshtDate(userunits);
+        }
 
-        List<UserUnit> userunits = JSON.parseArray(json.getString("userUnits"), UserUnit.class);
-        CodeRepositoryCache.userUnitRepo.setFreshtDate(userunits);
+        tempJa = json.getJSONArray("dataCatalogs");
+        if (tempJa != null) {
+            List<DataCatalog> datacatalogs = tempJa.toJavaList(DataCatalog.class);
+            CodeRepositoryCache.catalogRepo.setFreshtDate(datacatalogs);
+        }
 
-        List<DataCatalog> datacatalogs = JSON.parseArray(json.getString("dataCatalogs"), DataCatalog.class);
-        CodeRepositoryCache.catalogRepo.setFreshtDate(datacatalogs);
-        List<DataDictionary> datadictionaies = JSON.parseArray(json.getString("dataDictionaries"), DataDictionary.class);
-        allDictionaryRepo.setFreshtDate(datadictionaies);
+        tempJa = json.getJSONArray("dataDictionaries");
+        if (tempJa != null) {
+            List<DataDictionary> datadictionaies = tempJa.toJavaList(DataDictionary.class);
+            allDictionaryRepo.setFreshtDate(datadictionaies);
+        }
     }
 
     public String loadJsonStringFormConfigFile(String fileName) throws IOException {
@@ -122,5 +161,4 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             logger.error(e.getMessage(),e);
         }
     }
-
 }

@@ -102,6 +102,7 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.dictionaryRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.optInfoRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.codeToOptMap.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.optDataScopeRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.optMethodRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.codeToMethodMap.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.roleInfoRepo.setFreshPeriod(periodSeconds);
@@ -114,7 +115,7 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.roleUnitsRepo.setFreshPeriod(periodSeconds);
     }
 
-    public static void evictCache(String cacheName, String mapKey){
+    private static void innerEvictCache(String cacheName, String mapKey){
         switch (cacheName){
             case "UserInfo":
                 CodeRepositoryCache.userInfoRepo.evictCahce();
@@ -156,6 +157,9 @@ public abstract class CodeRepositoryCache {
                 CodeRepositoryCache.optMethodRepo.evictCahce();
                 //CodeRepositoryCache.codeToMethodMap.evictCahce();
                 break;
+            case "optDataScope":
+                CodeRepositoryCache.optDataScopeRepo.evictCahce();
+                break;
             case "RoleInfo":
                 CodeRepositoryCache.roleInfoRepo.evictCahce();
                 //CodeRepositoryCache.codeToRoleMap.evictCahce();
@@ -176,13 +180,17 @@ public abstract class CodeRepositoryCache {
                 CodeRepositoryCache.roleUnitsRepo.evictCahce();
                 break;
         }
+    }
+
+    public static void evictCache(String cacheName, String mapKey){
+        CodeRepositoryCache.innerEvictCache(cacheName, mapKey);
         if(CodeRepositoryCache.evictCacheExtOpt != null){
             CodeRepositoryCache.evictCacheExtOpt.evictCache(cacheName, mapKey);
         }
     }
 
     public static void evictCache(String cacheName){
-        CodeRepositoryCache.evictCache(cacheName, null);
+        CodeRepositoryCache.innerEvictCache(cacheName, null);
 
         if(CodeRepositoryCache.evictCacheExtOpt != null){
             CodeRepositoryCache.evictCacheExtOpt.evictCache(cacheName);
@@ -196,6 +204,7 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.catalogRepo.evictCahce();
         CodeRepositoryCache.dictionaryRepo.evictCahce();
         CodeRepositoryCache.optInfoRepo.evictCahce();
+        CodeRepositoryCache.optDataScopeRepo.evictCahce();
         CodeRepositoryCache.optMethodRepo.evictCahce();
         CodeRepositoryCache.roleInfoRepo.evictCahce();
         CodeRepositoryCache.rolePowerRepo.evictCahce();
@@ -426,6 +435,21 @@ public abstract class CodeRepositoryCache {
             return codeMap;
         }, optInfoRepo);
 
+    public static CachedObject<Map<String, List<IOptDataScope>>> optDataScopeRepo=
+        new CachedObject<>(()->{
+            List<? extends IOptDataScope> optDataScopes = getPlatformEnvironment().listAllOptDataScope();
+            Map<String,List<IOptDataScope>> optDataScopeMap = new HashMap<>(200);
+            for(IOptDataScope dataScope: optDataScopes){
+                List<IOptDataScope> odss = optDataScopeMap.get(dataScope.getOptId());
+                if(odss==null){
+                    odss = new ArrayList<>(4);
+                }
+                odss.add(dataScope);
+                optDataScopeMap.put(dataScope.getOptId(), odss);
+            }
+            return optDataScopeMap;
+        }, CACHE_FRESH_PERIOD_SECONDS);
+
 
     public static CachedObject<List<? extends IOptMethod>> optMethodRepo=
         new CachedObject<>(()-> getPlatformEnvironment().listAllOptMethod(), CACHE_FRESH_PERIOD_SECONDS);
@@ -461,4 +485,20 @@ public abstract class CodeRepositoryCache {
 
     public static CachedObject<List<? extends IRolePower>> rolePowerRepo =
         new CachedObject<>(()-> getPlatformEnvironment().listAllRolePower(), CACHE_FRESH_PERIOD_SECONDS);
+
+    public static CachedObject<Map<String, List<IRolePower>>> rolePowerMap =
+        new CachedObject<>(()-> {
+            List<? extends IRolePower> allRowPowers = CodeRepositoryCache.rolePowerRepo.getCachedTarget();
+            Map<String,List<IRolePower>> rolePowerMap = new HashMap<>(100);
+            for(IRolePower rolePower: allRowPowers){
+                List<IRolePower> odss = rolePowerMap.get(rolePower.getRoleCode());
+                if(odss==null){
+                    odss = new ArrayList<>(4);
+                }
+                odss.add(rolePower);
+                rolePowerMap.put(rolePower.getRoleCode(), odss);
+            }
+            return rolePowerMap;
+        }, rolePowerRepo);
+
 }
