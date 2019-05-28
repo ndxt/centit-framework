@@ -204,15 +204,5 @@ public interface PlatformEnvironment {
      */
     void insertOrUpdateMenu(List<? extends IOptInfo> optInfos,
                             List<? extends IOptMethod> optMethods);
-
-    /**
-     * 获得用户摸个功能方法的数据范围权限，返回null或者size==0表示拥有所有权限
-     * @param sUserCode sUserCode
-     * @param sOptId sOptid
-     * @param sOptMethod sOptMethod
-     * @return 用户摸个功能方法的数据范围权限
-     */
-    List<String> listUserDataFiltersByOptIdAndMethod
-    (String sUserCode, String sOptId, String sOptMethod);
 }
 

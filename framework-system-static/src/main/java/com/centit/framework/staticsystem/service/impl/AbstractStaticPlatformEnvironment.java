@@ -555,41 +555,4 @@ public abstract class AbstractStaticPlatformEnvironment
 
     }
 
-    @Override
-    public List<String> listUserDataFiltersByOptIdAndMethod(String sUserCode, String sOptId, String sOptMethod) {
-        List<IOptDataScope> odss = CodeRepositoryCache.optDataScopeRepo.getCachedTarget().get(sOptId);
-        if(odss==null || odss.size()<1){
-            return null;
-        }
-        Set<String> dataScopes = new HashSet<>();
-        for (UserRole ur : allUserRoleRepo.getCachedTarget()) {
-            if (StringUtils.equals(ur.getUserCode(), sUserCode)) {
-                IRoleInfo ri = CodeRepositoryCache.codeToRoleMap.getCachedTarget().get(ur.getRoleCode());
-                if (ri != null) {
-                    for (IRolePower rp : ri.getRolePowers()) {
-                        // 需要过滤掉 不是 sOptId 下面的方式（不过滤也不会影响结果）; 但是这个过滤可能并不能提高效率
-                        //IOptMethod om = CodeRepositoryCache.codeToMethodMap.getFreshTarget().get(rp.getOptCode());
-                        //if(StringUtils.equals(sOptId,om.getOptId())) {
-                            String[] oscs = rp.getOptScopeCodeSet();
-                            if (oscs != null) {
-                                Collections.addAll(dataScopes, oscs);
-                            }
-                        //}
-                    }
-                }
-            }
-        }
-
-        List<String> filters = new ArrayList<>();
-        for(IOptDataScope ods : odss){
-            if(dataScopes.contains(ods.getOptScopeCode())){
-                filters.add(ods.getFilterCondition());
-            }
-        }
-        if(filters.size()>0){
-            return filters;
-        }
-        return null;
-    }
-
 }
