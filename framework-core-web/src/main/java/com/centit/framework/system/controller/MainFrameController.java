@@ -689,9 +689,9 @@ public class MainFrameController extends BaseController {
         Object currentUser = WebOptUtils.getLoginUser(request);
         if(currentUser instanceof CentitUserDetails) {
             ((CentitUserDetails) currentUser).setCurrentStationId(userUnitId);
+        } else {
+           throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
-
-        throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
     }
 
     @Deprecated
