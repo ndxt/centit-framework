@@ -1,11 +1,13 @@
 package com.centit.framework.session.redis;
 
 import com.centit.framework.session.FrameworkHttpSessionConfiguration;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.security.core.session.SessionRegistry;
@@ -27,11 +29,17 @@ public class RedisSessionPersistenceConfig extends FrameworkHttpSessionConfigura
     @Value("${session.redis.port:6379}")
     private Integer port;
 
+    @Value("${session.redis.password:}")
+    private String password;
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        JedisConnectionFactory connection = new JedisConnectionFactory(
-            new RedisStandaloneConfiguration(host,port));
-        return connection;
+        RedisStandaloneConfiguration configuration =
+            new RedisStandaloneConfiguration(host,port);
+        if(StringUtils.isNotBlank(password)){
+            configuration.setPassword(RedisPassword.of(password));
+        }
+        return new JedisConnectionFactory(configuration);
     }
 
     @Bean
