@@ -6,7 +6,7 @@ package com.centit.framework.filter;
  * @author sx
  * 2014-10-14
  */
-public class RequestThreadLocal extends ThreadLocal<HttpThreadWrapper> {
+public class RequestThreadLocal {
     private static ThreadLocal<HttpThreadWrapper> threadLocal = new ThreadLocal<>();
 
     private RequestThreadLocal() {
