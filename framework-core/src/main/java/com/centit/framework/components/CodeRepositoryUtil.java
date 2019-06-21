@@ -1526,6 +1526,28 @@ public abstract class CodeRepositoryUtil {
         return map;
     }
 
+    public static List<String> listAllUserRoles(String sUserCode){
+        List<String> userRoles = new ArrayList<>(20);
+        userRoles.add(SecurityContextUtils.PUBLIC_ROLE_CODE);
+        List<? extends IUserRole> urs = CodeRepositoryCache.userRolesRepo.getCachedValue(sUserCode);
+        if(urs!=null && urs.size()>0) {
+            for (IUserRole ur : urs) {
+                userRoles.add(ur.getRoleCode());
+            }
+        }
+        List<? extends IUserUnit> uus = CodeRepositoryCache.userUnitsMap.getCachedValue(sUserCode);
+        if(uus!=null && uus.size()>0) {
+            for (IUserUnit uu : uus) {
+                List<? extends IUnitRole> uurs = CodeRepositoryCache.unitRolesRepo.getCachedValue(uu.getUnitCode());
+                if (uurs != null && uurs.size() > 0) {
+                    for (IUnitRole ur : uurs) {
+                        userRoles.add(ur.getRoleCode());
+                    }
+                }
+            }
+        }
+        return userRoles;
+    }
     public static List<String> listUserDataFiltersByOptIdAndMethod(String sUserCode, String sOptId, String sOptMethod) {
         List<IOptDataScope> odss = CodeRepositoryCache.optDataScopeRepo.getCachedTarget().get(sOptId);
         if(odss==null || odss.size()<1){
@@ -1533,16 +1555,10 @@ public abstract class CodeRepositoryUtil {
         }
 
         Set<String> dataScopes = new HashSet<>();
-        // 添加 public 的过滤条件
-        for (IRolePower rp : CodeRepositoryCache.rolePowerMap.getCachedTarget().get(SecurityContextUtils.PUBLIC_ROLE_CODE)) {
-            String[] oscs = rp.getOptScopeCodeSet();
-            if (oscs != null) {
-                Collections.addAll(dataScopes, oscs);
-            }
-        }
+        List<String> allUserRole = listAllUserRoles(sUserCode);
 
-        for (IUserRole ur : CodeRepositoryCache.userRolesRepo.getCachedValue(sUserCode)) {
-            IRoleInfo ri = CodeRepositoryCache.codeToRoleMap.getCachedTarget().get(ur.getRoleCode());
+        for (String rolecode : allUserRole) {
+            IRoleInfo ri = CodeRepositoryCache.codeToRoleMap.getCachedTarget().get(rolecode);
             if (ri != null) {
                 for (IRolePower rp : CodeRepositoryCache.rolePowerMap.getCachedTarget().get(ri.getRoleCode())) {
                     // 需要过滤掉 不是 sOptId 下面的方式（不过滤也不会影响结果）; 但是这个过滤可能并不能提高效率
