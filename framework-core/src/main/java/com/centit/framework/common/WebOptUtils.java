@@ -1,20 +1,23 @@
 package com.centit.framework.common;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.basedata.IUserInfo;
+import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.framework.security.model.JsonCentitUserDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -55,7 +58,7 @@ public class WebOptUtils {
      *  getLoginUser(HttpServletRequest request)
      * @return CentitUserDetails
      */
-    private static CentitUserDetails getLoginUser() {
+    private static CentitUserDetails innerGetUserDetailFromSpringContext() {
         SecurityContext sch = SecurityContextHolder.getContext();
         if (sch == null)
             return null;
@@ -71,7 +74,7 @@ public class WebOptUtils {
         return ud;
     }
 
-    private static CentitUserDetails innerGetLoginUser(HttpSession session) {
+    private static CentitUserDetails innerGetUserDetailFromSession(HttpSession session) {
         Object attr = session.getAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         if(attr==null){
@@ -93,15 +96,25 @@ public class WebOptUtils {
         return ud;
     }
 
+    private static CentitUserDetails innerGetUserDetail(HttpSession session){
+        CentitUserDetails ud = innerGetUserDetailFromSpringContext();
+        if(ud!=null){
+            return ud;
+        }
+        return innerGetUserDetailFromSession(session);
+    }
     @Deprecated
     public static CentitUserDetails getLoginUser(HttpSession session) {
-        CentitUserDetails ud = getLoginUser();
-        if(ud!=null){
-             return ud;
-        }
-        return innerGetLoginUser(session);
+        return innerGetUserDetail(session);
     }
 
+    private static IUserInfo innerGetLoginUserFromCloud(HttpServletRequest request){
+        String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
+        if(userCode!=null){
+            return CodeRepositoryUtil.getUserInfoByCode(userCode);
+        }
+        return null;
+    }
     /**
      * 返回IUserInfo or CentitUserDetails
      * @param request HttpServletRequest
@@ -109,18 +122,9 @@ public class WebOptUtils {
      */
     public static Object getLoginUser(HttpServletRequest request) {
         if(WebOptUtils.requestInSpringCloud){
-            String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
-            if(userCode!=null){
-                return CodeRepositoryUtil.getUserInfoByCode(userCode);
-            }
+            return innerGetLoginUserFromCloud(request);
         }
-        CentitUserDetails ud = getLoginUser();
-        if(ud != null) {
-            return ud;
-        }
-        //根据token获取用户信息
-        //在session中手动获得用户信息
-        return innerGetLoginUser(request.getSession());
+        return innerGetUserDetail(request.getSession());
     }
 
     public static String getRequestAddr(HttpServletRequest request) {
@@ -174,7 +178,7 @@ public class WebOptUtils {
         String localLang = request.getHeader("Accept-Language");
         if(StringUtils.isNotBlank(localLang)){
             String [] langs = localLang.split("-");
-            if(langs!=null && langs.length>1)
+            if(langs.length>1)
                 return StringUtils.lowerCase(langs[0])
                         +"_"+StringUtils.upperCase(langs[1]);
         }
@@ -187,7 +191,7 @@ public class WebOptUtils {
             return;
 
         String [] langs = localLang.split("_");
-        if(langs==null || langs.length<1)
+        if(langs.length<1)
             return;
         if(langs.length>1){
             session.setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME,
@@ -203,15 +207,38 @@ public class WebOptUtils {
     }
 
     public static JSONObject getCurrentUserInfo(HttpServletRequest request) {
-        Object ud = getLoginUser(request);
-        if(ud instanceof CentitUserDetails) {
-            return ((CentitUserDetails)ud).getUserInfo();
+        if(WebOptUtils.requestInSpringCloud){
+            return (JSONObject)JSON.toJSON(innerGetLoginUserFromCloud(request));
         }
-
-        if(ud instanceof IUserInfo) {
-            return (JSONObject)JSON.toJSON(ud);
+        CentitUserDetails ud = innerGetUserDetail(request.getSession());
+        if(ud != null) {
+            return ud.getUserInfo();
         }
         return null;
+    }
+
+    public static CentitUserDetails getCurrentUserDetails(HttpServletRequest request) {
+        if(WebOptUtils.requestInSpringCloud){
+            String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
+            if(userCode!=null){
+                IUserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(userCode);
+                JsonCentitUserDetails userDetails = new JsonCentitUserDetails();
+                userDetails.setUserInfo((JSONObject) JSON.toJSON(userinfo));
+                List<? extends IUserUnit> uulist = CodeRepositoryUtil.listUserUnits(userCode);
+                userDetails.setUserUnits((JSONArray) JSON.toJSON(uulist));
+                String unitCode = request.getHeader(WebOptUtils.CURRENT_UNIT_CODE_TAG);
+                if(uulist!=null && uulist.size()>0) {
+                    for (IUserUnit uu : uulist) {
+                        if(StringUtils.equals(unitCode, uu.getUnitCode())){
+                            userDetails.setCurrentStationId(uu.getUserUnitId());
+                            break;
+                        }
+                    }
+                }
+                return userDetails;
+            }
+        }
+        return innerGetUserDetail(request.getSession());
     }
 
     public static String getCurrentUserCode(HttpServletRequest request) {
@@ -222,42 +249,25 @@ public class WebOptUtils {
             }
         }
 
-        Object ud = getLoginUser(request);
-        if (ud == null)
+        CentitUserDetails ud = innerGetUserDetail(request.getSession());
+        if (ud == null) {
             return "";
-        if(ud instanceof CentitUserDetails) {
-            return ((CentitUserDetails)ud).getUserCode();
         }
-
-        return "";
+        return ud.getUserCode();
     }
 
     public static String getCurrentUserName(HttpServletRequest request) {
-        Object ud = getLoginUser(request);
+        JSONObject ud = getCurrentUserInfo(request);
         if (ud == null)
             return "";
-        if(ud instanceof CentitUserDetails) {
-            return ((CentitUserDetails)ud).getUserInfo().getString("userName");
-        }
-
-        if(ud instanceof IUserInfo) {
-            return ((IUserInfo)ud).getUserName();
-        }
-        return "";
+        return ud.getString("userName");
     }
 
     public static String getCurrentUserLoginName(HttpServletRequest request) {
-        Object ud = getLoginUser(request);
+        JSONObject ud = getCurrentUserInfo(request);
         if (ud == null)
             return "";
-        if(ud instanceof CentitUserDetails) {
-            return ((CentitUserDetails)ud).getUsername();
-        }
-
-        if(ud instanceof IUserInfo) {
-            return ((IUserInfo)ud).getLoginName();
-        }
-        return "";
+        return ud.getString("loginName");
     }
 
     public static String getCurrentUnitCode(HttpServletRequest request) {
@@ -267,13 +277,10 @@ public class WebOptUtils {
                 return unitCode;
             }
         }
-
-        Object ud = getLoginUser(request);
-        if (ud == null)
+        CentitUserDetails ud = innerGetUserDetail(request.getSession());
+        if (ud == null) {
             return "";
-        if(ud instanceof CentitUserDetails) {
-            return ((CentitUserDetails)ud).getCurrentUnitCode();
         }
-        return "";
+        return ud.getCurrentUnitCode();
     }
 }
