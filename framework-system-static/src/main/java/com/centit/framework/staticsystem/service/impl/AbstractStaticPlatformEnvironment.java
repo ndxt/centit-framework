@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
+import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.JsonCentitUserDetails;
@@ -228,15 +229,15 @@ public abstract class AbstractStaticPlatformEnvironment
         List<OptInfo> userOptinfos = new ArrayList<>();
 
         Set<String> optIds = new HashSet<>(20);
-        for (UserRole ur : allUserRoleRepo.getCachedTarget()) {
-            if (StringUtils.equals(ur.getUserCode(), userCode)) {
-                RoleInfo ri = (RoleInfo)CodeRepositoryCache.codeToRoleMap.getCachedTarget().get(ur.getRoleCode());
-                if (ri != null) {
-                    for (RolePower rp : ri.getRolePowers()) {
-                        OptMethod om = (OptMethod)CodeRepositoryCache.codeToMethodMap.getCachedTarget().get(rp.getOptCode());
-                        if (om != null)
-                            optIds.add(om.getOptId());
-                    }
+        List<UserRole> userRoles = listUserRoles(userCode);
+        userRoles.add(new UserRole(userCode, SecurityContextUtils.PUBLIC_ROLE_CODE));
+        for (UserRole ur : userRoles) {
+            RoleInfo ri = (RoleInfo)CodeRepositoryCache.codeToRoleMap.getCachedTarget().get(ur.getRoleCode());
+            if (ri != null) {
+                for (RolePower rp : ri.getRolePowers()) {
+                    OptMethod om = (OptMethod)CodeRepositoryCache.codeToMethodMap.getCachedTarget().get(rp.getOptCode());
+                    if (om != null)
+                        optIds.add(om.getOptId());
                 }
             }
         }

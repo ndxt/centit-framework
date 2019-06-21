@@ -6,6 +6,7 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.filter.HttpThreadWrapper;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.*;
+import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.StringBaseOpt;
@@ -1530,7 +1531,16 @@ public abstract class CodeRepositoryUtil {
         if(odss==null || odss.size()<1){
             return null;
         }
+
         Set<String> dataScopes = new HashSet<>();
+        // 添加 public 的过滤条件
+        for (IRolePower rp : CodeRepositoryCache.rolePowerMap.getCachedTarget().get(SecurityContextUtils.PUBLIC_ROLE_CODE)) {
+            String[] oscs = rp.getOptScopeCodeSet();
+            if (oscs != null) {
+                Collections.addAll(dataScopes, oscs);
+            }
+        }
+
         for (IUserRole ur : CodeRepositoryCache.userRolesRepo.getCachedValue(sUserCode)) {
             IRoleInfo ri = CodeRepositoryCache.codeToRoleMap.getCachedTarget().get(ur.getRoleCode());
             if (ri != null) {

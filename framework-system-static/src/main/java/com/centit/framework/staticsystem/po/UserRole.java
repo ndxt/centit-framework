@@ -55,7 +55,13 @@ public class UserRole implements IUserRole, java.io.Serializable {
      * default constructor
      */
     public UserRole() {
-        obtainType = "D";
+        this.obtainType = "D";
+    }
+
+    public UserRole(String userCode, String rolecode) {
+        this.obtainType = "D";
+        this.roleCode = rolecode;
+        this.userCode = userCode;
     }
 
     public String getUserCode() {
