@@ -82,14 +82,14 @@ public class CentitSecurityMetadata {
     private static OptTreeNode reloadOptTreeNode(){
         Pair<OptTreeNode, Map<String ,List<ConfigAttribute >>>  securityData
             = reloadSecurityMetadata();
-        optMethodRoleMapCache.setFreshtDate(securityData.getRight());
+        optMethodRoleMapCache.setFreshData(securityData.getRight());
         return securityData.getLeft();
     }
 
     private static Map<String,List<ConfigAttribute>>  reloadOptMethodRoleMap(){
         Pair<OptTreeNode, Map<String ,List<ConfigAttribute >>>  securityData
             = reloadSecurityMetadata();
-        optTreeNodeCache.setFreshtDate(securityData.getLeft());
+        optTreeNodeCache.setFreshData(securityData.getLeft());
         return securityData.getRight();
     }
 

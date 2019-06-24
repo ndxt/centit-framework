@@ -95,7 +95,7 @@ public abstract class AbstractStaticPlatformEnvironment
             ud.setUserUnits((JSONArray) JSON.toJSON(uulist));
             userDetails.add(ud);
         }
-        allUserDetailsRepo.setFreshtDate(userDetails);
+        allUserDetailsRepo.setFreshData(userDetails);
     }
 
     @Override

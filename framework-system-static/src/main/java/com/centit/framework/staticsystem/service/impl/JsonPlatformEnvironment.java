@@ -35,17 +35,17 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         JSONArray tempJa= json.getJSONArray("userInfos");
         if(tempJa!=null) {
             List<UserInfo> userinfos = tempJa.toJavaList(UserInfo.class);
-            CodeRepositoryCache.userInfoRepo.setFreshtDate(userinfos);
+            CodeRepositoryCache.userInfoRepo.setFreshData(userinfos);
         }
         tempJa= json.getJSONArray("optInfos");
         if(tempJa!=null) {
             List<OptInfo> optinfos = tempJa.toJavaList(OptInfo.class);
-            CodeRepositoryCache.optInfoRepo.setFreshtDate(optinfos);
+            CodeRepositoryCache.optInfoRepo.setFreshData(optinfos);
         }
         tempJa= json.getJSONArray("optMethods");
         if(tempJa!=null) {
             List<OptMethod> optmethods = tempJa.toJavaList(OptMethod.class);
-            CodeRepositoryCache.optMethodRepo.setFreshtDate(optmethods);
+            CodeRepositoryCache.optMethodRepo.setFreshData(optmethods);
         }
 
         tempJa= json.getJSONArray("optDataScopes");
@@ -56,43 +56,43 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         tempJa= json.getJSONArray("roleInfos");
         if(tempJa!=null) {
             List<RoleInfo> roleinfos = tempJa.toJavaList(RoleInfo.class);
-            CodeRepositoryCache.roleInfoRepo.setFreshtDate(roleinfos);
+            CodeRepositoryCache.roleInfoRepo.setFreshData(roleinfos);
         }
 
         tempJa= json.getJSONArray("rolePowers");
         if(tempJa!=null) {
             List<RolePower> rolepowers = tempJa.toJavaList(RolePower.class);
-            CodeRepositoryCache.rolePowerRepo.setFreshtDate(rolepowers);
+            CodeRepositoryCache.rolePowerRepo.setFreshData(rolepowers);
         }
 
         tempJa = json.getJSONArray("userRoles");
         if (tempJa != null) {
             List<UserRole> userroles = tempJa.toJavaList(UserRole.class);
-            allUserRoleRepo.setFreshtDate(userroles);
+            allUserRoleRepo.setFreshData(userroles);
         }
 
         tempJa = json.getJSONArray("unitInfos");
         if (tempJa != null) {
             List<UnitInfo> unitinfos = tempJa.toJavaList(UnitInfo.class);
-            CodeRepositoryCache.unitInfoRepo.setFreshtDate(unitinfos);
+            CodeRepositoryCache.unitInfoRepo.setFreshData(unitinfos);
         }
 
         tempJa = json.getJSONArray("userUnits");
         if (tempJa != null) {
             List<UserUnit> userunits = tempJa.toJavaList(UserUnit.class);
-            CodeRepositoryCache.userUnitRepo.setFreshtDate(userunits);
+            CodeRepositoryCache.userUnitRepo.setFreshData(userunits);
         }
 
         tempJa = json.getJSONArray("dataCatalogs");
         if (tempJa != null) {
             List<DataCatalog> datacatalogs = tempJa.toJavaList(DataCatalog.class);
-            CodeRepositoryCache.catalogRepo.setFreshtDate(datacatalogs);
+            CodeRepositoryCache.catalogRepo.setFreshData(datacatalogs);
         }
 
         tempJa = json.getJSONArray("dataDictionaries");
         if (tempJa != null) {
             List<DataDictionary> datadictionaies = tempJa.toJavaList(DataDictionary.class);
-            allDictionaryRepo.setFreshtDate(datadictionaies);
+            allDictionaryRepo.setFreshData(datadictionaies);
         }
     }
 
