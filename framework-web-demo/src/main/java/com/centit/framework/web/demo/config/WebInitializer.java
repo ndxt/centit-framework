@@ -27,6 +27,7 @@ public class WebInitializer implements WebApplicationInitializer {
         initializeSystemSpringMvcConfig(servletContext);
         initializeNormalSpringMvcConfig(servletContext);
 
+        WebConfig.registerSpringSecurityFilter(servletContext);
         //WebConfig.registerSpringContextLoaderListener(servletContext);
         WebConfig.registerRequestContextListener(servletContext);
         WebConfig.registerSingleSignOutHttpSessionListener(servletContext);
@@ -35,7 +36,6 @@ public class WebInitializer implements WebApplicationInitializer {
         WebConfig.registerHttpPutFormContentFilter(servletContext);
         WebConfig.registerHiddenHttpMethodFilter(servletContext);
         WebConfig.registerRequestThreadLocalFilter(servletContext);
-        WebConfig.registerSpringSecurityFilter(servletContext);
         //Session
         WebConfig.registerHttpSessionEventPublisher(servletContext);
         WebConfig.initializeH2Console(servletContext);
