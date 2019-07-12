@@ -1,6 +1,5 @@
 package com.centit.framework.web.demo.config;
 
-import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.config.SystemSpringMvcConfig;
 import com.centit.framework.config.WebConfig;
 import org.springframework.web.WebApplicationInitializer;
