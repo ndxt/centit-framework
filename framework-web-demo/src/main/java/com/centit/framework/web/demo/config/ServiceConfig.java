@@ -50,7 +50,7 @@ public class ServiceConfig {
     //@Value("${message.sender.email.serverEmail:}")
 
     @Bean
-    public EmailMessageSenderImpl emailMessageManager(){
+    public EmailMessageSenderImpl messageSender(){
         EmailMessageSenderImpl messageManager = new EmailMessageSenderImpl();
         messageManager.setHostName("mail.centit.com");
         messageManager.setSmtpPort(25);
