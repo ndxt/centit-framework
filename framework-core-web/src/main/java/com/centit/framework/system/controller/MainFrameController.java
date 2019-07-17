@@ -14,6 +14,7 @@ import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
+import com.centit.framework.model.basedata.IUserRole;
 import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
@@ -438,7 +439,7 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "当前登录用户", notes = "获取当前登录用户详情")
     @RequestMapping(value = "/currentuserinfo",method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getCurrentUser(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseData getCurrentUserInfo(HttpServletRequest request, HttpServletResponse response) {
         JSONObject userInfo = WebOptUtils.getCurrentUserInfo(request);
         if(userInfo==null) {
             return ResponseData.makeErrorMessageWithData(
@@ -453,11 +454,24 @@ public class MainFrameController extends BaseController {
      * @param request request
      * @return ResponseData
      */
-    @ApiOperation(value = "当前登录者", notes = "当前登录者，CentitUserDetails对象信息")
+    @ApiOperation(value = "当前登录者信息（可能是userInfo也可能是userDetails）", notes = "当前登录者，CentitUser对象信息")
     @RequestMapping(value = "/currentuser",method = RequestMethod.GET)
     @WrapUpResponseBody
-    public Object getCurrentUserDetails(HttpServletRequest request) {
+    public Object getCurrentUser(HttpServletRequest request) {
         Object ud = WebOptUtils.getLoginUser(request);
+        if(ud==null) {
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+                "用户没有登录，请重新登录！");
+        }
+        else {
+            return ud;
+        }
+    }
+    @ApiOperation(value = "当前登录者详细信息", notes = "当前登录者，CentitUserDetails对象信息")
+    @RequestMapping(value = "/currentuserdetails",method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public Object getCurrentUserDetails(HttpServletRequest request) {
+        CentitUserDetails ud = WebOptUtils.getCurrentUserDetails(request);
         if(ud==null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录，请重新登录！");
@@ -640,13 +654,12 @@ public class MainFrameController extends BaseController {
         return null;
     }
 
-    @Deprecated
-    @GetMapping(value = "/userpositions")
+    @GetMapping(value = "/userroles")
     @WrapUpResponseBody
-    public JSONArray listCurrentUserPostions(HttpServletRequest request) {
-        return listCurrentUserUnits(request);
+    public List<? extends IUserRole>  listCurrentUserRoles(HttpServletRequest request) {
+        return platformEnvironment
+            .listUserRoles(WebOptUtils.getCurrentUserCode(request));
     }
-
     /**
      * 查询当前用户当前职位
      * @param request {@link HttpServletRequest}
