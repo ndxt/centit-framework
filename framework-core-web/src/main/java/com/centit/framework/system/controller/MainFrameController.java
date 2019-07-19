@@ -678,13 +678,6 @@ public class MainFrameController extends BaseController {
         throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
     }
 
-    @Deprecated
-    @GetMapping(value = "/usercurrposition")
-    @WrapUpResponseBody
-    public Map<String,Object> getUserCurrentPosition(HttpServletRequest request) {
-        return getUserCurrentStaticn(request);
-    }
-
     /**
      * 设置当前用户当前职位
      * @param userUnitId 用户机构Id
@@ -705,14 +698,6 @@ public class MainFrameController extends BaseController {
         } else {
            throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
-    }
-
-    @Deprecated
-    @PutMapping(value = "/setuserposition/{userUnitId}")
-    @WrapUpResponseBody
-    public void setUserCurrentPosition(@PathVariable String userUnitId,
-            HttpServletRequest request) {
-        setUserCurrentStaticn(userUnitId, request);
     }
 
     /**
