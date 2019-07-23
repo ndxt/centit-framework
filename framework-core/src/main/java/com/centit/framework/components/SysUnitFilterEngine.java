@@ -1,6 +1,7 @@
 package com.centit.framework.components;
 
 import com.centit.framework.components.impl.SystemUserUnitFilterCalcContext;
+import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
 import org.apache.commons.lang3.StringUtils;

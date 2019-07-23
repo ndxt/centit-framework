@@ -1,7 +1,7 @@
 package com.centit.framework.components.impl;
 
 import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.components.UserUnitFilterCalcContext;
+import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.basedata.IDataDictionary;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;

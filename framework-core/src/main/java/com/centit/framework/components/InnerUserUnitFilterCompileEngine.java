@@ -1,10 +1,9 @@
 package com.centit.framework.components;
 
+import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
-import com.centit.support.compiler.Lexer;
 import com.centit.support.compiler.VariableFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

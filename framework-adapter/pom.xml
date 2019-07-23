@@ -26,6 +26,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <optional>true</optional>
+            <!--<scope>provided</scope>-->
+        </dependency>
+
+        <dependency>
             <groupId>com.sun</groupId>
             <artifactId>tools</artifactId>
             <version>${jdk.version}</version>

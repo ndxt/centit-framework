@@ -1,6 +1,7 @@
 package com.centit.framework.components;
 
 import com.centit.framework.components.impl.SystemUserUnitFilterCalcContext;
+import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
@@ -43,7 +44,7 @@ public abstract class SysUserFilterEngine {
     private static final Logger logger = LoggerFactory.getLogger(SysUserFilterEngine.class);
 
     public static Set<String> getUsersByRoleAndUnit(UserUnitFilterCalcContext ecc,
-                                                    String roleType,String roleCode,String unitCode)
+                                                    String roleType, String roleCode, String unitCode)
     {
         return getUsersByRoleAndUnit(ecc,roleType, roleCode, unitCode, false);
     }

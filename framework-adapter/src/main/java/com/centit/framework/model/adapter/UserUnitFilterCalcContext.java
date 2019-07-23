@@ -1,6 +1,5 @@
-package com.centit.framework.components;
+package com.centit.framework.model.adapter;
 
-import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserUnit;
