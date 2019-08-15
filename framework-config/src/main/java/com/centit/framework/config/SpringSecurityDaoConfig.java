@@ -49,7 +49,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Override
     protected String[] getPermitAllUrl() {
-        return new String[]{"/**/login", "/system/exception"};
+        return new String[]{"/**/login", "/**/logout", "/system/exception"};
     }
 
     @Override
@@ -126,7 +126,10 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Override
     protected LogoutFilter logoutFilter() {
-        return new LogoutFilter("/system/mainframe/login",
+        String defaultTargetUrl = env.getProperty("logout.success.targetUrl");
+        defaultTargetUrl = StringBaseOpt.emptyValue(defaultTargetUrl,"/system/mainframe/login");
+
+        return new LogoutFilter(defaultTargetUrl,
             new CsrfLogoutHandler(csrfTokenRepository),
             new CookieClearingLogoutHandler("JSESSIONID","remember-me"),
             new SecurityContextLogoutHandler());
