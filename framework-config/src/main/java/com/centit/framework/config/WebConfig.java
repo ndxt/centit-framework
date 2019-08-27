@@ -3,6 +3,7 @@ package com.centit.framework.config;
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.filter.RequestThreadLocalFilter;
 import com.centit.support.algorithm.StringRegularOpt;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
@@ -89,14 +90,30 @@ public class WebConfig  {
         corsFilter.addMappingForUrlPatterns(null, false, "/service/*");
     }*/
 
+    private static String [] makeUrlPatterns(String [] servletUrlPatterns, String ... otherUrlPatterns) {
+        int nlen = servletUrlPatterns.length + (otherUrlPatterns==null?0:otherUrlPatterns.length);
+        String [] urlPatterns = new String[nlen];
+        int n=0;
+        for(String servletUrl : servletUrlPatterns){
+            urlPatterns[n++] = servletUrl;
+        }
+        if(otherUrlPatterns!=null){
+            for(String url : otherUrlPatterns){
+                urlPatterns[n++] = url;
+            }
+        }
+        return urlPatterns;
+    }
     /**
      * 注册CharacterEncodingFilter过滤器 （设置字符集）
      * @param servletContext ServletContext
+     * @param servletUrlPatterns Servlet 名称列表
      */
-    public static void registerCharacterEncodingFilter(ServletContext servletContext) {
+    public static void registerCharacterEncodingFilter(ServletContext servletContext, String [] servletUrlPatterns) {
         javax.servlet.FilterRegistration.Dynamic encodingFilter
                 = servletContext.addFilter("encodingFilter", CharacterEncodingFilter.class);
-        encodingFilter.addMappingForUrlPatterns(null, false, "*.jsp", "*.html", "/service/*", "/system/*");
+        encodingFilter.addMappingForUrlPatterns(null, false,
+            makeUrlPatterns(servletUrlPatterns,"*.jsp", "*.html"));
         encodingFilter.setAsyncSupported(true);
         encodingFilter.setInitParameter("encoding", "UTF-8");
         encodingFilter.setInitParameter("forceEncoding", "true");
@@ -105,23 +122,27 @@ public class WebConfig  {
     /**
      * 注册HttpPutFormContentFilter过滤器 （让put也可以想post一样接收form表单中的数据）
      * @param servletContext ServletContext
+     * @param servletUrlPatterns Servlet 名称列表
      */
-    public static void registerHttpPutFormContentFilter(ServletContext servletContext) {
+    public static void registerHttpPutFormContentFilter(ServletContext servletContext, String [] servletUrlPatterns) {
         javax.servlet.FilterRegistration.Dynamic httpPutFormContentFilter
                 = servletContext.addFilter("httpPutFormContentFilter", HttpPutFormContentFilter.class);
-        httpPutFormContentFilter.addMappingForUrlPatterns(null, false, "/service/*", "/system/*");
+        httpPutFormContentFilter.addMappingForUrlPatterns(null, false,
+            makeUrlPatterns(servletUrlPatterns));
         httpPutFormContentFilter.setAsyncSupported(true);
     }
 
     /**
      * 注册HiddenHttpMethodFilter过滤器 （过滤请求方式）
      * @param servletContext ServletContext
+     * @param servletUrlPatterns Servlet 名称列表
      */
-    public static void registerHiddenHttpMethodFilter(ServletContext servletContext) {
+    public static void registerHiddenHttpMethodFilter(ServletContext servletContext, String [] servletUrlPatterns) {
         javax.servlet.FilterRegistration.Dynamic hiddenHttpMethodFilter
                 = servletContext.addFilter("hiddenHttpMethodFilter", HiddenHttpMethodFilter.class);
         hiddenHttpMethodFilter.addMappingForUrlPatterns(
-                EnumSet.allOf(DispatcherType.class), false, "/service/*", "/system/*");
+                EnumSet.allOf(DispatcherType.class), false,
+            makeUrlPatterns(servletUrlPatterns));
         hiddenHttpMethodFilter.setAsyncSupported(true);
     }
 
@@ -140,12 +161,14 @@ public class WebConfig  {
     /**
      * 注册springSecurityFilterChain过滤器 （使用spring security 授权与验证）
      * @param servletContext ServletContext
+     * @param servletUrlPatterns Servlet 名称列表
      */
-    public static void registerSpringSecurityFilter(ServletContext servletContext) {
+    public static void registerSpringSecurityFilter(ServletContext servletContext, String [] servletUrlPatterns) {
         javax.servlet.FilterRegistration.Dynamic springSecurityFilterChain
                 = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
         springSecurityFilterChain.addMappingForUrlPatterns(
-                null, false, "/login/*" ,"/logout/*", "/service/*", "/system/*");
+                null, false,
+            makeUrlPatterns(servletUrlPatterns,"/login/*" ,"/logout/*"));
         springSecurityFilterChain.setAsyncSupported(true);
     }
 
@@ -166,7 +189,8 @@ public class WebConfig  {
         }
 
         if(startH2Console) {
-            ServletRegistration.Dynamic h2console = servletContext.addServlet("h2console", org.h2.server.web.WebServlet.class);
+            ServletRegistration.Dynamic h2console = servletContext.addServlet("h2console",
+                org.h2.server.web.WebServlet.class);
             h2console.setInitParameter("webAllowOthers", "");
             h2console.addMapping("/h2console/*");
             h2console.setLoadOnStartup(1);
