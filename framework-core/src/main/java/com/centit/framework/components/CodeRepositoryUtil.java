@@ -1457,7 +1457,16 @@ public abstract class CodeRepositoryUtil {
 
 
     }
+    public static Boolean checkUserOptPower(String optId, String IOptMethod,HttpServletRequest request) {
 
+        Object userDetails = WebOptUtils.getLoginUser(request);
+        if (userDetails instanceof CentitUserDetails) {
+            return ((CentitUserDetails)userDetails).checkOptPower(optId, IOptMethod);
+        }
+        return false;
+
+
+    }
     /**
      * 获取用户所有的 操作方法
      * @return 返回一个map，key为optid+‘-’+method value 为 'T'
@@ -1470,7 +1479,13 @@ public abstract class CodeRepositoryUtil {
         }
         return null;
     }
-
+    public static Map<String,String> getUserAllOptPowers(HttpServletRequest request) {
+        Object userDetails = WebOptUtils.getLoginUser(request);
+        if (userDetails instanceof CentitUserDetails) {
+            return ((CentitUserDetails)userDetails).getUserOptList();
+        }
+        return null;
+    }
     /**
      * 获取用户参数设置
      *
