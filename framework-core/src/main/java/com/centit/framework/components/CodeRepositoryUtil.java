@@ -195,12 +195,6 @@ public abstract class CodeRepositoryUtil {
         return result;
     }
 
-    private static HttpServletRequest getLocalThreadWrapperRequest(){
-        HttpThreadWrapper localThread = RequestThreadLocal.getHttpThreadWrapper();
-        if(localThread!=null)
-            return localThread.getRequest();
-        return null;
-    }
     /**
      * 获取数据字典对应的值，
      *
@@ -211,7 +205,8 @@ public abstract class CodeRepositoryUtil {
      * @return  数据字典对应的值
      */
     public static String getValue(String sCatalog, String sKey) {
-        return getValue(sCatalog,sKey,WebOptUtils.getCurrentLang(getLocalThreadWrapperRequest()));
+        return getValue(sCatalog,sKey,WebOptUtils.getCurrentLang(
+            RequestThreadLocal.getLocalThreadWrapperRequest()));
     }
     /**
      * 获取数据字典对应的值，
@@ -1091,7 +1086,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static Map<String,String> getAllLabelValueMap(String sCatalog){
         return innerGetLabelValueMap(sCatalog,WebOptUtils.getCurrentLang(
-            getLocalThreadWrapperRequest()), true);
+            RequestThreadLocal.getLocalThreadWrapperRequest()), true);
     }
     /**
      * 获取 数据字典 key value
@@ -1114,7 +1109,8 @@ public abstract class CodeRepositoryUtil {
      */
     public static Map<String,String> getLabelValueMap(String sCatalog){
         return innerGetLabelValueMap(sCatalog,
-            WebOptUtils.getCurrentLang(getLocalThreadWrapperRequest()),false);
+            WebOptUtils.getCurrentLang(
+                RequestThreadLocal.getLocalThreadWrapperRequest()),false);
     }
 
     /**
@@ -1331,7 +1327,7 @@ public abstract class CodeRepositoryUtil {
     public static List<OptionItem> getOptionForSelect(String sCatalog) {
         return getOptionForSelect(sCatalog,
             WebOptUtils.getCurrentLang(
-                getLocalThreadWrapperRequest()));
+                RequestThreadLocal.getLocalThreadWrapperRequest()));
     }
 
     /**
@@ -1453,7 +1449,7 @@ public abstract class CodeRepositoryUtil {
     public static Boolean checkUserOptPower(String optId, String IOptMethod) {
 
         Object userDetails = WebOptUtils.getLoginUser(
-            getLocalThreadWrapperRequest());
+            RequestThreadLocal.getLocalThreadWrapperRequest());
         if (userDetails instanceof CentitUserDetails) {
             return ((CentitUserDetails)userDetails).checkOptPower(optId, IOptMethod);
         }
@@ -1468,7 +1464,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static Map<String,String> getUserAllOptPowers() {
         Object userDetails = WebOptUtils.getLoginUser(
-            getLocalThreadWrapperRequest());
+            RequestThreadLocal.getLocalThreadWrapperRequest());
         if (userDetails instanceof CentitUserDetails) {
             return ((CentitUserDetails)userDetails).getUserOptList();
         }
@@ -1483,7 +1479,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static String getUserSettingValue(String paramCode) {
         Object userDetails = WebOptUtils.getLoginUser(
-            getLocalThreadWrapperRequest());
+            RequestThreadLocal.getLocalThreadWrapperRequest());
         if (userDetails instanceof CentitUserDetails) {
             return ((CentitUserDetails)userDetails).getUserSettingValue(paramCode);
         }
@@ -1496,7 +1492,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static Map<String, String> getUserAllSettings() {
         Object userDetails = WebOptUtils.getLoginUser(
-            getLocalThreadWrapperRequest());
+            RequestThreadLocal.getLocalThreadWrapperRequest());
         if (userDetails instanceof CentitUserDetails) {
             return ((CentitUserDetails)userDetails).getUserSettings();
         }
