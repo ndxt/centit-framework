@@ -732,9 +732,8 @@ public class CacheController extends BaseController {
     })
     @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = { RequestMethod.GET })
     @WrapUpResponseBody
-    public ResponseData checkUserOptPower(@PathVariable String optId,@PathVariable String method,HttpServletRequest request) {
-        boolean s = CodeRepositoryUtil.checkUserOptPower(optId,method,request);
-        return ResponseData.makeResponseData(s);
+    public boolean checkUserOptPower(@PathVariable String optId,@PathVariable String method,HttpServletRequest request) {
+        return CodeRepositoryUtil.checkUserOptPower(optId,method,request);
     }
 
     /**
@@ -745,8 +744,8 @@ public class CacheController extends BaseController {
     @ApiOperation(value = "获取用户所有的 操作方法", notes = "获取用户所有的 操作方法")
     @RequestMapping(value = "/userallpowers", method = { RequestMethod.GET })
     @WrapUpResponseBody
-    public ResponseData getUserAllPowers(HttpServletRequest request) {
-        return ResponseData.makeResponseData(CodeRepositoryUtil.getUserAllOptPowers(request));
+    public Map<String,String> getUserAllPowers(HttpServletRequest request) {
+        return CodeRepositoryUtil.getUserAllOptPowers(request);
     }
 
 }
