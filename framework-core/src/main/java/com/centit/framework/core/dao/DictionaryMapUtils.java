@@ -50,7 +50,8 @@ public abstract class DictionaryMapUtils {
             }
         }
     }
-    public static List<DictionaryMapColumn> innerFetchDictionaryMapColumns(Class<?> objType){
+
+    private static List<DictionaryMapColumn> innerFetchDictionaryMapColumns(Class<?> objType){
         List<DictionaryMapColumn> fieldDictionaryMaps = new ArrayList<>(10);
         Field[] objFields = objType.getDeclaredFields();
         for(Field field :objFields){
@@ -111,7 +112,7 @@ public abstract class DictionaryMapUtils {
      * @return DictionaryMapColumn 字段名包括数据字典相关信息
      */
     public static List<DictionaryMapColumn> getDictionaryMapColumns
-            (String[] fields,Class<?> objType){
+            (String[] fields, Class<?> objType){
 
         Field[] objFields = objType.getDeclaredFields();
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
@@ -199,7 +200,7 @@ public abstract class DictionaryMapUtils {
      * @param fieldDictionaryMaps 数据字典映射表
      * @return Po对象转换为JSONObject
      */
-    private static Object objectToJSON(Object obj , List<DictionaryMapColumn> fieldDictionaryMaps ){
+    private static Object objectToJSON(Object obj, List<DictionaryMapColumn> fieldDictionaryMaps ){
         if(obj==null)
             return null;
         Object jsonObject= ( obj instanceof  Map) ? obj : JSON.toJSON(obj);
@@ -232,7 +233,7 @@ public abstract class DictionaryMapUtils {
     }
 
 
-    private static Map<String,Object>  mapJsonObjectCascade(Map<String,Object> jsonObj, Object object) {
+    private static Map<String,Object> mapJsonObjectCascade(Map<String,Object> jsonObj, Object object) {
         Map<String,Object> jsonObject = mapJsonObject(jsonObj, object.getClass() );
 
         for(Map.Entry<String, Object> entry : jsonObject.entrySet()){
@@ -393,7 +394,7 @@ public abstract class DictionaryMapUtils {
          * @return  DictionaryMapBuilder
          */
         public DictionaryMapBuilder addDictionaryDesc(
-                String codeField,String valueField,String dictCatalog){
+                String codeField, String valueField, String dictCatalog){
             dictionaryMap.put(codeField, new LeftRightPair<>(valueField,dictCatalog));
             return this;
         }
@@ -419,26 +420,10 @@ public abstract class DictionaryMapUtils {
      * @return  DictionaryMapBuilder
      */
     public static DictionaryMapBuilder createDictionaryMapBuilder(
-            String codeField,String valueField,String dictCatalog){
+            String codeField, String valueField, String dictCatalog){
         DictionaryMapBuilder builder = new DictionaryMapBuilder();
         return builder.addDictionaryDesc(codeField, valueField, dictCatalog);
     }
-
-
-    /*private static List<DictionaryMapColumn> createDictionaryMapColumns
-            (List<Triple<String,String,String>> mapInfo){
-        List<DictionaryMapColumn> fieldDictionaryMaps =
-                new ArrayList<>();
-
-        for(Triple<String,String,String> ent : mapInfo){
-            DictionaryMapColumn dictionaryMapColumn = new DictionaryMapColumn(
-                    ent.getLeft(), ent.getMiddle(), ent.getRight());
-
-            fieldDictionaryMaps.add(dictionaryMapColumn);
-
-        }//end of for
-        return fieldDictionaryMaps;
-    }*/
 
     /**
      * 检查objType属性上是否有DictionaryMap注解，如果有则获取对应的数据字典用于后面查询是转换编码
@@ -468,7 +453,7 @@ public abstract class DictionaryMapUtils {
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
     }
 
-    public static Map<String,Object>  mapJsonObject(Map<String,Object> obj,
+    public static Map<String,Object> mapJsonObject(Map<String,Object> obj,
                                                           Map<String,LeftRightPair<String,String>> mapInfo) {
         List<DictionaryMapColumn> fieldDictionaryMaps = createDictionaryMapColumns(mapInfo);
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
@@ -489,8 +474,7 @@ public abstract class DictionaryMapUtils {
         return objs;
     }
 
-
-    public static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,Class<?>... objTypes) {
+    public static List<Map<String,Object>> mapJsonArray(List<Map<String,Object>> objs, Class<?>... objTypes) {
         if (objs == null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = new ArrayList<>();
@@ -501,7 +485,7 @@ public abstract class DictionaryMapUtils {
 
     }
 
-    public static List<Map<String,Object>>  mapJsonArray(List<Map<String,Object>> objs,
+    public static List<Map<String,Object>> mapJsonArray(List<Map<String,Object>> objs,
                                                          Map<String,LeftRightPair<String,String>> mapInfo ) {
         if (objs == null)
             return null;
