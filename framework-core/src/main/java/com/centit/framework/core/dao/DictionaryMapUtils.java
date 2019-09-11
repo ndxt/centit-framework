@@ -382,13 +382,13 @@ public abstract class DictionaryMapUtils {
      *
      */
     static public class DictionaryMapBuilder{
-        private List<Triple<String,String,String>> dictionaryMap;
+        private Map<String,LeftRightPair<String,String>> dictionaryMap;
         private DictionaryMapBuilder(){
-            dictionaryMap = new ArrayList<>();
+            dictionaryMap = new HashMap<>();
         }
 
         /**
-         *
+         * fieldName ， newFieldName， catalog
          * @param codeField 需要数据字典转换的字段名
          * @param valueField 转换后值存放的字段名
          * @param dictCatalog    数据字典类别代码
@@ -396,7 +396,7 @@ public abstract class DictionaryMapUtils {
          */
         public DictionaryMapBuilder addDictionaryDesc(
                 String codeField,String valueField,String dictCatalog){
-            dictionaryMap.add(new MutableTriple<>(codeField,valueField,dictCatalog));
+            dictionaryMap.put(codeField, new LeftRightPair<>(valueField,dictCatalog));
             return this;
         }
 
@@ -404,8 +404,8 @@ public abstract class DictionaryMapUtils {
          * 直接返回内置的 Map类型变量
          * @return  Map
          */
-        public  List<Triple<String,String,String>> create(){
-            return dictionaryMap;
+        public List<DictionaryMapColumn> build(){
+            return DictionaryMapUtils.createDictionaryMapColumns(dictionaryMap);
         }
     }
 
@@ -427,7 +427,7 @@ public abstract class DictionaryMapUtils {
     }
 
 
-    /*private static List<DictionaryMapColumn> getDictionaryMapColumns
+    /*private static List<DictionaryMapColumn> createDictionaryMapColumns
             (List<Triple<String,String,String>> mapInfo){
         List<DictionaryMapColumn> fieldDictionaryMaps =
                 new ArrayList<>();
@@ -447,7 +447,7 @@ public abstract class DictionaryMapUtils {
      * @param mapInfo po对象类型 fieldName ， newFieldName， catalog
      * @return DictionaryMapColumn 字段名包括数据字典相关信息
      */
-    private static List<DictionaryMapColumn> getDictionaryMapColumns
+    private static List<DictionaryMapColumn> createDictionaryMapColumns
         (Map<String,LeftRightPair<String,String>> mapInfo){
         List<DictionaryMapColumn> fieldDictionaryMaps =
             new ArrayList<>();
@@ -455,9 +455,7 @@ public abstract class DictionaryMapUtils {
         for(Map.Entry<String,LeftRightPair<String,String>> ent : mapInfo.entrySet()){
             DictionaryMapColumn dictionaryMapColumn = new DictionaryMapColumn(
                 ent.getKey(), ent.getValue().getLeft(), ent.getValue().getRight());
-
             fieldDictionaryMaps.add(dictionaryMapColumn);
-
         }//end of for
         return fieldDictionaryMaps;
     }
@@ -474,7 +472,7 @@ public abstract class DictionaryMapUtils {
 
     public static Map<String,Object>  mapJsonObject(Map<String,Object> obj,
                                                           Map<String,LeftRightPair<String,String>> mapInfo) {
-        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
+        List<DictionaryMapColumn> fieldDictionaryMaps = createDictionaryMapColumns(mapInfo);
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
     }
 
@@ -509,7 +507,7 @@ public abstract class DictionaryMapUtils {
                                                          Map<String,LeftRightPair<String,String>> mapInfo ) {
         if (objs == null)
             return null;
-        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
+        List<DictionaryMapColumn> fieldDictionaryMaps = createDictionaryMapColumns(mapInfo);
         return mapJsonArray( objs, fieldDictionaryMaps);
     }
 
@@ -551,7 +549,7 @@ public abstract class DictionaryMapUtils {
               Map<String,LeftRightPair<String,String>> mapInfo ) {
         if (objs == null)
             return null;
-        List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(mapInfo);
+        List<DictionaryMapColumn> fieldDictionaryMaps = createDictionaryMapColumns(mapInfo);
         return mapJsonArray( objs, fieldDictionaryMaps);
     }
 
