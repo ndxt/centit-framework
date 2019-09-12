@@ -83,6 +83,15 @@ public class OperationLogCenter {
        }
    }
 
+   private static String castObjectToJsonStr(Object newValue){
+        if(newValue == null){
+            return null;
+        }
+        if(newValue instanceof String) {
+            return (String) newValue;
+        }
+        return JSON.toJSONString(newValue);
+   }
    /**
     * 记录日志内容
     * @param loglevel 操作日志还是错误提示
@@ -95,8 +104,9 @@ public class OperationLogCenter {
     * @param oldValue 旧值json
     */
    public static void log(String loglevel, String userCode, String optId, String optTag, String optMethod,
-           String optContent,String newValue,String oldValue) {
-       OperationLog optLog = new OperationLog(loglevel, userCode, optId, optTag, optMethod,  optContent ,newValue, oldValue);
+           String optContent, Object newValue, Object oldValue) {
+       OperationLog optLog = new OperationLog(loglevel, userCode, optId, optTag, optMethod,
+           optContent, castObjectToJsonStr(newValue), castObjectToJsonStr(oldValue));
        optLog.setOptTime(new Date());
        log(optLog);
    }
@@ -124,7 +134,7 @@ public class OperationLogCenter {
     * @param newValue 详细参数json
     */
    public static void log(String userCode, String optId, String optMethod,
-           String optContent,String newValue) {
+           String optContent,Object newValue) {
        log(OperationLog.LEVEL_INFO,userCode, optId, null, optMethod,  optContent,newValue, null);
    }
 
@@ -139,7 +149,7 @@ public class OperationLogCenter {
     * @param oldValue 旧值json
     */
    public static void log(String userCode, String optId,String optTag, String optMethod,
-           String optContent,String newValue,String oldValue) {
+           String optContent,Object newValue,Object oldValue) {
        log(OperationLog.LEVEL_INFO,userCode, optId, optTag, optMethod,  optContent,newValue, oldValue);
    }
 
@@ -164,8 +174,8 @@ public class OperationLogCenter {
      * @param newValue 详细参数JSON
      */
     public static void logError(String userCode, String optId, String optMethod,
-                                String optContent,String newValue) {
-        log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent,newValue, null);
+                                String optContent,Object newValue) {
+        log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent, newValue, null);
     }
 
     /**
@@ -188,7 +198,7 @@ public class OperationLogCenter {
      * @param newValue 详细参数JSON
      */
     public static void logWarn(String userCode, String optId, String optMethod,
-                                String optContent,String newValue) {
+                                String optContent,Object newValue) {
         log(OperationLog.LEVEL_WARN,userCode, optId, null, optMethod,  optContent,newValue, null);
     }
 
@@ -203,7 +213,7 @@ public class OperationLogCenter {
     * @param oldValue 旧值json
     */
    public static void log(HttpServletRequest request, String optId, String optTag, String optMethod,
-           String optContent, String newValue, String oldValue ) {
+           String optContent, Object newValue, Object oldValue ) {
        log(OperationLog.LEVEL_INFO, WebOptUtils.getCurrentUserCode(request),
                 optId, optTag, optMethod, optContent,newValue ,oldValue);
 
@@ -218,7 +228,7 @@ public class OperationLogCenter {
     * @param newValue 详细参数json
     */
    public static void log(HttpServletRequest request, String optId,
-          String optMethod,String optContent, String newValue) {
+          String optMethod,String optContent, Object newValue) {
        log(request, optId, null, optMethod, optContent, newValue,null);
    }
 
@@ -246,7 +256,7 @@ public class OperationLogCenter {
    public static void logNewObject(String userCode, String optId, String optTag, String optMethod,
            String optContent, Object newObject ) {
        log(OperationLog.LEVEL_INFO, userCode,
-                optId, optTag, optMethod, optContent,JSON.toJSONString(newObject) ,null );
+                optId, optTag, optMethod, optContent, newObject,null );
 
    }
 
@@ -262,7 +272,7 @@ public class OperationLogCenter {
    public static void logDeleteObject(String userCode, String optId, String optTag, String optMethod,
            String optContent, Object oldObject ) {
        log(OperationLog.LEVEL_INFO, userCode,
-                optId, optTag, optMethod, optContent,null,JSON.toJSONString(oldObject)  );
+                optId, optTag, optMethod, optContent,null, oldObject);
 
    }
 
@@ -320,7 +330,7 @@ public class OperationLogCenter {
    public static void logQuery(HttpServletRequest request, String optId, String optMethod,
                String queryDesc, Map<String,Object> queryMap ) {
            logQuery(WebOptUtils.getCurrentUserCode(request),
-                optId,  optMethod, queryDesc,queryMap);
+                optId,  optMethod, queryDesc, queryMap);
    }
 
    /**
