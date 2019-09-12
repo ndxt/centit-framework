@@ -719,6 +719,7 @@ public class CacheController extends BaseController {
      *
      * @param optId 系统业务代码
      * @param method 权限代码
+     * @param request HttpServletRequest
      * @return ResponseData
      */
     @ApiOperation(value = "验证当前用户是否有某个操作方法的权限", notes = "验证当前用户是否有某个操作方法的权限")
@@ -739,6 +740,7 @@ public class CacheController extends BaseController {
     /**
      * 获取用户所有的 操作方法
      * 返回一个map，key为optid+‘-’+method value 为 'T'
+     * @param request HttpServletRequest
      * @return ResponseData
      */
     @ApiOperation(value = "获取用户所有的 操作方法", notes = "获取用户所有的 操作方法")
