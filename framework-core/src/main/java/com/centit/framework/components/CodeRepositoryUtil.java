@@ -812,6 +812,21 @@ public abstract class CodeRepositoryUtil {
     }
 
     /**
+     * 根据用户代码获取用户名称
+     *
+     * @param userCode 用户代码
+     * @return 用户名称
+     */
+    public static String getUserName(String userCode) {
+        IUserInfo userInfo = getUserRepo().get(userCode);
+        if (userInfo == null) {
+            return "";
+        }
+        return userInfo.getUserName();
+    }
+
+
+    /**
      * 根据用户代码获取机构信息
      * @param sUsers 用户代码集合
      * @return 用户信息
