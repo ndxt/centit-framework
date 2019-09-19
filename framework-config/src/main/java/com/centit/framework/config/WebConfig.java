@@ -3,7 +3,6 @@ package com.centit.framework.config;
 import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.filter.RequestThreadLocalFilter;
 import com.centit.support.algorithm.StringRegularOpt;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.springframework.security.web.session.HttpSessionEventPublisher;

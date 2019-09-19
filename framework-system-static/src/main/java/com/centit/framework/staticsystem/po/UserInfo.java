@@ -4,9 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.support.algorithm.DatetimeOpt;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * FUserinfo entity.

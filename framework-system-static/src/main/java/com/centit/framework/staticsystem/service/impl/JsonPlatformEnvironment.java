@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryCache;
-import com.centit.framework.model.basedata.IOptDataScope;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.file.FileIOOpt;
@@ -15,10 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 

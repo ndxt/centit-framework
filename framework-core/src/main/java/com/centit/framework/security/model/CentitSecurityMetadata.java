@@ -38,14 +38,16 @@ public class CentitSecurityMetadata {
             IOptInfo oi = codeToOptInfoMap.get(ou.getOptId());
             if(oi!=null){
                 String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());
-                List<List<String>> sOpt = CentitSecurityMetadata.parsePowerDefineUrl(
-                    optDefUrl,ou.getOptReq());
+                if(StringUtils.isNotBlank(optDefUrl) && StringUtils.isNotBlank(ou.getOptReq())) {
+                    List<List<String>> sOpt = CentitSecurityMetadata.parsePowerDefineUrl(
+                        optDefUrl, ou.getOptReq());
 
-                for(List<String> surls : sOpt){
-                    OptTreeNode opt = optTreeNode;
-                    for(String surl : surls)
-                        opt = opt.setChildPath(surl);
-                    opt.setOptCode(ou.getOptCode());
+                    for (List<String> surls : sOpt) {
+                        OptTreeNode opt = optTreeNode;
+                        for (String surl : surls)
+                            opt = opt.setChildPath(surl);
+                        opt.setOptCode(ou.getOptCode());
+                    }
                 }
             }
         }
@@ -135,6 +137,13 @@ public class CentitSecurityMetadata {
         }
 
         List<List<String>> swords = new ArrayList<>();
+        /*if(StringUtils.isBlank(sMethod)){
+            List<String> fullOpts = new ArrayList<>(sopts.size()+2);
+            fullOpts.add("GET");
+            fullOpts.addAll(sopts);
+            swords.add(fullOpts);
+            return swords;
+        }*/
         if(sMethod.indexOf('C')>=0){
             List<String> fullOpts = new ArrayList<>(sopts.size()+2);
             fullOpts.add("POST");

@@ -1,10 +1,8 @@
 package com.centit.framework.session.redis;
 
 import com.centit.framework.common.SysParametersUtils;
-import com.centit.support.algorithm.StringRegularOpt;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
-import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 import java.util.Objects;

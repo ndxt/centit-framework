@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.RenderedImage;
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
