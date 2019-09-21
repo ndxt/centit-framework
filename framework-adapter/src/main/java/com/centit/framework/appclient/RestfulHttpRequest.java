@@ -1,6 +1,7 @@
 package com.centit.framework.appclient;
 
 import com.alibaba.fastjson.JSON;
+import com.centit.framework.common.ObjectException;
 import com.centit.support.network.UrlOptUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
@@ -17,6 +18,15 @@ public class RestfulHttpRequest {
 
     private static Logger logger = LoggerFactory.getLogger(RestfulHttpRequest.class);
 
+    private static void checkHttpReceiveJSON(HttpReceiveJSON resJson){
+        if(resJson == null){
+            throw new ObjectException(500, "服务器没有返回任何数据!");
+        }
+        if(resJson.getCode() != 0){
+            throw new ObjectException(resJson.getCode(),
+                resJson.getMessage());
+        }
+    }
     public static HttpReceiveJSON getResponseData(AppSession appSession,
                                                  String httpGetUrl){
         CloseableHttpClient httpClient = null;
@@ -45,8 +55,7 @@ public class RestfulHttpRequest {
             appSession.checkAccessToken(httpClient);
             HttpReceiveJSON resJson =  appSession.getResponseData(
                 httpClient,httpGetUrl);
-            if(resJson==null)
-                return null;
+            checkHttpReceiveJSON(resJson);
             return resJson.getDataAsArray(clazz);
 
         } catch (Exception e) {
@@ -67,8 +76,7 @@ public class RestfulHttpRequest {
             appSession.checkAccessToken(httpClient);
             HttpReceiveJSON resJson =  appSession.getResponseData(
                     httpClient,httpGetUrl);
-            if(resJson==null)
-                return null;
+            checkHttpReceiveJSON(resJson);
             return resJson.getDataAsObject(clazz);
 
         } catch (Exception e) {
