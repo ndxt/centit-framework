@@ -32,10 +32,13 @@ public class RedisSessionPersistenceConfig extends FrameworkHttpSessionConfigura
     @Value("${session.redis.password:}")
     private String password;
 
+    @Value("${session.redis.database:0}")
+    private Integer database;
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration configuration =
             new RedisStandaloneConfiguration(host,port);
+        configuration.setDatabase(database);
         if(StringUtils.isNotBlank(password)){
             configuration.setPassword(RedisPassword.of(password));
         }
