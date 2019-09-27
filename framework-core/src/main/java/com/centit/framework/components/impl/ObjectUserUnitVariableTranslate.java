@@ -12,16 +12,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ObjectUserUnitVariableTranslate<T extends Object> implements UserUnitVariableTranslate {
-    protected T object;
+public class ObjectUserUnitVariableTranslate implements UserUnitVariableTranslate {
+    protected Object object;
     public static final Logger logger = LoggerFactory.getLogger(ObjectUserUnitVariableTranslate.class);
     private Map<String,Set<String>> requestParams;
-    
+
     public ObjectUserUnitVariableTranslate(){
         object = null;
         requestParams = null;
     }
-    public ObjectUserUnitVariableTranslate(T o){
+    public ObjectUserUnitVariableTranslate(Object o){
         object = o;
         requestParams = null;
     }
@@ -31,14 +31,14 @@ public class ObjectUserUnitVariableTranslate<T extends Object> implements UserUn
         setServletRequest(request);
     }
 
-    public ObjectUserUnitVariableTranslate(T o, HttpServletRequest request){
+    public ObjectUserUnitVariableTranslate(Object o, HttpServletRequest request){
         object = o;
         setServletRequest(request);
     }
-    public void setModuleObject(T obj){
+    public void setModuleObject(Object obj){
         this.object = obj;
     }
-    
+
     public void setServletRequest(HttpServletRequest request){
         if(request==null) {
             requestParams = null;
@@ -53,7 +53,7 @@ public class ObjectUserUnitVariableTranslate<T extends Object> implements UserUn
         }
     }
 
-    
+
     /**
      * 默认返回业务模型对象的属性值 , request 队形的参数
      */
