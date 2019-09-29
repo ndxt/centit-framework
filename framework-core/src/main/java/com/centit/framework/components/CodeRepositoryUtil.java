@@ -967,7 +967,7 @@ public abstract class CodeRepositoryUtil {
             }
             uinfo = getUnitRepo().get(puc);
         }
-        return getUnitRepo().get(uinfo.getParentUnit());
+        return null;//getUnitRepo().get(uinfo.getParentUnit());
     }
     /**
      * 根据状态获取所有机构信息，
