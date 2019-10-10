@@ -748,6 +748,24 @@ public abstract class CodeRepositoryUtil {
         return CodeRepositoryCache.userRolesRepo.getCachedValue(userCode);
     }
 
+    /**
+     * 判断用户是否具有角色
+     * @param userCode 用户代码
+     * @param roleCode 角色代码
+     * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
+     */
+    public static boolean checkUserRole(String userCode, String roleCode) {
+        List<? extends IUserRole> userRoles = CodeRepositoryCache.userRolesRepo.getCachedValue(userCode);
+        if (userRoles != null) {
+            for (IUserRole ur : userRoles) {
+                if (roleCode.equals(ur.getRoleCode())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /** 获取机构所有角色
      * @param unitCode 机构代码
      * @return  List 机构所有菜单功能
@@ -824,7 +842,6 @@ public abstract class CodeRepositoryUtil {
         return userInfo.getUserName();
     }
 
-
     /**
      * 根据用户代码获取机构信息
      * @param sUsers 用户代码集合
@@ -862,6 +879,7 @@ public abstract class CodeRepositoryUtil {
             return Integer.valueOf(dd.getExtraCode());
         return CodeRepositoryUtil.MAXXZRANK;
     }
+
     /**
      * 获取用户行政角色
      *
@@ -1046,7 +1064,6 @@ public abstract class CodeRepositoryUtil {
         return units;
     }
 
-
     /**
      * 获取数据字典，并整理为json机构
      *
@@ -1102,6 +1119,7 @@ public abstract class CodeRepositoryUtil {
         return innerGetLabelValueMap(sCatalog,WebOptUtils.getCurrentLang(
             RequestThreadLocal.getLocalThreadWrapperRequest()), true);
     }
+
     /**
      * 获取 数据字典 key value
      * @param sCatalog 数据字典类别，或者系统内置的类别
@@ -1111,7 +1129,6 @@ public abstract class CodeRepositoryUtil {
     public static Map<String,String> getAllLabelValueMap(String sCatalog, String localLang) {
         return innerGetLabelValueMap(sCatalog, localLang, true);
     }
-
 
     /**
      * 获取 数据字典 key value 对， 忽略 禁用的 条目
@@ -1460,27 +1477,23 @@ public abstract class CodeRepositoryUtil {
      * @param IOptMethod IOptMethod
      * @return 操作方法的权限
      */
-    public static Boolean checkUserOptPower(String optId, String IOptMethod) {
-
+    public static boolean checkUserOptPower(String optId, String IOptMethod) {
         Object userDetails = WebOptUtils.getLoginUser(
             RequestThreadLocal.getLocalThreadWrapperRequest());
         if (userDetails instanceof CentitUserDetails) {
             return ((CentitUserDetails)userDetails).checkOptPower(optId, IOptMethod);
         }
         return false;
-
-
     }
-    public static Boolean checkUserOptPower(String optId, String IOptMethod,HttpServletRequest request) {
 
+    public static boolean checkUserOptPower(String optId, String IOptMethod,HttpServletRequest request) {
         Object userDetails = WebOptUtils.getLoginUser(request);
         if (userDetails instanceof CentitUserDetails) {
             return ((CentitUserDetails)userDetails).checkOptPower(optId, IOptMethod);
         }
         return false;
-
-
     }
+
     /**
      * 获取用户所有的 操作方法
      * @return 返回一个map，key为optid+‘-’+method value 为 'T'

@@ -22,19 +22,26 @@ public abstract class SysUserFilterEngine {
     /**
      * 岗位角色类别代码
      */
-    public static final String ROLE_TYPE_GW = "GW";
+    public static final String ROLE_TYPE_GW = InnerUserUnitFilterCompileEngine.USER_FILTER_ROLE_TYPE_GW;// "GW";
     /**
      * 行政角色类别代码
      */
-    public static final String ROLE_TYPE_XZ = "XZ";
+    public static final String ROLE_TYPE_XZ = InnerUserUnitFilterCompileEngine.USER_FILTER_ROLE_TYPE_XZ; // "XZ";
     /**
      * 项目（办件）角色类别代码
      */
     public static final String ROLE_TYPE_ITEM = "BJ";
+
+    /**
+     * 系统角色类别代码
+     */
+    public static final String ROLE_TYPE_SYSTEM = InnerUserUnitFilterCompileEngine.USER_FILTER_SYSTEM_ROLE;// "RO";
+
     /**
      * 角色表达式
      */
     public static final String ROLE_TYPE_ENGINE = "EN";
+
 
     private SysUserFilterEngine()
     {
