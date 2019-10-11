@@ -1,6 +1,6 @@
 package com.otherpackage.controller;
 
-import com.centit.framework.common.ObjectException;
+import com.centit.support.common.ObjectException;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;

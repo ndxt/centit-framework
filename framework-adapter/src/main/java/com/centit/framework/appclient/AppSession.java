@@ -1,7 +1,7 @@
 package com.centit.framework.appclient;
 
 import com.alibaba.fastjson.JSON;
-import com.centit.framework.common.ObjectException;
+import com.centit.support.common.ObjectException;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.network.HttpExecutor;
 import com.centit.support.network.HttpExecutorContext;

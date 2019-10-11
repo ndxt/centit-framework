@@ -13,6 +13,7 @@ import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.common.ObjectException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -111,7 +112,7 @@ public class CacheController extends BaseController {
     public Map<String,String> lvb(@PathVariable String catalog) {
         Map<String,String> keyValueMap = CodeRepositoryUtil.getLabelValueMap(catalog);
         if(keyValueMap==null || keyValueMap.isEmpty()){
-            throw new ObjectException(catalog,ObjectException.DATA_NOT_FOUND_EXCEPTION,"找不到对应的数据字典内容。");
+            throw new ObjectException(catalog, ObjectException.DATA_NOT_FOUND_EXCEPTION,"找不到对应的数据字典内容。");
         }
         return keyValueMap;
     }

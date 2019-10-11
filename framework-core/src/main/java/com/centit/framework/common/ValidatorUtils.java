@@ -1,5 +1,6 @@
 package com.centit.framework.common;
 
+import com.centit.support.common.ObjectException;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintViolation;
