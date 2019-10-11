@@ -208,24 +208,45 @@ public abstract class SysUserFilterEngine {
                 }
 
                 if (rf.isHasRoleFilter()) {
-                    for (Iterator<IUserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
-                        IUserInfo user = it.next();
-                        boolean hasRole = false;
-                        List<? extends IUserRole> userRoles = ecc.listUserRoles(user.getUserCode());
-                        if (userRoles != null) {
-                            for (IUserRole ur : userRoles) {
-                                if (rf.getOptRoles().contains(ur.getRoleCode())) {
-                                    hasRole = true;
-                                    break;
+                    int nUserSize = lsUserInfo.size();
+                    // 优化计算 效率
+                    if(nUserSize > rf.getOptRoles().size() ){
+                        //将 lsUserInfo 转换为map 效率可能更好
+                        Map<String, IUserInfo> tmpUserInfo = new HashMap<>(nUserSize + 1);
+                        for (String roleCode :rf.getOptRoles()) {
+                            List<? extends IUserRole> userRoles = ecc.listRoleUsers(roleCode);
+                            for(IUserRole ur : userRoles){
+                                for(IUserInfo userInfo : lsUserInfo){
+                                    if(StringUtils.equals( userInfo.getUserCode(), ur.getUserCode())){
+                                        tmpUserInfo.put(userInfo.getUserCode(), userInfo);
+                                        break;
+                                    }
                                 }
                             }
                         }
-                        if (!hasRole) {
-                            it.remove();
+                        lsUserInfo.clear();
+                        lsUserInfo.addAll(tmpUserInfo.values());
+                    } else { // 和上面的 效果应该是等价的，主要是考虑性能问题
+                        for (Iterator<IUserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
+                            IUserInfo user = it.next();
+                            boolean hasRole = false;
+                            List<? extends IUserRole> userRoles = ecc.listUserRoles(user.getUserCode());
+                            if (userRoles != null) {
+                                for (IUserRole ur : userRoles) {
+                                    if (rf.getOptRoles().contains(ur.getRoleCode())) {
+                                        hasRole = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!hasRole) {
+                                it.remove();
+                            }
                         }
                     }
                 }
                 rf.getUsers().clear();
+
                 for (IUserInfo user : lsUserInfo) {
                     rf.addUser(user.getUserCode());
                 }
