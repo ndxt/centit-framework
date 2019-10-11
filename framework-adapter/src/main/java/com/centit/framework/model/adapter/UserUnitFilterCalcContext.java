@@ -2,6 +2,7 @@ package com.centit.framework.model.adapter;
 
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
+import com.centit.framework.model.basedata.IUserRole;
 import com.centit.framework.model.basedata.IUserUnit;
 
 import java.util.List;
@@ -84,6 +85,10 @@ public interface UserUnitFilterCalcContext {
     List<? extends IUserUnit> listUnitUsers(String unitCode);
 
     List<? extends IUserUnit> listUserUnits(String userCode);
+
+    List<? extends IUserRole> listUserRoles(String userCode);
+
+    List<? extends IUserRole> listRoleUsers(String roleCode);
 
     IUserInfo getUserInfoByCode(String userCode);
 

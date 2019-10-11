@@ -2,10 +2,7 @@ package com.centit.framework.components.impl;
 
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
-import com.centit.framework.model.basedata.IDataDictionary;
-import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.framework.model.basedata.IUserInfo;
-import com.centit.framework.model.basedata.IUserUnit;
+import com.centit.framework.model.basedata.*;
 
 import java.util.List;
 
@@ -54,6 +51,16 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     @Override
     public List<? extends IUserUnit> listUserUnits(String userCode){
         return CodeRepositoryUtil.listUserUnits(userCode);
+    }
+
+    @Override
+    public List<? extends IUserRole> listUserRoles(String userCode) {
+        return CodeRepositoryUtil.listUserRoles(userCode);
+    }
+
+    @Override
+    public List<? extends IUserRole> listRoleUsers(String roleCode) {
+        return CodeRepositoryUtil.listRoleUsers(roleCode);
     }
 
     @Override

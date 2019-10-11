@@ -211,7 +211,7 @@ public abstract class SysUserFilterEngine {
                     for (Iterator<IUserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
                         IUserInfo user = it.next();
                         boolean hasRole = false;
-                        List<? extends IUserRole> userRoles = CodeRepositoryUtil.listUserRoles(user.getUserCode());
+                        List<? extends IUserRole> userRoles = ecc.listUserRoles(user.getUserCode());
                         if (userRoles != null) {
                             for (IUserRole ur : userRoles) {
                                 if (rf.getOptRoles().contains(ur.getRoleCode())) {
