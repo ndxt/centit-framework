@@ -27,13 +27,14 @@ public abstract class SysUserFilterEngine {
      * 行政角色类别代码
      */
     public static final String ROLE_TYPE_XZ = InnerUserUnitFilterCompileEngine.USER_FILTER_ROLE_TYPE_XZ; // "XZ";
-    /**
+
+   /**
      * 项目（办件）角色类别代码
      */
     public static final String ROLE_TYPE_ITEM = "BJ";
 
     /**
-     * 系统角色类别代码
+     * 系统功能权限角色
      */
     public static final String ROLE_TYPE_SYSTEM = InnerUserUnitFilterCompileEngine.USER_FILTER_SYSTEM_ROLE;// "RO";
 
@@ -51,15 +52,13 @@ public abstract class SysUserFilterEngine {
     private static final Logger logger = LoggerFactory.getLogger(SysUserFilterEngine.class);
 
     public static Set<String> getUsersByRoleAndUnit(UserUnitFilterCalcContext ecc,
-                                                    String roleType, String roleCode, String unitCode)
-    {
+         String roleType, String roleCode, String unitCode){
         return getUsersByRoleAndUnit(ecc,roleType, roleCode, unitCode, false);
     }
 
     public static Set<String> getUsersByRoleAndUnit(UserUnitFilterCalcContext ecc,
-                                                    String roleType,String roleCode,
-                                                    String unitCode, boolean onlyGetPrimary)
-    {
+                    String roleType,String roleCode,
+                    String unitCode, boolean onlyGetPrimary) {
         List<IUserUnit> lsUserunit = new LinkedList<>();
         if (unitCode != null && !"".equals(unitCode)) {
             IUnitInfo unit = ecc.getUnitInfoByCode(unitCode);
@@ -84,9 +83,22 @@ public abstract class SysUserFilterEngine {
         } else if (ROLE_TYPE_XZ.equalsIgnoreCase(roleType)) {
             // 过滤掉不符合要求的职位
             lsUserunit.removeIf(uu -> !roleCode.equals(uu.getUserRank()));
-        } else
+        } else if(ROLE_TYPE_SYSTEM.equalsIgnoreCase(roleType)) {
+            // 获取系统角色用户
+            List<? extends IUserRole> userRoles = ecc.listRoleUsers(roleCode);
+            Set<String> users = new HashSet<>();
+            for(IUserRole ur : userRoles){
+                for(IUserUnit uu : lsUserunit){
+                    if(StringUtils.equals( uu.getUserCode(), ur.getUserCode())){
+                        users.add(uu.getUserCode());
+                        break;
+                    }
+                }
+            }
+            return users;
+        } else {
             lsUserunit.clear();
-
+        }
         // 获取所有 符合条件的用户代码
         Set<String> users = new HashSet<>();
         for (IUserUnit uu : lsUserunit) {
