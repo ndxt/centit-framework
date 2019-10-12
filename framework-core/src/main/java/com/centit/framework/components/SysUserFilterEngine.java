@@ -42,7 +42,10 @@ public abstract class SysUserFilterEngine {
      * 角色表达式
      */
     public static final String ROLE_TYPE_ENGINE = "EN";
-
+    /**
+     * 预存表达式， 工作流中特有的 saved formula
+     */
+    public static final String ROLE_TYPE_ENGINE_FORMULA = "SF";
 
     private SysUserFilterEngine()
     {
