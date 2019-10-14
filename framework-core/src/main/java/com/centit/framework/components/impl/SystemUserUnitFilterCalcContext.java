@@ -92,7 +92,7 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
         if(dicts!=null){
             for(IDataDictionary dd: dicts){
                 ranks.add(Triple.of(dd.getDataCode(), dd.getDataValue(),
-                    NumberBaseOpt.castObjectToInteger(dd.getExtraCode() ,-1)));
+                    NumberBaseOpt.castObjectToInteger(dd.getExtraCode() ,CodeRepositoryUtil.MAXXZRANK)));
             }
         }
         return ranks;
