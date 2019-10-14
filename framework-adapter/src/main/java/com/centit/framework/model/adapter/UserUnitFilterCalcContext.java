@@ -92,7 +92,8 @@ public interface UserUnitFilterCalcContext {
     Map<String, String> listAllSystemRole();
     // 岗位
     Map<String, String> listAllStation();
-
+    // 办件角色 FlowUserRole// 流程角色，项目角色
+    Map<String, String> listAllProjectRole();
     // 行政角色 代码、名称 、等级
     List<Triple<String, String, Integer>> listAllRank();
     /**

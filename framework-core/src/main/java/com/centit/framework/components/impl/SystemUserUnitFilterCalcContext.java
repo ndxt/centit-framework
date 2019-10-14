@@ -76,15 +76,13 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     }
 
     @Override
+    public Map<String, String> listAllProjectRole() {
+        return CodeRepositoryUtil.getLabelValueMap("FlowUserRole");
+    }
+
+    @Override
     public Map<String, String> listAllStation() {
-        List<? extends IDataDictionary> dicts = CodeRepositoryUtil.getDictionary("StationType");
-        Map<String, String> stationMap = new HashMap<>();
-        if(dicts!=null){
-            for(IDataDictionary r: dicts){
-                stationMap.put(r.getDataCode(), r.getDataValue());
-            }
-        }
-        return stationMap;
+        return CodeRepositoryUtil.getLabelValueMap("StationType");
     }
 
     @Override
