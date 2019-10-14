@@ -60,6 +60,10 @@ public abstract class CodeRepositoryUtil {
         return CodeRepositoryCache.codeToRoleMap.getCachedTarget();
     }
 
+    public static List<? extends IRoleInfo> listAllRole() {
+        return CodeRepositoryCache.roleInfoRepo.getCachedTarget();
+    }
+
     public static Map<String,? extends IOptInfo> getOptRepo() {
         return CodeRepositoryCache.codeToOptMap.getCachedTarget();
     }

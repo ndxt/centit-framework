@@ -3,8 +3,13 @@ package com.centit.framework.components.impl;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.basedata.*;
+import com.centit.support.algorithm.NumberBaseOpt;
+import org.apache.commons.lang3.tuple.Triple;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcContext
     implements UserUnitFilterCalcContext {
@@ -26,11 +31,6 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     @Override
     public List<? extends IUnitInfo> listSubUnit(String unitCode) {
         return CodeRepositoryUtil.getSubUnits(unitCode);
-    }
-
-    @Override
-    public List<? extends IUnitInfo> listSubUnitAll(String unitCode) {
-        return CodeRepositoryUtil.getAllSubUnits(unitCode);
     }
 
     @Override
@@ -61,6 +61,43 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     @Override
     public List<? extends IUserRole> listRoleUsers(String roleCode) {
         return CodeRepositoryUtil.listRoleUsers(roleCode);
+    }
+
+    @Override
+    public Map<String, String> listAllSystemRole() {
+        List<? extends IRoleInfo> roles = CodeRepositoryUtil.listAllRole();
+        Map<String, String> roleMap = new HashMap<>();
+        if(roles!=null){
+            for(IRoleInfo r: roles){
+                roleMap.put(r.getRoleCode(), r.getRoleName());
+            }
+        }
+        return roleMap;
+    }
+
+    @Override
+    public Map<String, String> listAllStation() {
+        List<? extends IDataDictionary> dicts = CodeRepositoryUtil.getDictionary("StationType");
+        Map<String, String> stationMap = new HashMap<>();
+        if(dicts!=null){
+            for(IDataDictionary r: dicts){
+                stationMap.put(r.getDataCode(), r.getDataValue());
+            }
+        }
+        return stationMap;
+    }
+
+    @Override
+    public List<Triple<String, String, Integer>> listAllRank() {
+        List<? extends IDataDictionary> dicts = CodeRepositoryUtil.getDictionary("RankType");
+        List<Triple<String, String, Integer>> ranks = new ArrayList<>();
+        if(dicts!=null){
+            for(IDataDictionary dd: dicts){
+                ranks.add(Triple.of(dd.getDataCode(), dd.getDataValue(),
+                    NumberBaseOpt.castObjectToInteger(dd.getExtraCode() ,-1)));
+            }
+        }
+        return ranks;
     }
 
     @Override

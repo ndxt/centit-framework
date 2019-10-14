@@ -4,6 +4,7 @@ import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserRole;
 import com.centit.framework.model.basedata.IUserUnit;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 import java.util.Map;
@@ -71,12 +72,8 @@ public interface UserUnitFilterCalcContext {
      * @return 子机构集合
      */
     List<? extends IUnitInfo> listSubUnit(String unitCode);
-    /**
-     * 获得机构所有的子机构， 包括 子机构的下级机构
-     * @param unitCode 机构代码
-     * @return 子机构集合
-     */
-    List<? extends IUnitInfo> listSubUnitAll(String unitCode);
+
+    IUserInfo getUserInfoByCode(String userCode);
 
     IUnitInfo getUnitInfoByCode(String unitCode);
 
@@ -90,8 +87,14 @@ public interface UserUnitFilterCalcContext {
 
     List<? extends IUserRole> listRoleUsers(String roleCode);
 
-    IUserInfo getUserInfoByCode(String userCode);
+    //-----------------通用的常量---------------------
+    // 系统角色
+    Map<String, String> listAllSystemRole();
+    // 岗位
+    Map<String, String> listAllStation();
 
+    // 行政角色 代码、名称 、等级
+    List<Triple<String, String, Integer>> listAllRank();
     /**
      * 从数据字典中获取 Rank 的等级
      * @param rankCode 行政角色代码
