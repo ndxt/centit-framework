@@ -39,7 +39,6 @@ public interface PlatformEnvironment {
      */
     List<? extends IUserRole> listRoleUsers(String roleCode);
 
-
     /**
      * 获取用户所有角色
      * @param unitCode 机构代码
