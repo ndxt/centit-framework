@@ -58,7 +58,7 @@ public class ObjectUserUnitVariableTranslate implements UserUnitVariableTranslat
      * 默认返回业务模型对象的属性值 , request 队形的参数
      */
     @Override
-    public Object getGeneralVariable(String lableName) {
+    public Object getVarValue(String lableName) {
 
         if(requestParams!=null){
             Set<String> params = requestParams.get(lableName);

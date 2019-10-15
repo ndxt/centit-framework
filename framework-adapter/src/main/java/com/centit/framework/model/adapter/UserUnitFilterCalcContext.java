@@ -95,7 +95,7 @@ public interface UserUnitFilterCalcContext {
     // 办件角色 FlowUserRole// 流程角色，项目角色
     Map<String, String> listAllProjectRole();
     // 行政角色 代码、名称 、等级
-    List<Triple<String, String, Integer>> listAllRank();
+    Map<String, String> listAllRank();
     /**
      * 从数据字典中获取 Rank 的等级
      * @param rankCode 行政角色代码

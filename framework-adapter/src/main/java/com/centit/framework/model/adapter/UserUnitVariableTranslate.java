@@ -1,8 +1,9 @@
 package com.centit.framework.model.adapter;
 
+import com.centit.support.compiler.VariableTranslate;
 import java.util.Set;
 
-public interface UserUnitVariableTranslate {
+public interface UserUnitVariableTranslate extends VariableTranslate {
 
 
     /**
@@ -21,12 +22,14 @@ public interface UserUnitVariableTranslate {
      */
     Set<String> getUnitsVariable(String varName);
 
-    /**变量名--变量值的转变
+    /**变量名--变量值的转变 保持历史版本兼容
      *变量 是用 ${变量名}
      *如果这个变量不存在，返回空字符串 "''"
      * @param varName 自定义变量
      * @return  Object
      */
-    Object getGeneralVariable(String varName);
+    default Object getGeneralVariable(String varName){
+        return getVarValue(varName);
+    }
 
 }

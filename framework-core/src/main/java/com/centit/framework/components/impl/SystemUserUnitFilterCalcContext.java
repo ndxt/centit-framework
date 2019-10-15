@@ -86,16 +86,8 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     }
 
     @Override
-    public List<Triple<String, String, Integer>> listAllRank() {
-        List<? extends IDataDictionary> dicts = CodeRepositoryUtil.getDictionary("RankType");
-        List<Triple<String, String, Integer>> ranks = new ArrayList<>();
-        if(dicts!=null){
-            for(IDataDictionary dd: dicts){
-                ranks.add(Triple.of(dd.getDataCode(), dd.getDataValue(),
-                    NumberBaseOpt.castObjectToInteger(dd.getExtraCode() ,CodeRepositoryUtil.MAXXZRANK)));
-            }
-        }
-        return ranks;
+    public Map<String, String> listAllRank() {
+        return CodeRepositoryUtil.getLabelValueMap("RankType");
     }
 
     @Override

@@ -59,7 +59,7 @@ public class UserUnitMapTranslate implements UserUnitVariableTranslate {
      * @return  变量值的转变
      */
     @Override
-    public Object getGeneralVariable(String varName) {
+    public Object getVarValue(String varName) {
         if(varMap==null)
             return null;
         return ReflectionOpt.attainExpressionValue(varMap, varName);
