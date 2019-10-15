@@ -4,7 +4,6 @@ import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserRole;
 import com.centit.framework.model.basedata.IUserUnit;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 import java.util.Map;

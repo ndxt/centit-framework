@@ -83,7 +83,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
         if(ecc.isLabel(w)){
             UserUnitVariableTranslate variableTranslate = ecc.getVarTrans();
             if(variableTranslate != null){
-                Object obj = ecc.getVarTrans().getGeneralVariable(w);
+                Object obj = ecc.getVarTrans().getVarValue(w);
                 if(obj != null){
                     return obj;
                 }

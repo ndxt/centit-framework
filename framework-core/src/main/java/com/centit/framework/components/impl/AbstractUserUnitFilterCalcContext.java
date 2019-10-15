@@ -158,7 +158,7 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
         if (rank != null)
             return rank;
         String srank = StringBaseOpt.objectToString(
-            varTrans.getGeneralVariable(paramName));
+            varTrans.getVarValue(paramName));
         return stringToRank(srank);
     }
 
