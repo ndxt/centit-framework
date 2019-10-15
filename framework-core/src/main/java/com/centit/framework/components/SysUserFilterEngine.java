@@ -271,6 +271,9 @@ public abstract class SysUserFilterEngine {
     }
 
     /**
+     * D(机构过滤)DT(机构类别过滤)DL(机构标签过滤)
+     * GW(岗位过滤)XZ(行政职务过滤)R(行政等级过滤)
+     * U(用户过滤)UT(用户类别过滤)UL(用户标签过滤)RO(用户角色过滤)
      * D()DT()DL()GW()XZ()R()U()UT()UL()RO()
      * D 根据 机构代码 过滤
      * DT 根据 机构类型 过滤

@@ -481,7 +481,7 @@ public abstract class SysUnitFilterEngine {
         return rf.getUnits();
     }
     /**
-     * D()DT()DL()
+     * D(机构过滤)DT(机构类别过滤)DL(机构标签过滤)
      * @return 机构表达式计算结果
      */
     private static Set<String> calcSimpleExp(UserUnitFilterCalcContext ecc) {
