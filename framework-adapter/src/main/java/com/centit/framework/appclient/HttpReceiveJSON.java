@@ -187,6 +187,50 @@ public class HttpReceiveJSON {
         return recvJson;
     }
 
+    public JSONObject getJSONObject() {
+        Object data = getData();
+        if(data==null) {
+            return null;
+        }
+        if(data instanceof JSONObject) {
+            return (JSONObject)data;
+        }
+        return null;
+    }
+
+    public JSONArray getJSONArray() {
+        Object data = getData();
+        if(data==null) {
+            return null;
+        }
+        if(data instanceof JSONArray) {
+            return (JSONArray)data;
+        }
+        return null;
+    }
+
+    public JSONObject getJSONObject(String sKey) {
+        Object data = getData(sKey);
+        if(data==null) {
+            return null;
+        }
+        if(data instanceof JSONObject) {
+            return (JSONObject)data;
+        }
+        return null;
+    }
+
+    public JSONArray getJSONArray(String sKey) {
+        Object data = getData(sKey);
+        if(data==null) {
+            return null;
+        }
+        if(data instanceof JSONArray) {
+            return (JSONArray)data;
+        }
+        return null;
+    }
+
     public JSON getOriginalJSON() {
         if(isJSON()){
             return (JSON)resObj;

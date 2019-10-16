@@ -18,7 +18,7 @@ public class RestfulHttpRequest {
 
     private static Logger logger = LoggerFactory.getLogger(RestfulHttpRequest.class);
 
-    private static void checkHttpReceiveJSON(HttpReceiveJSON resJson){
+    public static void checkHttpReceiveJSON(HttpReceiveJSON resJson){
         if(resJson == null){
             throw new ObjectException(500, "服务器没有返回任何数据!");
         }
