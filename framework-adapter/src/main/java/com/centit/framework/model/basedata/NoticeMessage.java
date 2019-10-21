@@ -27,6 +27,39 @@ public class NoticeMessage implements java.io.Serializable {
      */
     private String optTag;
 
+    public static NoticeMessage create(){
+        return new NoticeMessage();
+    }
+    public NoticeMessage typeOf(String stype){
+        this.msgType = stype;
+        return this;
+    }
+
+    public NoticeMessage subject(String ssubject){
+        this.msgSubject = ssubject;
+        return this;
+    }
+
+    public NoticeMessage content(String scontent){
+        this.msgContent = scontent;
+        return this;
+    }
+
+    public NoticeMessage operation(String soptid){
+        this.optId = soptid;
+        return this;
+    }
+
+    public NoticeMessage method(String smethod){
+        this.optMethod = smethod;
+        return this;
+    }
+
+    public NoticeMessage tag(String stag){
+        this.optTag = stag;
+        return this;
+    }
+
     public static void setDefaultMsgType(String defaultMsgType) {
         NoticeMessage.defaultMsgType = defaultMsgType;
     }
