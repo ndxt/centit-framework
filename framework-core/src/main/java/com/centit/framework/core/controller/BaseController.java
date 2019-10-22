@@ -33,41 +33,11 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public abstract class BaseController {
 
-    /**
-     * 转换查询参数为字符串，用于 = 或者 like 查询
-     */
-    private static final String SEARCH_STRING_PREFIX = "s_";
-    private static final int SEARCH_STRING_PREFIX_LEN = 2;
-
-    /**
-     * 转换查询参数为字符串数组，用于 in 查询
-     */
-    private static final String SEARCH_ARRAY_PREFIX = "a_";
-    private static final int SEARCH_ARRAY_PREFIX_LEN = 2;
-
-    /**
-     * 转换查询参数为数字，用于 Long 类型的 = 或者 like 查询
-     */
-    private static final String SEARCH_NUMBER_PREFIX = "n_";
-    private static final int SEARCH_NUMBER_PREFIX_LEN = 2;
-
-    /**
-     * 转换查询参数为数字数组，用于 Long 类型的 in 查询
-     */
-    private static final String SEARCH_NUMBER_ARRAY_PREFIX = "na_";
-    private static final int SEARCH_NUMBER_ARRAY_PREFIX_LEN = 3;
-
     protected Logger logger = LoggerFactory.getLogger(BaseController.class);
     /**
      * 当前log4j日志是否打开Debug模式
      */
     protected boolean logDebug = logger.isDebugEnabled();
-
-    protected static final String PAGE_DESC = "pageDesc";
-
-    protected static final String OBJECT = "object";
-
-    protected static final String OBJLIST = "objList";
 
     /*public  String getOptId(){
         return "NOT_DEFINED";
@@ -153,73 +123,7 @@ public abstract class BaseController {
         }
     }
 
-    /**
-     * 将查询条件转换为Dao中hql语句的参数变量
-     * 这个中的规则是为了兼容以前的版本，新的版本不需要添加任何前缀
-     * @param request request
-     * @return map 将查询条件转换为Dao中hql语句的参数变量
-     */
-    @Deprecated
-    public static Map<String, Object> convertSearchColumn(HttpServletRequest request) {
-        // log.error("规则化前参数表：" + paramMap.toString());
-        Map<String, String[]> parameterMap = request.getParameterMap();
-        Map<String, Object> map = new HashMap<>();
-        //map.put("isValid", "T");
-        for (Map.Entry<String, String[]> ent : parameterMap.entrySet()) {
-            String key = ent.getKey();
-            // 查询字符串 s_
-            if (key.startsWith(SEARCH_STRING_PREFIX)) {
-                String sKey = key.substring(SEARCH_STRING_PREFIX_LEN);
-                String sValue = HtmlFormUtils.getParameterString(ent.getValue());
-                if (sValue != null) {
-                    if ("isAll".equals(sKey)) {
-                        if ("true".equalsIgnoreCase(sValue) || "1".equals(sValue)) {
-                            map.remove("isvalid");
-                        }
-                    } else
-                        map.put(sKey, sValue);
-                }
-            }
-            // 查询数组 a_
-            else if (key.startsWith(SEARCH_ARRAY_PREFIX)) {
-                String sKey = key.substring(SEARCH_ARRAY_PREFIX_LEN);
-                Object sValue = ent.getValue();//HtmlFormUtils.getParameterObject(ent.getValue());
-                map.put(sKey, sValue);
-            }
-            // 查询数字 n_
-            else if (key.startsWith(SEARCH_NUMBER_PREFIX)) {
-                String sKey = key.substring(SEARCH_NUMBER_PREFIX_LEN);
-                String sValue = HtmlFormUtils.getParameterString(ent.getValue());
-                map.put(sKey, NumberBaseOpt.parseLong(sValue));
-            }
-            // 查询数字数组 na_
-            else if (key.startsWith(SEARCH_NUMBER_ARRAY_PREFIX)) {
-                String sKey = key.substring(SEARCH_NUMBER_ARRAY_PREFIX_LEN);
 
-                String[] sValue = HtmlFormUtils.getParameterStringArray(ent.getValue());
-                if(sValue==null){
-                    map.put(sKey,null);
-                }else{
-                    Long[] ll = new Long[sValue.length];
-                    for (int i=0;i<sValue.length;i++) {
-                        ll[i]=NumberBaseOpt.parseLong(sValue[i]);
-                    }
-                    map.put(sKey, ll);
-                }
-            }
-            else if(! key.startsWith("_")){
-                String[] values = CollectionsOpt.removeBlankString(ent.getValue());
-                if(values!=null) {
-                    if (values.length == 1) {
-                        map.put(key, values[0]);
-                    } else {
-                        map.put(key, values);
-                    }
-                }
-            }
-        }
-        return map;
-    }
     /**
      * 将参数变量转换为查询条件
      * @param request request
@@ -258,32 +162,5 @@ public abstract class BaseController {
         return map;
     }
 
-    /**
-     * 这个用jsp中会写 参数
-     * @param filterMap Map 过滤条件
-     * @param request request
-     */
-    @Deprecated
-    public static void setbackSearchColumn(Map<String, Object> filterMap, HttpServletRequest request) {
-        if (filterMap == null || filterMap.size() < 1) {
-            return;
-        }
-        for (Map.Entry<String, Object> ent : filterMap.entrySet()) {
-            Object objValue = ent.getValue();
-            String skey;
-            if(objValue instanceof String ){
-                //和default一样，为了效率优先判断
-                skey = SEARCH_STRING_PREFIX + ent.getKey();
-            }else if(objValue instanceof String[]){
-                skey = SEARCH_ARRAY_PREFIX + ent.getKey();
-            }else if(objValue instanceof Long){
-                skey = SEARCH_NUMBER_PREFIX + ent.getKey();
-            }else if(objValue instanceof Long[]){
-                skey = SEARCH_NUMBER_ARRAY_PREFIX + ent.getKey();
-            }else{
-                skey = SEARCH_STRING_PREFIX + ent.getKey();
-            }
-            request.setAttribute(skey, objValue);
-        }
-    }
+
 }
