@@ -31,6 +31,9 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public abstract class BaseController {
 
+    public static final String OBJLIST = "objList";
+    public static final String PAGE_DESC = "pageDesc";
+
     protected Logger logger = LoggerFactory.getLogger(BaseController.class);
     /**
      * 当前log4j日志是否打开Debug模式
