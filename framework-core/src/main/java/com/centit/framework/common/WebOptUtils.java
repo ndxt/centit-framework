@@ -66,12 +66,11 @@ public class WebOptUtils {
         if (auth == null)
             return null;
 
-        CentitUserDetails ud = null;
         Object o = auth.getPrincipal();
         if (o instanceof CentitUserDetails) {
-            ud = (CentitUserDetails) o;// auth.getPrincipal();
+            return (CentitUserDetails) o;// auth.getPrincipal();
         }
-        return ud;
+        return null;
     }
 
     private static CentitUserDetails innerGetUserDetailFromSession(HttpSession session) {
@@ -81,19 +80,19 @@ public class WebOptUtils {
             return null;
         }
         if(attr instanceof CentitUserDetails){
-            return (CentitUserDetails)attr;
+            return (CentitUserDetails) attr;
         }
-        CentitUserDetails ud = null;
+
         if(attr instanceof SecurityContext) {
             Authentication auth = ((SecurityContext) attr).getAuthentication();
             if (auth == null)
                 return null;
             Object o = auth.getPrincipal();
             if (o instanceof CentitUserDetails) {
-                ud = (CentitUserDetails) o;// auth.getPrincipal();
+                return (CentitUserDetails) o;// auth.getPrincipal();
             }
         }
-        return ud;
+        return null;
     }
 
     private static CentitUserDetails innerGetUserDetail(HttpSession session){

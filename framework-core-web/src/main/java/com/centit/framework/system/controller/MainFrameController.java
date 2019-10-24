@@ -444,7 +444,8 @@ public class MainFrameController extends BaseController {
         JSONObject userInfo = WebOptUtils.getCurrentUserInfo(request);
         if(userInfo==null) {
             return ResponseData.makeErrorMessageWithData(
-                request.getSession().getId(),ResponseData.ERROR_UNAUTHORIZED,"No user login on current session!");
+                request.getSession().getId(),ResponseData.ERROR_USER_NOT_LOGIN,
+                "用户没有登录或者超时，请重新登录！");
         }
         else {
             return ResponseData.makeResponseData(userInfo);
@@ -462,7 +463,7 @@ public class MainFrameController extends BaseController {
         Object ud = WebOptUtils.getLoginUser(request);
         if(ud==null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录，请重新登录！");
+                "用户没有登录或者超时，请重新登录！");
         }
         else {
             return ud;
@@ -475,7 +476,7 @@ public class MainFrameController extends BaseController {
         CentitUserDetails ud = WebOptUtils.getCurrentUserDetails(request);
         if(ud==null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录，请重新登录！");
+                "用户没有登录或者超时，请重新登录！");
         }
         else {
             return ud;
@@ -519,7 +520,7 @@ public class MainFrameController extends BaseController {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if(StringUtils.isBlank(userCode)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录，请重新登录！");
+                "用户没有登录或者超时，请重新登录！");
 
         }
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
@@ -567,7 +568,7 @@ public class MainFrameController extends BaseController {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if(StringUtils.isBlank(userCode)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录，请重新登录！");
+                "用户没有登录或者超时，请重新登录！");
         }
         //Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
         boolean asAdmin = BooleanBaseOpt.castObjectToBoolean(asadmin,false);
@@ -676,7 +677,8 @@ public class MainFrameController extends BaseController {
                 ((CentitUserDetails) currentUser).getCurrentStation(),
                 IUserUnit.class);
         }
-        throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
+        throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT,
+            "用户没有登录或者超时，请重新登录。");
     }
 
     /**

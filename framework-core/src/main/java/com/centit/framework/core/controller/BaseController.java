@@ -69,6 +69,17 @@ public abstract class BaseController {
     @ExceptionHandler
     public void exceptionHandler(Exception ex, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        if(ex==null){ // 应该永远也运行不到这儿
+            logger.error("未知的内部错误！");
+            if (WebOptUtils.isAjax(request)) {
+                JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
+                    "未知的内部错误！", response);
+            } else {
+                response.sendRedirect(request.getContextPath()
+                    + "/system/exception/error/500");
+            }
+            return;
+        }
         logger.error(ex.getMessage());
         if (WebOptUtils.isAjax(request)) {
             if (ex instanceof ObjectException){
@@ -100,10 +111,8 @@ public abstract class BaseController {
                 if (bindingResult.hasErrors()) {
                     for (FieldError fieldError : bindingResult.getFieldErrors()) {
                         responseData.addResponseData(fieldError.getField(), fieldError.getDefaultMessage());
-
                         errMsg.append(fieldError.getField()).append("：")
                             .append(fieldError.getDefaultMessage()).append("；");
-
                     }
                 }
                 responseData.setMessage(errMsg.toString());
@@ -119,11 +128,11 @@ public abstract class BaseController {
                 response.sendRedirect(request.getContextPath()
                     + "/system/exception/error/" + objex.getExceptionCode());
             }else {
-                response.sendRedirect(request.getContextPath() + "/system/exception/error/500");
+                response.sendRedirect(request.getContextPath()
+                    + "/system/exception/error/500");
             }
         }
     }
-
 
     /**
      * 将参数变量转换为查询条件
