@@ -20,7 +20,11 @@ public class TextOperationLogWriterImpl implements OperationLogWriter{
     private String optLogHomePath;
 
     public void setOptLogHomePath(String optLogPath){
-        this.optLogHomePath = optLogPath;
+        if(optLogPath.endsWith("/") || optLogPath.endsWith("\\")){
+            this.optLogHomePath = optLogPath.substring(0,optLogPath.length()-1);
+        }else {
+            this.optLogHomePath = optLogPath;
+        }
     }
 
     public String getCurrentLogPath(){
