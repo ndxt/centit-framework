@@ -1421,13 +1421,22 @@ public abstract class CodeRepositoryUtil {
      */
     private static List<IUnitInfo> fetchSubUnits(List<? extends IUnitInfo> allunits,
                                                  String parentUnitCode) {
-        if(StringUtils.isBlank(parentUnitCode) || allunits==null)
+        if(allunits==null)
             return null;
         List<IUnitInfo> units = new ArrayList<>();
-        for (IUnitInfo uc : allunits) {
-            if ( parentUnitCode.equals(uc.getParentUnit()) &&
-                CodeRepositoryUtil.T.equals(uc.getIsValid())) {
-                units.add(uc);
+        if(StringUtils.isBlank(parentUnitCode)){
+            for (IUnitInfo uc : allunits) {
+                if (StringUtils.isBlank(uc.getParentUnit()) &&
+                    CodeRepositoryUtil.T.equals(uc.getIsValid())) {
+                    units.add(uc);
+                }
+            }
+        } else {
+            for (IUnitInfo uc : allunits) {
+                if (parentUnitCode.equals(uc.getParentUnit()) &&
+                    CodeRepositoryUtil.T.equals(uc.getIsValid())) {
+                    units.add(uc);
+                }
             }
         }
         return units;
@@ -1440,9 +1449,7 @@ public abstract class CodeRepositoryUtil {
      * @return 机构的下级机构
      */
     public static List<IUnitInfo> getSubUnits(String unitCode) {
-
         List<? extends IUnitInfo> units = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
-
         return fetchSubUnits(units,unitCode);
     }
     /**
@@ -1452,10 +1459,7 @@ public abstract class CodeRepositoryUtil {
      * @return 机构的下级机构,并按照树形排列
      */
     public static List<IUnitInfo> getAllSubUnits(String unitCode) {
-        if(StringUtils.isBlank(unitCode))
-            return null;
         List<? extends IUnitInfo> allunits = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
-
         List<IUnitInfo> units = new ArrayList<>();
         List<IUnitInfo> subunits = fetchSubUnits(allunits,unitCode);
         while( subunits!=null && subunits.size()>0){
