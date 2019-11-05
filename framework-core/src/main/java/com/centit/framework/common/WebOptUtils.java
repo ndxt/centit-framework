@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -281,5 +283,13 @@ public class WebOptUtils {
             return "";
         }
         return ud.getCurrentUnitCode();
+    }
+
+    public static <T> T getWebAppContextBean(String beanName, Class<T> clazz ) {
+        WebApplicationContext ctx = ContextLoaderListener.getCurrentWebApplicationContext();
+        if(ctx == null) {
+            return null;
+        }
+        return ctx.getBean(beanName, clazz);
     }
 }

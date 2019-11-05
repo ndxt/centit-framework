@@ -1,5 +1,6 @@
 package com.centit.framework.components;
 
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.support.algorithm.CollectionsOpt;
@@ -45,13 +46,6 @@ public abstract class CodeRepositoryCache {
 
     private static final Logger logger = LoggerFactory.getLogger(CodeRepositoryCache.class);
 
-    private static <T> T getCtxBean(String beanName, Class<T> clazz ) {
-        WebApplicationContext ctx = ContextLoaderListener.getCurrentWebApplicationContext();
-        if(ctx==null)
-            return null;
-        return ctx.getBean(beanName, clazz);
-    }
-
     public interface EvictCacheExtOpt{
         void evictCache(String cacheName, String mapKey);
         void evictCache(String cacheName);
@@ -72,8 +66,9 @@ public abstract class CodeRepositoryCache {
     }
 
     private static PlatformEnvironment getPlatformEnvironment() {
-        if(platformEnvironment==null)
-            platformEnvironment = getCtxBean("platformEnvironment", PlatformEnvironment.class);
+        if(platformEnvironment==null) {
+            platformEnvironment = WebOptUtils.getWebAppContextBean("platformEnvironment", PlatformEnvironment.class);
+        }
         //Assert.checkNonNull(platformEnvironment);
         return platformEnvironment;
     }

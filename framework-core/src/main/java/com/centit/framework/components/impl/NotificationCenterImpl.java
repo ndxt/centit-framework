@@ -1,6 +1,7 @@
 package com.centit.framework.components.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.model.adapter.MessageSender;
@@ -35,6 +36,13 @@ public class NotificationCenterImpl implements NotificationCenter {
 
     public void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
         this.platformEnvironment = platformEnvironment;
+    }
+
+    public PlatformEnvironment getPlatformEnvironment() {
+        if(platformEnvironment == null) {
+            platformEnvironment = WebOptUtils.getWebAppContextBean("platformEnvironment", PlatformEnvironment.class);
+        }
+        return platformEnvironment;
     }
 
     public void setWriteNoticeLog(boolean writeNoticeLog) {
@@ -92,7 +100,7 @@ public class NotificationCenterImpl implements NotificationCenter {
          *  并在数据库中记录发送信息，在发送方式中用逗号把多个方式拼接在一起保存在对应的字段中
          */
         String returnText = "OK";
-        IUserSetting userReceiveWays = platformEnvironment.getUserSetting(receiver, "receiveways");
+        IUserSetting userReceiveWays = getPlatformEnvironment().getUserSetting(receiver, "receiveways");
         String receiveways = userReceiveWays==null?null:userReceiveWays.getParamValue();
         StringBuilder errorObjects = new StringBuilder();
 
