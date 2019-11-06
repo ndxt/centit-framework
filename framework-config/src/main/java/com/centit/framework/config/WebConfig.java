@@ -8,10 +8,12 @@ import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.filter.HttpPutFormContentFilter;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
@@ -199,5 +201,37 @@ public class WebConfig  {
 
     public static void initializeH2Console(ServletContext servletContext){
         initializeH2Console(servletContext, false);
+    }
+
+    /**
+     * 加载Spring 配置
+     * 注册 spring 的配置信息，bean的配置类
+     * @param servletContext 上下文
+     * @param annotatedClasses 配置类
+     */
+    public static void registerSpringConfig(ServletContext servletContext,
+                                             Class<?>... annotatedClasses ) {
+        AnnotationConfigWebApplicationContext springContext = new AnnotationConfigWebApplicationContext();
+        springContext.register(annotatedClasses);
+        servletContext.addListener(new ContextLoaderListener(springContext));
+    }
+
+    /**
+     * 注册 spring MVC 的配置信息，servlet 的配置类
+     * @param servletContext 上下文
+     * @param servletName  名称
+     * @param servletUrlPattern url
+     * @param annotatedClasses servlet 配置类
+     */
+    public static void registerServletConfig(ServletContext servletContext,
+                                             String servletName, String servletUrlPattern,
+                                             Class<?>... annotatedClasses ) {
+        AnnotationConfigWebApplicationContext contextSer = new AnnotationConfigWebApplicationContext();
+        contextSer.register(annotatedClasses);
+        ServletRegistration.Dynamic workflow  = servletContext.addServlet(servletName,
+            new DispatcherServlet(contextSer));
+        workflow.addMapping(servletUrlPattern);
+        workflow.setLoadOnStartup(1);
+        workflow.setAsyncSupported(true);
     }
 }
