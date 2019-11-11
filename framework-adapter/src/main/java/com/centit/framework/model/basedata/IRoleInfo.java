@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface IRoleInfo{
     /**
-     * 角色代码
+     * 角色代码 角色的主键
      * @return 角色代码
      */
     String getRoleCode();
@@ -19,11 +19,14 @@ public interface IRoleInfo{
     String getRoleName();
 
     /**
-     * 角色的类别 F (Fixe)系统内置的，固有的 这些角色不能删除，也不能赋给任何人， G (global) 全局的
+     * 角色的类别 F (Fixe)系统内置的，固有的 这些角色不能删除，也不能赋给任何人，
+     *          G (global) 全局的
      *          P (Public) 公用的，指 系统全局 和 部门之间公用的
      *          D (Department)部门(机构)特有的角色
      *          S (Sub System) 属于某个子系统
-     *          I ( Item )为项目角色 W (workflow)工作流角色 ，这两个为保留类别，暂时没有使用
+     *          I/W 这两个为保留类别，暂时没有使用
+     *          I (Item )为项目角色
+     *          W (workflow)工作流角色 ，
      *          H (HIDE)系统内置的不要显示的，是部门可以自己支配的操作权限集合
      * @return 角色的类别 F/G/P/D/S/I/W/H
      */
