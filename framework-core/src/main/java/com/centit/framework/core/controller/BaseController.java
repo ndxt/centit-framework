@@ -69,17 +69,6 @@ public abstract class BaseController {
     @ExceptionHandler
     public void exceptionHandler(Exception ex, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        /*if(ex==null){ // 应该永远也运行不到这儿
-            logger.error("未知的内部错误！");
-            if (WebOptUtils.isAjax(request)) {
-                JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
-                    "未知的内部错误！", response);
-            } else {
-                response.sendRedirect(request.getContextPath()
-                    + "/system/exception/error/500");
-            }
-            return;
-        }*/
         logger.error(ex.getMessage());
         if (WebOptUtils.isAjax(request)) {
             if (ex instanceof ObjectException){
