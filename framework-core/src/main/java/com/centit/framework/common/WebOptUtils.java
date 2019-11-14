@@ -49,8 +49,8 @@ public class WebOptUtils {
     }
 
     public static boolean isAjax(HttpServletRequest request) {
-        return "XMLHttpRequest".equals(request.getHeader("X-Requested-With")) ||
-            request.getHeader("accept").contains("application/json");
+        return StringUtils.equals("XMLHttpRequest", request.getHeader("X-Requested-With"))
+            || StringUtils.contains(request.getHeader("accept"),"application/json");
     }
 
     /**
