@@ -118,7 +118,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 } else if ("+".equals(w)) {  // 获取所有 根 机构
                     units = SysUnitFilterEngine.nullSubUnits(ecc,1);
                 }
-                ecc.setPreword(w);
+                ecc.writeBackAWord(w);
             } else {
                 Set<String> us = ecc.getUnitCode(w);
                 if (us != null)
@@ -205,7 +205,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
             }
             w = ecc.getAWord();
         }
-        ecc.setPreword(w);
+        ecc.writeBackAWord(w);
         // w = ecc.getAWord();
         // if(")".equals(w)){ //语句结束
         return units;
@@ -596,7 +596,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
                     ecc.setLastErrMsg(w + " is unexpected, expect number or ')' ; calcXzRank +  .");
                     return false;
                 } /*else
-                    ecc.setPreword(w);*/
+                    ecc.writeBackAWord(w);*/
             } else {
                 if(rank>=0)
                     rank += Integer.valueOf(StringRegularOpt.trimString(w));
@@ -611,7 +611,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
                     ecc.setLastErrMsg(w + " is unexpected, expect number or ')' ; calcXzRank -  .");
                     return false;
                 } /*else
-                    ecc.setPreword(w);*/
+                    ecc.writeBackAWord(w);*/
             } else {
                 if(rank>=0)
                     rank -= Integer.valueOf(StringRegularOpt.trimString(w));
@@ -652,7 +652,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 break;
             if (",".equals(w) || ")".equals(w) || "!".equals(w) || "|".equals(w) || "||".equals(w) || "&".equals(w)
                     || "&&".equals(w)) {
-                ecc.setPreword(w);
+                ecc.writeBackAWord(w);
                 break;
             }
             /*根据部门过滤*/

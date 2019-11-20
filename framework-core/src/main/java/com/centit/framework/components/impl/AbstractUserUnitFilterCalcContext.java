@@ -200,8 +200,8 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     }
 
     @Override
-    public void setPreword(String preWord) {
-        lexer.setPreword(preWord);
+    public void writeBackAWord(String preWord) {
+        lexer.writeBackAWord(preWord);
     }
 
     @Override
@@ -223,4 +223,5 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     public boolean seekToRightBracket() {
         return lexer.seekToRightBracket();
     }
+
 }

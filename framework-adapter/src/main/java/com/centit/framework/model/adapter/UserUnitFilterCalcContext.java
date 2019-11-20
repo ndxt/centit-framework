@@ -51,7 +51,7 @@ public interface UserUnitFilterCalcContext {
 
     void setFormula(String sFormula);
 
-    void setPreword(String preWord);
+    void writeBackAWord(String preWord);
 
     void setCanAcceptOpt(boolean canAcceptOpt);
 

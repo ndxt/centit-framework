@@ -90,26 +90,26 @@ public class MainFrameController extends BaseController {
     private String topOptId ;
     /**
      * 登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置
-     * @param request request
-     * @param session session
+     * param request request
+     * param session session
      * @return 登录首页链接
      */
     @ApiOperation(value = "登录首页链接", notes = "登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置")
-    @GetMapping(value = "/index")
-    public String index(HttpServletRequest request, HttpSession session) {
+    @GetMapping(value = {"", "/", "/index"})
+    public String index() {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
         return "sys/index";//"redirect:"+ firstpage;//
     }
 
     /**
      * 跳往cas登录链接
-     * @param request request
-     * @param session session
+     * param request request
+     * param session session
      * @return 登录后首页URL
      */
     @ApiOperation(value = "跳往cas登录链接", notes = "使用cas登录系统")
     @GetMapping(value = "/logincas")
-    public String logincas(HttpServletRequest request, HttpSession session) {
+    public String logincas() {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
         return "redirect:"+firstpage;//"sys/mainframe/index";
     }
@@ -736,7 +736,7 @@ public class MainFrameController extends BaseController {
         name = "rank", value="职务代码",
         required= true, paramType = "path", dataType= "String"
     )
-    @GetMapping(value = "userranks/{rank}")
+    @GetMapping(value = "/userranks/{rank}")
     @WrapUpResponseBody
     public JSONArray listUserUnitsByRank(@PathVariable String rank, HttpServletRequest request){
         String userCode = WebOptUtils.getCurrentUserCode(request);
@@ -757,7 +757,7 @@ public class MainFrameController extends BaseController {
         name = "station", value="岗位代码",
         required= true, paramType = "path", dataType= "String"
     )
-    @GetMapping(value = "userstations/{station}")
+    @GetMapping(value = "/userstations/{station}")
     @WrapUpResponseBody
     public ResponseData listUserUnitsByStation(@PathVariable String station, HttpServletRequest request){
         String userCode = WebOptUtils.getCurrentUserCode(request);
@@ -775,7 +775,7 @@ public class MainFrameController extends BaseController {
         name = "jsonStr", value="参数格式josn示例: \u007B formula:unitParams:\u007BU: \u005B \u005D \u007D,userParams:\u007BU:\u005B \u005D\u007D,rankParams:\u007BU:\u005B \u005D\u007D\u007D",
         required= true, paramType = "body", dataType= "String"
     )
-    @PostMapping(value = "testUserEngine")
+    @PostMapping(value = "/testUserEngine")
     @WrapUpResponseBody
     public Set<String> testUserEngine(@RequestBody String jsonStr, HttpServletRequest request){
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
@@ -806,7 +806,7 @@ public class MainFrameController extends BaseController {
         name = "jsonStr", value="参数格式josn示例: \u007Bformula:\"\",unitParams:\u007BU:\u005B \u005D\u007D\u007D",
         required= true, paramType = "body", dataType= "String"
     )
-    @PostMapping(value = "testUnitEngine")
+    @PostMapping(value = "/testUnitEngine")
     @WrapUpResponseBody
     public Set<String> testUnitEngine(@RequestBody String jsonStr, HttpServletRequest request){
         Object centitUserDetails = WebOptUtils.getLoginUser(request);

@@ -41,6 +41,14 @@ public class TestCaseController extends BaseController {
         return "testCtrl";
     }
 
+
+    @ApiOperation(value = "测试首页", notes = "测试首页")
+    @GetMapping({"", "/", "/index"})
+    @WrapUpResponseBody
+    public String index() {
+        return "test default";
+    }
+
     @ApiOperation(value="hello",notes="Say hello to somebody.")
     @ApiImplicitParams(@ApiImplicitParam(
         name = "userName", value="用户姓名，向某人说hello",

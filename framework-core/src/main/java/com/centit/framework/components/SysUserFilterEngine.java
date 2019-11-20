@@ -349,7 +349,7 @@ public abstract class SysUserFilterEngine {
         } else if ("S".equalsIgnoreCase(w)) {
             return calcSingleExp(ecc);
         } else {
-            ecc.setPreword(w);
+            ecc.writeBackAWord(w);
             return calcSimpleExp(ecc);
         }
     }
@@ -370,7 +370,7 @@ public abstract class SysUserFilterEngine {
                 return users;
 
             if (",".equals(w) || ")".equals(w)) {
-                ecc.setPreword(w);
+                ecc.writeBackAWord(w);
                 return users;
             }
 
