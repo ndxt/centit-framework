@@ -81,6 +81,9 @@ public class MainFrameController extends BaseController {
     private boolean useCas;
     @Value("${login.cas.localHome:}")
     private String localHome ;
+    @Value("${logout.success.targetUrl:}")
+    private String logoutTargetUrl;
+
     @Value("${login.cas.casHome:}")
     private String casHome ;// https://productsvr.centit.com:8443/cas
     @Value("${app.local.firstpage:}")
@@ -180,15 +183,24 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "退出登录", notes = "退出登录")
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
+        session.setAttribute(ENTRANCE_TYPE, NORMAL_LOGIN);
         session.removeAttribute(LOGIN_AUTH_ERROR_MSG);
         if(useCas){
             //return "sys/mainframe/index";
             session.invalidate();
-            return "redirect:"+casHome+"/logout?service="+localHome+"/system/mainframe/index";
+            if(StringUtils.isBlank(logoutTargetUrl)) {
+                return "redirect:"+casHome+"/logout?service=" + localHome+"/system/mainframe/logincas";
+            } else {
+                return "redirect:"+casHome+"/logout?service=" + logoutTargetUrl;
+            }
+
         }
         else {
-            return "redirect:/logout";//j_spring_security_logout
+            if(StringUtils.isBlank(logoutTargetUrl)) {
+                return "redirect:/logout";//j_spring_security_logout
+            } else {
+                return "redirect:" + logoutTargetUrl;
+            }
         }
     }
 

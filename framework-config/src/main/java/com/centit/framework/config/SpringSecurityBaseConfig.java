@@ -107,7 +107,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
                 http.headers().frameOptions().deny();
         }
 
-        String defaultTargetUrl = env.getProperty("login.success.targetUrl");
+        String defaultTargetUrl = env.getProperty("logout.success.targetUrl");
         http.logout().logoutSuccessUrl(StringBaseOpt.emptyValue(defaultTargetUrl,"/"));
 
 
