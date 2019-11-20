@@ -3,7 +3,10 @@ package com.centit.framework.system.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.*;
+import com.centit.framework.common.ResponseData;
+import com.centit.framework.common.ResponseSingleData;
+import com.centit.framework.common.ViewDataTransform;
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.SysUnitFilterEngine;
 import com.centit.framework.components.SysUserFilterEngine;
@@ -82,6 +85,9 @@ public class MainFrameController extends BaseController {
     private boolean useCas;
     @Value("${login.cas.localHome:}")
     private String localHome ;
+
+    @Value("${logout.success.targetUrl:}")
+    private String logoutTargetUrl;
     @Value("${login.cas.casHome:}")
     private String casHome ;// https://productsvr.centit.com:8443/cas
     @Value("${app.local.firstpage:}")
@@ -95,7 +101,7 @@ public class MainFrameController extends BaseController {
      * @return 登录首页链接
      */
     @ApiOperation(value = "登录首页链接", notes = "登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置")
-    @GetMapping(value = {"", "/", "/index"})
+    @GetMapping({"", "/", "/index"})
     public String index() {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
         return "sys/index";//"redirect:"+ firstpage;//
@@ -186,10 +192,19 @@ public class MainFrameController extends BaseController {
         if(useCas){
             //return "sys/mainframe/index";
             session.invalidate();
-            return "redirect:"+casHome+"/logout?service="+localHome+"/system/mainframe/index";
+            if(StringUtils.isBlank(logoutTargetUrl)) {
+                return "redirect:"+casHome+"/logout?service=" + localHome+"/system/mainframe/logincas";
+            } else {
+                return "redirect:"+casHome+"/logout?service=" + logoutTargetUrl;
+            }
+
         }
         else {
-            return "redirect:/logout";//j_spring_security_logout
+            if(StringUtils.isBlank(logoutTargetUrl)) {
+                return "redirect:/logout";//j_spring_security_logout
+            } else {
+                return "redirect:" + logoutTargetUrl;
+            }
         }
     }
 
@@ -222,17 +237,14 @@ public class MainFrameController extends BaseController {
 
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if(StringUtils.isBlank(userCode)){
-//            JsonResultUtils.writeErrorMessageJson("用户没有登录，不能修改密码！", response);
             return ResponseData.makeErrorMessage("用户没有登录，不能修改密码！");
         }else{
-            boolean bo=platformEnvironment.checkUserPassword(userCode, password);
-            if(!bo){
-//                JsonResultUtils.writeErrorMessageJson("用户输入的密码错误，不能修改密码！", response);
-                return ResponseData.makeErrorMessage("用户输入的密码错误，不能修改密码！");
-            }else{
+            boolean bo = platformEnvironment.checkUserPassword(userCode, password);
+            if(bo){
                 platformEnvironment.changeUserPassword(userCode, newPassword);
-//                JsonResultUtils.writeSuccessJson(response);
                 return ResponseData.makeSuccessResponse();
+            }else{
+                return ResponseData.makeErrorMessage("用户输入的密码错误，不能修改密码！");
             }
         }
     }
