@@ -201,7 +201,7 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
 
     @Override
     public void setPreword(String preWord) {
-        lexer.setPreword(preWord);
+        lexer.writeBackAWord(preWord);
     }
 
     @Override
