@@ -57,8 +57,11 @@ public class ResponseMapData extends ResponseSingleData {
         }
         ((Map<String, Object>) data).put(sKey, objValue);
     }
-    
+
     public Object getResponseData(String sKey) {
-        return getData().get(sKey);
+        if( this.data == null){
+            return null;
+        }
+        return ((Map<String, Object>) data).get(sKey);
     }
 }
