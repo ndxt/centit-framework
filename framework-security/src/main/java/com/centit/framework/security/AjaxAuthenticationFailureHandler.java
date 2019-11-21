@@ -3,6 +3,7 @@ package com.centit.framework.security;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.support.algorithm.DatetimeOpt;
 import org.springframework.security.core.AuthenticationException;
@@ -38,7 +39,7 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         }
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
         String ajax = request.getParameter("ajax");
-        boolean isAjaxQuery = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        boolean isAjaxQuery = WebOptUtils.isAjax(request);
         if(isAjaxQuery || "true".equalsIgnoreCase(ajax)){
             ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_LOGIN_ERROR,
                     exception.getMessage() + "!");

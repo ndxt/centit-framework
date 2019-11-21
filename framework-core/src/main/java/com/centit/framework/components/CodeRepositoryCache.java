@@ -10,8 +10,6 @@ import com.centit.support.common.DerivativeCachedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;

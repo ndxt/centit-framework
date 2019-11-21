@@ -80,7 +80,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         }
 
         String ajax = request.getParameter("ajax");
-        boolean isAjaxQuery = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        boolean isAjaxQuery = WebOptUtils.isAjax(request);
         if(isAjaxQuery || "true".equalsIgnoreCase(ajax)){
             ResponseMapData resData = new ResponseMapData();
             //if(registToken) {

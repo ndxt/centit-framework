@@ -1,6 +1,5 @@
 package com.otherpackage.controller;
 
-import com.centit.support.common.ObjectException;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
@@ -8,6 +7,7 @@ import com.centit.framework.core.controller.WrapUpContentType;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.operationlog.RecordOperationLog;
 import com.centit.support.algorithm.ByteBaseOpt;
+import com.centit.support.common.ObjectException;
 import com.centit.support.common.ParamName;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.support.image.CaptchaImageUtil;
