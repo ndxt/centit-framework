@@ -193,7 +193,7 @@ public class MainFrameController extends BaseController {
             //return "sys/mainframe/index";
             session.invalidate();
             if(StringUtils.isBlank(logoutTargetUrl)) {
-                return "redirect:"+casHome+"/logout?service=" + localHome+"/system/mainframe/logincas";
+                return "redirect:"+casHome+"/logout?service=" + localHome + "/system/mainframe/logincas";
             } else {
                 return "redirect:"+casHome+"/logout?service=" + logoutTargetUrl;
             }

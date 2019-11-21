@@ -23,7 +23,7 @@ public abstract class ViewDataTransform {
         if(objs==null || objs.length<2)
             return null;
         Map<String,String> paramsMap = new HashMap<>(objs.length);
-        for(int i=0;i<objs.length / 2;i++){
+        for(int i = 0; i < objs.length / 2; i++){
             paramsMap.put(String.valueOf(objs[i*2]), objs[i*2+1]);
         }
         return paramsMap;
