@@ -197,14 +197,8 @@ public class MainFrameController extends BaseController {
             } else {
                 return "redirect:"+casHome+"/logout?service=" + logoutTargetUrl;
             }
-
-        }
-        else {
-            if(StringUtils.isBlank(logoutTargetUrl)) {
-                return "redirect:/logout";//j_spring_security_logout
-            } else {
-                return "redirect:" + logoutTargetUrl;
-            }
+        } else {
+            return "redirect:/logout"; //j_spring_security_logout
         }
     }
 
