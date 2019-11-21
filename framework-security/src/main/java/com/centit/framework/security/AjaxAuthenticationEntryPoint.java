@@ -17,10 +17,11 @@ import java.io.IOException;
 
 public class AjaxAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private AuthenticationEntryPoint browse;
-    private AuthenticationEntryPoint api = new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
+    private AuthenticationEntryPoint api;
 
     public AjaxAuthenticationEntryPoint(String loginFormUrl) {
         this.browse = new LoginUrlAuthenticationEntryPoint(loginFormUrl);
+        this.api = new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
     }
 
     @Override

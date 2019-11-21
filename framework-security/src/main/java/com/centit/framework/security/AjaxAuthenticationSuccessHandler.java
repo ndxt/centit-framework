@@ -24,12 +24,11 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         this.writeLog = writeLog;
     }
 
-    private boolean registToken = false;
+    /*private boolean registToken = false;
 
     public void setRegistToken(boolean registToken) {
         this.registToken = registToken;
-    }
-
+    }*/
 
     private CentitUserDetailsService userDetailsService;
 

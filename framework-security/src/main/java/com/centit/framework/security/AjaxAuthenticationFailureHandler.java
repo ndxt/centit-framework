@@ -16,18 +16,14 @@ import java.io.IOException;
 public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private boolean writeLog = false;
-    
+
     public void setWriteLog(boolean writeLog) {
         this.writeLog = writeLog;
-    }  
+    }
 
     public AjaxAuthenticationFailureHandler() {
     }
- 
-    public AjaxAuthenticationFailureHandler(String defaultFailureUrl) {
-        super(defaultFailureUrl);
-    }
-    
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
             HttpServletResponse response, AuthenticationException exception)
