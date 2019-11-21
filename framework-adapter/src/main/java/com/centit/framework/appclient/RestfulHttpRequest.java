@@ -23,10 +23,11 @@ public class RestfulHttpRequest {
             throw new ObjectException(500, "服务器没有返回任何数据!");
         }
         if(resJson.getCode() != 0){
-            throw new ObjectException(resJson.getCode(),
+            throw new ObjectException(resJson.getData(), resJson.getCode(),
                 resJson.getMessage());
         }
     }
+
     public static HttpReceiveJSON getResponseData(AppSession appSession,
                                                  String httpGetUrl){
         CloseableHttpClient httpClient = null;

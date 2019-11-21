@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.ResponseData;
+import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 
 import java.util.HashMap;
@@ -44,8 +45,9 @@ public class HttpReceiveJSON {
 
     public int getCode() {
         if(isResponseData) {
-            Integer retCode = resJSONObject.getInteger(ResponseData.RES_CODE_FILED);
-            return retCode == null ? 0 : retCode;
+            Object retCode = resJSONObject.get(ResponseData.RES_CODE_FILED);
+            return retCode == null ? 0
+                : NumberBaseOpt.castObjectToInteger(retCode, 0);
         }
         return 0;
     }

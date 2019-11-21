@@ -102,14 +102,11 @@ public class AppSession {
     public HttpExecutorContext createHttpExecutorContext(CloseableHttpClient httpClient) {
         HttpExecutorContext httpExecutorContext = HttpExecutorContext.create(httpClient);
         if(StringUtils.isNotBlank(accessToken)) {
-            httpExecutorContext.header("x-auth-token", accessToken)
-                .header("X-Requested-With", "XMLHttpRequest")
-                .header("accept", "application/json");
+            httpExecutorContext.header("x-auth-token", accessToken);
         }
+        httpExecutorContext//.header("X-Requested-With", "XMLHttpRequest")
+            .header("accept", "application/json");
         return httpExecutorContext;
-    }
-    public HttpExecutorContext createHttpExecutorContext()  throws Exception{
-          return createHttpExecutorContext(httpClientPool.borrowObject());
     }
 
     public void releaseHttpClient(CloseableHttpClient httpClient){
@@ -127,7 +124,6 @@ public class AppSession {
     public String simpleGet(CloseableHttpClient httpClient,
                                          String httpGetUrl)
         throws IOException {
-
         return  HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
                 completeQueryUrl(httpGetUrl), "");
     }
