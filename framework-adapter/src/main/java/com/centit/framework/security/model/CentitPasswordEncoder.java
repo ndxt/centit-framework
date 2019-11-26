@@ -15,7 +15,9 @@ public interface CentitPasswordEncoder {
      * @return 密文
      */
     @Deprecated
-    String encodePassword(String rawPass, Object salt);
+    default String encodePassword(String rawPass, Object salt){
+        return createPassword( rawPass, salt);
+    }
 
     boolean isPasswordValid(String encodedPassword, String rawPass, Object salt);
 

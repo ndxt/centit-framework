@@ -103,6 +103,7 @@
         <module>framework-security-ldap</module>
         <module>framework-boot-config</module>
         <module>framework-security-boot-config</module>
+        <module>framework-security-gm-plugin</module>
     </modules>
 
     <build>

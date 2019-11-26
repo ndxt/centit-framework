@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * 采用Spring 推荐的 BCryptPasswordEncoder 加密方式
  */
 public class StandardPasswordEncoderImpl
-        implements CentitPasswordEncoder,PasswordEncoder {
+        implements CentitPasswordEncoder, PasswordEncoder {
 
     private BCryptPasswordEncoder passwordEncoder ;
 
@@ -32,13 +32,8 @@ public class StandardPasswordEncoderImpl
     }
 
     @Override
-    public String encodePassword(String rawPass, Object salt){
-        return passwordEncoder.encode(rawPass);
-    }
-
-    @Override
     public boolean isPasswordValid(String encodedPassword, String rawPass, Object salt){
-        return passwordEncoder.matches(rawPass,encodedPassword);
+        return passwordEncoder.matches(rawPass, encodedPassword);
     }
 
     /**
@@ -65,7 +60,7 @@ public class StandardPasswordEncoderImpl
      */
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword,encodedPassword);
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
     @Override
