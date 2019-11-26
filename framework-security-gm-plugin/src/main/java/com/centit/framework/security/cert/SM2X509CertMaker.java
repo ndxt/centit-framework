@@ -1,5 +1,6 @@
 package com.centit.framework.security.cert;
 
+import com.centit.framework.security.utils.BCECUtil;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.Extension;
@@ -12,7 +13,6 @@ import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
-import org.zz.gmhelper.BCECUtil;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;

@@ -1,5 +1,7 @@
 package com.centit.framework.security.cert;
 
+import com.centit.framework.security.utils.BCECUtil;
+import com.centit.framework.security.utils.SM2Util;
 import org.bouncycastle.asn1.pkcs.ContentInfo;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -17,8 +19,6 @@ import org.bouncycastle.pkcs.PKCS12SafeBag;
 import org.bouncycastle.pkcs.PKCS12SafeBagFactory;
 import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
 import org.bouncycastle.pkcs.jcajce.JcePKCSPBEInputDecryptorProviderBuilder;
-import org.zz.gmhelper.BCECUtil;
-import org.zz.gmhelper.SM2Util;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;

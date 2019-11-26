@@ -49,6 +49,7 @@ public class SM3PasswordEncoderImpl
      */
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return isPasswordValid(String.valueOf(encodedPassword), String.valueOf(rawPassword), null);
+        return isPasswordValid(String.valueOf(encodedPassword),
+            String.valueOf(rawPassword), null);
     }
 }

@@ -21,7 +21,6 @@ public class SM2Pkcs12Maker {
      * @throws CertificateException
      * @throws NoSuchAlgorithmException
      * @throws IOException
-     * @throws PKCSException
      */
     public KeyStore makePkcs12(PrivateKey privKey, X509Certificate[] chain, char[] passwd)
         throws KeyStoreException, NoSuchProviderException,
@@ -38,8 +37,10 @@ public class SM2Pkcs12Maker {
      * @param passwd  口令
      * @return the PKCS12 keystore
      * @throws NoSuchAlgorithmException
+     * @throws KeyStoreException
+     * @throws CertificateException
+     * @throws NoSuchProviderException
      * @throws IOException
-     * @throws PKCSException
      */
     public KeyStore makePkcs12(PrivateKey privKey, X509Certificate cert, char[] passwd)
         throws KeyStoreException, NoSuchProviderException,
