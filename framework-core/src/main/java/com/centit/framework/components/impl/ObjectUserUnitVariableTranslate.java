@@ -1,13 +1,14 @@
 package com.centit.framework.components.impl;
 
-import com.centit.framework.components.UserUnitParamBuilder;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
+import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.network.HtmlFormUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -46,10 +47,10 @@ public class ObjectUserUnitVariableTranslate implements UserUnitVariableTranslat
         }
         Map<String,String[]> paramMap = request.getParameterMap();
 
-        requestParams = UserUnitParamBuilder.createEmptyParamMap();
+        requestParams = new HashMap<>();
         for (Map.Entry<String,String[]> ent : paramMap.entrySet() ) {
-            UserUnitParamBuilder.addParamsToParamMap( requestParams,
-                    ent.getKey(),ent.getValue());
+            requestParams.put(
+                    ent.getKey(), CollectionsOpt.createHashSet(ent.getValue()));
         }
     }
 
