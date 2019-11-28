@@ -6,20 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * FAddressBook entity.
- * 
+ * OptInfo entity.
  * @author codefan@hotmail.com
  */
 // 业务模块表
 public class OptInfo implements IOptInfo, java.io.Serializable{
     private static final long serialVersionUID = 1L;
 
- 
+
     private String optId; // 业务编号
-    
-  
+
+
     private String preOptId; // 上级业务模块编号
-    
+
     private String optName; // 业务名称
     /**
      * S:实施业务, O:普通业务, W:流程业务, I:项目业务
@@ -31,12 +30,12 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
 
     /**
      * 系统菜单路由
-     * 
+     *
      * 与angularjs路由匹配
      */
 
     private String optRoute;
-    
+
 
     private String optUrl; // 业务url（b/s）
 
@@ -54,19 +53,19 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
 
     private String flowCode; // 流程代码
 
- 
+
     private String pageType; // 页面打开方式 D: DIV I： iFrame
 
- 
+
     private Long orderInd; // 业务顺序
 
- 
+
     private String icon;// 图标 // 图标编号
 
- 
+
     private Long height;// 高度
 
- 
+
     private Long width;// 宽度
 
 
@@ -115,18 +114,18 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
     public List<OptInfo> getChildren() {
         return children;
     }
-    
+
     public void addChild(OptInfo child) {
         if(children==null)
             children = new ArrayList<OptInfo>();
         this.children.add(child);
-    }   
+    }
 
 
     public void setChildren(List<OptInfo> children) {
         this.children = children;
     }
-    
+
     public String getOptId() {
         return this.optId;
     }
@@ -258,7 +257,7 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
 
     /**
      * 页面打开方式 D: DIV I： iFrame
-     * 
+     *
      * @return 页面打开方式 D: DIV I： iFrame
      */
     public String getPageType() {
@@ -267,13 +266,13 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
 
     /**
      * 页面打开方式 D: DIV I： iFrame
-     * 
+     *
      * @param pageType pageType
      */
     public void setPageType(String pageType) {
         this.pageType = pageType;
     }
-    
+
 
     public void copy(OptInfo other) {
 
@@ -383,5 +382,5 @@ public class OptInfo implements IOptInfo, java.io.Serializable{
     public OptInfo(String optId) {
         super();
         this.optId = optId;
-    }    
+    }
 }

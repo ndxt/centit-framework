@@ -11,55 +11,59 @@ public interface IOptInfo {
      * 业务ID 主键
      * @return optId
      */
-     String getOptId();
+    String getOptId();
     /**
      * 父业务ID
      * @return 父业务ID
      */
-     String getPreOptId();
+    String getPreOptId();
     /**
      * 业务名称
      * @return 业务名称
      */
-     String getOptName();
+    String getOptName();
 
     /**
      * S:实施业务, O:普通业务, W:流程业务, I:项目业务
      * @return OptType
      */
-     String getOptType();
+    String getOptType();
     /**
      * 业务菜单其实地址 url
      * @return 业务菜单其实地址 url
      */
-     String getOptRoute();
+    String getOptRoute();
     /**
      * 后台权限控制业务url前缀（不是必须的）
      * @return 后台权限控制业务url前缀
      */
-     String getOptUrl();
+    String getOptUrl();
 
+    /**
+     * @return 菜单所属的最高 菜单
+     */
+    String getTopOptId();
     /**
      * 是否是菜单项，Y:是 N:否
      * @return 是否是菜单项，Y:是 N:否
      */
-     String getIsInToolbar();
+    String getIsInToolbar();
     /**
      * 图标编号
      * @return 图标编号 Icon
      */
      //Long getImgIndex();
-     String getIcon();
+    String getIcon();
     /**
      * 页面打开方式 D: DIV I： iFrame
      * @return 页面打开方式 D: DIV I： iFrame
      */
-     String getPageType();
+    String getPageType();
     /**
      * 业务排序号
      * @return 业务排序号
      */
-     Long getOrderInd();
+    Long getOrderInd();
 
     /**
      *

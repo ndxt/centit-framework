@@ -3,42 +3,41 @@ package com.centit.framework.staticsystem.po;
 import com.centit.framework.model.basedata.IOptMethod;
 
 /**
- * FAddressBook entity.
- *
+ * OptMethod entity.
  * @author codefan@hotmail.com
  */
 
 public class OptMethod implements IOptMethod, java.io.Serializable{
     private static final long serialVersionUID = 1L;
 
- 
+
     private String optCode;// 操作代码
 
-  
+
     private String optName; // 操作名称
 
- 
-    private String optId; 
+
+    private String optId;
 
     private String optMethod;// 操作方法
 
-  
+
     private String optDesc; // 操作说明
 
- 
+
     private String isInWorkflow;// 是否是流程操作
 
 
     private String optUrl;
 
-  
+
     private String optReq;//http 请求方法
 
     private Integer optOrder;// 操作方法排序
- 
+
 
     // Constructors
- 
+
     /**
      * default constructor
      */
@@ -178,5 +177,5 @@ public class OptMethod implements IOptMethod, java.io.Serializable{
             this.optReq = other.getOptReq();
         if (other.getOptUrl() != null)
             this.optUrl = other.getOptUrl();
-    } 
+    }
 }

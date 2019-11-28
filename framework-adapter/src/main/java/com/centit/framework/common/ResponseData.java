@@ -232,7 +232,7 @@ public interface ResponseData{
     /**
      * 706  用户没有执行程序的权限
      */
-    int ERROR_BAD_PROCESS_POWER_=706;
+    int ERROR_BAD_PROCESS_POWER=706;
     /**
      * 707  用户没有操作对应的数据权限
      */

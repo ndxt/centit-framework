@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * FAddressBook entity.
- *
+ * DataCatalog entity.
  * @author codefan@hotmail.com
  */
 
