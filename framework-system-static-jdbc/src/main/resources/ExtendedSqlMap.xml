@@ -19,11 +19,11 @@
 
     <sql id="LIST_ALL_USER">
         <![CDATA[
-            select USER_CODE as userCode, USER_PIN as userPin , IS_VALID as isValid, USER_TYPE as userType,
-                LOGIN_NAME as loginName, USER_NAME as userName, ENGLISH_NAME as englishName, USER_DESC as userDesc,
-                LOGIN_TIMES as loginTimes, ACTIVE_TIME as activeTime, PWD_EXPIRED_TIME as pwdExpiredTime, LOGIN_IP as loginIp,
-                ADDRBOOK_ID as addrbookId, REG_EMAIL as regEmail ,  REG_CELL_PHONE as regCellPhone, USER_WORD as userWord,
-                USER_TAG as userTag, USER_ORDER as userOrder, PRIMARY_UNIT as primaryUnit
+            select USER_CODE, USER_PIN, IS_VALID, USER_TYPE,
+                LOGIN_NAME, USER_NAME, ENGLISH_NAME, USER_DESC,
+                LOGIN_TIMES, ACTIVE_TIME, PWD_EXPIRED_TIME,
+                REG_EMAIL, REG_CELL_PHONE, USER_WORD,
+                USER_TAG, USER_ORDER, PRIMARY_UNIT
             from F_USERINFO
         ]]>
     </sql>
@@ -34,85 +34,107 @@
 
     <sql id="LIST_ALL_OPTINFO">
         <![CDATA[
-            select OPT_ID as optId, PRE_OPT_ID as preOptId, OPT_NAME as optName, OPT_TYPE as optType,
-                FORM_CODE as formCode, OPT_ROUTE as optRoute, OPT_URL as optUrl, MSG_NO as msgNo,
-                MSG_PRM as msgPrm, IS_IN_TOOLBAR as isInToolbar, IMG_INDEX as imgIndex, TOP_OPT_ID as topOptId,
-                FLOW_CODE as flowCode, PAGE_TYPE as pageType, ORDER_IND as orderInd, ICON as icon,
-                HEIGHT as height, WIDTH as width, CREATE_DATE as createDate, CREATOR as creator,
-                UPDATOR as updator, UPDATE_DATE as updateDate
+            select OPT_ID, PRE_OPT_ID, OPT_NAME, OPT_TYPE,
+                FORM_CODE, OPT_ROUTE, OPT_URL, MSG_NO,
+                MSG_PRM, IS_IN_TOOLBAR, IMG_INDEX, TOP_OPT_ID,
+                FLOW_CODE, PAGE_TYPE, ORDER_IND, ICON,
+                HEIGHT, WIDTH, CREATE_DATE, CREATOR,
+                UPDATOR, UPDATE_DATE
             from F_OPTINFO
         ]]>
     </sql>
 
     <sql id="LIST_ALL_OPTMETHOD">
         <![CDATA[
-            select OPT_CODE as optCode, OPT_NAME as optName, OPT_ID as optId, OPT_METHOD as optMethod,
-                OPT_DESC as optDesc, IS_IN_WORKFLOW as isInWorkflow, OPT_URL as optUrl, OPT_REQ as optReq,
-                CREATE_DATE as createDate, CREATOR as creator, UPDATOR as updator, UPDATE_DATE as updateDate,
-                OPT_ORDER as optOrder
+            select OPT_CODE, OPT_NAME, OPT_ID, OPT_METHOD,
+                OPT_DESC, IS_IN_WORKFLOW, OPT_URL, OPT_REQ,
+                CREATE_DATE, CREATOR, UPDATOR, UPDATE_DATE,
+                OPT_ORDER
             from F_OPTDEF
+        ]]>
+    </sql>
+
+    <sql id="LIST_ALL_OPTDATASCOPE">
+        <![CDATA[
+            select OPT_SCOPE_CODE, SCOPE_NAME, OPT_ID, FILTER_CONDITION, SCOPE_MEMO
+            from F_OPTDATASCOPE
         ]]>
     </sql>
 
     <sql id="LIST_ALL_ROLEINFO">
         <![CDATA[
-            select ROLE_CODE as roleCode, ROLE_NAME as roleName, IS_VALID as isValid, ROLE_TYPE as roleType,
-                UNIT_CODE as unitCode, ROLE_DESC as roleDesc, CREATE_DATE as createDate, CREATOR as creator,
-                UPDATOR as updator, UPDATE_DATE as updateDate
+            select ROLE_CODE, ROLE_NAME, IS_VALID, ROLE_TYPE,
+                UNIT_CODE, ROLE_DESC, CREATE_DATE, CREATOR,
+                UPDATOR, UPDATE_DATE
             from F_ROLEINFO
         ]]>
     </sql>
 
     <sql id="LIST_ALL_ROLEPOWER">
         <![CDATA[
-            select ROLE_CODE as roleCode, OPT_CODE as optCode, CREATE_DATE as createDate, OPT_SCOPE_CODES as optScopeCodes,
-                CREATOR as creator, UPDATOR as updator, UPDATE_DATE as updateDate
+            select ROLE_CODE, OPT_CODE, CREATE_DATE, OPT_SCOPE_CODES,
+                CREATOR, UPDATOR, UPDATE_DATE
             from F_ROLEPOWER
         ]]>
     </sql>
 
     <sql id="LIST_ALL_USERROLE">
         <![CDATA[
-            select USER_CODE as userCode, ROLE_CODE as roleCode, OBTAIN_DATE as obtainDate, CHANGE_DESC as changeDesc,
-                CREATE_DATE as createDate, CREATOR as creator, UPDATOR as updator, UPDATE_DATE as updateDate
+            select USER_CODE, ROLE_CODE, OBTAIN_DATE, CHANGE_DESC,
+                CREATE_DATE, CREATOR, UPDATOR, UPDATE_DATE
             from F_USERROLE
         ]]>
     </sql>
 
     <sql id="LIST_ALL_UNITINFO">
         <![CDATA[
-            select UNIT_CODE as unitCode, PARENT_UNIT as parentUnit, UNIT_TYPE as unitType, IS_VALID as isValid,
-                UNIT_NAME as unitName, ENGLISH_NAME as englishName, UNIT_SHORT_NAME as unitShortName, UNIT_WORD as unitWord,
-                UNIT_TAG as unitTag, UNIT_DESC as unitDesc, ADDRBOOK_ID as addrbookId, UNIT_ORDER as unitOrder,
-                UNIT_GRADE as unitGrade, DEP_NO as depNo, UNIT_PATH as unitPath, UNIT_MANAGER as unitManager,
-                CREATE_DATE as createDate, CREATOR as creator, UPDATOR as updator, UPDATE_DATE as updateDate
+            select UNIT_CODE as group_Id, PARENT_UNIT, UNIT_TYPE, IS_VALID,
+                UNIT_NAME, ENGLISH_NAME, UNIT_SHORT_NAME, UNIT_WORD,
+                UNIT_TAG, UNIT_DESC,  UNIT_ORDER,
+                UNIT_GRADE, DEP_NO, UNIT_PATH, UNIT_MANAGER,
+                CREATE_DATE, CREATOR, UPDATOR, UPDATE_DATE
             from F_UNITINFO
         ]]>
     </sql>
 
     <sql id="LIST_ALL_USERUNIT">
         <![CDATA[
-            select USER_UNIT_ID as userUnitId, UNIT_CODE as unitCode, USER_CODE as userCode, USER_STATION as userStation,
-                USER_RANK as userRank, RANK_MEMO as rankMemo, IS_PRIMARY as isPrimary, USER_ORDER as userOrder,CREATE_DATE as createDate, CREATOR as creator, UPDATOR as updator, UPDATE_DATE as updateDate
+            select USER_UNIT_ID, UNIT_CODE, USER_CODE, USER_STATION,
+                USER_RANK, RANK_MEMO, IS_PRIMARY, USER_ORDER,CREATE_DATE, CREATOR, UPDATOR, UPDATE_DATE
             from F_USERUNIT
         ]]>
     </sql>
 
     <sql id="LIST_ALL_DATACATALOG">
         <![CDATA[
-            select CATALOG_CODE as catalogCode, CATALOG_NAME as catalogName, CATALOG_STYLE as catalogStyle, CATALOG_TYPE as catalogType,
-                CATALOG_DESC as catalogDesc, FIELD_DESC as fieldDesc, NEED_CACHE as needCache, OPT_ID as optId,
-                CREATE_DATE as createDate, CREATOR as creator, UPDATOR as updator, UPDATE_DATE as updateDate
+            select CATALOG_CODE, CATALOG_NAME, CATALOG_STYLE, CATALOG_TYPE,
+                CATALOG_DESC, FIELD_DESC, NEED_CACHE, OPT_ID,
+                CREATE_DATE, CREATOR, UPDATOR, UPDATE_DATE
             from F_DATACATALOG
         ]]>
     </sql>
 
     <sql id="LIST_ALL_DICTIONARY">
         <![CDATA[
-            select CATALOG_CODE as catalogCode, DATA_CODE as dataCode, EXTRA_CODE as extraCode, EXTRA_CODE2 as extraCode2,
-                DATA_TAG as dataTag, DATA_VALUE as dataValue, DATA_STYLE as dataStyle, DATA_ORDER as dataOrder,
-                DATA_DESC as dataDesc, CREATE_DATE as createDate, LAST_MODIFY_DATE as lastModifyDate
+            select CATALOG_CODE, DATA_CODE, EXTRA_CODE, EXTRA_CODE2 as extraCode2,
+                DATA_TAG, DATA_VALUE, DATA_STYLE, DATA_ORDER,
+                DATA_DESC, CREATE_DATE, LAST_MODIFY_DATE
             from F_DATADICTIONARY
+        ]]>
+    </sql>
+
+    <sql id="LIST_ALL_OS">
+        <![CDATA[
+            select OS_ID, OS_NAME, OS_URL, OAUTH_PASSWORD
+            from F_OS_INFO
+        ]]>
+    </sql>
+
+    <sql id="LIST_ALL_DATABASE">
+        <![CDATA[
+            select DATABASE_CODE, OS_ID, DATABASE_NAME,
+                DATABASE_URL, USERNAME, PASSWORD, DATABASE_DESC
+            from F_DATABASE_INFO
         ]]>
     </sql>
 </sqlMap>
