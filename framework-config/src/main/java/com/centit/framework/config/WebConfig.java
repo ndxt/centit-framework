@@ -16,6 +16,7 @@ import org.springframework.web.filter.HttpPutFormContentFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import java.util.EnumSet;
@@ -27,7 +28,7 @@ import java.util.Properties;
 
 
 @SuppressWarnings("unused")
-public class WebConfig  {
+public abstract class WebConfig  {
 
     /**
      * 注册RequestContextListener监听器 （增加request、session和global session作用域）
@@ -39,7 +40,7 @@ public class WebConfig  {
         //无用的方法
         //添加framework-session依赖 自动注册spring session过滤器
 //        Properties properties = SysParametersUtils.loadProperties();
-//        javax.servlet.FilterRegistration.Dynamic springSessionRepositoryFilter
+//        FilterRegistration.Dynamic springSessionRepositoryFilter
 //            = servletContext.addFilter("springSessionRepositoryFilter", DelegatingFilterProxy.class);
 //        springSessionRepositoryFilter.addMappingForUrlPatterns(
 //            EnumSet.allOf(DispatcherType.class), false, "/*");
@@ -86,13 +87,13 @@ public class WebConfig  {
      * @param servletContext ServletContext
      */
     /*public static void registerResponseCorsFilter(ServletContext servletContext) {
-        javax.servlet.FilterRegistration.Dynamic corsFilter
+        FilterRegistration.Dynamic corsFilter
                 = servletContext.addFilter("corsFilter", ResponseCorsFilter.class);
         corsFilter.addMappingForUrlPatterns(null, false, "/service/*");
     }*/
 
     private static String [] makeUrlPatterns(String [] servletUrlPatterns, String ... otherUrlPatterns) {
-        int nlen = servletUrlPatterns.length + (otherUrlPatterns==null?0:otherUrlPatterns.length);
+        int nlen = servletUrlPatterns.length + (otherUrlPatterns == null? 0 : otherUrlPatterns.length);
         String [] urlPatterns = new String[nlen];
         int n=0;
         for(String servletUrl : servletUrlPatterns){
@@ -110,14 +111,15 @@ public class WebConfig  {
      * @param servletContext ServletContext
      * @param servletUrlPatterns Servlet 名称列表
      */
-    public static void registerCharacterEncodingFilter(ServletContext servletContext, String [] servletUrlPatterns) {
-        javax.servlet.FilterRegistration.Dynamic encodingFilter
+    public static FilterRegistration.Dynamic registerCharacterEncodingFilter(ServletContext servletContext, String [] servletUrlPatterns) {
+        FilterRegistration.Dynamic encodingFilter
                 = servletContext.addFilter("encodingFilter", CharacterEncodingFilter.class);
         encodingFilter.addMappingForUrlPatterns(null, false,
             makeUrlPatterns(servletUrlPatterns,"*.jsp", "*.html"));
         encodingFilter.setAsyncSupported(true);
         encodingFilter.setInitParameter("encoding", "UTF-8");
         encodingFilter.setInitParameter("forceEncoding", "true");
+        return encodingFilter;
     }
 
     /**
@@ -125,12 +127,13 @@ public class WebConfig  {
      * @param servletContext ServletContext
      * @param servletUrlPatterns Servlet 名称列表
      */
-    public static void registerHttpPutFormContentFilter(ServletContext servletContext, String [] servletUrlPatterns) {
-        javax.servlet.FilterRegistration.Dynamic httpPutFormContentFilter
+    public static FilterRegistration.Dynamic registerHttpPutFormContentFilter(ServletContext servletContext, String [] servletUrlPatterns) {
+        FilterRegistration.Dynamic httpPutFormContentFilter
                 = servletContext.addFilter("httpPutFormContentFilter", HttpPutFormContentFilter.class);
         httpPutFormContentFilter.addMappingForUrlPatterns(null, false,
             makeUrlPatterns(servletUrlPatterns));
         httpPutFormContentFilter.setAsyncSupported(true);
+        return httpPutFormContentFilter;
     }
 
     /**
@@ -138,13 +141,14 @@ public class WebConfig  {
      * @param servletContext ServletContext
      * @param servletUrlPatterns Servlet 名称列表
      */
-    public static void registerHiddenHttpMethodFilter(ServletContext servletContext, String [] servletUrlPatterns) {
-        javax.servlet.FilterRegistration.Dynamic hiddenHttpMethodFilter
+    public static FilterRegistration.Dynamic registerHiddenHttpMethodFilter(ServletContext servletContext, String [] servletUrlPatterns) {
+        FilterRegistration.Dynamic hiddenHttpMethodFilter
                 = servletContext.addFilter("hiddenHttpMethodFilter", HiddenHttpMethodFilter.class);
         hiddenHttpMethodFilter.addMappingForUrlPatterns(
                 EnumSet.allOf(DispatcherType.class), false,
             makeUrlPatterns(servletUrlPatterns));
         hiddenHttpMethodFilter.setAsyncSupported(true);
+        return hiddenHttpMethodFilter;
     }
 
     /**
@@ -152,11 +156,12 @@ public class WebConfig  {
      *                  (将HttpServletRequest请求与本地线程绑定，方便在非Controller层获取HttpServletRequest实例)
      * @param servletContext ServletContext
      */
-    public static void registerRequestThreadLocalFilter(ServletContext servletContext) {
-        javax.servlet.FilterRegistration.Dynamic requestThreadLocalFilter
+    public static FilterRegistration.Dynamic registerRequestThreadLocalFilter(ServletContext servletContext) {
+        FilterRegistration.Dynamic requestThreadLocalFilter
                 = servletContext.addFilter("requestThreadLocalFilter", RequestThreadLocalFilter.class);
         requestThreadLocalFilter.addMappingForUrlPatterns(null, false, "/*");
         requestThreadLocalFilter.setAsyncSupported(true);
+        return requestThreadLocalFilter;
     }
 
     /**
@@ -164,13 +169,14 @@ public class WebConfig  {
      * @param servletContext ServletContext
      * @param servletUrlPatterns Servlet 名称列表
      */
-    public static void registerSpringSecurityFilter(ServletContext servletContext, String [] servletUrlPatterns) {
-        javax.servlet.FilterRegistration.Dynamic springSecurityFilterChain
+    public static FilterRegistration.Dynamic registerSpringSecurityFilter(ServletContext servletContext, String [] servletUrlPatterns) {
+        FilterRegistration.Dynamic springSecurityFilterChain
                 = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
         springSecurityFilterChain.addMappingForUrlPatterns(
                 null, false,
             makeUrlPatterns(servletUrlPatterns,"/login/*" ,"/logout/*"));
         springSecurityFilterChain.setAsyncSupported(true);
+        return springSecurityFilterChain;
     }
 
     /**
@@ -223,15 +229,16 @@ public class WebConfig  {
      * @param servletUrlPattern url
      * @param annotatedClasses servlet 配置类
      */
-    public static void registerServletConfig(ServletContext servletContext,
+    public static ServletRegistration.Dynamic registerServletConfig(ServletContext servletContext,
                                              String servletName, String servletUrlPattern,
                                              Class<?>... annotatedClasses ) {
         AnnotationConfigWebApplicationContext contextSer = new AnnotationConfigWebApplicationContext();
         contextSer.register(annotatedClasses);
-        ServletRegistration.Dynamic workflow  = servletContext.addServlet(servletName,
+        ServletRegistration.Dynamic servlet  = servletContext.addServlet(servletName,
             new DispatcherServlet(contextSer));
-        workflow.addMapping(servletUrlPattern);
-        workflow.setLoadOnStartup(1);
-        workflow.setAsyncSupported(true);
+        servlet.addMapping(servletUrlPattern);
+        servlet.setLoadOnStartup(1);
+        servlet.setAsyncSupported(true);
+        return servlet;
     }
 }
