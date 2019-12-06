@@ -69,7 +69,7 @@ public abstract class BaseController {
     @ExceptionHandler
     public void exceptionHandler(Exception ex, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        logger.error(ex.getMessage());
+        logger.error(ObjectException.extortExceptionMessage(ex));
         if (WebOptUtils.isAjax(request)) {
             if (ex instanceof ObjectException){
                 ObjectException objex = (ObjectException)ex;
@@ -79,8 +79,9 @@ public abstract class BaseController {
                     JsonResultUtils.writeHttpErrorMessage(objex.getExceptionCode(),
                         objex.getLocalizedMessage(), response);
                 }else {
-                    ResponseSingleData responseData = new ResponseSingleData(objex.getExceptionCode(),
-                        objex.getLocalizedMessage());
+                    ResponseSingleData responseData =
+                        new ResponseSingleData(objex.getExceptionCode(),
+                            ObjectException.extortExceptionMessage(objex));
                     responseData.setData(objex.getObjectData());
                     JsonResultUtils.writeResponseDataAsJson(responseData, response);
                 }
@@ -110,7 +111,7 @@ public abstract class BaseController {
             }
             // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误
             JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
-                        StringUtils.isNotEmpty(ex.getMessage()) ? ex.getMessage() : ex.toString(), response);
+                ObjectException.extortExceptionMessage(ex), response);
         } else {
             if (ex instanceof ObjectException) {
                 ObjectException objex = (ObjectException) ex;
