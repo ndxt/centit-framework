@@ -69,9 +69,10 @@ public abstract class BaseController {
     @ExceptionHandler
     public void exceptionHandler(Exception ex, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        logger.error(ObjectException.extortExceptionMessage(ex));
+
         if (WebOptUtils.isAjax(request)) {
             if (ex instanceof ObjectException){
+                logger.error(ex.getMessage());
                 ObjectException objex = (ObjectException)ex;
                 if(WebOptUtils.exceptionNotAsHttpError &&
                     (objex.getExceptionCode() == ResponseData.ERROR_USER_NOT_LOGIN ||
@@ -87,7 +88,7 @@ public abstract class BaseController {
                 }
                 return;
             }
-
+            logger.error(ObjectException.extortExceptionMessage(ex));
             BindingResult bindingResult = null;
             if(ex instanceof BindException){
                 bindingResult =((BindException)ex).getBindingResult();
@@ -114,10 +115,12 @@ public abstract class BaseController {
                 ObjectException.extortExceptionMessage(ex), response);
         } else {
             if (ex instanceof ObjectException) {
+                logger.error(ex.getMessage());
                 ObjectException objex = (ObjectException) ex;
                 response.sendRedirect(request.getContextPath()
                     + "/system/exception/error/" + objex.getExceptionCode());
             }else {
+                logger.error(ObjectException.extortExceptionMessage(ex));
                 response.sendRedirect(request.getContextPath()
                     + "/system/exception/error/500");
             }
