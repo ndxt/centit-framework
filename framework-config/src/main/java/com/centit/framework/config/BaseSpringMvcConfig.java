@@ -11,7 +11,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.nio.charset.Charset;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 @EnableWebMvc
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-public class BaseSpringMvcConfig extends WebMvcConfigurerAdapter  implements ApplicationContextAware {
+public class BaseSpringMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
 
     private FastJsonHttpMessageConverter jsonHttpMessageConverter = null;
 

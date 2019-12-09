@@ -110,6 +110,7 @@ public abstract class WebConfig  {
      * 注册CharacterEncodingFilter过滤器 （设置字符集）
      * @param servletContext ServletContext
      * @param servletUrlPatterns Servlet 名称列表
+     * @return FilterRegistration.Dynamic 可以再次配置属性
      */
     public static FilterRegistration.Dynamic registerCharacterEncodingFilter(ServletContext servletContext, String [] servletUrlPatterns) {
         FilterRegistration.Dynamic encodingFilter
@@ -126,6 +127,7 @@ public abstract class WebConfig  {
      * 注册HttpPutFormContentFilter过滤器 （让put也可以想post一样接收form表单中的数据）
      * @param servletContext ServletContext
      * @param servletUrlPatterns Servlet 名称列表
+     * @return FilterRegistration.Dynamic 可以再次配置属性
      */
     public static FilterRegistration.Dynamic registerHttpPutFormContentFilter(ServletContext servletContext, String [] servletUrlPatterns) {
         FilterRegistration.Dynamic httpPutFormContentFilter
@@ -140,6 +142,7 @@ public abstract class WebConfig  {
      * 注册HiddenHttpMethodFilter过滤器 （过滤请求方式）
      * @param servletContext ServletContext
      * @param servletUrlPatterns Servlet 名称列表
+     * @return FilterRegistration.Dynamic 可以再次配置属性
      */
     public static FilterRegistration.Dynamic registerHiddenHttpMethodFilter(ServletContext servletContext, String [] servletUrlPatterns) {
         FilterRegistration.Dynamic hiddenHttpMethodFilter
@@ -155,6 +158,7 @@ public abstract class WebConfig  {
      * 注册RequestThreadLocalFilter过滤器
      *                  (将HttpServletRequest请求与本地线程绑定，方便在非Controller层获取HttpServletRequest实例)
      * @param servletContext ServletContext
+     * @return FilterRegistration.Dynamic 可以再次配置属性
      */
     public static FilterRegistration.Dynamic registerRequestThreadLocalFilter(ServletContext servletContext) {
         FilterRegistration.Dynamic requestThreadLocalFilter
@@ -168,6 +172,7 @@ public abstract class WebConfig  {
      * 注册springSecurityFilterChain过滤器 （使用spring security 授权与验证）
      * @param servletContext ServletContext
      * @param servletUrlPatterns Servlet 名称列表
+     * @return FilterRegistration.Dynamic 可以再次配置属性
      */
     public static FilterRegistration.Dynamic registerSpringSecurityFilter(ServletContext servletContext, String [] servletUrlPatterns) {
         FilterRegistration.Dynamic springSecurityFilterChain
@@ -228,6 +233,7 @@ public abstract class WebConfig  {
      * @param servletName  名称
      * @param servletUrlPattern url
      * @param annotatedClasses servlet 配置类
+     * @return ServletRegistration.Dynamic 可以再次配置属性
      */
     public static ServletRegistration.Dynamic registerServletConfig(ServletContext servletContext,
                                              String servletName, String servletUrlPattern,
