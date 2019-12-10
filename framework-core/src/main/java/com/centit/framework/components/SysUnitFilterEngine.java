@@ -4,6 +4,7 @@ import com.centit.framework.components.impl.SystemUserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUnitInfo;
+import com.centit.support.common.ObjectException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -502,8 +503,9 @@ public abstract class SysUnitFilterEngine {
     public static Set<String> calcSystemUnitsByExp(String unitExp,
                                              Map<String, Set<String>> unitParams,
                                              UserUnitVariableTranslate varTrans) {
-        if (unitExp == null)
+        if (StringUtils.isBlank(unitExp)) {
             return null;
+        }
         UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
         ecc.setFormula(unitExp);
         ecc.setVarTrans(varTrans);
@@ -514,8 +516,9 @@ public abstract class SysUnitFilterEngine {
 
         if (ecc.hasError()) {
             logger.error(ecc.getLastErrMsg());
+            throw new ObjectException(ecc, ObjectException.FORMULA_GRAMMAR_ERROE,
+                unitExp +":"+ ecc.getLastErrMsg());
         }
-
         return untis;
     }
 
@@ -528,14 +531,18 @@ public abstract class SysUnitFilterEngine {
         Set<String> untis = calcUnitsExp(ecc);
         if (untis == null || untis.size() == 0)
             return null;
-        if (ecc.hasError())
+        if (ecc.hasError()) {
             logger.error(ecc.getLastErrMsg());
+            throw new ObjectException(ecc, ObjectException.FORMULA_GRAMMAR_ERROE,
+                ecc.getLastErrMsg());
+        }
         return untis.iterator().next();
     }
 
     public static String calcSingleSystemUnitByExp(String unitExp,Map<String, Set<String>> unitParams , UserUnitVariableTranslate varTrans) {
-        if (unitExp == null)
+        if (StringUtils.isBlank(unitExp)) {
             return null;
+        }
         UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
         ecc.setFormula(unitExp);
         ecc.setVarTrans(varTrans);

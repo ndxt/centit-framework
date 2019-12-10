@@ -7,6 +7,7 @@ import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserRole;
 import com.centit.framework.model.basedata.IUserUnit;
+import com.centit.support.common.ObjectException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -401,8 +402,9 @@ public abstract class SysUserFilterEngine {
                                                 Map<String, Set<String>> userParams,
                                                 Map<String, Integer> rankParams,
                                                 UserUnitVariableTranslate varTrans) {
-        if (roleExp == null)
+        if (StringUtils.isBlank(roleExp)) {
             return null;
+        }
         UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
         ecc.setFormula(roleExp);
         ecc.setVarTrans(varTrans);
@@ -417,8 +419,12 @@ public abstract class SysUserFilterEngine {
         }
 
         Set<String> sUsers = calcRolesExp(ecc);
-        if (sUsers == null || ecc.hasError())
+        //if (sUsers == null || ecc.hasError())
+        if (ecc.hasError()) {
             logger.error(ecc.getLastErrMsg());
+            throw new ObjectException(ecc, ObjectException.FORMULA_GRAMMAR_ERROE,
+                roleExp +":"+ ecc.getLastErrMsg());
+        }
         return sUsers;
     }
 

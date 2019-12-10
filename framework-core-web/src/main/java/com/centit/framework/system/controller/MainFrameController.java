@@ -807,7 +807,7 @@ public class MainFrameController extends BaseController {
         );
     }
 
-    @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
+    @ApiOperation(value = "测试机构表达式引擎", notes = "测试机构表达式引擎")
     @ApiImplicitParam(
         name = "jsonStr", value="参数格式josn示例: \u007Bformula:\"\",unitParams:\u007BU:\u005B \u005D\u007D\u007D",
         required= true, paramType = "body", dataType= "String"
