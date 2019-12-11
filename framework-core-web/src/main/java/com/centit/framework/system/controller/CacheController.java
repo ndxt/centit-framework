@@ -370,10 +370,12 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/dictionaryd/{catalog}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData dictionaryd(@PathVariable String catalog,
+    public JSONArray dictionaryd(@PathVariable String catalog,
             HttpServletRequest request) {
         List<? extends IDataDictionary> listObjects = CodeRepositoryUtil.getDictionaryIgnoreD(catalog);
-
+        if(listObjects==null){
+            return null;
+        }
         String lang = WebOptUtils.getCurrentLang(request);
         JSONArray dictJson = new JSONArray();
         for(IDataDictionary dict : listObjects){
@@ -381,7 +383,7 @@ public class CacheController extends BaseController {
             obj.put("dataValue", dict.getLocalDataValue(lang));
             dictJson.add(obj);
         }
-        return ResponseData.makeResponseData(dictJson);
+        return dictJson;
     }
 
     /**
