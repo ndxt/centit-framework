@@ -242,15 +242,29 @@ public interface ResponseData{
      * 708 方法已禁用
      */
     int ERROR_METHOD_DISABLED=708;
-
+    /**
+     * 709 session 超时
+     */
     int ERROR_SESSION_TIMEOUT=709;
+
+    /**
+     * 710 用户找不到
+     */
+    int ERROR_USER_NOTFOUND=710;
+    /**
+     * 711 用户配置错误
+     */
+    int ERROR_USER_CONFIG=711;
+    /**
+     * 712 系统配置错误
+     */
+    int ERROR_SYSTEM_CONFIG=712;
     /**
      *  8xx 业务系统自定义错误
      */
     int ERROR_OPERATION=800;
 
     String RES_CODE_FILED="code";
-
     String RES_MSG_FILED="message";
     String RES_DATA_FILED="data";
 

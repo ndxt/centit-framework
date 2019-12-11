@@ -1,6 +1,7 @@
 package com.centit.framework.components.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.OperationLogCenter;
@@ -94,12 +95,11 @@ public class NotificationCenterImpl implements NotificationCenter {
      * @return 结果
      */
     @Override
-    public String sendMessage(String sender, String receiver, NoticeMessage message) {
+    public ResponseData sendMessage(String sender, String receiver, NoticeMessage message) {
         /*
          *  从用户设置中获得用户希望的接收消息的方式，可能是多个，比如用户希望同时接收到Email和短信，这样就要发送两天
          *  并在数据库中记录发送信息，在发送方式中用逗号把多个方式拼接在一起保存在对应的字段中
          */
-        String returnText = "OK";
         IUserSetting userReceiveWays = getPlatformEnvironment().getUserSetting(receiver, "receiveways");
         String receiveways = userReceiveWays==null?null:userReceiveWays.getParamValue();
         StringBuilder errorObjects = new StringBuilder();
@@ -116,10 +116,10 @@ public class NotificationCenterImpl implements NotificationCenter {
                 for (String val : vals) {
                     if (StringUtils.isNotBlank(val)) {
                         sendTypeCount++;
-                        String errorText = realSendMessage(msgSenders.get(val.trim()), sender, receiver, message);
-                        if (StringUtils.isNotBlank(errorText)) {
+                        ResponseData res = realSendMessage(msgSenders.get(val.trim()), sender, receiver, message);
+                        if (res.getCode() != 0) {
                             sendErrorCount ++;
-                            errorObjects.append(errorText).append("\r\n");
+                            errorObjects.append(res.getMessage()).append("\r\n");
                         }
                     }
                 }
@@ -131,25 +131,21 @@ public class NotificationCenterImpl implements NotificationCenter {
             logger.info(infoText);
             noticeType = StringUtils.isBlank(noticeType)?"D":noticeType+",D";
             sendTypeCount++;
-            String errorText = realSendMessage(defautlMsgSender, sender, receiver,message);
-            if (StringUtils.isNotBlank(errorText)) {
+            ResponseData res = realSendMessage(defautlMsgSender, sender, receiver,message);
+            if (res.getCode() != 0) {
                 sendErrorCount ++;
-                errorObjects.append(errorText).append("\r\n");
+                errorObjects.append(res.getMessage()).append("\r\n");
             }
         }
 
-
-        String notifyState =sendErrorCount==0?"0":(sendErrorCount==sendTypeCount?"1":"2");
-
-        if (sendErrorCount>0) {//返回异常信息
-            returnText = errorObjects.toString();
-        }
+        int notifyState = sendErrorCount ==0? 0:(sendErrorCount==sendTypeCount? 1: 2);
+        String returnText = sendErrorCount>0? errorObjects.toString():"OK!";
         if(writeNoticeLog){
             wirteNotifyLog(noticeType, sender, receiver, message,
-                returnText, notifyState);
+                returnText, String.valueOf(notifyState));
         }
 
-        return returnText;
+        return ResponseData.makeErrorMessage(notifyState, returnText);
     }
 
 
@@ -163,21 +159,13 @@ public class NotificationCenterImpl implements NotificationCenter {
      * @return 结果
      */
     @Override
-    public String sendMessageAppointedType(String noticeType, String sender, String receiver, NoticeMessage message) {
-        String returnText = "OK";
-        String errorText = realSendMessage(msgSenders.get(noticeType), sender, receiver, message);
-
-        //发送成功
-        String notifyState = "0";
-        if (StringUtils.isNotBlank(errorText)) {
-            notifyState = "1";
-            returnText = errorText;
-        }
+    public ResponseData sendMessageAppointedType(String noticeType, String sender, String receiver, NoticeMessage message) {
+        ResponseData res = realSendMessage(msgSenders.get(noticeType), sender, receiver, message);
         if(writeNoticeLog) {
             wirteNotifyLog(noticeType, sender, receiver, message,
-                errorText, notifyState);
+                res.getMessage(), String.valueOf(res.getCode()));
         }
-        return returnText;
+        return res;
     }
 
 
@@ -217,21 +205,19 @@ public class NotificationCenterImpl implements NotificationCenter {
      * @param message 消息主题
      * @return 结果信息
      */
-    public static String realSendMessage(MessageSender messageSender, String sender, String receiver, NoticeMessage message ) {
+    public static ResponseData realSendMessage(MessageSender messageSender, String sender, String receiver, NoticeMessage message ) {
         if (null == messageSender) {
             String errorText = "找不到消息发送器，请检查Spring中的配置和数据字典 WFNotice中的配置是否一致";
             logger.error(errorText);
-            return errorText;
+            return ResponseData.makeErrorMessage(ResponseData.ERROR_SYSTEM_CONFIG, errorText);
         }
         try {
-            messageSender.sendMessage(sender, receiver, message);
+            return messageSender.sendMessage(sender, receiver, message);
         } catch (Exception e) {
             String errorText = messageSender.getClass().getName() + "发送通知失败，异常信息 " + e.getMessage();
             logger.error(errorText,e);
-            return errorText;
+            return ResponseData.makeErrorMessage(ResponseData.HTTP_INTERNAL_SERVER_ERROR, errorText);
         }
-
-        return null;
     }
 
 }

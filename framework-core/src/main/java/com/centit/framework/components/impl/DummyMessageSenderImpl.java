@@ -1,5 +1,6 @@
 package com.centit.framework.components.impl;
 
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.basedata.NoticeMessage;
 
@@ -13,8 +14,8 @@ public class DummyMessageSenderImpl implements MessageSender{
     public final static DummyMessageSenderImpl instance = new DummyMessageSenderImpl();
 
     @Override
-    public String sendMessage(String sender, String receiver, NoticeMessage message) {
-        return "ok";
+    public ResponseData sendMessage(String sender, String receiver, NoticeMessage message) {
+        return ResponseData.makeSuccessResponse();
     }
 
 }

@@ -82,11 +82,13 @@ public class ResponseSingleData implements ResponseData{
         Map<String, Object> param = new HashMap<>();
         param.put(ResponseData.RES_CODE_FILED, code);
         param.put(ResponseData.RES_MSG_FILED, message);
-        if(data !=null)
+        if(data !=null) {
             param.put(ResponseData.RES_DATA_FILED, data);
-        if(simplePropertyPreFilter==null)
-            return JSONObject.toJSONString(param);
-        return JSONObject.toJSONString(param,simplePropertyPreFilter);
+            if (simplePropertyPreFilter != null) {
+                return JSONObject.toJSONString(param, simplePropertyPreFilter);
+            }
+        }
+        return JSONObject.toJSONString(param);
     }
 
 
@@ -95,18 +97,4 @@ public class ResponseSingleData implements ResponseData{
         return toJSONString();
     }
 
-    /*public ResponseSingleData code(int resCode){
-        this.code = resCode;
-        return this;
-    }
-
-    public ResponseSingleData message(String resMessage){
-        this.message = resMessage;
-        return this;
-    }
-
-    public ResponseSingleData data(Object objValue) {
-        this.data = objValue;
-        return this;
-    }*/
 }

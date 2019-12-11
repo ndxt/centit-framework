@@ -1,10 +1,11 @@
 package com.centit.framework.model.adapter;
 
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.model.basedata.NoticeMessage;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 系统消息发送接口
@@ -29,7 +30,7 @@ public interface MessageSender {
      * @param message 消息主体
      * @return "OK" 表示成功，其他的为错误信息
      */
-    String sendMessage(String sender, String receiver, NoticeMessage message);
+     ResponseData sendMessage(String sender, String receiver, NoticeMessage message);
 
     /**
      * 批量发送内部系统消息
@@ -39,12 +40,21 @@ public interface MessageSender {
      * @param message 消息主体
      * @return "OK" 表示成功，其他的为错误信息
      */
-    default List<String> sendMessage(String sender, Collection<String> receivers, NoticeMessage message){
-        List<String> res = new ArrayList<>(receivers.size());
+    default ResponseData sendMessage(String sender, Collection<String> receivers, NoticeMessage message){
+        int error = 0; int success = 0;
+        Map<String, Object> result = new HashMap<>();
         for (String receiver : receivers){
-            res.add(sendMessage(sender, receiver, message));
+            ResponseData response = sendMessage(sender, receiver, message);
+            if(response.getCode() !=0){
+                error ++;
+                result.put(receiver, response.getMessage());
+            } else {
+                success ++;
+            }
         }
-        return res;
+        String msgStr = "一共发送" + (error+success) + "条消息，成功"+success+"条，失败"+error+"条。";
+        int resCode = error == 0? 0:(success==0?2:3);
+        return ResponseData.makeErrorMessageWithData(result, resCode, msgStr);
     }
 
     /**
@@ -56,14 +66,11 @@ public interface MessageSender {
      * @param msgContent 消息内容
      * @return "OK" 表示成功，其他的为错误信息
      */
-    default String sendMessage(String sender, String receiver, String msgSubject, String msgContent){
-        NoticeMessage message = new NoticeMessage();
-        message.setMsgSubject(msgSubject);
-        message.setMsgContent(msgContent);
-        return sendMessage(sender, receiver, message);
+    default ResponseData sendMessage(String sender, String receiver, String msgSubject, String msgContent){
+        return sendMessage(sender, receiver,
+            NoticeMessage.create()
+                .subject(msgSubject).content(msgContent));
     }
-
-
 
     /**
      *
@@ -78,15 +85,12 @@ public interface MessageSender {
      * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
      * @return "OK" 表示成功，其他的为错误信息
      */
-    default String sendMessage(String sender, String receiver, String msgSubject, String msgContent,
+    default ResponseData sendMessage(String sender, String receiver, String msgSubject, String msgContent,
             String optId, String optMethod, String optTag){
-        NoticeMessage message = new NoticeMessage();
-        message.setMsgSubject(msgSubject);
-        message.setMsgContent(msgContent);
-        message.setOptId(optId);
-        message.setOptMethod(optMethod);
-        message.setOptTag(optTag);
-        return sendMessage(sender, receiver, message);
+        return sendMessage(sender, receiver,
+            NoticeMessage.create()
+                .subject(msgSubject).content(msgContent)
+                .operation(optId).method(optMethod).tag(optTag));
     }
 
     /**
@@ -99,12 +103,11 @@ public interface MessageSender {
      * @param msgContent 消息内容
      * @return "OK" 表示成功，其他的为错误信息
      */
-    default String sendMessage(String sender, String receiver, String msgType, String msgSubject, String msgContent){
-        NoticeMessage message = new NoticeMessage();
-        message.setMsgType(msgType);
-        message.setMsgSubject(msgSubject);
-        message.setMsgContent(msgContent);
-        return sendMessage(sender, receiver, message);
+    default ResponseData sendMessage(String sender, String receiver, String msgType, String msgSubject, String msgContent){
+        return sendMessage(sender, receiver,
+            NoticeMessage.create()
+                .typeOf(msgType)
+                .subject(msgSubject).content(msgContent));
     }
 
 
@@ -123,16 +126,13 @@ public interface MessageSender {
      * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
      * @return "OK" 表示成功，其他的为错误信息
      */
-    default String sendMessage(String sender, String receiver, String msgType, String msgSubject, String msgContent,
+    default ResponseData sendMessage(String sender, String receiver, String msgType, String msgSubject, String msgContent,
                                String optId, String optMethod, String optTag){
-        NoticeMessage message = new NoticeMessage();
-        message.setMsgType(msgType);
-        message.setMsgSubject(msgSubject);
-        message.setMsgContent(msgContent);
-        message.setOptId(optId);
-        message.setOptMethod(optMethod);
-        message.setOptTag(optTag);
-        return sendMessage(sender, receiver, message);
+        return sendMessage(sender, receiver,
+            NoticeMessage.create()
+                .typeOf(msgType)
+                .subject(msgSubject).content(msgContent)
+                .operation(optId).method(optMethod).tag(optTag));
     }
 
 

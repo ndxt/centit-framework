@@ -1,5 +1,6 @@
 package com.centit.framework.components.impl;
 
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.basedata.NoticeMessage;
@@ -35,7 +36,7 @@ public class SimpleNotificationCenterImpl implements NotificationCenter {
      * @return 结果
      */
     @Override
-    public String sendMessage(String sender, String receiver, NoticeMessage message) {
+    public ResponseData sendMessage(String sender, String receiver, NoticeMessage message) {
         return realMessageSender.sendMessage(sender, receiver, message);
     }
 
@@ -73,7 +74,7 @@ public class SimpleNotificationCenterImpl implements NotificationCenter {
      * @return 结果
      */
     @Override
-    public String sendMessageAppointedType(String noticeType, String sender, String receiver, NoticeMessage message) {
+    public ResponseData sendMessageAppointedType(String noticeType, String sender, String receiver, NoticeMessage message) {
         return realMessageSender.sendMessage(sender, receiver, message);
     }
 

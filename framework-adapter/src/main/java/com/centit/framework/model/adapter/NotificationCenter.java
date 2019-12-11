@@ -1,5 +1,6 @@
 package com.centit.framework.model.adapter;
 
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.model.basedata.NoticeMessage;
 
 /**
@@ -45,7 +46,7 @@ public interface NotificationCenter extends MessageSender {
      * @param message 消息主体
      * @return "OK" 表示成功，其他的为错误信息
      */
-    String sendMessageAppointedType(String noticeType, String sender, String receiver, NoticeMessage message);
+    ResponseData sendMessageAppointedType(String noticeType, String sender, String receiver, NoticeMessage message);
 
     /**
      * 发送内部系统消息
@@ -56,11 +57,10 @@ public interface NotificationCenter extends MessageSender {
      * @param msgContent 消息内容
      * @return "OK" 表示成功，其他的为错误信息
      */
-    default String sendMessageAppointedType(String noticeType, String sender, String receiver, String msgSubject, String msgContent){
-        NoticeMessage message = new NoticeMessage();
-        message.setMsgSubject(msgSubject);
-        message.setMsgContent(msgContent);
-        return sendMessageAppointedType(noticeType, sender, receiver, message);
+    default ResponseData sendMessageAppointedType(String noticeType, String sender, String receiver, String msgSubject, String msgContent){
+        return sendMessageAppointedType(noticeType, sender, receiver,
+            NoticeMessage.create()
+                .subject(msgSubject).content(msgContent));
     }
 
     /**
@@ -76,15 +76,12 @@ public interface NotificationCenter extends MessageSender {
      * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
      * @return "OK" 表示成功，其他的为错误信息
      */
-    default String sendMessageAppointedType(String noticeType,String sender, String receiver, String msgSubject, String msgContent,
+    default ResponseData sendMessageAppointedType(String noticeType,String sender, String receiver, String msgSubject, String msgContent,
                                String optId, String optMethod, String optTag){
-        NoticeMessage message = new NoticeMessage();
-        message.setMsgSubject(msgSubject);
-        message.setMsgContent(msgContent);
-        message.setOptId(optId);
-        message.setOptMethod(optMethod);
-        message.setOptTag(optTag);
-        return sendMessageAppointedType(noticeType, sender, receiver, message);
+        return sendMessageAppointedType(noticeType, sender, receiver,
+            NoticeMessage.create()
+            .subject(msgSubject).content(msgContent)
+            .operation(optId).method(optMethod).tag(optTag));
     }
 
     /**
@@ -97,15 +94,12 @@ public interface NotificationCenter extends MessageSender {
      * @param msgContent 消息内容
      * @return "OK" 表示成功，其他的为错误信息
      */
-    default String sendMessageAppointedType(String noticeType, String sender, String receiver, String msgType, String msgSubject, String msgContent){
-        NoticeMessage message = new NoticeMessage();
-        message.setMsgType(msgType);
-        message.setMsgSubject(msgSubject);
-        message.setMsgContent(msgContent);
-        return sendMessageAppointedType(noticeType, sender, receiver, message);
+    default ResponseData sendMessageAppointedType(String noticeType, String sender, String receiver, String msgType, String msgSubject, String msgContent){
+        return sendMessageAppointedType(noticeType, sender, receiver,
+            NoticeMessage.create()
+                .typeOf(msgType)
+                .subject(msgSubject).content(msgContent));
     }
-
-
 
     /**
      *
@@ -121,16 +115,13 @@ public interface NotificationCenter extends MessageSender {
      * @param optTag 业务主键 ，复合主键用URL方式对的格式 a=v1;b=v2
      * @return "OK" 表示成功，其他的为错误信息
      */
-    default String sendMessageAppointedType(String noticeType, String sender, String receiver, String msgType, String msgSubject, String msgContent,
+    default ResponseData sendMessageAppointedType(String noticeType, String sender, String receiver, String msgType, String msgSubject, String msgContent,
                                String optId, String optMethod, String optTag){
-        NoticeMessage message = new NoticeMessage();
-        message.setMsgType(msgType);
-        message.setMsgSubject(msgSubject);
-        message.setMsgContent(msgContent);
-        message.setOptId(optId);
-        message.setOptMethod(optMethod);
-        message.setOptTag(optTag);
-        return sendMessageAppointedType(noticeType, sender, receiver, message);
+        return sendMessageAppointedType(noticeType, sender, receiver,
+            NoticeMessage.create()
+                .typeOf(msgType)
+                .subject(msgSubject).content(msgContent)
+                .operation(optId).method(optMethod).tag(optTag));
     }
 
 }
