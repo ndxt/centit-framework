@@ -2,6 +2,7 @@ package com.centit.framework.model.adapter;
 
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.model.basedata.NoticeMessage;
+import com.centit.support.common.DoubleAspect;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -55,6 +56,17 @@ public interface MessageSender {
         String msgStr = "一共发送" + (error+success) + "条消息，成功"+success+"条，失败"+error+"条。";
         int resCode = error == 0? 0:(success==0?2:3);
         return ResponseData.makeErrorMessageWithData(result, resCode, msgStr);
+    }
+
+    /**
+     * 广播信息
+     * @param sender 发送人内部用户编码
+     * @param message  消息主体
+     * @param userInline DoubleAspec.ON 在线用户  OFF 离线用户 BOTH 所有用户
+     * @return  默认没有实现
+     */
+    default ResponseData broadcastMessage(String sender, NoticeMessage message, DoubleAspect userInline){
+        return ResponseData.errorResponse;
     }
 
     /**

@@ -283,6 +283,10 @@ public interface ResponseData{
         return toJSONString(null);
     }
 
+    ResponseData successResponse = new ResponseSingleData();
+    ResponseData errorResponse =
+        new ResponseSingleData(ERROR_INTERNAL_SERVER_ERROR, "ERROR");
+
     static ResponseData makeSuccessResponse(){
         return new ResponseSingleData();
     }
