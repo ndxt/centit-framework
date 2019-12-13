@@ -3,6 +3,7 @@
  */
 package com.centit.framework.service.impl;
 
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.basedata.IUserInfo;
@@ -46,40 +47,33 @@ public class EmailMessageSenderImpl implements MessageSender {
         this.hostName = hostName;
         this.smtpPort = smtpPort;
     }
-    public String sendEmailMessage(String mailTo,String mailFrom,String msgSubject,String msgContent) {
+
+    private void sendEmailMessage(String mailTo,String mailFrom,String msgSubject,String msgContent)
+        throws EmailException{
 
         MultiPartEmail multMail = new MultiPartEmail();
         // SMTP
         multMail.setHostName(hostName);
                 //CodeRepositoryUtil.getValue("SysMail", "host_name"));
         multMail.setSmtpPort(smtpPort);
-        String resStr = "OK";
-        // 需要提供公用的消息用户名和密码
+         // 需要提供公用的消息用户名和密码
         multMail.setAuthentication(userName, userPassword);
                 //CodeRepositoryUtil.getValue("SysMail", "host_user"),
                 //CodeRepositoryUtil.getValue("SysMail", "host_password"));
-        try {
-            //multMail.setFrom(CodeRepositoryUtil.getValue("SysMail", "admin_email"));
-            multMail.setFrom(mailFrom);
-            multMail.addTo(mailTo);
-            multMail.setSubject(msgSubject);
-            if(msgContent.endsWith("</html>") || msgContent.endsWith("</HTML>")){
-                multMail.addPart(msgContent, "text/html;charset=utf-8");
-            }else{
-                multMail.setMsg(msgContent);
-            }
-            multMail.send();
-            return "OK";
-        } catch (EmailException e) {
-            resStr=e.getMessage();
-            logger.error(e.getMessage(),e);
-            //e.printStackTrace();
+        //multMail.setFrom(CodeRepositoryUtil.getValue("SysMail", "admin_email"));
+        multMail.setFrom(mailFrom);
+        multMail.addTo(mailTo);
+        multMail.setSubject(msgSubject);
+        if(msgContent.endsWith("</html>") || msgContent.endsWith("</HTML>")){
+            multMail.addPart(msgContent, "text/html;charset=utf-8");
+        }else{
+            multMail.setMsg(msgContent);
         }
-        return resStr;
+        multMail.send();
     }
 
     @Override
-    public String sendMessage(String sender, String receiver, NoticeMessage message){
+    public ResponseData sendMessage(String sender, String receiver, NoticeMessage message){
         IUserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(sender);
         String mailFrom;
         if(userinfo==null){
@@ -91,14 +85,23 @@ public class EmailMessageSenderImpl implements MessageSender {
         userinfo = CodeRepositoryUtil.getUserInfoByCode(receiver);
         if(userinfo==null){
             logger.error("找不到用户："+receiver);
-            return "找不到用户："+receiver;
+            return ResponseData.makeErrorMessage(
+                ResponseData.ERROR_USER_NOTFOUND, "找不到用户："+receiver);
         }
         String email = userinfo.getRegEmail();
 
-        if(email!=null && !"".equals(email))
-            return sendEmailMessage (email,mailFrom, message.getMsgSubject(), message.getMsgContent());
-        else
-            return "用户："+receiver+"没有设置注册邮箱";
+        if(email!=null && !"".equals(email)) {
+            try {
+                sendEmailMessage(email, mailFrom, message.getMsgSubject(), message.getMsgContent());
+                return ResponseData.successResponse;
+            } catch (EmailException e) {
+                logger.error(e.getMessage(),e);
+                return ResponseData.makeErrorMessage(e.getMessage());
+            }
+        } else {
+            return ResponseData.makeErrorMessage(
+                ResponseData.ERROR_USER_CONFIG, "用户：" + receiver + "没有设置注册邮箱");
+        }
     }
 
     public void setHostName(String hostName) {

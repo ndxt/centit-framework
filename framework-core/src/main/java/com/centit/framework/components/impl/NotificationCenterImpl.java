@@ -10,6 +10,7 @@ import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IUserSetting;
 import com.centit.framework.model.basedata.NoticeMessage;
+import com.centit.support.common.DoubleAspect;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,32 +29,16 @@ public class NotificationCenterImpl implements NotificationCenter {
     protected Map<String, MessageSender> msgSenders = new HashMap<>();
     protected boolean writeNoticeLog;
     protected MessageSender defautlMsgSender;
+    private boolean useMsgPusher;
+    protected MessageSender msgPusher;
 
-    /**
-     * 用户设置
-     */
     protected PlatformEnvironment platformEnvironment;
-    //注入接口MessageSender实现类，通过setMsgSenders方法进行配置
-
-    public void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
-        this.platformEnvironment = platformEnvironment;
-    }
-
-    public PlatformEnvironment getPlatformEnvironment() {
-        if(platformEnvironment == null) {
-            platformEnvironment = WebOptUtils.getWebAppContextBean("platformEnvironment", PlatformEnvironment.class);
-        }
-        return platformEnvironment;
-    }
-
-    public void setWriteNoticeLog(boolean writeNoticeLog) {
-        this.writeNoticeLog = writeNoticeLog;
-    }
-
 
 
     public NotificationCenterImpl() {
-        writeNoticeLog = false;
+        this.writeNoticeLog = false;
+        this.msgPusher = null;
+        this.useMsgPusher = false;
     }
 
     /**
@@ -64,6 +49,18 @@ public class NotificationCenterImpl implements NotificationCenter {
         defautlMsgSender = DummyMessageSenderImpl.instance;
     }
 
+    /**
+     *
+     * @param senderName 消息发送器名称
+     * @param sender 消息发送器
+     * @return 通知实体bean
+     */
+    public static NotificationCenterImpl createSimpleNotification(String senderName, MessageSender sender) {
+        NotificationCenterImpl notification = new NotificationCenterImpl();
+        notification.registerMessageSender(senderName, sender);
+        notification.appointDefaultSendType(senderName);
+        return notification;
+    }
     /**
      * 如果 MessageSender 是spring托管类请
      * MessageSender msgManager =
@@ -81,11 +78,11 @@ public class NotificationCenterImpl implements NotificationCenter {
     @Override
     public MessageSender appointDefaultSendType(String sendType){
         MessageSender ms = msgSenders.get(sendType);
-        if(ms!=null)
+        if(ms!=null) {
             defautlMsgSender = ms;
+        }
         return defautlMsgSender;
     }
-
 
     /**
      * 根据用户设定的方式发送消息
@@ -96,59 +93,62 @@ public class NotificationCenterImpl implements NotificationCenter {
      */
     @Override
     public ResponseData sendMessage(String sender, String receiver, NoticeMessage message) {
-        /*
-         *  从用户设置中获得用户希望的接收消息的方式，可能是多个，比如用户希望同时接收到Email和短信，这样就要发送两天
-         *  并在数据库中记录发送信息，在发送方式中用逗号把多个方式拼接在一起保存在对应的字段中
-         */
-        IUserSetting userReceiveWays = getPlatformEnvironment().getUserSetting(receiver, "receiveways");
-        String receiveways = userReceiveWays==null?null:userReceiveWays.getParamValue();
-        StringBuilder errorObjects = new StringBuilder();
-
-        String noticeType ="" ;//default;
-        int sendTypeCount = 0;
+        int sendSuccessCount = 0;
         int sendErrorCount = 0;
-        if (receiveways!= null && StringUtils.isNotBlank(receiveways)) {
-            String[] vals = receiveways.split(",");
-
-            if (ArrayUtils.isNotEmpty(vals)) {
-
+        String noticeType = "";//default;
+        StringBuilder errorObjects = new StringBuilder();
+        if(msgSenders.size()>1) {
+            /*
+             *  从用户设置中获得用户希望的接收消息的方式，可能是多个，比如用户希望同时接收到Email和短信，这样就要发送两天
+             *  并在数据库中记录发送信息，在发送方式中用逗号把多个方式拼接在一起保存在对应的字段中
+             */
+            IUserSetting userReceiveWays = getPlatformEnvironment().getUserSetting(receiver, "receiveways");
+            String receiveways = userReceiveWays == null ? null : userReceiveWays.getParamValue();
+            if (StringUtils.isNotBlank(receiveways)) {
                 noticeType = receiveways;
-                for (String val : vals) {
-                    if (StringUtils.isNotBlank(val)) {
-                        sendTypeCount++;
-                        ResponseData res = realSendMessage(msgSenders.get(val.trim()), sender, receiver, message);
-                        if (res.getCode() != 0) {
-                            sendErrorCount ++;
-                            errorObjects.append(res.getMessage()).append("\r\n");
+                String[] vals = receiveways.split(",");
+                if (ArrayUtils.isNotEmpty(vals)) {
+                    for (String val : vals) {
+                        if (StringUtils.isNotBlank(val)) {
+                            ResponseData res = realSendMessage(msgSenders.get(val.trim()), sender, receiver, message);
+                            if (res.getCode() != 0) {
+                                sendErrorCount++;
+                                errorObjects.append(res.getMessage()).append("\r\n");
+                            } else {
+                                sendSuccessCount++;
+                            }
                         }
                     }
                 }
             }
         }
-        if(sendTypeCount==0 || sendErrorCount==sendTypeCount){
+
+        if(sendSuccessCount==0){
             String infoText = "用户 " + CodeRepositoryUtil.getUserInfoByCode(receiver).getLoginName() + " " +
                     "未选择任何通知接收方式，默认通过内部消息发送通知";
             logger.info(infoText);
             noticeType = StringUtils.isBlank(noticeType)?"D":noticeType+",D";
-            sendTypeCount++;
             ResponseData res = realSendMessage(defautlMsgSender, sender, receiver,message);
             if (res.getCode() != 0) {
                 sendErrorCount ++;
                 errorObjects.append(res.getMessage()).append("\r\n");
+            } else {
+                sendSuccessCount ++;
             }
         }
 
-        int notifyState = sendErrorCount ==0? 0:(sendErrorCount==sendTypeCount? 1: 2);
+        int notifyState = sendErrorCount ==0? 0:(sendSuccessCount==0? 1: 2);
         String returnText = sendErrorCount>0? errorObjects.toString():"OK!";
         if(writeNoticeLog){
             wirteNotifyLog(noticeType, sender, receiver, message,
                 returnText, String.valueOf(notifyState));
         }
 
+        if(useMsgPusher){
+            msgPusher.sendMessage(sender, receiver, message);
+        }
         return ResponseData.makeErrorMessage(notifyState, returnText);
     }
-
-
 
     /**
      * 发送指定类别的消息
@@ -165,15 +165,30 @@ public class NotificationCenterImpl implements NotificationCenter {
             wirteNotifyLog(noticeType, sender, receiver, message,
                 res.getMessage(), String.valueOf(res.getCode()));
         }
+
+        if(useMsgPusher){
+            msgPusher.sendMessage(sender, receiver, message);
+        }
         return res;
     }
 
-
-
+    /**
+     * 广播信息
+     *
+     * @param sender     发送人内部用户编码
+     * @param message    消息主体
+     * @param userInline DoubleAspec.ON 在线用户  OFF 离线用户 BOTH 所有用户
+     * @return 默认没有实现
+     */
+    @Override
+    public ResponseData broadcastMessage(String sender, NoticeMessage message, DoubleAspect userInline) {
+        if(!useMsgPusher) return ResponseData.errorResponse;
+        return msgPusher.broadcastMessage(sender, message, userInline);
+    }
      /*
      * 保存系统通知中心数据
      */
-    protected void wirteNotifyLog(String noticeType, String sender, String receiver,
+     protected void wirteNotifyLog(String noticeType, String sender, String receiver,
                                 NoticeMessage message, String errorText, String notifyState ) {
         Map<String,String> sysNotify = new HashMap<>();
         sysNotify.put("sender", sender);
@@ -205,7 +220,7 @@ public class NotificationCenterImpl implements NotificationCenter {
      * @param message 消息主题
      * @return 结果信息
      */
-    public static ResponseData realSendMessage(MessageSender messageSender, String sender, String receiver, NoticeMessage message ) {
+    protected static ResponseData realSendMessage(MessageSender messageSender, String sender, String receiver, NoticeMessage message ) {
         if (null == messageSender) {
             String errorText = "找不到消息发送器，请检查Spring中的配置和数据字典 WFNotice中的配置是否一致";
             logger.error(errorText);
@@ -220,4 +235,23 @@ public class NotificationCenterImpl implements NotificationCenter {
         }
     }
 
+    public void setWriteNoticeLog(boolean writeNoticeLog) {
+        this.writeNoticeLog = writeNoticeLog;
+    }
+
+    public void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
+        this.platformEnvironment = platformEnvironment;
+    }
+
+    protected PlatformEnvironment getPlatformEnvironment() {
+        if(platformEnvironment == null) {
+            platformEnvironment = WebOptUtils.getWebAppContextBean("platformEnvironment", PlatformEnvironment.class);
+        }
+        return platformEnvironment;
+    }
+
+    public void setMsgPusher(MessageSender msgPusher) {
+        this.msgPusher = msgPusher;
+        this.useMsgPusher = this.msgPusher!=null;
+    }
 }
