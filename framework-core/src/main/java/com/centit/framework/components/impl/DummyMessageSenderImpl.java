@@ -15,7 +15,7 @@ public class DummyMessageSenderImpl implements MessageSender{
 
     @Override
     public ResponseData sendMessage(String sender, String receiver, NoticeMessage message) {
-        return ResponseData.makeSuccessResponse();
+        return ResponseData.successResponse;
     }
 
 }

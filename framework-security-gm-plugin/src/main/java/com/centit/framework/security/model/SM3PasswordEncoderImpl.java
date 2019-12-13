@@ -30,7 +30,7 @@ public class SM3PasswordEncoderImpl
      * Encode the raw password. Generally, a good encoding algorithm applies a SHA-1 or
      * greater hash combined with an 8-byte or greater randomly generated salt.
      *
-     * @param rawPassword
+     * @param rawPassword 明文密码
      */
     @Override
     public String encode(CharSequence rawPassword) {
@@ -42,7 +42,7 @@ public class SM3PasswordEncoderImpl
      * password after it too is encoded. Returns true if the passwords match, false if
      * they do not. The stored password itself is never decoded.
      *
-     * @param rawPassword     the raw password to encode and match
+     * @param rawPassword     明文密码 the raw password to encode and match
      * @param encodedPassword the encoded password from storage to compare with
      * @return true if the raw password, after encoding, matches the encoded password from
      * storage

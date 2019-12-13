@@ -236,7 +236,7 @@ public class MainFrameController extends BaseController {
             boolean bo = platformEnvironment.checkUserPassword(userCode, password);
             if(bo){
                 platformEnvironment.changeUserPassword(userCode, newPassword);
-                return ResponseData.makeSuccessResponse();
+                return ResponseData.successResponse;
             }else{
                 return ResponseData.makeErrorMessage("用户输入的密码错误，不能修改密码！");
             }

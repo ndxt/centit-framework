@@ -88,13 +88,13 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
         writeWithMessageConverters(returnValue, returnType, outputMessage);
     }
 
-    protected <T> void writeWithMessageConverters(T value,
+    protected void writeWithMessageConverters(Object value,
                                                   MethodParameter returnType,
                                                   ServletServerHttpResponse outputMessage)
         throws IOException, HttpMessageNotWritableException {
 
         WrapUpResponseBody wrap = returnType.getMethodAnnotation(WrapUpResponseBody.class);
-        WrapUpContentType wrapUpType =  wrap != null ? wrap.contentType()
+        WrapUpContentType wrapUpType = wrap != null ? wrap.contentType()
                             : WrapUpContentType.DATA;
         switch (wrapUpType) {
             case RAW:
@@ -156,7 +156,7 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
             default: {
                     ResponseData outputValue;
                     if(value == null) {
-                        outputValue = ResponseData.makeSuccessResponse();
+                        outputValue = ResponseData.successResponse;
                     } else if (value instanceof ToResponseData){
                         outputValue = ((ToResponseData)value).toResponseData();
                     } else if (value instanceof ResponseData) {
