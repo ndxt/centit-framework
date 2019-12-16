@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.ResponseData;
+import com.centit.framework.common.ToResponseData;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 
@@ -16,7 +17,7 @@ import java.util.Map;
  * 作为接收数据使用
  */
 @SuppressWarnings({"unused","unchecked"})
-public class HttpReceiveJSON {
+public class HttpReceiveJSON implements ToResponseData {
     //private static final Logger logger = LoggerFactory.getLogger(HttpReceiveJSON.class);
     /**
      * 返回的详细数据， 可能是需要回显的参数，也可能是验证的错误提示
@@ -238,5 +239,12 @@ public class HttpReceiveJSON {
             return (JSON)resObj;
         }
         return null;
+    }
+
+    @Override
+    public ResponseData toResponseData() {
+        return ResponseData.makeErrorMessageWithData(
+            this.getData(), this.getCode(), this.getMessage()
+        );
     }
 }
