@@ -26,7 +26,8 @@ public class AppSession {
     private String password;
 
     private String accessToken;
-    private Date    tokenCheckTime;
+    private Date   tokenCheckTime;
+    private String csrfToken;
     private boolean needAuthenticated;
 
     private GenericObjectPool<CloseableHttpClient>  httpClientPool;
@@ -76,13 +77,19 @@ public class AppSession {
         Map<String,String> param = new HashMap<>();
         param.put("userCode", userCode);
         param.put("password", password);
-        String jsonStr = HttpExecutor.formPost(createHttpExecutorContext(httpclient),
+        HttpExecutorContext httpContext = createHttpExecutorContext(httpclient);
+        String jsonStr = HttpExecutor.formPost(httpContext,
             getAppLoginUrl() + "/mainframe/loginasclient", param);
         HttpReceiveJSON jsonData = HttpReceiveJSON.valueOfJson(jsonStr);
         if(jsonData==null || jsonData.getCode()!=0){
             throw new ObjectException(jsonData==null?"访问服务器失败":jsonData.getMessage());
         }
         accessToken = jsonData.getDataAsString(/*SecurityContextUtils.*/SECURITY_CONTEXT_TOKENNAME);
+        HttpReceiveJSON csrfData = HttpReceiveJSON.valueOfJson(
+            HttpExecutor.simpleGet(httpContext, getAppLoginUrl() + "/mainframe/csrf"));
+        if(csrfData!=null){
+            csrfToken = csrfData.getDataAsString("token");
+        }
     }
 
     public String completeQueryUrl(String queryUrl){
@@ -104,6 +111,10 @@ public class AppSession {
         if(StringUtils.isNotBlank(accessToken)) {
             httpExecutorContext.header("x-auth-token", accessToken);
         }
+        if(StringUtils.isNotBlank(csrfToken)) {
+            httpExecutorContext.header("x-csrf-token", csrfToken);
+        }
+
         httpExecutorContext//.header("X-Requested-With", "XMLHttpRequest")
             .header("accept", "application/json");
         return httpExecutorContext;
