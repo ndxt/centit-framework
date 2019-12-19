@@ -86,5 +86,4 @@ public interface NotificationCenter extends MessageSender {
         return ResponseData.makeErrorMessageWithData(result, resCode, msgStr);
     }
 
-
 }

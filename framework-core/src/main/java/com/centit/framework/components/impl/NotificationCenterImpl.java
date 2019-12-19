@@ -3,7 +3,6 @@ package com.centit.framework.components.impl;
 import com.alibaba.fastjson.JSON;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
-import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.adapter.NotificationCenter;
@@ -32,12 +31,13 @@ public class NotificationCenterImpl implements NotificationCenter {
     private boolean pushMsgAfterSended;
     protected MessageSender msgPusher;
     protected PlatformEnvironment platformEnvironment;
-
+    private boolean useDefautlSender;
 
     public NotificationCenterImpl() {
         this.writeNoticeLog = false;
         this.msgPusher = null;
         this.pushMsgAfterSended = false;
+        this.useDefautlSender = true;
     }
 
     /**
@@ -94,9 +94,9 @@ public class NotificationCenterImpl implements NotificationCenter {
     public ResponseData sendMessage(String sender, String receiver, NoticeMessage message) {
         int sendSuccessCount = 0;
         int sendErrorCount = 0;
-        String noticeType = "";//default;
+        String noticeType = "D";//default;
         StringBuilder errorObjects = new StringBuilder();
-        if(msgSenders.size()>1) {
+        if(!this.useDefautlSender && msgSenders.size()>1) {
             /*
              *  从用户设置中获得用户希望的接收消息的方式，可能是多个，比如用户希望同时接收到Email和短信，这样就要发送两天
              *  并在数据库中记录发送信息，在发送方式中用逗号把多个方式拼接在一起保存在对应的字段中
@@ -123,10 +123,10 @@ public class NotificationCenterImpl implements NotificationCenter {
         }
 
         if(sendSuccessCount==0){
-            String infoText = "用户 " + CodeRepositoryUtil.getUserInfoByCode(receiver).getLoginName() + " " +
+            /*String infoText = "用户 " + CodeRepositoryUtil.getUserInfoByCode(receiver).getLoginName() + " " +
                     "未选择任何通知接收方式，默认通过内部消息发送通知";
             logger.info(infoText);
-            noticeType = StringUtils.isBlank(noticeType)?"D":noticeType+",D";
+            noticeType = StringUtils.isBlank(noticeType)?"D":noticeType+",D";*/
             ResponseData res = realSendMessage(defautlMsgSender, sender, receiver,message);
             if (res.getCode() != 0) {
                 sendErrorCount ++;
@@ -262,5 +262,9 @@ public class NotificationCenterImpl implements NotificationCenter {
 
     public void setPushMsgAfterSended(boolean pushMsgAfterSended) {
         this.pushMsgAfterSended = /*this.msgPusher != null &&*/ pushMsgAfterSended;
+    }
+
+    public void setUseDefautlSender(boolean useDefautlSender) {
+        this.useDefautlSender = useDefautlSender;
     }
 }
