@@ -29,16 +29,15 @@ public class NotificationCenterImpl implements NotificationCenter {
     protected Map<String, MessageSender> msgSenders = new HashMap<>();
     protected boolean writeNoticeLog;
     protected MessageSender defautlMsgSender;
-    private boolean useMsgPusher;
+    private boolean pushMsgAfterSended;
     protected MessageSender msgPusher;
-
     protected PlatformEnvironment platformEnvironment;
 
 
     public NotificationCenterImpl() {
         this.writeNoticeLog = false;
         this.msgPusher = null;
-        this.useMsgPusher = false;
+        this.pushMsgAfterSended = false;
     }
 
     /**
@@ -144,12 +143,18 @@ public class NotificationCenterImpl implements NotificationCenter {
                 returnText, String.valueOf(notifyState));
         }
 
-        if(useMsgPusher){
-            msgPusher.sendMessage(sender, receiver, message);
+        if(pushMsgAfterSended && this.msgPusher != null){
+            this.msgPusher.sendMessage(sender, receiver, message);
         }
         return ResponseData.makeErrorMessage(notifyState, returnText);
     }
 
+    @Override
+    public ResponseData pushMessage(String sender, String receiver, NoticeMessage message){
+        if(this.msgPusher == null)
+            return ResponseData.errorResponse;
+        return msgPusher.sendMessage(sender, receiver, message);
+    }
     /**
      * 发送指定类别的消息
      * @param sender     发送人内部用户编码
@@ -166,7 +171,7 @@ public class NotificationCenterImpl implements NotificationCenter {
                 res.getMessage(), String.valueOf(res.getCode()));
         }
 
-        if(useMsgPusher){
+        if(pushMsgAfterSended && this.msgPusher != null){
             msgPusher.sendMessage(sender, receiver, message);
         }
         return res;
@@ -182,7 +187,7 @@ public class NotificationCenterImpl implements NotificationCenter {
      */
     @Override
     public ResponseData broadcastMessage(String sender, NoticeMessage message, DoubleAspect userInline) {
-        if(!useMsgPusher) return ResponseData.errorResponse;
+        if(this.msgPusher == null) return ResponseData.errorResponse;
         return msgPusher.broadcastMessage(sender, message, userInline);
     }
      /*
@@ -252,6 +257,10 @@ public class NotificationCenterImpl implements NotificationCenter {
 
     public void setMsgPusher(MessageSender msgPusher) {
         this.msgPusher = msgPusher;
-        this.useMsgPusher = this.msgPusher!=null;
+        //this.pushMsgAfterSended = this.msgPusher!=null;
+    }
+
+    public void setPushMsgAfterSended(boolean pushMsgAfterSended) {
+        this.pushMsgAfterSended = /*this.msgPusher != null &&*/ pushMsgAfterSended;
     }
 }
