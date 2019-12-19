@@ -112,7 +112,10 @@ public class AppSession {
             httpExecutorContext.header("x-auth-token", accessToken);
         }
         if(StringUtils.isNotBlank(csrfToken)) {
-            httpExecutorContext.header("x-csrf-token", csrfToken);
+          /**class org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository
+                DEFAULT_CSRF_PARAMETER_NAME = "_csrf";
+                DEFAULT_CSRF_HEADER_NAME = "X-CSRF-TOKEN";*/
+            httpExecutorContext.header("X-CSRF-TOKEN", csrfToken);
         }
 
         httpExecutorContext//.header("X-Requested-With", "XMLHttpRequest")
