@@ -44,8 +44,13 @@ public class ObjectAppendProperties<T> implements ToResponseData {
 
     @Override
     public ResponseData toResponseData(){
+        if(object==null){
+            return ResponseData.makeResponseData(extendProperties);
+        }
         Map<String, Object> objectMap = CollectionsOpt.objectToMap(object);
-        objectMap.putAll(extendProperties);
+        if(extendProperties!=null && extendProperties.size()>0) {
+            objectMap.putAll(extendProperties);
+        }
         return ResponseData.makeResponseData(objectMap);
     }
 
