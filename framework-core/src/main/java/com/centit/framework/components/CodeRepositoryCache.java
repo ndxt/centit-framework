@@ -432,13 +432,15 @@ public abstract class CodeRepositoryCache {
         new CachedObject<>(()->{
             List<? extends IOptDataScope> optDataScopes = getPlatformEnvironment().listAllOptDataScope();
             Map<String,List<IOptDataScope>> optDataScopeMap = new HashMap<>(200);
-            for(IOptDataScope dataScope: optDataScopes){
-                List<IOptDataScope> odss = optDataScopeMap.get(dataScope.getOptId());
-                if(odss==null){
-                    odss = new ArrayList<>(4);
+            if(optDataScopes != null) {
+                for (IOptDataScope dataScope : optDataScopes) {
+                    List<IOptDataScope> odss = optDataScopeMap.get(dataScope.getOptId());
+                    if (odss == null) {
+                        odss = new ArrayList<>(4);
+                    }
+                    odss.add(dataScope);
+                    optDataScopeMap.put(dataScope.getOptId(), odss);
                 }
-                odss.add(dataScope);
-                optDataScopeMap.put(dataScope.getOptId(), odss);
             }
             return optDataScopeMap;
         }, CACHE_FRESH_PERIOD_SECONDS);
