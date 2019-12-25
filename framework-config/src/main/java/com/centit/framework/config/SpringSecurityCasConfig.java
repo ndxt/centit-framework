@@ -36,7 +36,7 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
 
     @Override
     protected String[] getPermitAllUrl() {
-        return new String[]{"/system/exception"};
+        return new String[]{"/**/csrf","/**/doc.html","/system/exception"};
     }
 
     @Override

@@ -55,6 +55,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
                 web.ignoring().antMatchers(ignoreUrls[i]);
             }
         }
+        //web.ignoring().antMatchers("/**/csrf","/**/doc.html");
         web.httpFirewall(httpFirewall());
     }
 
@@ -72,19 +73,15 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.anonymous.disable"),false)) {
             http.anonymous().disable();
         }
-
         if(getPermitAllUrl() != null && getPermitAllUrl().length>0) {
             http.authorizeRequests().antMatchers(getPermitAllUrl()).permitAll();
         }
         if(getAuthenticatedUrl() != null && getAuthenticatedUrl().length>0) {
             http.authorizeRequests().antMatchers(getAuthenticatedUrl()).authenticated();
         }
-
-
         if(BooleanBaseOpt.castObjectToBoolean(env.getProperty("http.csrf.enable"),false)) {
             http.csrf().csrfTokenRepository(csrfTokenRepository);
         } else {

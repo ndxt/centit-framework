@@ -49,7 +49,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Override
     protected String[] getPermitAllUrl() {
-        return new String[]{"/**/login", "/**/logout", "/system/exception"};
+        return new String[]{"/**/login", "/**/logout","/**/csrf","/**/doc.html","/system/exception"};
     }
 
     @Override
