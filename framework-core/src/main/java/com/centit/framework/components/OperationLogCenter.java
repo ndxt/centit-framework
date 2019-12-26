@@ -1,15 +1,14 @@
 package com.centit.framework.components;
 
-import com.alibaba.fastjson.JSON;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.basedata.OperationLog;
+import com.centit.support.algorithm.DatetimeOpt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -83,15 +82,6 @@ public class OperationLogCenter {
        }
    }
 
-   private static String castObjectToJsonStr(Object newValue){
-        if(newValue == null){
-            return null;
-        }
-        if(newValue instanceof String) {
-            return (String) newValue;
-        }
-        return JSON.toJSONString(newValue);
-   }
    /**
     * 记录日志内容
     * @param loglevel 操作日志还是错误提示
@@ -105,10 +95,10 @@ public class OperationLogCenter {
     */
    public static void log(String loglevel, String userCode, String optId, String optTag, String optMethod,
            String optContent, Object newValue, Object oldValue) {
-       OperationLog optLog = new OperationLog(loglevel, userCode, optId, optTag, optMethod,
-           optContent, castObjectToJsonStr(newValue), castObjectToJsonStr(oldValue));
-       optLog.setOptTime(new Date());
-       log(optLog);
+       log(OperationLog.create().level(loglevel)
+           .user(userCode).operation(optId).tag(optTag).method(optMethod)
+           .content(optContent).newObject(newValue)
+            .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
@@ -120,7 +110,9 @@ public class OperationLogCenter {
     * @param optContent 者操作说明
     */
    public static void log(String userCode, String optId, String optMethod, String optContent) {
-       log(OperationLog.LEVEL_INFO,userCode, optId, null, optMethod,  optContent,null,null);
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(userCode).operation(optId).method(optMethod)
+           .content(optContent).time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
@@ -135,7 +127,10 @@ public class OperationLogCenter {
     */
    public static void log(String userCode, String optId, String optMethod,
            String optContent,Object newValue) {
-       log(OperationLog.LEVEL_INFO,userCode, optId, null, optMethod,  optContent,newValue, null);
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(userCode).operation(optId).method(optMethod)
+           .content(optContent).newObject(newValue)
+           .time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
@@ -162,8 +157,10 @@ public class OperationLogCenter {
     * @param optContent 操作说明
     */
    public static void logError(String userCode, String optId, String optMethod, String optContent) {
-           log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent,null, null);
-   }
+       log(OperationLog.create().level(OperationLog.LEVEL_ERROR)
+           .user(userCode).operation(optId).method(optMethod)
+           .content(optContent).time(DatetimeOpt.currentUtilDate()));
+     }
 
     /**
      * 记录日志内容
@@ -175,7 +172,10 @@ public class OperationLogCenter {
      */
     public static void logError(String userCode, String optId, String optMethod,
                                 String optContent,Object newValue) {
-        log(OperationLog.LEVEL_ERROR,userCode, optId, null, optMethod,  optContent, newValue, null);
+        log(OperationLog.create().level(OperationLog.LEVEL_ERROR)
+            .user(userCode).operation(optId).method(optMethod)
+            .content(optContent).newObject(newValue)
+            .time(DatetimeOpt.currentUtilDate()));
     }
 
     /**
@@ -186,7 +186,9 @@ public class OperationLogCenter {
      * @param optContent 操作说明
      */
     public static void logWarn(String userCode, String optId, String optMethod, String optContent) {
-        log(OperationLog.LEVEL_WARN,userCode, optId, null, optMethod,  optContent,null, null);
+        log(OperationLog.create().level(OperationLog.LEVEL_WARN)
+            .user(userCode).operation(optId).method(optMethod)
+            .content(optContent).time(DatetimeOpt.currentUtilDate()));
     }
 
     /**
@@ -199,7 +201,10 @@ public class OperationLogCenter {
      */
     public static void logWarn(String userCode, String optId, String optMethod,
                                 String optContent,Object newValue) {
-        log(OperationLog.LEVEL_WARN,userCode, optId, null, optMethod,  optContent,newValue, null);
+        log(OperationLog.create().level(OperationLog.LEVEL_WARN)
+            .user(userCode).operation(optId).method(optMethod)
+            .content(optContent).newObject(newValue)
+            .time(DatetimeOpt.currentUtilDate()));
     }
 
    /**
@@ -214,9 +219,10 @@ public class OperationLogCenter {
     */
    public static void log(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent, Object newValue, Object oldValue ) {
-       log(OperationLog.LEVEL_INFO, WebOptUtils.getCurrentUserCode(request),
-                optId, optTag, optMethod, optContent,newValue ,oldValue);
-
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).tag(optTag).method(optMethod)
+           .content(optContent).newObject(newValue)
+           .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
@@ -229,7 +235,10 @@ public class OperationLogCenter {
     */
    public static void log(HttpServletRequest request, String optId,
           String optMethod,String optContent, Object newValue) {
-       log(request, optId, null, optMethod, optContent, newValue,null);
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).method(optMethod)
+           .content(optContent).newObject(newValue)
+           .time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
@@ -240,7 +249,9 @@ public class OperationLogCenter {
     * @param optContent 操作说明
     */
    public static void log(HttpServletRequest request, String optId, String optMethod,String optContent ) {
-       log(request, optId, null, optMethod, optContent, null,null);
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).method(optMethod)
+           .content(optContent).time(DatetimeOpt.currentUtilDate()));
    }
 
 
@@ -255,8 +266,10 @@ public class OperationLogCenter {
     */
    public static void logNewObject(String userCode, String optId, String optTag, String optMethod,
            String optContent, Object newObject ) {
-       log(OperationLog.LEVEL_INFO, userCode,
-                optId, optTag, optMethod, optContent, newObject,null );
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(userCode).operation(optId).tag(optTag).method(optMethod)
+           .content(optContent).newObject(newObject)
+           .time(DatetimeOpt.currentUtilDate()));
 
    }
 
@@ -271,9 +284,10 @@ public class OperationLogCenter {
     */
    public static void logDeleteObject(String userCode, String optId, String optTag, String optMethod,
            String optContent, Object oldObject ) {
-       log(OperationLog.LEVEL_INFO, userCode,
-                optId, optTag, optMethod, optContent,null, oldObject);
-
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(userCode).operation(optId).tag(optTag).method(optMethod)
+           .content(optContent)
+           .oldObject(oldObject).time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
@@ -288,12 +302,10 @@ public class OperationLogCenter {
     */
    public static void logUpdateObject(String userCode, String optId, String optTag, String optMethod,
            String optContent,Object newObject , Object oldObject ) {
-
-       OperationLog optLog = new OperationLog(userCode,
-               optId, optTag, optMethod,  optContent );
-       optLog.setOptDifference(newObject, oldObject);
-       optLog.setOptTime(new Date());
-       log(optLog);
+       log(OperationLog.create().user(userCode).operation(optId)
+           .tag(optTag).method(optMethod).content(optContent)
+           .makeDifference(oldObject, newObject)
+           .time(DatetimeOpt.currentUtilDate()));
    }
 
 
@@ -308,9 +320,10 @@ public class OperationLogCenter {
     */
    public static void logNewObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent, Object newObject ) {
-       logNewObject(WebOptUtils.getCurrentUserCode(request),
-                optId, optTag, optMethod, optContent,newObject );
-
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).tag(optTag).method(optMethod)
+           .content(optContent).newObject(newObject)
+           .time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
@@ -323,14 +336,20 @@ public class OperationLogCenter {
     */
    public static void logQuery(String userCode, String optId, String optMethod,
            String queryDesc, Map<String,Object> queryMap ) {
-       log(OperationLog.LEVEL_INFO, userCode,
-               optId, null, optMethod, queryDesc,JSON.toJSONString(queryMap),null);
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(userCode).operation(optId).method(optMethod)
+           .content(queryDesc).newObject(queryMap)
+           .time(DatetimeOpt.currentUtilDate()));
+
+
    }
 
    public static void logQuery(HttpServletRequest request, String optId, String optMethod,
                String queryDesc, Map<String,Object> queryMap ) {
-           logQuery(WebOptUtils.getCurrentUserCode(request),
-                optId,  optMethod, queryDesc, queryMap);
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).method(optMethod)
+           .content(queryDesc).newObject(queryMap)
+           .time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
@@ -344,9 +363,10 @@ public class OperationLogCenter {
     */
    public static void logDeleteObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent, Object oldObject ) {
-       logDeleteObject(WebOptUtils.getCurrentUserCode(request),
-                optId, optTag, optMethod, optContent,oldObject);
-
+       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+           .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).tag(optTag).method(optMethod)
+           .content(optContent)
+           .oldObject(oldObject).time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
@@ -361,8 +381,9 @@ public class OperationLogCenter {
     */
    public static void logUpdateObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent,Object newObject , Object oldObject ) {
-
-       logUpdateObject(WebOptUtils.getCurrentUserCode(request),
-               optId, optTag, optMethod, optContent,newObject,oldObject);
+       log(OperationLog.create().user(WebOptUtils.getCurrentUserCode(request)).operation(optId)
+           .tag(optTag).method(optMethod).content(optContent)
+           .makeDifference(oldObject, newObject)
+           .time(DatetimeOpt.currentUtilDate()));
    }
- }
+}

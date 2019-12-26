@@ -1,7 +1,9 @@
 package com.centit.framework.model.basedata;
 
 import com.alibaba.fastjson.JSON;
+import lombok.Data;
 
+@Data
 public class NoticeMessage implements java.io.Serializable {
 
     private static final long serialVersionUID = 1;
@@ -27,9 +29,18 @@ public class NoticeMessage implements java.io.Serializable {
      */
     private String optTag;
 
+    public static void setDefaultMsgType(String defaultMsgType) {
+        NoticeMessage.defaultMsgType = defaultMsgType;
+    }
+
+    public NoticeMessage(){
+        this.msgType = defaultMsgType;
+    }
+
     public static NoticeMessage create(){
         return new NoticeMessage();
     }
+
     public NoticeMessage typeOf(String stype){
         this.msgType = stype;
         return this;
@@ -58,62 +69,6 @@ public class NoticeMessage implements java.io.Serializable {
     public NoticeMessage tag(String stag){
         this.optTag = stag;
         return this;
-    }
-
-    public static void setDefaultMsgType(String defaultMsgType) {
-        NoticeMessage.defaultMsgType = defaultMsgType;
-    }
-
-    public NoticeMessage(){
-        msgType = defaultMsgType;
-    }
-
-    public String getMsgType() {
-        return msgType;
-    }
-
-    public void setMsgType(String msgType) {
-        this.msgType = msgType;
-    }
-
-    public String getMsgSubject() {
-        return msgSubject;
-    }
-
-    public void setMsgSubject(String msgSubject) {
-        this.msgSubject = msgSubject;
-    }
-
-    public String getMsgContent() {
-        return msgContent;
-    }
-
-    public void setMsgContent(String msgContent) {
-        this.msgContent = msgContent;
-    }
-
-    public String getOptId() {
-        return optId;
-    }
-
-    public void setOptId(String optId) {
-        this.optId = optId;
-    }
-
-    public String getOptMethod() {
-        return optMethod;
-    }
-
-    public void setOptMethod(String optMethod) {
-        this.optMethod = optMethod;
-    }
-
-    public String getOptTag() {
-        return optTag;
-    }
-
-    public void setOptTag(String optTag) {
-        this.optTag = optTag;
     }
 
     @Override

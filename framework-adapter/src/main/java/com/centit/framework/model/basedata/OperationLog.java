@@ -1,16 +1,16 @@
 package com.centit.framework.model.basedata;
 
 import com.alibaba.fastjson.JSON;
-import com.centit.support.algorithm.ReflectionOpt;
+import com.centit.support.algorithm.CollectionsOpt;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Data
 public class OperationLog implements java.io.Serializable {
 
     private static final long serialVersionUID = 1;
@@ -36,9 +36,9 @@ public class OperationLog implements java.io.Serializable {
     public static final String P_OPT_LOG_METHOD_U = "update";
     public static final String P_OPT_LOG_METHOD_D = "delete";
 
-  
+
     private String logLevel = LEVEL_INFO;
-  
+
     /**
      * 操作用户
      */
@@ -66,17 +66,17 @@ public class OperationLog implements java.io.Serializable {
     /**
      * 更新前旧值，json格式，这个字段不是必须的
      */
-    private String newValue; 
+    private String newValue;
     /**
      * 更新后新值，json格式，这个字段不是必须的
      */
-    private String oldValue; 
+    private String oldValue;
 
 
     public OperationLog() {
         this.logLevel = LEVEL_INFO;
     }
-    
+
     public OperationLog(String userCode, String optId, String optTag, String optmethod, String optcontent) {
         this.logLevel = LEVEL_INFO;
         this.userCode = userCode;
@@ -85,8 +85,8 @@ public class OperationLog implements java.io.Serializable {
         this.optMethod = optmethod;
         this.optContent = optcontent;
     }
-    
-    public OperationLog(String userCode, String optId, String optTag, String optmethod, 
+
+    public OperationLog(String userCode, String optId, String optTag, String optmethod,
             String optcontent ,String newValue, String oldvalue ) {
         this.logLevel = LEVEL_INFO;
         this.userCode = userCode;
@@ -97,9 +97,9 @@ public class OperationLog implements java.io.Serializable {
         this.newValue = newValue;
         this.oldValue = oldvalue;
     }
-    
 
-    public OperationLog(String loglevel, String userCode, String optId, String optTag, String optmethod, 
+
+    public OperationLog(String loglevel, String userCode, String optId, String optTag, String optmethod,
             String optcontent,String newValue, String oldvalue) {
         this.logLevel = loglevel;
         this.userCode = userCode;
@@ -111,133 +111,98 @@ public class OperationLog implements java.io.Serializable {
         this.oldValue = oldvalue;
     }
 
-    public String getLogLevel() {
-        return this.logLevel;
+    public static OperationLog create(){
+        return new OperationLog();
     }
 
-    public void setLogLevel(String loglevel) {
-        this.logLevel = loglevel;
+    public OperationLog level(String logLevel){
+        this.logLevel = logLevel;
+        return this;
     }
 
-    public String getUserCode() {
-        return this.userCode;
-    }
-
-    public void setUserCode(String userCode) {
+    public OperationLog user(String userCode){
         this.userCode = userCode;
-    }
-    
-    public String getOptTag() {
-        return optTag;
+        return this;
     }
 
-    public void setOptTag(String optTag) {
+    public OperationLog operation(String soptid){
+        this.optId = soptid;
+        return this;
+    }
+
+    public OperationLog method(String smethod){
+        this.optMethod = smethod;
+        return this;
+    }
+
+    public OperationLog tag(String optTag){
         this.optTag = optTag;
-    }
-    
-    public Date getOptTime() {
-        return this.optTime;
+        return this;
     }
 
-    public void setOptTime(Date opttime) {
+    public OperationLog time(Date opttime){
         this.optTime = opttime;
+        return this;
     }
 
-    public String getOptId() {
-        return this.optId;
+    public OperationLog content(String scontent){
+        this.optContent = scontent;
+        return this;
     }
 
-    public void setOptId(String optid) {
-        this.optId = optid;
-    }
-
-    public String getOptMethod() {
-        return this.optMethod;
-    }
-
-    public void setOptMethod(String optmethod) {
-        this.optMethod = optmethod;
-    }
-
-    public String getOptContent() {
-        return this.optContent;
-    }
-    public void setOptContent(String optcontent) {
-        this.optContent = optcontent;
-    }
-    
-    public void setNewValue(String newValue) {
-        this.newValue = newValue;
-    }
-    
-    public String getNewValue() {
-        return this.newValue;
-    }   
-
-    
-    public void setOptNewObject(Object obj){
-        this.newValue = JSON.toJSONString(obj);
-    }
-
-    public void setOptOldObject(Object obj){
-        this.oldValue = JSON.toJSONString(obj);
-    }
-
-    public <T extends Object> void setOptDifference(T newObj,T oldObj){
-        if(newObj==null || oldObj==null){
-            this.newValue = JSON.toJSONString(newObj);
-            this.oldValue = JSON.toJSONString(oldObj);
-            return;
+    private static String castObjectToJsonStr(Object newValue){
+        if(newValue == null){
+            return null;
         }
-        Field[] fields = ReflectionOpt.getFields(newObj);
-        if(fields==null || fields.length<1)
-            return ;
+        if(newValue instanceof String) {
+            return (String) newValue;
+        }
+        return JSON.toJSONString(newValue);
+    }
+
+    public OperationLog newObject(Object obj){
+        this.newValue = castObjectToJsonStr(obj);
+        return this;
+    }
+
+    public OperationLog oldObject(Object obj){
+        this.oldValue = castObjectToJsonStr(obj);
+        return this;
+    }
+
+    public <T extends Object> OperationLog makeDifference(T oldObj, T newObj){
+        if(newObj==null || oldObj==null){
+            this.newValue = castObjectToJsonStr(newObj);
+            this.oldValue = castObjectToJsonStr(oldObj);
+            return this;
+        }
+
+        Map<String,Object> oldObjMap = CollectionsOpt.objectToMap(oldObj);
+        Map<String,Object> newObjMap = CollectionsOpt.objectToMap(newObj);
+
         Map<String,Object> newTempValue = new HashMap<>();
         Map<String,Object> oldTempValue = new HashMap<>();
-        for(Field field : fields){
-            try{
-                Object obj1 = ReflectionOpt.forceGetFieldValue(newObj, field);
-                Object obj2 = ReflectionOpt.forceGetFieldValue(oldObj, field);
-                //method.getName()
-                if(obj1==null){
-                    if(obj2!=null){
-                        //newValue.put(field.getName(),"");
-                        oldTempValue.put(field.getName(),obj2);
-                    }
-                }else{
-                    if(obj2==null){
-                        newTempValue.put(field.getName(),obj1);
-                        //oldValue.put(field.getName(),"");
-                    }else if(!obj1.equals(obj2)){
-                        newTempValue.put(field.getName(),obj1);
-                        oldTempValue.put(field.getName(),obj2);
-                    }
-                }
+        for(Map.Entry<String,Object> ent: newObjMap.entrySet()){
+           if(!oldObjMap.containsKey(ent.getKey())){
+               newTempValue.put(ent.getKey(), ent.getValue());
+           }
+        }
 
-            } catch (Exception e) {
-                logger.error(e.getMessage(),e);
+        for(Map.Entry<String,Object> ent: oldObjMap.entrySet()){
+            Object newP = newObjMap.get(ent.getKey());
+            if(newP == null){
+                oldTempValue.put(ent.getKey(), ent.getValue());
+            } else if(!newP.equals(ent.getValue())){
+                oldTempValue.put(ent.getKey(), ent.getValue());
+                newTempValue.put(ent.getKey(), newP);
             }
         }
+
         this.newValue = JSON.toJSONString(newTempValue);
         this.oldValue = JSON.toJSONString(oldTempValue);
-    }
-    
-    public String getOldValue() {
-        return this.oldValue;
+        return this;
     }
 
-    public void setOldValue(String oldvalue) {
-        this.oldValue = oldvalue;
-    }
-
-     public String getoptTag() {
-        return optTag;
-    }
-
-    public void setoptTag(String optTag) {
-        this.optTag = optTag;
-    }
-    
     public String  getOptMethodText() {
         if (P_OPT_LOG_METHOD_C.equals(this.optMethod)) {
             return "新增";
