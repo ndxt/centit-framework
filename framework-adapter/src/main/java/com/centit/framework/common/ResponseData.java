@@ -309,8 +309,10 @@ public interface ResponseData{
         return ResponseSingleData.makeResponseData(objValue);
     }
 
-    static ResponseMapData makeResponseData(String key, Object objValue){
-        return ResponseMapData.makeResponseData(CollectionsOpt.createHashMap(key, objValue));
+    static ResponseData makeResponseData(String message, Object objValue){
+        ResponseSingleData response = new ResponseSingleData(message);
+        response.setData(objValue);
+        return response;
     }
 
     static ResponseMapData makeResponseData(Map<String, Object> resMapData){

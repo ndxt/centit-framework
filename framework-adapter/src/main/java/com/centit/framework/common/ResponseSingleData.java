@@ -27,17 +27,17 @@ public class ResponseSingleData implements ResponseData{
     protected Object data;
 
     public ResponseSingleData() {
-        code = 0;
+        code = RESULT_OK;
         message = "OK";
     }
 
     public ResponseSingleData(int nCode) {
         code = nCode;
-        message = nCode==0?"OK":"ERROR";
+        message = nCode==RESULT_OK?"OK":"ERROR";
     }
 
     public ResponseSingleData(String message) {
-        code = 0;
+        code = RESULT_OK;
         this.message = message;
     }
 
