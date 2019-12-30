@@ -33,6 +33,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,7 +43,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.ContextLoaderListener;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -66,10 +66,10 @@ public class MainFrameController extends BaseController {
     public String getOptId (){
         return "mainframe";
     }
-    @Resource
+    @Autowired
     protected CsrfTokenRepository csrfTokenRepository;
 
-    @Resource
+    @Autowired
     protected PlatformEnvironment platformEnvironment;
 
     /**
