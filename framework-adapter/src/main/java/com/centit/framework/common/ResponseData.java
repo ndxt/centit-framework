@@ -285,21 +285,25 @@ public interface ResponseData{
 
     ResponseData successResponse = new ResponseSingleData();
     ResponseData errorResponse =
-        new ResponseSingleData(ERROR_INTERNAL_SERVER_ERROR, "ERROR");
+        new ResponseSingleData(ERROR_INTERNAL_SERVER_ERROR, "内部未知错误！");
 
-    static ResponseData makeSuccessResponse(){
+    static ResponseSingleData makeSuccessResponse(){
         return new ResponseSingleData();
     }
 
-    static ResponseData makeErrorMessage(String message){
+    static ResponseSingleData makeSuccessResponse(String message){
+        return new ResponseSingleData(message);
+    }
+
+    static ResponseSingleData makeErrorMessage(String message){
         return new ResponseSingleData(ERROR_INTERNAL_SERVER_ERROR, message);
     }
 
-    static ResponseData makeErrorMessage(int errorCode, String message){
+    static ResponseSingleData makeErrorMessage(int errorCode, String message){
         return new ResponseSingleData(errorCode, message);
     }
 
-    static ResponseData makeErrorMessageWithData(Object obj, int errorCode, String message){
+    static ResponseSingleData makeErrorMessageWithData(Object obj, int errorCode, String message){
         ResponseSingleData response = new ResponseSingleData(errorCode, message);
         response.setData(obj);
         return response;

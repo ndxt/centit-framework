@@ -33,7 +33,7 @@ public class ResponseSingleData implements ResponseData{
 
     public ResponseSingleData(int nCode) {
         code = nCode;
-        message = nCode==RESULT_OK?"OK":"ERROR";
+        message = nCode==RESULT_OK ? "OK" : "ERROR";
     }
 
     public ResponseSingleData(String message) {
