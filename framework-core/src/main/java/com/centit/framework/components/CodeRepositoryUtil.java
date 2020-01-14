@@ -9,6 +9,7 @@ import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.common.CachedObject;
 import com.centit.support.compiler.Lexer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author codefan@sina.com
  * 2015-11-3
  */
+@SuppressWarnings("unused")
 public abstract class CodeRepositoryUtil {
 
     public static final String LOGIN_NAME = "loginName";
@@ -68,11 +70,22 @@ public abstract class CodeRepositoryUtil {
         return CodeRepositoryCache.codeToOptMap.getCachedTarget();
     }
 
-    public static Map<String, Map<String, String>> extendedCodeRepo =
+    public final static Map<String, CachedObject<Map<String, String>>> extendedCodeRepo =
         new ConcurrentHashMap<>(16);
 
-    public static void registeExtendedCodeRepo(String catalog, Map<String,String> repo){
-        extendedCodeRepo.put(catalog,repo);
+    public boolean hasExtendedDictionary(String dataCatalog){
+        return extendedCodeRepo.containsKey(dataCatalog);
+    }
+
+    public static void registeExtendedCodeRepo(String catalog, Map<String, String> repo){
+        CachedObject<Map<String, String>> cachedObject =
+            new CachedObject<>(()-> repo, CachedObject.NOT_REFRESH_PERIOD * 1000);
+        cachedObject.setFreshData(repo);
+        extendedCodeRepo.put(catalog, cachedObject);
+    }
+
+    public static void registeExtendedCodeRepo(String catalog, CachedObject<Map<String, String>> repo){
+        extendedCodeRepo.put(catalog, repo);
     }
     /**
      * 获取操作定义（权限的控制单位）
@@ -283,9 +296,9 @@ public abstract class CodeRepositoryUtil {
                     return oi.getOptName() + "-" + od.getOptName();
                 }
                 default:
-                    Map<String, String> extendRepo = extendedCodeRepo.get(sCatalog);
+                    CachedObject<Map<String, String>> extendRepo = extendedCodeRepo.get(sCatalog);
                     if(extendRepo != null){
-                        String svalue = extendRepo.get(sKey);
+                        String svalue = extendRepo.getCachedTarget().get(sKey);
                         return svalue != null ? svalue : sKey;
                     }
 
@@ -359,9 +372,9 @@ public abstract class CodeRepositoryUtil {
                     return sValue;
 
                 default:
-                    Map<String, String> extendRepo = extendedCodeRepo.get(sCatalog);
+                    CachedObject<Map<String, String>> extendRepo = extendedCodeRepo.get(sCatalog);
                     if(extendRepo != null){
-                        for(Map.Entry<String, String> ent : extendRepo.entrySet()) {
+                        for(Map.Entry<String, String> ent : extendRepo.getCachedTarget().entrySet()) {
                             if(StringUtils.equals(ent.getValue(),sValue)){
                                 return ent.getKey();
                             }
@@ -1237,9 +1250,9 @@ public abstract class CodeRepositoryUtil {
             }
 
             default:
-                Map<String, String> extendRepo = extendedCodeRepo.get(sCatalog);
+                CachedObject<Map<String, String>> extendRepo = extendedCodeRepo.get(sCatalog);
                 if(extendRepo != null){
-                    return extendRepo;
+                    return extendRepo.getCachedTarget();
                 }
 
                 List<? extends IDataDictionary> dcMap = getDictionary(sCatalog);
