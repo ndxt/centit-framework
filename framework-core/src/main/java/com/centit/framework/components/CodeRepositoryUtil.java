@@ -73,7 +73,7 @@ public abstract class CodeRepositoryUtil {
     public final static Map<String, CachedObject<Map<String, String>>> extendedCodeRepo =
         new ConcurrentHashMap<>(16);
 
-    public boolean hasExtendedDictionary(String dataCatalog){
+    public static boolean hasExtendedDictionary(String dataCatalog){
         return extendedCodeRepo.containsKey(dataCatalog);
     }
 
