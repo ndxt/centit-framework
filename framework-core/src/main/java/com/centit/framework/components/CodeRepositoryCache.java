@@ -26,16 +26,16 @@ public abstract class CodeRepositoryCache {
     /**
      * 默认15分钟，900秒
      */
-    public final static int CACHE_FRESH_PERIOD_SECONDS = 900;
+    public final static long CACHE_FRESH_PERIOD_SECONDS = 900L;
     /**
      * 用不过去，就把失效时间设定为一个月
      */
-    public final static int CACHE_NEVER_EXPIRE = 30 * 24 * 60 * 60;
+    public final static long CACHE_NEVER_EXPIRE = 30 * 24 * 60 * 60L;
 
     /**
      * 短期缓存，就把失效时间设定为 5 秒
      */
-    public final static int CACHE_KEEP_FRESH = 5;
+    public final static long CACHE_KEEP_FRESH = 5L;
 
     private CodeRepositoryCache()
     {
