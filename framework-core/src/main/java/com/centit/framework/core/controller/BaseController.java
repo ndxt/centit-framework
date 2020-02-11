@@ -151,13 +151,13 @@ public abstract class BaseController {
                 paramValue = QueryUtils.pretreatParameter(pretreatment,paramValue);
             }*/
             //和 QueryUtils 中的语法保存一致
-            if(key.charAt(0)=='('){
-                int e = key.indexOf(')');
-                if(e>0){
-                    String pretreatment = key.substring(1, e).trim();
-                    paramAlias =  key.substring(e+1).trim();
-                    paramValue = QueryUtils.pretreatParameter(pretreatment,paramValue);
-                }
+            int nPos = key.indexOf('(');
+            int nRevPos = key.lastIndexOf(')');
+            if(nPos>=0 && nRevPos>=0){
+                String pretreatment = key.substring(nRevPos+1, nRevPos).trim();
+                paramAlias = nPos>0? key.substring(0,nPos).trim()
+                    :key.substring(nRevPos+1).trim();
+                paramValue = QueryUtils.pretreatParameter(pretreatment, paramValue);
             }
             map.put(paramAlias, paramValue);
         }
