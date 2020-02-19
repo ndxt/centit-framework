@@ -154,7 +154,7 @@ public abstract class BaseController {
             int nPos = key.indexOf('(');
             int nRevPos = key.lastIndexOf(')');
             if(nPos>=0 && nRevPos>=0){
-                String pretreatment = key.substring(nRevPos+1, nRevPos).trim();
+                String pretreatment = key.substring(nPos+1, nRevPos).trim();
                 paramAlias = nPos>0? key.substring(0,nPos).trim()
                     :key.substring(nRevPos+1).trim();
                 paramValue = QueryUtils.pretreatParameter(pretreatment, paramValue);
