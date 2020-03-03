@@ -27,6 +27,11 @@ public class OperationLog implements java.io.Serializable {
      */
     public static final String LEVEL_WARN = "2";
 
+    /**
+     * 调试信息
+     */
+    public static final String LEVEL_DEBUG = "3";
+
     private static Logger logger = LoggerFactory.getLogger(OperationLog.class);
     /**
      * 系统日志操作
@@ -37,7 +42,7 @@ public class OperationLog implements java.io.Serializable {
     public static final String P_OPT_LOG_METHOD_D = "delete";
 
 
-    private String logLevel = LEVEL_INFO;
+    private String logLevel;
 
     /**
      * 操作用户
@@ -75,40 +80,6 @@ public class OperationLog implements java.io.Serializable {
 
     public OperationLog() {
         this.logLevel = LEVEL_INFO;
-    }
-
-    public OperationLog(String userCode, String optId, String optTag, String optmethod, String optcontent) {
-        this.logLevel = LEVEL_INFO;
-        this.userCode = userCode;
-        this.optId = optId;
-        this.optTag = optTag;
-        this.optMethod = optmethod;
-        this.optContent = optcontent;
-    }
-
-    public OperationLog(String userCode, String optId, String optTag, String optmethod,
-            String optcontent ,String newValue, String oldvalue ) {
-        this.logLevel = LEVEL_INFO;
-        this.userCode = userCode;
-        this.optId = optId;
-        this.optTag = optTag;
-        this.optMethod = optmethod;
-        this.optContent = optcontent;
-        this.newValue = newValue;
-        this.oldValue = oldvalue;
-    }
-
-
-    public OperationLog(String loglevel, String userCode, String optId, String optTag, String optmethod,
-            String optcontent,String newValue, String oldvalue) {
-        this.logLevel = loglevel;
-        this.userCode = userCode;
-        this.optId = optId;
-        this.optTag = optTag;
-        this.optMethod = optmethod;
-        this.optContent = optcontent;
-        this.newValue = newValue;
-        this.oldValue = oldvalue;
     }
 
     public static OperationLog create(){
@@ -214,5 +185,10 @@ public class OperationLog implements java.io.Serializable {
             return "更新";
         }
         return this.optMethod;
+    }
+
+    @Override
+    public String toString(){
+        return JSON.toJSONString(this);
     }
 }

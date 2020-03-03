@@ -33,7 +33,7 @@ public interface NotificationCenter extends MessageSender {
      * @param sender MessageSender
      * @return NotificationCenter 系统的内置的通知中心
      */
-    NotificationCenter registerMessageSender(String sendType,MessageSender sender);
+    NotificationCenter registerMessageSender(String sendType, MessageSender sender);
 
     /**
      * 设置默认的发送通知内部

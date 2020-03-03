@@ -1,6 +1,5 @@
 package com.centit.framework.components.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.basedata.OperationLog;
@@ -35,7 +34,7 @@ public class TextOperationLogWriterImpl implements OperationLogWriter{
 
     @Override
     public void save(OperationLog optLog) {
-        TxtLogFile.writeLog(getCurrentLogPath(), JSON.toJSONString(optLog),
+        TxtLogFile.writeLog(getCurrentLogPath(), optLog.toString(),
                 true,true);
     }
 
@@ -45,7 +44,7 @@ public class TextOperationLogWriterImpl implements OperationLogWriter{
         TxtLogFile logger = new TxtLogFile();
         logger.openLogFile(logFilePath);
         for(OperationLog optLog : optLogs) {
-            logger.writeLog(JSON.toJSONString(optLog),
+            logger.writeLog(optLog.toString(),
                 true, true);
         }
         logger.closeLogFile();

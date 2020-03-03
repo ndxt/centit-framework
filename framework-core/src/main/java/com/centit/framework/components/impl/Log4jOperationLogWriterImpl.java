@@ -20,15 +20,14 @@ public class Log4jOperationLogWriterImpl implements OperationLogWriter{
 
     protected Logger logger = LoggerFactory.getLogger(Log4jOperationLogWriterImpl.class);
 
-
     @Override
     public void save(OperationLog optLog) {
-        logger.info( JSON.toJSONString(optLog) );
+        logger.info(optLog.toString());
     }
 
     @Override
     public void save(List<OperationLog> optLogs) {
         for(OperationLog optLog : optLogs)
-            logger.info( JSON.toJSONString(optLog) );
+            logger.info(optLog.toString());
     }
 }
