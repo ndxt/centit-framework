@@ -75,7 +75,7 @@ public abstract class CodeRepositoryCache {
      * 设置所有的缓存刷新时间 单位秒
      * @param periodSeconds 缓存刷新时间 单位秒
      */
-    public static void setAllCacheFreshPeriod(int periodSeconds){
+    public static void setAllCacheFreshPeriod(long periodSeconds){
         CodeRepositoryCache.userInfoRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.codeToUserMap.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.loginNameToUserMap.setFreshPeriod(periodSeconds);
