@@ -1,7 +1,9 @@
 package com.centit.framework.model.basedata;
 
 import com.alibaba.fastjson.JSON;
+import com.centit.framework.core.dao.DictionaryMap;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.DatetimeOpt;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +49,7 @@ public class OperationLog implements java.io.Serializable {
     /**
      * 操作用户
      */
+    @DictionaryMap(value = "userCode", fieldName = "userName")
     private String userCode;
     /**
      * 操作时间
@@ -77,9 +80,9 @@ public class OperationLog implements java.io.Serializable {
      */
     private String oldValue;
 
-
     public OperationLog() {
         this.logLevel = LEVEL_INFO;
+        this.optTime = DatetimeOpt.currentSqlDate();
     }
 
     public static OperationLog create(){
