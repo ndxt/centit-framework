@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
 import javax.servlet.Filter;
 
@@ -59,7 +60,11 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
             casFilter.setSessionAuthenticationStrategy(
                 new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
         }
+        SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
+        rememberMeServices.setAlwaysRemember(BooleanBaseOpt.castObjectToBoolean(
+            env.getProperty("session.always.rememberme"), false));
 
+        casFilter.setRememberMeServices(rememberMeServices);
         return casFilter;
     }
 
