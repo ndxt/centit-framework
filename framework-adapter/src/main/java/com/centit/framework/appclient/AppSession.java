@@ -11,9 +11,8 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class AppSession {
@@ -30,7 +29,9 @@ public class AppSession {
     private String csrfToken;
     private boolean needAuthenticated;
 
-    private GenericObjectPool<CloseableHttpClient>  httpClientPool;
+
+    private List<Consumer<HttpExecutorContext>> httpInterceptors;
+    private GenericObjectPool<CloseableHttpClient> httpClientPool;
 
     public AppSession(String appServerUrl,boolean needAuthenticated,String userCode,String password){
         this.appServerUrl = appServerUrl;
@@ -56,6 +57,15 @@ public class AppSession {
 
     public AppSession(){
         this(null,false,null,null);
+    }
+
+    public void registerInterceptor(Consumer<HttpExecutorContext> httpInterceptor){
+        if(this.httpInterceptors==null){
+            this.httpInterceptors = new ArrayList<>(8);
+        }
+        //if(!this.httpInterceptors.contains(httpInterceptor)){
+            this.httpInterceptors.add(httpInterceptor);
+        //}
     }
 
     public boolean checkAccessToken(CloseableHttpClient httpclient)
@@ -120,6 +130,9 @@ public class AppSession {
 
         httpExecutorContext//.header("X-Requested-With", "XMLHttpRequest")
             .header("accept", "application/json");
+        if(httpInterceptors!=null) {
+            httpInterceptors.forEach(interceptor -> interceptor.accept(httpExecutorContext));
+        }
         return httpExecutorContext;
     }
 
