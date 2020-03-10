@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -79,19 +80,24 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
                     + "从主机"+loginIp+"登录。");
         }
 
+        Cookie cookie = new Cookie(SecurityContextUtils.SecurityContextTokenName,
+            request.getSession().getId());
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
         String ajax = request.getParameter("ajax");
         boolean isAjaxQuery = WebOptUtils.isAjax(request);
         if(isAjaxQuery || "true".equalsIgnoreCase(ajax)){
             ResponseMapData resData = new ResponseMapData();
-            //if(registToken) {
             resData.addResponseData(SecurityContextUtils.SecurityContextTokenName,
                 request.getSession().getId());
-            //}
             resData.addResponseData("userInfo", ud);
             JsonResultUtils.writeResponseDataAsJson(resData, response);
             //request.getSession().setAttribute("SPRING_SECURITY_AUTHENTICATION", authentication);
             //JsonResultUtils.writeSingleErrorDataJson(0,authentication.getName() + " login ok！",request.getSession().getId(), response);
         }else{
+            response.setHeader(SecurityContextUtils.SecurityContextTokenName,
+                request.getSession().getId());
             super.onAuthenticationSuccess(request, response, authentication);
         }
     }
