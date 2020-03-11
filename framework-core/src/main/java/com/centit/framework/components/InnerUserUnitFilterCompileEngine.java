@@ -213,7 +213,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
 
 
     /**
-     * D(机构表达式)
+     * D(机构表达式,......)
      *
      * @param ecc 运行环境
      * @param gene 过滤条件
@@ -225,15 +225,17 @@ public abstract class InnerUserUnitFilterCompileEngine {
             ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcRoleUnits begin .");
             return false;
         }
-        Set<String> units = calcSimpleUnitExp(ecc);
-        if (units == null)
-            return false;
-        gene.addUnits(units);
-        w = ecc.getAWord();
-        if (")".equals(w))
-            return true;
-        else
-            return false;
+        while(true) {
+            Set<String> units = calcSimpleUnitExp(ecc);
+            if (units != null) {
+                gene.addUnits(units);
+            }
+            w = ecc.getAWord();
+            if (")".equals(w))
+                return true;
+            if (!",".equals(w))
+                return false;
+        }
     }
 
     /**
