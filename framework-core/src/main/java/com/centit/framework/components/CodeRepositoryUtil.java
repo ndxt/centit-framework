@@ -1490,6 +1490,30 @@ public abstract class CodeRepositoryUtil {
         return units;
     }
 
+    public static Set<String> listUnitAllUsers(String unitCode, boolean includeSubUnit) {
+        List<? extends IUserUnit> userUnits = CodeRepositoryUtil.listUnitUsers(unitCode);
+
+        Set<String> users = new HashSet<>(100);
+        if(userUnits!=null) {
+            for (IUserUnit user : userUnits) {
+                users.add(user.getUserCode());
+            }
+        }
+        if(includeSubUnit) {
+            List<IUnitInfo> unitInfos = CodeRepositoryUtil.getAllSubUnits(unitCode);
+            if(unitInfos != null){
+                for (IUnitInfo unit : unitInfos) {
+                    userUnits = CodeRepositoryUtil.listUnitUsers(unit.getUnitCode());
+                    if(userUnits!=null) {
+                        for (IUserUnit user : userUnits) {
+                            users.add(user.getUserCode());
+                        }
+                    }
+                }
+            }
+        }
+        return users;
+    }
 
     /**
      * 验证当前用户是否有某个操作方法的权限

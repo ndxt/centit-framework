@@ -3,6 +3,7 @@ package com.centit.framework.components.impl;
 import com.alibaba.fastjson.JSON;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.adapter.NotificationCenter;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 通知中心实现，所有的消息通过此类进行发送，消息中心会通过接收用户设置的消息接收方式自行决定使用哪种消息发送方式
@@ -149,11 +151,37 @@ public class NotificationCenterImpl implements NotificationCenter {
         return ResponseData.makeErrorMessage(notifyState, returnText);
     }
 
+    /**
+     * 按部门发送系统消息
+     *
+     * @param sender     发送人内部用户编码
+     * @param unitCode   接收人内部部门编码
+     * @param message 消息主体
+     * @param includeSubUnit  是否包括子部门
+     * @return "OK" 表示成功，其他的为错误信息
+     */
+    @Override
+    public ResponseData sendUnitMessage(String sender, String unitCode, boolean includeSubUnit, NoticeMessage message){
+        Set<String> users = CodeRepositoryUtil.listUnitAllUsers(unitCode, includeSubUnit);
+        return sendMessage(sender, users, message);
+    }
+
     @Override
     public ResponseData pushMessage(String sender, String receiver, NoticeMessage message){
         if(this.msgPusher == null)
             return ResponseData.errorResponse;
         return msgPusher.sendMessage(sender, receiver, message);
+    }
+
+    @Override
+    public ResponseData pushUnitMessage(String sender, String unitCode, boolean includeSubUnit, NoticeMessage message){
+        /*Set<String> users = SysUserFilterEngine.calcSystemOperators(
+            includeSubUnit?"D(unitCode, unitCode++)":"D(unitCode)",null,
+            null,null,
+            new UserUnitMapTranslate(CollectionsOpt.createHashMap("unitCode", unitCode)));
+            */
+        Set<String> users = CodeRepositoryUtil.listUnitAllUsers(unitCode, includeSubUnit);
+        return pushMessage(sender, users, message);
     }
     /**
      * 发送指定类别的消息

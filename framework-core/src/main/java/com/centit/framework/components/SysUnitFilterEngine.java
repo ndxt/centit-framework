@@ -315,8 +315,9 @@ public abstract class SysUnitFilterEngine {
             if (tu != null)
                 retUnits.add(tu);
         }
-        if(nTiers < 1)
+        if(nTiers < 1) {
             return retUnits;
+        }
 
         Set<String> midUnits = retUnits;
         Set<String> serUnits = new HashSet<>();
@@ -539,7 +540,7 @@ public abstract class SysUnitFilterEngine {
         return untis.iterator().next();
     }
 
-    public static String calcSingleSystemUnitByExp(String unitExp,Map<String, Set<String>> unitParams , UserUnitVariableTranslate varTrans) {
+    public static String calcSingleSystemUnitByExp(String unitExp, Map<String, Set<String>> unitParams , UserUnitVariableTranslate varTrans) {
         if (StringUtils.isBlank(unitExp)) {
             return null;
         }

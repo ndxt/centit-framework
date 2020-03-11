@@ -51,6 +51,19 @@ public interface NotificationCenter extends MessageSender {
      * @return "OK" 表示成功，其他的为错误信息
      */
     ResponseData sendMessageAppointedType(String noticeType, String sender, String receiver, NoticeMessage message);
+
+
+    /**
+     * 按部门发送系统消息
+     *
+     * @param sender     发送人内部用户编码
+     * @param unitCode   接收人内部部门编码
+     * @param message 消息主体
+     * @param includeSubUnit  是否包括子部门
+     * @return "OK" 表示成功，其他的为错误信息
+     */
+    ResponseData sendUnitMessage(String sender, String unitCode, boolean includeSubUnit, NoticeMessage message);
+
     /**
      * 推送内部系统消息，比如通过socket
      *
@@ -61,6 +74,16 @@ public interface NotificationCenter extends MessageSender {
      */
     ResponseData pushMessage(String sender, String receiver, NoticeMessage message);
 
+    /**
+     * 按部门发送系统消息
+     *
+     * @param sender     发送人内部用户编码
+     * @param unitCode   接收人内部部门编码
+     * @param message 消息主体
+     * @param includeSubUnit  是否包括子部门
+     * @return "OK" 表示成功，其他的为错误信息
+     */
+    ResponseData pushUnitMessage(String sender, String unitCode, boolean includeSubUnit, NoticeMessage message);
     /**
      * 推送送内部系统消息
      *
