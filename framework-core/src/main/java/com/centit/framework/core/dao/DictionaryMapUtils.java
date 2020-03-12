@@ -453,8 +453,14 @@ public abstract class DictionaryMapUtils {
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
     }
 
+    public static Map<String,Object> mapJsonObject(Map<String,Object> obj, List<DictionaryMapColumn> fieldDictionaryMaps) {
+        if (obj == null)
+            return null;
+        return (Map<String,Object>) objectToJSON(obj, fieldDictionaryMaps);
+    }
+
     public static Map<String,Object> mapJsonObject(Map<String,Object> obj,
-                                                          Map<String,LeftRightPair<String,String>> mapInfo) {
+                                                          Map<String, LeftRightPair<String,String>> mapInfo) {
         List<DictionaryMapColumn> fieldDictionaryMaps = createDictionaryMapColumns(mapInfo);
         return ( Map<String,Object>) objectToJSON( obj , fieldDictionaryMaps);
     }
@@ -481,7 +487,7 @@ public abstract class DictionaryMapUtils {
         for(Class<?> objType : objTypes) {
             fieldDictionaryMaps.addAll(DictionaryMapUtils.getDictionaryMapColumns(objType));
         }
-        return mapJsonArray( objs, fieldDictionaryMaps);
+        return mapJsonArray(objs, fieldDictionaryMaps);
 
     }
 
