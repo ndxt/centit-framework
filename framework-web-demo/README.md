@@ -2,6 +2,10 @@
 
 framework-web-demo模块是使用框架的最简示例。基于框架开发的项目可以直接复制demo中代码到自己的项目中。这个demo代码包括一下内容：
 
+## 依赖包的版本管理
+
+pom中的framework-snapshot-dependencies包设定了框架的各个包版本，如果需要升级框架只需要修改这个包的版本号即可。
+
 ## 包依赖说明
 
 1. framework-system-static 框架接口的最简单额实现
