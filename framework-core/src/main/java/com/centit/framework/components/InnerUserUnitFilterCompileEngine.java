@@ -222,7 +222,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
     private static boolean calcUnits(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
         String w = ecc.getAWord();
         if (!"(".equals(w)) { // 语法错误
-            ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcRoleUnits begin .");
+            ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcUnits begin.");
             return false;
         }
         while(true) {
@@ -233,8 +233,10 @@ public abstract class InnerUserUnitFilterCompileEngine {
             w = ecc.getAWord();
             if (")".equals(w))
                 return true;
-            if (!",".equals(w))
+            if (!",".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' or ',' ; calcUnits end.");
                 return false;
+            }
         }
     }
 
@@ -359,7 +361,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
             if (")".equals(w)) {
                 return true;
             } else if (!",".equals(w)) {
-                ecc.setLastErrMsg(w + " is unexpected, expect ')' or ',' ; calcRoleUsers end .");
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' or ',' ; calcUsers end .");
                 return false;
             }
         }
