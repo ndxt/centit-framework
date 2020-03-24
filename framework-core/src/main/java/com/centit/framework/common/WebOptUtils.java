@@ -8,6 +8,7 @@ import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.JsonCentitUserDetails;
+import com.centit.support.algorithm.BooleanBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -53,7 +54,9 @@ public class WebOptUtils {
     public static boolean isAjax(HttpServletRequest request) {
         return StringUtils.equals("XMLHttpRequest", request.getHeader("X-Requested-With"))
             || StringUtils.contains(request.getHeader("content-type"),"application/json")
-            || StringUtils.contains(request.getHeader("accept"),"application/json");
+            || StringUtils.contains(request.getHeader("accept"),"application/json")
+            || BooleanBaseOpt.castObjectToBoolean(
+                request.getParameter("ajax"), false);
     }
 
     /**

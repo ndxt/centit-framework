@@ -80,9 +80,8 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
                     + "从主机"+loginIp+"登录。");
         }
 
-        String ajax = request.getParameter("ajax");
         boolean isAjaxQuery = WebOptUtils.isAjax(request);
-        if(isAjaxQuery || "true".equalsIgnoreCase(ajax)){
+        if(isAjaxQuery){
             ResponseMapData resData = new ResponseMapData();
             resData.addResponseData(SecurityContextUtils.SecurityContextTokenName,
                 request.getSession().getId());
