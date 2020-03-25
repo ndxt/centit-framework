@@ -26,6 +26,7 @@ public class SecurityProperties {
         public static class Cas {
             private String localHome;
             private String casHome;
+            private String appKey;
         }
 
         @Data
