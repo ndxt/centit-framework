@@ -43,6 +43,7 @@ public class CentitSecurityMetadata {
 
         OptTreeNode optTreeNode = new OptTreeNode();
         Map<String, ? extends IOptInfo> codeToOptInfoMap = CodeRepositoryCache.codeToOptMap.getCachedTarget();
+
         for(IOptMethod ou : CodeRepositoryCache.optMethodRepo.getCachedTarget()){
             IOptInfo oi = codeToOptInfoMap.get(ou.getOptId());
             if(oi!=null){

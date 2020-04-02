@@ -24,6 +24,10 @@ public class OptTreeNode {
     }
 
     public void addRoleList(List<ConfigAttribute> roleList) {
+        if(roleList==null){
+            return;
+        }
+
         if(this.roleList == null) {
             this.roleList = roleList;
         } else {

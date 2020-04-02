@@ -63,6 +63,7 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
                 havePublicRole = true;
             }
         }
+
         if(!havePublicRole){
             arrayAuths.add(new SimpleGrantedAuthority(CentitSecurityMetadata.ROLE_PREFIX
                     + SecurityContextUtils.PUBLIC_ROLE_CODE));
