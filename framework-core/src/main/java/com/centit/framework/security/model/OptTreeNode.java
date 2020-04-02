@@ -1,43 +1,48 @@
 package com.centit.framework.security.model;
 
 import com.centit.support.algorithm.StringBaseOpt;
+import org.springframework.security.access.ConfigAttribute;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 public class OptTreeNode {
     //public String urlWord;
-    public String optCode;
-    public Map<String,OptTreeNode> childList;
+    public List<ConfigAttribute> roleList;
+    public Map<String, OptTreeNode> childList;
 
     public OptTreeNode(){
-        optCode = null;
+        roleList = null;
         childList = null;
     }
 
-    public String getOptCode() {
-        return optCode;
+    public List<ConfigAttribute> getRoleList() {
+        return roleList;
     }
 
-    public void setOptCode(String optCode) {
-        this.optCode = optCode;
+    public void addRoleList(List<ConfigAttribute> roleList) {
+        if(this.roleList == null) {
+            this.roleList = roleList;
+        } else {
+            this.roleList.addAll(roleList);
+        }
+        //排序
+        if(this.roleList != null) {
+            this.roleList.sort(
+                Comparator.comparing(ConfigAttribute::getAttribute));
+        }
     }
 
     public Map<String, OptTreeNode> getChildList() {
         return childList;
     }
 
-    public OptTreeNode getChild(String surl){
-        if(childList==null)
-            childList = new HashMap<String,OptTreeNode>();
-        return childList.get(surl);
-    }
-
-
     public OptTreeNode setChildPath(String surl){
         if(childList==null)
-            childList = new HashMap<String,OptTreeNode>();
+            childList = new HashMap<>();
         OptTreeNode child = childList.get(surl);
         if(child==null){
             child = new OptTreeNode();
@@ -46,34 +51,18 @@ public class OptTreeNode {
         return child;
     }
 
-    public OptTreeNode setChildOptCode(String surl,String optCode){
-        if(childList==null)
-            childList = new HashMap<String,OptTreeNode>();
-        OptTreeNode child = childList.get(surl);
-        if(child==null){
-            child = new OptTreeNode();
-            childList.put(surl, child);
-        }
-        child.setOptCode(optCode);
-        return child;
-    }
-
-    public void setChildList(Map<String, OptTreeNode> childList) {
-        this.childList = childList;
-    }
-
-    private void printTreeNode(OptTreeNode treeNode,int n){
-
+    private void printTreeNode(OptTreeNode treeNode, int n){
         if(treeNode.getChildList()==null)
             return;
         for(Map.Entry<String,OptTreeNode> child : treeNode.getChildList().entrySet()){
-            System.out.println( StringBaseOpt.multiplyString("  ",n) + child.getKey()+":"+child.getValue().getOptCode());
+            System.out.println( StringBaseOpt.multiplyString("  ",n) +
+                child.getKey() + ":" + StringBaseOpt.castObjectToString(child.getValue().getRoleList()));
             printTreeNode(child.getValue(),n+1);
         }
     }
 
     public void printTreeNode(){
-        System.out.println(this.optCode);
+        System.out.println(StringBaseOpt.castObjectToString(this.roleList));
         printTreeNode(this,1);
         System.out.println("--------------------------------");
     }
