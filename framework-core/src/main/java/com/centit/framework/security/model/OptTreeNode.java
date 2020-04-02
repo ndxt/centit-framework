@@ -23,15 +23,19 @@ public class OptTreeNode {
         return roleList;
     }
 
-    public void addRoleList(List<ConfigAttribute> roleList) {
-        if(roleList==null){
+    public void addRoleList(List<ConfigAttribute> attributes) {
+        if(attributes==null){
             return;
         }
 
         if(this.roleList == null) {
-            this.roleList = roleList;
+            this.roleList = attributes;
         } else {
-            this.roleList.addAll(roleList);
+            for(ConfigAttribute role : attributes) {
+                if(!this.roleList.contains(role)) {
+                    this.roleList.add(role);
+                }
+            }
         }
         //排序
         if(this.roleList != null) {
