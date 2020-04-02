@@ -105,6 +105,9 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
                     return userUnit;
                 }
             }
+            if(uus.size()>0){
+                return (JSONObject)uus.get(0);
+            }
         }
         return null;
     }
