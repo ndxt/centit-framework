@@ -282,19 +282,13 @@ public class MainFrameController extends BaseController {
 
         String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
         String userPwd = StringBaseOpt.objectToString(formValue.get("password"));
-
-        CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
-        if(ud==null){
-//            JsonResultUtils.writeErrorMessageJson("用户： "+userCode+"不存在。", response);
-            return ResponseData.makeErrorMessage("用户： "+userCode+"不存在。");
-        }
-        boolean bo=platformEnvironment.checkUserPassword(ud.getUserCode(), userPwd);
+        boolean bo = platformEnvironment.checkUserPassword(userCode, userPwd);
         if(!bo){
-//            JsonResultUtils.writeErrorMessageJson("用户 名和密码不匹配。", response);
             return ResponseData.makeErrorMessage("用户 名和密码不匹配。");
         }
+        CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
         SecurityContextHolder.getContext().setAuthentication(ud);
-            //new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
+        //new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
         return ResponseData.makeResponseData(
             SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());

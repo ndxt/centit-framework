@@ -100,10 +100,11 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public boolean checkUserPassword(String userCode,String userPassword){
-        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedTarget().get(userCode);
-        if(ui==null)
+        UserInfo ui = (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedTarget().get(userCode);
+        if(ui == null) {
             return false;
-        return passwordEncoder.isPasswordValid(ui.getUserPin(),userPassword, userCode);
+        }
+        return passwordEncoder.isPasswordValid(ui.getUserPin(), userPassword, userCode);
     }
 
     private static List<OptInfo> getMenuFuncs(List<OptInfo> preOpts, List<OptInfo> ls) {
