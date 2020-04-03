@@ -3,8 +3,6 @@ package com.centit.framework.system.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.ResponseData;
-import com.centit.framework.common.ResponseSingleData;
 import com.centit.framework.common.ViewDataTransform;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
@@ -27,10 +25,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -67,10 +63,9 @@ public class CacheController extends BaseController {
     )})
     @RequestMapping(value = "/mapvalue/{catalog}/{key}", method = RequestMethod.GET)
     //@RecordOperationLog(content = "查询字典{arg0}中{arg1}的值",timing = true, appendRequest = true)
-    @ResponseBody
-    public ResponseData mapvalue(@PathVariable String catalog, @PathVariable String key) {
-        String value = CodeRepositoryUtil.getValue(catalog, key);
-        return ResponseData.makeResponseData(value);
+    @WrapUpResponseBody
+    public String mapvalue(@PathVariable String catalog, @PathVariable String key) {
+        return CodeRepositoryUtil.getValue(catalog, key);
     }
 
     /**
@@ -92,7 +87,6 @@ public class CacheController extends BaseController {
     @WrapUpResponseBody
     public String mapcode(@PathVariable String catalog, @PathVariable String value) {
         return CodeRepositoryUtil.getCode(catalog, value);
-        //return ResponseData.makeResponseData(key);
     }
 
 
@@ -137,10 +131,9 @@ public class CacheController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )})
     @RequestMapping(value = "/mapexpression/{catalog}/{expression}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseData mapexpression(@PathVariable String catalog, String expression) {
-        String s = CodeRepositoryUtil.transExpression(catalog, expression);
-        return ResponseData.makeResponseData(s);
+    @WrapUpResponseBody
+    public String mapexpression(@PathVariable String catalog, String expression) {
+        return CodeRepositoryUtil.transExpression(catalog, expression);
     }
 
     /**
@@ -159,10 +152,9 @@ public class CacheController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )})
     @RequestMapping(value = "/mapstate/{catalog}/{key}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseData mapstate(@PathVariable String catalog, @PathVariable String key) {
-        String s = CodeRepositoryUtil.getItemState(catalog, key);
-        return ResponseData.makeResponseData(s);
+    @WrapUpResponseBody
+    public String mapstate(@PathVariable String catalog, @PathVariable String key) {
+        return CodeRepositoryUtil.getItemState(catalog, key);
     }
 
     /**
@@ -183,9 +175,8 @@ public class CacheController extends BaseController {
     )})
     @RequestMapping(value = "/subunits/{unitCode}/{unitType}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData subunits(@PathVariable String unitCode, @PathVariable String unitType) {
-        List<IUnitInfo> listObjects = CodeRepositoryUtil.getSortedSubUnits(unitCode, unitType);
-        return ResponseData.makeResponseData(listObjects);
+    public List<IUnitInfo> subunits(@PathVariable String unitCode, @PathVariable String unitType) {
+        return CodeRepositoryUtil.getSortedSubUnits(unitCode, unitType);
     }
 
     /**
@@ -202,10 +193,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/allunits/{state}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData allunits(@PathVariable String state) {
-        List<IUnitInfo> listObjects = CodeRepositoryUtil.getAllUnits(state);
-//        JsonResultUtils.writeSingleDataJson(listObjects, response);
-        return ResponseData.makeResponseData(listObjects);
+    public List<IUnitInfo> allunits(@PathVariable String state) {
+        return CodeRepositoryUtil.getAllUnits(state);
     }
 
     /**
@@ -221,8 +210,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/userinfo/{userCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getUserInfo(@PathVariable String userCode) {
-        return ResponseData.makeResponseData(CodeRepositoryUtil.getUserInfoByCode(userCode));
+    public IUserInfo getUserInfo(@PathVariable String userCode) {
+        return CodeRepositoryUtil.getUserInfoByCode(userCode);
     }
 
     /**
@@ -238,8 +227,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/unitinfo/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getUintInfo(@PathVariable String unitCode) {
-        return ResponseData.makeResponseData(CodeRepositoryUtil.getUnitInfoByCode(unitCode));
+    public IUnitInfo getUintInfo(@PathVariable String unitCode) {
+        return CodeRepositoryUtil.getUnitInfoByCode(unitCode);
     }
 
     /**
@@ -254,13 +243,14 @@ public class CacheController extends BaseController {
         required= true, paramType = "path", dataType= "String"
     )
     @RequestMapping(value = "/parentunit/{unitCode}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseData getParentUintInfo(@PathVariable String unitCode) {
+    @WrapUpResponseBody
+    public String getParentUintInfo(@PathVariable String unitCode) {
         IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(unitCode);
         if(ui!=null){
-           return ResponseData.makeResponseData(ui.getParentUnit());
+           return ui.getParentUnit();
         }else {
-           return ResponseData.makeErrorMessage("没有代码为: "+ unitCode+" 的机构！");
+           throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION,
+               "没有代码为: "+ unitCode+" 的机构！");
         }
     }
 
@@ -277,7 +267,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/parentpath/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getParentUintPath(@PathVariable String unitCode) {
+    public List<IUnitInfo> getParentUintPath(@PathVariable String unitCode) {
         IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(unitCode);
         if(ui!=null){
             List<IUnitInfo> parentUnits = new ArrayList<>();
@@ -292,16 +282,16 @@ public class CacheController extends BaseController {
                 parentUnits.add(parentUnit);
                 ui = parentUnit;
             }
-            return ResponseData.makeResponseData(parentUnits);
+            return parentUnits;
         }else {
-            return ResponseData.makeErrorMessage("没有代码为: "+ unitCode+" 的机构！");
+            throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                "没有代码为: "+ unitCode+" 的机构！");
         }
     }
     /**
      * cp标签中RECURSEUNITS实现
      * 获得已知机构 下级的所有有效机构并返回map，包括下级机构的下级机构
      * @param parentUnit 父级机构代码
-     * @param response   HttpServletResponse
      * @return ResponseData
      */
     @ApiOperation(value = "获得已知机构 下级的所有有效机构", notes = "获得已知机构 下级的所有有效机构并返回map，包括下级机构的下级机构")
@@ -311,9 +301,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/recurseunits/{parentUnit}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseSingleData recurseUnits(@PathVariable String parentUnit, HttpServletResponse response) {
-        Map<String, IUnitInfo> objects = CodeRepositoryUtil.getUnitMapBuyParaentRecurse(parentUnit);
-        return ResponseData.makeResponseData(objects);
+    public Map<String, IUnitInfo> recurseUnits(@PathVariable String parentUnit) {
+        return CodeRepositoryUtil.getUnitMapBuyParaentRecurse(parentUnit);
     }
 
     /**
@@ -400,9 +389,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/unituser/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData unituser(@PathVariable String unitCode) {
-        List<IUserInfo> listObjects = CodeRepositoryUtil.getSortedUnitUsers(unitCode);
-        return ResponseData.makeResponseData(listObjects);
+    public List<IUserInfo> unituser(@PathVariable String unitCode) {
+        return CodeRepositoryUtil.getSortedUnitUsers(unitCode);
     }
 
     /**
@@ -419,9 +407,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/alluser/{state}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData alluser(@PathVariable String state) {
-        List<IUserInfo> listObjects = CodeRepositoryUtil.getAllUsers(state);
-        return ResponseData.makeResponseData(listObjects);
+    public List<IUserInfo> alluser(@PathVariable String state) {
+        return CodeRepositoryUtil.getAllUsers(state);
     }
 
     /**
@@ -438,17 +425,14 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/subunits/{unitcode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getSubUnits(@PathVariable String unitcode) {
-        List<IUnitInfo> listObjects = CodeRepositoryUtil.getSubUnits(unitcode);
-//        JsonResultUtils.writeSingleDataJson(listObjects, response);
-        return ResponseData.makeResponseData(listObjects);
+    public List<IUnitInfo> getSubUnits(@PathVariable String unitcode) {
+        return CodeRepositoryUtil.getSubUnits(unitcode);
     }
 
     /**
      * 获取机构的下级机构，并按照树形排列
      *
      * @param unitcode 机构代码
-     * @param response HttpServletResponse
      * @return ResponseData
      */
     @ApiOperation(value = "获取所有下级机构树形排列", notes = "根据机构代码获取所有下级机构，并按照树形排列")
@@ -458,9 +442,8 @@ public class CacheController extends BaseController {
     )
     @WrapUpResponseBody
     @RequestMapping(value = "/allsubunits/{unitcode}", method = RequestMethod.GET)
-    public ResponseData getAllSubUnits(@PathVariable String unitcode, HttpServletResponse response) {
-        List<IUnitInfo> listObjects = CodeRepositoryUtil.getAllSubUnits(unitcode);
-        return ResponseData.makeResponseData(listObjects);
+    public List<IUnitInfo> getAllSubUnits(@PathVariable String unitcode) {
+        return CodeRepositoryUtil.getAllSubUnits(unitcode);
 
     }
 
@@ -609,9 +592,9 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/optinfo/{optType}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData optinfoByTypeAsMenu(@PathVariable String optType) {
+    public JSONArray optinfoByTypeAsMenu(@PathVariable String optType) {
         List<IOptInfo> listObjects = CodeRepositoryUtil.getOptinfoList(optType);
-        return ResponseData.makeResponseData(makeMenuFuncsJson(listObjects));
+        return makeMenuFuncsJson(listObjects);
     }
 
     /**
@@ -628,9 +611,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/optdef/{optID}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData optdef(@PathVariable String optID) {
-        List<? extends IOptMethod> listObjects = CodeRepositoryUtil.getOptMethodByOptID(optID);
-        return ResponseData.makeResponseData(listObjects);
+    public List<? extends IOptMethod> optdef(@PathVariable String optID) {
+        return CodeRepositoryUtil.getOptMethodByOptID(optID);
     }
 
     /**
@@ -647,9 +629,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/roleinfo/{roleType}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData roleinfo(@PathVariable String roleType) {
-        List<IRoleInfo> listObjects = CodeRepositoryUtil.getRoleinfoListByType(roleType);
-        return ResponseData.makeResponseData(listObjects);
+    public List<IRoleInfo> roleinfo(@PathVariable String roleType) {
+        return CodeRepositoryUtil.getRoleinfoListByType(roleType);
     }
 
     /**
@@ -665,11 +646,10 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/sysconfig/{paramCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getSysConfigValue(HttpServletRequest request) {
+    public String getSysConfigValue(HttpServletRequest request) {
         String uri = request.getRequestURI();
         String paramCode = uri.substring(uri.lastIndexOf('/')+1);
-        String pv =  CodeRepositoryUtil.getSysConfigValue(paramCode);
-        return ResponseData.makeResponseData(pv);
+        return  CodeRepositoryUtil.getSysConfigValue(paramCode);
     }
 
     /**
@@ -685,11 +665,10 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/sysconfigbyprefix/{prefix}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getSysConfigByPrefix(HttpServletRequest request) {
+    public Map<String, Object> getSysConfigByPrefix(HttpServletRequest request) {
         String uri = request.getRequestURI();
         String prefix = uri.substring(uri.lastIndexOf('/')+1);
-        Map<String, Object> pv =  CodeRepositoryUtil.getSysConfigByPrefix(prefix);
-        return ResponseData.makeResponseData(pv);
+        return CodeRepositoryUtil.getSysConfigByPrefix(prefix);
     }
 
      /**
@@ -706,9 +685,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/usersetting/{paramCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getUserSettingValue(@PathVariable String paramCode) {
-        String pv =  CodeRepositoryUtil.getUserSettingValue(paramCode);
-        return ResponseData.makeResponseData(pv);
+    public String getUserSettingValue(@PathVariable String paramCode) {
+        return CodeRepositoryUtil.getUserSettingValue(paramCode);
     }
 
     /**
@@ -718,8 +696,8 @@ public class CacheController extends BaseController {
     @ApiOperation(value = "获取用户所有设置", notes = "获取用户所有设置")
     @RequestMapping(value = "/usersettings", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getUserAllSettings() {
-        return ResponseData.makeResponseData(CodeRepositoryUtil.getUserAllSettings());
+    public Map<String, String> getUserAllSettings() {
+        return CodeRepositoryUtil.getUserAllSettings();
     }
 
     /**
