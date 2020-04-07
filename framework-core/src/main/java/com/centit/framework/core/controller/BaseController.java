@@ -68,7 +68,10 @@ public abstract class BaseController {
     @ExceptionHandler
     public void exceptionHandler(Exception ex, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-
+        if (ex == null){
+            logger.error("未知错误，cause by " + request.getRequestURL().toString());
+            return;
+        }
         if (WebOptUtils.isAjax(request)) {
             if (ex instanceof ObjectException){
                 logger.error(ex.getMessage());
