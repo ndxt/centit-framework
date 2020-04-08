@@ -122,7 +122,7 @@ public abstract class CodeRepositoryUtil {
      *
      * @return Map 所有数据字典类别
      */
-    public static final Map<String,String> getDataCatalogMap() {
+    public static Map<String,String> getDataCatalogMap() {
         Map<String, String> dataCatalogMap = new HashMap<>();
         List<? extends IDataCatalog> dataCatalogs = CodeRepositoryCache.catalogRepo.getCachedTarget();
         if(dataCatalogs==null)
@@ -888,6 +888,13 @@ public abstract class CodeRepositoryUtil {
             }
         }
         return primaryUnit;
+    }
+
+    public static String getUserPrimaryUnitCode(String userCode) {
+        IUserUnit primaryUnit = getUserPrimaryUnit(userCode);
+        if(primaryUnit==null)
+            return null;
+        return primaryUnit.getUnitCode();
     }
 
     private static int getXzRank(String rankCode){

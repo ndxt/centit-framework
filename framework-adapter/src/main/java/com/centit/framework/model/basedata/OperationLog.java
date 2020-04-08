@@ -34,6 +34,16 @@ public class OperationLog implements java.io.Serializable {
      */
     public static final String LEVEL_DEBUG = "3";
 
+    /**
+     * 只能同一机构查看的日志
+     */
+    public static final String LEVEL_SECURITY_UNIT = "4";
+
+    /**
+     * 只能自己查看的日志
+     */
+    public static final String LEVEL_SECURITY_USER = "5";
+
     private static Logger logger = LoggerFactory.getLogger(OperationLog.class);
     /**
      * 系统日志操作
@@ -43,7 +53,9 @@ public class OperationLog implements java.io.Serializable {
     public static final String P_OPT_LOG_METHOD_U = "update";
     public static final String P_OPT_LOG_METHOD_D = "delete";
 
-
+    /**
+     * 日志级别，用户可以自己解释这个属性
+     */
     private String logLevel;
 
     /**
@@ -51,6 +63,12 @@ public class OperationLog implements java.io.Serializable {
      */
     @DictionaryMap(value = "userCode", fieldName = "userName")
     private String userCode;
+
+    /**
+     * 操作用户所属机构
+     */
+    @DictionaryMap(value = "unitCode", fieldName = "unitName")
+    private String unitCode;
     /**
      * 操作时间
      */
@@ -68,7 +86,7 @@ public class OperationLog implements java.io.Serializable {
      */
     private String optTag;
     /**
-     * 日志内容描述
+     * 日志内容描述; 也可以是json
      */
     private String optContent;
     /**
@@ -96,6 +114,11 @@ public class OperationLog implements java.io.Serializable {
 
     public OperationLog user(String userCode){
         this.userCode = userCode;
+        return this;
+    }
+
+    public OperationLog unit(String unitCode){
+        this.unitCode = unitCode;
         return this;
     }
 

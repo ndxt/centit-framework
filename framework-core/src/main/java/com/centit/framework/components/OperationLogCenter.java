@@ -96,7 +96,8 @@ public class OperationLogCenter {
    public static void log(String loglevel, String userCode, String optId, String optTag, String optMethod,
            String optContent, Object newValue, Object oldValue) {
        log(OperationLog.create().level(loglevel)
-           .user(userCode).operation(optId).tag(optTag).method(optMethod)
+           .user(userCode)//.unit(CodeRepositoryUtil.getUserPrimaryUnitCode(userCode))
+           .operation(optId).tag(optTag).method(optMethod)
            .content(optContent).newObject(newValue)
             .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()));
    }
@@ -322,6 +323,7 @@ public class OperationLogCenter {
            String optContent, Object newObject ) {
        log(OperationLog.create().level(OperationLog.LEVEL_INFO)
            .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).tag(optTag).method(optMethod)
+           //.unit(WebOptUtils.getCurrentUnitCode(request))
            .content(optContent).newObject(newObject)
            .time(DatetimeOpt.currentUtilDate()));
    }
@@ -348,6 +350,7 @@ public class OperationLogCenter {
                String queryDesc, Map<String,Object> queryMap ) {
        log(OperationLog.create().level(OperationLog.LEVEL_INFO)
            .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).method(optMethod)
+           //.unit(WebOptUtils.getCurrentUnitCode(request))
            .content(queryDesc).newObject(queryMap)
            .time(DatetimeOpt.currentUtilDate()));
    }
@@ -365,6 +368,7 @@ public class OperationLogCenter {
            String optContent, Object oldObject ) {
        log(OperationLog.create().level(OperationLog.LEVEL_INFO)
            .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).tag(optTag).method(optMethod)
+           //.unit(WebOptUtils.getCurrentUnitCode(request))
            .content(optContent)
            .oldObject(oldObject).time(DatetimeOpt.currentUtilDate()));
    }
@@ -382,6 +386,7 @@ public class OperationLogCenter {
    public static void logUpdateObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent,Object newObject , Object oldObject ) {
        log(OperationLog.create().user(WebOptUtils.getCurrentUserCode(request)).operation(optId)
+           //.unit(WebOptUtils.getCurrentUnitCode(request))
            .tag(optTag).method(optMethod).content(optContent)
            .makeDifference(oldObject, newObject)
            .time(DatetimeOpt.currentUtilDate()));
