@@ -67,8 +67,8 @@ public class OperationLog implements java.io.Serializable {
     /**
      * 操作用户所属机构
      */
-    @DictionaryMap(value = "unitCode", fieldName = "unitName")
-    private String unitCode;
+    //@DictionaryMap(value = "unitCode", fieldName = "unitName")
+    //private String unitCode;
     /**
      * 操作时间
      */
@@ -117,10 +117,10 @@ public class OperationLog implements java.io.Serializable {
         return this;
     }
 
-    public OperationLog unit(String unitCode){
+    /*public OperationLog unit(String unitCode){
         this.unitCode = unitCode;
         return this;
-    }
+    }*/
 
     public OperationLog operation(String soptid){
         this.optId = soptid;
