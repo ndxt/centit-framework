@@ -28,6 +28,9 @@ public class NotificationCenterImpl implements NotificationCenter {
     private static final Logger logger = LoggerFactory.getLogger(NotificationCenterImpl.class);
 
     protected Map<String, MessageSender> msgSenders = new HashMap<>();
+    /**
+     * 记录发送消息日志，永远不要打开，除非用于调试
+     */
     protected boolean writeNoticeLog;
     protected MessageSender defautlMsgSender;
     private boolean pushMsgAfterSended;
@@ -218,11 +221,11 @@ public class NotificationCenterImpl implements NotificationCenter {
         if(this.msgPusher == null) return ResponseData.errorResponse;
         return msgPusher.broadcastMessage(sender, message, userInline);
     }
-     /*
-     * 保存系统通知中心数据
-     */
-     protected void wirteNotifyLog(String noticeType, String sender, String receiver,
-                                NoticeMessage message, String errorText, String notifyState ) {
+    /*
+    * 保存系统通知中心数据
+    */
+    protected void wirteNotifyLog(String noticeType, String sender, String receiver,
+                            NoticeMessage message, String errorText, String notifyState ) {
         Map<String,String> sysNotify = new HashMap<>();
         sysNotify.put("sender", sender);
         sysNotify.put("receiver", receiver);
@@ -241,7 +244,7 @@ public class NotificationCenterImpl implements NotificationCenter {
         sysNotify.put("notifyState", notifyState);
         sysNotify.put("errorText", errorText);
 
-        OperationLogCenter.log(sender, "Notify","notify", JSON.toJSONString(sysNotify));
+        OperationLogCenter.log(sender, "Notify", message.getOptTag(),"notify", JSON.toJSONString(sysNotify));
 
     }
 
@@ -268,6 +271,10 @@ public class NotificationCenterImpl implements NotificationCenter {
         }
     }
 
+    /**
+     * 记录发送消息日志，永远不要打开，除非用于调试
+     * @param writeNoticeLog false
+     */
     public void setWriteNoticeLog(boolean writeNoticeLog) {
         this.writeNoticeLog = writeNoticeLog;
     }

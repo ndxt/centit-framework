@@ -4,6 +4,7 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.UuidOpt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,6 +87,8 @@ public class OperationLogCenter {
     * 记录日志内容
     * @param loglevel 操作日志还是错误提示
     * @param userCode 操作人员
+    * @param unitCode 操作人员机构
+    * @param correlationId 协作id用于调试
     * @param optId    业务代码（类别）
     * @param optTag   对象主键，如果是联合主键请用url的方式编写，比如a=1;b=2
     * @param optMethod 操作方法
@@ -93,13 +96,15 @@ public class OperationLogCenter {
     * @param newValue 新增json(或者操作参数明细，比如查询操作可以记录查询参数)
     * @param oldValue 旧值json
     */
-   public static void log(String loglevel, String userCode, String optId, String optTag, String optMethod,
+   public static void log(String loglevel, String userCode, String unitCode, String correlationId,
+                          String optId, String optTag, String optMethod,
            String optContent, Object newValue, Object oldValue) {
        log(OperationLog.create().level(loglevel)
-           .user(userCode)//.unit(CodeRepositoryUtil.getUserPrimaryUnitCode(userCode))
+           .user(userCode).unit(unitCode)
+           .correlation(correlationId)
            .operation(optId).tag(optTag).method(optMethod)
            .content(optContent).newObject(newValue)
-            .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()));
+           .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
@@ -110,103 +115,13 @@ public class OperationLogCenter {
     * @param optMethod 操作方法
     * @param optContent 者操作说明
     */
-   public static void log(String userCode, String optId, String optMethod, String optContent) {
+   public static void log(String userCode, String optId, String optTag, String optMethod, String optContent) {
        log(OperationLog.create().level(OperationLog.LEVEL_INFO)
-           .user(userCode).operation(optId).method(optMethod)
+           .user(userCode).unit(CodeRepositoryUtil.getUserPrimaryUnitCode(userCode))
+           .correlation(UuidOpt.getUuidAsString32())
+           .operation(optId).tag(optTag).method(optMethod)
            .content(optContent).time(DatetimeOpt.currentUtilDate()));
    }
-
-   /**
-    * 记录日志内容
-    * @param userCode 操作人员
-    * @param optId    业务代码（类别）
-    * 对象主键  可以没有
-    * @param optMethod 操作方法
-    * 操作前原始值 可以没有
-    * @param optContent 者操作说明
-    * @param newValue 详细参数json
-    */
-   public static void log(String userCode, String optId, String optMethod,
-           String optContent,Object newValue) {
-       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
-           .user(userCode).operation(optId).method(optMethod)
-           .content(optContent).newObject(newValue)
-           .time(DatetimeOpt.currentUtilDate()));
-   }
-
-   /**
-    * 记录日志内容
-    * @param userCode 操作人员
-    * @param optId    业务代码（类别）
-    * @param optTag 对象主键  可以没有
-    * @param optMethod 操作方法
-    * @param optContent 者操作说明
-    * @param newValue 新增json
-    * @param oldValue 旧值json
-    */
-   public static void log(String userCode, String optId,String optTag, String optMethod,
-           String optContent,Object newValue,Object oldValue) {
-       log(OperationLog.LEVEL_INFO,userCode, optId, optTag, optMethod,  optContent,newValue, oldValue);
-   }
-
-
-   /**
-    * 记录日志内容
-    * @param userCode 操作人员
-    * @param optId    业务代码（类别）
-    * @param optMethod 操作方法
-    * @param optContent 操作说明
-    */
-   public static void logError(String userCode, String optId, String optMethod, String optContent) {
-       log(OperationLog.create().level(OperationLog.LEVEL_ERROR)
-           .user(userCode).operation(optId).method(optMethod)
-           .content(optContent).time(DatetimeOpt.currentUtilDate()));
-     }
-
-    /**
-     * 记录日志内容
-     * @param userCode 操作人员
-     * @param optId    业务代码（类别）
-     * @param optMethod 操作方法
-     * @param optContent 操作说明
-     * @param newValue 详细参数JSON
-     */
-    public static void logError(String userCode, String optId, String optMethod,
-                                String optContent,Object newValue) {
-        log(OperationLog.create().level(OperationLog.LEVEL_ERROR)
-            .user(userCode).operation(optId).method(optMethod)
-            .content(optContent).newObject(newValue)
-            .time(DatetimeOpt.currentUtilDate()));
-    }
-
-    /**
-     * 记录日志内容
-     * @param userCode 操作人员
-     * @param optId    业务代码（类别）
-     * @param optMethod 操作方法
-     * @param optContent 操作说明
-     */
-    public static void logWarn(String userCode, String optId, String optMethod, String optContent) {
-        log(OperationLog.create().level(OperationLog.LEVEL_WARN)
-            .user(userCode).operation(optId).method(optMethod)
-            .content(optContent).time(DatetimeOpt.currentUtilDate()));
-    }
-
-    /**
-     * 记录日志内容
-     * @param userCode 操作人员
-     * @param optId    业务代码（类别）
-     * @param optMethod 操作方法
-     * @param optContent 操作说明
-     * @param newValue 详细参数JSON
-     */
-    public static void logWarn(String userCode, String optId, String optMethod,
-                                String optContent,Object newValue) {
-        log(OperationLog.create().level(OperationLog.LEVEL_WARN)
-            .user(userCode).operation(optId).method(optMethod)
-            .content(optContent).newObject(newValue)
-            .time(DatetimeOpt.currentUtilDate()));
-    }
 
    /**
     * 记录日志内容
@@ -218,29 +133,17 @@ public class OperationLogCenter {
     * @param newValue 新增json
     * @param oldValue 旧值json
     */
-   public static void log(HttpServletRequest request, String optId, String optTag, String optMethod,
+   public static void log(HttpServletRequest request, String loglevel, String optId, String optTag, String optMethod,
            String optContent, Object newValue, Object oldValue ) {
-       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
-           .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).tag(optTag).method(optMethod)
+       log(OperationLog.create().level(loglevel)
+           .user(WebOptUtils.getCurrentUserCode(request))
+           .unit(WebOptUtils.getCurrentUnitCode(request))
+           .correlation(WebOptUtils.getCorrelationId(request))
+           .operation(optId).tag(optTag).method(optMethod)
            .content(optContent).newObject(newValue)
            .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()));
    }
 
-   /**
-    * 记录日志内容
-    * @param request 获取当前用户
-    * @param optId    业务代码（类别）
-    * @param optMethod 操作方法
-    * @param optContent 操作说明
-    * @param newValue 详细参数json
-    */
-   public static void log(HttpServletRequest request, String optId,
-          String optMethod,String optContent, Object newValue) {
-       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
-           .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).method(optMethod)
-           .content(optContent).newObject(newValue)
-           .time(DatetimeOpt.currentUtilDate()));
-   }
 
    /**
     * 记录日志内容
@@ -249,65 +152,15 @@ public class OperationLogCenter {
     * @param optMethod 操作方法
     * @param optContent 操作说明
     */
-   public static void log(HttpServletRequest request, String optId, String optMethod,String optContent ) {
+   public static void log(HttpServletRequest request, String optId, String optTag, String optMethod, String optContent) {
        log(OperationLog.create().level(OperationLog.LEVEL_INFO)
-           .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).method(optMethod)
+           .user(WebOptUtils.getCurrentUserCode(request))
+           .unit(WebOptUtils.getCurrentUnitCode(request))
+           .correlation(WebOptUtils.getCorrelationId(request))
+           .operation(optId).tag(optTag).method(optMethod)
            .content(optContent).time(DatetimeOpt.currentUtilDate()));
    }
 
-
-   /**
-    * 新建对象日志
-    * @param userCode 操作人员
-    * @param optId    业务代码（类别）
-    * @param optTag   对象主键
-    * @param optMethod 操作方法
-    * @param optContent 操作说明
-    * @param newObject 新增对象
-    */
-   public static void logNewObject(String userCode, String optId, String optTag, String optMethod,
-           String optContent, Object newObject ) {
-       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
-           .user(userCode).operation(optId).tag(optTag).method(optMethod)
-           .content(optContent).newObject(newObject)
-           .time(DatetimeOpt.currentUtilDate()));
-
-   }
-
-   /**
-    * 删除对象日志
-    * @param userCode 操作人员
-    * @param optId    业务代码（类别）
-    * @param optTag   对象主键
-    * @param optMethod 操作方法
-    * @param optContent 操作说明
-    * @param oldObject 删除的对象
-    */
-   public static void logDeleteObject(String userCode, String optId, String optTag, String optMethod,
-           String optContent, Object oldObject ) {
-       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
-           .user(userCode).operation(optId).tag(optTag).method(optMethod)
-           .content(optContent)
-           .oldObject(oldObject).time(DatetimeOpt.currentUtilDate()));
-   }
-
-   /**
-    * 更新对对象日志
-    * @param userCode 操作人员
-    * @param optId    业务代码（类别）
-    * @param optTag   对象主键
-    * @param optMethod 操作方法
-    * @param optContent 操作说明
-    * @param newObject 新对象
-    * @param oldObject 旧对象
-    */
-   public static void logUpdateObject(String userCode, String optId, String optTag, String optMethod,
-           String optContent,Object newObject , Object oldObject ) {
-       log(OperationLog.create().user(userCode).operation(optId)
-           .tag(optTag).method(optMethod).content(optContent)
-           .makeDifference(oldObject, newObject)
-           .time(DatetimeOpt.currentUtilDate()));
-   }
 
 
    /**
@@ -323,34 +176,27 @@ public class OperationLogCenter {
            String optContent, Object newObject ) {
        log(OperationLog.create().level(OperationLog.LEVEL_INFO)
            .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).tag(optTag).method(optMethod)
-           //.unit(WebOptUtils.getCurrentUnitCode(request))
+           .unit(WebOptUtils.getCurrentUnitCode(request))
+           .correlation(WebOptUtils.getCorrelationId(request))
            .content(optContent).newObject(newObject)
            .time(DatetimeOpt.currentUtilDate()));
    }
 
    /**
     * 查询数据日志
-    * @param userCode 获取操作人员
+    * @param request 业务请求
     * @param optId    业务代码（类别）
     * @param optMethod   对象主键
     * @param queryDesc 查询说明
     * @param queryMap 查询条件对象
     */
-   public static void logQuery(String userCode, String optId, String optMethod,
-           String queryDesc, Map<String,Object> queryMap ) {
-       log(OperationLog.create().level(OperationLog.LEVEL_INFO)
-           .user(userCode).operation(optId).method(optMethod)
-           .content(queryDesc).newObject(queryMap)
-           .time(DatetimeOpt.currentUtilDate()));
-
-
-   }
 
    public static void logQuery(HttpServletRequest request, String optId, String optMethod,
                String queryDesc, Map<String,Object> queryMap ) {
        log(OperationLog.create().level(OperationLog.LEVEL_INFO)
            .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).method(optMethod)
-           //.unit(WebOptUtils.getCurrentUnitCode(request))
+           .unit(WebOptUtils.getCurrentUnitCode(request))
+           .correlation(WebOptUtils.getCorrelationId(request))
            .content(queryDesc).newObject(queryMap)
            .time(DatetimeOpt.currentUtilDate()));
    }
@@ -368,7 +214,8 @@ public class OperationLogCenter {
            String optContent, Object oldObject ) {
        log(OperationLog.create().level(OperationLog.LEVEL_INFO)
            .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).tag(optTag).method(optMethod)
-           //.unit(WebOptUtils.getCurrentUnitCode(request))
+           .unit(WebOptUtils.getCurrentUnitCode(request))
+           .correlation(WebOptUtils.getCorrelationId(request))
            .content(optContent)
            .oldObject(oldObject).time(DatetimeOpt.currentUtilDate()));
    }
@@ -386,7 +233,8 @@ public class OperationLogCenter {
    public static void logUpdateObject(HttpServletRequest request, String optId, String optTag, String optMethod,
            String optContent,Object newObject , Object oldObject ) {
        log(OperationLog.create().user(WebOptUtils.getCurrentUserCode(request)).operation(optId)
-           //.unit(WebOptUtils.getCurrentUnitCode(request))
+           .unit(WebOptUtils.getCurrentUnitCode(request))
+           .correlation(WebOptUtils.getCorrelationId(request))
            .tag(optTag).method(optMethod).content(optContent)
            .makeDifference(oldObject, newObject)
            .time(DatetimeOpt.currentUtilDate()));

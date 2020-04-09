@@ -6,10 +6,12 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.basedata.OperationLog;
+import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ParamName;
 import com.centit.support.compiler.Pretreatment;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -99,6 +101,7 @@ public class RecordOperationLogAspect {
             newValue = JSON.toJSONString(map);
             map.putAll(params);
         }
+
         JSONObject userInfo = WebOptUtils.getCurrentUserInfo(request);
         //JSONObject userInfo = (userDetails==null)?null:userDetails.getUserInfo();
         if(userInfo!=null) {
@@ -110,28 +113,55 @@ public class RecordOperationLogAspect {
         if(!loginIp.startsWith(remoteHost)){
             loginIp = remoteHost + ":" + loginIp;
         }
+
         map.put("loginIp", loginIp);
         String optContent = Pretreatment.mapTemplateString(operationLog.content(),map);
+        String optTag = "";
+        if(StringUtils.isNotBlank(operationLog.tag())){
+            optTag = Pretreatment.mapTemplateString(operationLog.tag(), map);
+        }
+
         Object targetController = joinPoint.getTarget();
-        String optId = StringBaseOpt.castObjectToString(
-                ReflectionOpt.getFieldValue(targetController,"optId"),"UNKNOWN");
-        String logLevel = OperationLog.LEVEL_INFO;
+        String optId =StringUtils.isBlank(operationLog.operation())?
+            StringBaseOpt.castObjectToString(
+                ReflectionOpt.getFieldValue(targetController,"optId"),"UNKNOWN")
+            :operationLog.operation();
+        String optMethod =StringUtils.isBlank(operationLog.method())?
+            joinPoint.getSignature().getName()
+            :operationLog.method();
+
+        String logLevel = operationLog.level();
         if(e != null){
             logLevel = OperationLog.LEVEL_ERROR;
             optContent += " 执行报错：" + e.getLocalizedMessage();
         }
+
         if(operationLog.timing()){
             Long beforeRun = (Long)request.getAttribute("_before_method_run");
             optContent += " 耗时：" + (System.currentTimeMillis() - beforeRun);
         }
-        String oldValue=null;
+
+        String oldValue = null;
         if(operationLog.returnValueAsOld() && retObj!=null){
             oldValue = JSON.toJSONString(retObj);
         }
 
-        OperationLogCenter.log(logLevel, userInfo==null? loginIp : userInfo.getString("userCode"),
-                optId, null ,joinPoint.getSignature().getName(),
-                optContent, newValue, oldValue);
+        if(StringUtils.isNotBlank(operationLog.newValue())){
+            newValue = Pretreatment.mapTemplateString(operationLog.newValue(), map);
+        }
+
+        if(StringUtils.isNotBlank(operationLog.oldValue())){
+            oldValue = Pretreatment.mapTemplateString(operationLog.oldValue(), map);
+        }
+
+        OperationLogCenter.log(
+            OperationLog.create().level(logLevel)
+                .user(userInfo==null? loginIp : userInfo.getString("userCode"))
+                .unit(WebOptUtils.getCurrentUnitCode(request))
+                .correlation(WebOptUtils.getCorrelationId(request))
+                .operation(optId).tag(optTag).method(optMethod)
+                .content(optContent).newObject(newValue)
+                .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()));
     }
 
     /**

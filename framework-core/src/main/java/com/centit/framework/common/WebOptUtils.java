@@ -154,6 +154,15 @@ public class WebOptUtils {
         return null;
     }
 
+    public static String getCorrelationId(HttpServletRequest request) {
+        String correlationId = request.getHeader(WebOptUtils.CORRELATION_ID);
+        if(StringUtils.isBlank(correlationId)){
+            correlationId = request.getSession().getId();
+            //request.hashCode()
+        }
+        return correlationId;
+    }
+
     /**
      * 获取请求端希望的语言，策略是
      *     1，首先看请求中有没有通过 LOCAL_LANGUAGE_LABLE="LOCAL_LANG" 参数指定语言

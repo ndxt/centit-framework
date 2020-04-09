@@ -1,5 +1,6 @@
 package com.centit.framework.operationlog;
 
+import com.centit.framework.model.basedata.OperationLog;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.ElementType;
@@ -12,10 +13,44 @@ import java.lang.annotation.Target;
 public @interface RecordOperationLog {
     /**
      *
-     * @return 记录操作内容，理论上这个不能为空
+     * @return 记录操作内容表达式，理论上这个不能为空
      */
     @AliasFor("value")
     String content() default "";
+
+    /**
+     *
+     * @return 日志等级
+     */
+    String level() default OperationLog.LEVEL_INFO;
+
+    /**
+     *
+     * @return 业务编码
+     */
+    String operation() default "";
+
+    /**
+     *
+     * @return 操作方法
+     */
+    String method() default "";
+    /**
+     *
+     * @return 操作对象主键 表达式
+     */
+    String tag() default "";
+
+    /**
+     * 优先级高于 appendRequest
+     * @return 更改后对象
+     */
+    String newValue() default "";
+    /**
+     * 优先级高于 returnValueAsOld
+     * @return 更改前对象
+     */
+    String oldValue() default "";
 
     /**
      * 是否记录操作时间
