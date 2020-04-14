@@ -112,6 +112,7 @@ public class OperationLogCenter {
     * @param userCode 操作人员
     * @param optId    业务代码（类别）
     * 对象主键 可以没有
+    * @param optTag   对象主键，如果是联合主键请用url的方式编写，比如a=1;b=2
     * @param optMethod 操作方法
     * @param optContent 者操作说明
     */
@@ -126,8 +127,9 @@ public class OperationLogCenter {
    /**
     * 记录日志内容
     * @param request 获取当前用户
+    * @param loglevel 操作日志还是错误提示
     * @param optId    业务代码（类别）
-    * @param optTag   对象主键
+    * @param optTag   对象主键，如果是联合主键请用url的方式编写，比如a=1;b=2
     * @param optMethod 操作方法
     * @param optContent 操作说明
     * @param newValue 新增json
@@ -149,6 +151,7 @@ public class OperationLogCenter {
     * 记录日志内容
     * @param request 获取当前用户
     * @param optId    业务代码（类别）
+    * @param optTag   对象主键，如果是联合主键请用url的方式编写，比如a=1;b=2
     * @param optMethod 操作方法
     * @param optContent 操作说明
     */
@@ -167,7 +170,7 @@ public class OperationLogCenter {
     * 新建对象日志
     * @param request 获取操作人员
     * @param optId    业务代码（类别）
-    * @param optTag   对象主键
+    * @param optTag   对象主键，如果是联合主键请用url的方式编写，比如a=1;b=2
     * @param optMethod 操作方法
     * @param optContent 操作说明
     * @param newObject 新增对象
@@ -205,7 +208,7 @@ public class OperationLogCenter {
     * 删除对象日志
     * @param request 获取操作人员
     * @param optId    业务代码（类别）
-    * @param optTag   对象主键
+    * @param optTag   对象主键，如果是联合主键请用url的方式编写，比如a=1;b=2
     * @param optMethod 操作方法
     * @param optContent 操作说明
     * @param oldObject 删除的对象
@@ -224,7 +227,7 @@ public class OperationLogCenter {
     * 更新对对象日志
     * @param request 获取操作人员
     * @param optId    业务代码（类别）
-    * @param optTag   对象主键
+    * @param optTag   对象主键，如果是联合主键请用url的方式编写，比如a=1;b=2
     * @param optMethod 操作方法
     * @param optContent 操作说明
     * @param newObject 新对象
