@@ -1,6 +1,7 @@
 package com.centit.framework.config;
 
 import com.centit.support.algorithm.BooleanBaseOpt;
+import org.apache.commons.lang3.StringUtils;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.springframework.context.annotation.Conditional;
@@ -44,7 +45,11 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
     protected AuthenticationEntryPoint getAuthenticationEntryPoint() {
         ServiceProperties serviceProperties = createCasServiceProperties();
         CasAuthenticationEntryPoint casEntryPoint = new CasAuthenticationEntryPoint();
-        casEntryPoint.setLoginUrl(env.getProperty("login.cas.casHome")+"/login");
+        String loginUrl = env.getProperty("login.cas.loginUrl");
+        if(StringUtils.isBlank(loginUrl)){
+            loginUrl = env.getProperty("login.cas.casHome")+"/login";
+        }
+        casEntryPoint.setLoginUrl(loginUrl);
         casEntryPoint.setServiceProperties(serviceProperties);
         return casEntryPoint;
     }
