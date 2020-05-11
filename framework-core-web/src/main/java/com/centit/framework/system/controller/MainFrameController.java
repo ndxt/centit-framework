@@ -424,7 +424,7 @@ public class MainFrameController extends BaseController {
         String sessionCode = StringBaseOpt.objectToString(
                     request.getSession().getAttribute(
                             CaptchaImageUtil.SESSIONCHECKCODE));
-        Boolean checkResult = StringUtils.equals(checkcode, sessionCode);
+        Boolean checkResult = CaptchaImageUtil.checkcodeMatch(checkcode, sessionCode);
         request.getSession().setAttribute(
                 SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT,
                 checkResult);
