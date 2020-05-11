@@ -45,7 +45,7 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
     protected AuthenticationEntryPoint getAuthenticationEntryPoint() {
         ServiceProperties serviceProperties = createCasServiceProperties();
         CasAuthenticationEntryPoint casEntryPoint = new CasAuthenticationEntryPoint();
-        String loginUrl = env.getProperty("login.cas.loginUrl");
+        String loginUrl = env.getProperty("login.cas.entryPoint");
         if(StringUtils.isBlank(loginUrl)){
             loginUrl = env.getProperty("login.cas.casHome")+"/login";
         }
