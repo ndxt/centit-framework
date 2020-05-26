@@ -59,6 +59,15 @@ public class WebOptUtils {
                 request.getParameter("ajax"), false);
     }
 
+    public static boolean isFromMobile(HttpServletRequest request) {
+        String agent = request.getHeader("User-Agent");
+        if(agent ==null)
+            return false;
+        agent = agent.toLowerCase();
+        return StringUtils.containsAny(agent,
+            "android", "iphone", "ipad", "windows phone",
+            "mqqbrowser", "opera mini", "mobi");
+    }
     /**
      *  获取当前用户 不建议用这个函数，这个可能获取不到用户信息，推荐使用
      *  getLoginUser(HttpServletRequest request)
