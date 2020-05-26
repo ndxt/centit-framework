@@ -139,7 +139,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
         }
         // --------------------------------------------------------------//
         w = ecc.getAWord();
-        while(w != null && ! "".equals(w) && ! ")".equals(w)) {
+        while(w != null && ! "".equals(w) && ! ")".equals(w) && ! ",".equals(w)) {
             if ("-".equals(w)) {
                 ecc.setCanAcceptOpt(true);
                 w = ecc.getAWord();
@@ -655,7 +655,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
             if (w == null || "".equals(w))
                 break;
             if (",".equals(w) || ")".equals(w) || "!".equals(w) || "|".equals(w) || "||".equals(w) || "&".equals(w)
-                    || "&&".equals(w)) {
+                || "&&".equals(w)) {
                 ecc.writeBackAWord(w);
                 break;
             }
