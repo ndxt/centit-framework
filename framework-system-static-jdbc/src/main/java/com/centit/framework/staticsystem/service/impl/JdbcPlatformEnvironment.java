@@ -129,7 +129,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedTarget().get(userCode);
         if(ui==null)
             return;
-        String userNewPassword = passwordEncoder.createPassword(userPassword, userCode);
+        String userNewPassword = passwordEncoder.encodePassword(userPassword, userCode);
         try(Connection conn = getConnection()) {
             DatabaseAccess.doExecuteSql(conn,
                 ExtendedQueryPool.getExtendedSql("UPDATE_USER_PASSWORD"),

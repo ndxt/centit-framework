@@ -150,7 +150,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         if(json==null)
             json = new JSONObject();
         try {
-            ui.setUserPin(passwordEncoder.createPassword(userPassword, userCode));
+            ui.setUserPin(passwordEncoder.encodePassword(userPassword, userCode));
             json.put(userCode,ui.getUserPin());
             FileIOOpt.writeStringToFile(json.toJSONString(),appHome +"/config"+jsonFile);
         } catch (IOException e) {

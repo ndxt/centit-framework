@@ -5,6 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.function.Function;
+
 /**
  * Created by codefan on 17-1-20.
  * 采用Spring 推荐的 BCryptPasswordEncoder 加密方式
@@ -13,6 +15,12 @@ public class StandardPasswordEncoderImpl
         implements CentitPasswordEncoder, PasswordEncoder {
 
     private BCryptPasswordEncoder passwordEncoder ;
+
+    public void setPasswordPreteat(Function<String, String> passwordPreteat) {
+        this.passwordPreteat = passwordPreteat;
+    }
+
+    private Function<String, String> passwordPreteat;
 
     public StandardPasswordEncoderImpl() {
         this(11);
@@ -24,11 +32,19 @@ public class StandardPasswordEncoderImpl
         }else {
             passwordEncoder = new BCryptPasswordEncoder(strength);
         }
+        passwordPreteat =null;
+    }
+
+    @Override
+    public String encodePassword(String rawPass, Object salt){
+        return passwordEncoder.encode(rawPass);
     }
 
     @Override
     public String createPassword(String rawPass, Object salt){
-        return passwordEncoder.encode(rawPass);
+        return encodePassword(
+            passwordPreteat != null ? passwordPreteat.apply(rawPass) : rawPass,
+            salt);
     }
 
     @Override

@@ -6,6 +6,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.function.Function;
+
 /**
  * Created by codefan on 17-1-20.
  * 采用Spring 推荐的 BCryptPasswordEncoder 加密方式
@@ -13,17 +15,29 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SM3PasswordEncoderImpl
         implements CentitPasswordEncoder, PasswordEncoder {
 
+    private Function<String, String> passwordPreteat;
+
+    public SM3PasswordEncoderImpl(){
+        passwordPreteat = null;
+    }
+
     @Override
-    public String createPassword(String rawPass, Object salt) {
+    public String encodePassword(String rawPass, Object salt) {
         return new String(Base64.encodeBase64URLSafe(
             SM3Util.hash(rawPass.getBytes())));
     }
 
+    @Override
+    public String createPassword(String rawPass, Object salt){
+        return encodePassword(
+            passwordPreteat != null ? passwordPreteat.apply(rawPass) : rawPass,
+            salt);
+    }
 
     @Override
     public boolean isPasswordValid(String encodedPassword, String rawPass, Object salt) {
         return StringUtils.equals(
-            encodedPassword, createPassword(rawPass, salt));
+            encodedPassword, encodePassword(rawPass, salt));
     }
 
     /**
@@ -34,7 +48,7 @@ public class SM3PasswordEncoderImpl
      */
     @Override
     public String encode(CharSequence rawPassword) {
-        return createPassword(String.valueOf(rawPassword), null);
+        return encodePassword(String.valueOf(rawPassword), null);
     }
 
     /**

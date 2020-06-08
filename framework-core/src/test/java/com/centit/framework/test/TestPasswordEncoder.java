@@ -10,24 +10,24 @@ public class TestPasswordEncoder {
     @Test
     public void testCentitCrypt() {
         //093ce7e6c0476c39ce4a46ce53dbcc98b53c30c6baf92e98
-        System.out.println(new StandardPasswordEncoderImpl().createPassword("000000",  "salt"));
+        System.out.println(new StandardPasswordEncoderImpl().encodePassword("000000",  "salt"));
         //System.out.println(CentitCrypt.cryptPassword2("000000", "salt", 11));
     }
 
     public void testPE() {
         StandardPasswordEncoderImpl pe = new StandardPasswordEncoderImpl();
-        String password = pe.createPassword("000000",null);
+        String password = pe.encodePassword("000000",null);
         System.out.println(password);
 
-        password = pe.createPassword("000000",null);
+        password = pe.encodePassword("000000",null);
         System.out.println(password);
-        password = pe.createPassword("000000",null);
+        password = pe.encodePassword("000000",null);
         System.out.println(password);
-        password = pe.createPassword("000000",null);
+        password = pe.encodePassword("000000",null);
         System.out.println(password);
-        password = pe.createPassword("000000",null);
+        password = pe.encodePassword("000000",null);
         System.out.println(password);
-        password = pe.createPassword("000000",null);
+        password = pe.encodePassword("000000",null);
         System.out.println(password);
 
         System.out.println(
