@@ -27,12 +27,9 @@ public class UtilDateDeserializer extends AbstractDateDeserializer implements Ob
             return (T) new java.util.Date(((Number) val).longValue());
         } else if (val instanceof String) {
             String strVal = (String) val;
-            
             if (StringUtils.isBlank(strVal)) {
                 return null;
-            } else if(Pattern.matches("\\d+", strVal)) {
-                return (T) new java.util.Date(Long.parseLong(strVal));
-            }else {
+            } else {
                return (T) ( DatetimeOpt.smartPraseDate(strVal));
             }
         }

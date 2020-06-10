@@ -8,7 +8,6 @@ import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
-import java.util.regex.Pattern;
 
 public class SqlTimestampDeserializer extends AbstractDateDeserializer implements ObjectDeserializer {
 
@@ -29,12 +28,10 @@ public class SqlTimestampDeserializer extends AbstractDateDeserializer implement
             return (T) new java.sql.Timestamp(((Number) val).longValue());
         } else if (val instanceof String) {
             String strVal = (String) val;
-            
+
             if (StringUtils.isBlank(strVal)) {
                 return null;
-            } else if(Pattern.matches("\\d+", strVal)) {
-                return (T) new java.sql.Timestamp(Long.parseLong(strVal));
-            }else {
+            } else {
                return (T) (DatetimeOpt.convertToSqlTimestamp(DatetimeOpt.smartPraseDate(strVal)));
             }
         }

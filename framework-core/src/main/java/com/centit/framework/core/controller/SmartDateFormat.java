@@ -10,7 +10,6 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 public class SmartDateFormat extends SimpleDateFormat{
 
@@ -57,12 +56,7 @@ public class SmartDateFormat extends SimpleDateFormat{
         pos.setErrorIndex(errorIndex);
 
         int nlen = source.length();
-        if(Pattern.matches("\\d+", source)) {
-            pos.setIndex(start + nlen);
-            return new Date(Long.parseLong(source));
-        }else {
-            pos.setIndex(start + nlen);
-            return DatetimeOpt.smartPraseDate(source);
-        }
+        pos.setIndex(start + nlen);
+        return DatetimeOpt.smartPraseDate(source);
     }
 }
