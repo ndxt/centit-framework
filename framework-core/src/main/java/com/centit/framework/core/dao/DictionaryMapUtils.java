@@ -31,11 +31,6 @@ public abstract class DictionaryMapUtils {
 
     }
 
-    private static DictionaryMapColumn makeDictionaryMapColumn(DictionaryMap dictionary, String fieldName ){
-        Map<String,String> dm = CodeRepositoryUtil.getAllLabelValueMap(dictionary.value());
-        return new DictionaryMapColumn(fieldName,dictionary);
-    }
-
     public static void mergeDictionaryMapColumn(List<DictionaryMapColumn> des, Class<?> objType){
         if( objType !=null
             && ! objType.equals(Object.class)
@@ -56,9 +51,12 @@ public abstract class DictionaryMapUtils {
         Field[] objFields = objType.getDeclaredFields();
         for(Field field :objFields){
             if (field.isAnnotationPresent(DictionaryMap.class)) {
-                DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
-                    field.getAnnotation(DictionaryMap.class),field.getName());
-                fieldDictionaryMaps.add(dictionaryMapColumn);
+                List<DictionaryMapColumn> mapColumns =
+                        DictionaryMapColumn.mapAnnotation(field.getName(),
+                                field.getAnnotation(DictionaryMap.class));
+                if(mapColumns!=null) {
+                    fieldDictionaryMaps.addAll(mapColumns);
+                }
             } else if (field.isAnnotationPresent(EmbeddedId.class)) {
                 fieldDictionaryMaps.addAll(
                     innerFetchDictionaryMapColumns(field.getType()));
@@ -67,11 +65,16 @@ public abstract class DictionaryMapUtils {
         List<Method> getter = ReflectionOpt.getAllGetterMethod(objType);
         for(Method method : getter){
             if (method.isAnnotationPresent(DictionaryMap.class)) {
-                DictionaryMapColumn dictionaryMapColumn = makeDictionaryMapColumn(
-                    method.getAnnotation(DictionaryMap.class),ReflectionOpt.mapGetter2Field(method));
+                List<DictionaryMapColumn> mapColumns =
+                    DictionaryMapColumn.mapAnnotation(ReflectionOpt.mapGetter2Field(method),
+                        method.getAnnotation(DictionaryMap.class));
                 //FIXED 不能简单的 add 需要去重
-                if(!fieldDictionaryMaps.contains(dictionaryMapColumn)) {
-                    fieldDictionaryMaps.add(dictionaryMapColumn);
+                if(mapColumns!=null) {
+                    for(DictionaryMapColumn col : mapColumns) {
+                        if(!fieldDictionaryMaps.contains(col)) {
+                            fieldDictionaryMaps.add(col);
+                        }
+                    }
                 }
             }
         }
@@ -84,7 +87,6 @@ public abstract class DictionaryMapUtils {
                 mergeDictionaryMapColumn(fieldDictionaryMaps, intf);
             }
         }
-
         return fieldDictionaryMaps;
     }
 

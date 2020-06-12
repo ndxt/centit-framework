@@ -1,6 +1,10 @@
 package com.centit.framework.core.dao;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class DictionaryMapColumn implements Serializable {
@@ -32,11 +36,23 @@ public class DictionaryMapColumn implements Serializable {
         isExpression = false;
     }
 
-    public DictionaryMapColumn(String fn, DictionaryMap dictionaryMap){
-        fieldName = fn;
-        mapFieldName = dictionaryMap.fieldName();
-        dictCatalog = dictionaryMap.value();
-        isExpression = dictionaryMap.isExpression();
+    public static List<DictionaryMapColumn> mapAnnotation(String fn, DictionaryMap dictionaryMap){
+        if(/*dictionaryMap.value()==null ||*/ dictionaryMap.value().length==0)
+            return null;
+        List<DictionaryMapColumn> columns = new ArrayList<>(dictionaryMap.value().length);
+        String [] fieldNams = dictionaryMap.fieldName();
+        int i=0;
+        for(String sValue : dictionaryMap.value()){
+            DictionaryMapColumn col = new DictionaryMapColumn();
+            col.setFieldName(fn);
+            col.setDictCatalog(sValue);
+            col.setExpression(dictionaryMap.isExpression());
+            col.setMapFieldName(
+                /*fieldNams !=null &&*/ fieldNams.length>i && StringUtils.isNotBlank(fieldNams[i])?
+                    fieldNams[i] : fn+ "Aux"+i);
+            i++;
+        }
+        return columns;
     }
 
     @Override

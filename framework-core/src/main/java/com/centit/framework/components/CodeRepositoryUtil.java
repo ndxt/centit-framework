@@ -8,6 +8,7 @@ import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.CachedObject;
 import com.centit.support.compiler.Lexer;
@@ -94,19 +95,6 @@ public abstract class CodeRepositoryUtil {
      */
     public static Map<String,? extends IOptMethod> getPowerRepo() {
         return CodeRepositoryCache.codeToMethodMap.getCachedTarget();
-    }
-
-    public static List<? extends IUnitInfo> getUnitAsTree() {
-        /* 缓存中已经排好序了*/
-        return CodeRepositoryCache.unitInfoRepo.getCachedTarget();
-        /*if(units!=null && units.size() > 1) {
-            List<IUnitInfo> sortedUnits = new ArrayList<>(units.size());
-            sortedUnits.addAll(units);
-            CollectionsOpt.sortAsTree(sortedUnits,
-                (p, c) -> StringUtils.equals(p.getUnitCode(), c.getParentUnit()));
-            return sortedUnits;
-        }
-        return units;*/
     }
 
     public static Map<String, ? extends IUnitInfo> getUnitRepo() {
@@ -233,6 +221,22 @@ public abstract class CodeRepositoryUtil {
      * @return 数据字典对应的值
      */
     public static String getValue(String sCatalog, String sKey,String localLang) {
+        if(sCatalog.startsWith("userInfo.")){
+            IUserInfo ui=getUserRepo().get(sKey);
+            if(ui==null)
+                return sKey;
+            return StringBaseOpt.castObjectToString(
+                ReflectionOpt.getFieldValue(ui, sCatalog.substring(9)));
+        }
+
+        if(sCatalog.startsWith("unitInfo.")){
+            IUnitInfo ui=getUnitRepo().get(sKey);
+            if(ui==null)
+                return sKey;
+            return StringBaseOpt.castObjectToString(
+                ReflectionOpt.getFieldValue(ui, sCatalog.substring(9)));
+        }
+
         try {
             switch (sCatalog) {
                 case CodeRepositoryUtil.USER_CODE:{
@@ -1181,6 +1185,30 @@ public abstract class CodeRepositoryUtil {
 
     private static Map<String,String> innerGetLabelValueMap(String sCatalog, String localLang, boolean allItem) {
         Map<String,String> lbvs = new HashMap<>();
+
+        if(sCatalog.startsWith("userInfo.")){
+            for (Map.Entry<String, ? extends IUserInfo> ent : getUserRepo().entrySet()) {
+                IUserInfo value = ent.getValue();
+                if (allItem || CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                    lbvs.put(value.getUserCode(),
+                        StringBaseOpt.castObjectToString(
+                            ReflectionOpt.getFieldValue(value, sCatalog.substring(9))));
+                }
+            }
+            return lbvs;
+        }
+
+        if(sCatalog.startsWith("unitInfo.")){
+            for (IUnitInfo value : listAllUnits()) {
+                if (allItem || CodeRepositoryUtil.T.equals(value.getIsValid())) {
+                    lbvs.put(value.getUnitCode(),
+                        StringBaseOpt.castObjectToString(
+                            ReflectionOpt.getFieldValue(value, sCatalog.substring(9))));
+                }
+            }
+            return lbvs;
+        }
+
         switch (sCatalog) {
             case CodeRepositoryUtil.USER_CODE: {
                 for (Map.Entry<String, ? extends IUserInfo> ent : getUserRepo().entrySet()) {
@@ -1201,7 +1229,7 @@ public abstract class CodeRepositoryUtil {
                 return lbvs;
             }
             case CodeRepositoryUtil.UNIT_CODE: {
-                for (IUnitInfo value : getUnitAsTree()) {
+                for (IUnitInfo value : listAllUnits()) {
                     if (allItem || CodeRepositoryUtil.T.equals(value.getIsValid())) {
                         lbvs.put(value.getUnitCode(), value.getUnitName());
                     }
@@ -1308,7 +1336,7 @@ public abstract class CodeRepositoryUtil {
         }
 
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.UNIT_CODE)) {
-            for (IUnitInfo value : getUnitAsTree()) {
+            for (IUnitInfo value : listAllUnits()) {
                 if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.add(new OptionItem(value.getUnitName(),
                         value.getUnitCode(), value.getParentUnit()));
