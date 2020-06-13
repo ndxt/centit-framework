@@ -50,6 +50,7 @@ public class DictionaryMapColumn implements Serializable {
             col.setMapFieldName(
                 /*fieldNams !=null &&*/ fieldNams.length>i && StringUtils.isNotBlank(fieldNams[i])?
                     fieldNams[i] : fn+ "Aux"+i);
+            columns.add(col);
             i++;
         }
         return columns;
