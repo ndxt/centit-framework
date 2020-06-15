@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -18,7 +17,6 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 /**
  * Created by zou_wy on 2017/6/14.
  */
-@Conditional(RedisSessionPersistenceCondition.class)
 @EnableRedisHttpSession
 public class RedisSessionPersistenceConfig extends FrameworkHttpSessionConfiguration {
     //private Logger logger = LoggerFactory.getLogger(RedisSessionPersistenceConfig.class);

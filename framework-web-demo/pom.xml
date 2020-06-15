@@ -23,11 +23,11 @@
     </description>
 
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>com.centit.framework</groupId>
-            <artifactId>framework-session</artifactId>
+            <artifactId>framework-session-redis</artifactId>
         </dependency>
-
+        -->
         <dependency>
             <groupId>com.centit.support</groupId>
             <artifactId>centit-database</artifactId>

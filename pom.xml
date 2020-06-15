@@ -99,11 +99,13 @@
         <module>framework-core-web</module>
         <module>framework-system-static-config</module>
         <module>framework-system-static-jdbc</module>
-        <module>framework-session</module>
+        <module>framework-session-core</module>
         <module>framework-security-ldap</module>
         <module>framework-boot-config</module>
         <module>framework-security-boot-config</module>
         <module>framework-security-gm-plugin</module>
+        <module>framework-session-redis</module>
+        <module>framework-session-jdbc</module>
     </modules>
 
     <build>

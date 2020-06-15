@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -25,7 +24,6 @@ import java.sql.Driver;
 /**
  * Created by zou_wy on 2017/6/14.
  */
-@Conditional(JdbcSessionPersistenceCondition.class)
 @EnableJdbcHttpSession(maxInactiveIntervalInSeconds = -1)
 public class JdbcSessionPersistenceConfig extends FrameworkHttpSessionConfiguration {
 
