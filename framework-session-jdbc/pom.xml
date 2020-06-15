@@ -21,7 +21,6 @@
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-jdbc</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
