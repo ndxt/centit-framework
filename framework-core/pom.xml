@@ -11,8 +11,6 @@
 
     <artifactId>framework-core</artifactId>
     <name>com.centit.framework:framework-core</name>
-
-    <packaging>pom</packaging>
     <description>框架的核心包，整合了多个开源框架，并定义了组织机构和权限体系</description>
 
     <dependencies>
