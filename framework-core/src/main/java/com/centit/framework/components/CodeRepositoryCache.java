@@ -4,6 +4,7 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.common.AsyncCachedObject;
 import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
 import com.centit.support.common.DerivativeCachedMap;
@@ -214,8 +215,8 @@ public abstract class CodeRepositoryCache {
     /**
      * 缓存用户信息
      */
-    public static CachedObject<List<? extends IUserInfo>> userInfoRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllUsers(), CACHE_FRESH_PERIOD_SECONDS);
+    public static AsyncCachedObject<List<? extends IUserInfo>> userInfoRepo =
+        new AsyncCachedObject<>(()-> getPlatformEnvironment().listAllUsers(), CACHE_FRESH_PERIOD_SECONDS);
     /**
      * 派生的缓存信息，派生缓存相当于索引
      */
@@ -288,8 +289,8 @@ public abstract class CodeRepositoryCache {
     /**
      * 缓存机构信息
      */
-    public static CachedObject<List<? extends IUnitInfo>> unitInfoRepo =
-        new CachedObject<>(()->{
+    public static AsyncCachedObject<List<? extends IUnitInfo>> unitInfoRepo =
+        new AsyncCachedObject<>(()->{
             List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits();
             CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
@@ -324,8 +325,8 @@ public abstract class CodeRepositoryCache {
         },unitInfoRepo);
 
 
-    public static CachedObject<List<? extends IUserUnit>> userUnitRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(), CACHE_FRESH_PERIOD_SECONDS);
+    public static AsyncCachedObject<List<? extends IUserUnit>> userUnitRepo =
+        new AsyncCachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(), CACHE_FRESH_PERIOD_SECONDS);
     /**
      * 派生缓存
      */
