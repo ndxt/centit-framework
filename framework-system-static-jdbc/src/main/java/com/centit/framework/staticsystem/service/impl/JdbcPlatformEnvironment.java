@@ -7,6 +7,7 @@ import com.centit.framework.staticsystem.po.*;
 import com.centit.support.database.utils.DataSourceDescription;
 import com.centit.support.database.utils.DatabaseAccess;
 import com.centit.support.database.utils.DbcpConnectPools;
+import com.centit.support.database.utils.TransactionHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
@@ -23,16 +24,8 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
     private DataSourceDescription dataSource;
 
-    private Connection getConnection() throws SQLException {
-        return DbcpConnectPools.getDbcpConnect(dataSource);
-    }
-
     public void setDataBaseConnectInfo(String connectURI, String username, String pswd){
         this.dataSource = new DataSourceDescription( connectURI,  username,  pswd);
-    }
-
-    public void close(Connection conn){
-        DbcpConnectPools.closeConnect(conn);
     }
 
     private <T> List<T> jsonArrayToObjectList(JSONArray jsonArray, Class<T> clazz) {
@@ -49,7 +42,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
         ExtendedQueryPool.loadResourceExtendedSqlMap(dataSource.getDbType());
 
-        try(Connection conn = getConnection()) {
+        try(Connection conn = DbcpConnectPools.getDbcpConnect(dataSource)) {
             JSONArray userJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_USER"));
             List<UserInfo> userinfos = jsonArrayToObjectList(userJSONArray, UserInfo.class);
@@ -130,11 +123,12 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         if(ui==null)
             return;
         String userNewPassword = passwordEncoder.encodePassword(userPassword, userCode);
-        try(Connection conn = getConnection()) {
-            DatabaseAccess.doExecuteSql(conn,
-                ExtendedQueryPool.getExtendedSql("UPDATE_USER_PASSWORD"),
-                    new Object []{ userNewPassword, userCode });
-            conn.commit();
+        try{
+            TransactionHandler.executeQueryInTransaction(
+                dataSource, (conn) -> DatabaseAccess.doExecuteSql(conn,
+                    ExtendedQueryPool.getExtendedSql("UPDATE_USER_PASSWORD"),
+                    new Object []{ userNewPassword, userCode })
+            );
         }catch (Exception e){
             //conn.rollback();
         }
