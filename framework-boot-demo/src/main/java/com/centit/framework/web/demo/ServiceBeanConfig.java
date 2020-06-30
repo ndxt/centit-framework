@@ -31,13 +31,6 @@ public class ServiceBeanConfig {
     public StandardPasswordEncoderImpl passwordEncoder() {
         return  new StandardPasswordEncoderImpl();
     }
-    //这个bean必须要有 可以配置不同策略的session保存方案
-
-    //@Value("${message.sender.email.hostName:}")
-    //@Value("${message.sender.email.smtpPort:25}")
-    //@Value("${message.sender.email.userName:}")
-    //@Value("${message.sender.email.userPassword:}")
-    //@Value("${message.sender.email.serverEmail:}")
 
     @Bean
     public NotificationCenter notificationCenter() {
