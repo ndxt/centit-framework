@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FrameworkHttpSessionConfiguration {
 
-    @Value("${session.strategy.cookie.first:true}")
+    @Value("${session.strategy.cookie.first:false}")
     private boolean cookieFist;
     @Value("${session.strategy.cookie.path:/}")
     private String cookiePath;
