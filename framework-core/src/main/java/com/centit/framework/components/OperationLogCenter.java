@@ -55,20 +55,24 @@ public class OperationLogCenter {
                    return;
               int nCount = 100;
               // 每一百条日志批量写入一次
-              while(nCount > 99) {
-                  nCount = 0;
-                  ArrayList<OperationLog> optLogs = new ArrayList<>(100);
-                  do { //true){//
-                      OperationLog optLog = waitingForWriteLogs.poll();
-                      if (optLog == null) {
-                          break;
+              try {
+                  while (nCount > 99) {
+                      nCount = 0;
+                      ArrayList<OperationLog> optLogs = new ArrayList<>(100);
+                      do { //true){//
+                          OperationLog optLog = waitingForWriteLogs.poll();
+                          if (optLog == null) {
+                              break;
+                          }
+                          optLogs.add(optLog);
+                          nCount++;
+                      } while (nCount < 100);
+                      if (nCount > 0) {
+                          logWriter.save(optLogs);
                       }
-                      optLogs.add(optLog);
-                      nCount++;
-                  } while (nCount < 100);
-                  if (nCount > 0) {
-                      logWriter.save(optLogs);
                   }
+              } catch (Exception e){
+                  logger.error("日志写入定时器错误：" + e.getMessage());
               }
            }, 30, 5, TimeUnit.SECONDS);
        //默认执行时间间隔为5秒
