@@ -872,7 +872,10 @@ public abstract class CodeRepositoryUtil {
         Map<String, ? extends IUserInfo> allUsers = getUserRepo();
         List<IUserInfo> users = new ArrayList<>();
         for(String uc : sUsers){
-            users.add(allUsers.get(uc));
+            IUserInfo userInfo = allUsers.get(uc);
+            if(userInfo!=null) {
+                users.add(userInfo);
+            }
         }
         return users;
     }
@@ -976,7 +979,10 @@ public abstract class CodeRepositoryUtil {
         Map<String, ? extends IUnitInfo> allUnts = getUnitRepo();
         List<IUnitInfo> units = new ArrayList<>();
         for(String uc : sUnits){
-            units.add(allUnts.get(uc));
+            IUnitInfo unitInfo = allUnts.get(uc);
+            if(unitInfo!=null) {
+                units.add(unitInfo);
+            }
         }
         return units;
     }
