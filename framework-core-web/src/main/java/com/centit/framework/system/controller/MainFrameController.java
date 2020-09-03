@@ -102,9 +102,14 @@ public class MainFrameController extends BaseController {
      */
     @ApiOperation(value = "登录首页链接", notes = "登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置")
     @GetMapping({"", "/", "/index"})
-    public String index() {
+    public String index(HttpServletRequest request) {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
-        return "sys/index";//"redirect:"+ firstpage;//
+        String redirectUrl = request.getParameter("webUrl");
+        if(StringUtils.isNotBlank(redirectUrl)){
+            return "redirect:" + redirectUrl;//"sys/mainframe/index";
+        } else {
+            return "sys/index";//"redirect:"+ firstpage;//
+        }
     }
 
     /**
@@ -115,9 +120,14 @@ public class MainFrameController extends BaseController {
      */
     @ApiOperation(value = "跳往cas登录链接", notes = "使用cas登录系统")
     @GetMapping(value = "/logincas")
-    public String logincas() {
+    public String logincas(HttpServletRequest request) {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
-        return "redirect:"+firstpage;//"sys/mainframe/index";
+        String redirectUrl = request.getParameter("webUrl");
+        if(StringUtils.isNotBlank(redirectUrl)){
+            return "redirect:" + redirectUrl;//"sys/mainframe/index";
+        } else {
+            return "redirect:" + firstpage;//"sys/mainframe/index";
+        }
     }
 
     /**
