@@ -1,6 +1,5 @@
 package com.centit.framework.staticsystem.po;
 
-import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.support.algorithm.DatetimeOpt;
 

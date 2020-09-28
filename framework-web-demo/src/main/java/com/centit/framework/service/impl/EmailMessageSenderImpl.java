@@ -4,7 +4,6 @@
 package com.centit.framework.service.impl;
 
 import com.centit.framework.common.ResponseData;
-import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.NoticeMessage;
