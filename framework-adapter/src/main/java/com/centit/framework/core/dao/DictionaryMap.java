@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * @author codefan
  * 2015年12月16日
  */
-@Target({ElementType.FIELD,ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DictionaryMap {
     /**

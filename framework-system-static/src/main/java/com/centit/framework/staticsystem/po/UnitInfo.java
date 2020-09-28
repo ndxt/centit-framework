@@ -165,10 +165,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
     public String getParentUnit() {
         return this.parentUnit;
     }
-    public String getParentUnitName(){
-        String name=CodeRepositoryUtil.getUnitName(getParentUnit());
-        return name;
-    }
+
     public void setParentUnit(String parentunit) {
         this.parentUnit = parentunit;
     }

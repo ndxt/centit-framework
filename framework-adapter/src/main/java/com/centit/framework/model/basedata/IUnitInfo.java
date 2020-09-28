@@ -1,5 +1,7 @@
 package com.centit.framework.model.basedata;
 
+import com.centit.framework.core.dao.DictionaryMap;
+
 /**
  * FUnitinfo entity.
  * 机构信息
@@ -30,6 +32,7 @@ public interface IUnitInfo{
      * 上级机构代码
      * @return 上级机构代码
      */
+     @DictionaryMap(fieldName = "parentUnitName", value = "unitCode")
      String getParentUnit();
     /**
      * 机构类别
