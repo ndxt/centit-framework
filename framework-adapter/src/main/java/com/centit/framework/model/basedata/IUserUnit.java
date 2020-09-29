@@ -8,6 +8,7 @@ import com.centit.framework.core.dao.DictionaryMap;
  * @author MyEclipse Persistence Tools
  */
 public interface IUserUnit{
+    int MAXXZRANK = 100000;
     /**
      * 关联关系主键
      * @return 关联关系主键

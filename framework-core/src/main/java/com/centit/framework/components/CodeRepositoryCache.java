@@ -4,6 +4,7 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.common.AsyncCachedObject;
 import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
 import com.centit.support.common.DerivativeCachedMap;
@@ -190,6 +191,10 @@ public abstract class CodeRepositoryCache {
         }
     }
 
+    public static void refreshAsyncCache(){
+        CodeRepositoryCache.userUnitRepo.asyncRefreshData();
+    }
+
     public static void evictAllCache(){
         CodeRepositoryCache.userInfoRepo.evictCahce();
         CodeRepositoryCache.unitInfoRepo.evictCahce();
@@ -222,8 +227,9 @@ public abstract class CodeRepositoryCache {
     public static CachedObject<Map<String, ? extends IUserInfo>> codeToUserMap =
         new CachedObject<>(()-> {
             List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
-            if(userInfos == null)
+            if(userInfos == null) {
                 return null;
+            }
             Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
             for(IUserInfo userInfo : userInfos){
                 codeToUser.put(userInfo.getUserCode(), userInfo);
@@ -255,7 +261,7 @@ public abstract class CodeRepositoryCache {
                 }
             }
             return codeToUser;
-        },userInfoRepo);
+        }, userInfoRepo);
 
     public static CachedObject<Map<String, ? extends IUserInfo>> phoneToUserMap =
         new CachedObject<>(()-> {
@@ -269,7 +275,7 @@ public abstract class CodeRepositoryCache {
                 }
             }
             return codeToUser;
-        },userInfoRepo);
+        }, userInfoRepo);
 
     public static CachedObject<Map<String, ? extends IUserInfo>> idcardToUserMap =
         new CachedObject<>(()-> {
@@ -283,7 +289,7 @@ public abstract class CodeRepositoryCache {
                 }
             }
             return codeToUser;
-        },userInfoRepo);
+        }, userInfoRepo);
 
     /**
      * 缓存机构信息
@@ -309,7 +315,7 @@ public abstract class CodeRepositoryCache {
                 codeToUnit.put(unitInfo.getUnitCode(), unitInfo);
             }
             return codeToUnit;
-        },unitInfoRepo);
+        }, unitInfoRepo);
 
     public static CachedObject<Map<String, ? extends IUnitInfo>> depNoToUnitMap =
         new CachedObject<>(()-> {
@@ -321,20 +327,25 @@ public abstract class CodeRepositoryCache {
                 codeToUnit.put(unitInfo.getDepNo(), unitInfo);
             }
             return codeToUnit;
-        },unitInfoRepo);
+        }, unitInfoRepo);
 
 
-    public static CachedObject<List<? extends IUserUnit>> userUnitRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(), CACHE_FRESH_PERIOD_SECONDS);
+    public static AsyncCachedObject<List<? extends IUserUnit>> userUnitRepo =
+        new AsyncCachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(), CACHE_FRESH_PERIOD_SECONDS);
     /**
      * 派生缓存
      */
     public static CachedMap<String, List<? extends IUserUnit>> userUnitsMap =
-        new CachedMap<>(
-            ( userCode )-> {
+        new CachedMap<>((userCode)-> {
                 List<? extends IUserUnit> userUnits = userUnitRepo.getCachedTarget();
-                if(userUnits == null)
-                    return null;
+                if(userUnits == null) {
+                    List<? extends IUserUnit> uus =
+                        getPlatformEnvironment().listUserUnits(userCode);
+                    if(uus==null){
+                        return null;
+                    }
+                    return new ArrayList<>(uus);
+                }
                 List<IUserUnit> uus = new ArrayList<>(16);
                 for(IUserUnit uu : userUnits){
                     if(StringUtils.equals(userCode, uu.getUserCode())){
@@ -350,8 +361,15 @@ public abstract class CodeRepositoryCache {
     public static CachedMap<String, List<IUserUnit>> unitUsersMap=
         new CachedMap<>((unitCode)-> {
             List<? extends IUserUnit> userUnits = userUnitRepo.getCachedTarget();
-            if(userUnits == null)
-                return null;
+            if(userUnits == null) {
+                List<? extends IUserUnit> uus =
+                    getPlatformEnvironment().listUnitUsers(unitCode);
+                if(uus==null){
+                    return null;
+                }
+                return new ArrayList<>(uus);
+            }
+
             List<IUserUnit> uus = new ArrayList<>(16);
             for(IUserUnit uu : userUnits){
                 if(StringUtils.equals(unitCode, uu.getUnitCode() )){
@@ -359,7 +377,7 @@ public abstract class CodeRepositoryCache {
                 }
             }
             return uus;
-        },userUnitRepo, 100);
+        }, userUnitRepo, 100);
 
 
     public static CachedObject<List< ? extends IDataCatalog>> catalogRepo  =
