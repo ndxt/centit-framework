@@ -103,6 +103,6 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
         IDataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode);
         if(dd!=null)
             return Integer.valueOf(dd.getExtraCode());
-        return CodeRepositoryUtil.MAXXZRANK;
+        return IUserUnit.MAX_XZ_RANK;
     }
 }

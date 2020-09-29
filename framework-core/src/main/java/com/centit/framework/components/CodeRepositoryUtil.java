@@ -44,7 +44,7 @@ public abstract class CodeRepositoryUtil {
     public static final String F = "F";
 
     @Deprecated
-    public static final int MAXXZRANK = IUserUnit.MAXXZRANK;
+    public static final int MAXXZRANK = IUserUnit.MAX_XZ_RANK;
 
     private CodeRepositoryUtil()
     {
@@ -910,7 +910,7 @@ public abstract class CodeRepositoryUtil {
         IDataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode);
         if(dd!=null)
             return Integer.valueOf(dd.getExtraCode());
-        return IUserUnit.MAXXZRANK;
+        return IUserUnit.MAX_XZ_RANK;
     }
 
     /**
@@ -922,19 +922,19 @@ public abstract class CodeRepositoryUtil {
      */
     public static Integer getUserUnitXzRank(String userCode, String unitCode) {
         if (userCode == null) {
-            return IUserUnit.MAXXZRANK;
+            return IUserUnit.MAX_XZ_RANK;
         }
         IUserInfo ui = getUserRepo().get(userCode);
         if (ui == null) {
-            return IUserUnit.MAXXZRANK;
+            return IUserUnit.MAX_XZ_RANK;
         }
         String rankUnitCode = (unitCode == null) ? ui.getPrimaryUnit() : unitCode;
         if (StringUtils.isBlank(rankUnitCode)) {
-            return IUserUnit.MAXXZRANK;
+            return IUserUnit.MAX_XZ_RANK;
         }
 
         List<? extends IUserUnit> uus = listUserUnits(userCode);
-        Integer nRank = IUserUnit.MAXXZRANK;
+        Integer nRank = IUserUnit.MAX_XZ_RANK;
         for (IUserUnit uu : uus) {
             if (StringUtils.equals(rankUnitCode,uu.getUnitCode())
                 && getXzRank(uu.getUserRank()) < nRank) {

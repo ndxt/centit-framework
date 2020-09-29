@@ -1,6 +1,5 @@
 package com.centit.framework.components.impl;
 
-import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUserUnit;
@@ -165,7 +164,7 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     @Override
     public int getUserRank(String userCode) {
         List<? extends IUserUnit> uus = listUserUnits(userCode);
-        int nRank = CodeRepositoryUtil.MAXXZRANK;
+        int nRank = IUserUnit.MAX_XZ_RANK;
         if (uus != null) {
             for (IUserUnit uu : uus) {
                 int nr = getXzRank(uu.getUserRank());
@@ -180,7 +179,7 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     @Override
     public int getUserUnitRank(String userCode, String unitCode) {
         List<? extends IUserUnit> uus = listUserUnits(userCode);
-        int nRank = CodeRepositoryUtil.MAXXZRANK;
+        int nRank = IUserUnit.MAX_XZ_RANK;
         if (uus != null) {
             for (IUserUnit uu : uus) {
                 if (StringUtils.equals(uu.getUnitCode(), unitCode)) {

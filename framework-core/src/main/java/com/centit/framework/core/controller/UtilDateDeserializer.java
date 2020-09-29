@@ -8,7 +8,6 @@ import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
-import java.util.regex.Pattern;
 
 public class UtilDateDeserializer extends AbstractDateDeserializer implements ObjectDeserializer {
 

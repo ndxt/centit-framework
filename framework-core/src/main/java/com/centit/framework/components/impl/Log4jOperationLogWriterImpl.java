@@ -1,6 +1,5 @@
 package com.centit.framework.components.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.basedata.OperationLog;
 import org.slf4j.Logger;

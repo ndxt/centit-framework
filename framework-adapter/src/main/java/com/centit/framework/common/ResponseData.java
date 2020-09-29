@@ -1,7 +1,6 @@
 package com.centit.framework.common;
 
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
-import com.centit.support.algorithm.CollectionsOpt;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
