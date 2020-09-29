@@ -79,6 +79,13 @@ public interface PlatformEnvironment {
      */
     List<? extends IUnitInfo> listAllUnits();
 
+    /*
+     * 获取机构信息
+     * @param unitCode 机构主键
+     * @return 机构信息
+
+     IUnitInfo getUnitrInfo(String unitCode);
+    */
     /**
      * 获取所有用户和机构关联关系
      * @return List 所有用户和机构关联关系
@@ -168,11 +175,18 @@ public interface PlatformEnvironment {
      */
     CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone);
 
+    /*
+     * 获取用户信息
+     * @param userCode 用户主键
+     * @return 用户信息
+     *
+      IUserInfo getUserInfo(String userCode);
+    */
     /**
      * 根据用户ID修改用户信息
      * @param userInfo 用户信息
      */
-    void  updateUserInfo(IUserInfo userInfo);
+    void updateUserInfo(IUserInfo userInfo);
 
     /**
      * 获得用户设置参数
