@@ -969,6 +969,8 @@ public abstract class CodeRepositoryUtil {
      * @return 机构信息
      */
     public static IUnitInfo getUnitInfoByCode(String sUnit) {
+        //TODO 修改成 从缓存获取后判空，如果为null调用platformEnvironment对应的接口
+        //这个代码 写道 CodeRepositoryCache 中
         return getUnitRepo().get(sUnit);
     }
 

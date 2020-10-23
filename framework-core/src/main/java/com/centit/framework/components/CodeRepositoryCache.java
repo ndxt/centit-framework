@@ -29,7 +29,7 @@ public abstract class CodeRepositoryCache {
      */
     public final static long CACHE_FRESH_PERIOD_SECONDS = 900L;
     /**
-     * 用不过去，就把失效时间设定为一个月
+     * 永不过期，就把失效时间设定为一个月
      */
     public final static long CACHE_NEVER_EXPIRE = 30 * 24 * 60 * 60L;
 
