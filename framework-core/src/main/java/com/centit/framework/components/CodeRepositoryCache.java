@@ -192,6 +192,7 @@ public abstract class CodeRepositoryCache {
     }
 
     public static void refreshAsyncCache(){
+        CodeRepositoryCache.userInfoRepo.asyncRefreshData();
         CodeRepositoryCache.userUnitRepo.asyncRefreshData();
     }
 
@@ -219,8 +220,8 @@ public abstract class CodeRepositoryCache {
     /**
      * 缓存用户信息
      */
-    public static CachedObject<List<? extends IUserInfo>> userInfoRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllUsers(), CACHE_FRESH_PERIOD_SECONDS);
+    public static AsyncCachedObject<List<? extends IUserInfo>> userInfoRepo =
+        new AsyncCachedObject<>(()-> getPlatformEnvironment().listAllUsers(), CACHE_FRESH_PERIOD_SECONDS);
     /**
      * 派生的缓存信息，派生缓存相当于索引
      */
