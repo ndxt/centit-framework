@@ -193,6 +193,7 @@ public abstract class CodeRepositoryCache {
 
     public static void refreshAsyncCache(){
         CodeRepositoryCache.userInfoRepo.asyncRefreshData();
+        CodeRepositoryCache.unitInfoRepo.asyncRefreshData();
         CodeRepositoryCache.userUnitRepo.asyncRefreshData();
     }
 
@@ -295,8 +296,8 @@ public abstract class CodeRepositoryCache {
     /**
      * 缓存机构信息
      */
-    public static CachedObject<List<? extends IUnitInfo>> unitInfoRepo =
-        new CachedObject<>(()->{
+    public static AsyncCachedObject<List<? extends IUnitInfo>> unitInfoRepo =
+        new AsyncCachedObject<>(()->{
             List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits();
             CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
