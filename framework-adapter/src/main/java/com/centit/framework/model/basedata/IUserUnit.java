@@ -28,6 +28,7 @@ public interface IUserUnit{
 
     String getUnitCode();
     /**
+     * 这个属性 是多余的， 和 用户defaultUnit 重复（primaryUnit）
      * 是否为默认(主)机构 T:主机构 F：辅机构
      * @return 是否为默认(主)机构 T:主机构 F：辅机构
      */
