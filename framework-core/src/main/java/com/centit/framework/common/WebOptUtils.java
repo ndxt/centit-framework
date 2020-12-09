@@ -9,6 +9,8 @@ import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.JsonCentitUserDetails;
 import com.centit.support.algorithm.BooleanBaseOpt;
+import com.centit.support.common.ObjectException;
+import com.centit.support.file.FileIOOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -313,5 +316,13 @@ public class WebOptUtils {
             return null;
         }
         return ctx.getBean(beanName, clazz);
+    }
+
+    public static String getRequestBody(HttpServletRequest request) {
+        try {
+            return FileIOOpt.readStringFromInputStream(request.getInputStream());
+        } catch (IOException e) {
+            throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION, e);
+        }
     }
 }
