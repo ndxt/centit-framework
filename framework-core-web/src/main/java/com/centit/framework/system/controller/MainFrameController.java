@@ -17,6 +17,7 @@ import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IOptInfo;
+import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserRole;
 import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.SecurityContextUtils;
@@ -47,10 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.RenderedImage;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Api(value="框架中用户权限相关的接口，用户登录接口，第三方认证接口，安全接口",
     tags= "登录、权限、安全控制等接口")
@@ -664,6 +662,45 @@ public class MainFrameController extends BaseController {
                 ((CentitUserDetails)currentUser).getUserUnits(), IUserUnit.class);
         }
         return null;
+    }
+
+    @ApiOperation(value = "查询当前用户所属租户", notes = "查询当前用户所属租户")
+    @GetMapping(value = {"/topUnit","/tenant"})
+    @WrapUpResponseBody
+    public List<IUnitInfo> listCurrentTopUnits(HttpServletRequest request) {
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if(StringUtils.isBlank(userCode)){
+            throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
+        }
+        List<? extends IUserUnit> userUnits = platformEnvironment.listUserUnits(userCode);
+        //platformEnvironment.
+        Set<String> uintCodes = new HashSet<>();
+        for(IUserUnit uu : userUnits){
+            uintCodes.add(uu.getUnitCode());
+        }
+        Set<String> topUintCodes = new HashSet<>();
+        //获取 根机构
+        for(String uc : uintCodes) {
+            IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(uc);
+            String[] units = ui.getUnitPath().split("/");
+            String topUnit = null;
+            for(String tuc : units){
+                if(StringUtils.isNotBlank(tuc)){
+                    topUnit = tuc;
+                    break;
+                }
+            }
+            if(StringUtils.isNotBlank(topUnit)) {
+                topUintCodes.add(topUnit);
+            } else {
+                topUintCodes.add(uc);
+            }
+        }
+        List<IUnitInfo> uis = new ArrayList<>();
+        for(String uc : topUintCodes) {
+            uis.add(CodeRepositoryUtil.getUnitInfoByCode(uc));
+        }
+        return uis;
     }
 
     @GetMapping(value = "/userroles")
