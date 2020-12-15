@@ -325,4 +325,24 @@ public class WebOptUtils {
             throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION, e);
         }
     }
+
+    public static String getRequestFirstOneParameter(HttpServletRequest request, String... params) {
+        for (String p : params) {
+            String value = request.getParameter(p);
+            if (StringUtils.isNotBlank(value)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    public static String getRequestFirstOneHeader(HttpServletRequest request, String... params) {
+        for (String p : params) {
+            String value = request.getHeader(p);
+            if (StringUtils.isNotBlank(value)) {
+                return value;
+            }
+        }
+        return null;
+    }
 }
