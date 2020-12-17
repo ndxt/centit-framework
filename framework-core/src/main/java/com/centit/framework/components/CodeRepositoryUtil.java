@@ -1652,7 +1652,7 @@ public abstract class CodeRepositoryUtil {
                 prop.load(resource);
             }
         } catch (IOException e2) {
-            logger.error("获取系统参数出错！",e2);
+            logger.error("获取系统参数出错！" + e2.getMessage());
         }
         return prop;
         //}
