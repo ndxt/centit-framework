@@ -188,6 +188,10 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
     protected AjaxAuthenticationSuccessHandler createAjaxSuccessHandler() {
         AjaxAuthenticationSuccessHandler ajaxSuccessHandler = new AjaxAuthenticationSuccessHandler();
         String defaultTargetUrl = env.getProperty("login.success.targetUrl");
+        if(BooleanBaseOpt.castObjectToBoolean(
+            env.getProperty("login.success.alwaysUserTargetUrl"), false)) {
+            ajaxSuccessHandler.setAlwaysUseDefaultTargetUrl(true);
+        }
         ajaxSuccessHandler.setDefaultTargetUrl(StringBaseOpt.emptyValue(defaultTargetUrl,"/"));
 
         ajaxSuccessHandler.setWriteLog(BooleanBaseOpt.castObjectToBoolean(
