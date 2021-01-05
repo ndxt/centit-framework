@@ -37,6 +37,7 @@ public abstract class CodeRepositoryUtil {
     public static final String UNIT_CODE = "unitCode";
     public static final String DEP_NO = "depNo";
     public static final String ROLE_CODE = "roleCode";
+    public static final String OS_ID = "osId";
     public static final String OPT_ID = "optId";
     public static final String OPT_CODE = "optCode";
     public static final String OPT_DESC = "optDesc";
@@ -67,6 +68,10 @@ public abstract class CodeRepositoryUtil {
 
     public static List<? extends IRoleInfo> listAllRole() {
         return CodeRepositoryCache.roleInfoRepo.getCachedTarget();
+    }
+
+    public static List<? extends IOsInfo> listOsInfo() {
+        return CodeRepositoryCache.osInfoCache.getCachedTarget();
     }
 
     public static Map<String,? extends IOptInfo> getOptRepo() {
@@ -286,6 +291,18 @@ public abstract class CodeRepositoryUtil {
                     }
                     return oi.getOptName();
                 }
+                case CodeRepositoryUtil.OS_ID: {
+                    List<? extends IOsInfo> osInfos = listOsInfo();
+                    if(osInfos==null){
+                        return sKey;
+                    }
+                    for (IOsInfo osInfo : osInfos){
+                        if(StringUtils.equals(sKey, osInfo.getOsId())){
+                            return osInfo.getOsName();
+                        }
+                    }
+                    return sKey;
+                }
                 case CodeRepositoryUtil.OPT_CODE:{
                     IOptMethod od= getPowerRepo().get(sKey);
                     if(od==null)
@@ -370,6 +387,19 @@ public abstract class CodeRepositoryUtil {
                             return ent.getKey();
                     }
                     return sValue;
+
+                case CodeRepositoryUtil.OS_ID: {
+                    List<? extends IOsInfo> osInfos = listOsInfo();
+                    if (osInfos == null) {
+                        return sValue;
+                    }
+                    for (IOsInfo osInfo : osInfos) {
+                        if (StringUtils.equals(sValue, osInfo.getOsName())) {
+                            return osInfo.getOsId();
+                        }
+                    }
+                    return sValue;
+                }
                 case CodeRepositoryUtil.OPT_CODE:
                     for (Map.Entry<String,? extends IOptMethod> ent : getPowerRepo().entrySet()) {
                         if (sValue.equals(ent.getValue().getOptName()))
@@ -1277,6 +1307,16 @@ public abstract class CodeRepositoryUtil {
                 return lbvs;
             }
 
+            case CodeRepositoryUtil.OS_ID: {
+                List<? extends IOsInfo> osInfos = listOsInfo();
+                if (osInfos != null) {
+                    for (IOsInfo osInfo : osInfos) {
+                        lbvs.put(osInfo.getOsId(), osInfo.getOsName());
+                    }
+                }
+                return lbvs;
+            }
+
             case CodeRepositoryUtil.OPT_CODE: {
                 for (Map.Entry<String, ? extends IOptMethod> ent : getPowerRepo().entrySet()) {
                     IOptMethod value = ent.getValue();
@@ -1321,7 +1361,7 @@ public abstract class CodeRepositoryUtil {
      * @return 数据字典,忽略禁用的条目
      */
     public static List<OptionItem> getOptionForSelect(String sCatalog, String localLang) {
-        List<OptionItem> lbvs = new ArrayList<OptionItem>();
+        List<OptionItem> lbvs = new ArrayList<>();
 
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.USER_CODE)) {
             for (Map.Entry<String,? extends IUserInfo> ent : getUserRepo().entrySet()) {
@@ -1383,6 +1423,16 @@ public abstract class CodeRepositoryUtil {
             for (Map.Entry<String,? extends IOptInfo> ent : getOptRepo().entrySet()) {
                 IOptInfo value = ent.getValue();
                 lbvs.add(new OptionItem(value.getOptName(), value.getOptId()));
+            }
+            return lbvs;
+        }
+
+        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.OS_ID)) {
+            List<? extends IOsInfo> osInfos = listOsInfo();
+            if (osInfos != null) {
+                for (IOsInfo osInfo : osInfos) {
+                    lbvs.add(new OptionItem(osInfo.getOsName(), osInfo.getOsId()));
+                }
             }
             return lbvs;
         }
@@ -1748,4 +1798,23 @@ public abstract class CodeRepositoryUtil {
         }
         return null;
     }
+
+
+    /**
+     * 获取框架中注册的业务系统
+     * @param osId osId
+     * @return 框架中注册的业务系统
+     */
+    public static IOsInfo getOsInfo(String osId){
+        List<? extends IOsInfo> osInfos = listOsInfo();
+        if(osInfos!=null) {
+            for (IOsInfo osInfo : osInfos) {
+                if (StringUtils.equals(osId, osInfo.getOsId())) {
+                    return osInfo;
+                }
+            }
+        }
+        return null;
+    }
+
 }

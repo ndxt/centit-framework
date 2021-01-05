@@ -77,9 +77,9 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             List<UserRole> userroles = jsonArrayToObjectList(userRoleJSONArray, UserRole.class);
             allUserRoleRepo.setFreshData(userroles);
 
-            JSONArray UnitInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
+            JSONArray unitInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_UNITINFO"));
-            List<UnitInfo> unitinfos = jsonArrayToObjectList(UnitInfoJSONArray, UnitInfo.class);
+            List<UnitInfo> unitinfos = jsonArrayToObjectList(unitInfoJSONArray, UnitInfo.class);
             CodeRepositoryCache.unitInfoRepo.setFreshData(unitinfos);
 
             JSONArray userUnitJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
@@ -96,6 +96,11 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_DICTIONARY"));
             List<DataDictionary> datadictionaies = jsonArrayToObjectList(dataDictionaryJSONArray, DataDictionary.class);
             allDictionaryRepo.setFreshData(datadictionaies);
+
+            JSONArray osInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
+                ExtendedQueryPool.getExtendedSql("LIST_ALL_OS"));
+            List<OsInfo> osInfos = jsonArrayToObjectList(osInfoJSONArray, OsInfo.class);
+            CodeRepositoryCache.osInfoCache.setFreshData(osInfos);
         }
 
     }

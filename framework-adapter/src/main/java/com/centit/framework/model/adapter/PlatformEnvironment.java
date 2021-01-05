@@ -216,5 +216,11 @@ public interface PlatformEnvironment {
      */
     void insertOrUpdateMenu(List<? extends IOptInfo> optInfos,
                             List<? extends IOptMethod> optMethods);
+
+    /**
+     * 获取所有注册的业务系统
+     * @return 所有注册的业务系统
+     */
+    List<? extends IOsInfo> listOsInfos();
 }
 

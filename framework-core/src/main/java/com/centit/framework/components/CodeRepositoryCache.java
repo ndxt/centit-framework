@@ -106,6 +106,8 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.roleUsersRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.unitRolesRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.roleUnitsRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.osInfoCache.setFreshPeriod(periodSeconds);
+
     }
 
     private static void innerEvictCache(String cacheName, String mapKey){
@@ -172,6 +174,9 @@ public abstract class CodeRepositoryCache {
             case "RoleUnits":
                 CodeRepositoryCache.roleUnitsRepo.evictCahce();
                 break;
+            case "OsInfo":
+                CodeRepositoryCache.osInfoCache.evictCahce();
+                break;
         }
     }
 
@@ -211,6 +216,7 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.roleUsersRepo.evictCahce();
         CodeRepositoryCache.unitRolesRepo.evictCahce();
         CodeRepositoryCache.roleUnitsRepo.evictCahce();
+        CodeRepositoryCache.osInfoCache.evictCahce();
 
         if(CodeRepositoryCache.evictCacheExtOpt != null){
             CodeRepositoryCache.evictCacheExtOpt.evictAllCache();
@@ -515,4 +521,6 @@ public abstract class CodeRepositoryCache {
             return rolePowerMap;
         }, rolePowerRepo);
 
+    public static CachedObject<List<? extends IOsInfo>> osInfoCache =
+        new CachedObject<>(()->getPlatformEnvironment().listOsInfos(), CACHE_FRESH_PERIOD_SECONDS);
 }

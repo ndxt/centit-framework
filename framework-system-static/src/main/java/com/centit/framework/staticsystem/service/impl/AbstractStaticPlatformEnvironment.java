@@ -463,6 +463,12 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     @Override
+    public List<? extends IOsInfo> listOsInfos() {
+        reloadPlatformData();
+        return CodeRepositoryCache.osInfoCache.getCachedTarget();
+    }
+
+    @Override
     public List<? extends IUnitInfo> listAllUnits() {
         reloadPlatformData();
         return CodeRepositoryCache.unitInfoRepo.getCachedTarget();

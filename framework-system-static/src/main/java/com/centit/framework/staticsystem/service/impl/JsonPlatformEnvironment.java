@@ -85,6 +85,12 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             CodeRepositoryCache.catalogRepo.setFreshData(datacatalogs);
         }
 
+        tempJa = json.getJSONArray("osInfos");
+        if (tempJa != null) {
+            List<OsInfo> osInfos = tempJa.toJavaList(OsInfo.class);
+            CodeRepositoryCache.osInfoCache.setFreshData(osInfos);
+        }
+
         tempJa = json.getJSONArray("dataDictionaries");
         if (tempJa != null) {
             List<DataDictionary> datadictionaies = tempJa.toJavaList(DataDictionary.class);
