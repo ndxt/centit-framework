@@ -7,6 +7,7 @@ import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
 import com.centit.support.common.DerivativeCachedMap;
+import com.centit.support.common.ICachedObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,8 @@ public abstract class CodeRepositoryCache {
     /**
      * 默认15分钟，900秒
      */
-    public final static long CACHE_FRESH_PERIOD_SECONDS = 900L;
+    public final static long CACHE_FRESH_PERIOD_SECONDS =
+        ICachedObject.DEFALUT_FRESH_PERIOD;
     /**
      * 永不过期，就把失效时间设定为一个月
      */
