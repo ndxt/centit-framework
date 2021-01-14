@@ -28,7 +28,7 @@ public abstract class CodeRepositoryCache {
      * 默认15分钟，900秒
      */
     public final static long CACHE_FRESH_PERIOD_SECONDS =
-        ICachedObject.DEFALUT_FRESH_PERIOD;
+        ICachedObject.DEFAULT_REFRESH_PERIOD;
     /**
      * 永不过期，就把失效时间设定为一个月
      */
