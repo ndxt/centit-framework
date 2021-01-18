@@ -21,10 +21,13 @@ public class RequestThreadLocalFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
-        RequestThreadLocal.setHttpThreadWrapper(
+        if(request!=null && response!=null) {
+            RequestThreadLocal.setHttpThreadWrapper(
                 new HttpThreadWrapper((HttpServletRequest) request, (HttpServletResponse) response));
-
-        chain.doFilter(request, response);
+            if(chain!=null) {
+                chain.doFilter(request, response);
+            }
+        }
     }
 
     @Override
