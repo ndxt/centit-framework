@@ -5,6 +5,7 @@ import com.centit.framework.core.controller.MvcConfigUtil;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitUserDetailsService;
+import com.centit.framework.staticsystem.service.impl.JdbcPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.JsonPlatformEnvironment;
 import com.centit.framework.staticsystem.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,20 @@ public class FrameworkBeanConfiguation {
     @Lazy(value = false)
     public PlatformEnvironment platformEnvironment() {
 
-        JsonPlatformEnvironment jsonPlatformEnvironment = new JsonPlatformEnvironment();
-        jsonPlatformEnvironment.setAppHome(frameworkProperties.getApp().getHome());
-        jsonPlatformEnvironment.setPasswordEncoder(passwordEncoder);
-        return jsonPlatformEnvironment;
+        if (frameworkProperties.getJdbcplatform().isEnable()) {
+            JdbcPlatformEnvironment jdbcPlatformEnvironment = new JdbcPlatformEnvironment();
+            jdbcPlatformEnvironment.setDataBaseConnectInfo(
+                frameworkProperties.getJdbcplatform().getUrl(),
+                frameworkProperties.getJdbcplatform().getUsername(),
+                frameworkProperties.getJdbcplatform().getPassword());
+            jdbcPlatformEnvironment.setPasswordEncoder(passwordEncoder);
+            return jdbcPlatformEnvironment;
+        } else{
+            JsonPlatformEnvironment jsonPlatformEnvironment = new JsonPlatformEnvironment();
+            jsonPlatformEnvironment.setAppHome(frameworkProperties.getApp().getHome());
+            jsonPlatformEnvironment.setPasswordEncoder(passwordEncoder);
+            return jsonPlatformEnvironment;
+        }
     }
 
     @Bean

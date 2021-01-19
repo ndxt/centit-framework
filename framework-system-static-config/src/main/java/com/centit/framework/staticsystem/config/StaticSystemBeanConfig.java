@@ -48,9 +48,9 @@ public class StaticSystemBeanConfig implements EnvironmentAware {
             JdbcPlatformEnvironment jdbcPlatformEnvironment = new JdbcPlatformEnvironment();
 
             jdbcPlatformEnvironment.setDataBaseConnectInfo(
-                 env.getProperty("centit.jdbcplatform.url"),
-                    env.getProperty("centit.jdbcplatform.username"),
-                    env.getProperty("centit.jdbcplatform.password")
+                env.getProperty("centit.jdbcplatform.url"),
+                env.getProperty("centit.jdbcplatform.username"),
+                env.getProperty("centit.jdbcplatform.password")
             );
             jdbcPlatformEnvironment.setPasswordEncoder(passwordEncoder);
             return jdbcPlatformEnvironment;
