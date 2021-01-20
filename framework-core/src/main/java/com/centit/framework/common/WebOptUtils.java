@@ -138,6 +138,9 @@ public class WebOptUtils {
      * @return IUserInfo or CentitUserDetails
      */
     public static Object getLoginUser(HttpServletRequest request) {
+        if(request==null){
+            return null;
+        }
         if(WebOptUtils.requestInSpringCloud){
             return innerGetLoginUserFromCloud(request);
         }

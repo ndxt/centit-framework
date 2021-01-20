@@ -1209,7 +1209,7 @@ public abstract class CodeRepositoryUtil {
     public static Map<String,String> getLabelValueMap(String sCatalog){
         return innerGetLabelValueMap(sCatalog,
             WebOptUtils.getCurrentLang(
-                RequestThreadLocal.getLocalThreadWrapperRequest()),false);
+                RequestThreadLocal.getLocalThreadWrapperRequest()), false);
     }
 
     /**
