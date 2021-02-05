@@ -79,7 +79,6 @@ public class HttpReceiveJSON implements ToResponseData {
         return StringBaseOpt.objectToString(obj);
     }
 
-
     public <T> T getDataAsObject( Class<T> clazz) {
         Object data = getData();
         if(data==null) {
@@ -173,21 +172,27 @@ public class HttpReceiveJSON implements ToResponseData {
         return null;
     }
 
-    public static HttpReceiveJSON valueOfJson(String jsonStr){
-        if(jsonStr==null)
+    public static HttpReceiveJSON valueOf(Object json){
+        if(json==null)
             return null;
         HttpReceiveJSON recvJson = new HttpReceiveJSON();
-        recvJson.resObj = JSON.parse(jsonStr);
+        recvJson.resObj = JSON.toJSON(json);
         recvJson.isResponseData = false;
         if (recvJson.resObj instanceof JSONObject) {
             recvJson.resJSONObject = (JSONObject) recvJson.resObj;
             recvJson.isResponseData =
                 recvJson.resJSONObject.containsKey(ResponseData.RES_CODE_FILED) &&
-                recvJson.resJSONObject.containsKey(ResponseData.RES_MSG_FILED);
-                // ResponseData 可能没有data部分，但是code和message一定是有的。
-                // && recvJson.resJSONObject.containsKey(ResponseData.RES_DATA_FILED);
+                    recvJson.resJSONObject.containsKey(ResponseData.RES_MSG_FILED);
+            // ResponseData 可能没有data部分，但是code和message一定是有的。
+            // && recvJson.resJSONObject.containsKey(ResponseData.RES_DATA_FILED);
         }
         return recvJson;
+    }
+
+    public static HttpReceiveJSON valueOfJson(String jsonStr){
+        if(jsonStr==null)
+            return null;
+        return valueOf(JSON.parse(jsonStr));
     }
 
     public JSONObject getJSONObject() {
