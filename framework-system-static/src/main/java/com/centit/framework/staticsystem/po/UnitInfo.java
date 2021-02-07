@@ -54,6 +54,9 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
 
     private String depNo;
 
+    private String topUnit;
+
+    private String socialCreditCode;
 
     private String unitPath;
 
@@ -206,6 +209,24 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitDesc = unitdesc;
     }
 
+    @Override
+    public String getTopUnit() {
+        return topUnit;
+    }
+
+    public void setTopUnit(String topUnit) {
+        this.topUnit = topUnit;
+    }
+
+    @Override
+    public String getSocialCreditCode() {
+        return socialCreditCode;
+    }
+
+    public void setSocialCreditCode(String socialCreditCode) {
+        this.socialCreditCode = socialCreditCode;
+    }
+
     /**
      * 获取创建时间
      *
@@ -252,7 +273,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
     }
 
     public void copy(UnitInfo other) {
-
         this.parentUnit = other.getParentUnit();
         this.unitType = other.getUnitType();
         this.isValid = other.getIsValid();
@@ -266,6 +286,8 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitTag = other.getUnitTag();
         this.englishName =other.getEnglishName();
         this.unitPath =other.getUnitPath();
+        this.topUnit =other.getTopUnit();
+        this.socialCreditCode =other.getSocialCreditCode();
     }
 
     public void copyNotNullProperty(UnitInfo other) {
@@ -298,6 +320,10 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
             this.englishName =other.getEnglishName();
         if (other.getUnitPath() != null)
             this.unitPath =other.getUnitPath();
+        if (other.getTopUnit() != null)
+            this.topUnit =other.getTopUnit();
+        if (other.getSocialCreditCode() != null)
+            this.socialCreditCode =other.getSocialCreditCode();
     }
 
     public static String[] field2Name(Field[] f) {

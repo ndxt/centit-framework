@@ -19,6 +19,10 @@ public class NoticeMessage implements java.io.Serializable {
     /** 消息内容，为一个文本，不同的消息类别 可以有不同的格式
      */
     private String msgContent;
+    /**
+     * 所属业务id
+     */
+    private String osId;//application id
     /** 关联业务
      */
     private String optId;
@@ -53,6 +57,11 @@ public class NoticeMessage implements java.io.Serializable {
 
     public NoticeMessage content(String scontent){
         this.msgContent = scontent;
+        return this;
+    }
+
+    public NoticeMessage application(String osId){
+        this.osId = osId;
         return this;
     }
 

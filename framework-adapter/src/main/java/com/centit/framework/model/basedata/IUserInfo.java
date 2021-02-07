@@ -90,10 +90,16 @@ public interface IUserInfo{
     String getIdCardNo();
 
     /**
-     * 获取和第三方对接数据，一般为第三方业务数据组件
-     * @return 用户第三发业务中的主键
+     * 用户标签
+     * @return 用户标签
      */
     String getUserTag();
+
+    /**
+     * 用户第三发业务中的主键, 比如：警员号
+     * @return 用户第三发业务中的主键
+     */
+    String getUserWord();
 
     /**
      * @return 英文名

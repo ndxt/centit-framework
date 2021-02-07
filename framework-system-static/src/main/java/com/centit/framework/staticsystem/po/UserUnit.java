@@ -36,6 +36,13 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
     private String isPrimary; // 是否为主
     private Long userOrder;    //用户排序号
 
+    /**
+     * 用户顶级机构 用户帐套管理，作为 租户的标识
+     * 这个属性在创建时指定，并且不能变
+     * 在添加机构的时候，需要校验机构的 unitPath 必须包括这个机构
+     */
+    private String topUnit;
+
     protected Date createDate;
 
 
@@ -110,7 +117,14 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
         this.userCode = userCode;
     }
 
+    @Override
+    public String getTopUnit() {
+        return topUnit;
+    }
 
+    public void setTopUnit(String topUnit) {
+        this.topUnit = topUnit;
+    }
 
     public String getRankMemo() {
         return this.rankMemo;
@@ -161,6 +175,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
         this.userCode = other.getUserCode();
         this.unitCode = other.getUnitCode();
         this.userOrder = other.getUserOrder();
+        this.topUnit = other.getTopUnit();
      }
 
     public void copyNotNullProperty(UserUnit other) {
@@ -189,6 +204,8 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
         if (null != other.getUserOrder()) {
             this.userOrder = other.getUserOrder();
         }
-
+        if (other.getTopUnit() != null) {
+            this.topUnit = other.getTopUnit();
+        }
     }
 }
