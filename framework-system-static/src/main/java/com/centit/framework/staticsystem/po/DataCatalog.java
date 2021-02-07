@@ -40,6 +40,7 @@ public class DataCatalog implements IDataCatalog, java.io.Serializable{
 
     private String osId;
 
+    private String optId;
 
     private List<DataDictionary> dataDictionaries;
 
@@ -131,6 +132,15 @@ public class DataCatalog implements IDataCatalog, java.io.Serializable{
         this.topUnit = topUnit;
     }
 
+    @Override
+    public String getOptId() {
+        return optId;
+    }
+
+    public void setOptId(String optId) {
+        this.optId = optId;
+    }
+
     public void setFieldDesc(String fielddesc) {
 
         if (StringUtils.isNotBlank(fielddesc)) {
@@ -166,6 +176,7 @@ public class DataCatalog implements IDataCatalog, java.io.Serializable{
         this.catalogDesc = other.getCatalogDesc();
         this.fieldDesc = other.getFieldDesc();
         this.osId = other.getOsId();
+        this.optId = other.getOptId();
         this.needCache = other.getNeedCache();
 
     }
@@ -182,6 +193,9 @@ public class DataCatalog implements IDataCatalog, java.io.Serializable{
             this.catalogDesc = other.getCatalogDesc();
         if (other.getFieldDesc() != null)
             this.fieldDesc = other.getFieldDesc();
+        if (other.getOptId() != null) {
+            this.optId = other.getOptId();
+        }
         if (other.getOsId() != null) {
             this.osId = other.getOsId();
             this.needCache = other.getOsId() == null ? "1" : other.getNeedCache();

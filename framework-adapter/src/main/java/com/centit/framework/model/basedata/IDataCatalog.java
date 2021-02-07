@@ -25,10 +25,16 @@ public interface IDataCatalog{
     String getTopUnit();
 
     /**
-     * 所属系统/业务ID
-     * @return 所属系统/业务ID
+     * 所属系统ID
+     * @return 所属系统ID
      */
     String getOsId();
+
+    /**
+     * 所属业务ID
+     * @return 所属业务ID
+     */
+    String getOptId();
 
     /**
      * 类别形式  L 列表 T 为 树
