@@ -54,7 +54,7 @@ public abstract class AbstractStaticPlatformEnvironment
                     ((RoleInfo)ri).addRolePowers((RolePower)rp);
                     /*OptMethod om = getOptMethod(rp.getOptCode());
                     if(om!=null)
-                        userOptList.put(om.getOptId()+"-"+om.getOptMethod(), "T");*/
+                        userOptList.put(om.getOsId()+"-"+om.getOptMethod(), "T");*/
                 }
             }
         }

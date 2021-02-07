@@ -12,7 +12,7 @@ import java.util.List;
  * @author codefan@hotmail.com
  */
 
-public class DataCatalog implements IDataCatalog,java.io.Serializable{
+public class DataCatalog implements IDataCatalog, java.io.Serializable{
     private static final long serialVersionUID = 1L;
 
 
@@ -36,8 +36,9 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
     // 默认值为1如何设置？
     private String needCache; // 是否需要缓存
 
+    private String topUnit;
 
-    private String optId;
+    private String osId;
 
 
     private List<DataDictionary> dataDictionaries;
@@ -77,12 +78,12 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
 
     // Property accessors
 
-    public String getOptId() {
-        return optId;
+    public String getOsId() {
+        return osId;
     }
 
-    public void setOptId(String dictionarytype) {
-        this.optId = dictionarytype;
+    public void setOsId(String dictionarytype) {
+        this.osId = dictionarytype;
     }
 
     public String getCatalogName() {
@@ -121,6 +122,15 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
         return this.fieldDesc;
     }
 
+    @Override
+    public String getTopUnit() {
+        return topUnit;
+    }
+
+    public void setTopUnit(String topUnit) {
+        this.topUnit = topUnit;
+    }
+
     public void setFieldDesc(String fielddesc) {
 
         if (StringUtils.isNotBlank(fielddesc)) {
@@ -155,7 +165,7 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
         this.catalogType = other.getCatalogType();
         this.catalogDesc = other.getCatalogDesc();
         this.fieldDesc = other.getFieldDesc();
-        this.optId = other.getOptId();
+        this.osId = other.getOsId();
         this.needCache = other.getNeedCache();
 
     }
@@ -172,9 +182,9 @@ public class DataCatalog implements IDataCatalog,java.io.Serializable{
             this.catalogDesc = other.getCatalogDesc();
         if (other.getFieldDesc() != null)
             this.fieldDesc = other.getFieldDesc();
-        if (other.getOptId() != null) {
-            this.optId = other.getOptId();
-            this.needCache = other.getOptId() == null ? "1" : other.getNeedCache();
+        if (other.getOsId() != null) {
+            this.osId = other.getOsId();
+            this.needCache = other.getOsId() == null ? "1" : other.getNeedCache();
         }
 
     }
