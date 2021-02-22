@@ -197,14 +197,14 @@ public abstract class CodeRepositoryCache {
      * 缓存用户信息, 按照租户隔离
      */
     public static CachedMap<String, List<? extends IUserInfo>> userInfoRepo =
-        new CachedMap<>((tenant)-> getPlatformEnvironment().listAllUsers(),
+        new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllUsers(),
             CACHE_FRESH_PERIOD_SECONDS);
 
     /**
      * 缓存机构信息, 按照租户隔离
      */
     public static CachedMap<String, List<? extends IUnitInfo>> unitInfoRepo =
-        new CachedMap<>((tenant)->{
+        new CachedMap<>((topUnit)->{
             List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits();
             CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );

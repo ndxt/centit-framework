@@ -76,7 +76,7 @@ public abstract class CodeRepositoryUtil {
     }
 
     /**
-     * 获取数据字典
+     * 获取数
      *
      * @param sCatalog 字典类别代码
      * @return List 数据字典
@@ -170,7 +170,7 @@ public abstract class CodeRepositoryUtil {
      * @param localLang String类型
      * @return 数据字典对应的值
      */
-    public static String getValue(String sCatalog, String sKey,String localLang) {
+    public static String getValue(String sCatalog, String sKey, String localLang) {
         if(sCatalog.startsWith("userInfo.")){
             IUserInfo ui=getUserRepo().get(sKey);
             if(ui==null)

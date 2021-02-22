@@ -35,6 +35,7 @@ import java.util.Locale;
 public class WebOptUtils {
     public static final String LOCAL_LANGUAGE_LABLE="LOCAL_LANG";
     public static final String CURRENT_USER_CODE_TAG   = "cnt-current-user-code";
+    public static final String CURRENT_TOP_UNIT_TAG   = "cnt-current-top-unit";
     public static final String CURRENT_UNIT_CODE_TAG   = "cnt-current-uint-code";
     public static final String CURRENT_STATION_ID_TAG   = "cnt-current-station-id";
     public static final String CORRELATION_ID = "cnt-correlation-id";
@@ -120,6 +121,7 @@ public class WebOptUtils {
         }
         return innerGetUserDetailFromSession(session);
     }
+
     @Deprecated
     public static CentitUserDetails getLoginUser(HttpSession session) {
         return innerGetUserDetail(session);
@@ -268,6 +270,20 @@ public class WebOptUtils {
             }
         }
         return innerGetUserDetail(request.getSession());
+    }
+
+    public static String getCurrentTopUnit(HttpServletRequest request) {
+        if(WebOptUtils.requestInSpringCloud){
+            String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
+            if(StringUtils.isNotBlank(topUnit)){
+                return topUnit;
+            }
+        }
+        CentitUserDetails ud = innerGetUserDetail(request.getSession());
+        if (ud == null) {
+            return "";
+        }
+        return ud.getTopUnitCode();
     }
 
     public static String getCurrentUserCode(HttpServletRequest request) {
