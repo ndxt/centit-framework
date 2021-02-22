@@ -31,44 +31,23 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @SuppressWarnings("unused")
 public abstract class CodeRepositoryUtil {
-
-    public static final String LOGIN_NAME = "loginName";
     public static final String USER_CODE = "userCode";
     public static final String UNIT_CODE = "unitCode";
-    public static final String DEP_NO = "depNo";
     public static final String ROLE_CODE = "roleCode";
     public static final String OS_ID = "osId";
     public static final String OPT_ID = "optId";
     public static final String OPT_CODE = "optCode";
-    public static final String OPT_DESC = "optDesc";
     public static final String T = "T";
     public static final String F = "F";
 
     @Deprecated
     public static final int MAXXZRANK = IUserUnit.MAX_XZ_RANK;
 
-    private CodeRepositoryUtil()
-    {
+    private CodeRepositoryUtil(){
         throw new IllegalAccessError("Utility class");
     }
 
     private static final Logger logger = LoggerFactory.getLogger(CodeRepositoryUtil.class);
-
-    public static Map<String,? extends IUserInfo> getUserRepo() {
-        return CodeRepositoryCache.codeToUserMap.getCachedTarget();
-    }
-
-    public static Map<String,? extends IUserInfo> getLoginRepo() {
-        return CodeRepositoryCache.loginNameToUserMap.getCachedTarget();
-    }
-
-    public static Map<String,? extends IRoleInfo> getRoleRepo() {
-        return CodeRepositoryCache.codeToRoleMap.getCachedTarget();
-    }
-
-    public static List<? extends IRoleInfo> listAllRole() {
-        return CodeRepositoryCache.roleInfoRepo.getCachedTarget();
-    }
 
     public static List<? extends IOsInfo> listOsInfo() {
         return CodeRepositoryCache.osInfoCache.getCachedTarget();
@@ -95,38 +74,6 @@ public abstract class CodeRepositoryUtil {
     public static void registeExtendedCodeRepo(String catalog, CachedObject<Map<String, String>> repo){
         extendedCodeRepo.put(catalog, repo);
     }
-    /**
-     * 获取操作定义（权限的控制单位）
-     *
-     * @return Map 操作定义（权限的控制单位）
-     */
-    public static Map<String,? extends IOptMethod> getPowerRepo() {
-        return CodeRepositoryCache.codeToMethodMap.getCachedTarget();
-    }
-
-    public static Map<String, ? extends IUnitInfo> getUnitRepo() {
-        return CodeRepositoryCache.codeToUnitMap.getCachedTarget();
-    }
-
-    public static Map<String, ? extends IUnitInfo> getDepNo() {
-        return CodeRepositoryCache.depNoToUnitMap.getCachedTarget();
-    }
-
-    /**
-     * 获取所有数据字典类别
-     *
-     * @return Map 所有数据字典类别
-     */
-    public static Map<String,String> getDataCatalogMap() {
-        Map<String, String> dataCatalogMap = new HashMap<>();
-        List<? extends IDataCatalog> dataCatalogs = CodeRepositoryCache.catalogRepo.getCachedTarget();
-        if(dataCatalogs==null)
-            return dataCatalogMap;
-        for(IDataCatalog dataCatalog:dataCatalogs){
-            dataCatalogMap.put(dataCatalog.getCatalogCode(), dataCatalog.getCatalogName());
-        }
-        return dataCatalogMap;
-    }
 
     /**
      * 获取数据字典
@@ -138,16 +85,12 @@ public abstract class CodeRepositoryUtil {
         return CodeRepositoryCache.dictionaryRepo.getCachedValue(sCatalog);
     }
 
-    public static List<? extends IUnitInfo> listAllUnits() {
-        return CodeRepositoryCache.unitInfoRepo.getCachedTarget();
+    public static List<? extends IUnitInfo> listAllUnits(String topUnit) {
+        return CodeRepositoryCache.unitInfoRepo.getCachedValue(topUnit);
     }
 
-    public static List<? extends IUserInfo> listAllUsers() {
-        return CodeRepositoryCache.userInfoRepo.getCachedTarget();
-    }
-
-    public static List<? extends IUserUnit> listAllUserUnits() {
-        return CodeRepositoryCache.userUnitRepo.getCachedTarget();
+    public static List<? extends IUserInfo> listAllUsers(String topUnit) {
+        return CodeRepositoryCache.userInfoRepo.getCachedValue(topUnit);
     }
 
     public static List<? extends IUserUnit> listUserUnits(String userCode) {
@@ -579,26 +522,13 @@ public abstract class CodeRepositoryUtil {
     }
 
     /**
-     * 获取所有符合状态标记的用户，
+     * 获取当前租户所有的用户，
      *
-     * @param sState 用户状态， A 表示所有状态
+     * @param tenant 租户代码， topUnit
      * @return List 所有符合状态标记的用户
      */
-    public static List<IUserInfo> getAllUsers(String sState) {
-        List<? extends IUserInfo> allusers = CodeRepositoryCache.userInfoRepo.getCachedTarget();
-        List<IUserInfo> users = new ArrayList<>();
-
-        if("A".equals(sState)){
-            users.addAll(allusers);
-            return users;
-        }
-
-        for (IUserInfo value : allusers) {
-            if (sState.equals(value.getIsValid())) {
-                users.add(value);
-            }
-        }
-        return users;
+    public static List<? extends IUserInfo> listAllUserByTopUnit(String tenant) {
+        return CodeRepositoryCache.userInfoRepo.getCachedValue(tenant);
     }
 
     /**
@@ -1557,8 +1487,8 @@ public abstract class CodeRepositoryUtil {
      * @return 机构的下级机构
      */
     public static List<IUnitInfo> getSubUnits(String unitCode) {
-        List<? extends IUnitInfo> units = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
-        return fetchSubUnits(units,unitCode);
+        List<? extends IUnitInfo> units = CodeRepositoryCache.unitInfoRepo.getCachedValue(unitCode);
+        return fetchSubUnits(units, unitCode);
     }
     /**
      * 获取机构的下级机构，并按照树形排列
@@ -1567,6 +1497,7 @@ public abstract class CodeRepositoryUtil {
      * @return 机构的下级机构,并按照树形排列
      */
     public static List<IUnitInfo> getAllSubUnits(String unitCode) {
+        //TODO 先判断属于那个租户；
         List<? extends IUnitInfo> allunits = CodeRepositoryCache.unitInfoRepo.getCachedTarget();
         List<IUnitInfo> units = new ArrayList<>();
         List<IUnitInfo> subunits = fetchSubUnits(allunits,unitCode);

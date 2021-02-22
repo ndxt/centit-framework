@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,35 +78,26 @@ public abstract class CodeRepositoryCache {
      */
     public static void setAllCacheFreshPeriod(long periodSeconds){
         CodeRepositoryCache.userInfoRepo.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.codeToUserMap.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.loginNameToUserMap.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.idcardToUserMap.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.emailToUserMap.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.phoneToUserMap.setFreshPeriod(periodSeconds);
+        //CodeRepositoryCache.codeToUserMap.setFreshPeriod(periodSeconds);
+
         CodeRepositoryCache.unitInfoRepo.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.codeToUnitMap.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.depNoToUnitMap.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.userUnitRepo.setFreshPeriod(periodSeconds);
+        //CodeRepositoryCache.codeToUnitMap.setFreshPeriod(periodSeconds);
+
+        //CodeRepositoryCache.userUnitRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.userUnitsMap.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.unitUsersMap.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.catalogRepo.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.codeToCatalogMap.setFreshPeriod(periodSeconds);
+
+        //CodeRepositoryCache.catalogRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.dictionaryRepo.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.codeToDictionaryMap.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.dictionaryRepo.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.optInfoRepo.setFreshPeriod(periodSeconds);
+        //CodeRepositoryCache.codeToDictionaryMap.setFreshPeriod(periodSeconds);
+
+
         CodeRepositoryCache.codeToOptMap.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.optDataScopeRepo.setFreshPeriod(periodSeconds);
+
         CodeRepositoryCache.optMethodRepo.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.codeToMethodMap.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.roleInfoRepo.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.codeToRoleMap.setFreshPeriod(periodSeconds);
+
         CodeRepositoryCache.rolePowerRepo.setFreshPeriod(periodSeconds);
 
-        CodeRepositoryCache.userRolesRepo.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.roleUsersRepo.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.unitRolesRepo.setFreshPeriod(periodSeconds);
-        CodeRepositoryCache.roleUnitsRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.osInfoCache.setFreshPeriod(periodSeconds);
 
     }
@@ -115,27 +105,32 @@ public abstract class CodeRepositoryCache {
     private static void innerEvictCache(String cacheName, String mapKey){
         switch (cacheName){
             case "UserInfo":
-                CodeRepositoryCache.userInfoRepo.evictCahce();
-                /*CodeRepositoryCache.codeToUserMap.evictCahce();
-                CodeRepositoryCache.loginNameToUserMap.evictCahce();
-                CodeRepositoryCache.idcardToUserMap.evictCahce();
-                CodeRepositoryCache.emailToUserMap.evictCahce();
-                CodeRepositoryCache.phoneToUserMap.evictCahce();*/
+                if(StringUtils.isNotBlank(mapKey)){
+                    CodeRepositoryCache.userInfoRepo.evictIdentifiedCache(mapKey);
+                }else{
+                    CodeRepositoryCache.userInfoRepo.evictCahce();
+                }
                 break;
             case "UnitInfo":
-                CodeRepositoryCache.unitInfoRepo.evictCahce();
-                /*CodeRepositoryCache.codeToUnitMap.evictCahce();
-                CodeRepositoryCache.depNoToUnitMap.evictCahce();*/
+                if(StringUtils.isNotBlank(mapKey)){
+                    CodeRepositoryCache.unitInfoRepo.evictIdentifiedCache(mapKey);
+                }else{
+                    CodeRepositoryCache.unitInfoRepo.evictCahce();
+                }
                 break;
-
+            case "UnitUser":
+                if(StringUtils.isNotBlank(mapKey)){
+                    CodeRepositoryCache.unitUsersMap.evictIdentifiedCache(mapKey);
+                }else{
+                    CodeRepositoryCache.unitUsersMap.evictCahce();
+                }
+                break;
             case "UserUnit":
-                CodeRepositoryCache.userUnitRepo.evictCahce();
-                /*CodeRepositoryCache.userUnitsMap.evictCahce();
-                CodeRepositoryCache.unitUsersMap.evictCahce();*/
-                break;
-            case "DataCatalog":
-                CodeRepositoryCache.catalogRepo.evictCahce();
-                //CodeRepositoryCache.codeToCatalogMap.evictCahce();
+                if(StringUtils.isNotBlank(mapKey)){
+                    CodeRepositoryCache.userUnitsMap.evictIdentifiedCache(mapKey);
+                }else{
+                    CodeRepositoryCache.userUnitsMap.evictCahce();
+                }
                 break;
             case "DataDictionary":
                 if(StringUtils.isNotBlank(mapKey)){
@@ -154,27 +149,8 @@ public abstract class CodeRepositoryCache {
                 CodeRepositoryCache.optMethodRepo.evictCahce();
                 //CodeRepositoryCache.codeToMethodMap.evictCahce();
                 break;
-            case "optDataScope":
-                CodeRepositoryCache.optDataScopeRepo.evictCahce();
-                break;
-            case "RoleInfo":
-                CodeRepositoryCache.roleInfoRepo.evictCahce();
-                //CodeRepositoryCache.codeToRoleMap.evictCahce();
-                break;
             case "RolePower":
                 CodeRepositoryCache.rolePowerRepo.evictCahce();
-                break;
-            case "UserRoles":
-                CodeRepositoryCache.userRolesRepo.evictCahce();
-                break;
-            case "RoleUsers":
-                CodeRepositoryCache.roleUsersRepo.evictCahce();
-                break;
-            case "UnitRoles":
-                CodeRepositoryCache.unitRolesRepo.evictCahce();
-                break;
-            case "RoleUnits":
-                CodeRepositoryCache.roleUnitsRepo.evictCahce();
                 break;
             case "OsInfo":
                 CodeRepositoryCache.osInfoCache.evictCahce();
@@ -206,212 +182,56 @@ public abstract class CodeRepositoryCache {
     public static void evictAllCache(){
         CodeRepositoryCache.userInfoRepo.evictCahce();
         CodeRepositoryCache.unitInfoRepo.evictCahce();
-        CodeRepositoryCache.userUnitRepo.evictCahce();
-        CodeRepositoryCache.catalogRepo.evictCahce();
+        //CodeRepositoryCache.catalogRepo.evictCahce();
         CodeRepositoryCache.dictionaryRepo.evictCahce();
         CodeRepositoryCache.optInfoRepo.evictCahce();
-        CodeRepositoryCache.optDataScopeRepo.evictCahce();
         CodeRepositoryCache.optMethodRepo.evictCahce();
-        CodeRepositoryCache.roleInfoRepo.evictCahce();
         CodeRepositoryCache.rolePowerRepo.evictCahce();
-        CodeRepositoryCache.userRolesRepo.evictCahce();
-        CodeRepositoryCache.roleUsersRepo.evictCahce();
-        CodeRepositoryCache.unitRolesRepo.evictCahce();
-        CodeRepositoryCache.roleUnitsRepo.evictCahce();
         CodeRepositoryCache.osInfoCache.evictCahce();
-
         if(CodeRepositoryCache.evictCacheExtOpt != null){
             CodeRepositoryCache.evictCacheExtOpt.evictAllCache();
         }
     }
 
     /**
-     * 缓存用户信息
+     * 缓存用户信息, 按照租户隔离
      */
-    public static CachedObject<List<? extends IUserInfo>> userInfoRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllUsers(), CACHE_FRESH_PERIOD_SECONDS);
-    /**
-     * 派生的缓存信息，派生缓存相当于索引
-     */
-    public static CachedObject<Map<String, ? extends IUserInfo>> codeToUserMap =
-        new CachedObject<>(()-> {
-            List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
-            if(userInfos == null) {
-                return null;
-            }
-            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
-            for(IUserInfo userInfo : userInfos){
-                codeToUser.put(userInfo.getUserCode(), userInfo);
-            }
-            return codeToUser;
-        }, userInfoRepo);
-
-    public static CachedObject<Map<String, ? extends IUserInfo>> loginNameToUserMap =
-        new CachedObject<>(()-> {
-            List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
-            if(userInfos == null)
-                return null;
-            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
-            for(IUserInfo userInfo : userInfos){
-                codeToUser.put(userInfo.getLoginName(), userInfo);
-            }
-            return codeToUser;
-        },userInfoRepo);
-
-    public static CachedObject<Map<String, ? extends IUserInfo>> emailToUserMap  =
-        new CachedObject<>(()-> {
-            List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
-            if(userInfos == null)
-                return null;
-            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
-            for(IUserInfo userInfo : userInfos){
-                if(StringUtils.isNoneBlank(userInfo.getRegEmail())) {
-                    codeToUser.put(userInfo.getRegEmail(), userInfo);
-                }
-            }
-            return codeToUser;
-        }, userInfoRepo);
-
-    public static CachedObject<Map<String, ? extends IUserInfo>> phoneToUserMap =
-        new CachedObject<>(()-> {
-            List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
-            if(userInfos == null)
-                return null;
-            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
-            for(IUserInfo userInfo : userInfos){
-                if(StringUtils.isNoneBlank(userInfo.getRegCellPhone())) {
-                    codeToUser.put(userInfo.getRegCellPhone(), userInfo);
-                }
-            }
-            return codeToUser;
-        }, userInfoRepo);
-
-    public static CachedObject<Map<String, ? extends IUserInfo>> idcardToUserMap =
-        new CachedObject<>(()-> {
-            List<? extends IUserInfo> userInfos = userInfoRepo.getCachedTarget();
-            if(userInfos == null)
-                return null;
-            Map<String, IUserInfo> codeToUser = new HashMap<>(userInfos.size()+5);
-            for(IUserInfo userInfo : userInfos){
-                if(StringUtils.isNoneBlank(userInfo.getIdCardNo())) {
-                    codeToUser.put(userInfo.getIdCardNo(), userInfo);
-                }
-            }
-            return codeToUser;
-        }, userInfoRepo);
+    public static CachedMap<String, List<? extends IUserInfo>> userInfoRepo =
+        new CachedMap<>((tenant)-> getPlatformEnvironment().listAllUsers(),
+            CACHE_FRESH_PERIOD_SECONDS);
 
     /**
-     * 缓存机构信息
+     * 缓存机构信息, 按照租户隔离
      */
-    public static CachedObject<List<? extends IUnitInfo>> unitInfoRepo =
-        new CachedObject<>(()->{
+    public static CachedMap<String, List<? extends IUnitInfo>> unitInfoRepo =
+        new CachedMap<>((tenant)->{
             List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits();
             CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
             return allunits;
          }, CACHE_FRESH_PERIOD_SECONDS);
 
-    /**
-     * 机构的派生缓存
-     */
-    public static CachedObject<Map<String, ? extends IUnitInfo>> codeToUnitMap =
-        new CachedObject<>(()-> {
-            List<? extends IUnitInfo> unitInfos = unitInfoRepo.getCachedTarget();
-            if(unitInfos == null)
-                return null;
-            Map<String, IUnitInfo> codeToUnit = new HashMap<>(unitInfos.size()+5);
-            for(IUnitInfo unitInfo : unitInfos){
-                codeToUnit.put(unitInfo.getUnitCode(), unitInfo);
-            }
-            return codeToUnit;
-        }, unitInfoRepo);
-
-    public static CachedObject<Map<String, ? extends IUnitInfo>> depNoToUnitMap =
-        new CachedObject<>(()-> {
-            List<? extends IUnitInfo> unitInfos = unitInfoRepo.getCachedTarget();
-            if(unitInfos == null)
-                return null;
-            Map<String, IUnitInfo> codeToUnit = new HashMap<>(unitInfos.size()+5);
-            for(IUnitInfo unitInfo : unitInfos){
-                codeToUnit.put(unitInfo.getDepNo(), unitInfo);
-            }
-            return codeToUnit;
-        }, unitInfoRepo);
-
-
-    public static CachedObject<List<? extends IUserUnit>> userUnitRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllUserUnits(), CACHE_FRESH_PERIOD_SECONDS);
-    /**
+     /**
      * 派生缓存
      */
     public static CachedMap<String, List<? extends IUserUnit>> userUnitsMap =
-        new CachedMap<>((userCode)-> {
-                List<? extends IUserUnit> userUnits = userUnitRepo.getCachedTarget();
-                if(userUnits == null) {
-                    List<? extends IUserUnit> uus =
-                        getPlatformEnvironment().listUserUnits(userCode);
-                    if(uus==null){
-                        return null;
-                    }
-                    return new ArrayList<>(uus);
-                }
-                List<IUserUnit> uus = new ArrayList<>(16);
-                for(IUserUnit uu : userUnits){
-                    if(StringUtils.equals(userCode, uu.getUserCode())){
-                        uus.add( uu );
-                    }
-                }
-                return uus;
-            },
-            userUnitRepo, 300);
+        new CachedMap<>((userCode)-> getPlatformEnvironment().listUserUnits(userCode),
+            CACHE_FRESH_PERIOD_SECONDS, 300);
     /**
      * 派生缓存
      */
-    public static CachedMap<String, List<IUserUnit>> unitUsersMap=
-        new CachedMap<>((unitCode)-> {
-            List<? extends IUserUnit> userUnits = userUnitRepo.getCachedTarget();
-            if(userUnits == null) {
-                List<? extends IUserUnit> uus =
-                    getPlatformEnvironment().listUnitUsers(unitCode);
-                if(uus==null){
-                    return null;
-                }
-                return new ArrayList<>(uus);
-            }
+    public static CachedMap<String, List<? extends IUserUnit>> unitUsersMap=
+        new CachedMap<>(
+            (unitCode)-> getPlatformEnvironment().listUnitUsers(unitCode),
+            CACHE_FRESH_PERIOD_SECONDS, 100);
 
-            List<IUserUnit> uus = new ArrayList<>(16);
-            for(IUserUnit uu : userUnits){
-                if(StringUtils.equals(unitCode, uu.getUnitCode() )){
-                    uus.add( uu );
-                }
-            }
-            return uus;
-        }, userUnitRepo, 100);
-
-
-    public static CachedObject<List< ? extends IDataCatalog>> catalogRepo  =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllDataCatalogs(), CACHE_FRESH_PERIOD_SECONDS);
     /**
-     * 派生缓存，避免对象重复
+     * 数据字典列表
      */
-    public static CachedObject<Map<String, ? extends IDataCatalog>> codeToCatalogMap  =
-        new CachedObject<>(()-> {
-                List<? extends IDataCatalog> dataCatalogs = catalogRepo.getCachedTarget();
-                if(dataCatalogs==null)
-                    return null;
-                Map<String, IDataCatalog> dataCatalogMap = new HashMap<>(dataCatalogs.size()+5);
-                for( IDataCatalog dataCatalog : dataCatalogs){
-                    dataCatalogMap.put(dataCatalog.getCatalogCode(), dataCatalog);
-                }
-                return dataCatalogMap;
-            },
-            catalogRepo);
-
-
     public static CachedMap<String, List<? extends IDataDictionary>> dictionaryRepo =
         new CachedMap<>((sCatalog)->  getPlatformEnvironment().listDataDictionaries(sCatalog), CACHE_FRESH_PERIOD_SECONDS);
 
-    public static DerivativeCachedMap<String,List<? extends IDataDictionary>,
+    public static DerivativeCachedMap<String, List<? extends IDataDictionary>,
             Map<String,? extends IDataDictionary>> codeToDictionaryMap =
         new DerivativeCachedMap<>( (dataDictionarys )-> {
                 if(dataDictionarys==null)
@@ -425,21 +245,12 @@ public abstract class CodeRepositoryCache {
             dictionaryRepo, 100);
 
 
-    public static CachedObject<List<? extends IRoleInfo>> roleInfoRepo=
-        new CachedObject<>(()-> getPlatformEnvironment().listAllRoleInfo(), CACHE_FRESH_PERIOD_SECONDS);
+    public static CachedObject<List<? extends IOsInfo>> osInfoCache =
+        new CachedObject<>(()->getPlatformEnvironment().listOsInfos(), CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedObject<Map<String, ? extends IRoleInfo>> codeToRoleMap=
-            new CachedObject<>(()-> {
-                List<? extends IRoleInfo> roleInfos = roleInfoRepo.getCachedTarget();
-                if(roleInfos==null)
-                    return null;
-                Map<String, IRoleInfo> codeMap = new HashMap<>(roleInfos.size()+5);
-                for( IRoleInfo data : roleInfos){
-                    codeMap.put(data.getRoleCode(), data);
-                }
-                return codeMap;
-            }, roleInfoRepo);
-
+    /*
+     * 下面的缓存信息用于spring security 中的用户的权限信息缓存
+     */
     public static CachedObject<List<? extends IOptInfo>> optInfoRepo=
         new CachedObject<>(()-> getPlatformEnvironment().listAllOptInfo(), CACHE_FRESH_PERIOD_SECONDS);
 
@@ -455,74 +266,12 @@ public abstract class CodeRepositoryCache {
             return codeMap;
         }, optInfoRepo);
 
-    public static CachedObject<Map<String, List<IOptDataScope>>> optDataScopeRepo=
-        new CachedObject<>(()->{
-            List<? extends IOptDataScope> optDataScopes = getPlatformEnvironment().listAllOptDataScope();
-            Map<String,List<IOptDataScope>> optDataScopeMap = new HashMap<>(200);
-            if(optDataScopes != null) {
-                for (IOptDataScope dataScope : optDataScopes) {
-                    List<IOptDataScope> odss = optDataScopeMap.get(dataScope.getOptId());
-                    if (odss == null) {
-                        odss = new ArrayList<>(4);
-                    }
-                    odss.add(dataScope);
-                    optDataScopeMap.put(dataScope.getOptId(), odss);
-                }
-            }
-            return optDataScopeMap;
-        }, CACHE_FRESH_PERIOD_SECONDS);
-
 
     public static CachedObject<List<? extends IOptMethod>> optMethodRepo=
         new CachedObject<>(()-> getPlatformEnvironment().listAllOptMethod(), CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedObject<Map<String, ? extends IOptMethod>> codeToMethodMap=
-        new CachedObject<>(()-> {
-            List<? extends IOptMethod> methods = optMethodRepo.getCachedTarget();
-            if(methods==null)
-                return null;
-            Map<String, IOptMethod> codeMap = new HashMap<>(methods.size()+5);
-            for( IOptMethod data : methods){
-                codeMap.put(data.getOptCode(), data);
-            }
-            return codeMap;
-        }, optMethodRepo);
-
-
-    public static CachedMap<String, List<? extends IUserRole>> userRolesRepo =
-        new CachedMap<>((sUserCode)-> getPlatformEnvironment().listUserRoles(sUserCode),
-            5);
-
-    public static CachedMap<String, List<? extends IUserRole>> roleUsersRepo =
-        new CachedMap<>((sRoleCode)-> getPlatformEnvironment().listRoleUsers(sRoleCode),
-            5);
-
-    public static CachedMap<String, List<? extends IUnitRole>> unitRolesRepo =
-        new CachedMap<>((sUnitCode)-> getPlatformEnvironment().listUnitRoles(sUnitCode),
-            5);
-
-    public static CachedMap<String, List<? extends IUnitRole>> roleUnitsRepo =
-        new CachedMap<>((sRoleCode)-> getPlatformEnvironment().listRoleUnits(sRoleCode),
-            5);
-
     public static CachedObject<List<? extends IRolePower>> rolePowerRepo =
         new CachedObject<>(()-> getPlatformEnvironment().listAllRolePower(), CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedObject<Map<String, List<IRolePower>>> rolePowerMap =
-        new CachedObject<>(()-> {
-            List<? extends IRolePower> allRowPowers = CodeRepositoryCache.rolePowerRepo.getCachedTarget();
-            Map<String,List<IRolePower>> rolePowerMap = new HashMap<>(100);
-            for(IRolePower rolePower: allRowPowers){
-                List<IRolePower> odss = rolePowerMap.get(rolePower.getRoleCode());
-                if(odss==null){
-                    odss = new ArrayList<>(4);
-                }
-                odss.add(rolePower);
-                rolePowerMap.put(rolePower.getRoleCode(), odss);
-            }
-            return rolePowerMap;
-        }, rolePowerRepo);
-
-    public static CachedObject<List<? extends IOsInfo>> osInfoCache =
-        new CachedObject<>(()->getPlatformEnvironment().listOsInfos(), CACHE_FRESH_PERIOD_SECONDS);
 }
+
