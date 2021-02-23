@@ -31,6 +31,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @SuppressWarnings("unused")
 public abstract class CodeRepositoryUtil {
+    public static final String TOP_UNIT_NO_TENANT = "root";
+    public static final String SYSTEM_ADMIN_TENANT = "system";
+
     public static final String USER_CODE = "userCode";
     public static final String UNIT_CODE = "unitCode";
     public static final String ROLE_CODE = "roleCode";
@@ -159,8 +162,10 @@ public abstract class CodeRepositoryUtil {
      * @return  数据字典对应的值
      */
     public static String getValue(String sCatalog, String sKey) {
-        return getValue(sCatalog,sKey,WebOptUtils.getCurrentLang(
-            RequestThreadLocal.getLocalThreadWrapperRequest()));
+        HttpServletRequest request = RequestThreadLocal.getLocalThreadWrapperRequest();
+        return getValue(sCatalog,sKey,
+            WebOptUtils.getCurrentLang(request)
+        );
     }
     /**
      * 获取数据字典对应的值，
@@ -171,6 +176,7 @@ public abstract class CodeRepositoryUtil {
      * @return 数据字典对应的值
      */
     public static String getValue(String sCatalog, String sKey, String localLang) {
+
         if(sCatalog.startsWith("userInfo.")){
             IUserInfo ui=getUserRepo().get(sKey);
             if(ui==null)
