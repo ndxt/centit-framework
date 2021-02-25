@@ -48,10 +48,8 @@ public interface IUserInfo{
     String getLoginName();
 
     /**
-     * 用户顶级机构 用户帐套管理，作为 租户的标识
-     * 这个属性在创建时指定，并且不能变
-     * 在添加机构的时候，需要校验机构的 unitPath 必须包括这个机构
-     * @return 用户顶级机构
+     * 用户默认的租户，每次登录后修改这个属性
+     * @return 用户默认租户
      */
     String getTopUnit();
 
