@@ -17,6 +17,8 @@ public interface IOsInfo {
     String getOauthUser();
 
     String getOauthPassword();
+
+    String getTopUnit();
     /**
      * 关联的顶层菜单ID
      */

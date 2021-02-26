@@ -11,6 +11,9 @@ public class OsInfo implements IOsInfo, java.io.Serializable {
 
     private String osUrl;
 
+    private String topUnit;
+
+
     private String osHomePage;
 
     private String oauthUser;
@@ -88,5 +91,14 @@ public class OsInfo implements IOsInfo, java.io.Serializable {
 
     public void setRelOptId(String relOptId) {
         this.relOptId = relOptId;
+    }
+
+    @Override
+    public String getTopUnit() {
+        return topUnit;
+    }
+
+    public void setTopUnit(String topUnit) {
+        this.topUnit = topUnit;
     }
 }

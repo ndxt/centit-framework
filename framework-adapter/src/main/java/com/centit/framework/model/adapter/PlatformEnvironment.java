@@ -7,51 +7,7 @@ import java.util.List;
 
 public interface PlatformEnvironment {
 
-    /**
-     * 获取用户所有菜单功能
-     * @param userCode userCode
-     * @param asAdmin 是否是作为管理员
-     * @return  List 用户所有菜单功能
-     */
-    List<? extends IOptInfo> listUserMenuOptInfos(String userCode,boolean asAdmin);
-
-    /**
-     * 获取用户所有菜单功能
-     * @param userCode userCode
-     * @param superOptId superOptId
-     * @param asAdmin 是否是作为管理员
-     * @return List 用户所有菜单功能
-     */
-    List<? extends IOptInfo> listUserMenuOptInfosUnderSuperOptId(
-            String userCode,String superOptId,boolean asAdmin);
-
-    /**
-     * 获取用户所有角色
-     * @param userCode 用户代码
-     * @return  List 用户所有菜单功能
-     */
-    List<? extends IUserRole> listUserRoles(String userCode);
-
-    /**
-     * 获取拥有该角色的所有用户
-     * @param roleCode 角色代码
-     * @return  List 用户所有菜单功能
-     */
-    List<? extends IUserRole> listRoleUsers(String roleCode);
-
-    /**
-     * 获取用户所有角色
-     * @param unitCode 机构代码
-     * @return  List 用户所有菜单功能
-     */
-    List<? extends IUnitRole> listUnitRoles(String unitCode);
-
-    /**
-     * 获取拥有该角色的所有用户
-     * @param roleCode 角色代码
-     * @return  List 用户所有菜单功能
-     */
-    List<? extends IUnitRole> listRoleUnits(String roleCode);
+    /*用户组织和机构相关接口*/
 
     /**
      * 修改用户密码
@@ -66,15 +22,18 @@ public interface PlatformEnvironment {
      * @param userPassword userPassword
      * @return 验证结果
      */
-    boolean checkUserPassword(String userCode,String userPassword);
+    boolean checkUserPassword(String userCode, String userPassword);
     /**
-     * 获取所有用户，
+     * 获取当全租户所有用户，
      * @return List 所有用户
      */
     List<? extends IUserInfo> listAllUsers(String topUnit);
 
     /**
-     * 获取所有机构
+     * 获取当全租户所有机构
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
+     *                通过 unitpath来过滤
      * @return List 所有机构
      */
     List<? extends IUnitInfo> listAllUnits(String topUnit);
@@ -88,6 +47,9 @@ public interface PlatformEnvironment {
     */
     /**
      * 获取所有用户和机构关联关系
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
+     *                通过 unitpath来过滤
      * @return List 所有用户和机构关联关系
      */
     List<? extends IUserUnit> listAllUserUnits(String topUnit);
@@ -106,47 +68,110 @@ public interface PlatformEnvironment {
      */
     List<? extends IUserUnit> listUnitUsers(String unitCode);
 
+    /*权限相关的*/
+
+
+    /**
+      * 获取当前租户有那些应用
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
+     *                通过 unitpath来过滤
+     * @return 所有注册的业务系统
+     */
+    List<? extends IOsInfo> listOsInfos(String topUnit);
+
+    /*
+     * 获取用户所有菜单功能; 获取某个应用的菜单
+     * @param userCode userCode
+     * @param asAdmin 是否是作为管理员
+      * @return  List 用户所有菜单功能
+     * 这个接口可以废弃调，用 listUserMenuOptInfosUnderSuperOptId 代地
+     */
+    /*@Deprecated
+    List<? extends IOptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin);
+*/
+    /**
+     * 获取用户所有菜单功能
+     * @param userCode userCode
+     * @param superOptId 应用id 对应osinfo的osid 或者 对应paas平台的applicationId， 对应菜单树中
+     *      *             根菜单（顶层菜单）的optId
+     *                   如果 superOptId = 'all'  返回所有的
+     * @param asAdmin 是否是作为管理员
+     * @return List 用户所有菜单功能
+     */
+    List<? extends IOptInfo> listUserMenuOptInfosUnderSuperOptId(
+            String userCode, String superOptId, boolean asAdmin);
+
+    /**
+     * 获取用户所有角色
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
+     * @param userCode 用户代码
+     * @return  List 用户所有菜单功能
+     */
+    List<? extends IUserRole> listUserRoles(String topUnit, String userCode);
+
+    /**
+     * 获取拥有该角色的所有用户
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
+     * @param roleCode 角色代码
+     * @return  List 用户所有菜单功能
+     */
+    List<? extends IUserRole> listRoleUsers(String topUnit, String roleCode);
+
+    /**
+     * 获取用户所有角色
+     * @param unitCode 机构代码
+     * @return  List 用户所有菜单功能
+     */
+    List<? extends IUnitRole> listUnitRoles(String unitCode);
+
+    /**
+     * 获取拥有该角色的所有用户
+     * @param roleCode 角色代码
+     * @return  List 用户所有菜单功能
+     */
+    List<? extends IUnitRole> listRoleUnits(String roleCode);
+
+
     /**
      * 获取所有角色信息
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
      * @return List 操作方法信息
      */
-    List<? extends IRoleInfo> listAllRoleInfo();
+    List<? extends IRoleInfo> listAllRoleInfo(String topUnit);
 
     /**
      * 获取所有角色和权限对应关系
      * @return List 操作方法信息
      */
-    List<? extends IRolePower> listAllRolePower();
+    List<? extends IRolePower> listAllRolePower(String topUnit);
 
 
     /**
      * 获取业务操作信息
+     * @param superOptId 应用id 对应osinfo的osid 或者 对应paas平台的applicationId， 对应菜单树中
+     *                 根菜单（顶层菜单）的optId
+     *                   如果 superOptId = 'all'  返回所有的
      * @return List 业务信息
      */
-    List<? extends IOptInfo> listAllOptInfo();
+    List<? extends IOptInfo> listAllOptInfo(String superOptId);
 
     /**
      * 获取操作方法信息
+     * @param superOptId 应用id 对应osinfo的osid 或者 对应paas平台的applicationId， 对应菜单树中
+     *                 根菜单（顶层菜单）的optId
+     *                   如果 superOptId = 'all'  返回所有的
      * @return List 操作方法信息
      */
-    List<? extends IOptMethod> listAllOptMethod();
+    List<? extends IOptMethod> listAllOptMethod(String superOptId);
 
     /**
      * @return 所有的数据范围定义表达式
      */
-    List<? extends IOptDataScope> listAllOptDataScope();
-    /**
-     * 获取所有数据字典类别信息
-     * @return List 所有数据字典类别信息
-     */
-    List<? extends IDataCatalog> listAllDataCatalogs();
-
-    /**
-     * 获取所有数据字典类别信息
-     * @param catalogCode catalogCode
-     * @return List 所有数据字典类别信息
-     */
-    List<? extends IDataDictionary> listDataDictionaries(String catalogCode);
+    List<? extends IOptDataScope> listAllOptDataScope(String superOptId);
 
     /**
      * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
@@ -209,18 +234,31 @@ public interface PlatformEnvironment {
      */
     void saveUserSetting(IUserSetting userSetting);
 
-    /**
+    /*
      * 新增菜单和操作
      * @param optInfos 菜单对象集合
      * @param optMethods 操作对象集合
      */
+    /*
     void insertOrUpdateMenu(List<? extends IOptInfo> optInfos,
-                            List<? extends IOptMethod> optMethods);
+                            List<? extends IOptMethod> optMethods);*/
+
+    /*数据字典相关接口*/
+    /**
+     * 获取所有数据字典类别信息
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
+     * @return List 所有数据字典类别信息
+     */
+    List<? extends IDataCatalog> listAllDataCatalogs(String topUnit);
 
     /**
-     * 获取所有注册的业务系统
-     * @return 所有注册的业务系统
+     * 获取所有数据字典类别信息
+     * @param catalogCode catalogCode
+     * @return List 所有数据字典类别信息
      */
-    List<? extends IOsInfo> listOsInfos();
+    List<? extends IDataDictionary> listDataDictionaries(String catalogCode);
+
+
 }
 

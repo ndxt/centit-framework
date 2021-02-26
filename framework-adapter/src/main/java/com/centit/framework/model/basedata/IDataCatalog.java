@@ -4,7 +4,7 @@ package com.centit.framework.model.basedata;
  * @author codefan@hotmail.com
  */
 
-public interface IDataCatalog{
+public interface  IDataCatalog{
 
     /**
      * 类别代码
