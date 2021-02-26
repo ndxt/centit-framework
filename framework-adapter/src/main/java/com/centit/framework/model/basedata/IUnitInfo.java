@@ -40,6 +40,7 @@ public interface IUnitInfo{
 
     /**
      * 上级机构代码
+     * parentUnit 为 空 可作为租户
      * @return 上级机构代码
      */
      @DictionaryMap(fieldName = "parentUnitName", value = "unitCode")
