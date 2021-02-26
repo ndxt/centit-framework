@@ -61,9 +61,9 @@ public interface UserUnitFilterCalcContext {
 
     boolean seekToRightBracket();
 
-    List<? extends IUserInfo> listAllUserInfo();
+    List<? extends IUserInfo> listAllUserInfo(String topUnit);
 
-    List<? extends IUnitInfo> listAllUnitInfo();
+    List<? extends IUnitInfo> listAllUnitInfo(String topUnit);
 
     /**
      * 获得机构所有的子机构
@@ -76,7 +76,7 @@ public interface UserUnitFilterCalcContext {
 
     IUnitInfo getUnitInfoByCode(String unitCode);
 
-    List<? extends IUserUnit> listAllUserUnits();
+    List<? extends IUserUnit> listAllUserUnits(String topUnit);
 
     List<? extends IUserUnit> listUnitUsers(String unitCode);
 

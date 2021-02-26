@@ -538,6 +538,21 @@ public abstract class CodeRepositoryUtil {
     }
 
     /**
+     * 获取当前用户所有的租户
+     *
+     * @return List 所有符合状态标记的租户
+     */
+    public static List<String> listAllTenantsByCurrentUser() {
+        Object userDetails = WebOptUtils.getLoginUser(RequestThreadLocal.getLocalThreadWrapperRequest());
+        String userCode = "";
+        if (userDetails instanceof CentitUserDetails) {
+            userCode =  ((CentitUserDetails)userDetails).getUserCode();
+        }
+        //return CodeRepositoryCache.userInfoRepo.getCachedValue(userCode);
+        return null;
+    }
+
+    /**
      * 获取一个机构下面的所有以这个机构为主机构的用户，并且根据排序号排序
      *
      * @param unitCode unitCode

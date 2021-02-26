@@ -457,9 +457,9 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     @Override
-    public List<? extends IUserInfo> listAllUsers() {
+    public List<? extends IUserInfo> listAllUsers(String topUnit) {
         reloadPlatformData();
-        return CodeRepositoryCache.userInfoRepo.getCachedTarget();
+        return CodeRepositoryCache.userInfoRepo.getCachedValue(topUnit);
     }
 
     @Override
@@ -469,14 +469,16 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     @Override
-    public List<? extends IUnitInfo> listAllUnits() {
+    public List<? extends IUnitInfo> listAllUnits(String topUnit) {
         reloadPlatformData();
-        return CodeRepositoryCache.unitInfoRepo.getCachedTarget();
+        //return CodeRepositoryCache.unitInfoRepo.getCachedTarget(topUnit);
+        return CodeRepositoryCache.unitInfoRepo.getCachedValue(topUnit);
     }
 
     @Override
-    public List<? extends IUserUnit> listAllUserUnits(){
+    public List<? extends IUserUnit> listAllUserUnits(String topUnit){
         reloadPlatformData();
+        //return CodeRepositoryCache.userUnitRepo.getCachedTarget();
         return CodeRepositoryCache.userUnitRepo.getCachedTarget();
     }
 

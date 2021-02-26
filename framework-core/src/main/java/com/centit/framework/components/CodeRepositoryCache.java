@@ -183,6 +183,7 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.userInfoRepo.evictCahce();
         CodeRepositoryCache.unitInfoRepo.evictCahce();
         //CodeRepositoryCache.catalogRepo.evictCahce();
+        //CodeRepositoryCache.userUnitRepo.evictCahce();
         CodeRepositoryCache.dictionaryRepo.evictCahce();
         CodeRepositoryCache.optInfoRepo.evictCahce();
         CodeRepositoryCache.optMethodRepo.evictCahce();
@@ -197,7 +198,7 @@ public abstract class CodeRepositoryCache {
      * 缓存用户信息, 按照租户隔离
      */
     public static CachedMap<String, List<? extends IUserInfo>> userInfoRepo =
-        new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllUsers(),
+        new CachedMap<>((topUnit) -> getPlatformEnvironment().listAllUsers(topUnit),
             CACHE_FRESH_PERIOD_SECONDS);
 
     /**
@@ -205,7 +206,7 @@ public abstract class CodeRepositoryCache {
      */
     public static CachedMap<String, List<? extends IUnitInfo>> unitInfoRepo =
         new CachedMap<>((topUnit)->{
-            List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits();
+            List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits(topUnit);
             CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
             return allunits;

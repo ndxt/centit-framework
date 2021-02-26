@@ -16,13 +16,13 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     }
 
     @Override
-    public List<? extends IUserInfo> listAllUserInfo(){
-        return CodeRepositoryUtil.listAllUsers();
+    public List<? extends IUserInfo> listAllUserInfo(String topUnit){
+        return CodeRepositoryUtil.listAllUsers(topUnit);
     }
 
     @Override
-    public List<? extends IUnitInfo> listAllUnitInfo() {
-        return CodeRepositoryUtil.listAllUnits();
+    public List<? extends IUnitInfo> listAllUnitInfo(String topUnit) {
+        return CodeRepositoryUtil.listAllUnits(topUnit);
     }
 
     @Override
@@ -36,8 +36,9 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     }
 
     @Override
-    public List<? extends IUserUnit> listAllUserUnits() {
-        return CodeRepositoryUtil.listAllUserUnits();
+    public List<? extends IUserUnit> listAllUserUnits(String topUnit) {
+        //return CodeRepositoryUtil.listAllUserUnits(topUnit);
+        return null;
     }
 
     @Override

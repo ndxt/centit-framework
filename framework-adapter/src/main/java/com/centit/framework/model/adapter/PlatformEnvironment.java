@@ -71,13 +71,13 @@ public interface PlatformEnvironment {
      * 获取所有用户，
      * @return List 所有用户
      */
-    List<? extends IUserInfo> listAllUsers();
+    List<? extends IUserInfo> listAllUsers(String topUnit);
 
     /**
      * 获取所有机构
      * @return List 所有机构
      */
-    List<? extends IUnitInfo> listAllUnits();
+    List<? extends IUnitInfo> listAllUnits(String topUnit);
 
     /*
      * 获取机构信息
@@ -90,7 +90,7 @@ public interface PlatformEnvironment {
      * 获取所有用户和机构关联关系
      * @return List 所有用户和机构关联关系
      */
-    List<? extends IUserUnit> listAllUserUnits();
+    List<? extends IUserUnit> listAllUserUnits(String topUnit);
 
     /**
      * 根据用户代码获得 用户所有的机构信息
