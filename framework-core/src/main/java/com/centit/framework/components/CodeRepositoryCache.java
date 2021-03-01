@@ -79,27 +79,18 @@ public abstract class CodeRepositoryCache {
     public static void setAllCacheFreshPeriod(long periodSeconds){
         CodeRepositoryCache.userInfoRepo.setFreshPeriod(periodSeconds);
         //CodeRepositoryCache.codeToUserMap.setFreshPeriod(periodSeconds);
-
         CodeRepositoryCache.unitInfoRepo.setFreshPeriod(periodSeconds);
         //CodeRepositoryCache.codeToUnitMap.setFreshPeriod(periodSeconds);
-
         //CodeRepositoryCache.userUnitRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.userUnitsMap.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.unitUsersMap.setFreshPeriod(periodSeconds);
-
         //CodeRepositoryCache.catalogRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.dictionaryRepo.setFreshPeriod(periodSeconds);
         //CodeRepositoryCache.codeToDictionaryMap.setFreshPeriod(periodSeconds);
-
-
-        CodeRepositoryCache.codeToOptMap.setFreshPeriod(periodSeconds);
-
+        //CodeRepositoryCache.codeToOptMap.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.optMethodRepo.setFreshPeriod(periodSeconds);
-
         CodeRepositoryCache.rolePowerRepo.setFreshPeriod(periodSeconds);
-
         CodeRepositoryCache.osInfoCache.setFreshPeriod(periodSeconds);
-
     }
 
     private static void innerEvictCache(String cacheName, String mapKey){
@@ -246,33 +237,25 @@ public abstract class CodeRepositoryCache {
             dictionaryRepo, 100);
 
 
-    public static CachedObject<List<? extends IOsInfo>> osInfoCache =
-        new CachedObject<>(()->getPlatformEnvironment().listOsInfos(), CACHE_FRESH_PERIOD_SECONDS);
+    public static CachedMap<String, List<? extends IOsInfo>> osInfoCache =
+        new CachedMap<>((topUnit)->getPlatformEnvironment().listOsInfos(topUnit),
+            CACHE_FRESH_PERIOD_SECONDS);
 
     /*
      * 下面的缓存信息用于spring security 中的用户的权限信息缓存
      */
-    public static CachedObject<List<? extends IOptInfo>> optInfoRepo=
-        new CachedObject<>(()-> getPlatformEnvironment().listAllOptInfo(), CACHE_FRESH_PERIOD_SECONDS);
-
-    public static CachedObject<Map<String, ? extends IOptInfo>> codeToOptMap=
-        new CachedObject<>(()-> {
-            List<? extends IOptInfo> optInfos = optInfoRepo.getCachedTarget();
-            if(optInfos==null)
-                return null;
-            Map<String, IOptInfo> codeMap = new HashMap<>(optInfos.size()+5);
-            for( IOptInfo data : optInfos){
-                codeMap.put(data.getOptId(), data);
-            }
-            return codeMap;
-        }, optInfoRepo);
+    public static CachedMap<String, List<? extends IOptInfo>> optInfoRepo=
+        new CachedMap<>((superOptId)-> getPlatformEnvironment().listAllOptInfo(superOptId),
+            CACHE_FRESH_PERIOD_SECONDS);
 
 
-    public static CachedObject<List<? extends IOptMethod>> optMethodRepo=
-        new CachedObject<>(()-> getPlatformEnvironment().listAllOptMethod(), CACHE_FRESH_PERIOD_SECONDS);
+    public static CachedMap<String, List<? extends IOptMethod>> optMethodRepo=
+        new CachedMap<>((superOptId)-> getPlatformEnvironment().listAllOptMethod(superOptId),
+            CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedObject<List<? extends IRolePower>> rolePowerRepo =
-        new CachedObject<>(()-> getPlatformEnvironment().listAllRolePower(), CACHE_FRESH_PERIOD_SECONDS);
+    public static CachedMap<String, List<? extends IRolePower>> rolePowerRepo =
+        new CachedMap<>((superOptId)-> getPlatformEnvironment().listAllRolePower(superOptId),
+            CACHE_FRESH_PERIOD_SECONDS);
 
 }
 
