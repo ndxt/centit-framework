@@ -31,6 +31,8 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
     private JSONArray userRoles;
     private JSONArray userUnits;
 
+    private String topUnitCode;
+
     @JSONField(serialize = false)
     private List<GrantedAuthority> arrayAuths;
 
@@ -138,23 +140,21 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
         this.loginIp = loginIp;
     }
 
+
+    public void setTopUnitCode(String topUnitCode) {
+        this.topUnitCode = topUnitCode;
+    }
     /**
-     * 获取当前用户，当前机构的顶级机构，用于处理帐套
+     * 用户登录时需要设置这个值
      * @return 最上层机构代码，根据用户的当前结构设置可能有变化
      */
     @Override
     @JSONField(serialize = false)
     public String getTopUnitCode(){
-        JSONObject cs = getCurrentStation();
-        IUnitInfo unitInfo = cs == null ?
-            CodeRepositoryUtil.getUnitInfoByCode(getUserInfo().getString("primaryUnit")):
-            CodeRepositoryUtil.getUnitInfoByCode(cs.getString("unitCode"));
-        if(unitInfo == null){
-            return cs == null ? getUserInfo().getString("primaryUnit") : cs.getString("unitCode");
+        if(StringUtils.isNotBlank(topUnitCode)){
+            return "all";
         }
-        int pos = unitInfo.getUnitPath().indexOf('/');
-        return pos<1 ? unitInfo.getUnitPath() :
-            unitInfo.getUnitPath().substring(0,pos);
+        return topUnitCode;
     }
 
     @Override

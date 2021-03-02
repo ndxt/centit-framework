@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -248,16 +249,36 @@ public abstract class CodeRepositoryCache {
     /*
      * 下面的缓存信息用于spring security 中的用户的权限信息缓存
      */
-    public static CachedMap<String, List<? extends IOptInfo>> optInfoRepo=
-        new CachedMap<>((superOptId)-> getPlatformEnvironment().listAllOptInfo(superOptId),
+    public static CachedMap<String, List<IOptInfo>> optInfoRepo=
+        new CachedMap<>((topUnit)-> {
+                List<? extends IOsInfo> iOsInfos = getPlatformEnvironment().listOsInfos(topUnit);
+                List<IOptInfo> optInfos = new ArrayList<>(100);
+                if(iOsInfos!=null) {
+                    for (IOsInfo oi : iOsInfos) {
+                        optInfos.addAll(
+                            getPlatformEnvironment().listAllOptInfo(oi.getRelOptId()));
+                    }
+                }
+                return optInfos;
+            },
             CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedMap<String, List<? extends IOptMethod>> optMethodRepo=
-        new CachedMap<>((superOptId)-> getPlatformEnvironment().listAllOptMethod(superOptId),
+        new CachedMap<>((topUnit)-> {
+                List<? extends IOsInfo> iOsInfos = getPlatformEnvironment().listOsInfos(topUnit);
+                List<IOptMethod> optInfos = new ArrayList<>(100);
+                if(iOsInfos!=null) {
+                    for (IOsInfo oi : iOsInfos) {
+                        optInfos.addAll(
+                            getPlatformEnvironment().listAllOptMethod(oi.getRelOptId()));
+                    }
+                }
+                return optInfos;
+            },
             CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedMap<String, List<? extends IRolePower>> rolePowerRepo =
-        new CachedMap<>((superOptId)-> getPlatformEnvironment().listAllRolePower(superOptId),
+        new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllRolePower(topUnit),
             CACHE_FRESH_PERIOD_SECONDS);
 
 }

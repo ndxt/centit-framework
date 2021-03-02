@@ -1,6 +1,7 @@
 package com.centit.framework.components;
 
 import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.adapter.OperationLogWriter;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.support.algorithm.DatetimeOpt;
@@ -146,7 +147,7 @@ public abstract class OperationLogCenter {
      */
     public static void log(String userCode, String optId, String optTag, String optMethod, String optContent) {
         log(OperationLog.create().level(OperationLog.LEVEL_INFO)
-            .user(userCode).unit(CodeRepositoryUtil.getUserPrimaryUnitCode(userCode))
+            .user(userCode).unit(WebOptUtils.getCurrentUnitCode(RequestThreadLocal.getLocalThreadWrapperRequest()))
             .correlation(UuidOpt.getUuidAsString32())
             .operation(optId).tag(optTag).method(optMethod)
             .content(optContent).time(DatetimeOpt.currentUtilDate()));

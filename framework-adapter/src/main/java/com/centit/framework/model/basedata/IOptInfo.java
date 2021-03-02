@@ -12,11 +12,13 @@ public interface IOptInfo {
      * @return optId
      */
     String getOptId();
+
     /**
      * 父业务ID
      * @return 父业务ID
      */
     String getPreOptId();
+
     /**
      * 业务名称
      * @return 业务名称
@@ -28,11 +30,13 @@ public interface IOptInfo {
      * @return OptType
      */
     String getOptType();
+
     /**
      * 业务菜单其实地址 url
      * @return 业务菜单其实地址 url
      */
     String getOptRoute();
+
     /**
      * 后台权限控制业务url前缀（不是必须的）
      * @return 后台权限控制业务url前缀
@@ -43,22 +47,26 @@ public interface IOptInfo {
      * @return 菜单所属的最高 菜单
      */
     String getTopOptId();
+
     /**
      * 是否是菜单项，Y:是 N:否
      * @return 是否是菜单项，Y:是 N:否
      */
     String getIsInToolbar();
+
     /**
      * 图标编号
      * @return 图标编号 Icon
      */
      //Long getImgIndex();
     String getIcon();
+
     /**
      * 页面打开方式 D: DIV I： iFrame
      * @return 页面打开方式 D: DIV I： iFrame
      */
     String getPageType();
+
     /**
      * 业务排序号
      * @return 业务排序号
@@ -76,5 +84,4 @@ public interface IOptInfo {
      * @return 状态
      */
     String getState();
-
 }
