@@ -129,8 +129,9 @@ public class WebOptUtils {
 
     private static IUserInfo innerGetLoginUserFromCloud(HttpServletRequest request){
         String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
+        String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
         if(userCode!=null){
-            return CodeRepositoryUtil.getUserInfoByCode(userCode);
+            return CodeRepositoryUtil.getUserInfoByCode(topUnit, userCode);
         }
         return null;
     }
@@ -251,11 +252,12 @@ public class WebOptUtils {
     public static CentitUserDetails getCurrentUserDetails(HttpServletRequest request) {
         if(WebOptUtils.requestInSpringCloud){
             String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
+            String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
             if(userCode!=null){
-                IUserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(userCode);
+                IUserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(topUnit, userCode);
                 JsonCentitUserDetails userDetails = new JsonCentitUserDetails();
                 userDetails.setUserInfo((JSONObject) JSON.toJSON(userinfo));
-                List<? extends IUserUnit> uulist = CodeRepositoryUtil.listUserUnits(userCode);
+                List<? extends IUserUnit> uulist = CodeRepositoryUtil.listUserUnits(topUnit, userCode);
                 userDetails.setUserUnits((JSONArray) JSON.toJSON(uulist));
                 String unitCode = request.getHeader(WebOptUtils.CURRENT_UNIT_CODE_TAG);
                 if(uulist!=null && uulist.size()>0) {
@@ -280,8 +282,8 @@ public class WebOptUtils {
             }
         }
         CentitUserDetails ud = innerGetUserDetail(request.getSession());
-        if (ud == null) {
-            return "";
+        if (ud == null || StringUtils.isNotBlank(ud.getTopUnitCode())) {
+            return GlobalConstValue.NO_TENANT_TOP_UNIT;
         }
         return ud.getTopUnitCode();
     }
