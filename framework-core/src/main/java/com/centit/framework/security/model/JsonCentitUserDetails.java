@@ -3,6 +3,7 @@ package com.centit.framework.security.model;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.security.SecurityContextUtils;
@@ -152,7 +153,7 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
     @JSONField(serialize = false)
     public String getTopUnitCode(){
         if(StringUtils.isNotBlank(topUnitCode)){
-            return "all";
+            return GlobalConstValue.NO_TENANT_TOP_UNIT;
         }
         return topUnitCode;
     }
