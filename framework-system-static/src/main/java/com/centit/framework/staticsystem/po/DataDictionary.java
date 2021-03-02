@@ -19,7 +19,7 @@ public class DataDictionary implements IDataDictionary, java.io.Serializable {
     private String catalogCode; // 类别代码
 
     private String dataCode; // 数据代码
-    
+
     private String extraCode; // 附加代码1
 
 
@@ -30,24 +30,24 @@ public class DataDictionary implements IDataDictionary, java.io.Serializable {
 
     private String dataValue; // 数据值
 
- 
+
     private String dataStyle; // 属性
 
-  
+
     private Integer dataOrder;
 
 
     private String dataDesc; // 备注
-    
+
 
     /**
      * default constructor
      */
-    public DataDictionary() {       
+    public DataDictionary() {
         dataTag = "N";
     }
 
-  
+
     public DataDictionary(String catalogcode, String datacode, String extracode,
                           String extracode2, String datatag, String datavalue,
                           String datastyle, String datadesc) {
@@ -63,7 +63,7 @@ public class DataDictionary implements IDataDictionary, java.io.Serializable {
 
     // Property accessors
 
-  
+
 
     public String getDataCode() {
 
@@ -115,12 +115,12 @@ public class DataDictionary implements IDataDictionary, java.io.Serializable {
     public String getDataValue() {
         return this.dataValue;
     }
-    
+
     @Override
     public String getLocalDataValue(String lang) {
-         return this.dataValue;
+        return this.dataValue;
     }
- 
+
     public String getFullKey() {
         return this.catalogCode + "." + this.dataCode;
     }
@@ -144,8 +144,8 @@ public class DataDictionary implements IDataDictionary, java.io.Serializable {
     public void setDataDesc(String datadesc) {
         this.dataDesc = datadesc;
     }
-    
-  
+
+
 
     public void copy(DataDictionary other) {
 

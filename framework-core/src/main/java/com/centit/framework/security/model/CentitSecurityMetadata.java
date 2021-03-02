@@ -24,7 +24,7 @@ public class CentitSecurityMetadata {
 
     public static final CachedObject<OptTreeNode> optTreeNodeCache =
         new CachedObject<>( CentitSecurityMetadata ::reloadOptTreeNode,
-            new AbstractCachedObject<?>[]{CodeRepositoryCache.codeToOptMap,
+            new AbstractCachedObject<?>[]{ CodeRepositoryCache.optInfoRepo,
                 CodeRepositoryCache.optMethodRepo, CodeRepositoryCache.rolePowerRepo});
 
     private static OptTreeNode reloadOptTreeNode(){

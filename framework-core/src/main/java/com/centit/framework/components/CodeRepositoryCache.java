@@ -5,16 +5,13 @@ import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.CachedMap;
-import com.centit.support.common.CachedObject;
-import com.centit.support.common.DerivativeCachedMap;
 import com.centit.support.common.ICachedObject;
+import com.centit.support.common.ListAppendMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * cp标签实现类，并可以通过静态方法直接调用系统缓存
@@ -188,19 +185,22 @@ public abstract class CodeRepositoryCache {
     /**
      * 缓存用户信息, 按照租户隔离
      */
-    public static CachedMap<String, List<? extends IUserInfo>> userInfoRepo =
-        new CachedMap<>((topUnit) -> getPlatformEnvironment().listAllUsers(topUnit),
+    public static CachedMap<String, ListAppendMap<? extends IUserInfo>> userInfoRepo =
+        new CachedMap<>( (topUnit) ->
+               new ListAppendMap(
+                    getPlatformEnvironment().listAllUsers(topUnit),
+                    (ui)->((IUserInfo)ui).getUserCode()),
             CACHE_FRESH_PERIOD_SECONDS);
 
     /**
      * 缓存机构信息, 按照租户隔离
      */
-    public static CachedMap<String, List<? extends IUnitInfo>> unitInfoRepo =
+    public static CachedMap<String, ListAppendMap<? extends IUnitInfo>> unitInfoRepo =
         new CachedMap<>((topUnit)->{
             List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits(topUnit);
             CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
-            return allunits;
+            return new ListAppendMap(allunits, (ui)->((IUnitInfo)ui).getUnitCode());
          }, CACHE_FRESH_PERIOD_SECONDS);
 
      /**
@@ -220,25 +220,27 @@ public abstract class CodeRepositoryCache {
     /**
      * 数据字典列表
      */
-    public static CachedMap<String, List<? extends IDataDictionary>> dictionaryRepo =
-        new CachedMap<>((sCatalog)->  getPlatformEnvironment().listDataDictionaries(sCatalog), CACHE_FRESH_PERIOD_SECONDS);
-
-    public static DerivativeCachedMap<String, List<? extends IDataDictionary>,
-            Map<String,? extends IDataDictionary>> codeToDictionaryMap =
-        new DerivativeCachedMap<>( (dataDictionarys )-> {
-                if(dataDictionarys==null)
-                    return null;
-                Map<String, IDataDictionary> dataDictionaryMap = new HashMap<>(dataDictionarys.size()+5);
-                for( IDataDictionary data : dataDictionarys){
-                    dataDictionaryMap.put(data.getDataCode(), data);
-                }
-                return dataDictionaryMap;
-            },
-            dictionaryRepo, 100);
-
+    public static CachedMap<String, ListAppendMap<? extends IDataDictionary>> dictionaryRepo =
+        new CachedMap<>((sCatalog)->
+            new ListAppendMap(
+                getPlatformEnvironment().listDataDictionaries(sCatalog),
+                (ui)->((IDataDictionary)ui).getDataCode()),
+            CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedMap<String, List<? extends IOsInfo>> osInfoCache =
         new CachedMap<>((topUnit)->getPlatformEnvironment().listOsInfos(topUnit),
+            CACHE_FRESH_PERIOD_SECONDS);
+
+    public static CachedMap<String, CachedMap<String, List<? extends IUserRole>>> userRolesRepo =
+        new CachedMap<>((topUnit)->
+             new CachedMap<>((sUserCode)-> getPlatformEnvironment().listUserRoles(topUnit, sUserCode),
+                 CACHE_FRESH_PERIOD_SECONDS),
+            CACHE_FRESH_PERIOD_SECONDS);
+
+    public static CachedMap<String, CachedMap<String, List<? extends IUserRole>>> roleUsersRepo =
+        new CachedMap<>((topUnit)->
+            new CachedMap<>((sRoleCode)-> getPlatformEnvironment().listRoleUsers(topUnit, sRoleCode),
+                CACHE_FRESH_PERIOD_SECONDS),
             CACHE_FRESH_PERIOD_SECONDS);
 
     /*
@@ -247,7 +249,6 @@ public abstract class CodeRepositoryCache {
     public static CachedMap<String, List<? extends IOptInfo>> optInfoRepo=
         new CachedMap<>((superOptId)-> getPlatformEnvironment().listAllOptInfo(superOptId),
             CACHE_FRESH_PERIOD_SECONDS);
-
 
     public static CachedMap<String, List<? extends IOptMethod>> optMethodRepo=
         new CachedMap<>((superOptId)-> getPlatformEnvironment().listAllOptMethod(superOptId),
