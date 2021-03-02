@@ -372,67 +372,6 @@ public abstract class CodeRepositoryUtil {
     }
 
     /**
-     * 根据角色类别获取角色类别。
-     *
-     * @param roleType 角色类别
-     * @return List 角色信息
-     */
-    public static List<IRoleInfo> getRoleinfoListByType(String roleType) {
-        List<IRoleInfo> roleList = new ArrayList<>();
-        for (Map.Entry<String,? extends IRoleInfo> ent : getRoleRepo().entrySet()) {
-            IRoleInfo value = ent.getValue();
-            if (StringUtils.equals(roleType,value.getRoleType())
-                && CodeRepositoryUtil.T.equals(value.getIsValid())) {
-                roleList.add(value);
-            }
-        }
-        return roleList;
-    }
-
-    /**
-     * 获取机构角色列表
-     * @param unitCode 角色类别
-     * @return List 角色信息
-     */
-    public static List<IRoleInfo> getUnitRoleinfoList(String unitCode) {
-        List<IRoleInfo> roleList = new ArrayList<>();
-        for (Map.Entry<String,? extends IRoleInfo> ent : getRoleRepo().entrySet()) {
-            IRoleInfo value = ent.getValue();
-            if ("D".equals(value.getRoleType())
-                && StringUtils.equals(unitCode, value.getRoleOwner())) {
-                roleList.add(value);
-            }
-        }
-        return roleList;
-    }
-
-    /**
-     * 根据角色代码获得角色信息
-     * @param roleCode 角色代码
-     * @return 角色名称
-     */
-    public static IRoleInfo getRoleByRoleCode(String roleCode) {
-        return getRoleRepo().get(roleCode);
-    }
-
-
-
-    /**
-     * 获取当前用户所有的租户
-     *
-     * @return List 所有符合状态标记的租户
-     */
-    public static List<String> listAllTenantsByCurrentUser() {
-        Object userDetails = WebOptUtils.getLoginUser(RequestThreadLocal.getLocalThreadWrapperRequest());
-        String userCode = "";
-        if (userDetails instanceof CentitUserDetails) {
-            userCode =  ((CentitUserDetails)userDetails).getUserCode();
-        }
-        //return CodeRepositoryCache.userInfoRepo.getCachedValue(userCode);
-        return null;
-    }
-
-    /**
      * 获取一个机构下面的所有以这个机构为主机构的用户，并且根据排序号排序
      *
      * @param unitCode unitCode

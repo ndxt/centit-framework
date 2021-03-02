@@ -235,13 +235,13 @@ public abstract class CodeRepositoryCache {
         new CachedMap<>((topUnit)->
              new CachedMap<>((sUserCode)-> getPlatformEnvironment().listUserRoles(topUnit, sUserCode),
                  CACHE_FRESH_PERIOD_SECONDS),
-            CACHE_FRESH_PERIOD_SECONDS);
+            ICachedObject.NOT_REFRESH_PERIOD);
 
     public static CachedMap<String, CachedMap<String, List<? extends IUserRole>>> roleUsersRepo =
         new CachedMap<>((topUnit)->
             new CachedMap<>((sRoleCode)-> getPlatformEnvironment().listRoleUsers(topUnit, sRoleCode),
                 CACHE_FRESH_PERIOD_SECONDS),
-            CACHE_FRESH_PERIOD_SECONDS);
+            ICachedObject.NOT_REFRESH_PERIOD);
 
     /*
      * 下面的缓存信息用于spring security 中的用户的权限信息缓存

@@ -54,12 +54,24 @@ public interface PlatformEnvironment {
      */
     List<? extends IUserUnit> listAllUserUnits(String topUnit);
 
+
     /**
-     * 根据用户代码获得 用户所有的机构信息
+     * 根据用户代码获得 用户的所有租户，顶级机构
      * @param userCode userCode
      * @return List 用户所有的机构信息
      */
-    List<? extends IUserUnit> listUserUnits(String userCode);
+    List<? extends IUserUnit> listUserTopUnits(String userCode);
+
+    /**
+     * 根据用户代码获得 用户所有的机构信息
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
+     *                通过 unitpath来过滤
+     * @param userCode userCode
+     * @return List 用户所有的机构信息
+     */
+    List<? extends IUserUnit> listUserUnits(String topUnit, String userCode);
+
 
     /**
      * 根据机构代码获得 机构所有用户信息
