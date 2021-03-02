@@ -206,9 +206,11 @@ public abstract class CodeRepositoryCache {
      /**
      * 派生缓存
      */
-    public static CachedMap<String, List<? extends IUserUnit>> userUnitsMap =
-        new CachedMap<>((userCode)-> getPlatformEnvironment().listUserUnits(userCode),
-            CACHE_FRESH_PERIOD_SECONDS, 300);
+    public static CachedMap<String, CachedMap<String, List<? extends IUserUnit>>> userUnitsMap =
+         new CachedMap<>((topUnit)->
+             new CachedMap<>((userCode)-> getPlatformEnvironment().listUserUnits(topUnit, userCode),
+                CACHE_FRESH_PERIOD_SECONDS, 300),
+             ICachedObject.NOT_REFRESH_PERIOD);
     /**
      * 派生缓存
      */
@@ -233,7 +235,7 @@ public abstract class CodeRepositoryCache {
 
     public static CachedMap<String, CachedMap<String, List<? extends IUserRole>>> userRolesRepo =
         new CachedMap<>((topUnit)->
-             new CachedMap<>((sUserCode)-> getPlatformEnvironment().listUserRoles(topUnit, sUserCode),
+            new CachedMap<>((sUserCode)-> getPlatformEnvironment().listUserRoles(topUnit, sUserCode),
                  CACHE_FRESH_PERIOD_SECONDS),
             ICachedObject.NOT_REFRESH_PERIOD);
 
