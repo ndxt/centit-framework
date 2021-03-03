@@ -78,16 +78,17 @@ public abstract class CodeRepositoryCache {
      */
     public static void setAllCacheFreshPeriod(long periodSeconds){
         CodeRepositoryCache.userInfoRepo.setFreshPeriod(periodSeconds);
-        //CodeRepositoryCache.codeToUserMap.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.unitInfoRepo.setFreshPeriod(periodSeconds);
-        //CodeRepositoryCache.codeToUnitMap.setFreshPeriod(periodSeconds);
-        //CodeRepositoryCache.userUnitRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.userUnitsMap.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.unitUsersMap.setFreshPeriod(periodSeconds);
-        //CodeRepositoryCache.catalogRepo.setFreshPeriod(periodSeconds);
+
         CodeRepositoryCache.dictionaryRepo.setFreshPeriod(periodSeconds);
-        //CodeRepositoryCache.codeToDictionaryMap.setFreshPeriod(periodSeconds);
-        //CodeRepositoryCache.codeToOptMap.setFreshPeriod(periodSeconds);
+
+        CodeRepositoryCache.roleInfoRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.roleUsersRepo.setFreshPeriod(periodSeconds);
+
+        CodeRepositoryCache.optInfoRepo.setFreshPeriod(periodSeconds);
+        CodeRepositoryCache.optDataScopeRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.optMethodRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.rolePowerRepo.setFreshPeriod(periodSeconds);
         CodeRepositoryCache.osInfoCache.setFreshPeriod(periodSeconds);
@@ -125,20 +126,26 @@ public abstract class CodeRepositoryCache {
                 break;
             case "DataDictionary":
                 if(StringUtils.isNotBlank(mapKey)){
-                    CodeRepositoryCache.dictionaryRepo.evictIdentifiedCache(mapKey);
-                    //CodeRepositoryCache.codeToDictionaryMap.evictIdentifiedCache(mapKey);
+                    CodeRepositoryCache.dictionaryRepo.evictIdentifiedCache(mapKey);;
                 }else{
                     CodeRepositoryCache.dictionaryRepo.evictCahce();
-                    //CodeRepositoryCache.codeToDictionaryMap.evictAll();
                 }
                 break;
             case "OptInfo":
                 CodeRepositoryCache.optInfoRepo.evictCahce();
-                //CodeRepositoryCache.codeToOptMap.evictCahce();
                 break;
+            case "RoleInfo":
+                CodeRepositoryCache.roleInfoRepo.evictCahce();
+                break;
+            case "UserRoles":
+                CodeRepositoryCache.userRolesRepo.evictCahce();
+                break;
+
             case "OptMethod":
                 CodeRepositoryCache.optMethodRepo.evictCahce();
-                //CodeRepositoryCache.codeToMethodMap.evictCahce();
+                break;
+            case "optDataScope":
+                CodeRepositoryCache.optDataScopeRepo.evictCahce();
                 break;
             case "RolePower":
                 CodeRepositoryCache.rolePowerRepo.evictCahce();
