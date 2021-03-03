@@ -1,9 +1,11 @@
 package com.centit.framework.staticsystem.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.core.dao.ExtendedQueryPool;
 import com.centit.framework.staticsystem.po.*;
+import com.centit.support.common.ListAppendMap;
 import com.centit.support.database.utils.DataSourceDescription;
 import com.centit.support.database.utils.DatabaseAccess;
 import com.centit.support.database.utils.DbcpConnectPools;
@@ -46,12 +48,14 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             JSONArray userJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_USER"));
             List<UserInfo> userinfos = jsonArrayToObjectList(userJSONArray, UserInfo.class);
-            CodeRepositoryCache.userInfoRepo.setFreshData(userinfos);
-
+            CodeRepositoryCache.userInfoRepo.setFreshData(
+                GlobalConstValue.NO_TENANT_TOP_UNIT, new ListAppendMap<>(userinfos,
+                    UserInfo::getUserCode));
             JSONArray optInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_OPTINFO"));
             List<OptInfo> optinfos = jsonArrayToObjectList(optInfoJSONArray,  OptInfo.class);
-            CodeRepositoryCache.optInfoRepo.setFreshData(optinfos);
+            CodeRepositoryCache.optInfoRepo.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
+                optinfos);
 
             JSONArray optDataScopesJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_OPTDATASCOPE"));
@@ -60,17 +64,20 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             JSONArray optMethodsJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_OPTMETHOD"));
             List<OptMethod> optmethods = jsonArrayToObjectList(optMethodsJSONArray,  OptMethod.class);
-            CodeRepositoryCache.optMethodRepo.setFreshData(optmethods);
+            CodeRepositoryCache.optMethodRepo.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
+                optmethods);
 
             JSONArray roleInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_ROLEINFO"));
             List<RoleInfo> roleinfos = jsonArrayToObjectList(roleInfoJSONArray,  RoleInfo.class);
-            CodeRepositoryCache.roleInfoRepo.setFreshData(roleinfos);
+            CodeRepositoryCache.roleInfoRepo.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
+                roleinfos);
 
             JSONArray rolePowerJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_ROLEPOWER"));
             List<RolePower>  rolepowers = jsonArrayToObjectList(rolePowerJSONArray,  RolePower.class);
-            CodeRepositoryCache.rolePowerRepo.setFreshData(rolepowers);
+            CodeRepositoryCache.rolePowerRepo.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
+                rolepowers);
 
             JSONArray userRoleJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_USERROLE"));
@@ -80,17 +87,18 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             JSONArray unitInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_UNITINFO"));
             List<UnitInfo> unitinfos = jsonArrayToObjectList(unitInfoJSONArray, UnitInfo.class);
-            CodeRepositoryCache.unitInfoRepo.setFreshData(unitinfos);
+            CodeRepositoryCache.unitInfoRepo.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
+                new ListAppendMap<>(unitinfos, UnitInfo::getUnitCode));
 
             JSONArray userUnitJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_USERUNIT"));
             List<UserUnit> userunits = jsonArrayToObjectList(userUnitJSONArray, UserUnit.class);
-            CodeRepositoryCache.userUnitRepo.setFreshData(userunits);
+            allUserUnitRepo.setFreshData(userunits);
 
             JSONArray dataCatalogsJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_DATACATALOG"));
             List<DataCatalog> datacatalogs = jsonArrayToObjectList(dataCatalogsJSONArray, DataCatalog.class);
-            CodeRepositoryCache.catalogRepo.setFreshData(datacatalogs);
+            catalogRepo.setFreshData(datacatalogs);
 
             JSONArray dataDictionaryJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_DICTIONARY"));
@@ -100,7 +108,8 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             JSONArray osInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_OS"));
             List<OsInfo> osInfos = jsonArrayToObjectList(osInfoJSONArray, OsInfo.class);
-            CodeRepositoryCache.osInfoCache.setFreshData(osInfos);
+            CodeRepositoryCache.osInfoCache.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
+                osInfos);
         }
 
     }
@@ -124,7 +133,9 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
      */
     @Override
     public void changeUserPassword(String userCode, String userPassword) {
-        UserInfo ui= (UserInfo)CodeRepositoryCache.codeToUserMap.getCachedTarget().get(userCode);
+        UserInfo ui= (UserInfo)CodeRepositoryCache.userInfoRepo
+            .getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT)
+            .getAppendMap().get(userCode);
         if(ui==null)
             return;
         String userNewPassword = passwordEncoder.encodePassword(userPassword, userCode);

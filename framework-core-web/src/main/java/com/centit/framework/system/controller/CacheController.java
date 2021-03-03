@@ -620,21 +620,19 @@ public class CacheController extends BaseController {
     }
 
     /**
-     *
-     * 根据角色类别获取角色
-     *
-     * @param roleType 角色类别
+     * 根据租户获取角色
+     * @param topUnit 租户
      * @return ResponseData
      */
     @ApiOperation(value = "根据角色类别获取角色", notes = "根据角色类别获取角色")
     @ApiImplicitParam(
-        name = "roleType", value="角色类别",
+        name = "topUnit", value="租户代码",
         required= true, paramType = "path", dataType= "String"
     )
-    @RequestMapping(value = "/roleinfo/{roleType}", method = RequestMethod.GET)
+    @RequestMapping(value = "/roleinfo/{topUnit}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IRoleInfo> roleinfo(@PathVariable String roleType) {
-        return CodeRepositoryUtil.getRoleinfoListByType(roleType);
+    public List<? extends IRoleInfo> roleinfo(@PathVariable String topUnit) {
+        return CodeRepositoryUtil.listAllRole(topUnit);
     }
 
     /**

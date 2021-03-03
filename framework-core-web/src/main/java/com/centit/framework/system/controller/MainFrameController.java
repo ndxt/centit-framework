@@ -522,9 +522,13 @@ public class MainFrameController extends BaseController {
      * @return JSONArray
      */
     @ApiOperation(value = "首页菜单", notes = "获取首页菜单信息")
-    @RequestMapping(value = "/menu" , method = RequestMethod.GET)
+    @RequestMapping(value = "/menu/{osId}" , method = RequestMethod.GET)
+    @ApiImplicitParam(
+        name = "osId", value = "应用主键applicationID",
+        required = true, paramType = "path", dataType = "String"
+    )
     @WrapUpResponseBody
-    public JSONArray getMenu(HttpServletRequest request) {
+    public JSONArray getMenu(@PathVariable String osId, HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if(StringUtils.isBlank(userCode)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
@@ -535,12 +539,10 @@ public class MainFrameController extends BaseController {
         boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
         List<? extends IOptInfo> menuFunsByUser = null;
 
-        if(StringUtils.isNotBlank(topOptId)) {
-            menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, topOptId, asAdmin);
-        }
+        menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, osId, asAdmin);
 
-        if(menuFunsByUser == null || menuFunsByUser.size()==0 ){
-            menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userCode, asAdmin);
+        if((menuFunsByUser == null || menuFunsByUser.size()==0) && StringUtils.isNotBlank(topOptId)) {
+            menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, topOptId, asAdmin);
         }
 
         if(menuFunsByUser==null){
@@ -595,22 +597,25 @@ public class MainFrameController extends BaseController {
      * @return ResponseData
      */
     @ApiOperation(value = "获取用户有权限的菜单", notes = "根据用户代码获取用户有权限的菜单")
-    @ApiImplicitParam(
-        name = "userCode", value="用户代码",
-        required= true, paramType = "path", dataType= "String"
-    )
-    @RequestMapping(value = "/userMenu/{userCode}" , method = RequestMethod.GET)
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "osId", value = "应用主键applicationID",
+            required = true, paramType = "path", dataType = "String"
+        ), @ApiImplicitParam(
+            name = "userCode", value = "用户代码",
+            required = true, paramType = "path", dataType = "String"
+        )
+    })
+    @RequestMapping(value = "/userMenu/{osId}/{userCode}" , method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getMemuByUsercode(@PathVariable String userCode) {
+    public ResponseData getMemuByUsercode(@PathVariable String osId, @PathVariable String userCode) {
 
         List<? extends IOptInfo> menuFunsByUser = null;
 
-        if(StringUtils.isNotBlank(topOptId)) {
-            menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, topOptId, false);
-        }
+        menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, osId, false);
 
-        if(menuFunsByUser==null || menuFunsByUser.size() == 0){
-            menuFunsByUser = platformEnvironment.listUserMenuOptInfos(userCode, false);
+        if((menuFunsByUser == null || menuFunsByUser.size()==0) && StringUtils.isNotBlank(topOptId)) {
+            menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, topOptId, false);
         }
 
         return ResponseData.makeResponseData(makeMenuFuncsJson(menuFunsByUser));
@@ -667,47 +672,21 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "查询当前用户所属租户", notes = "查询当前用户所属租户")
     @GetMapping(value = {"/topUnit","/tenant"})
     @WrapUpResponseBody
-    public List<IUnitInfo> listCurrentTopUnits(HttpServletRequest request) {
+    public List<? extends IUnitInfo> listCurrentTopUnits(HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
+        //String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if(StringUtils.isBlank(userCode)){
             throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
-        List<? extends IUserUnit> userUnits = platformEnvironment.listUserUnits(userCode);
-        //platformEnvironment.
-        Set<String> uintCodes = new HashSet<>();
-        for(IUserUnit uu : userUnits){
-            uintCodes.add(uu.getUnitCode());
-        }
-        Set<String> topUintCodes = new HashSet<>();
-        //获取 根机构
-        for(String uc : uintCodes) {
-            IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(uc);
-            String[] units = ui.getUnitPath().split("/");
-            String topUnit = null;
-            for(String tuc : units){
-                if(StringUtils.isNotBlank(tuc)){
-                    topUnit = tuc;
-                    break;
-                }
-            }
-            if(StringUtils.isNotBlank(topUnit)) {
-                topUintCodes.add(topUnit);
-            } else {
-                topUintCodes.add(uc);
-            }
-        }
-        List<IUnitInfo> uis = new ArrayList<>();
-        for(String uc : topUintCodes) {
-            uis.add(CodeRepositoryUtil.getUnitInfoByCode(uc));
-        }
-        return uis;
+        return platformEnvironment.listUserTopUnits(userCode);
+
     }
 
     @GetMapping(value = "/userroles")
     @WrapUpResponseBody
     public List<? extends IUserRole>  listCurrentUserRoles(HttpServletRequest request) {
         return platformEnvironment
-            .listUserRoles(WebOptUtils.getCurrentUserCode(request));
+            .listUserRoles(WebOptUtils.getCurrentTopUnit(request), WebOptUtils.getCurrentUserCode(request));
     }
     /**
      * 查询当前用户当前职位
@@ -787,11 +766,12 @@ public class MainFrameController extends BaseController {
     @WrapUpResponseBody
     public JSONArray listUserUnitsByRank(@PathVariable String rank, HttpServletRequest request){
         String userCode = WebOptUtils.getCurrentUserCode(request);
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if(StringUtils.isBlank(userCode)){
             throw new ObjectException("用户没有登录或者超时，请重新登录。");
         }
         return DictionaryMapUtils.objectsToJSONArray(
-                    CodeRepositoryUtil.listUserUnitsByRank(userCode, rank));
+                    CodeRepositoryUtil.listUserUnitsByRank(topUnit, userCode, rank));
     }
     /**
      * 获取用户在某个岗位的用户组列表
@@ -808,12 +788,13 @@ public class MainFrameController extends BaseController {
     @WrapUpResponseBody
     public ResponseData listUserUnitsByStation(@PathVariable String station, HttpServletRequest request){
         String userCode = WebOptUtils.getCurrentUserCode(request);
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if(StringUtils.isBlank(userCode)){
             return new ResponseSingleData("用户没有登录或者超时，请重新登录");
         }
         return ResponseSingleData.makeResponseData(
                 DictionaryMapUtils.objectsToJSONArray(
-                CodeRepositoryUtil.listUserUnitsByStation(userCode, station)));
+                CodeRepositoryUtil.listUserUnitsByStation(topUnit, userCode, station)));
     }
 
 
