@@ -72,9 +72,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
      */
     private String updator;
 
-
     // Constructors
-
     /**
      * default constructor
      */
@@ -94,43 +92,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitName = unitname;
 
     }
-
-    public UnitInfo(String unitcode, String parentunit, String unittype,
-                    String isvalid, String unitname, String unitshortname, String unitword,
-                    String unitdesc, Long grade, Long unitorder, String depno,
-                    Date createDate, Date lastModifyDate) {
-        super();
-        this.unitCode = unitcode;
-        this.parentUnit = parentunit;
-        this.unitType = unittype;
-        this.isValid = isvalid;
-        this.unitName = unitname;
-        this.unitShortName = unitshortname;
-        this.unitWord = unitword;
-        this.unitDesc = unitdesc;
-        this.unitGrade = grade;
-        this.unitOrder = unitorder;
-        this.depNo = depno;
-    }
-
-    public UnitInfo(String unitcode, String parentunit, String unittype,
-                    String unitstate, String unitname, String unitdesc,
-                    String unitshortname, String depno,
-                    String unittag, String englishname,String unitword, Long unitgrade) {
-        this.unitCode = unitcode;
-        this.parentUnit = parentunit;
-        this.unitType = unittype;
-        this.isValid = unitstate;
-        this.unitName = unitname;
-        this.unitDesc = unitdesc;
-        this.unitShortName = unitshortname;
-        this.depNo = depno;
-        this.unitWord = unitword;
-        this.unitGrade = unitgrade;
-        this.unitTag = unittag;
-        this.englishName = englishname;
-    }
-
 
     public String getEnglishName() {
         return englishName;

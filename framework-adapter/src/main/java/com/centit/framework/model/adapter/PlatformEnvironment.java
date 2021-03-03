@@ -68,7 +68,7 @@ public interface PlatformEnvironment {
      * @param userCode userCode
      * @return List 用户所有的机构信息
      */
-    List<? extends IUserUnit> listUserTopUnits(String userCode);
+    List<? extends IUnitInfo> listUserTopUnits(String userCode);
 
     /**
      * 根据用户代码获得 用户所有的机构信息
@@ -88,7 +88,7 @@ public interface PlatformEnvironment {
      * @param unitCode unitCode
      * @return List 机构所有用户信息
      */
-    List<? extends IUserUnit> listUnitUsers(String unitCode);
+    List<? extends IUserUnit> listUnitUsers(/*String topUnit, */String unitCode);
 
     /*权限相关的*/
 

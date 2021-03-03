@@ -12,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * cp标签实现类，并可以通过静态方法直接调用系统缓存
@@ -205,7 +207,7 @@ public abstract class CodeRepositoryCache {
          }, CACHE_FRESH_PERIOD_SECONDS);
 
      /**
-     * 派生缓存
+     * 用户机构缓存
      */
     public static CachedMap<String, CachedMap<String, List<? extends IUserUnit>>> userUnitsMap =
          new CachedMap<>((topUnit)->
@@ -213,16 +215,14 @@ public abstract class CodeRepositoryCache {
                 CACHE_FRESH_PERIOD_SECONDS, 300),
              ICachedObject.NOT_REFRESH_PERIOD);
     /**
-     * 派生缓存
+     * 机构用户缓存
      */
     public static CachedMap<String, List<? extends IUserUnit>> unitUsersMap=
         new CachedMap<>(
             (unitCode)-> getPlatformEnvironment().listUnitUsers(unitCode),
             CACHE_FRESH_PERIOD_SECONDS, 100);
 
-    /**
-     * 数据字典列表
-     */
+
     public static CachedMap<String, ListAppendMap<? extends IDataDictionary>> dictionaryRepo =
         new CachedMap<>((sCatalog)->
             new ListAppendMap(
@@ -230,6 +230,9 @@ public abstract class CodeRepositoryCache {
                 (ui)->((IDataDictionary)ui).getDataCode()),
             CACHE_FRESH_PERIOD_SECONDS);
 
+    /**
+     * 权限相关缓存
+     */
     public static CachedMap<String, List<? extends IOsInfo>> osInfoCache =
         new CachedMap<>((topUnit)->getPlatformEnvironment().listOsInfos(topUnit),
             CACHE_FRESH_PERIOD_SECONDS);
@@ -255,7 +258,7 @@ public abstract class CodeRepositoryCache {
             CACHE_FRESH_PERIOD_SECONDS);
 
 
-    public static CachedMap<String, List<IOptInfo>> optInfoRepo=
+    public static CachedMap<String, List<? extends IOptInfo>> optInfoRepo=
         new CachedMap<>((topUnit)-> {
                 List<? extends IOsInfo> iOsInfos = getPlatformEnvironment().listOsInfos(topUnit);
                 List<IOptInfo> optInfos = new ArrayList<>(100);
@@ -282,6 +285,23 @@ public abstract class CodeRepositoryCache {
                 return optInfos;
             },
             CACHE_FRESH_PERIOD_SECONDS);
+
+    public static CachedMap<String, Map<String, List<IOptDataScope>>> optDataScopeRepo=
+        new CachedMap<>((topUnit)->{
+            List<? extends IOptDataScope> optDataScopes = getPlatformEnvironment().listAllOptDataScope(topUnit);
+            Map<String,List<IOptDataScope>> optDataScopeMap = new HashMap<>(200);
+            if(optDataScopes != null) {
+                for (IOptDataScope dataScope : optDataScopes) {
+                    List<IOptDataScope> odss = optDataScopeMap.get(dataScope.getOptId());
+                    if (odss == null) {
+                        odss = new ArrayList<>(4);
+                    }
+                    odss.add(dataScope);
+                    optDataScopeMap.put(dataScope.getOptId(), odss);
+                }
+            }
+            return optDataScopeMap;
+        }, CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedMap<String, List<? extends IRolePower>> rolePowerRepo =
         new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllRolePower(topUnit),
