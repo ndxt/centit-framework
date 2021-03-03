@@ -175,8 +175,8 @@ public class CacheController extends BaseController {
     )})
     @RequestMapping(value = "/subunits/{unitCode}/{unitType}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUnitInfo> subunits(@PathVariable String unitCode, @PathVariable String unitType) {
-        return CodeRepositoryUtil.getSortedSubUnits(unitCode, unitType);
+    public List<IUnitInfo> subunits(@PathVariable String unitCode, @PathVariable String unitType, HttpServletRequest request) {
+        return CodeRepositoryUtil.getSortedSubUnits(WebOptUtils.getCurrentTopUnit(request), unitCode, unitType);
     }
 
     /**
@@ -193,8 +193,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/allunits/{state}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUnitInfo> allunits(@PathVariable String state) {
-        return CodeRepositoryUtil.getAllUnits(state);
+    public List<IUnitInfo> allunits(@PathVariable String state, HttpServletRequest request) {
+        return CodeRepositoryUtil.getAllUnits(WebOptUtils.getCurrentTopUnit(request), state);
     }
 
     /**
@@ -210,8 +210,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/userinfo/{userCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public IUserInfo getUserInfo(@PathVariable String userCode) {
-        return CodeRepositoryUtil.getUserInfoByCode(userCode);
+    public IUserInfo getUserInfo(@PathVariable String userCode, HttpServletRequest request) {
+        return CodeRepositoryUtil.getUserInfoByCode(WebOptUtils.getCurrentTopUnit(request), userCode);
     }
 
     /**
@@ -227,8 +227,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/unitinfo/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public IUnitInfo getUintInfo(@PathVariable String unitCode) {
-        return CodeRepositoryUtil.getUnitInfoByCode(unitCode);
+    public IUnitInfo getUintInfo(@PathVariable String unitCode, HttpServletRequest request) {
+        return CodeRepositoryUtil.getUnitInfoByCode(WebOptUtils.getCurrentTopUnit(request), unitCode);
     }
 
     /**
@@ -244,8 +244,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/parentunit/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public String getParentUintInfo(@PathVariable String unitCode) {
-        IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(unitCode);
+    public String getParentUintInfo(@PathVariable String unitCode, HttpServletRequest request) {
+        IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(WebOptUtils.getCurrentTopUnit(request), unitCode);
         if(ui!=null){
            return ui.getParentUnit();
         }else {
@@ -267,15 +267,15 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/parentpath/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUnitInfo> getParentUintPath(@PathVariable String unitCode) {
-        IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(unitCode);
+    public List<IUnitInfo> getParentUintPath(@PathVariable String unitCode, HttpServletRequest request) {
+        IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(WebOptUtils.getCurrentTopUnit(request), unitCode);
         if(ui!=null){
             List<IUnitInfo> parentUnits = new ArrayList<>();
             while(true) {
                 if(StringUtils.isBlank(ui.getParentUnit())){
                     break;
                 }
-                IUnitInfo parentUnit = CodeRepositoryUtil.getUnitInfoByCode(ui.getParentUnit());
+                IUnitInfo parentUnit = CodeRepositoryUtil.getUnitInfoByCode(ui.getTopUnit(), ui.getParentUnit());
                 if(parentUnit==null){
                     break;
                 }
@@ -301,8 +301,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/recurseunits/{parentUnit}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public Map<String, IUnitInfo> recurseUnits(@PathVariable String parentUnit) {
-        return CodeRepositoryUtil.getUnitMapBuyParaentRecurse(parentUnit);
+    public Map<String, IUnitInfo> recurseUnits(@PathVariable String parentUnit, HttpServletRequest request) {
+        return CodeRepositoryUtil.getUnitMapBuyParaentRecurse(WebOptUtils.getCurrentTopUnit(request), parentUnit);
     }
 
     /**
@@ -389,15 +389,15 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/unituser/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUserInfo> unituser(@PathVariable String unitCode) {
-        return CodeRepositoryUtil.getSortedUnitUsers(unitCode);
+    public List<IUserInfo> unituser(@PathVariable String unitCode, HttpServletRequest request) {
+        return CodeRepositoryUtil.getSortedUnitUsers(WebOptUtils.getCurrentTopUnit(request), unitCode);
     }
 
     /**
      * CP标签中ALLUSER实现
      * 获取当前租户所有的用户信息
      *
-     * @param topUnit 住户信息
+     * @param topUnit 租户信息
      * @return ResponseData
      */
     @ApiOperation(value = "获取所有符合状态标记的用户", notes = "根据状态获取所有用户")
@@ -408,7 +408,7 @@ public class CacheController extends BaseController {
     @RequestMapping(value = "/alluser/{topUnit}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public List<? extends IUserInfo> alluser(@PathVariable String topUnit) {
-        return CodeRepositoryUtil.listAllUserByTopUnit(topUnit);
+        return CodeRepositoryUtil.listAllUsers(topUnit);
     }
 
     /**
@@ -425,8 +425,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/subunits/{unitcode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUnitInfo> getSubUnits(@PathVariable String unitcode) {
-        return CodeRepositoryUtil.getSubUnits(unitcode);
+    public List<IUnitInfo> getSubUnits(@PathVariable String unitcode, HttpServletRequest request) {
+        return CodeRepositoryUtil.getSubUnits(WebOptUtils.getCurrentTopUnit(request), unitcode);
     }
 
     /**
@@ -442,8 +442,8 @@ public class CacheController extends BaseController {
     )
     @WrapUpResponseBody
     @RequestMapping(value = "/allsubunits/{unitcode}", method = RequestMethod.GET)
-    public List<IUnitInfo> getAllSubUnits(@PathVariable String unitcode) {
-        return CodeRepositoryUtil.getAllSubUnits(unitcode);
+    public List<IUnitInfo> getAllSubUnits(@PathVariable String unitcode, HttpServletRequest request) {
+        return CodeRepositoryUtil.getAllSubUnits(WebOptUtils.getCurrentTopUnit(request), unitcode);
 
     }
 
@@ -455,13 +455,16 @@ public class CacheController extends BaseController {
         JSONObject userInfo = null;
         CentitUserDetails userDetails = null;
         String userCode = null;
+        String topUnit = null;
         if(ud instanceof CentitUserDetails){
             userDetails = (CentitUserDetails) ud;
             userInfo = userDetails.getUserInfo();
             userCode = userDetails.getUserCode();
+            topUnit = userDetails.getTopUnitCode();
         }else if(ud instanceof IUserInfo){
             userInfo = (JSONObject) JSON.toJSON(ud);
             userCode = ((IUserInfo)ud).getUserCode();
+            topUnit = ((IUserInfo)ud).getTopUnit();
         }
         //当前用户信息
         dpf.put("currentUser", userInfo);
@@ -469,14 +472,15 @@ public class CacheController extends BaseController {
             dpf.put("currentStation", userDetails.getCurrentStation());
             //当前用户主机构信息
             dpf.put("primaryUnit", CodeRepositoryUtil
-                .getUnitInfoByCode(userDetails.getUserInfo().getString("primaryUnit")));
+                .getUnitInfoByCode(userDetails.getUserInfo().getString("topUnit"),
+                    userDetails.getUserInfo().getString("primaryUnit")));
             //当前用户的角色信息
             dpf.put("userRoles", userDetails.getUserRoles());
         }
         //当前用户所有机构关联关系信息
         if(StringUtils.isNotBlank(userCode)) {
             List<? extends IUserUnit> userUnits = CodeRepositoryUtil
-                .listUserUnits(userCode);
+                .listUserUnits(topUnit, userCode);
             if (userUnits != null) {
                 dpf.put("userUnits", userUnits);
                 Map<String, List<IUserUnit>> rankUnits = new HashMap<>(5);
@@ -529,7 +533,7 @@ public class CacheController extends BaseController {
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
 
-        List<IUnitInfo> retUntis = CodeRepositoryUtil.getUnitInfosByCodes(units);
+        List<IUnitInfo> retUntis = CodeRepositoryUtil.getUnitInfosByCodes(WebOptUtils.getCurrentTopUnit(request), units);
         CollectionsOpt.sortAsTree(retUntis,
             ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
         return retUntis;
@@ -559,7 +563,7 @@ public class CacheController extends BaseController {
                 StringEscapeUtils.unescapeHtml4(userfilter),
             null,null,null,
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails)));
-        return CodeRepositoryUtil.getUserInfosByCodes(users);
+        return CodeRepositoryUtil.getUserInfosByCodes(WebOptUtils.getCurrentTopUnit(request), users);
     }
 
     private JSONArray makeMenuFuncsJson(List<IOptInfo> menuFunsByUser) {
@@ -611,8 +615,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/optdef/{optID}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<? extends IOptMethod> optdef(@PathVariable String optID) {
-        return CodeRepositoryUtil.getOptMethodByOptID(optID);
+    public List<? extends IOptMethod> optdef(@PathVariable String optID, HttpServletRequest request) {
+        return CodeRepositoryUtil.getOptMethodByOptID(WebOptUtils.getCurrentTopUnit(request), optID);
     }
 
     /**
