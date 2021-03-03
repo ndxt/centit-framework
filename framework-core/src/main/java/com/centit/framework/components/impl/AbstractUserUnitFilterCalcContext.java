@@ -1,5 +1,6 @@
 package com.centit.framework.components.impl;
 
+import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUserUnit;
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilterCalcContext {
+
     protected Lexer lexer;
     protected Map<String, Set<String>> unitParams;
     protected Map<String, Set<String>> userParams;
@@ -18,6 +20,7 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     protected boolean hasError;
     protected String lastErrMsg;
     protected UserUnitVariableTranslate varTrans;
+    protected String topUnit;
 
     public AbstractUserUnitFilterCalcContext() {
         lexer = new Lexer();
@@ -51,6 +54,18 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     @Override
     public String getLastErrMsg() {
         return lastErrMsg;
+    }
+
+    @Override
+    public String getTopUnit() {
+        if(StringUtils.isBlank(topUnit)){
+            return GlobalConstValue.NO_TENANT_TOP_UNIT;
+        }
+        return topUnit;
+    }
+
+    public void setTopUnit(String topUnit) {
+        this.topUnit = topUnit;
     }
 
     @Override

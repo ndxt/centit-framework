@@ -15,6 +15,7 @@ public class UserUnitMapTranslate implements UserUnitVariableTranslate {
     public UserUnitMapTranslate(){
         varMap = null;
     }
+
     public UserUnitMapTranslate(Map<String,Object> varMap) {
         this.varMap = varMap;
     }

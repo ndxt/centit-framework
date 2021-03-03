@@ -1,6 +1,5 @@
 package com.centit.framework.model.adapter;
 
-import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserRole;
@@ -12,9 +11,7 @@ import java.util.Set;
 
 public interface UserUnitFilterCalcContext {
 
-    default String getTopUnit(){
-        return GlobalConstValue.NO_TENANT_TOP_UNIT;
-    }
+    String getTopUnit();
 
     void setVarTrans(UserUnitVariableTranslate varTrans);
 

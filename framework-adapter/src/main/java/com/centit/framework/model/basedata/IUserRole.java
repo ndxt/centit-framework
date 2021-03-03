@@ -1,8 +1,5 @@
 package com.centit.framework.model.basedata;
 
-import com.centit.framework.core.dao.DictionaryMap;
-import io.swagger.annotations.ApiModelProperty;
-
 /**
  * FUserrole entity.
  *  用户角色
