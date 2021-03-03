@@ -50,7 +50,8 @@ public class TopUnitSecurityMetadata {
         OptTreeNode optTreeNode = new OptTreeNode();
         List<? extends IOptInfo> optInfos = CodeRepositoryCache.optInfoRepo.getCachedValue(this.topUnit);
         Map<String, ? extends IOptInfo> optInfoMap = CollectionsOpt.createHashMap(optInfos, IOptInfo::getOptId);
-        for(IOptMethod ou : CodeRepositoryCache.optMethodRepo.getCachedValue(this.topUnit)){
+        for(IOptMethod ou : CodeRepositoryCache.optMethodRepo
+                .getCachedValue(this.topUnit).getListData()){
             IOptInfo oi = optInfoMap.get(ou.getOptId());
             if(oi!=null){
                 String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());

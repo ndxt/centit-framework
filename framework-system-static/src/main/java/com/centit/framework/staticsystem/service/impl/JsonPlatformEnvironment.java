@@ -49,13 +49,13 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         tempJa= json.getJSONArray("optMethods");
         if(tempJa!=null) {
             List<OptMethod> optmethods = tempJa.toJavaList(OptMethod.class);
-            CodeRepositoryCache.optMethodRepo.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
-                optmethods);
+            allOptMethod.setFreshData(optmethods);
         }
 
         tempJa= json.getJSONArray("optDataScopes");
         if(tempJa!=null) {
-            optDataScopes = tempJa.toJavaList(OptDataScope.class);
+            List<OptDataScope> dataScopes = tempJa.toJavaList(OptDataScope.class);
+            optDataScopes.setFreshData(dataScopes);
         }
 
         tempJa= json.getJSONArray("roleInfos");
@@ -68,8 +68,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         tempJa= json.getJSONArray("rolePowers");
         if(tempJa!=null) {
             List<RolePower> rolepowers = tempJa.toJavaList(RolePower.class);
-            CodeRepositoryCache.rolePowerRepo.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
-                rolepowers);
+            allRolePower.setFreshData(rolepowers);
         }
 
         tempJa = json.getJSONArray("userRoles");

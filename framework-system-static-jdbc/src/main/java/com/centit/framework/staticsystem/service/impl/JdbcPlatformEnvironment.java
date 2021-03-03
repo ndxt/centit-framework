@@ -59,13 +59,13 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
 
             JSONArray optDataScopesJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_OPTDATASCOPE"));
-            optDataScopes = jsonArrayToObjectList(optDataScopesJSONArray, OptDataScope.class);
+            List<OptDataScope> dataScopes = jsonArrayToObjectList(optDataScopesJSONArray, OptDataScope.class);
+            optDataScopes.setFreshData(dataScopes);
 
             JSONArray optMethodsJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_OPTMETHOD"));
             List<OptMethod> optmethods = jsonArrayToObjectList(optMethodsJSONArray,  OptMethod.class);
-            CodeRepositoryCache.optMethodRepo.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
-                optmethods);
+            allOptMethod.setFreshData(optmethods);
 
             JSONArray roleInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_ROLEINFO"));
@@ -76,8 +76,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             JSONArray rolePowerJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_ROLEPOWER"));
             List<RolePower>  rolepowers = jsonArrayToObjectList(rolePowerJSONArray,  RolePower.class);
-            CodeRepositoryCache.rolePowerRepo.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
-                rolepowers);
+            allRolePower.setFreshData(rolepowers);
 
             JSONArray userRoleJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_USERROLE"));
@@ -111,7 +110,6 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             CodeRepositoryCache.osInfoCache.setFreshData(GlobalConstValue.NO_TENANT_TOP_UNIT,
                 osInfos);
         }
-
     }
     /**
      * 刷新数据字典

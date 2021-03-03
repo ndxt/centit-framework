@@ -3,6 +3,7 @@
  */
 package com.centit.framework.service.impl;
 
+import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.MessageSender;
@@ -74,7 +75,8 @@ public class EmailMessageSenderImpl implements MessageSender {
 
     @Override
     public ResponseData sendMessage(String sender, String receiver, NoticeMessage message){
-        IUserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(sender);
+        IUserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(
+            GlobalConstValue.NO_TENANT_TOP_UNIT, sender);
         String mailFrom;
         if(userinfo==null){
             mailFrom = serverEmail;
@@ -82,7 +84,8 @@ public class EmailMessageSenderImpl implements MessageSender {
         }else
             mailFrom =  userinfo.getRegEmail();
 
-        userinfo = CodeRepositoryUtil.getUserInfoByCode(receiver);
+        userinfo = CodeRepositoryUtil.getUserInfoByCode(
+            GlobalConstValue.NO_TENANT_TOP_UNIT, receiver);
         if(userinfo==null){
             logger.error("找不到用户："+receiver);
             return ResponseData.makeErrorMessage(

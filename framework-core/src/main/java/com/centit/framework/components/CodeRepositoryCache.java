@@ -32,7 +32,7 @@ public abstract class CodeRepositoryCache {
      * 永不过期，就把失效时间设定为一个月
      */
     public final static long CACHE_NEVER_EXPIRE = 30 * 24 * 60 * 60L;
-
+    public final static long CACHE_EXPIRE_EVERY_DAY = 24 * 60 * 60L;
     /**
      * 短期缓存，就把失效时间设定为 5 秒
      */
@@ -272,7 +272,7 @@ public abstract class CodeRepositoryCache {
             },
             CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedMap<String, List<? extends IOptMethod>> optMethodRepo=
+    public static CachedMap<String, ListAppendMap<? extends IOptMethod>> optMethodRepo=
         new CachedMap<>((topUnit)-> {
                 List<? extends IOsInfo> iOsInfos = getPlatformEnvironment().listOsInfos(topUnit);
                 List<IOptMethod> optInfos = new ArrayList<>(100);
@@ -282,14 +282,14 @@ public abstract class CodeRepositoryCache {
                             getPlatformEnvironment().listAllOptMethod(oi.getRelOptId()));
                     }
                 }
-                return optInfos;
+                return new ListAppendMap<>(optInfos, IOptMethod::getOptCode);
             },
             CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedMap<String, Map<String, List<IOptDataScope>>> optDataScopeRepo=
         new CachedMap<>((topUnit)->{
             List<? extends IOptDataScope> optDataScopes = getPlatformEnvironment().listAllOptDataScope(topUnit);
-            Map<String,List<IOptDataScope>> optDataScopeMap = new HashMap<>(200);
+            Map<String, List<IOptDataScope>> optDataScopeMap = new HashMap<>(200);
             if(optDataScopes != null) {
                 for (IOptDataScope dataScope : optDataScopes) {
                     List<IOptDataScope> odss = optDataScopeMap.get(dataScope.getOptId());
@@ -303,9 +303,23 @@ public abstract class CodeRepositoryCache {
             return optDataScopeMap;
         }, CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedMap<String, List<? extends IRolePower>> rolePowerRepo =
-        new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllRolePower(topUnit),
-            CACHE_FRESH_PERIOD_SECONDS);
+    public static CachedMap<String,List<? extends IRolePower>> rolePowerRepo =
+        new CachedMap<>((topUnit)->
+            getPlatformEnvironment().listAllRolePower(topUnit), CACHE_FRESH_PERIOD_SECONDS);
 
+    public static CachedMap<String, Map<String, List<IRolePower>>> rolePowerMap =
+        new CachedMap<>((topUnit)->{
+            List<? extends IRolePower> allRowPowers = rolePowerRepo.getCachedValue(topUnit);
+            Map<String, List<IRolePower>> rolePowerMap = new HashMap<>(100);
+            for(IRolePower rolePower: allRowPowers){
+                List<IRolePower> odss = rolePowerMap.get(rolePower.getRoleCode());
+                if(odss==null){
+                    odss = new ArrayList<>(4);
+                }
+                odss.add(rolePower);
+                rolePowerMap.put(rolePower.getRoleCode(), odss);
+            }
+            return rolePowerMap;
+        }, rolePowerRepo);
 }
 

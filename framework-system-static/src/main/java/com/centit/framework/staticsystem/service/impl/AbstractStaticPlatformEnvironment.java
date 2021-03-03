@@ -21,30 +21,40 @@ import java.util.*;
 public abstract class AbstractStaticPlatformEnvironment
     implements PlatformEnvironment {
 
-    protected List<OptDataScope> optDataScopes;
-
     /**
      * 数据字典列表
      */
+    public CachedObject<List<OptDataScope>> optDataScopes  =
+        new CachedObject<>(this::loadOptDataScope,
+            CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
+
     public CachedObject<List<DataCatalog>> catalogRepo  =
-        new CachedObject<>(this::listAllDataCatalog,
-            CodeRepositoryCache.CACHE_NEVER_EXPIRE );
+        new CachedObject<>(this::loadAllDataCatalog,
+            CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
+
+    public CachedObject<List<RolePower>> allRolePower =
+        new CachedObject<>(this::loadAllRolePower,
+            CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
+
+    public CachedObject<List<OptMethod>> allOptMethod =
+        new CachedObject<>(this::loadAllOptMethod,
+            CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
 
     public CachedObject<List<DataDictionary>> allDictionaryRepo =
-        new CachedObject<>(this::listAllDataDictionary,
-            CodeRepositoryCache.CACHE_NEVER_EXPIRE );
+        new CachedObject<>(this::loadAllDataDictionary,
+            CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
 
     public CachedObject<List<UserRole>> allUserRoleRepo =
-        new CachedObject<>(this::listAllUserRole,
-            CodeRepositoryCache.CACHE_NEVER_EXPIRE );
+        new CachedObject<>(this::loadAllUserRole,
+            CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
 
     public CachedObject<List<UserUnit>> allUserUnitRepo =
-        new CachedObject<>(this::listAllUserUnit,
-            CodeRepositoryCache.CACHE_NEVER_EXPIRE );
+        new CachedObject<>(this::loadAllUserUnit,
+            CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
 
     public CachedObject<List<JsonCentitUserDetails>> allUserDetailsRepo =
         new CachedObject<>(()-> { this.reloadPlatformData(); return null;},
-            CodeRepositoryCache.CACHE_NEVER_EXPIRE );
+            CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
 
     protected CentitPasswordEncoder passwordEncoder;
 
@@ -62,13 +72,9 @@ public abstract class AbstractStaticPlatformEnvironment
         }
 
         for (IRoleInfo ri : CodeRepositoryCache.roleInfoRepo.getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT)) {
-            for (IRolePower rp : CodeRepositoryCache.rolePowerRepo.getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT)) {
-                if (StringUtils.equals(rp.getRoleCode(), ri.getRoleCode())) {
+            for (IRolePower rp : CodeRepositoryCache.rolePowerMap
+                .getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT).get(ri.getRoleCode())) {
                     ((RoleInfo)ri).addRolePowers((RolePower)rp);
-                    /*OptMethod om = getOptMethod(rp.getOptCode());
-                    if(om!=null)
-                        userOptList.put(om.getOsId()+"-"+om.getOptMethod(), "T");*/
-                }
             }
         }
 
@@ -81,10 +87,6 @@ public abstract class AbstractStaticPlatformEnvironment
             CodeRepositoryCache.roleInfoRepo.getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT),
             IRoleInfo::getRoleCode);
 
-        Map<String, ? extends IOptMethod> codeToMethodMap = CollectionsOpt.createHashMap(
-            CodeRepositoryCache.optMethodRepo.getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT),
-            IOptMethod::getOptCode);
-
         for (IUserInfo ui : userinfos) {
             List<RoleInfo> roles = new ArrayList<>();
             Map<String, String> userOptList = new HashMap<>();
@@ -94,7 +96,9 @@ public abstract class AbstractStaticPlatformEnvironment
                     if (ri != null) {
                         roles.add((RoleInfo)ri);
                         for (IRolePower rp : ri.getRolePowers()) {
-                            IOptMethod om = codeToMethodMap.get(rp.getOptCode());
+                            IOptMethod om = CodeRepositoryCache.optMethodRepo
+                                .getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT)
+                                .getAppendMap().get(rp.getOptCode());
                             if (om != null && StringUtils.isNotBlank(om.getOptMethod())) {
                                 //om.getOptCode()
                                 userOptList.put(om.getOptId() + "-" + om.getOptMethod(), om.getOptCode());
@@ -103,6 +107,7 @@ public abstract class AbstractStaticPlatformEnvironment
                     }
                 }
             }
+
             JsonCentitUserDetails ud = new JsonCentitUserDetails();
             ud.setUserInfo((JSONObject) JSON.toJSON(ui));
             ud.getUserInfo().put("userPin", ui.getUserPin());
@@ -265,15 +270,13 @@ public abstract class AbstractStaticPlatformEnvironment
             CodeRepositoryCache.optInfoRepo.getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT),
             IOptInfo::getOptId);
 
-        Map<String, ? extends IOptMethod> codeToMethodMap = CollectionsOpt.createHashMap(
-            CodeRepositoryCache.optMethodRepo.getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT),
-            IOptMethod::getOptCode);
-
         for (UserRole ur : userRoles) {
             RoleInfo ri = (RoleInfo)codeToRoleMap.get(ur.getRoleCode());
             if (ri != null) {
                 for (RolePower rp : ri.getRolePowers()) {
-                    OptMethod om = (OptMethod)codeToMethodMap.get(rp.getOptCode());
+                    IOptMethod om = CodeRepositoryCache.optMethodRepo
+                        .getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT)
+                        .getAppendMap().get(rp.getOptCode());
                     if (om != null)
                         optIds.add(om.getOptId());
                 }
@@ -558,38 +561,46 @@ public abstract class AbstractStaticPlatformEnvironment
      */
     @Override
     public List<? extends IRolePower> listAllRolePower(String topUnit){
-        reloadPlatformData();
-        return CodeRepositoryCache.rolePowerRepo
-            .getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT);
+        return allRolePower.getCachedTarget();
     }
 
-    protected List<DataCatalog> listAllDataCatalog() {
+    protected List<RolePower> loadAllRolePower() {
+        reloadPlatformData();
+        return allRolePower.getCachedTarget();
+    }
+
+    protected List<DataCatalog> loadAllDataCatalog() {
         reloadPlatformData();
         return catalogRepo.getCachedTarget();
     }
 
-    protected List<DataDictionary> listAllDataDictionary() {
+    protected List<DataDictionary> loadAllDataDictionary() {
         reloadPlatformData();
         return allDictionaryRepo.getCachedTarget();
     }
 
-    protected List<UserRole> listAllUserRole() {
+    protected List<UserRole> loadAllUserRole() {
         reloadPlatformData();
         return allUserRoleRepo.getCachedTarget();
     }
-    protected List<UserUnit> listAllUserUnit() {
+    protected List<UserUnit> loadAllUserUnit() {
         reloadPlatformData();
         return allUserUnitRepo.getCachedTarget();
     }
-    /**
-     * 获取操作方法信息
-     * @return List 操作方法信息
-     */
+
+    protected List<OptMethod> loadAllOptMethod() {
+        reloadPlatformData();
+        return allOptMethod.getCachedTarget();
+    }
+
+    protected List<OptDataScope> loadOptDataScope() {
+        reloadPlatformData();
+        return optDataScopes.getCachedTarget();
+    }
+
     @Override
     public List<? extends IOptMethod> listAllOptMethod(String topUnit){
-        reloadPlatformData();
-        return CodeRepositoryCache.optMethodRepo
-            .getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT);
+        return allOptMethod.getCachedTarget();
     }
 
     /**
@@ -600,8 +611,7 @@ public abstract class AbstractStaticPlatformEnvironment
      */
     @Override
     public List<? extends IOptDataScope> listAllOptDataScope(String superOptId) {
-        reloadPlatformData();
-        return this.optDataScopes;
+        return optDataScopes.getCachedTarget();
     }
     /**
      * 根据用户代码获得 用户的所有租户，顶级机构

@@ -367,7 +367,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static List<? extends IOptMethod> getOptMethodByOptID(String superOptId, String sOptID) {
         List<IOptMethod> optList = new ArrayList<>();
-        for (IOptMethod value : CodeRepositoryCache.optMethodRepo.getCachedValue(superOptId)) {
+        for (IOptMethod value : CodeRepositoryCache.optMethodRepo.getCachedValue(superOptId).getListData()) {
             if (sOptID.equals(value.getOptId())) {
                 optList.add(value);
             }
@@ -1008,7 +1008,7 @@ public abstract class CodeRepositoryUtil {
 
             case CodeRepositoryUtil.OPT_CODE: {
                 for (IOptMethod value :
-                        CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit)) {
+                        CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit).getListData()) {
                     lbvs.put(value.getOptCode(), value.getOptName());
                 }
                 return lbvs;
@@ -1075,7 +1075,7 @@ public abstract class CodeRepositoryUtil {
         }
 
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.OPT_CODE)) {
-            for (IOptMethod value : CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit)) {
+            for (IOptMethod value : CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit).getListData()) {
                 lbvs.add(new OptionItem(value.getOptName(), value.getOptCode(),value.getOptId()));
             }
             return lbvs;
@@ -1392,10 +1392,10 @@ public abstract class CodeRepositoryUtil {
         return userRoles;
     }
 
-    /*public static List<String> listUserDataFiltersByOptIdAndMethod(
-                String sUserCode, String sOptId, String sOptMethod) {
+    public static List<String> listUserDataFiltersByOptIdAndMethod(
+        String topUnit, String sUserCode, String sOptId, String sOptMethod) {
         Map<String, List<IOptDataScope>> optDataScope =
-            CodeRepositoryCache.optDataScopeRepo.getCachedTarget();
+            CodeRepositoryCache.optDataScopeRepo.getCachedValue(topUnit);
         if(optDataScope==null){
             return null;
         }
@@ -1405,19 +1405,18 @@ public abstract class CodeRepositoryUtil {
         }
 
         Set<String> dataScopes = new HashSet<>();
-        List<String> allUserRole = listAllUserRoles(sUserCode);
+        List<String> allUserRole = listAllUserRoles(topUnit, sUserCode);
 
         for (String rolecode : allUserRole) {
-            IRoleInfo ri = CodeRepositoryCache.codeToRoleMap.getCachedTarget().get(rolecode);
-            if (ri != null) {
-                for (IRolePower rp : CodeRepositoryCache.rolePowerMap.getCachedTarget().get(ri.getRoleCode())) {
-                    // 需要过滤掉 不是 sOptId 下面的方式（不过滤也不会影响结果）; 但是这个过滤可能并不能提高效率
-                    IOptMethod om = CodeRepositoryCache.codeToMethodMap.getFreshTarget().get(rp.getOptCode());
-                    if(StringUtils.equals(sOptId, om.getOptId()) && StringUtils.equals(om.getOptMethod(),sOptMethod)) {
-                        String[] oscs = rp.getOptScopeCodeSet();
-                        if (oscs != null) {
-                            Collections.addAll(dataScopes, oscs);
-                        }
+            //IRoleInfo ri = CodeRepositoryCache.roleInfoRepo.getCachedTarget().get(rolecode);
+            for (IRolePower rp : CodeRepositoryCache.rolePowerMap.getCachedValue(topUnit).get(rolecode)) {
+                // 需要过滤掉 不是 sOptId 下面的方式（不过滤也不会影响结果）; 但是这个过滤可能并不能提高效率
+                IOptMethod om = CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit)
+                    .getAppendMap().get(rp.getOptCode());
+                if(StringUtils.equals(sOptId, om.getOptId()) && StringUtils.equals(om.getOptMethod(),sOptMethod)) {
+                    String[] oscs = rp.getOptScopeCodeSet();
+                    if (oscs != null) {
+                        Collections.addAll(dataScopes, oscs);
                     }
                 }
             }
@@ -1433,7 +1432,7 @@ public abstract class CodeRepositoryUtil {
             return filters;
         }
         return null;
-    }*/
+    }
 
     /**
      * 获取框架中注册的业务系统
