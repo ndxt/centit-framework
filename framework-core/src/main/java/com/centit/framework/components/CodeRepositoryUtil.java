@@ -518,6 +518,10 @@ public abstract class CodeRepositoryUtil {
         return units;
     }
 
+    public static List<? extends IRoleInfo> listAllRole(String topUnit) {
+        return CodeRepositoryCache.roleInfoRepo.getCachedValue(topUnit);
+    }
+
     /**
      * listRoleUserByRoleCode(roleCode);
      * 获取 拥有指定角色的所有用户

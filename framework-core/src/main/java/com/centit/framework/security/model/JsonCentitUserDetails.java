@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.common.GlobalConstValue;
-import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.security.SecurityContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;

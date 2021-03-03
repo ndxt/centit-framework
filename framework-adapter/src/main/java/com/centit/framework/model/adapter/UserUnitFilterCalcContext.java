@@ -1,5 +1,6 @@
 package com.centit.framework.model.adapter;
 
+import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserInfo;
 import com.centit.framework.model.basedata.IUserRole;
@@ -10,6 +11,10 @@ import java.util.Map;
 import java.util.Set;
 
 public interface UserUnitFilterCalcContext {
+
+    default String getTopUnit(){
+        return GlobalConstValue.NO_TENANT_TOP_UNIT;
+    }
 
     void setVarTrans(UserUnitVariableTranslate varTrans);
 
@@ -61,9 +66,9 @@ public interface UserUnitFilterCalcContext {
 
     boolean seekToRightBracket();
 
-    List<? extends IUserInfo> listAllUserInfo(String topUnit);
+    List<? extends IUserInfo> listAllUserInfo();
 
-    List<? extends IUnitInfo> listAllUnitInfo(String topUnit);
+    List<? extends IUnitInfo> listAllUnitInfo();
 
     /**
      * 获得机构所有的子机构
@@ -76,7 +81,7 @@ public interface UserUnitFilterCalcContext {
 
     IUnitInfo getUnitInfoByCode(String unitCode);
 
-    List<? extends IUserUnit> listAllUserUnits(String topUnit);
+    List<? extends IUserUnit> listAllUserUnits();
 
     List<? extends IUserUnit> listUnitUsers(String unitCode);
 
@@ -88,13 +93,12 @@ public interface UserUnitFilterCalcContext {
 
     //-----------------通用的常量---------------------
     // 系统角色
-    Map<String, String> listAllSystemRole(String topUnit);
+    Map<String, String> listAllSystemRole();
     // 岗位
     Map<String, String> listAllStation();
-    // 办件角色 FlowUserRole// 流程角色，项目角色
-    Map<String, String> listAllProjectRole();
+
     // 行政角色 代码、名称 、等级
-    Map<String, String> listAllRank(String topUnit);
+    Map<String, String> listAllRank();
     /**
      * 从数据字典中获取 Rank 的等级
      * @param rankCode 行政角色代码

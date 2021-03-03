@@ -16,28 +16,28 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     }
 
     @Override
-    public List<? extends IUserInfo> listAllUserInfo(String topUnit){
-        return CodeRepositoryUtil.listAllUsers(topUnit);
+    public List<? extends IUserInfo> listAllUserInfo(){
+        return CodeRepositoryUtil.listAllUsers(this.getTopUnit());
     }
 
     @Override
-    public List<? extends IUnitInfo> listAllUnitInfo(String topUnit) {
-        return CodeRepositoryUtil.listAllUnits(topUnit);
+    public List<? extends IUnitInfo> listAllUnitInfo() {
+        return CodeRepositoryUtil.listAllUnits(this.getTopUnit());
     }
 
     @Override
     public List<? extends IUnitInfo> listSubUnit(String unitCode) {
-        return CodeRepositoryUtil.getSubUnits(unitCode);
+        return CodeRepositoryUtil.getSubUnits(this.getTopUnit(), unitCode);
     }
 
     @Override
     public IUnitInfo getUnitInfoByCode(String unitCode) {
-        return CodeRepositoryUtil.getUnitInfoByCode(unitCode);
+        return CodeRepositoryUtil.getUnitInfoByCode(this.getTopUnit(), unitCode);
     }
 
     @Override
-    public List<? extends IUserUnit> listAllUserUnits(String topUnit) {
-        //return CodeRepositoryUtil.listAllUserUnits(topUnit);
+    public List<? extends IUserUnit> listAllUserUnits() {
+        //return CodeRepositoryUtil.listAllUserUnits(this.getTopUnit());
         return null;
     }
 
@@ -48,22 +48,22 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
 
     @Override
     public List<? extends IUserUnit> listUserUnits(String userCode){
-        return CodeRepositoryUtil.listUserUnits(userCode);
+        return CodeRepositoryUtil.listUserUnits(this.getTopUnit(), userCode);
     }
 
     @Override
     public List<? extends IUserRole> listUserRoles(String userCode) {
-        return CodeRepositoryUtil.listUserRoles(userCode);
+        return CodeRepositoryUtil.listUserRoles(this.getTopUnit(), userCode);
     }
 
     @Override
     public List<? extends IUserRole> listRoleUsers(String roleCode) {
-        return CodeRepositoryUtil.listRoleUsers(roleCode);
+        return CodeRepositoryUtil.listRoleUsers(this.getTopUnit(), roleCode);
     }
 
     @Override
     public Map<String, String> listAllSystemRole() {
-        List<? extends IRoleInfo> roles = CodeRepositoryUtil.listAllRole();
+        List<? extends IRoleInfo> roles = CodeRepositoryUtil.listAllRole(this.getTopUnit());
         Map<String, String> roleMap = new HashMap<>();
         if(roles!=null){
             for(IRoleInfo r: roles){
@@ -71,11 +71,6 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
             }
         }
         return roleMap;
-    }
-
-    @Override
-    public Map<String, String> listAllProjectRole() {
-        return CodeRepositoryUtil.getLabelValueMap("FlowUserRole");
     }
 
     @Override
@@ -90,7 +85,7 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
 
     @Override
     public IUserInfo getUserInfoByCode(String userCode) {
-        return CodeRepositoryUtil.getUserInfoByCode(userCode);
+        return CodeRepositoryUtil.getUserInfoByCode(this.getTopUnit(), userCode);
     }
 
     /**

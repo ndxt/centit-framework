@@ -5,6 +5,7 @@ import com.centit.framework.model.basedata.IOptInfo;
 import com.centit.framework.model.basedata.IOptMethod;
 import com.centit.framework.model.basedata.IRolePower;
 import com.centit.framework.security.SecurityContextUtils;
+import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.AbstractCachedObject;
 import com.centit.support.common.CachedObject;
@@ -31,14 +32,6 @@ public class TopUnitSecurityMetadata {
                     CodeRepositoryCache.optMethodRepo, CodeRepositoryCache.rolePowerRepo});
     }
 
-    private IOptInfo findOptInfo(List<? extends IOptInfo> optInfos , String optId){
-        for(IOptInfo optInfo : optInfos){
-            if(optInfo.getOptId().equals(optId)){
-                return optInfo;
-            }
-        }
-        return null;
-    }
     private OptTreeNode reloadOptTreeNode(){
         Map<String, List<ConfigAttribute>> optMethodRoleMap = new HashMap<>(100);
         List<? extends IRolePower> rolepowers =
@@ -56,9 +49,9 @@ public class TopUnitSecurityMetadata {
 
         OptTreeNode optTreeNode = new OptTreeNode();
         List<? extends IOptInfo> optInfos = CodeRepositoryCache.optInfoRepo.getCachedValue(this.topUnit);
-
+        Map<String, ? extends IOptInfo> optInfoMap = CollectionsOpt.createHashMap(optInfos, IOptInfo::getOptId);
         for(IOptMethod ou : CodeRepositoryCache.optMethodRepo.getCachedValue(this.topUnit)){
-            IOptInfo oi = findOptInfo(optInfos, ou.getOptId());
+            IOptInfo oi = optInfoMap.get(ou.getOptId());
             if(oi!=null){
                 String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());
                 if(StringUtils.isNotBlank(optDefUrl) && StringUtils.isNotBlank(ou.getOptReq())) {

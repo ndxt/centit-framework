@@ -249,6 +249,12 @@ public abstract class CodeRepositoryCache {
     /*
      * 下面的缓存信息用于spring security 中的用户的权限信息缓存
      */
+
+    public static CachedMap<String,List<? extends IRoleInfo>> roleInfoRepo=
+        new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllRoleInfo(topUnit),
+            CACHE_FRESH_PERIOD_SECONDS);
+
+
     public static CachedMap<String, List<IOptInfo>> optInfoRepo=
         new CachedMap<>((topUnit)-> {
                 List<? extends IOsInfo> iOsInfos = getPlatformEnvironment().listOsInfos(topUnit);

@@ -3,8 +3,8 @@ package com.centit.framework.components.impl;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.IUserUnit;
+import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
-import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.compiler.Lexer;
 import org.apache.commons.lang3.StringUtils;
 
@@ -144,11 +144,7 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
 
     @Override
     public int stringToRank(String srank) {
-        if (StringUtils.isBlank(srank))
-            return -1;
-        if (!StringRegularOpt.isNumber(srank))
-            return -1;
-        return Integer.valueOf(StringRegularOpt.trimString(srank));
+        return NumberBaseOpt.castObjectToInteger(srank, -1);
     }
 
     @Override
