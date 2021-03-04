@@ -8,6 +8,7 @@ import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.CachedObject;
@@ -661,9 +662,9 @@ public abstract class CodeRepositoryUtil {
 
     private static int getXzRank(String rankCode){
         IDataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode);
-        if(dd!=null)
-            return Integer.valueOf(dd.getExtraCode());
-        return IUserUnit.MAX_XZ_RANK;
+        return dd!=null ? NumberBaseOpt.castObjectToInteger(dd.getExtraCode(),
+                IUserUnit.MAX_XZ_RANK )
+            : IUserUnit.MAX_XZ_RANK;
     }
 
     /**
