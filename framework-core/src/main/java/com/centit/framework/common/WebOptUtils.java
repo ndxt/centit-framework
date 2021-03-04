@@ -33,7 +33,7 @@ import java.util.Locale;
  * date 2014年10月24日
  */
 public class WebOptUtils {
-    public static final String LOCAL_LANGUAGE_LABLE="LOCAL_LANG";
+    public static final String LOCAL_LANGUAGE_LABLE = "LOCAL_LANG";
     public static final String CURRENT_USER_CODE_TAG   = "cnt-current-user-code";
     public static final String CURRENT_TOP_UNIT_TAG   = "cnt-current-top-unit";
     public static final String CURRENT_UNIT_CODE_TAG   = "cnt-current-uint-code";
@@ -275,6 +275,9 @@ public class WebOptUtils {
     }
 
     public static String getCurrentTopUnit(HttpServletRequest request) {
+        if(request==null){
+            return GlobalConstValue.NO_TENANT_TOP_UNIT;
+        }
         if(WebOptUtils.requestInSpringCloud){
             String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
             if(StringUtils.isNotBlank(topUnit)){
@@ -289,6 +292,9 @@ public class WebOptUtils {
     }
 
     public static String getCurrentUserCode(HttpServletRequest request) {
+        if(request == null){
+            return "";
+        }
         if(WebOptUtils.requestInSpringCloud){
             String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
             if(StringUtils.isNotBlank(userCode)){
