@@ -175,7 +175,8 @@ public interface PlatformEnvironment {
 
     /**
      * 获取租户下所有角色和权限对应关系
-     *
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
      * @return List 操作方法信息
      */
     List<? extends IRolePower> listAllRolePower(String topUnit);
@@ -184,22 +185,20 @@ public interface PlatformEnvironment {
     /**
      * 获取租户下业务操作信息
      *
-     * @param superOptId 应用id 对应osinfo的osid 或者 对应paas平台的applicationId，
-     *                   对应菜单树中根菜单（顶层菜单）的optId
-     *                   如果 superOptId = 'all'  返回所有的
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
      * @return List 业务信息
      */
-    List<? extends IOptInfo> listAllOptInfo(String superOptId);
+    List<? extends IOptInfo> listAllOptInfo(String topUnit);
 
     /**
      * 获取租户下操作方法信息
      *
-     * @param superOptId 应用id 对应osinfo的osid 或者 对应paas平台的applicationId，
-     *                   对应菜单树中根菜单（顶层菜单）的optId
-     *                   如果 superOptId = 'all'  返回所有的
+     * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
+     *                如果 topUnit = 'all' 返回所有机构
      * @return List 操作方法信息
      */
-    List<? extends IOptMethod> listAllOptMethod(String superOptId);
+    List<? extends IOptMethod> listAllOptMethod(String topUnit);
 
     /**
      * 获取租户下所有的数据范围定义表达式

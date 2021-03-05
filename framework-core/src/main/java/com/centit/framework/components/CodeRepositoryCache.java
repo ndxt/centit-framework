@@ -266,29 +266,13 @@ public abstract class CodeRepositoryCache {
 
 
     public static CachedMap<String, List<? extends IOptInfo>> optInfoRepo=
-        new CachedMap<>((topUnit)-> {
-                List<? extends IOsInfo> iOsInfos = getPlatformEnvironment().listOsInfos(topUnit);
-                List<IOptInfo> optInfos = new ArrayList<>(100);
-                if(iOsInfos!=null) {
-                    for (IOsInfo oi : iOsInfos) {
-                        optInfos.addAll(
-                            getPlatformEnvironment().listAllOptInfo(oi.getRelOptId()));
-                    }
-                }
-                return optInfos;
-            },
+        new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllOptInfo(topUnit),
             CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedMap<String, ListAppendMap<? extends IOptMethod>> optMethodRepo=
         new CachedMap<>((topUnit)-> {
-                List<? extends IOsInfo> iOsInfos = getPlatformEnvironment().listOsInfos(topUnit);
-                List<IOptMethod> optInfos = new ArrayList<>(100);
-                if(iOsInfos!=null) {
-                    for (IOsInfo oi : iOsInfos) {
-                        optInfos.addAll(
-                            getPlatformEnvironment().listAllOptMethod(oi.getRelOptId()));
-                    }
-                }
+                List<? extends IOptMethod> optInfos =
+                    getPlatformEnvironment().listAllOptMethod(topUnit);
                 return new ListAppendMap<>(optInfos, IOptMethod::getOptCode);
             },
             CACHE_FRESH_PERIOD_SECONDS);
