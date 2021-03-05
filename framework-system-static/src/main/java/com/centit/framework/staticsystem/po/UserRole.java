@@ -34,10 +34,6 @@ public class UserRole implements IUserRole, java.io.Serializable {
 
     private String inheritedFrom;
 
-    private String roleType;
-
-    private String unitCode;
-
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -84,42 +80,6 @@ public class UserRole implements IUserRole, java.io.Serializable {
 
     public String getRoleCode() {
         return this.roleCode;
-    }
-
-
-    public void setRoleType(String roleType) {
-        this.roleType = roleType;
-    }
-
-    public void setUnitCode(String unitCode) {
-        this.unitCode = unitCode;
-    }
-    /**
-     * 角色的类别 F (Fixed)系统内置的，固有的 这些角色不能删除，也不能赋给任何人，
-     * public，forbidden，anonymous
-     * G (global) 全局的
-     * P (Public) 公用的，指 系统全局 和 部门之间公用的
-     * D (Department)部门(机构)特有的角色, 租户角色
-     * S (Sub System) 属于某个子系统
-     * I (Item )为项目角色
-     * W (workflow)工作流角色 ，这两个为保留类别，暂时没有使用
-     * H (HIDE)系统内置的不要显示的，是部门可以自己支配的操作权限集合
-     * 角色的类别 F/G/P/D/S/I/W/H
-     */
-    @Override
-    public String getRoleType() {
-        return StringUtils.isBlank(this.roleType)?"G":this.roleType;
-    }
-
-    /**
-     * 对租户的 topUnit
-     *
-     * @return 对租户的 topUnit ，角色属于某个租户
-     */
-    @Override
-    public String getUnitCode() {
-        return StringUtils.isBlank(this.unitCode)?
-             GlobalConstValue.NO_TENANT_TOP_UNIT: this.unitCode;
     }
 
     public void setRoleCode(String rolecode) {

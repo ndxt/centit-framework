@@ -33,6 +33,11 @@ public interface IRoleInfo{
     String getRoleType();
 
     /**
+     * 对租户的 topUnit
+     * @return 对租户的 topUnit ，角色属于某个租户
+     */
+    String getUnitCode();
+    /**
      * 获取角色的所有者， roleType = 'D'/'S' 时 生效， 其他的都返回 system 系统的
      * @return 角色的所有者
      */
