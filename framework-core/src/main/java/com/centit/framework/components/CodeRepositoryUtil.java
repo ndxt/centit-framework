@@ -808,6 +808,31 @@ public abstract class CodeRepositoryUtil {
     }
 
     /**
+     * 根据状态获取所有机构信息，
+     *
+     * @param sState A表示所有状态
+     * @return List 所有机构信息
+     */
+    public static List<IUserInfo> getAllUsers(String topUnit, String sState) {
+
+        List<? extends IUserInfo> allUsers = CodeRepositoryCache.userInfoRepo
+            .getCachedValue(topUnit).getListData();
+
+        List<IUserInfo> users = new ArrayList<>();
+        if("A".equals(sState)){
+            users.addAll(allUsers);
+            return users;
+        }
+
+        for (IUserInfo user : allUsers) {
+            if (sState.equals(user.getIsValid())) {
+                users.add(user);
+            }
+        }
+        return users;
+    }
+
+    /**
      * 获得已知机构 下级的所有机构并返回map，包括失效的机构
      *
      * @param sParentUnit sParentUnit
