@@ -11,8 +11,9 @@ public class OsInfo implements IOsInfo, java.io.Serializable {
 
     private String osUrl;
 
-    private String topUnit;
+    private String osType;
 
+    private String topUnit;
 
     private String osHomePage;
 
@@ -96,6 +97,16 @@ public class OsInfo implements IOsInfo, java.io.Serializable {
     @Override
     public String getTopUnit() {
         return topUnit;
+    }
+
+
+    @Override
+    public String getOsType() {
+        return osType;
+    }
+
+    public void setOsType(String osType) {
+        this.osType = osType;
     }
 
     public void setTopUnit(String topUnit) {
