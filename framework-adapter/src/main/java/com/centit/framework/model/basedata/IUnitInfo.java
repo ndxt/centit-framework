@@ -47,7 +47,7 @@ public interface IUnitInfo{
      String getParentUnit();
 
     /**
-     * 机构类别
+     * 机构类别 T 租户
      * @return 机构类别
      */
      String getUnitType();

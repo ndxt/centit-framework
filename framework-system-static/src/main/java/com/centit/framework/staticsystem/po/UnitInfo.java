@@ -101,6 +101,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.englishName = englishName;
     }
 
+    @Override
     public String getUnitTag() {
         return unitTag;
     }
@@ -110,6 +111,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
     }
 
     // Property accessors
+    @Override
     public String getUnitCode() {
         return this.unitCode;
     }
@@ -118,6 +120,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitCode = unitcode;
     }
 
+    @Override
     public String getUnitShortName() {
         return unitShortName;
     }
@@ -126,6 +129,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitShortName = unitshortname;
     }
 
+    @Override
     public String getParentUnit() {
         return this.parentUnit;
     }
@@ -134,6 +138,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.parentUnit = parentunit;
     }
 
+    @Override
     public String getUnitType() {
         return this.unitType;
     }
@@ -142,6 +147,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitType = unittype;
     }
 
+    @Override
     public String getIsValid() {
         return this.isValid;
     }
@@ -150,6 +156,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.isValid = unitstate;
     }
 
+    @Override
     public String getUnitName() {
         return this.unitName;
     }
@@ -304,6 +311,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         return value;
     }
 
+    @Override
     public Long getUnitOrder() {
         return unitOrder;
     }
@@ -312,6 +320,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitOrder = unitorder;
     }
 
+    @Override
     public String getUnitWord() {
         return unitWord;
     }
@@ -328,6 +337,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitGrade = unitGrade;
     }
 
+    @Override
     public String getDepNo() {
         return depNo;
     }
@@ -336,7 +346,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.depNo = depNo;
     }
 
-
+    @Override
     public String getUnitPath() {
         return unitPath;
     }
@@ -345,6 +355,7 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitPath = unitPath;
     }
 
+    @Override
     public String getUnitManager() {
         return unitManager;
     }
