@@ -90,7 +90,6 @@ public class UnitInfo implements IUnitInfo, java.io.Serializable{
         this.unitCode = unitcode;
         this.isValid = unitstate;
         this.unitName = unitname;
-
     }
 
     public String getEnglishName() {
