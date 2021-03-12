@@ -294,7 +294,7 @@ public abstract class CodeRepositoryCache {
             return optDataScopeMap;
         }, CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedMap<String,List<? extends IRolePower>> rolePowerRepo =
+    public static CachedMap<String, List<? extends IRolePower>> rolePowerRepo =
         new CachedMap<>((topUnit)->
             getPlatformEnvironment().listAllRolePower(topUnit), CACHE_FRESH_PERIOD_SECONDS);
 
