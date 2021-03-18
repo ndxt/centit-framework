@@ -1,5 +1,6 @@
 package com.centit.framework.components.impl;
 
+import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.basedata.*;
@@ -75,12 +76,13 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
 
     @Override
     public Map<String, String> listAllStation() {
-        return CodeRepositoryUtil.getLabelValueMap("StationType");
+        //TODO 适配 多租户
+        return CodeRepositoryUtil.getLabelValueMap(GlobalConstValue.DATA_CATALOG_STATION);
     }
 
     @Override
     public Map<String, String> listAllRank() {
-        return CodeRepositoryUtil.getLabelValueMap("RankType");
+        return CodeRepositoryUtil.getLabelValueMap(GlobalConstValue.DATA_CATALOG_RANK);
     }
 
     @Override
@@ -96,7 +98,7 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
      */
     @Override
     public int getXzRank(String rankCode) {
-        IDataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode);
+        IDataDictionary dd = CodeRepositoryUtil.getDataPiece(GlobalConstValue.DATA_CATALOG_RANK, rankCode);
         if(dd!=null)
             return Integer.valueOf(dd.getExtraCode());
         return IUserUnit.MAX_XZ_RANK;
