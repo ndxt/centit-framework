@@ -108,7 +108,7 @@ public interface PlatformEnvironment {
      * @param userCode userCode
      * @param asAdmin 是否是作为管理员
      * @return  List 用户所有菜单功能
-     * 这个接口可以废弃调，用 listUserMenuOptInfosUnderSuperOptId 代地
+     * 这个接口可以废弃调，用 listUserMenuOptInfosUnderSuperOptId 代替
      */
     /*@Deprecated
     List<? extends IOptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin);

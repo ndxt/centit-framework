@@ -372,4 +372,12 @@ public class WebOptUtils {
         }
         return null;
     }
+
+    public static boolean isTenantTopUnit(HttpServletRequest request) {
+        String topUnit = getCurrentTopUnit(request);
+        if (GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit) || StringUtils.isBlank(topUnit)) {
+            return false;
+        }
+        return true;
+    }
 }
