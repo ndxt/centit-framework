@@ -49,6 +49,8 @@ public interface IUserInfo{
 
     /**
      * 用户默认的租户，每次登录后修改这个属性
+     * 如果用户只能属于一个租户，这个值就是他的租户
+     * 在不支持租户的系统中这个字段可以有其他的解释
      * @return 用户默认租户
      */
     String getTopUnit();
