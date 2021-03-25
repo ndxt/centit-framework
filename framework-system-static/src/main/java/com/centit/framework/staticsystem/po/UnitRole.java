@@ -38,9 +38,10 @@ public class UnitRole implements IUnitRole, java.io.Serializable {
      * default constructor
      */
     public UnitRole() {
-      
+
     }
-    
+
+    @Override
     public String getUnitCode() {
         return this.unitCode;
     }
@@ -49,6 +50,7 @@ public class UnitRole implements IUnitRole, java.io.Serializable {
         this.unitCode = unitCode;
     }
 
+    @Override
     public String getRoleCode() {
         return this.roleCode;
     }
@@ -71,7 +73,7 @@ public class UnitRole implements IUnitRole, java.io.Serializable {
      * sdfDate.parse(ssecededate); } catch (ParseException e) {
      * e.printStackTrace(); } }
      */
-
+    @Override
     public String getChangeDesc() {
         return this.changeDesc;
     }
@@ -79,7 +81,7 @@ public class UnitRole implements IUnitRole, java.io.Serializable {
     public void setChangeDesc(String changedesc) {
         this.changeDesc = changedesc;
     }
-    
+
     public Date getCreateDate() {
         return createDate;
     }
@@ -96,11 +98,11 @@ public class UnitRole implements IUnitRole, java.io.Serializable {
     }
 
     public void copyNotNullProperty(UnitRole other) {
-  
+
         if (other.getObtainDate() != null)
             this.obtainDate = other.getObtainDate();
         if (other.getChangeDesc() != null)
             this.changeDesc = other.getChangeDesc();
- 
-    }  
+
+    }
 }

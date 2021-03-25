@@ -17,4 +17,9 @@ public interface IUnitRole {
      * @return 角色代码
      */
      String getRoleCode();
+    /**
+     * 说明用户获得角色的途径或方式
+     * @return 变更说明
+     */
+    String getChangeDesc();
 }

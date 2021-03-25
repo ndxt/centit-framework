@@ -1,8 +1,6 @@
 package com.centit.framework.staticsystem.po;
 
-import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.model.basedata.IUserRole;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
@@ -70,6 +68,7 @@ public class UserRole implements IUserRole, java.io.Serializable {
         this.userCode = userCode;
     }
 
+    @Override
     public String getUserCode() {
         return this.userCode;
     }
@@ -78,6 +77,7 @@ public class UserRole implements IUserRole, java.io.Serializable {
         this.userCode = userCode;
     }
 
+    @Override
     public String getRoleCode() {
         return this.roleCode;
     }
@@ -100,7 +100,7 @@ public class UserRole implements IUserRole, java.io.Serializable {
      * sdfDate.parse(ssecededate); } catch (ParseException e) {
      * e.printStackTrace(); } }
      */
-
+    @Override
     public String getChangeDesc() {
         return this.changeDesc;
     }

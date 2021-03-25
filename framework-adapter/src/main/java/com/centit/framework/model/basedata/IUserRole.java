@@ -29,4 +29,10 @@ public interface IUserRole{
      * @return "D" 直接活的 ， "I" 从机构继承， "M" 从机构层级继承，至少夸一级，这个默认不打开
      */
     String getObtainType();
+
+    /**
+     * 说明用户获得角色的途径或方式
+     * @return 变更说明
+     */
+    String getChangeDesc();
 }
