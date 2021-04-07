@@ -285,7 +285,7 @@ public class WebOptUtils {
             }
         }
         CentitUserDetails ud = innerGetUserDetail(request.getSession());
-        if (ud == null || StringUtils.isNotBlank(ud.getTopUnitCode())) {
+        if (ud == null || StringUtils.isBlank(ud.getTopUnitCode())) {
             return GlobalConstValue.NO_TENANT_TOP_UNIT;
         }
         return ud.getTopUnitCode();
@@ -371,5 +371,13 @@ public class WebOptUtils {
             }
         }
         return null;
+    }
+
+    public static boolean isTenantTopUnit(HttpServletRequest request) {
+        String topUnit = getCurrentTopUnit(request);
+        if (GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit) || StringUtils.isBlank(topUnit)) {
+            return false;
+        }
+        return true;
     }
 }
