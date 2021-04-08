@@ -1439,10 +1439,12 @@ public abstract class CodeRepositoryUtil {
                 // 需要过滤掉 不是 sOptId 下面的方式（不过滤也不会影响结果）; 但是这个过滤可能并不能提高效率
                 IOptMethod om = CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit)
                     .getAppendMap().get(rp.getOptCode());
-                if(StringUtils.equals(sOptId, om.getOptId()) && StringUtils.equals(om.getOptMethod(),sOptMethod)) {
-                    String[] oscs = rp.getOptScopeCodeSet();
-                    if (oscs != null) {
-                        Collections.addAll(dataScopes, oscs);
+                if(om!=null) {
+                    if (StringUtils.equals(sOptId, om.getOptId()) && StringUtils.equals(om.getOptMethod(), sOptMethod)) {
+                        String[] oscs = rp.getOptScopeCodeSet();
+                        if (oscs != null) {
+                            Collections.addAll(dataScopes, oscs);
+                        }
                     }
                 }
             }
