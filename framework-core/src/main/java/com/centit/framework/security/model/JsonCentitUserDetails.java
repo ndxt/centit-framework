@@ -150,7 +150,7 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
     @Override
     @JSONField(serialize = false)
     public String getTopUnitCode(){
-        if(StringUtils.isNotBlank(topUnitCode)){
+        if(StringUtils.isBlank(topUnitCode)){
             return GlobalConstValue.NO_TENANT_TOP_UNIT;
         }
         return topUnitCode;
