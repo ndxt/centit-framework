@@ -95,17 +95,12 @@ public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
         return casServiceProperties;
     }
 
-
-    private SingleSignOutFilter singleSignOutFilter() {
-        SingleSignOutFilter singleLogoutFilter = new SingleSignOutFilter();
-        singleLogoutFilter.setCasServerUrlPrefix(env.getProperty("login.cas.casHome"));
-        return singleLogoutFilter;
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         // 添加单点登出过滤器
-        http.addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
+        SingleSignOutFilter singleLogoutFilter = new SingleSignOutFilter();
+        //singleLogoutFilter.setCasServerUrlPrefix(env.getProperty("login.cas.casHome"));
+        http.addFilterBefore(singleLogoutFilter, CasAuthenticationFilter.class);
     }
 }

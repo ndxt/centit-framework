@@ -67,8 +67,8 @@ public class WebSecurityCasConfig extends WebSecurityBaseConfig {
 
     private SingleSignOutFilter singleSignOutFilter() {
         SingleSignOutFilter singleLogoutFilter = new SingleSignOutFilter();
-        singleLogoutFilter.setCasServerUrlPrefix(
-            securityProperties.getLogin().getCas().getCasHome());
+//        singleLogoutFilter.setCasServerUrlPrefix(
+//            securityProperties.getLogin().getCas().getCasHome());
         return singleLogoutFilter;
     }
 
