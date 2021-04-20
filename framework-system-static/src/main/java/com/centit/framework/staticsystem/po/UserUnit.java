@@ -32,8 +32,9 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
     @DictionaryMap(fieldName="userRankText",value="RankType")
     private String userRank; // 职务
 
+    private String postRank;
     private String rankMemo; // 备注
-    private String isPrimary; // 是否为主
+    private String relType; // 是否为主
     private Long userOrder;    //用户排序号
 
     /**
@@ -69,7 +70,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
      */
     public UserUnit(String id, String isprimary) {
         this.userUnitId = id;
-        this.isPrimary = isprimary;
+        this.relType = isprimary;
     }
 
     public UserUnit(String id, String userstation, String userrank,
@@ -77,7 +78,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
         this.userUnitId = id;
         this.userStation = userstation;
         this.userRank = userrank;
-        this.isPrimary = isprimary;
+        this.relType = isprimary;
     }
 
     // Property accessors
@@ -93,6 +94,20 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
 
     public String getUserRank() {
         return this.userRank;
+    }
+
+    public void setPostRank(String postRank) {
+        this.postRank = postRank;
+    }
+
+    /**
+     * 用户在本机构的 职级
+     *
+     * @return 用户在本机构的 职级
+     */
+    @Override
+    public String getPostRank() {
+        return this.postRank;
     }
 
     public void setUserRank(String userrank) {
@@ -138,14 +153,14 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
      * T:主机构 F：辅机构
      * @return T:主机构 F：辅机构
      */
-    public String getIsPrimary() {
-        return this.isPrimary;
+    public String getRelType() {
+        return this.relType;
     }
     /**
      * @param isprimary T:主机构 F：辅机构
      */
-    public void setIsPrimary(String isprimary) {
-        this.isPrimary = isprimary;
+    public void setRelType(String isprimary) {
+        this.relType = isprimary;
     }
 
 
@@ -167,7 +182,7 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
 
     public void copy(UserUnit other) {
         this.userUnitId  = other.getUserUnitId();
-        this.isPrimary = other.getIsPrimary();
+        this.relType = other.getRelType();
         this.createDate = other.getCreateDate();
         this.rankMemo = other.getRankMemo();
         this.userRank = other.getUserRank();
@@ -180,8 +195,8 @@ public class UserUnit implements IUserUnit, java.io.Serializable {
 
     public void copyNotNullProperty(UserUnit other) {
 
-        if (null != other.getIsPrimary()) {
-            this.isPrimary = other.getIsPrimary();
+        if (null != other.getRelType()) {
+            this.relType = other.getRelType();
         }
         if (null != other.getCreateDate()) {
             this.createDate = other.getCreateDate();

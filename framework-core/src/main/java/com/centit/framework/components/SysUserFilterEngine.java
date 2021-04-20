@@ -69,7 +69,7 @@ public abstract class SysUserFilterEngine {
             if (unit != null){
                 if(onlyGetPrimary){
                     for(IUserUnit uu: ecc.listUnitUsers(unitCode)){
-                        if("T".equals(uu.getIsPrimary())){
+                        if("T".equals(uu.getRelType())){
                             lsUserunit.add(uu);
                         }
                     }
@@ -128,7 +128,8 @@ public abstract class SysUserFilterEngine {
                 for (String unitCode : rf.getUnits()) {
                     if (rf.isOnlyGetPrimaryUser()) {
                         for (IUserUnit uu : ecc.listUnitUsers(unitCode)) {
-                            if ("T".equals(uu.getIsPrimary())) {
+                            // 归属部门 或者 借入部门
+                            if ("T".equals(uu.getRelType()) || "I".equals(uu.getRelType())) {
                                 lsUserunit.add(uu);
                             }
                         }

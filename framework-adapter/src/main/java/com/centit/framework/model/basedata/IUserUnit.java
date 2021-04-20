@@ -28,11 +28,12 @@ public interface IUserUnit{
     @DictionaryMap(fieldName = "unitName", value = "unitCode")
     String getUnitCode();
     /**
-     * 这个属性 是多余的， 和 用户defaultUnit 重复（primaryUnit）
-     * 是否为默认(主)机构 T:主机构 F：辅机构
-     * @return 是否为默认(主)机构 T:主机构 F：辅机构
+     * 关联关系，数据字典
+     * 归属部门 T 工作部门 F 借出部门 O 借入部门 I
+     * @return 归属部门 T 工作部门 F 借出部门 O 借入部门 I
      */
-    String getIsPrimary();
+    @DictionaryMap(fieldName = "userUnitRelType", value = "UserUnitRelType")
+    String getRelType();
 
     /**
      * 用户顶级机构 用户帐套管理，作为 租户的标识
@@ -55,6 +56,12 @@ public interface IUserUnit{
     @DictionaryMap(fieldName = "userRankText", value = "RankType")
     String getUserRank();
 
+    /**
+     * 用户在本机构的 职级
+     * @return 用户在本机构的 职级
+     */
+    @DictionaryMap(fieldName = "userPostText", value = "PostRank")
+    String getPostRank();
     /**
      * 用户在本单位的排序号
      * @return 排序号

@@ -390,9 +390,12 @@ public abstract class CodeRepositoryUtil {
 
         List<IUserInfo> users = new ArrayList<>();
         for (IUserUnit uu :unitUsers) {
-            if (!CodeRepositoryUtil.T.equals(uu.getIsPrimary())) {
+            // 归属部门 或者 借入部门
+            if (!"T".equals(uu.getRelType()) &&
+                !"I".equals(uu.getRelType())) {
                 continue;
             }
+
             IUserInfo user = getUserRepo(topUnit).get(uu.getUserCode());
             if (user != null) {
                 if (CodeRepositoryUtil.T.equals(user.getIsValid())) {
@@ -646,7 +649,7 @@ public abstract class CodeRepositoryUtil {
             return null;
         IUserUnit primaryUnit = uus.get(0);
         for (IUserUnit uu : uus) {
-            if ("T".equals(uu.getIsPrimary())) {
+            if ("T".equals(uu.getRelType())) {
                 primaryUnit = uu;
             }
         }
