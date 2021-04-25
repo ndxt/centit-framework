@@ -1,6 +1,7 @@
 package com.centit.framework.components;
 
 import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.filter.RequestThreadLocal;
@@ -11,6 +12,7 @@ import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
 import com.centit.support.compiler.Lexer;
 import org.apache.commons.lang3.StringUtils;
@@ -47,15 +49,19 @@ public abstract class CodeRepositoryUtil {
     @Deprecated
     public static final int MAXXZRANK = IUserUnit.MAX_XZ_RANK;
 
+    public static boolean cacheByTopUnit = true;
+
+    public static void setCacheByTopUnit(boolean cacheByTopUnit) {
+        CodeRepositoryUtil.cacheByTopUnit = cacheByTopUnit;
+    }
+
     private CodeRepositoryUtil(){
         throw new IllegalAccessError("Utility class");
     }
 
     private static final Logger logger = LoggerFactory.getLogger(CodeRepositoryUtil.class);
 
-    public static List<? extends IOsInfo> listOsInfo(String topUnit) {
-        return CodeRepositoryCache.osInfoCache.getCachedValue(topUnit);
-    }
+
 
     public final static Map<String, CachedObject<Map<String, String>>> extendedCodeRepo =
         new ConcurrentHashMap<>(16);
@@ -87,26 +93,31 @@ public abstract class CodeRepositoryUtil {
     }
 
     public static List<? extends IUnitInfo> listAllUnits(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         return CodeRepositoryCache.unitInfoRepo
             .getCachedValue(topUnit).getListData();
     }
 
     public static Map<String, ? extends IUnitInfo> getUnitRepo(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         return CodeRepositoryCache.unitInfoRepo
             .getCachedValue(topUnit).getAppendMap();
     }
 
     public static List<? extends IUserInfo> listAllUsers(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         return CodeRepositoryCache.userInfoRepo
             .getCachedValue(topUnit).getListData();
     }
 
     public static Map<String,? extends IUserInfo> getUserRepo(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         return CodeRepositoryCache.userInfoRepo
             .getCachedValue(topUnit).getAppendMap();
     }
 
     public static List<? extends IUserUnit> listUserUnits(String topUnit, String userCode) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         return CodeRepositoryCache.userUnitsMap
                     .getCachedValue(topUnit)
                 .getCachedValue(userCode);
@@ -114,6 +125,28 @@ public abstract class CodeRepositoryUtil {
 
     public static List<? extends IUserUnit> listUnitUsers(String unitCode) {
         return CodeRepositoryCache.unitUsersMap.getCachedValue(unitCode);
+    }
+
+    public static List<? extends IOsInfo> listOsInfo(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        return CodeRepositoryCache.osInfoCache.getCachedValue(topUnit);
+    }
+
+    public static CachedMap<String, List<? extends IUserRole>> getUserRolesRepo(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        return CodeRepositoryCache.userRolesRepo
+            .getCachedValue(topUnit);
+    }
+
+    public static CachedMap<String, List<? extends IUserRole>> getRoleUsersRepo(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        return CodeRepositoryCache.roleUsersRepo
+            .getCachedValue(topUnit);
+    }
+
+    public static List<? extends IRoleInfo> listAllRole(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        return CodeRepositoryCache.roleInfoRepo.getCachedValue(topUnit);
     }
 
     /**
@@ -522,9 +555,6 @@ public abstract class CodeRepositoryUtil {
         return units;
     }
 
-    public static List<? extends IRoleInfo> listAllRole(String topUnit) {
-        return CodeRepositoryCache.roleInfoRepo.getCachedValue(topUnit);
-    }
 
     /**
      * listRoleUserByRoleCode(roleCode);
@@ -533,8 +563,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回拥有这个角色的所有用户
      */
     public static List<? extends IUserInfo> listUsersByRoleCode(String topUnit, String roleCode) {
-        List<? extends IUserRole> userRoles =
-            CodeRepositoryCache.roleUsersRepo.getCachedValue(topUnit)
+        List<? extends IUserRole> userRoles =getRoleUsersRepo(topUnit)
                 .getCachedValue(roleCode);
         if(userRoles==null){
             return null;
@@ -554,8 +583,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
      */
     public static List<String> listRolesByUserCode(String topUnit, String userCode) {
-        List<? extends IUserRole> roleUsers =  CodeRepositoryCache
-            .userRolesRepo.getCachedValue(topUnit).getCachedValue(userCode);
+        List<? extends IUserRole> roleUsers =  getUserRolesRepo(topUnit).getCachedValue(userCode);
         if(roleUsers==null){
             return null;
         }
@@ -568,8 +596,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回拥有这个角色的所有用户
      */
     public static List<? extends IUserRole> listRoleUsers(String topUnit, String roleCode) {
-        return CodeRepositoryCache.roleUsersRepo.getCachedValue(topUnit)
-            .getCachedValue(roleCode);
+        return getRoleUsersRepo(topUnit).getCachedValue(roleCode);
     }
 
     /**
@@ -578,8 +605,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
      */
     public static List<? extends IUserRole> listUserRoles(String topUnit, String userCode) {
-        return CodeRepositoryCache.userRolesRepo.getCachedValue(topUnit)
-            .getCachedValue(userCode);
+        return getUserRolesRepo(topUnit).getCachedValue(userCode);
     }
 
     /**
@@ -589,8 +615,7 @@ public abstract class CodeRepositoryUtil {
      * @return 返回该用户拥有的所有角色，包括从机构继承来的角色
      */
     public static boolean checkUserRole(String topUnit, String userCode, String roleCode) {
-        List<? extends IUserRole> userRoles = CodeRepositoryCache
-                .userRolesRepo.getCachedValue(topUnit)
+        List<? extends IUserRole> userRoles = getUserRolesRepo(topUnit)
                 .getCachedValue(userCode);
         if (userRoles != null) {
             for (IUserRole ur : userRoles) {
@@ -1399,8 +1424,7 @@ public abstract class CodeRepositoryUtil {
     public static List<String> listAllUserRoles(String topUnit, String sUserCode){
         List<String> userRoles = new ArrayList<>(20);
         userRoles.add(SecurityContextUtils.PUBLIC_ROLE_CODE);
-        List<? extends IUserRole> urs = CodeRepositoryCache.userRolesRepo
-                .getCachedValue(topUnit).getCachedValue(sUserCode);
+        List<? extends IUserRole> urs = getUserRolesRepo(topUnit).getCachedValue(sUserCode);
         if(urs!=null && urs.size()>0) {
             for (IUserRole ur : urs) {
                 userRoles.add(ur.getRoleCode());
