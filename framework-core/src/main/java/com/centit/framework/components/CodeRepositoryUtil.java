@@ -14,6 +14,7 @@ import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
+import com.centit.support.common.ListAppendMap;
 import com.centit.support.compiler.Lexer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -148,6 +149,28 @@ public abstract class CodeRepositoryUtil {
         topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         return CodeRepositoryCache.roleInfoRepo.getCachedValue(topUnit);
     }
+
+    public static List<? extends IOptInfo> getOptInfoRepo(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit ? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        return CodeRepositoryCache.optInfoRepo.getCachedValue(topUnit);
+    }
+
+
+    public static ListAppendMap<? extends IOptMethod> getOptMethodRepo(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit ? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        return CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit);
+    }
+
+    public static Map<String, List<IOptDataScope>> getOptDataScopeRepo(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit ? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        return CodeRepositoryCache.optDataScopeRepo.getCachedValue(topUnit);
+    }
+
+    public static Map<String, List<IRolePower>> getRolePowerRepo(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit ? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        return CodeRepositoryCache.rolePowerMap.getCachedValue(topUnit);
+    }
+
 
     /**
      * 获取用户在某个职务的用户组列表
@@ -377,12 +400,12 @@ public abstract class CodeRepositoryUtil {
     /**
      * 按类别获取 业务定义信息
      *
-     * @param superOptId 顶级菜单目录
+     * @param topUnit 顶级菜单目录
      * @return List 业务定义信息
      */
-    public static List<IOptInfo> getOptinfoList(String superOptId) {
+    public static List<IOptInfo> getOptinfoList(String topUnit) {
         List<IOptInfo> optList = new ArrayList<>();
-        optList.addAll(CodeRepositoryCache.optInfoRepo.getCachedValue(superOptId));
+        optList.addAll(getOptInfoRepo(topUnit));
 
         Collections.sort(optList, (o1,o2) -> // Long.compare(o1.getOrderInd() , o2.getOrderInd())) ;
             ( o2.getOrderInd() == null && o1.getOrderInd() == null)? 0 :
@@ -395,13 +418,13 @@ public abstract class CodeRepositoryUtil {
 
     /**
      * 获得一个业务下面的操作定义
-     * @param superOptId applicationId 应用的ID
+     * @param topUnit applicationId 应用的ID
      * @param sOptID optId
      * @return List 一个业务下面的操作定义
      */
-    public static List<? extends IOptMethod> getOptMethodByOptID(String superOptId, String sOptID) {
+    public static List<? extends IOptMethod> getOptMethodByOptID(String topUnit, String sOptID) {
         List<IOptMethod> optList = new ArrayList<>();
-        for (IOptMethod value : CodeRepositoryCache.optMethodRepo.getCachedValue(superOptId).getListData()) {
+        for (IOptMethod value : getOptMethodRepo(topUnit).getListData()) {
             if (sOptID.equals(value.getOptId())) {
                 optList.add(value);
             }
@@ -1062,7 +1085,7 @@ public abstract class CodeRepositoryUtil {
 
             case CodeRepositoryUtil.OPT_CODE: {
                 for (IOptMethod value :
-                        CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit).getListData()) {
+                        getOptMethodRepo(topUnit).getListData()) {
                     lbvs.put(value.getOptCode(), value.getOptName());
                 }
                 return lbvs;
@@ -1129,7 +1152,7 @@ public abstract class CodeRepositoryUtil {
         }
 
         if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.OPT_CODE)) {
-            for (IOptMethod value : CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit).getListData()) {
+            for (IOptMethod value : getOptMethodRepo(topUnit).getListData()) {
                 lbvs.add(new OptionItem(value.getOptName(), value.getOptCode(),value.getOptId()));
             }
             return lbvs;
@@ -1447,8 +1470,7 @@ public abstract class CodeRepositoryUtil {
 
     public static List<String> listUserDataFiltersByOptIdAndMethod(
         String topUnit, String sUserCode, String sOptId, String sOptMethod) {
-        Map<String, List<IOptDataScope>> optDataScope =
-            CodeRepositoryCache.optDataScopeRepo.getCachedValue(topUnit);
+        Map<String, List<IOptDataScope>> optDataScope = getOptDataScopeRepo(topUnit);
         if(optDataScope==null){
             return null;
         }
@@ -1462,9 +1484,9 @@ public abstract class CodeRepositoryUtil {
 
         for (String rolecode : allUserRole) {
             //IRoleInfo ri = CodeRepositoryCache.roleInfoRepo.getCachedTarget().get(rolecode);
-            for (IRolePower rp : CodeRepositoryCache.rolePowerMap.getCachedValue(topUnit).get(rolecode)) {
+            for (IRolePower rp : getRolePowerRepo(topUnit).get(rolecode)) {
                 // 需要过滤掉 不是 sOptId 下面的方式（不过滤也不会影响结果）; 但是这个过滤可能并不能提高效率
-                IOptMethod om = CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit)
+                IOptMethod om = getOptMethodRepo(topUnit)
                     .getAppendMap().get(rp.getOptCode());
                 if(om!=null) {
                     if (StringUtils.equals(sOptId, om.getOptId()) && StringUtils.equals(om.getOptMethod(), sOptMethod)) {
