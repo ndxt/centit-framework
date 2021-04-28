@@ -123,7 +123,6 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
     }
 
     @Override
-    @JSONField(serialize = false)
     public String getCurrentUnitCode(){
         JSONObject cs = getCurrentStation();
         return cs != null? cs.getString("unitCode"): getUserInfo().getString("primaryUnit");
@@ -148,11 +147,7 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
      * @return 最上层机构代码，根据用户的当前结构设置可能有变化
      */
     @Override
-    @JSONField(serialize = false)
     public String getTopUnitCode(){
-        if(StringUtils.isBlank(topUnitCode)){
-            return GlobalConstValue.NO_TENANT_TOP_UNIT;
-        }
         return topUnitCode;
     }
 
@@ -271,7 +266,8 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
     }
 
     @Override
-    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+    public void setAuthenticated(boolean isAuthenticated)
+        throws IllegalArgumentException {
 
     }
 
