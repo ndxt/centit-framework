@@ -15,7 +15,6 @@ public @interface RecordOperationLog {
      *
      * @return 记录操作内容表达式，理论上这个不能为空
      */
-    @AliasFor("value")
     String content() default "";
 
     /**
