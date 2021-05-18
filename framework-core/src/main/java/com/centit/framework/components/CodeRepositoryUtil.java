@@ -403,10 +403,18 @@ public abstract class CodeRepositoryUtil {
      * @param topUnit 顶级菜单目录
      * @return List 业务定义信息
      */
-    public static List<IOptInfo> getOptinfoList(String topUnit) {
+    public static List<IOptInfo> getOptinfoList(String topUnit,String superOptId) {
+        List<? extends IOptInfo> allOpts = getOptInfoRepo(topUnit);
         List<IOptInfo> optList = new ArrayList<>();
-        optList.addAll(getOptInfoRepo(topUnit));
-
+        if("A".equals(superOptId)){
+            optList.addAll(allOpts);
+        }else {
+            for (IOptInfo optInfo : allOpts) {
+                if (superOptId.equals(optInfo.getTopOptId())) {
+                    optList.add(optInfo);
+                }
+            }
+        }
         Collections.sort(optList, (o1,o2) -> // Long.compare(o1.getOrderInd() , o2.getOrderInd())) ;
             ( o2.getOrderInd() == null && o1.getOrderInd() == null)? 0 :
                 ( (o2.getOrderInd() == null)? 1 :

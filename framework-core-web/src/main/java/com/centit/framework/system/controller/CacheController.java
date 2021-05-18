@@ -405,10 +405,10 @@ public class CacheController extends BaseController {
         name = "state", value="用户状态 A 表示所有状态",
         required= true, paramType = "path", dataType= "String"
     )
-    @RequestMapping(value = "/alluser/{topUnit}", method = RequestMethod.GET)
+    @RequestMapping(value = "/alluser/{state}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<? extends IUserInfo> alluser(@PathVariable String topUnit) {
-        return CodeRepositoryUtil.listAllUsers(topUnit);
+    public List<? extends IUserInfo> alluser(@PathVariable String state,HttpServletRequest request) {
+        return CodeRepositoryUtil.getAllUsers(WebOptUtils.getCurrentTopUnit(request),state);
     }
 
     /**
@@ -596,8 +596,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/optinfo/{optType}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public JSONArray optinfoByTypeAsMenu(@PathVariable String optType) {
-        List<IOptInfo> listObjects = CodeRepositoryUtil.getOptinfoList(optType);
+    public JSONArray optinfoByTypeAsMenu(@PathVariable String optType,HttpServletRequest request) {
+        List<IOptInfo> listObjects = CodeRepositoryUtil.getOptinfoList(WebOptUtils.getCurrentTopUnit(request),optType);
         return makeMenuFuncsJson(listObjects);
     }
 
