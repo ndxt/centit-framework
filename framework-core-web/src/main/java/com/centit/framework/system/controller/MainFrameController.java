@@ -115,8 +115,7 @@ public class MainFrameController extends BaseController {
 
     /**
      * 跳往cas登录链接
-     * param request request
-     * param session session
+     * @param request request
      * @return 登录后首页URL
      */
     @ApiOperation(value = "跳往cas登录链接", notes = "使用cas登录系统")
@@ -521,6 +520,7 @@ public class MainFrameController extends BaseController {
 
     /**
      * 首页菜单
+     * @param osId 系统id
      * @param request  HttpServletRequest
      * @return JSONArray
      */

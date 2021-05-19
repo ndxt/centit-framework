@@ -160,7 +160,7 @@ public class CacheController extends BaseController {
     /**
      * cp标签中SUBUNITS实现
      * 获取机构下面的所有下级机构，并且排序
-     *
+     * @param request 请求体
      * @param unitCode 机构代码
      * @param unitType 机构类别
      * @return ResponseData
@@ -182,7 +182,7 @@ public class CacheController extends BaseController {
     /**
      * cp标签中ALLUNITS实现
      * 根据状态获取所有机构信息，
-     *
+     * @param request 请求体
      * @param state    A表示所有状态
      * @return ResponseData
      */
@@ -199,7 +199,7 @@ public class CacheController extends BaseController {
 
     /**
      * 根据用户编码获取用户信息
-     *
+     * @param request 请求体
      * @param userCode 用户编码
      * @return ResponseData
      */
@@ -216,7 +216,7 @@ public class CacheController extends BaseController {
 
     /**
      * 根据机构编码获取机构信息
-     *
+     * @param request 请求体
      * @param unitCode 机构代码
      * @return ResponseData
      */
@@ -233,7 +233,7 @@ public class CacheController extends BaseController {
 
     /**
      * 根据机构代码获取父机构
-     *
+     * @param request 请求体
      * @param unitCode 机构代码
      * @return ResponseData
      */
@@ -256,7 +256,7 @@ public class CacheController extends BaseController {
 
     /**
      * 根据机构代码获取父机构路径
-     *
+     * @param request 请求体
      * @param unitCode 机构代码
      * @return ResponseData
      */
@@ -291,6 +291,7 @@ public class CacheController extends BaseController {
     /**
      * cp标签中RECURSEUNITS实现
      * 获得已知机构 下级的所有有效机构并返回map，包括下级机构的下级机构
+     * @param request 请求体
      * @param parentUnit 父级机构代码
      * @return ResponseData
      */
@@ -378,7 +379,7 @@ public class CacheController extends BaseController {
     /**
      * CP标签中UNITUSER实现
      * 获取一个机构下面的所有用户，并且根据排序号排序
-     *
+     * @param request 请求体
      * @param unitCode 机构代码
      * @return ResponseData
      */
@@ -396,8 +397,8 @@ public class CacheController extends BaseController {
     /**
      * CP标签中ALLUSER实现
      * 获取当前租户所有的用户信息
-     *
-     * @param topUnit 租户信息
+     * @param request 请求体
+     * @param state 租户信息
      * @return ResponseData
      */
     @ApiOperation(value = "获取所有符合状态标记的用户", notes = "根据状态获取所有用户")
@@ -414,7 +415,7 @@ public class CacheController extends BaseController {
     /**
      * CP标签中UNITSLIST实现
      * 获取所有下级机构，
-     *
+     * @param request 请求体
      * @param unitcode 机构代码
      * @return ResponseData
      */
