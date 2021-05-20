@@ -287,6 +287,19 @@ public abstract class CodeRepositoryUtil {
                     return ui.getUnitName();
                 }
 
+                case CodeRepositoryUtil.ROLE_CODE: {
+                    List<? extends IRoleInfo> roleInfos = listAllRole(topUnit);
+                    if (roleInfos == null) {
+                        return sKey;
+                    }
+                    for (IRoleInfo roleInfo : roleInfos) {
+                        if(StringUtils.equals(sKey, roleInfo.getRoleCode())){
+                            return roleInfo.getRoleName();
+                        }
+                    }
+                    return sKey;
+                }
+
                 case CodeRepositoryUtil.OS_ID: {
                     List<? extends IOsInfo> osInfos = listOsInfo(topUnit);
                     if(osInfos==null){
@@ -1081,6 +1094,16 @@ public abstract class CodeRepositoryUtil {
                 return lbvs;
             }
 
+            case CodeRepositoryUtil.ROLE_CODE: {
+                List<? extends IRoleInfo> roleInfos = listAllRole(topUnit);
+                if (roleInfos != null) {
+                    for (IRoleInfo roleInfo : roleInfos) {
+                        lbvs.put(roleInfo.getRoleCode(), roleInfo.getRoleName());
+                    }
+                }
+                return lbvs;
+            }
+
             case CodeRepositoryUtil.OS_ID: {
                 List<? extends IOsInfo> osInfos = listOsInfo(topUnit);
                 if (osInfos != null) {
@@ -1144,6 +1167,16 @@ public abstract class CodeRepositoryUtil {
                 if (CodeRepositoryUtil.T.equals(value.getIsValid())) {
                     lbvs.add(new OptionItem(value.getUnitName(),
                         value.getUnitCode(), value.getParentUnit()));
+                }
+            }
+            return lbvs;
+        }
+
+        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.ROLE_CODE)) {
+            List<? extends IRoleInfo> roleInfos = listAllRole(topUnit);
+            if (roleInfos != null) {
+                for (IRoleInfo roleInfo : roleInfos) {
+                    lbvs.add(new OptionItem(roleInfo.getRoleName(), roleInfo.getRoleCode()));
                 }
             }
             return lbvs;
