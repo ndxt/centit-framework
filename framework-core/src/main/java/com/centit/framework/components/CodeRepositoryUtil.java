@@ -300,6 +300,19 @@ public abstract class CodeRepositoryUtil {
                     return sKey;
                 }
 
+                case CodeRepositoryUtil.OPT_ID:{
+                    List<? extends IOptInfo> optInfos = getOptInfoRepo(topUnit);
+                    if (optInfos == null) {
+                        return sKey;
+                    }
+                    for (IOptInfo optInfo : optInfos) {
+                        if(StringUtils.equals(sKey, optInfo.getOptId())){
+                            return optInfo.getOptName();
+                        }
+                    }
+                    return sKey;
+                }
+
                 case CodeRepositoryUtil.OS_ID: {
                     List<? extends IOsInfo> osInfos = listOsInfo(topUnit);
                     if(osInfos==null){
@@ -1104,6 +1117,14 @@ public abstract class CodeRepositoryUtil {
                 return lbvs;
             }
 
+            case CodeRepositoryUtil.OPT_ID:{
+                List<? extends IOptInfo> optInfos = getOptInfoRepo(topUnit);
+                for (IOptInfo optInfo : optInfos) {
+                    lbvs.put(optInfo.getOptId(), optInfo.getOptName());
+                }
+                return lbvs;
+            }
+
             case CodeRepositoryUtil.OS_ID: {
                 List<? extends IOsInfo> osInfos = listOsInfo(topUnit);
                 if (osInfos != null) {
@@ -1177,6 +1198,16 @@ public abstract class CodeRepositoryUtil {
             if (roleInfos != null) {
                 for (IRoleInfo roleInfo : roleInfos) {
                     lbvs.add(new OptionItem(roleInfo.getRoleName(), roleInfo.getRoleCode()));
+                }
+            }
+            return lbvs;
+        }
+
+        if (sCatalog.equalsIgnoreCase(CodeRepositoryUtil.OPT_ID)) {
+            List<? extends IOptInfo> optInfos = getOptInfoRepo(topUnit);
+            if (optInfos != null) {
+                for (IOptInfo optInfo : optInfos) {
+                    lbvs.add(new OptionItem(optInfo.getOptName(), optInfo.getOptId()));
                 }
             }
             return lbvs;
