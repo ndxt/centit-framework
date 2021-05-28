@@ -23,6 +23,7 @@ public class TopUnitSecurityMetadata {
 
     private String topUnit;
     private CachedObject<OptTreeNode> optTreeNodeCache;
+    public static boolean requestInSpringCloud = false;
 
     public TopUnitSecurityMetadata(String topUnit){
         this.topUnit = topUnit;
@@ -30,6 +31,10 @@ public class TopUnitSecurityMetadata {
             new CachedObject<>( this::reloadOptTreeNode,
                 new AbstractCachedObject<?>[]{ CodeRepositoryCache.optInfoRepo,
                     CodeRepositoryCache.optMethodRepo, CodeRepositoryCache.rolePowerRepo});
+    }
+
+    public static void setRequestInSpringCloud(boolean requestInSpringCloud) {
+        TopUnitSecurityMetadata.requestInSpringCloud = requestInSpringCloud;
     }
 
     private OptTreeNode reloadOptTreeNode(){
@@ -169,6 +174,9 @@ public class TopUnitSecurityMetadata {
 
     public List<ConfigAttribute> matchUrlToRole(String sUrl,HttpServletRequest request){
 
+        if (requestInSpringCloud) {
+            sUrl = sUrl.substring(StringUtils.ordinalIndexOf(sUrl, "/", 2), sUrl.length());
+        }
         List<ConfigAttribute> roles = matchUrlToRole(
             optTreeNodeCache.getCachedTarget(), sUrl, request.getMethod());
         if(roles == null && CentitSecurityMetadata.isForbiddenWhenAssigned){
