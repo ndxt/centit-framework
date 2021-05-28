@@ -78,7 +78,9 @@ public abstract class SysUserFilterEngine {
                 }
             }
         } else {
-            lsUserunit.addAll(ecc.listAllUserUnits());
+            if(ecc.listAllUserUnits()!=null) {
+                lsUserunit.addAll(ecc.listAllUserUnits());
+            }
         }
 
         if (ROLE_TYPE_GW.equalsIgnoreCase(roleType)) {
@@ -137,7 +139,9 @@ public abstract class SysUserFilterEngine {
                         lsUserunit.addAll(ecc.listUnitUsers(unitCode));
                 }
             } else {
-                lsUserunit.addAll(ecc.listAllUserUnits());
+                if(ecc.listAllUserUnits()!=null) {
+                    lsUserunit.addAll(ecc.listAllUserUnits());
+                }
             }
 
             if (rf.isHasGWFilter()) {
