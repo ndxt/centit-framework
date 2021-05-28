@@ -1,5 +1,7 @@
 package com.centit.framework.components;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,8 +17,9 @@ public class UserUnitFilterGene {
     private boolean hasGWFilter;
     private boolean hasXZFilter;
     private boolean hasRankFilter;
+    private boolean hasRelationFilter;
 
-    private boolean onlyGetPrimaryUser;
+
 
     private Set<String> userTypes;
     private Set<String> userTags;
@@ -27,6 +30,7 @@ public class UserUnitFilterGene {
     private Set<String> xzRoles;
     private Set<String> gwRoles;
     private Set<String> optRoles;
+    private Set<String> userUnitRelTypes;
 
     private int xzRank;
     private boolean rankPlus;
@@ -35,7 +39,7 @@ public class UserUnitFilterGene {
     private boolean rankAllSub;
 
     public UserUnitFilterGene() {
-        hasUnitTypeFilter = hasUnitTagFilter = onlyGetPrimaryUser
+        hasUnitTypeFilter = hasUnitTagFilter = hasRelationFilter
             = hasUserTypeFilter = hasUserTagFilter = hasUnitFilter = hasUserFilter
             = hasGWFilter = hasXZFilter = hasRankFilter = rankPlus = hasUserRoleFilter
             = rankMinus = rankAllTop = rankAllSub = false;
@@ -49,6 +53,7 @@ public class UserUnitFilterGene {
         xzRoles = new HashSet<>();
         gwRoles = new HashSet<>();
         optRoles = new HashSet<>();
+        userUnitRelTypes = new HashSet<>();
         xzRank = 0;
     }
 
@@ -177,12 +182,20 @@ public class UserUnitFilterGene {
         return rankAllTop;
     }
 
-    public boolean isOnlyGetPrimaryUser() {
-        return onlyGetPrimaryUser;
+    public boolean isHasRelationFilter() {
+        return hasRelationFilter;
     }
 
-    public void setOnlyGetPrimaryUser(boolean onlyGetPrimaryUser) {
-        this.onlyGetPrimaryUser = onlyGetPrimaryUser;
+
+    public Set<String> getUserUnitRelTypes() {
+        return userUnitRelTypes;
+    }
+
+    public void addUserUnitRelType(String reltype) {
+        if (!StringUtils.isNotBlank(reltype)) {
+            this.userUnitRelTypes.add(reltype);
+            hasRelationFilter = true;
+        }
     }
 
     public void setRankAllTop() {

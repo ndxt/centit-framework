@@ -24,7 +24,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
     /**
      * 按主机构过滤
      */
-    public static final String USER_FILTER_PRIMARYUNIT = "P";
+    public static final String USER_FILTER_RELTYPE = "rel";
     /**
      * 按照用户代码过滤
      */
@@ -524,6 +524,40 @@ public abstract class InnerUserUnitFilterCompileEngine {
         }
     }
 
+    private static boolean calcUserUnitRelType(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
+        String w = ecc.getAWord();
+        if (!"(".equals(w)) { // 语法错误
+            ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcUserUnitRelType begin .");
+            return false;
+        }
+        while (true) {
+            w = ecc.getAWord();
+            if (w == null || "".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' ; calcUserUnitRelType end .");
+                return false;
+            }
+
+            if (")".equals(w)) { // 逗号后没有变量 或略这个错误
+                return true;
+            }
+
+            Object obj = mapVariable(ecc,w);
+            if (obj instanceof String){ // 变量
+                gene.addUserUnitRelType((String)obj);
+            } else { // 语法错误
+                ecc.setLastErrMsg(w + " is unexpected, expect label or string [UserUnitRelType]; calcUserUnitRelType label . ");
+                return false;
+            }
+
+            w = ecc.getAWord();
+            if (")".equals(w)) {
+                return true;
+            } else if (!",".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' or ','  ; calcUserUnitRelType , .");
+                return false;
+            }
+        }
+    }
     /**
      * UL("用户标记常量" [,"用户标记常量"]* )
      * @param ecc 运行环境
@@ -663,17 +697,16 @@ public abstract class InnerUserUnitFilterCompileEngine {
             if(USER_FILTER_DEPARTMENT.equalsIgnoreCase(w)){
                 if(!calcUnits(ecc,gene))
                     return null;
-                gene.setOnlyGetPrimaryUser(false);
             }else /*根据用户类别过滤*/if (USER_FILTER_UNIT_TYPE.equalsIgnoreCase(w)) {
                 if (!calcUnitTypeFilter(ecc, gene))
                     return null;
             } else /*根据用户标签过滤*/if (USER_FILTER_UNIT_LABEL.equalsIgnoreCase(w)) {
                 if (!calcUnitTagFilter(ecc, gene))
                     return null;
-            } else /*仅仅获取主要机构用户*/ if(USER_FILTER_PRIMARYUNIT.equalsIgnoreCase(w)){
-                if(!calcUnits(ecc,gene))
+            } else /*过滤用户机构关联关系*/ if(USER_FILTER_RELTYPE.equalsIgnoreCase(w)){
+                if(!calcUserUnitRelType(ecc,gene))
                     return null;
-                gene.setOnlyGetPrimaryUser(true);
+
             }else /*根据岗位角色过滤*/if (USER_FILTER_ROLE_TYPE_GW.equalsIgnoreCase(w)) {
                 if (!calcGwRoles(ecc, gene))
                     return null;

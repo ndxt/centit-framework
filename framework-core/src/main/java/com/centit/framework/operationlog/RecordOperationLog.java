@@ -1,7 +1,6 @@
 package com.centit.framework.operationlog;
 
 import com.centit.framework.model.basedata.OperationLog;
-import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

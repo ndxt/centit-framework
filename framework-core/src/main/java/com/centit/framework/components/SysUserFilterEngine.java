@@ -114,7 +114,7 @@ public abstract class SysUserFilterEngine {
     private static Set<String> getUsersByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
 
         boolean hasUnitFilter = rf.isHasGWFilter() || rf.isHasRankFilter()
-            || rf.isHasXZFilter() || rf.isHasUnitFilter() ;
+            || rf.isHasXZFilter() || rf.isHasUnitFilter() || rf.isHasRelationFilter() ;
 
         boolean hasTypeTagFilter =
             rf.isHasUserTagFilter() || rf.isHasUserTypeFilter() || rf.isHasRoleFilter();
@@ -126,20 +126,16 @@ public abstract class SysUserFilterEngine {
             List<IUserUnit> lsUserunit = new LinkedList<>();
             if (rf.isHasUnitFilter()) {
                 for (String unitCode : rf.getUnits()) {
-                    if (rf.isOnlyGetPrimaryUser()) {
-                        for (IUserUnit uu : ecc.listUnitUsers(unitCode)) {
-                            // 归属部门 或者 借入部门
-                            if ("T".equals(uu.getRelType()) || "I".equals(uu.getRelType())) {
-                                lsUserunit.add(uu);
-                            }
-                        }
-                    } else
-                        lsUserunit.addAll(ecc.listUnitUsers(unitCode));
+                    lsUserunit.addAll(ecc.listUnitUsers(unitCode));
                 }
             } else {
                 lsUserunit.addAll(ecc.listAllUserUnits());
             }
-
+            if (rf.isHasRelationFilter()) {
+                // 过滤掉关联关系不一致的用户
+                // 这个地方 暂时没有考虑 类别嵌套（默认类别）的情况
+                lsUserunit.removeIf(uu -> !rf.getUserUnitRelTypes().contains(uu.getRelType()));
+            }
             if (rf.isHasGWFilter()) {
                 // 过滤掉不符合要求的岗位
                 lsUserunit.removeIf(uu -> !rf.getGwRoles().contains(uu.getUserStation()));

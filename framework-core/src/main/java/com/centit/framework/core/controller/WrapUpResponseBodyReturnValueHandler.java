@@ -150,9 +150,10 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                         outputValue = DictionaryMapUtils.objectToJSON(value);
                     }
                     messageConverter.write(
-                        ResponseData.makeResponseData(outputValue), MediaType.APPLICATION_JSON_UTF8, outputMessage);
+                        ResponseData.makeResponseData(outputValue), MediaType.APPLICATION_JSON, outputMessage);
                 }
                 break;
+            case DATA:
             default: {
                     ResponseData outputValue;
                     if(value == null) {
@@ -165,7 +166,7 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                         outputValue = ResponseData.makeResponseData(value);
                     }
                     messageConverter.write(
-                        outputValue, MediaType.APPLICATION_JSON_UTF8, outputMessage);
+                        outputValue, MediaType.APPLICATION_JSON, outputMessage);
                 }
                 break;
         }
