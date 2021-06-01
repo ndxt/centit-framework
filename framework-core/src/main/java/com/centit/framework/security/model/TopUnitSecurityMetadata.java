@@ -173,9 +173,16 @@ public class TopUnitSecurityMetadata {
     }
 
     public List<ConfigAttribute> matchUrlToRole(String sUrl,HttpServletRequest request){
-
         if (requestInSpringCloud) {
-            sUrl = sUrl.substring(StringUtils.ordinalIndexOf(sUrl, "/", 2), sUrl.length());
+            int count = 0;
+            for (int i = 0; i < sUrl.length(); i++) {
+                if (sUrl.charAt(i) == '/') {
+                    count++;
+                }
+            }
+            if (count > 1) {
+                sUrl = sUrl.substring(StringUtils.ordinalIndexOf(sUrl, "/", 2), sUrl.length());
+            }
         }
         List<ConfigAttribute> roles = matchUrlToRole(
             optTreeNodeCache.getCachedTarget(), sUrl, request.getMethod());
