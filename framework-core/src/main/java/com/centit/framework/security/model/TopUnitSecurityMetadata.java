@@ -174,12 +174,7 @@ public class TopUnitSecurityMetadata {
 
     public List<ConfigAttribute> matchUrlToRole(String sUrl,HttpServletRequest request){
         if (requestInSpringCloud) {
-            int count = 0;
-            for (int i = 0; i < sUrl.length(); i++) {
-                if (sUrl.charAt(i) == '/') {
-                    count++;
-                }
-            }
+            int count = sUrl.split("/").length - 1;
             if (count > 1) {
                 sUrl = sUrl.substring(StringUtils.ordinalIndexOf(sUrl, "/", 2), sUrl.length());
             }
