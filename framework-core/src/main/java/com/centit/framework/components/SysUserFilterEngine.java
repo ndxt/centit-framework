@@ -128,11 +128,15 @@ public abstract class SysUserFilterEngine {
             List<IUserUnit> lsUserunit = new LinkedList<>();
             if (rf.isHasUnitFilter()) {
                 for (String unitCode : rf.getUnits()) {
-                    lsUserunit.addAll(ecc.listUnitUsers(unitCode));
+                    List<? extends IUserUnit> uus = ecc.listUnitUsers(unitCode);
+                    if(uus != null || uus.size()>0) {
+                        lsUserunit.addAll(uus);
+                    }
                 }
             } else {
-                if(ecc.listAllUserUnits()!=null) {
-                    lsUserunit.addAll(ecc.listAllUserUnits());
+                List<? extends IUserUnit> uus = ecc.listAllUserUnits();
+                if(uus!=null) {
+                    lsUserunit.addAll(uus);
                 }
             }
             if (rf.isHasRelationFilter()) {
