@@ -16,17 +16,11 @@ import com.centit.framework.core.controller.WrapUpContentType;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.framework.model.basedata.IOptInfo;
-import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.framework.model.basedata.IUserRole;
-import com.centit.framework.model.basedata.IUserUnit;
+import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.ThirdPartyCheckUserDetails;
-import com.centit.support.algorithm.BooleanBaseOpt;
-import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.algorithm.NumberBaseOpt;
-import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.algorithm.*;
 import com.centit.support.common.ObjectException;
 import com.centit.support.image.CaptchaImageUtil;
 import io.swagger.annotations.Api;
@@ -48,13 +42,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.RenderedImage;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-@Api(value="框架中用户权限相关的接口，用户登录接口，第三方认证接口，安全接口",
-    tags= "登录、权限、安全控制等接口")
+@Api(value = "框架中用户权限相关的接口，用户登录接口，第三方认证接口，安全接口",
+    tags = "登录、权限、安全控制等接口")
 @Controller
 @RequestMapping("/mainframe")
 public class MainFrameController extends BaseController {
@@ -64,9 +55,10 @@ public class MainFrameController extends BaseController {
     public static final String DEPLOY_LOGIN = "DEPLOY";
     public static final String LOGIN_AUTH_ERROR_MSG = "LOGIN_ERROR_MSG";
 
-    public String getOptId (){
+    public String getOptId() {
         return "mainframe";
     }
+
     @Autowired
     protected CsrfTokenRepository csrfTokenRepository;
 
@@ -85,20 +77,22 @@ public class MainFrameController extends BaseController {
     @Value("${login.cas.enable:false}")
     private boolean useCas;
     @Value("${login.cas.localHome:}")
-    private String localHome ;
+    private String localHome;
 
     @Value("${logout.success.targetUrl:}")
     private String logoutTargetUrl;
     @Value("${login.cas.casHome:}")
-    private String casHome ;// https://productsvr.centit.com:8443/cas
+    private String casHome;// https://productsvr.centit.com:8443/cas
     @Value("${app.local.firstpage:}")
-    private String firstpage ;
+    private String firstpage;
     @Value("${app.menu.topoptid:}")
-    private String topOptId ;
+    private String topOptId;
+
     /**
      * 登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置
      * param request request
      * param session session
+     *
      * @return 登录首页链接
      */
     @ApiOperation(value = "登录首页链接", notes = "登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置")
@@ -106,7 +100,7 @@ public class MainFrameController extends BaseController {
     public String index(HttpServletRequest request) {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
         String redirectUrl = request.getParameter("webUrl");
-        if(StringUtils.isNotBlank(redirectUrl)){
+        if (StringUtils.isNotBlank(redirectUrl)) {
             return "redirect:" + redirectUrl;//"sys/mainframe/index";
         } else {
             return "sys/index";//"redirect:"+ firstpage;//
@@ -115,6 +109,7 @@ public class MainFrameController extends BaseController {
 
     /**
      * 跳往cas登录链接
+     *
      * @param request request
      * @return 登录后首页URL
      */
@@ -123,7 +118,7 @@ public class MainFrameController extends BaseController {
     public String logincas(HttpServletRequest request) {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
         String redirectUrl = request.getParameter("webUrl");
-        if(StringUtils.isNotBlank(redirectUrl)){
+        if (StringUtils.isNotBlank(redirectUrl)) {
             return "redirect:" + redirectUrl;//"sys/mainframe/index";
         } else {
             return "redirect:" + firstpage;//"sys/mainframe/index";
@@ -132,6 +127,7 @@ public class MainFrameController extends BaseController {
 
     /**
      * 登录界面入口
+     *
      * @param session session
      * @param request HttpServletRequest
      * @return 登录界面
@@ -140,16 +136,17 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "登录界面入口", notes = "登录界面入口")
     public String login(HttpServletRequest request, HttpSession session) {
         //不允许ajax强求登录页面
-        if(WebOptUtils.isAjax(request)){
+        if (WebOptUtils.isAjax(request)) {
             return "redirect:/system/exception/error/401";
         }
         //输入实施人员链接后未登录，后直接输入 普通用户登录链接
-        session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
-        return useCas?"redirect:/system/mainframe/logincas":"sys/login";
+        session.setAttribute(ENTRANCE_TYPE, NORMAL_LOGIN);
+        return useCas ? "redirect:/system/mainframe/logincas" : "sys/login";
     }
 
     /**
      * 以管理员登录界面
+     *
      * @param session session
      * @param request HttpServletRequest
      * @return 登录界面
@@ -158,7 +155,7 @@ public class MainFrameController extends BaseController {
     @GetMapping("/loginasadmin")
     public String loginAsAdmin(HttpServletRequest request, HttpSession session) {
         //不允许ajax强求登录页面
-        if(WebOptUtils.isAjax(request)){
+        if (WebOptUtils.isAjax(request)) {
             return "redirect:/system/exception/error/401";
         }
         if (deploy) {
@@ -166,46 +163,48 @@ public class MainFrameController extends BaseController {
             session.setAttribute(ENTRANCE_TYPE, DEPLOY_LOGIN);
         }
 
-        return useCas ? "redirect:/system/mainframe/logincas":"sys/login";
+        return useCas ? "redirect:/system/mainframe/logincas" : "sys/login";
     }
 
     /**
      * 登录失败回到登录页
+     *
      * @param request HttpServletRequest
      * @param session session
      * @return 登录界面
      */
     @ApiOperation(value = "登录失败回到登录页", notes = "登录失败回到登录页")
     @GetMapping("/login/error")
-    public String loginError(HttpServletRequest request,HttpSession session) {
+    public String loginError(HttpServletRequest request, HttpSession session) {
         //在系统中设定Spring Security 相关的错误信息
         AuthenticationException authException = (AuthenticationException)
-                session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+            session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
         //设置错误信息
-        if(authException!=null) {
+        if (authException != null) {
             session.setAttribute(LOGIN_AUTH_ERROR_MSG, authException.getMessage());
         }
         //重新登录
-        return login(request,session);
+        return login(request, session);
     }
 
     /**
      * 退出登录
+     *
      * @param session session
      * @return 登出页面
      */
     @ApiOperation(value = "退出登录", notes = "退出登录")
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.setAttribute(ENTRANCE_TYPE,NORMAL_LOGIN);
+        session.setAttribute(ENTRANCE_TYPE, NORMAL_LOGIN);
         session.removeAttribute(LOGIN_AUTH_ERROR_MSG);
-        if(useCas){
+        if (useCas) {
             //return "sys/mainframe/index";
             session.invalidate();
-            if(StringUtils.isBlank(logoutTargetUrl)) {
-                return "redirect:"+casHome+"/logout?service=" + localHome + "/system/mainframe/logincas";
+            if (StringUtils.isBlank(logoutTargetUrl)) {
+                return "redirect:" + casHome + "/logout?service=" + localHome + "/system/mainframe/logincas";
             } else {
-                return "redirect:"+casHome+"/logout?service=" + logoutTargetUrl;
+                return "redirect:" + casHome + "/logout?service=" + logoutTargetUrl;
             }
         } else {
             return "redirect:/logout"; //j_spring_security_logout
@@ -214,40 +213,41 @@ public class MainFrameController extends BaseController {
 
     /**
      * 修改密码
-     * @param password 旧密码
+     *
+     * @param password    旧密码
      * @param newPassword 新密码
-     * @param request request
-     * @param response response
+     * @param request     request
+     * @param response    response
      * @return ResponseData
      */
     @ApiOperation(value = "修改密码", notes = "修改用户登录密码")
     @ApiImplicitParams({@ApiImplicitParam(
-        name = "password", value="旧密码",
-        required=true, paramType = "query", dataType= "String"
-    ),@ApiImplicitParam(
-        name = "newPassword", value="新密码",
-        required= true, paramType = "query", dataType= "String"
+        name = "password", value = "旧密码",
+        required = true, paramType = "query", dataType = "String"
+    ), @ApiImplicitParam(
+        name = "newPassword", value = "新密码",
+        required = true, paramType = "query", dataType = "String"
     )})
-    @RequestMapping(value ="/changepwd",method = RequestMethod.PUT)
+    @RequestMapping(value = "/changepwd", method = RequestMethod.PUT)
     @WrapUpResponseBody
     public ResponseData changepassword(String password, String newPassword,
-            HttpServletRequest request,HttpServletResponse response) {
-        if(StringUtils.isBlank(password)) {
+                                       HttpServletRequest request, HttpServletResponse response) {
+        if (StringUtils.isBlank(password)) {
             password = request.getParameter("password");
         }
-        if(StringUtils.isBlank(newPassword)) {
+        if (StringUtils.isBlank(newPassword)) {
             newPassword = request.getParameter("newPassword");
         }
 
         String userCode = WebOptUtils.getCurrentUserCode(request);
-        if(StringUtils.isBlank(userCode)){
+        if (StringUtils.isBlank(userCode)) {
             return ResponseData.makeErrorMessage("用户没有登录，不能修改密码！");
-        }else{
+        } else {
             boolean bo = platformEnvironment.checkUserPassword(userCode, password);
-            if(bo){
+            if (bo) {
                 platformEnvironment.changeUserPassword(userCode, newPassword);
                 return ResponseData.successResponse;
-            }else{
+            } else {
                 return ResponseData.makeErrorMessage("用户输入的密码错误，不能修改密码！");
             }
         }
@@ -255,37 +255,39 @@ public class MainFrameController extends BaseController {
 
     /**
      * 校验密码
+     *
      * @param password password
-     * @param request request
+     * @param request  request
      * @return ResponseData
      */
     @ApiOperation(value = "校验密码", notes = "校验密码是否正确")
     @ApiImplicitParam(
-        name = "password", value="当前密码",
-        required= true, paramType = "path", dataType= "String"
+        name = "password", value = "当前密码",
+        required = true, paramType = "path", dataType = "String"
     )
-    @RequestMapping(value ="/checkpwd",method = RequestMethod.POST)
+    @RequestMapping(value = "/checkpwd", method = RequestMethod.POST)
     @WrapUpResponseBody
     public ResponseData checkpassword(String password, HttpServletRequest request) {
-        if(StringUtils.isBlank(password)) {
+        if (StringUtils.isBlank(password)) {
             password = request.getParameter("password");
         }
         String userCode = WebOptUtils.getCurrentUserCode(request);
-        if(StringUtils.isBlank(userCode)){
-            return ResponseData.makeErrorMessage(ResponseData.ERROR_UNAUTHORIZED,"用户没有登录，不能修改密码！");
-        }else{
-            boolean bo=platformEnvironment.checkUserPassword(userCode, password);
+        if (StringUtils.isBlank(userCode)) {
+            return ResponseData.makeErrorMessage(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录，不能修改密码！");
+        } else {
+            boolean bo = platformEnvironment.checkUserPassword(userCode, password);
             return ResponseData.makeResponseData(bo);
         }
     }
 
     /**
      * 这个方法是个内部通讯的客户端程序使用的，客户端程序通过用户代码（注意不是用户名）和密码登录，这个密码建议随机生成
+     *
      * @param request request
      * @return ResponseData
      */
     @ApiOperation(value = "内部通讯的客户端程序使用接口", notes = "这个方法是个内部通讯的客户端程序使用的，客户端程序通过用户代码（注意不是用户名）和密码登录，这个密码建议随机生成")
-    @RequestMapping(value="/loginasclient",method = RequestMethod.POST)
+    @RequestMapping(value = "/loginasclient", method = RequestMethod.POST)
     @WrapUpResponseBody
     public ResponseData loginAsClient(HttpServletRequest request) {
         Map<String, Object> formValue = BaseController.collectRequestParameters(request);
@@ -293,7 +295,7 @@ public class MainFrameController extends BaseController {
         String userCode = StringBaseOpt.objectToString(formValue.get("userCode"));
         String userPwd = StringBaseOpt.objectToString(formValue.get("password"));
         boolean bo = platformEnvironment.checkUserPassword(userCode, userPwd);
-        if(!bo){
+        if (!bo) {
             return ResponseData.makeErrorMessage("用户 名和密码不匹配。");
         }
         CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
@@ -306,37 +308,38 @@ public class MainFrameController extends BaseController {
 
     /**
      * 这个方法用于和第三方对接的验证方式，需要注入名为 thirdPartyCheckUserDetails 的bean 。
+     *
      * @param formJson json格式的表单数据 {userCode:"u0000000", token:"231413241234"}
-     * @param request HttpServletRequest
+     * @param request  HttpServletRequest
      * @return ResponseData
      */
-    @ApiOperation(value="第三方认证接口",
-        notes="这时框架留的一个后门，系统如果要使用这个接口，必须配置一个名为thirdPartyCheckUserDetails的bean;" +
-        "该方法使用post调用，提交的对象中必须有userCode和token两个属性。")
+    @ApiOperation(value = "第三方认证接口",
+        notes = "这时框架留的一个后门，系统如果要使用这个接口，必须配置一个名为thirdPartyCheckUserDetails的bean;" +
+            "该方法使用post调用，提交的对象中必须有userCode和token两个属性。")
     @ApiImplicitParams(@ApiImplicitParam(
-        name = "formValue", value="json格式的表单数据,示例：{userCode:\"u0000000\", token:\"231413241234\"}",
-        required=true, paramType = "body", dataType= "String"
+        name = "formValue", value = "json格式的表单数据,示例：{userCode:\"u0000000\", token:\"231413241234\"}",
+        required = true, paramType = "body", dataType = "String"
     ))
-    @RequestMapping(value="/loginasthird",method = RequestMethod.POST)
+    @RequestMapping(value = "/loginasthird", method = RequestMethod.POST)
     @WrapUpResponseBody
     public ResponseData loginAsThird(HttpServletRequest request,
-                    @RequestBody String formJson) {
+                                     @RequestBody String formJson) {
         try {
             if (thirdPartyCheckUserDetails == null) {
                 thirdPartyCheckUserDetails = ContextLoaderListener.getCurrentWebApplicationContext()
                     .getBean("thirdPartyCheckUserDetails", ThirdPartyCheckUserDetails.class);
             }
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             //thirdPartyCheckUserDetails = null;
             return ResponseData.makeErrorMessage(e.getLocalizedMessage());
         }
-        if(thirdPartyCheckUserDetails == null){
+        if (thirdPartyCheckUserDetails == null) {
             return ResponseData.makeErrorMessage("系统找不到名为 thirdPartyCheckUserDetails 的 bean。");
         }
 
         CentitUserDetails ud = thirdPartyCheckUserDetails.check(platformEnvironment, JSON.parseObject(formJson));
-        if(ud==null){
-            return ResponseData.makeErrorMessage("第三方验证失败: "+ formJson);
+        if (ud == null) {
+            return ResponseData.makeErrorMessage("第三方验证失败: " + formJson);
         }
 
         SecurityContextHolder.getContext().setAuthentication(ud);
@@ -350,150 +353,158 @@ public class MainFrameController extends BaseController {
 
     /**
      * 防跨站请求伪造
-     * @param request request
+     *
+     * @param request  request
      * @param response response
      * @return ResponseData
      */
     @ApiOperation(value = "防跨站请求伪造", notes = "防跨站请求伪造")
-    @RequestMapping(value = "/login/csrf",method = RequestMethod.GET)
+    @RequestMapping(value = "/login/csrf", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getLoginCsrfToken(HttpServletRequest request,HttpServletResponse response) {
-        if(csrfTokenRepository!=null){
+    public ResponseData getLoginCsrfToken(HttpServletRequest request, HttpServletResponse response) {
+        if (csrfTokenRepository != null) {
             CsrfToken token = csrfTokenRepository.loadToken(request);
-            if(token == null){
+            if (token == null) {
                 token = csrfTokenRepository.generateToken(request);
-                csrfTokenRepository.saveToken( token,  request, response);
+                csrfTokenRepository.saveToken(token, request, response);
             }
             response.setHeader("_csrf_parameter", token.getParameterName());
             response.setHeader("_csrf_header", token.getHeaderName());
             response.setHeader("_csrf", token.getToken());
             return ResponseData.makeResponseData(token);
-        }else{
+        } else {
             return ResponseData.makeErrorMessage("Bean csrfTokenRepository not found!");
         }
     }
 
     /**
      * 防跨站请求伪造
-     * @param request request
+     *
+     * @param request  request
      * @param response response
      * @return ResponseData
      */
     @ApiOperation(value = "防跨站请求伪造", notes = "防跨站请求伪造")
-    @RequestMapping(value = "/csrf",method = RequestMethod.GET)
+    @RequestMapping(value = "/csrf", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getCsrfToken(HttpServletRequest request,HttpServletResponse response) {
-       return getLoginCsrfToken(request, response);
+    public ResponseData getCsrfToken(HttpServletRequest request, HttpServletResponse response) {
+        return getLoginCsrfToken(request, response);
     }
 
     /**
      * 获取验证码
-     * @param request request
+     *
+     * @param request  request
      * @param response response
      * @return RenderedImage
      */
     @ApiOperation(value = "获取验证码", notes = "获取验证码")
-    @RequestMapping(value = "/captchaimage",method = RequestMethod.GET)
+    @RequestMapping(value = "/captchaimage", method = RequestMethod.GET)
     @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
     public RenderedImage captchaImage(HttpServletRequest request, HttpServletResponse response) {
         String checkcode = CaptchaImageUtil.getRandomString();
         request.getSession().setAttribute(
-                CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
+            CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
         response.setHeader("Cache-Control", "no-cache");
         return CaptchaImageUtil.generateCaptchaImage(checkcode);
     }
 
     /**
      * 获取登录验证码
-     * @param request request
+     *
+     * @param request  request
      * @param response response
      * @return RenderedImage
      */
     @ApiOperation(value = "获取登录验证码", notes = "获取登录验证码")
-    @RequestMapping(value = "/login/captchaimage",method = RequestMethod.GET)
+    @RequestMapping(value = "/login/captchaimage", method = RequestMethod.GET)
     @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
-    public RenderedImage loginCaptchaImage( HttpServletRequest request, HttpServletResponse response) {
-        return captchaImage(  request,  response);
+    public RenderedImage loginCaptchaImage(HttpServletRequest request, HttpServletResponse response) {
+        return captchaImage(request, response);
     }
 
     /**
      * 校验验证码
+     *
      * @param checkcode checkcode
-     * @param request request
+     * @param request   request
      * @return ResponseData
      */
     @ApiOperation(value = "校验验证码", notes = "校验验证码")
     @ApiImplicitParam(
-        name = "checkcode", value="验证码",
-        required= true, paramType = "path", dataType= "String"
+        name = "checkcode", value = "验证码",
+        required = true, paramType = "path", dataType = "String"
     )
-    @RequestMapping(value = "/checkcaptcha/{checkcode}",method = RequestMethod.GET)
+    @RequestMapping(value = "/checkcaptcha/{checkcode}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public ResponseData checkCaptchaImage(@PathVariable String checkcode, HttpServletRequest request) {
 
         String sessionCode = StringBaseOpt.objectToString(
-                    request.getSession().getAttribute(
-                            CaptchaImageUtil.SESSIONCHECKCODE));
+            request.getSession().getAttribute(
+                CaptchaImageUtil.SESSIONCHECKCODE));
         Boolean checkResult = CaptchaImageUtil.checkcodeMatch(sessionCode, checkcode);
         request.getSession().setAttribute(
-                SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT,
-                checkResult);
+            SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT,
+            checkResult);
         return ResponseData.makeResponseData(checkResult);
     }
 
     /**
      * 当前登录用户
-     * @param request request
+     *
+     * @param request  request
      * @param response response
      * @return ResponseData
      */
     @ApiOperation(value = "当前登录用户", notes = "获取当前登录用户详情")
-    @RequestMapping(value = "/currentuserinfo",method = RequestMethod.GET)
+    @RequestMapping(value = "/currentuserinfo", method = RequestMethod.GET)
     @WrapUpResponseBody
     public ResponseData getCurrentUserInfo(HttpServletRequest request, HttpServletResponse response) {
         JSONObject userInfo = WebOptUtils.getCurrentUserInfo(request);
-        if(userInfo==null) {
+        if (userInfo == null) {
             return ResponseData.makeErrorMessageWithData(
-                request.getSession().getId(),ResponseData.ERROR_USER_NOT_LOGIN,
+                request.getSession().getId(), ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录或者超时，请重新登录！");
-        }
-        else {
+        } else {
             return ResponseData.makeResponseData(userInfo);
         }
     }
+
     /**
      * 当前登录者
+     *
      * @param request request
      * @return ResponseData
      */
     @ApiOperation(value = "当前登录者信息（可能是userInfo也可能是userDetails）", notes = "当前登录者，CentitUser对象信息")
-    @RequestMapping(value = "/currentuser",method = RequestMethod.GET)
+    @RequestMapping(value = "/currentuser", method = RequestMethod.GET)
     @WrapUpResponseBody
     public Object getCurrentUser(HttpServletRequest request) {
         Object ud = WebOptUtils.getLoginUser(request);
-        if(ud==null) {
+        if (ud == null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录或者超时，请重新登录！");
-        }
-        else {
+        } else {
             return ud;
         }
     }
+
     @ApiOperation(value = "当前登录者详细信息", notes = "当前登录者，CentitUserDetails对象信息")
-    @RequestMapping(value = "/currentuserdetails",method = RequestMethod.GET)
+    @RequestMapping(value = "/currentuserdetails", method = RequestMethod.GET)
     @WrapUpResponseBody
     public Object getCurrentUserDetails(HttpServletRequest request) {
         CentitUserDetails ud = WebOptUtils.getCurrentUserDetails(request);
-        if(ud==null) {
+        if (ud == null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录或者超时，请重新登录！");
-        }
-        else {
+        } else {
             return ud;
         }
     }
+
     /**
      * 检验是否登录
+     *
      * @param request request
      * @return Boolean
      */
@@ -505,27 +516,28 @@ public class MainFrameController extends BaseController {
         return StringUtils.isNotBlank(userCode);
     }
 
-    private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser){
+    private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser) {
         return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
-                ViewDataTransform.createStringHashMap("id","optId",
-                        "pid","preOptId",
-                        "text","optName",
-                        "url","optRoute",
-                        "icon","icon",
-                        "children","children",
-                        "isInToolbar","isInToolbar"
-                        //"attributes.external","pageType"
-                    ), (jsonObject,obj) -> jsonObject.put("external", !("D".equals(obj.getPageType()))));
+            ViewDataTransform.createStringHashMap("id", "optId",
+                "pid", "preOptId",
+                "text", "optName",
+                "url", "optRoute",
+                "icon", "icon",
+                "children", "children",
+                "isInToolbar", "isInToolbar"
+                //"attributes.external","pageType"
+            ), (jsonObject, obj) -> jsonObject.put("external", !("D".equals(obj.getPageType()))));
     }
 
     /**
      * 首页菜单
-     * @param osId 系统id
-     * @param request  HttpServletRequest
+     *
+     * @param osId    系统id
+     * @param request HttpServletRequest
      * @return JSONArray
      */
     @ApiOperation(value = "首页菜单", notes = "获取首页菜单信息")
-    @RequestMapping(value = "/menu/{osId}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/menu/{osId}", method = RequestMethod.GET)
     @ApiImplicitParam(
         name = "osId", value = "应用主键applicationID",
         required = true, paramType = "path", dataType = "String"
@@ -533,22 +545,22 @@ public class MainFrameController extends BaseController {
     @WrapUpResponseBody
     public JSONArray getMenu(@PathVariable String osId, HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
-        if(StringUtils.isBlank(userCode)){
+        if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录或者超时，请重新登录！");
 
         }
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
-        boolean asAdmin = obj!=null && DEPLOY_LOGIN.equals(obj.toString());
+        boolean asAdmin = obj != null && DEPLOY_LOGIN.equals(obj.toString());
         List<? extends IOptInfo> menuFunsByUser = null;
 
         menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, osId, asAdmin);
 
-        if((menuFunsByUser == null || menuFunsByUser.size()==0) && StringUtils.isNotBlank(topOptId)) {
+        if ((menuFunsByUser == null || menuFunsByUser.size() == 0) && StringUtils.isNotBlank(topOptId)) {
             menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, topOptId, asAdmin);
         }
 
-        if(menuFunsByUser==null){
+        if (menuFunsByUser == null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录,或者没有给用户任何权限，请重新登录！");
         }
@@ -557,7 +569,8 @@ public class MainFrameController extends BaseController {
 
     /**
      * 获取子菜单
-     * @param optid 菜单代码
+     *
+     * @param optid   菜单代码
      * @param asadmin 作为管理员
      * @param request HttpServletRequest
      * @return JSONArray
@@ -565,29 +578,29 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "获取子菜单", notes = "获取子菜单详情")
     @ApiImplicitParams({
         @ApiImplicitParam(
-            name = "optid", value="菜单代码",
-            paramType = "query", dataType= "String"
+            name = "optid", value = "菜单代码",
+            paramType = "query", dataType = "String"
         ),
         @ApiImplicitParam(
-            name = "asadmin", value="作为管理员 t/f",
-            paramType = "query", dataType= "String"
+            name = "asadmin", value = "作为管理员 t/f",
+            paramType = "query", dataType = "String"
         )})
-    @RequestMapping(value = "/submenu" , method = RequestMethod.GET)
+    @RequestMapping(value = "/submenu", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public JSONArray getMenuUnderOptId(@RequestParam(value="optid", required=false)  String optid,
-                                       @RequestParam(value="asadmin", required=false)  String asadmin,
-            HttpServletRequest request) {
+    public JSONArray getMenuUnderOptId(@RequestParam(value = "optid", required = false) String optid,
+                                       @RequestParam(value = "asadmin", required = false) String asadmin,
+                                       HttpServletRequest request) {
 
         String userCode = WebOptUtils.getCurrentUserCode(request);
-        if(StringUtils.isBlank(userCode)){
+        if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录或者超时，请重新登录！");
         }
         //Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
-        boolean asAdmin = BooleanBaseOpt.castObjectToBoolean(asadmin,false);
+        boolean asAdmin = BooleanBaseOpt.castObjectToBoolean(asadmin, false);
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment
             .listUserMenuOptInfosUnderSuperOptId(userCode, optid, asAdmin);
-        if(menuFunsByUser==null){
+        if (menuFunsByUser == null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录,或者没有给用户任何权限，请重新登录！");
         }
@@ -596,6 +609,7 @@ public class MainFrameController extends BaseController {
 
     /**
      * 获取用户有权限的菜单
+     *
      * @param userCode 用户代码
      * @return ResponseData
      */
@@ -605,11 +619,11 @@ public class MainFrameController extends BaseController {
             name = "osId", value = "应用主键applicationID",
             required = true, paramType = "path", dataType = "String"
         ), @ApiImplicitParam(
-            name = "userCode", value = "用户代码",
-            required = true, paramType = "path", dataType = "String"
-        )
+        name = "userCode", value = "用户代码",
+        required = true, paramType = "path", dataType = "String"
+    )
     })
-    @RequestMapping(value = "/userMenu/{osId}/{userCode}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/userMenu/{osId}/{userCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public ResponseData getMemuByUsercode(@PathVariable String osId, @PathVariable String userCode) {
 
@@ -617,7 +631,7 @@ public class MainFrameController extends BaseController {
 
         menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, osId, false);
 
-        if((menuFunsByUser == null || menuFunsByUser.size()==0) && StringUtils.isNotBlank(topOptId)) {
+        if ((menuFunsByUser == null || menuFunsByUser.size() == 0) && StringUtils.isNotBlank(topOptId)) {
             menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, topOptId, false);
         }
 
@@ -626,34 +640,37 @@ public class MainFrameController extends BaseController {
 
     /**
      * 获取用户某个菜单下有权限的子菜单
-     * @param userCode 用户代码
+     *
+     * @param userCode  用户代码
      * @param menuOptId 菜单代码
      * @return ResponseData
      */
     @ApiOperation(value = "获取用户有权限的菜单", notes = "根据用户代码和菜单代码获取用户有权限的子菜单")
     @ApiImplicitParams({@ApiImplicitParam(
-        name = "userCode", value="用户代码",
-        required=true, paramType = "path", dataType= "String"
-    ),@ApiImplicitParam(
-        name = "menuOptId", value="菜单代码",
-        required= true, paramType = "path", dataType= "String"
+        name = "userCode", value = "用户代码",
+        required = true, paramType = "path", dataType = "String"
+    ), @ApiImplicitParam(
+        name = "menuOptId", value = "菜单代码",
+        required = true, paramType = "path", dataType = "String"
     )})
-    @RequestMapping(value = "/useSubrMenu/{userCode}/{menuOptId}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/useSubrMenu/{userCode}/{menuOptId}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public ResponseData getSubMemuByUsercode(@PathVariable String userCode,@PathVariable String menuOptId) {
-        List<? extends IOptInfo> menuFunsByUser  = platformEnvironment
+    public ResponseData getSubMemuByUsercode(@PathVariable String userCode, @PathVariable String menuOptId) {
+        List<? extends IOptInfo> menuFunsByUser = platformEnvironment
             .listUserMenuOptInfosUnderSuperOptId(userCode, menuOptId, false);
         return ResponseData.makeResponseData(makeMenuFuncsJson(menuFunsByUser));
     }
 
     @ApiOperation(value = "获取当前session", notes = "获取当前session")
-    @RequestMapping(value = "/session" , method = RequestMethod.GET)
+    @RequestMapping(value = "/session", method = RequestMethod.GET)
     @WrapUpResponseBody
     public String getSession(HttpServletRequest request) {
         return request.getSession().getId();
     }
+
     /**
      * 查询当前用户所有职位
+     *
      * @param request {@link HttpServletRequest}
      * @return JSONArray
      */
@@ -662,23 +679,23 @@ public class MainFrameController extends BaseController {
     @WrapUpResponseBody
     public JSONArray listCurrentUserUnits(HttpServletRequest request) {
         Object currentUser = WebOptUtils.getLoginUser(request);
-        if(currentUser==null){
+        if (currentUser == null) {
             throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
-        if(currentUser instanceof CentitUserDetails) {
+        if (currentUser instanceof CentitUserDetails) {
             return DictionaryMapUtils.mapJsonArray(
-                ((CentitUserDetails)currentUser).getUserUnits(), IUserUnit.class);
+                ((CentitUserDetails) currentUser).getUserUnits(), IUserUnit.class);
         }
         return null;
     }
 
     @ApiOperation(value = "查询当前用户所属租户", notes = "查询当前用户所属租户")
-    @GetMapping(value = {"/topUnit","/tenant"})
+    @GetMapping(value = {"/topUnit", "/tenant"})
     @WrapUpResponseBody
     public List<? extends IUnitInfo> listCurrentTopUnits(HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         //String topUnit = WebOptUtils.getCurrentTopUnit(request);
-        if(StringUtils.isBlank(userCode)){
+        if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
         return platformEnvironment.listUserTopUnits(userCode);
@@ -687,21 +704,23 @@ public class MainFrameController extends BaseController {
 
     @GetMapping(value = "/userroles")
     @WrapUpResponseBody
-    public List<? extends IUserRole>  listCurrentUserRoles(HttpServletRequest request) {
+    public List<? extends IUserRole> listCurrentUserRoles(HttpServletRequest request) {
         return platformEnvironment
             .listUserRoles(WebOptUtils.getCurrentTopUnit(request), WebOptUtils.getCurrentUserCode(request));
     }
+
     /**
      * 查询当前用户当前职位
+     *
      * @param request {@link HttpServletRequest}
      * @return ResponseData
      */
     @ApiOperation(value = "查询当前用户当前职位", notes = "查询当前用户当前职位")
     @GetMapping(value = "/usercurrstation")
     @WrapUpResponseBody
-    public Map<String,Object> getUserCurrentStaticn(HttpServletRequest request) {
+    public Map<String, Object> getUserCurrentStaticn(HttpServletRequest request) {
         Object currentUser = WebOptUtils.getLoginUser(request);
-        if(currentUser instanceof CentitUserDetails) {
+        if (currentUser instanceof CentitUserDetails) {
             return DictionaryMapUtils.mapJsonObject(
                 ((CentitUserDetails) currentUser).getCurrentStation(),
                 IUserUnit.class);
@@ -712,140 +731,198 @@ public class MainFrameController extends BaseController {
 
     /**
      * 设置当前用户当前职位
+     *
      * @param userUnitId 用户机构Id
-     * @param request {@link HttpServletRequest}
+     * @param request    {@link HttpServletRequest}
      */
     @ApiOperation(value = "设置当前用户当前职位", notes = "根据用户机构id设置当前用户当前职位")
     @ApiImplicitParam(
-        name = "userUnitId", value="用户机构Id",
-        required= true, paramType = "path", dataType= "String"
+        name = "userUnitId", value = "用户机构Id",
+        required = true, paramType = "path", dataType = "String"
     )
     @PutMapping(value = "/setuserstation/{userUnitId}")
     @WrapUpResponseBody
     public void setUserCurrentStaticn(@PathVariable String userUnitId,
                                       HttpServletRequest request) {
         Object currentUser = WebOptUtils.getLoginUser(request);
-        if(currentUser instanceof CentitUserDetails) {
+        if (currentUser instanceof CentitUserDetails) {
             ((CentitUserDetails) currentUser).setCurrentStationId(userUnitId);
         } else {
-           throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
+            throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
     }
 
     /**
      * 验证当前用户是否有某个操作方法的权限
-     * @param optId 业务菜单代码
+     *
+     * @param optId  业务菜单代码
      * @param method 操作方法
      * @return ResponseData
      */
     @ApiOperation(value = "验证当前用户是否有某个操作方法的权限", notes = "验证当前用户是否有某个操作方法的权限")
     @ApiImplicitParams({
         @ApiImplicitParam(
-            name = "optId", value="系统业务代码",
-            required= true,paramType = "path", dataType= "String"),
+            name = "optId", value = "系统业务代码",
+            required = true, paramType = "path", dataType = "String"),
         @ApiImplicitParam(
-            name = "method", value="操作方法",
-            required= true,paramType = "path", dataType= "String")
+            name = "method", value = "操作方法",
+            required = true, paramType = "path", dataType = "String")
     })
-    @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = { RequestMethod.GET })
+    @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = {RequestMethod.GET})
     @WrapUpResponseBody
-    public ResponseData checkUserOptPower(@PathVariable String optId,@PathVariable String method) {
-        boolean s = CodeRepositoryUtil.checkUserOptPower(optId,method);
+    public ResponseData checkUserOptPower(@PathVariable String optId, @PathVariable String method) {
+        boolean s = CodeRepositoryUtil.checkUserOptPower(optId, method);
         return ResponseData.makeResponseData(s);
     }
 
     /**
      * 获取用户在某个职务的用户组列表
-     * @param rank 职务代码
+     *
+     * @param rank    职务代码
      * @param request HttpServletRequest
      * @return json 结果
      */
     @ApiOperation(value = "获取当前用户具有某个行政职务的任职信息", notes = "获取当前用户具有某个行政职务的任职信息")
     @ApiImplicitParam(
-        name = "rank", value="职务代码",
-        required= true, paramType = "path", dataType= "String"
+        name = "rank", value = "职务代码",
+        required = true, paramType = "path", dataType = "String"
     )
     @GetMapping(value = "/userranks/{rank}")
     @WrapUpResponseBody
-    public JSONArray listUserUnitsByRank(@PathVariable String rank, HttpServletRequest request){
+    public JSONArray listUserUnitsByRank(@PathVariable String rank, HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
-        if(StringUtils.isBlank(userCode)){
+        if (StringUtils.isBlank(userCode)) {
             throw new ObjectException("用户没有登录或者超时，请重新登录。");
         }
         return DictionaryMapUtils.objectsToJSONArray(
-                    CodeRepositoryUtil.listUserUnitsByRank(topUnit, userCode, rank));
+            CodeRepositoryUtil.listUserUnitsByRank(topUnit, userCode, rank));
     }
+
     /**
      * 获取用户在某个岗位的用户组列表
+     *
      * @param station 岗位代码
      * @param request HttpServletRequest
      * @return json结果
      */
     @ApiOperation(value = "获取当前用户具有某个岗位的任职信息", notes = "获取当前用户具有某个岗位的任职信息")
     @ApiImplicitParam(
-        name = "station", value="岗位代码",
-        required= true, paramType = "path", dataType= "String"
+        name = "station", value = "岗位代码",
+        required = true, paramType = "path", dataType = "String"
     )
     @GetMapping(value = "/userstations/{station}")
     @WrapUpResponseBody
-    public ResponseData listUserUnitsByStation(@PathVariable String station, HttpServletRequest request){
+    public ResponseData listUserUnitsByStation(@PathVariable String station, HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
-        if(StringUtils.isBlank(userCode)){
+        if (StringUtils.isBlank(userCode)) {
             return new ResponseSingleData("用户没有登录或者超时，请重新登录");
         }
         return ResponseSingleData.makeResponseData(
-                DictionaryMapUtils.objectsToJSONArray(
+            DictionaryMapUtils.objectsToJSONArray(
                 CodeRepositoryUtil.listUserUnitsByStation(topUnit, userCode, station)));
     }
 
 
     @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
     @ApiImplicitParam(
-        name = "jsonStr", value="参数格式josn示例: \u007B formula:unitParams:\u007BU: \u005B \u005D \u007D,userParams:\u007BU:\u005B \u005D\u007D,rankParams:\u007BU:\u005B \u005D\u007D\u007D",
-        required= true, paramType = "body", dataType= "String"
+        name = "jsonStr", value = "参数格式josn示例: \u007B formula:unitParams:\u007BU: \u005B \u005D \u007D,userParams:\u007BU:\u005B \u005D\u007D,rankParams:\u007BU:\u005B \u005D\u007D\u007D",
+        required = true, paramType = "body", dataType = "String"
     )
     @PostMapping(value = "/testUserEngine")
     @WrapUpResponseBody
-    public Set<String> testUserEngine(@RequestBody String jsonStr, HttpServletRequest request){
+    public JSONArray testUserEngine(@RequestBody String jsonStr, HttpServletRequest request) {
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
         Object userParams = jsonObject.getJSONObject("userParams");
         Object rankParams = jsonObject.getJSONObject("rankParams");
         Map<String, Integer> rankMap = null;
-        if(rankParams!=null) {
+        if (rankParams != null) {
             Map<String, Object> objMap = CollectionsOpt.objectToMap(rankParams);
             rankMap = new HashMap<>(objMap.size() + 1);
             for (Map.Entry<String, Object> ent : objMap.entrySet()) {
                 rankMap.put(ent.getKey(), NumberBaseOpt.castObjectToInteger(ent.getValue()));
             }
         }
-
-        return SysUserFilterEngine.calcSystemOperators(
+        Set<String> sUsers = SysUserFilterEngine.calcSystemOperators(
             jsonObject.getString("formula"),
-            unitParams==null?null:StringBaseOpt.objectToMapStrSet(unitParams),
-            userParams==null?null:StringBaseOpt.objectToMapStrSet(userParams),
+            unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
+            userParams == null ? null : StringBaseOpt.objectToMapStrSet(userParams),
             rankMap,
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
+        Set<String> sUnits = SysUnitFilterEngine.calcSystemUnitsByExp(
+            jsonObject.getString("formula"),
+            unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
+            new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
+        );
+        List<IUserUnit> allUserInfos = new ArrayList<>();
+        if (sUsers != null) {
+            for (String uc : sUsers) {
+                List<IUserUnit> userInfos = (List<IUserUnit>) CodeRepositoryUtil.listUserUnits("", uc);
+                if (sUnits == null) {
+                    allUserInfos.addAll(userInfos);
+                } else {
+                    userInfos.forEach(userInfo -> {
+                            if (sUnits.contains(userInfo.getUnitCode())) {
+                                allUserInfos.add(userInfo);
+                            }
+                        }
+                    );
+                }
+            }
+        }
+        allUserInfos.sort((o1, o2) -> compareTwoRow(o1, o2));
+        JSONArray jsonArray= (JSONArray) JSONArray.toJSON(allUserInfos);
+        for(int i=0;i<jsonArray.size();i++) {
+            JSONObject jsonObject1=jsonArray.getJSONObject(i);
+            String userName=CodeRepositoryUtil.getUserName("",jsonObject1.getString("userCode"));
+            jsonObject1.put("userName",userName);
+            String unitName=CodeRepositoryUtil.getUnitName("",jsonObject1.getString("unitCode"));
+            jsonObject1.put("unitName",unitName);
+        }
+        return jsonArray;
+    }
+
+    private static int compareTwoRow(IUserUnit data1, IUserUnit data2) {
+        if (data1 == null && data2 == null) {
+            return 0;
+        }
+        if (data1 == null) {
+            return -1;
+        }
+        if (data2 == null) {
+            return 1;
+        }
+        int cr = GeneralAlgorithm.compareTwoObject(
+            data1.getUnitCode(), data2.getUnitCode());
+        if (cr != 0) {
+            return cr;
+        }
+        cr = GeneralAlgorithm.compareTwoObject(
+            data1.getUserOrder(), data2.getUserOrder(),false);
+        if (cr != 0) {
+            return cr;
+        }
+        return 0;
     }
 
     @ApiOperation(value = "测试机构表达式引擎", notes = "测试机构表达式引擎")
     @ApiImplicitParam(
-        name = "jsonStr", value="参数格式josn示例: \u007Bformula:\"\",unitParams:\u007BU:\u005B \u005D\u007D\u007D",
-        required= true, paramType = "body", dataType= "String"
+        name = "jsonStr", value = "参数格式josn示例: \u007Bformula:\"\",unitParams:\u007BU:\u005B \u005D\u007D\u007D",
+        required = true, paramType = "body", dataType = "String"
     )
     @PostMapping(value = "/testUnitEngine")
     @WrapUpResponseBody
-    public Set<String> testUnitEngine(@RequestBody String jsonStr, HttpServletRequest request){
+    public Set<String> testUnitEngine(@RequestBody String jsonStr, HttpServletRequest request) {
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
         return SysUnitFilterEngine.calcSystemUnitsByExp(
             jsonObject.getString("formula"),
-            unitParams==null?null:StringBaseOpt.objectToMapStrSet(unitParams),
+            unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
     }
