@@ -864,7 +864,7 @@ public class MainFrameController extends BaseController {
         List<IUserUnit> allUserInfos = new ArrayList<>();
         if (sUsers != null) {
             for (String uc : sUsers) {
-                List<IUserUnit> userInfos = (List<IUserUnit>) CodeRepositoryUtil.listUserUnits("", uc);
+                List<IUserUnit> userInfos = (List<IUserUnit>) CodeRepositoryUtil.listUserUnits("all", uc);
                 if (sUnits == null) {
                     allUserInfos.addAll(userInfos);
                 } else {
@@ -877,19 +877,19 @@ public class MainFrameController extends BaseController {
                 }
             }
         }
-        allUserInfos.sort((o1, o2) -> compareTwoRow(o1, o2));
+        allUserInfos.sort((o1, o2) -> compareUserTwoRow(o1, o2));
         JSONArray jsonArray = (JSONArray) JSONArray.toJSON(allUserInfos);
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-            String userName = CodeRepositoryUtil.getUserName("", jsonObject1.getString("userCode"));
+            String userName = CodeRepositoryUtil.getUserName("all", jsonObject1.getString("userCode"));
             jsonObject1.put("userName", userName);
-            String unitName = CodeRepositoryUtil.getUnitName("", jsonObject1.getString("unitCode"));
+            String unitName = CodeRepositoryUtil.getUnitName("all", jsonObject1.getString("unitCode"));
             jsonObject1.put("unitName", unitName);
         }
         return jsonArray;
     }
 
-    private static int compareTwoRow(IUserUnit data1, IUserUnit data2) {
+    private static int compareUserTwoRow(IUserUnit data1, IUserUnit data2) {
         if (data1 == null && data2 == null) {
             return 0;
         }
@@ -919,14 +919,37 @@ public class MainFrameController extends BaseController {
     )
     @PostMapping(value = "/testUnitEngine")
     @WrapUpResponseBody
-    public Set<String> testUnitEngine(@RequestBody String jsonStr, HttpServletRequest request) {
+    public JSONArray testUnitEngine(@RequestBody String jsonStr, HttpServletRequest request) {
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
-        return SysUnitFilterEngine.calcSystemUnitsByExp(
+        Set<String> sUnits= SysUnitFilterEngine.calcSystemUnitsByExp(
             jsonObject.getString("formula"),
             unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
+        List<IUnitInfo> unitInfos = new ArrayList<>();
+        for (String uc : sUnits) {
+            unitInfos.add(CodeRepositoryUtil.getUnitInfoByCode("all",uc));
+        }
+        unitInfos.sort((o1, o2) -> compareUnitTwoRow(o1, o2));
+        return (JSONArray) JSONArray.toJSON(unitInfos);
+    }
+    private static int compareUnitTwoRow(IUnitInfo data1, IUnitInfo data2) {
+        if (data1 == null && data2 == null) {
+            return 0;
+        }
+        if (data1 == null) {
+            return -1;
+        }
+        if (data2 == null) {
+            return 1;
+        }
+        int cr = GeneralAlgorithm.compareTwoObject(
+            data1.getUnitOrder(), data2.getUnitOrder(), false);
+        if (cr != 0) {
+            return cr;
+        }
+        return 0;
     }
 }
