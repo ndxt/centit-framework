@@ -1556,15 +1556,17 @@ public abstract class CodeRepositoryUtil {
 
         for (String rolecode : allUserRole) {
             //IRoleInfo ri = CodeRepositoryCache.roleInfoRepo.getCachedTarget().get(rolecode);
-            for (IRolePower rp : getRolePowerRepo(topUnit).get(rolecode)) {
-                // 需要过滤掉 不是 sOptId 下面的方式（不过滤也不会影响结果）; 但是这个过滤可能并不能提高效率
-                IOptMethod om = getOptMethodRepo(topUnit)
-                    .getAppendMap().get(rp.getOptCode());
-                if(om!=null) {
-                    if (StringUtils.equals(sOptId, om.getOptId()) && StringUtils.equals(om.getOptMethod(), sOptMethod)) {
-                        String[] oscs = rp.getOptScopeCodeSet();
-                        if (oscs != null) {
-                            Collections.addAll(dataScopes, oscs);
+            if(getRolePowerRepo(topUnit).get(rolecode)!=null) {
+                for (IRolePower rp : getRolePowerRepo(topUnit).get(rolecode)) {
+                    // 需要过滤掉 不是 sOptId 下面的方式（不过滤也不会影响结果）; 但是这个过滤可能并不能提高效率
+                    IOptMethod om = getOptMethodRepo(topUnit)
+                        .getAppendMap().get(rp.getOptCode());
+                    if (om != null) {
+                        if (StringUtils.equals(sOptId, om.getOptId()) && StringUtils.equals(om.getOptMethod(), sOptMethod)) {
+                            String[] oscs = rp.getOptScopeCodeSet();
+                            if (oscs != null) {
+                                Collections.addAll(dataScopes, oscs);
+                            }
                         }
                     }
                 }
