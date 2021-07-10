@@ -163,7 +163,7 @@ public abstract class WebConfig  {
     public static FilterRegistration.Dynamic registerRequestThreadLocalFilter(ServletContext servletContext) {
         FilterRegistration.Dynamic requestThreadLocalFilter
                 = servletContext.addFilter("requestThreadLocalFilter", RequestThreadLocalFilter.class);
-        requestThreadLocalFilter.addMappingForUrlPatterns(null, true, "/*");
+        requestThreadLocalFilter.addMappingForUrlPatterns(null, false, "/*");
         requestThreadLocalFilter.setAsyncSupported(true);
         return requestThreadLocalFilter;
     }
