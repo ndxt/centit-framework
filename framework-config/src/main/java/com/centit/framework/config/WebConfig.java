@@ -163,7 +163,7 @@ public abstract class WebConfig  {
     public static FilterRegistration.Dynamic registerRequestThreadLocalFilter(ServletContext servletContext) {
         FilterRegistration.Dynamic requestThreadLocalFilter
                 = servletContext.addFilter("requestThreadLocalFilter", RequestThreadLocalFilter.class);
-        requestThreadLocalFilter.addMappingForUrlPatterns(null, false, "/*");
+        requestThreadLocalFilter.addMappingForUrlPatterns(null, true, "/*");
         requestThreadLocalFilter.setAsyncSupported(true);
         return requestThreadLocalFilter;
     }
@@ -178,7 +178,7 @@ public abstract class WebConfig  {
         FilterRegistration.Dynamic springSecurityFilterChain
                 = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
         springSecurityFilterChain.addMappingForUrlPatterns(
-                null, false,
+                null, true,
             makeUrlPatterns(servletUrlPatterns,"/login/*" ,"/logout/*"));
         springSecurityFilterChain.setAsyncSupported(true);
         return springSecurityFilterChain;
