@@ -24,6 +24,7 @@ public class SmartHttpSessionResolver implements HttpSessionIdResolver {
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
         cookieSerializer.setCookiePath(cookiePath);
         browser = new CookieHttpSessionIdResolver();
+        browser.setCookieSerializer(cookieSerializer);
         api = new HeaderHttpSessionIdResolver("x-auth-token");
         this.cookieFirst = cookieFirst;
     }
