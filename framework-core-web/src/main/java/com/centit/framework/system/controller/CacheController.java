@@ -19,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -391,7 +392,12 @@ public class CacheController extends BaseController {
     @RequestMapping(value = "/unituser/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public List<IUserInfo> unituser(@PathVariable String unitCode, HttpServletRequest request) {
-        return CodeRepositoryUtil.getSortedUnitUsers(WebOptUtils.getCurrentTopUnit(request), unitCode);
+        List<IUserInfo> userInfos = CodeRepositoryUtil.getSortedUnitUsers(WebOptUtils.getCurrentTopUnit(request), unitCode);
+        String relType = request.getParameter("relType");
+        if (StringUtils.isNotBlank(relType) && "T".equals(relType) && CollectionUtils.isNotEmpty(userInfos)) {
+            userInfos.removeIf(user -> !unitCode.equals(user.getPrimaryUnit()));
+        }
+        return userInfos;
     }
 
     /**

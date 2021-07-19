@@ -178,7 +178,7 @@ public abstract class WebConfig  {
         FilterRegistration.Dynamic springSecurityFilterChain
                 = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
         springSecurityFilterChain.addMappingForUrlPatterns(
-                null, false,
+                null, true,
             makeUrlPatterns(servletUrlPatterns,"/login/*" ,"/logout/*"));
         springSecurityFilterChain.setAsyncSupported(true);
         return springSecurityFilterChain;

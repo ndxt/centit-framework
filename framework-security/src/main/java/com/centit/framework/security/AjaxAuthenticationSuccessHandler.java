@@ -79,7 +79,10 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
                     "用户 ："+ud.getUserInfo().getString("userName")+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
                     + "从主机"+loginIp+"登录。");
         }
-
+        Cookie cookie = new Cookie("x-auth-token",
+            request.getSession().getId());
+        cookie.setPath("/");
+        response.addCookie(cookie);
         boolean isAjaxQuery = WebOptUtils.isAjax(request);
         if(isAjaxQuery){
             ResponseMapData resData = new ResponseMapData();
@@ -90,10 +93,6 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             //request.getSession().setAttribute("SPRING_SECURITY_AUTHENTICATION", authentication);
             //JsonResultUtils.writeSingleErrorDataJson(0,authentication.getName() + " login ok！",request.getSession().getId(), response);
         }else{
-            Cookie cookie = new Cookie("x-auth-token",
-                request.getSession().getId());
-            cookie.setPath("/");
-            response.addCookie(cookie);
             response.setHeader("x-auth-token",
                 request.getSession().getId());
             response.setHeader(SecurityContextUtils.SecurityContextTokenName,

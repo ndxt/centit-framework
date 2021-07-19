@@ -23,10 +23,7 @@ import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.ThirdPartyCheckUserDetails;
-import com.centit.support.algorithm.BooleanBaseOpt;
-import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.algorithm.NumberBaseOpt;
-import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.algorithm.*;
 import com.centit.support.common.ObjectException;
 import com.centit.support.image.CaptchaImageUtil;
 import io.swagger.annotations.Api;
@@ -48,13 +45,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.RenderedImage;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-@Api(value="框架中用户权限相关的接口，用户登录接口，第三方认证接口，安全接口",
-    tags= "登录、权限、安全控制等接口")
+@Api(value = "框架中用户权限相关的接口，用户登录接口，第三方认证接口，安全接口",
+    tags = "登录、权限、安全控制等接口")
 @Controller
 @RequestMapping("/mainframe")
 public class MainFrameController extends BaseController {
@@ -64,9 +58,10 @@ public class MainFrameController extends BaseController {
     public static final String DEPLOY_LOGIN = "DEPLOY";
     public static final String LOGIN_AUTH_ERROR_MSG = "LOGIN_ERROR_MSG";
 
-    public String getOptId (){
+    public String getOptId() {
         return "mainframe";
     }
+
     @Autowired
     protected CsrfTokenRepository csrfTokenRepository;
 
@@ -85,20 +80,22 @@ public class MainFrameController extends BaseController {
     @Value("${login.cas.enable:false}")
     private boolean useCas;
     @Value("${login.cas.localHome:}")
-    private String localHome ;
+    private String localHome;
 
     @Value("${logout.success.targetUrl:}")
     private String logoutTargetUrl;
     @Value("${login.cas.casHome:}")
-    private String casHome ;// https://productsvr.centit.com:8443/cas
+    private String casHome;// https://productsvr.centit.com:8443/cas
     @Value("${app.local.firstpage:}")
-    private String firstpage ;
+    private String firstpage;
     @Value("${app.menu.topoptid:}")
-    private String topOptId ;
+    private String topOptId;
+
     /**
      * 登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置
      * param request request
      * param session session
+     *
      * @return 登录首页链接
      */
     @ApiOperation(value = "登录首页链接", notes = "登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置")
@@ -106,7 +103,7 @@ public class MainFrameController extends BaseController {
     public String index(HttpServletRequest request) {
         //为了缩短普通管理员登录后首页URL，转发到 /service/
         String redirectUrl = request.getParameter("webUrl");
-        if(StringUtils.isNotBlank(redirectUrl)){
+        if (StringUtils.isNotBlank(redirectUrl)) {
             return "redirect:" + redirectUrl;//"sys/mainframe/index";
         } else {
             return "sys/index";//"redirect:"+ firstpage;//
@@ -115,6 +112,7 @@ public class MainFrameController extends BaseController {
 
     /**
      * 跳往cas登录链接
+     *
      * @param request request
      * @return 登录后首页URL
      */
@@ -509,7 +507,7 @@ public class MainFrameController extends BaseController {
         return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
                 ViewDataTransform.createStringHashMap("id","optId",
                         "pid","preOptId",
-                        "text","localOptName",
+                        "text","optName",
                         "url","optRoute",
                         "icon","icon",
                         "children","children",
@@ -830,8 +828,60 @@ public class MainFrameController extends BaseController {
             rankMap,
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
+        Set<String> sUnits = SysUnitFilterEngine.calcSystemUnitsByExp(
+            jsonObject.getString("formula"),
+            unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
+            new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
+        );
+        List<IUserUnit> allUserInfos = new ArrayList<>();
+        if (sUsers != null) {
+            for (String uc : sUsers) {
+                List<IUserUnit> userInfos = (List<IUserUnit>) CodeRepositoryUtil.listUserUnits("all", uc);
+                if (sUnits == null) {
+                    allUserInfos.addAll(userInfos);
+                } else {
+                    userInfos.forEach(userInfo -> {
+                            if (sUnits.contains(userInfo.getUnitCode())) {
+                                allUserInfos.add(userInfo);
+                            }
+                        }
+                    );
+                }
+            }
+        }
+        allUserInfos.sort((o1, o2) -> compareUserTwoRow(o1, o2));
+        JSONArray jsonArray = (JSONArray) JSONArray.toJSON(allUserInfos);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+            String userName = CodeRepositoryUtil.getUserName("all", jsonObject1.getString("userCode"));
+            jsonObject1.put("userName", userName);
+            String unitName = CodeRepositoryUtil.getUnitName("all", jsonObject1.getString("unitCode"));
+            jsonObject1.put("unitName", unitName);
+        }
+        return jsonArray;
+    }
 
-        //CodeRepositoryUtil.
+    private static int compareUserTwoRow(IUserUnit data1, IUserUnit data2) {
+        if (data1 == null && data2 == null) {
+            return 0;
+        }
+        if (data1 == null) {
+            return -1;
+        }
+        if (data2 == null) {
+            return 1;
+        }
+        int cr = GeneralAlgorithm.compareTwoObject(
+            data1.getUnitCode(), data2.getUnitCode());
+        if (cr != 0) {
+            return cr;
+        }
+        cr = GeneralAlgorithm.compareTwoObject(
+            data1.getUserOrder(), data2.getUserOrder(), false);
+        if (cr != 0) {
+            return cr;
+        }
+        return 0;
     }
 
     @ApiOperation(value = "测试机构表达式引擎", notes = "测试机构表达式引擎")
@@ -850,5 +900,28 @@ public class MainFrameController extends BaseController {
             unitParams==null?null:StringBaseOpt.objectToMapStrSet(unitParams),
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
+        List<IUnitInfo> unitInfos = new ArrayList<>();
+        for (String uc : sUnits) {
+            unitInfos.add(CodeRepositoryUtil.getUnitInfoByCode("all",uc));
+        }
+        unitInfos.sort((o1, o2) -> compareUnitTwoRow(o1, o2));
+        return (JSONArray) JSONArray.toJSON(unitInfos);
+    }
+    private static int compareUnitTwoRow(IUnitInfo data1, IUnitInfo data2) {
+        if (data1 == null && data2 == null) {
+            return 0;
+        }
+        if (data1 == null) {
+            return -1;
+        }
+        if (data2 == null) {
+            return 1;
+        }
+        int cr = GeneralAlgorithm.compareTwoObject(
+            data1.getUnitOrder(), data2.getUnitOrder(), false);
+        if (cr != 0) {
+            return cr;
+        }
+        return 0;
     }
 }
