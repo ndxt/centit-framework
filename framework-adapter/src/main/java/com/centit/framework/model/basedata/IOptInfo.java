@@ -20,11 +20,19 @@ public interface IOptInfo {
     String getPreOptId();
 
     /**
-     * 业务名称
+     * 业务名称 :// 国际化
      * @return 业务名称
      */
     String getOptName();
 
+    /**
+     * 当前语言对应的业务名称
+     * @param lang zh_CN
+     * @return 当前语言对应的菜单名称
+     */
+    default String getLocalOptName(String lang){
+        return getOptName();
+    }
     /**
      * S:实施业务, O:普通业务, W:流程业务, I:项目业务
      * @return OptType

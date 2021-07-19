@@ -45,7 +45,7 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
     public void setRetryCheckTimeTnterval(int checkTimeTnterval) {
         CheckFailLogs.setCheckTimeTnterval(checkTimeTnterval);
     }
-    
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
@@ -63,12 +63,12 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
             String sessionCheckcode = StringBaseOpt.castObjectToString(
                     request.getSession().getAttribute(CaptchaImageUtil.SESSIONCHECKCODE));
 
-            request.getSession().removeAttribute(CaptchaImageUtil.SESSIONCHECKCODE);  
-            
+            request.getSession().removeAttribute(CaptchaImageUtil.SESSIONCHECKCODE);
+
             if(! "nocheckcode".equals(requestCheckcode)){
                 if(!CaptchaImageUtil.checkcodeMatch(sessionCheckcode, requestCheckcode))
                 //if(request_checkcode==null || ! request_checkcode.equalsIgnoreCase(session_checkcode)  )
-                    throw new AuthenticationServiceException("bad checkcode");   
+                    throw new AuthenticationServiceException("bad checkcode");
             }
         }
 

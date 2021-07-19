@@ -509,7 +509,7 @@ public class MainFrameController extends BaseController {
         return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
                 ViewDataTransform.createStringHashMap("id","optId",
                         "pid","preOptId",
-                        "text","optName",
+                        "text","localOptName",
                         "url","optRoute",
                         "icon","icon",
                         "children","children",
