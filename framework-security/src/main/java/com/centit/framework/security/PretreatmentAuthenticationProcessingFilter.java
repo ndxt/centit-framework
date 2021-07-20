@@ -90,6 +90,7 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
         //if(!onlyPretreat || writeLog || CheckFailLogs.getMaxTryTimes() > 0){
         try{
             Authentication auth = super.attemptAuthentication(request, response);
+            request.changeSessionId();
             //if(CheckFailLogs.getMaxTryTimes() >= 0){
                 CheckFailLogs.removeCheckFail(request);
             //}
