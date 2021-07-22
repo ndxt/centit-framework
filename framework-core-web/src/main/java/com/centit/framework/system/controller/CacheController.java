@@ -578,7 +578,7 @@ public class CacheController extends BaseController {
                 ViewDataTransform.createStringHashMap("id", "optId",
                         "optId", "optId",
                         "pid", "preOptId",
-                        "text", "optName",
+                        "text", "localOptName",
                         "optName", "optName",
                         "url", "optRoute",
                         "icon", "icon",
