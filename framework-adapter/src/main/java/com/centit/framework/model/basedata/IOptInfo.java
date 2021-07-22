@@ -27,10 +27,9 @@ public interface IOptInfo {
 
     /**
      * 当前语言对应的业务名称
-     * @param lang zh_CN
      * @return 当前语言对应的菜单名称
      */
-    default String getLocalOptName(String lang){
+    default String getLocalOptName(){
         return getOptName();
     }
     /**
