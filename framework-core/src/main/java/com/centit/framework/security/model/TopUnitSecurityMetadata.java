@@ -91,7 +91,7 @@ public class TopUnitSecurityMetadata {
 
         swords.add(httpMethod);
         for(String s:sFunUrl.split("/")){
-            if(!StringBaseOpt.isNvl(s) /*&& !"*".equals(s)*/){
+            if(StringUtils.isNotBlank(s) /*&& !"*".equals(s)*/){
                 swords.add(s);
             }
         }
@@ -108,7 +108,7 @@ public class TopUnitSecurityMetadata {
         String sUrls[] = (sOptDefUrl).split("/");
         List<String> sopts = new ArrayList<>();
         for(String s:sUrls){
-            if(!StringUtils.isBlank(s)/* && !"*".equals(s)*/)
+            if(StringUtils.isNotBlank(s)/* && !"*".equals(s)*/)
                 sopts.add(s);
         }
 

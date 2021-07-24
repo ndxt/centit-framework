@@ -192,7 +192,7 @@ public class UserUnitFilterGene {
     }
 
     public void addUserUnitRelType(String reltype) {
-        if (!StringUtils.isNotBlank(reltype)) {
+        if (StringUtils.isNotBlank(reltype)) {
             this.userUnitRelTypes.add(reltype);
             hasRelationFilter = true;
         }
