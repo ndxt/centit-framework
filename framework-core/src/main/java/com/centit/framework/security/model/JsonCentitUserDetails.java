@@ -101,7 +101,7 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
                 }
 
                 if (StringUtils.isBlank(currentStationId) &&
-                    "T".equals(userUnit.getString("isPrimary"))) {
+                    "T".equals(userUnit.getString("relType"))) {
                     return userUnit;
                 }
             }
