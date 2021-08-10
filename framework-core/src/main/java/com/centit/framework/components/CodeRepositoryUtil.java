@@ -392,7 +392,7 @@ public abstract class CodeRepositoryUtil {
         lex.setFormula(sExpression);
 
         while (true) {
-            String aWord = lex.getAWord();
+            String aWord = lex.getAString();
             if (StringUtils.isBlank(aWord)) {
                 break;
             }
