@@ -639,21 +639,7 @@ public class CacheController extends BaseController {
     @RequestMapping(value = "/roleinfo/{topUnit}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public List<? extends IRoleInfo> roleinfo(@PathVariable String topUnit, HttpServletRequest request) {
-        List<? extends IRoleInfo> roleInfos = CodeRepositoryUtil.listAllRole(topUnit);
-        List<? extends IRoleInfo> roles = new ArrayList<>(roleInfos);
-        roles.removeIf(r -> "F".equals(r.getRoleType()));
-        if ((!"all".equals(topUnit) && !"G".equals(topUnit)) || WebOptUtils.isTenantTopUnit(request)) {
-            JSONObject userInfo = WebOptUtils.getCurrentUserInfo(request);
-            if (null != userInfo && userInfo.getString("topUnit").equals(userInfo.getString("primaryUnit"))) {
-                String topUnitCode = userInfo.getString("topUnit");
-                roles.removeIf(r -> "G".equals(r.getRoleType()));
-                roles.removeIf(r -> "D".equals(r.getRoleType()) && !topUnitCode.equals(r.getUnitCode()));
-            } else {
-                roles.removeIf(r -> "G".equals(r.getRoleType()));
-                roles.removeIf(r -> "D".equals(r.getRoleType()) && !topUnit.equals(r.getUnitCode()));
-            }
-        }
-        return roles;
+        return CodeRepositoryUtil.listAllRole(topUnit);
     }
 
     /**

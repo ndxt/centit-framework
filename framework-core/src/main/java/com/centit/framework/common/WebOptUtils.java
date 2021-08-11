@@ -152,7 +152,20 @@ public class WebOptUtils {
 
     public static String getRequestAddr(HttpServletRequest request) {
         String sHostIp = request.getHeader("x-forwarded-for");
-        if(StringUtils.isBlank(sHostIp)){
+        if (StringUtils.isNotBlank(sHostIp) && !"unKnown".equalsIgnoreCase(sHostIp)) {
+            //多次反向代理后会有多个ip值，第一个ip才是真实ip
+            int index = sHostIp.indexOf(",");
+            if (index != -1) {
+                return sHostIp.substring(0, index);
+            } else {
+                return sHostIp;
+            }
+        }
+        sHostIp = request.getHeader("X-Real-IP");
+        if (StringUtils.isNotBlank(sHostIp) && !"unKnown".equalsIgnoreCase(sHostIp)) {
+            return sHostIp;
+        }
+        if (StringUtils.isBlank(sHostIp)) {
             sHostIp = request.getRemoteAddr();
         }
         return sHostIp;
