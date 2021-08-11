@@ -161,7 +161,7 @@ public class RecordOperationLogAspect {
                 .correlation(WebOptUtils.getCorrelationId(request))
                 .operation(optId).tag(optTag).method(optMethod)
                 .content(optContent).newObject(newValue)
-                .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()));
+                .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()).loginIp(loginIp));
     }
 
     /**

@@ -35,7 +35,7 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
             String loginHost = request.getRemoteHost()+":"+request.getRemotePort();
             OperationLogCenter.log(loginName,"login", loginName,"loginError",
                     "用户 ："+loginName+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
-                    + "从主机"+loginHost+"尝试登录,失败原因:"+exception.getMessage()+"。");
+                    + "从主机"+loginHost+"尝试登录,失败原因:"+exception.getMessage()+"。",loginHost);
         }
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
         boolean isAjaxQuery = WebOptUtils.isAjax(request);

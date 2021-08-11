@@ -77,7 +77,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             }
             OperationLogCenter.log(ud.getUserCode(),"mainframe", ud.getUserCode(),"login",
                     "用户 ："+ud.getUserInfo().getString("userName")+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
-                    + "从主机"+loginIp+"登录。");
+                    + "从主机"+loginIp+"登录。",loginIp);
         }
         Cookie cookie = new Cookie("x-auth-token",
             request.getSession().getId());

@@ -101,6 +101,7 @@ public class OperationLog implements java.io.Serializable {
      * 更新后新值，json格式，这个字段不是必须的
      */
     private String oldValue;
+    private String loginIp;
 
     public OperationLog() {
         this.logLevel = LEVEL_INFO;
@@ -175,7 +176,10 @@ public class OperationLog implements java.io.Serializable {
         this.oldValue = castObjectToJsonStr(obj);
         return this;
     }
-
+    public OperationLog loginIp(String loginIp){
+        this.loginIp = loginIp;
+        return this;
+    }
     public <T extends Object> OperationLog makeDifference(T oldObj, T newObj){
         if(newObj==null || oldObj==null){
             this.newValue = castObjectToJsonStr(newObj);

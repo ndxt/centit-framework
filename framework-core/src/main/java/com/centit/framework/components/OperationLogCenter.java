@@ -153,6 +153,14 @@ public abstract class OperationLogCenter {
             .content(optContent).time(DatetimeOpt.currentUtilDate()));
     }
 
+    public static void log(String userCode, String optId, String optTag, String optMethod, String optContent,String loginIp) {
+        log(OperationLog.create().level(OperationLog.LEVEL_INFO)
+            .user(userCode).unit(WebOptUtils.getCurrentUnitCode(RequestThreadLocal.getLocalThreadWrapperRequest()))
+            .correlation(UuidOpt.getUuidAsString32())
+            .operation(optId).tag(optTag).method(optMethod)
+            .content(optContent).time(DatetimeOpt.currentUtilDate()).loginIp(loginIp));
+    }
+
     /**
      * 记录日志内容
      *
@@ -173,7 +181,7 @@ public abstract class OperationLogCenter {
             .correlation(WebOptUtils.getCorrelationId(request))
             .operation(optId).tag(optTag).method(optMethod)
             .content(optContent).newObject(newValue)
-            .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()));
+            .oldObject(oldValue).time(DatetimeOpt.currentUtilDate()).loginIp(WebOptUtils.getRequestAddr(request)));
     }
 
 
@@ -192,7 +200,7 @@ public abstract class OperationLogCenter {
             .unit(WebOptUtils.getCurrentUnitCode(request))
             .correlation(WebOptUtils.getCorrelationId(request))
             .operation(optId).tag(optTag).method(optMethod)
-            .content(optContent).time(DatetimeOpt.currentUtilDate()));
+            .content(optContent).time(DatetimeOpt.currentUtilDate()).loginIp(WebOptUtils.getRequestAddr(request)));
     }
 
 
@@ -213,7 +221,7 @@ public abstract class OperationLogCenter {
             .unit(WebOptUtils.getCurrentUnitCode(request))
             .correlation(WebOptUtils.getCorrelationId(request))
             .content(optContent).newObject(newObject)
-            .time(DatetimeOpt.currentUtilDate()));
+            .time(DatetimeOpt.currentUtilDate()).loginIp(WebOptUtils.getRequestAddr(request)));
     }
 
     /**
@@ -233,7 +241,7 @@ public abstract class OperationLogCenter {
             .unit(WebOptUtils.getCurrentUnitCode(request))
             .correlation(WebOptUtils.getCorrelationId(request))
             .content(queryDesc).newObject(queryMap)
-            .time(DatetimeOpt.currentUtilDate()));
+            .time(DatetimeOpt.currentUtilDate()).loginIp(WebOptUtils.getRequestAddr(request)));
     }
 
     /**
@@ -253,7 +261,7 @@ public abstract class OperationLogCenter {
             .unit(WebOptUtils.getCurrentUnitCode(request))
             .correlation(WebOptUtils.getCorrelationId(request))
             .content(optContent)
-            .oldObject(oldObject).time(DatetimeOpt.currentUtilDate()));
+            .oldObject(oldObject).time(DatetimeOpt.currentUtilDate()).loginIp(WebOptUtils.getRequestAddr(request)));
     }
 
     /**
@@ -274,6 +282,6 @@ public abstract class OperationLogCenter {
             .correlation(WebOptUtils.getCorrelationId(request))
             .tag(optTag).method(optMethod).content(optContent)
             .makeDifference(oldObject, newObject)
-            .time(DatetimeOpt.currentUtilDate()));
+            .time(DatetimeOpt.currentUtilDate()).loginIp(WebOptUtils.getRequestAddr(request)));
     }
 }
