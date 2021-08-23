@@ -55,6 +55,12 @@ public class WebOptUtils {
         WebOptUtils.requestInSpringCloud = requestInSpringCloud;
     }
 
+    public static boolean isTenant = false;
+
+    public static void setIsTenant(boolean isTenant) {
+        WebOptUtils.isTenant = isTenant;
+    }
+
     public static boolean isAjax(HttpServletRequest request) {
         return StringUtils.equals("XMLHttpRequest", request.getHeader("X-Requested-With"))
             || StringUtils.contains(request.getHeader("content-type"),"application/json")
@@ -395,6 +401,9 @@ public class WebOptUtils {
         }
         String topUnit = getCurrentTopUnit(request);
         if (GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit) || StringUtils.isBlank(topUnit)) {
+            return false;
+        }
+        if (!WebOptUtils.isTenant) {
             return false;
         }
         return true;
