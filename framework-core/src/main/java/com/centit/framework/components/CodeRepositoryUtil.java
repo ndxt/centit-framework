@@ -307,7 +307,7 @@ public abstract class CodeRepositoryUtil {
                     }
                     for (IOptInfo optInfo : optInfos) {
                         if(StringUtils.equals(sKey, optInfo.getOptId())){
-                            return optInfo.getOptName();
+                            return optInfo.getLocalOptName();
                         }
                     }
                     return sKey;
@@ -1120,7 +1120,7 @@ public abstract class CodeRepositoryUtil {
             case CodeRepositoryUtil.OPT_ID:{
                 List<? extends IOptInfo> optInfos = getOptInfoRepo(topUnit);
                 for (IOptInfo optInfo : optInfos) {
-                    lbvs.put(optInfo.getOptId(), optInfo.getOptName());
+                    lbvs.put(optInfo.getOptId(), optInfo.getLocalOptName());
                 }
                 return lbvs;
             }
@@ -1207,7 +1207,7 @@ public abstract class CodeRepositoryUtil {
             List<? extends IOptInfo> optInfos = getOptInfoRepo(topUnit);
             if (optInfos != null) {
                 for (IOptInfo optInfo : optInfos) {
-                    lbvs.add(new OptionItem(optInfo.getOptName(), optInfo.getOptId()));
+                    lbvs.add(new OptionItem(optInfo.getLocalOptName(), optInfo.getOptId()));
                 }
             }
             return lbvs;
