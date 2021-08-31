@@ -35,11 +35,10 @@ public class RestfulHttpRequest {
             httpClient = appSession.allocHttpClient();
             appSession.checkAccessToken(httpClient);
             return appSession.getResponseData(
-                httpClient,
-                appSession.completeQueryUrl(httpGetUrl));
+                httpClient, httpGetUrl);
 
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error("访问：" + appSession.completeQueryUrl(httpGetUrl) + "，报错："+ e.getLocalizedMessage(), e);
             return null;
         } finally {
             if(httpClient!=null) {
@@ -55,12 +54,12 @@ public class RestfulHttpRequest {
             httpClient = appSession.allocHttpClient();
             appSession.checkAccessToken(httpClient);
             HttpReceiveJSON resJson =  appSession.getResponseData(
-                httpClient,httpGetUrl);
+                httpClient, httpGetUrl);
             checkHttpReceiveJSON(resJson);
             return resJson.getDataAsArray(clazz);
 
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error("访问：" + appSession.completeQueryUrl(httpGetUrl) + "，报错："+ e.getLocalizedMessage(), e);
             return null;
         } finally {
             if(httpClient!=null) {
@@ -81,7 +80,7 @@ public class RestfulHttpRequest {
             return resJson.getDataAsObject(clazz);
 
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error("访问：" + appSession.completeQueryUrl(httpGetUrl) + "，报错："+ e.getLocalizedMessage(), e);
             return null;
         } finally {
             if(httpClient!=null) {
@@ -118,7 +117,7 @@ public class RestfulHttpRequest {
             appSession.checkAccessToken(httpClient);
             return appSession.jsonPost(httpClient,httpPostUrl, formData, asPut);
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error("访问：" + appSession.completeQueryUrl(httpPostUrl) + "，报错："+ e.getLocalizedMessage(), e);
             return null;
         } finally {
             if(httpClient!=null) {
@@ -150,7 +149,7 @@ public class RestfulHttpRequest {
             return appSession.jsonPut(httpClient,httpPostUrl, jsonString);
 
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error("访问：" + appSession.completeQueryUrl(httpPostUrl) + "，报错："+ e.getLocalizedMessage(), e);
             return null;
         } finally {
             if(httpClient!=null) {
@@ -168,7 +167,7 @@ public class RestfulHttpRequest {
             appSession.checkAccessToken(httpClient);
             return appSession.formPost(httpClient,httpPostUrl, formData, asPut);
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error("访问：" + appSession.completeQueryUrl(httpPostUrl) + "，报错："+ e.getLocalizedMessage(), e);
             return null;
         } finally {
             if(httpClient!=null) {
@@ -190,7 +189,7 @@ public class RestfulHttpRequest {
             appSession.checkAccessToken(httpClient);
             return appSession.formPut(httpClient,httpPostUrl, formData);
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error("访问：" + appSession.completeQueryUrl(httpPostUrl) + "，报错："+ e.getLocalizedMessage(), e);
             return null;
         } finally {
             if(httpClient!=null) {
@@ -206,7 +205,7 @@ public class RestfulHttpRequest {
             appSession.checkAccessToken(httpClient);
             return appSession.doDelete(httpClient,httpDeleteUrl);
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error("访问：" + appSession.completeQueryUrl(httpDeleteUrl) + "，报错："+ e.getLocalizedMessage(), e);
             return null;
         } finally {
             if(httpClient!=null) {
@@ -222,7 +221,7 @@ public class RestfulHttpRequest {
             appSession.checkAccessToken(httpClient);
             return appSession.doDelete(httpClient,httpDeleteUrl, queryParam);
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error("访问：" + appSession.completeQueryUrl(httpDeleteUrl) + "，报错："+ e.getLocalizedMessage(), e);
             return null;
         } finally {
             if(httpClient!=null) {
