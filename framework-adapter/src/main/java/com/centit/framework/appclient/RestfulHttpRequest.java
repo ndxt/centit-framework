@@ -198,7 +198,7 @@ public class RestfulHttpRequest {
         }
     }
 
-    public String doDelete(AppSession appSession, String httpDeleteUrl){
+    public static String doDelete(AppSession appSession, String httpDeleteUrl){
         CloseableHttpClient httpClient = null;
         try {
             httpClient = appSession.allocHttpClient();
@@ -214,7 +214,7 @@ public class RestfulHttpRequest {
         }
     }
 
-    public String doDelete(AppSession appSession, String httpDeleteUrl, Map<String,Object> queryParam){
+    public static String doDelete(AppSession appSession, String httpDeleteUrl, Map<String,Object> queryParam){
         CloseableHttpClient httpClient = null;
         try {
             httpClient = appSession.allocHttpClient();

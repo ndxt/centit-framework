@@ -1,5 +1,6 @@
 package com.centit.framework.model.adapter;
 
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 
@@ -102,6 +103,14 @@ public interface PlatformEnvironment {
      * @return 所有注册的业务系统
      */
     List<? extends IOsInfo> listOsInfos(String topUnit);
+
+    default IOsInfo getOsInfo(String osId){return null;}
+
+    default IOsInfo deleteOsInfo(String osId){return null;}
+
+    default IOsInfo updateOsInfo(JSONObject osInfo){return null;}
+
+    default IOsInfo addOsInfo(JSONObject osInfo){return null;}
 
     /*
      * 获取用户所有菜单功能; 获取某个应用的菜单
