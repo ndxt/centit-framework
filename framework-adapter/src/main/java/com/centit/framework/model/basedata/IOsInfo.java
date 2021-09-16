@@ -3,7 +3,8 @@ package com.centit.framework.model.basedata;
 import java.util.Date;
 
 public interface IOsInfo {
-
+    String OSTYPE_PLATFORM="P";
+    String OSTYPE_LOCODE="L";
     /**
      * 业务代码
      *
