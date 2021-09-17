@@ -91,4 +91,6 @@ public interface IOptInfo {
      * @return 状态
      */
     String getState();
+
+    default String getDocId(){return "";}
 }

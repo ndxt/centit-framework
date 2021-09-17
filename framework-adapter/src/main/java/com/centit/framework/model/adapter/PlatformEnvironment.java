@@ -136,6 +136,12 @@ public interface PlatformEnvironment {
     List<? extends IOptInfo> listUserMenuOptInfosUnderSuperOptId(
         String userCode, String superOptId, boolean asAdmin);
 
+    default List<? extends IOptInfo> listMenuOptInfosUnderOsId(String osId){
+        return null;
+    }
+
+    default IOptInfo addOptInfo(JSONObject optInfo){return null;}
+
     /**
      * 获取租户下用户所有角色
      *
