@@ -3,8 +3,9 @@ package com.centit.framework.model.basedata;
 import java.util.Date;
 
 public interface IOsInfo {
-    String OSTYPE_PLATFORM="P";
-    String OSTYPE_LOCODE="L";
+    String OSTYPE_PLATFORM = "P";
+    String OSTYPE_LOCODE = "L";
+
     /**
      * 业务代码
      *
@@ -73,5 +74,23 @@ public interface IOsInfo {
     Date getLastModifyDate();
 
     String getCreated();
+
+    default void setCreated(String created) {
+        return;
+    }
+
+    default void setTopUnit(String topUnit) {
+        return;
+    }
+
+    default void setOsType(String osType) {
+        return;
+    }
+    default void setOsId(String osId) {
+        return;
+    }
+    default void setOsName(String osName) {
+        return;
+    }
 
 }

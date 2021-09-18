@@ -108,9 +108,9 @@ public interface PlatformEnvironment {
 
     default IOsInfo deleteOsInfo(String osId){return null;}
 
-    default IOsInfo updateOsInfo(JSONObject osInfo){return null;}
+    default IOsInfo updateOsInfo(IOsInfo osInfo){return null;}
 
-    default IOsInfo addOsInfo(JSONObject osInfo){return null;}
+    default IOsInfo addOsInfo(IOsInfo osInfo){return null;}
 
     /*
      * 获取用户所有菜单功能; 获取某个应用的菜单
