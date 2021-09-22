@@ -92,5 +92,6 @@ public interface IOsInfo {
     default void setOsName(String osName) {
         return;
     }
+    default void setRelOptId(String relOptId){return;}
 
 }
