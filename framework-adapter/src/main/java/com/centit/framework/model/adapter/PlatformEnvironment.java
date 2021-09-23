@@ -104,13 +104,21 @@ public interface PlatformEnvironment {
      */
     List<? extends IOsInfo> listOsInfos(String topUnit);
 
-    default IOsInfo getOsInfo(String osId){return null;}
+    default IOsInfo getOsInfo(String osId) {
+        return null;
+    }
 
-    default IOsInfo deleteOsInfo(String osId){return null;}
+    default IOsInfo deleteOsInfo(String osId) {
+        return null;
+    }
 
-    default IOsInfo updateOsInfo(IOsInfo osInfo){return null;}
+    default IOsInfo updateOsInfo(IOsInfo osInfo) {
+        return null;
+    }
 
-    default IOsInfo addOsInfo(IOsInfo osInfo){return null;}
+    default IOsInfo addOsInfo(IOsInfo osInfo) {
+        return null;
+    }
 
     /*
      * 获取用户所有菜单功能; 获取某个应用的菜单
@@ -136,11 +144,13 @@ public interface PlatformEnvironment {
     List<? extends IOptInfo> listUserMenuOptInfosUnderSuperOptId(
         String userCode, String superOptId, boolean asAdmin);
 
-    default List<? extends IOptInfo> listMenuOptInfosUnderOsId(String osId){
+    default List<? extends IOptInfo> listMenuOptInfosUnderOsId(String osId) {
         return null;
     }
 
-    default IOptInfo addOptInfo(JSONObject optInfo){return null;}
+    default IOptInfo addOptInfo(JSONObject optInfo) {
+        return null;
+    }
 
     /**
      * 获取租户下用户所有角色
@@ -190,6 +200,7 @@ public interface PlatformEnvironment {
 
     /**
      * 获取租户下所有角色和权限对应关系
+     *
      * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
      *                如果 topUnit = 'all' 返回所有机构
      * @return List 操作方法信息
@@ -214,6 +225,10 @@ public interface PlatformEnvironment {
      * @return List 操作方法信息
      */
     List<? extends IOptMethod> listAllOptMethod(String topUnit);
+
+    default IOptMethod addOptMethod(JSONObject optMethod) {
+        return null;
+    }
 
     /**
      * 获取租户下所有的数据范围定义表达式

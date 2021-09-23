@@ -67,7 +67,7 @@ public interface IOsInfo {
 
     String getPicId();
 
-    Boolean getIsDelete();
+    default boolean isDeleted(){return false;}
 
     Date getCreateTime();
 
@@ -93,5 +93,6 @@ public interface IOsInfo {
         return;
     }
     default void setRelOptId(String relOptId){return;}
+    default void setDeleted(boolean deleted){return;}
 
 }
