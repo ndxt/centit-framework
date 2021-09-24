@@ -93,6 +93,7 @@
         <module>framework-adapter</module>
         <module>framework-core</module>
         <module>framework-config</module>
+        <module>framework-dubbo-config</module>
         <module>framework-filter</module>
         <module>framework-security</module>
         <module>framework-system-static</module>
