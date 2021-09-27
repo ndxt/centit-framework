@@ -8,8 +8,8 @@
         <version>5.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>framework-dubbo-config</artifactId>
-    <name>com.centit.framework:framework-dubbo-config</name>
+    <artifactId>framework-dubbo-client-config</artifactId>
+    <name>com.centit.framework:framework-dubbo-client-config</name>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
