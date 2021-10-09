@@ -15,6 +15,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.centit.framework</groupId>
+            <artifactId>framework-system-entity</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
         </dependency>
