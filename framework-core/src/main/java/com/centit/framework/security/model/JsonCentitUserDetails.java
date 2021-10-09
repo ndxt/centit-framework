@@ -40,9 +40,14 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
         return getUserInfo().getString("userCode");
     }
 
+    /**
+     * T:可用
+     * W：未加入任何租户，也表示可用状态
+     * @return
+     */
     @Override
     public boolean isEnabled() {
-        return "T".equals(getUserInfo().getString("isValid"));
+        return StringUtils.equalsAny(getUserInfo().getString("isValid"),"T","W");
     }
 
     protected void makeUserAuthorities(){
