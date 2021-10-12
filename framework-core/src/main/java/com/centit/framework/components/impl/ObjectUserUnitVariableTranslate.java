@@ -8,12 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ObjectUserUnitVariableTranslate implements UserUnitVariableTranslate {
+public class ObjectUserUnitVariableTranslate implements UserUnitVariableTranslate, Serializable {
+    private static final long serialVersionUID = 1L;
     protected Object object;
     public static final Logger logger = LoggerFactory.getLogger(ObjectUserUnitVariableTranslate.class);
     private Map<String,Set<String>> requestParams;
