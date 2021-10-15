@@ -15,7 +15,7 @@ public abstract class GlobalConstValue {
     //在多租户系统中用户类型数据字典为 租户代码+这个后缀
     public static final String DATA_CATALOG_UESR_TYPE_SUFFIX = "-UT";
     //机构类型数据字典
-    public static final String DATA_CATALOG_UNIT_TYPE = "unitType";
+    public static final String DATA_CATALOG_UNIT_TYPE = "UnitType";
     //在多租户系统中机构类型数据字典为 租户代码+这个后缀
     public static final String DATA_CATALOG_UNIT_TYPE_SUFFIX = "-DT";
 
