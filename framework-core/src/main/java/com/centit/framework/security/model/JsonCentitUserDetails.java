@@ -6,7 +6,6 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.security.SecurityContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 

@@ -148,7 +148,7 @@ public interface PlatformEnvironment {
         return null;
     }
 
-    default IOptInfo addOptInfo(JSONObject optInfo) {
+    default IOptInfo addOptInfo(IOptInfo optInfo) {
         return null;
     }
 

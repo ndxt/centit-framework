@@ -9,6 +9,16 @@ public abstract class GlobalConstValue {
     public static final String SYSTEM_TENANT_TOP_UNIT = "system";
     //全局应用归属租户
     public static final String GLOBAL_TENANT_TOP_UNIT = "global";
+
+    //用户类型数据字典
+    public static final String DATA_CATALOG_UESR_TYPE = "UserType";
+    //在多租户系统中用户类型数据字典为 租户代码+这个后缀
+    public static final String DATA_CATALOG_UESR_TYPE_SUFFIX = "-UT";
+    //机构类型数据字典
+    public static final String DATA_CATALOG_UNIT_TYPE = "UnitType";
+    //在多租户系统中机构类型数据字典为 租户代码+这个后缀
+    public static final String DATA_CATALOG_UNIT_TYPE_SUFFIX = "-DT";
+
     //用户职务数据字典
     public static final String DATA_CATALOG_RANK = "RankType";
     //在多租户系统中用户职务数据字典为 租户代码+这个后缀
