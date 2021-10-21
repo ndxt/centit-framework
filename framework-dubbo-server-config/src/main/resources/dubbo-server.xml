@@ -15,6 +15,6 @@
     <!-- 用dubbo协议在20880端口暴露服务 -->
     <dubbo:protocol name="dubbo" port="20880"/>
     <!-- 用rmi协议在21880端口暴露服务 -->
-    <dubbo:protocol name="rmi" port="21880"/>
+    <dubbo:protocol name="rmi" port="21880" server="servlet"/>
     <dubbo:provider timeout="50000"/>
 </beans>
