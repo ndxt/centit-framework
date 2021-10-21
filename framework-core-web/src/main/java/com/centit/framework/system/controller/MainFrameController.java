@@ -213,7 +213,13 @@ public class MainFrameController extends BaseController {
             return "redirect:/logout"; //j_spring_security_logout
         }
     }
-
+    @ApiOperation(value = "locode退出登录", notes = "locode退出登录")
+    @GetMapping("/logoutlocode")
+    @WrapUpResponseBody
+    public void logoutLocode(HttpSession session) {
+        session.setAttribute(ENTRANCE_TYPE, NORMAL_LOGIN);
+        session.removeAttribute(LOGIN_AUTH_ERROR_MSG);
+    }
     /**
      * 修改密码
      *
