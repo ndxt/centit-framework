@@ -151,6 +151,9 @@ public interface PlatformEnvironment {
     default IOptInfo addOptInfo(IOptInfo optInfo) {
         return null;
     }
+    default IOptInfo updateOptInfo(IOptInfo optInfo) {
+        return null;
+    }
 
     /**
      * 获取租户下用户所有角色
