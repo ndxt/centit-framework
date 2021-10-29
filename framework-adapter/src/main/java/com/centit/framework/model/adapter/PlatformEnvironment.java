@@ -154,9 +154,7 @@ public interface PlatformEnvironment {
     default IOptInfo updateOptInfo(IOptInfo optInfo) {
         return null;
     }
-    default IOptMethod addOptMethod(IOptMethod optMethod){
-        return null;
-    }
+
 
     /**
      * 获取租户下用户所有角色
@@ -232,7 +230,7 @@ public interface PlatformEnvironment {
      */
     List<? extends IOptMethod> listAllOptMethod(String topUnit);
 
-    default IOptMethod addOptMethod(JSONObject optMethod) {
+    default IOptMethod addOptMethod(IOptMethod optMethod) {
         return null;
     }
 
