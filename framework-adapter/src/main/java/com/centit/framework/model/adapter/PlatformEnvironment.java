@@ -341,6 +341,16 @@ public interface PlatformEnvironment {
      */
     List<? extends IDataDictionary> listDataDictionaries(String catalogCode);
 
+    /**
+     * 操作定义所属业务模块（页面删除菜单时需要先将设计好的数据更新到其它业务模块下）
+     * @param optId  新业务模块id
+     * @param optCodes 需要更新数据的主键集合
+     * @return
+     */
+    default int[] updateOptIdByOptCodes(String optId,List<String> optCodes){
+        return null;
+    }
+
 
 }
 
