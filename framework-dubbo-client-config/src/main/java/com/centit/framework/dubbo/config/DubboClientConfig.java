@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:system.properties")
 //@ImportResource({"classpath:dubbo-client.xml"})
-public class DubboConfig {
+public class DubboClientConfig {
     @Value("${centit.dubbo.consumer.nacos.url:nacos://192.168.134.10:8848}")
     private String nacosUrl;
 
