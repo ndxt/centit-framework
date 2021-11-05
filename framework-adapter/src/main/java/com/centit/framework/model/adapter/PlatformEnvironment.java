@@ -351,6 +351,15 @@ public interface PlatformEnvironment {
         return null;
     }
 
+    /**
+     * 根据optId删除业务模块信息
+     * @param optId
+     * @return
+     */
+    default boolean deleteOptInfoByOptId(String optId){
+        return false;
+    };
+
 
 }
 
