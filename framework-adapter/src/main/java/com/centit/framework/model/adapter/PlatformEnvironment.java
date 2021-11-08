@@ -347,8 +347,8 @@ public interface PlatformEnvironment {
      * @param optCodes 需要更新数据的主键集合
      * @return
      */
-    default int updateOptIdByOptCodes(String optId,List<String> optCodes){
-        return 0;
+    default int[] updateOptIdByOptCodes(String optId,List<String> optCodes){
+        return null;
     }
 
     /**
