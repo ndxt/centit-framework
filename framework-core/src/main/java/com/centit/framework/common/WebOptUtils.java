@@ -217,8 +217,13 @@ public class WebOptUtils {
         if(obj!=null)
             return String.valueOf(obj);
 
-        Locale local = (Locale)request.getSession().getAttribute(
-                SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
+        Locale local = null;
+        Object localeName = request.getSession().getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
+        if (localeName instanceof Locale) {
+             local = (Locale) localeName;
+        } else if (null != localeName){
+            local = new Locale(localeName.toString());
+        }
 
         if(local!=null){
             return local.getLanguage() +"_"+local.getCountry();

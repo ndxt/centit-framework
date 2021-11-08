@@ -18,7 +18,7 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry;
  * Created by zou_wy on 2017/6/14.
  */
 @Configuration
-@EnableRedisHttpSession
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 7200)
 public class RedisSessionPersistenceConfig{
     //private Logger logger = LoggerFactory.getLogger(RedisSessionPersistenceConfig.class);
 

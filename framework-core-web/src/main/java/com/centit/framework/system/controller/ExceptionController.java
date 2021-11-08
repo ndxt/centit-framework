@@ -68,9 +68,21 @@ public class ExceptionController {
                     {
                         errorMessage =(String) request.getAttribute("CENTIT_SYSTEM_ERROR_MSG");
                         if(StringUtils.isBlank(errorMessage)){
-                            Exception ex = (Exception) request.getSession().getAttribute(WebAttributes.ACCESS_DENIED_403);
-                            if(ex==null){
-                                ex = (Exception) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+                            Exception ex = null;
+                            Object accessException = request.getSession().getAttribute(WebAttributes.ACCESS_DENIED_403);
+                            if (accessException instanceof Exception) {
+                                ex = (Exception) accessException;
+                            } else if (null != accessException){
+                                ex = new Exception(accessException.toString());
+                            }
+                            if (ex == null) {
+                                Object authenticationException = request.getSession().getAttribute(
+                                    WebAttributes.AUTHENTICATION_EXCEPTION);
+                                if (authenticationException instanceof Exception) {
+                                    ex = (Exception) authenticationException;
+                                } else if (null != authenticationException){
+                                    ex = new Exception(authenticationException.toString());
+                                }
                             }
                             //触发异常的类
                             if (null != ex) {
