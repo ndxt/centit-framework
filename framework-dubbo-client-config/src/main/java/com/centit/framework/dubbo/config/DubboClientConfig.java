@@ -1,18 +1,17 @@
 package com.centit.framework.dubbo.config;
+
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ConsumerConfig;
-import org.apache.dubbo.config.ProtocolConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource("classpath:system.properties")
 //@ImportResource({"classpath:dubbo-client.xml"})
-public class DubboConfig {
+public class DubboClientConfig {
     @Value("${centit.dubbo.consumer.nacos.url:nacos://192.168.134.10:8848}")
     private String nacosUrl;
 
