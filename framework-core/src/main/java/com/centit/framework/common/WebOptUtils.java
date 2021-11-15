@@ -55,7 +55,7 @@ public class WebOptUtils {
         WebOptUtils.requestInSpringCloud = requestInSpringCloud;
     }
 
-    public static boolean isTenant = false;
+    public static boolean isTenant = true;
 
     public static void setIsTenant(boolean isTenant) {
         WebOptUtils.isTenant = isTenant;
@@ -299,9 +299,6 @@ public class WebOptUtils {
     }
 
     public static String getCurrentTopUnit(HttpServletRequest request) {
-        if(request==null){
-            return GlobalConstValue.NO_TENANT_TOP_UNIT;
-        }
         if(WebOptUtils.requestInSpringCloud){
             String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
             if(StringUtils.isNotBlank(topUnit)){
