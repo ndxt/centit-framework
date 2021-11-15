@@ -309,7 +309,8 @@ public class WebOptUtils {
             }
         }
         CentitUserDetails ud = innerGetUserDetail(request.getSession());
-        if (ud == null || StringUtils.isBlank(ud.getTopUnitCode())) {
+        boolean noSupportTenant = !WebOptUtils.isTenant && StringUtils.isBlank(ud.getTopUnitCode());
+        if (ud == null || noSupportTenant) {
             return GlobalConstValue.NO_TENANT_TOP_UNIT;
         }
         return ud.getTopUnitCode();
