@@ -1601,14 +1601,17 @@ public abstract class CodeRepositoryUtil {
         }
         return null;
     }
-
+    public final static String OPT_INFO_FORM_CODE_COMMON = "C";
     public static IOptInfo getCommonOptId(String topUnit,String optId){
         topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         List<? extends IOptInfo> optInfos = CodeRepositoryUtil.getOptInfoRepo(topUnit);
         IOptInfo optInfo=optInfos.stream().filter(key-> key.getOptId().equals(optId)).findAny().orElse(null);
         if(optInfo!=null){
+            if(OPT_INFO_FORM_CODE_COMMON.equals(optInfo.getFormCode())){
+                return optInfo;
+            }
             List<? extends IOptInfo> osOptInfos=CodeRepositoryUtil.getOptinfoList(topUnit,optInfo.getTopOptId());
-            return osOptInfos.stream().filter(key-> "C".equals(key.getFormCode())).findAny().orElse(null);
+            return osOptInfos.stream().filter(key-> OPT_INFO_FORM_CODE_COMMON.equals(key.getFormCode())).findAny().orElse(null);
         }
         return null;
     }
