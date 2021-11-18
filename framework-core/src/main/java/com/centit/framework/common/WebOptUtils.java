@@ -309,7 +309,7 @@ public class WebOptUtils {
         if (!WebOptUtils.isTenant) {
             return GlobalConstValue.NO_TENANT_TOP_UNIT;
         }
-        if(ud==null){
+        if(ud==null || ud.getTopUnitCode()==null){
             return "";
         }
         return ud.getTopUnitCode();
