@@ -404,11 +404,11 @@ public class WebOptUtils {
                 return true;
             }
         }
-        String topUnit = getCurrentTopUnit(request);
-        if (GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit) || StringUtils.isBlank(topUnit)) {
+        if (!WebOptUtils.isTenant) {
             return false;
         }
-        if (!WebOptUtils.isTenant) {
+        String topUnit = getCurrentTopUnit(request);
+        if (GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit)) {
             return false;
         }
         return true;
