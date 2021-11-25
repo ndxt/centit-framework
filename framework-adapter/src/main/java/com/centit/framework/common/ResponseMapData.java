@@ -1,5 +1,6 @@
 package com.centit.framework.common;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -7,7 +8,9 @@ import java.util.Map;
  * 响应 http 请求 返回的数据，可以用Map返回多个数据
  */
 @SuppressWarnings("unused")
-public class ResponseMapData extends ResponseSingleData {
+public class ResponseMapData extends ResponseSingleData  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public ResponseMapData() {
         super();
