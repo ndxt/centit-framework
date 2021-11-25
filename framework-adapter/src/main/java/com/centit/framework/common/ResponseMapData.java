@@ -8,7 +8,7 @@ import java.util.Map;
  * 响应 http 请求 返回的数据，可以用Map返回多个数据
  */
 @SuppressWarnings("unused")
-public class ResponseMapData extends ResponseSingleData  implements Serializable {
+public class ResponseMapData extends ResponseSingleData {
 
     private static final long serialVersionUID = 1L;
 
