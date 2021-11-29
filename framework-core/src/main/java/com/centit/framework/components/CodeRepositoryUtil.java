@@ -331,6 +331,9 @@ public abstract class CodeRepositoryUtil {
                 }
 
                 default:
+                    if (!GlobalConstValue.NO_TENANT_TOP_UNIT.equals(topUnit)&&StringUtils.isNotBlank(topUnit)) {
+                        sCatalog = transformTenantInitCatalog(sCatalog, topUnit);
+                    }
                     CachedObject<Map<String, String>> extendRepo = extendedCodeRepo.get(sCatalog);
                     if(extendRepo != null){
                         String svalue = extendRepo.getCachedTarget().get(sKey);
@@ -347,6 +350,31 @@ public abstract class CodeRepositoryUtil {
             logger.error(e.getMessage(),e);
             return sKey;
         }
+    }
+
+    /**
+     * 转换租户初始化字典catalog
+     *
+     * @param sCatalog 需要被转换的catalog
+     * @param topUnit  租户机构
+     * @return
+     */
+    private static String transformTenantInitCatalog(String sCatalog, String topUnit) {
+        switch (sCatalog) {
+            case GlobalConstValue.DATA_CATALOG_UESR_TYPE:
+                sCatalog = topUnit + GlobalConstValue.DATA_CATALOG_UESR_TYPE_SUFFIX;
+                break;
+            case GlobalConstValue.DATA_CATALOG_UNIT_TYPE:
+                sCatalog = topUnit + GlobalConstValue.DATA_CATALOG_UNIT_TYPE_SUFFIX;
+                break;
+            case GlobalConstValue.DATA_CATALOG_RANK:
+                sCatalog = topUnit + GlobalConstValue.DATA_CATALOG_RANK_SUFFIX;
+                break;
+            case GlobalConstValue.DATA_CATALOG_STATION:
+                sCatalog = topUnit + GlobalConstValue.DATA_CATALOG_STATION_SUFFIX;
+                break;
+        }
+        return sCatalog;
     }
 
     /**

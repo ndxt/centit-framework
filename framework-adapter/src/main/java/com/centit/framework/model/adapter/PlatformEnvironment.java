@@ -360,6 +360,13 @@ public interface PlatformEnvironment {
         return false;
     };
 
+    /**
+     *根据optcode 删除optdef表 和 f_rolepower表数据
+     */
+
+    default boolean deleteOptDefAndRolepowerByOptCode(String optCode){
+        return false;
+    };
 
 }
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.serializer.PropertyPreFilter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Map;
  * 作为 发送数据使用
  */
 @ApiModel(description = "返回的json数据格式")
-public interface ResponseData{
+public interface ResponseData  extends Serializable {
     /**
      * HTTP协议状态码详解（HTTP Status Code）
 
