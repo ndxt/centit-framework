@@ -113,8 +113,12 @@ public abstract class CodeRepositoryUtil {
 
     public static Map<String,? extends IUserInfo> getUserRepo(String topUnit) {
         topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
-        return CodeRepositoryCache.userInfoRepo
-            .getCachedValue(topUnit).getAppendMap();
+        ListAppendMap<? extends IUserInfo> listAppendMap= CodeRepositoryCache.userInfoRepo
+            .getCachedValue(topUnit);
+        if(listAppendMap!=null){
+            return listAppendMap.getAppendMap();
+        }
+        return Collections.emptyMap();
     }
 
     public static List<? extends IUserUnit> listUserUnits(String topUnit, String userCode) {
