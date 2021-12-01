@@ -16,6 +16,7 @@ import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
 import com.centit.support.common.ListAppendMap;
 import com.centit.support.compiler.Lexer;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1637,6 +1638,9 @@ public abstract class CodeRepositoryUtil {
     public static IOptInfo getCommonOptId(String topUnit,String optId){
         topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         List<? extends IOptInfo> optInfos = CodeRepositoryUtil.getOptInfoRepo(topUnit);
+        if (CollectionUtils.sizeIsEmpty(optInfos)){
+            return null;
+        }
         IOptInfo optInfo=optInfos.stream().filter(key-> key.getOptId().equals(optId)).findAny().orElse(null);
         if(optInfo!=null){
             if(OPT_INFO_FORM_CODE_COMMON.equals(optInfo.getFormCode())){
