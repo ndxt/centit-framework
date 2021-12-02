@@ -99,6 +99,9 @@ public class WebOptUtils {
     }
 
     private static CentitUserDetails innerGetUserDetailFromSession(HttpSession session) {
+        if(session==null){
+           return null;
+        }
         Object attr = session.getAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         if(attr==null){
