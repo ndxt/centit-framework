@@ -332,9 +332,6 @@ public abstract class CodeRepositoryUtil {
                 }
 
                 default:
-                    if (!GlobalConstValue.NO_TENANT_TOP_UNIT.equals(topUnit)&&StringUtils.isNotBlank(topUnit)) {
-                        sCatalog = transformTenantInitCatalog(sCatalog, topUnit);
-                    }
                     CachedObject<Map<String, String>> extendRepo = extendedCodeRepo.get(sCatalog);
                     if(extendRepo != null){
                         String svalue = extendRepo.getCachedTarget().get(sKey);
@@ -1289,6 +1286,10 @@ public abstract class CodeRepositoryUtil {
      * @return 字典条目
      */
     public static IDataDictionary getDataPiece(String sCatalog, String sKey) {
+        String topUnit = WebOptUtils.getCurrentTopUnit(RequestThreadLocal.getLocalThreadWrapperRequest());
+        if (!GlobalConstValue.NO_TENANT_TOP_UNIT.equals(topUnit)&&StringUtils.isNotBlank(topUnit)) {
+            sCatalog = transformTenantInitCatalog(sCatalog, topUnit);
+        }
         Map<String, ? extends IDataDictionary> dcMap =
             CodeRepositoryCache.dictionaryRepo.getCachedValue(sCatalog).getAppendMap();
         return dcMap==null? null : dcMap.get(sKey);
