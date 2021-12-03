@@ -302,6 +302,9 @@ public class WebOptUtils {
     }
 
     public static String getCurrentTopUnit(HttpServletRequest request) {
+        if(request==null || request.getSession()==null){
+            return GlobalConstValue.NO_TENANT_TOP_UNIT;
+        }
         if(WebOptUtils.requestInSpringCloud){
             String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
             if(StringUtils.isNotBlank(topUnit)){
