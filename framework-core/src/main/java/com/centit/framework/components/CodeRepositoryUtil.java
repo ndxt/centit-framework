@@ -337,8 +337,7 @@ public abstract class CodeRepositoryUtil {
                         String svalue = extendRepo.getCachedTarget().get(sKey);
                         return svalue != null ? svalue : sKey;
                     }
-
-                    IDataDictionary dictPiece = getDataPiece(sCatalog, sKey);
+                    IDataDictionary dictPiece = getDataPiece(sCatalog, sKey,topUnit);
                     if (dictPiece == null) {
                         return sKey;
                     }
@@ -438,11 +437,12 @@ public abstract class CodeRepositoryUtil {
      *
      * @param sCatalog 字典类别代码
      * @param sKey     字典代码
+     * @param topUnit
      * @return 数据字典条目的状态
      */
-    public static String getItemState(String sCatalog, String sKey) {
+    public static String getItemState(String sCatalog, String sKey,String topUnit) {
         try {
-            IDataDictionary dictPiece = getDataPiece(sCatalog, sKey);
+            IDataDictionary dictPiece = getDataPiece(sCatalog, sKey,topUnit);
             if (dictPiece == null) {
                 return "";
             }
@@ -775,8 +775,8 @@ public abstract class CodeRepositoryUtil {
         return primaryUnit.getUnitCode();
     }
 
-    private static int getXzRank(String rankCode){
-        IDataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode);
+    private static int getXzRank(String rankCode,String topUnit){
+        IDataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode,topUnit);
         return dd!=null ? NumberBaseOpt.castObjectToInteger(dd.getExtraCode(),
                 IUserUnit.MAX_XZ_RANK )
             : IUserUnit.MAX_XZ_RANK;
@@ -806,8 +806,8 @@ public abstract class CodeRepositoryUtil {
         Integer nRank = IUserUnit.MAX_XZ_RANK;
         for (IUserUnit uu : uus) {
             if (StringUtils.equals(rankUnitCode,uu.getUnitCode())
-                && getXzRank(uu.getUserRank()) < nRank) {
-                nRank = getXzRank(uu.getUserRank());
+                && getXzRank(uu.getUserRank(),topUnit) < nRank) {
+                nRank = getXzRank(uu.getUserRank(),topUnit);
             }
         }
         return nRank;
@@ -1285,8 +1285,7 @@ public abstract class CodeRepositoryUtil {
      * @param sKey     字典代码
      * @return 字典条目
      */
-    public static IDataDictionary getDataPiece(String sCatalog, String sKey) {
-        String topUnit = WebOptUtils.getCurrentTopUnit(RequestThreadLocal.getLocalThreadWrapperRequest());
+    public static IDataDictionary getDataPiece(String sCatalog, String sKey,String topUnit) {
         if (!GlobalConstValue.NO_TENANT_TOP_UNIT.equals(topUnit)&&StringUtils.isNotBlank(topUnit)) {
             sCatalog = transformTenantInitCatalog(sCatalog, topUnit);
         }

@@ -3,6 +3,7 @@ package com.centit.framework.system.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.common.ViewDataTransform;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
@@ -154,8 +155,8 @@ public class CacheController extends BaseController {
     )})
     @RequestMapping(value = "/mapstate/{catalog}/{key}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public String mapstate(@PathVariable String catalog, @PathVariable String key) {
-        return CodeRepositoryUtil.getItemState(catalog, key);
+    public String mapstate(@PathVariable String catalog, @PathVariable String key, HttpServletRequest request) {
+        return CodeRepositoryUtil.getItemState(catalog, key,WebOptUtils.getCurrentTopUnit(request));
     }
 
     /**
