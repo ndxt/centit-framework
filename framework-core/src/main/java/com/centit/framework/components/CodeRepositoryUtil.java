@@ -1178,7 +1178,7 @@ public abstract class CodeRepositoryUtil {
                 if(extendRepo != null){
                     return extendRepo.getCachedTarget();
                 }
-
+                sCatalog = transformTenantInitCatalog(sCatalog, topUnit);
                 List<? extends IDataDictionary> dcMap = getDictionary(sCatalog);
                 if (dcMap != null) {
                     for (IDataDictionary value : dcMap) {
