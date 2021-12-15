@@ -585,7 +585,8 @@ public class CacheController extends BaseController {
                         "icon", "icon",
                         "children", "children",
                         "isInToolbar", "isInToolbar",
-                        "state", "state"
+                        "state", "state",
+                        "topOptId","topOptId"
                 ), (jsonObject, obj) ->
                         jsonObject.put("external", !("D".equals(obj.getPageType()))));
     }
