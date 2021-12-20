@@ -368,5 +368,23 @@ public interface PlatformEnvironment {
         return false;
     };
 
+    /**
+     * 根据topUnit统计租户下用户个数
+     * @param topUnit
+     * @return
+     */
+    default int countUserByTopUnit(String topUnit){
+        return 0;
+    }
+
+    /**
+     * 根据topUnit统计租户下单位个数
+     * @param topUnit
+     * @return
+     */
+    default int countUnitByTopUnit(String topUnit){
+        return 0;
+    }
+
 }
 
