@@ -46,17 +46,6 @@ public class DubboServerConfig {
     private Integer rmiProtocolPort;
 
 
-    @Value("${centit.dubbo.hessianprotocol.name:hessian}")
-    private String hessianProtocolName;
-    @Value("${centit.dubbo.hessianprotocol.server:servlet}")
-    private String hessianProtocolServer;
-    //该端口必须和tomcat端口一致   默认8080
- /*   @Value("${centit.dubbo.hessianprotocol.port}")
-    private Integer hessianProtocolPort;*/
-    @Value("${centit.dubbo.hessianprotocol.contextpath:}")
-    private String contextpath;
-
-
     /**
      * 应用名
      * @return
@@ -115,39 +104,4 @@ public class DubboServerConfig {
         protocolConfig.setPort(rmiProtocolPort);
         return protocolConfig;
     }
-
-    @Bean
-    public ProtocolConfig hessianProtocolConfig() {
-        ProtocolConfig protocolConfig = new ProtocolConfig();
-        protocolConfig.setName(hessianProtocolName);
-        protocolConfig.setServer(hessianProtocolServer);
-        protocolConfig.setPort(getHttpPort());
-        protocolConfig.setContextpath(contextpath);
-        return protocolConfig;
-    }
-
-    public int getHttpPort() {
-        try {
-            MBeanServer server;
-            if (MBeanServerFactory.findMBeanServer(null).size() > 0) {
-                server = MBeanServerFactory.findMBeanServer(null).get(0);
-            } else {
-                logger.error("获取hessian协议端口异常,no MBeanServer!");
-                return 8080;
-            }
-            Set names = server.queryNames(new ObjectName("Catalina:type=Connector,*"),
-                Query.match(Query.attr("protocol"), Query.value("HTTP/1.1")));
-            Iterator iterator = names.iterator();
-            if (iterator.hasNext()) {
-                ObjectName name = (ObjectName) iterator.next();
-                int port = Integer.parseInt(server.getAttribute(name, "port").toString());
-                logger.info("获取到hessian协议端口为："+port);
-                return port;
-            }
-        } catch (Exception e) {
-            logger.error("获取hessian协议端口异常，异常信息："+e.getMessage());
-        }
-        return -1;
-    }
-
 }
