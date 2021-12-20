@@ -29,8 +29,7 @@
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-core</artifactId>
-            <version>83.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

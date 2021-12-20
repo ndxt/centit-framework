@@ -4,15 +4,25 @@ import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ProtocolConfig;
 import org.apache.dubbo.config.ProviderConfig;
 import org.apache.dubbo.config.RegistryConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
+import javax.management.ObjectName;
+import javax.management.Query;
+import java.util.Iterator;
+import java.util.Set;
+
 @Configuration
 @PropertySource("classpath:system.properties")
 //@ImportResource({"classpath:dubbo-server.xml"})
 public class DubboServerConfig {
+    Logger logger = LoggerFactory.getLogger(DubboServerConfig.class);
 
     @Value("${centit.dubbo.nacos.url:nacos://192.168.134.10:8848}")
     private String nacosUrl;
@@ -41,8 +51,8 @@ public class DubboServerConfig {
     @Value("${centit.dubbo.hessianprotocol.server:servlet}")
     private String hessianProtocolServer;
     //该端口必须和tomcat端口一致   默认8080
-    @Value("${centit.dubbo.hessianprotocol.port:8080}")
-    private Integer hessianProtocolPort;
+ /*   @Value("${centit.dubbo.hessianprotocol.port}")
+    private Integer hessianProtocolPort;*/
     @Value("${centit.dubbo.hessianprotocol.contextpath:}")
     private String contextpath;
 
@@ -79,6 +89,7 @@ public class DubboServerConfig {
     public ProviderConfig providerConfig() {
         ProviderConfig providerConfig = new ProviderConfig();
         providerConfig.setTimeout(timeout);
+        //providerConfig.setFilter("dubboServiceCallContextFilter");
         return providerConfig;
     }
 
@@ -110,8 +121,33 @@ public class DubboServerConfig {
         ProtocolConfig protocolConfig = new ProtocolConfig();
         protocolConfig.setName(hessianProtocolName);
         protocolConfig.setServer(hessianProtocolServer);
-        protocolConfig.setPort(hessianProtocolPort);
+        protocolConfig.setPort(getHttpPort());
         protocolConfig.setContextpath(contextpath);
         return protocolConfig;
     }
+
+    public int getHttpPort() {
+        try {
+            MBeanServer server;
+            if (MBeanServerFactory.findMBeanServer(null).size() > 0) {
+                server = MBeanServerFactory.findMBeanServer(null).get(0);
+            } else {
+                logger.error("获取hessian协议端口异常,no MBeanServer!");
+                return 8080;
+            }
+            Set names = server.queryNames(new ObjectName("Catalina:type=Connector,*"),
+                Query.match(Query.attr("protocol"), Query.value("HTTP/1.1")));
+            Iterator iterator = names.iterator();
+            if (iterator.hasNext()) {
+                ObjectName name = (ObjectName) iterator.next();
+                int port = Integer.parseInt(server.getAttribute(name, "port").toString());
+                logger.info("获取到hessian协议端口为："+port);
+                return port;
+            }
+        } catch (Exception e) {
+            logger.error("获取hessian协议端口异常，异常信息："+e.getMessage());
+        }
+        return -1;
+    }
+
 }
