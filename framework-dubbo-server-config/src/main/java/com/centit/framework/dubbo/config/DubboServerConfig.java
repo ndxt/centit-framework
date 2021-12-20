@@ -11,13 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
-import javax.management.ObjectName;
-import javax.management.Query;
-import java.util.Iterator;
-import java.util.Set;
-
 @Configuration
 @PropertySource("classpath:system.properties")
 //@ImportResource({"classpath:dubbo-server.xml"})
