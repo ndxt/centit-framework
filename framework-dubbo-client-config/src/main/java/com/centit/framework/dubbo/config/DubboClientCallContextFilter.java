@@ -1,9 +1,7 @@
 package com.centit.framework.dubbo.config;
 
-import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.filter.HttpThreadWrapper;
 import com.centit.framework.filter.RequestThreadLocal;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.dubbo.rpc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
