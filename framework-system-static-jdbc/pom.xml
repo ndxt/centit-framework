@@ -24,13 +24,13 @@
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>centit-persistence-core</artifactId>
-            <version>${centit.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.centit.support</groupId>
             <artifactId>centit-database-datasource</artifactId>
-            <version>${centit.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- test library -->

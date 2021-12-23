@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.centit.support</groupId>
             <artifactId>centit-database</artifactId>
-            <version>${centit.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
