@@ -7,10 +7,9 @@
     <parent>
         <artifactId>centit-framework-dependencies</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>5.1-SNAPSHOT</version>
+        <version>5.2.2112</version>
     </parent>
 
-    <groupId>com.centit.framework</groupId>
     <artifactId>framework-parent</artifactId>
     <packaging>pom</packaging>
     <version>5.2-SNAPSHOT</version>
@@ -22,8 +21,6 @@
     <url>https://github.com/ndxt/centit-framework</url>
 
     <properties>
-        <centit.persistence.version>1.3-SNAPSHOT</centit.persistence.version>
-        <centit.commons.version>2.3-SNAPSHOT</centit.commons.version>
         <centit.ui.version>3.1.2007</centit.ui.version>
     </properties>
 
