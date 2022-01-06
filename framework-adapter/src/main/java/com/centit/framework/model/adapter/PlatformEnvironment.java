@@ -360,6 +360,31 @@ public interface PlatformEnvironment {
         return false;
     };
 
+    /**
+     *根据optcode 删除optdef表 和 f_rolepower表数据
+     */
+
+    default boolean deleteOptDefAndRolepowerByOptCode(String optCode){
+        return false;
+    };
+
+    /**
+     * 根据topUnit统计租户下用户个数
+     * @param topUnit
+     * @return
+     */
+    default int countUserByTopUnit(String topUnit){
+        return 0;
+    }
+
+    /**
+     * 根据topUnit统计租户下单位个数
+     * @param topUnit
+     * @return
+     */
+    default int countUnitByTopUnit(String topUnit){
+        return 0;
+    }
 
 }
 

@@ -1,6 +1,5 @@
 package com.centit.framework.config;
 
-import com.centit.framework.common.SysParametersUtils;
 import com.centit.support.algorithm.StringRegularOpt;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
@@ -13,7 +12,6 @@ public class SecurityDaoCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        boolean isDao = StringRegularOpt.isTrue(SysParametersUtils.getStringValue("login.dao.enable"));
-        return isDao;
+        return StringRegularOpt.isTrue(context.getEnvironment().getProperty("login.dao.enable"));
     }
 }

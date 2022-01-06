@@ -20,7 +20,6 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
     private static final long serialVersionUID = 20181227L;
 
     private String loginIp;
-    private String currentStationId;
     private Map<String, String> userSettings;
     private Map<String, String> userOptList;
 
@@ -97,6 +96,7 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
     @JSONField(serialize = false)
     public JSONObject getCurrentStation() {
         JSONArray uus = this.getUserUnits();
+        String currentStationId = userInfo.getString("currentStationId");
         if (uus != null) {
             for (Object uu : uus) {
                 JSONObject userUnit = (JSONObject) uu;
@@ -118,11 +118,11 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
 
     @Override
     public void setCurrentStationId(String userUnitId) {
-        currentStationId = userUnitId;
+        userInfo.put("currentStationId",userUnitId);
     }
 
     public String getCurrentStationId(){
-        return currentStationId;
+        return userInfo.getString("currentStationId");
     }
 
     @Override
@@ -281,9 +281,10 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
 
     @Override
     public boolean equals(Object other) {
-       if(other instanceof CentitUserDetails)
+       if(other instanceof CentitUserDetails) {
            return this.getUserInfo().getString("userCode").equals(
                    ((CentitUserDetails) other).getUserInfo().getString("userCode"));
+       }
 
        return false;
     }

@@ -4,6 +4,8 @@ import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ProtocolConfig;
 import org.apache.dubbo.config.ProviderConfig;
 import org.apache.dubbo.config.RegistryConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:system.properties")
 //@ImportResource({"classpath:dubbo-server.xml"})
 public class DubboServerConfig {
+    Logger logger = LoggerFactory.getLogger(DubboServerConfig.class);
 
     @Value("${centit.dubbo.nacos.url:nacos://192.168.134.10:8848}")
     private String nacosUrl;
@@ -27,25 +30,6 @@ public class DubboServerConfig {
     private String dubboprotocolServer;
     @Value("${centit.dubbo.dubboprotocol.port:20885}")
     private Integer dubboprotocolPort;
-
-    @Value("${centit.dubbo.rmiprotocol.name:rmi}")
-    private String rmiProtocolName;
-    @Value("${centit.dubbo.rmiprotocol.server:servlet}")
-    private String rmiProtocolServer;
-    @Value("${centit.dubbo.rmiprotocol.port:21886}")
-    private Integer rmiProtocolPort;
-
-
-    @Value("${centit.dubbo.hessianprotocol.name:hessian}")
-    private String hessianProtocolName;
-    @Value("${centit.dubbo.hessianprotocol.server:servlet}")
-    private String hessianProtocolServer;
-    //该端口必须和tomcat端口一致   默认8080
-    @Value("${centit.dubbo.hessianprotocol.port:8080}")
-    private Integer hessianProtocolPort;
-    @Value("${centit.dubbo.hessianprotocol.contextpath:}")
-    private String contextpath;
-
 
     /**
      * 应用名
@@ -93,25 +77,6 @@ public class DubboServerConfig {
         protocolConfig.setName(dubboProtocolName);
         protocolConfig.setPort(dubboprotocolPort);
         protocolConfig.setServer(dubboprotocolServer);
-        return protocolConfig;
-    }
-
-    @Bean
-    public ProtocolConfig rmiProtocolConfig() {
-        ProtocolConfig protocolConfig = new ProtocolConfig();
-        protocolConfig.setName(rmiProtocolName);
-        protocolConfig.setServer(rmiProtocolServer);
-        protocolConfig.setPort(rmiProtocolPort);
-        return protocolConfig;
-    }
-
-    @Bean
-    public ProtocolConfig hessianProtocolConfig() {
-        ProtocolConfig protocolConfig = new ProtocolConfig();
-        protocolConfig.setName(hessianProtocolName);
-        protocolConfig.setServer(hessianProtocolServer);
-        protocolConfig.setPort(hessianProtocolPort);
-        protocolConfig.setContextpath(contextpath);
         return protocolConfig;
     }
 }

@@ -55,7 +55,7 @@ public class WebOptUtils {
         WebOptUtils.requestInSpringCloud = requestInSpringCloud;
     }
 
-    public static boolean isTenant = false;
+    public static boolean isTenant = true;
 
     public static void setIsTenant(boolean isTenant) {
         WebOptUtils.isTenant = isTenant;
@@ -99,6 +99,9 @@ public class WebOptUtils {
     }
 
     private static CentitUserDetails innerGetUserDetailFromSession(HttpSession session) {
+        if(session==null){
+           return null;
+        }
         Object attr = session.getAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         if(attr==null){
@@ -299,7 +302,7 @@ public class WebOptUtils {
     }
 
     public static String getCurrentTopUnit(HttpServletRequest request) {
-        if(request==null){
+        if(request==null || request.getSession()==null){
             return GlobalConstValue.NO_TENANT_TOP_UNIT;
         }
         if(WebOptUtils.requestInSpringCloud){
@@ -309,8 +312,11 @@ public class WebOptUtils {
             }
         }
         CentitUserDetails ud = innerGetUserDetail(request.getSession());
-        if (ud == null || StringUtils.isBlank(ud.getTopUnitCode())) {
+        if (!WebOptUtils.isTenant) {
             return GlobalConstValue.NO_TENANT_TOP_UNIT;
+        }
+        if(ud==null || ud.getTopUnitCode()==null){
+            return "";
         }
         return ud.getTopUnitCode();
     }
@@ -404,11 +410,11 @@ public class WebOptUtils {
                 return true;
             }
         }
-        String topUnit = getCurrentTopUnit(request);
-        if (GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit) || StringUtils.isBlank(topUnit)) {
+        if (!WebOptUtils.isTenant) {
             return false;
         }
-        if (!WebOptUtils.isTenant) {
+        String topUnit = getCurrentTopUnit(request);
+        if (GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit)) {
             return false;
         }
         return true;

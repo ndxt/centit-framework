@@ -13,13 +13,10 @@
 
     <groupId>com.centit.framework</groupId>
     <artifactId>framework-boot-demo</artifactId>
-    <version>5.1-SNAPSHOT</version>
+    <version>5.2-SNAPSHOT</version>
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <centit.framework.version>5.0-SNAPSHOT</centit.framework.version>
-        <centit.persistence.version>1.3-SNAPSHOT</centit.persistence.version>
-        <centit.commons.version>2.3-SNAPSHOT</centit.commons.version>
         <centit.ui.version>3.1.1809</centit.ui.version>
     </properties>
 

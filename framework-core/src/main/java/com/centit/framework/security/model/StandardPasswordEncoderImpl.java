@@ -12,9 +12,9 @@ import java.util.function.Function;
  * 采用Spring 推荐的 BCryptPasswordEncoder 加密方式
  */
 public class StandardPasswordEncoderImpl
-        implements CentitPasswordEncoder, PasswordEncoder {
+    implements CentitPasswordEncoder, PasswordEncoder {
 
-    private BCryptPasswordEncoder passwordEncoder ;
+    private BCryptPasswordEncoder passwordEncoder;
 
     public void setPasswordPreteat(Function<String, String> passwordPreteat) {
         this.passwordPreteat = passwordPreteat;
@@ -27,28 +27,26 @@ public class StandardPasswordEncoderImpl
     }
 
     public StandardPasswordEncoderImpl(int strength) {
-        if(strength<5 ||strength >31){
+        if (strength < 5 || strength > 31) {
             passwordEncoder = new BCryptPasswordEncoder(11);
-        }else {
+        } else {
             passwordEncoder = new BCryptPasswordEncoder(strength);
         }
-        passwordPreteat =null;
+        passwordPreteat = null;
     }
 
     @Override
-    public String encodePassword(String rawPass, Object salt){
+    public String encodePassword(String rawPass, Object salt) {
         return passwordEncoder.encode(rawPass);
     }
 
     @Override
-    public String createPassword(String rawPass, Object salt){
-        return encodePassword(
-            passwordPreteat != null ? passwordPreteat.apply(rawPass) : rawPass,
-            salt);
+    public String createPassword(String rawPass, Object salt) {
+        return encodePassword(rawPass, salt);
     }
 
     @Override
-    public boolean isPasswordValid(String encodedPassword, String rawPass, Object salt){
+    public boolean isPasswordValid(String encodedPassword, String rawPass, Object salt) {
         return passwordEncoder.matches(rawPass, encodedPassword);
     }
 
@@ -56,7 +54,7 @@ public class StandardPasswordEncoderImpl
      * Encode the raw password. Generally, a good encoding algorithm applies a SHA-1 or
      * greater hash combined with an 8-byte or greater randomly generated salt.
      *
-     * @param rawPassword  rawPassword
+     * @param rawPassword rawPassword
      * @return encode
      */
     @Override
@@ -76,12 +74,12 @@ public class StandardPasswordEncoderImpl
      */
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
+        return passwordEncoder.matches(passwordPreteat != null ? passwordPreteat.apply(rawPassword.toString()) : rawPassword, encodedPassword);
     }
 
     @Override
-    public boolean isCorrectPasswordFormat(String password){
-        if(StringUtils.isBlank(password) || password.length()<48){
+    public boolean isCorrectPasswordFormat(String password) {
+        if (StringUtils.isBlank(password) || password.length() < 48) {
             return false;
         }
         return password.charAt(0) == '$'
