@@ -123,7 +123,7 @@ public class WebOptUtils {
         return null;
     }
 
-    private static CentitUserDetails innerGetUserDetail(HttpSession session){
+    public static CentitUserDetails innerGetUserDetail(HttpSession session){
         CentitUserDetails ud = innerGetUserDetailFromSpringContext();
         if(ud!=null){
             return ud;
@@ -266,6 +266,13 @@ public class WebOptUtils {
     }
 
     public static JSONObject getCurrentUserInfo(HttpServletRequest request) {
+        if(request == null){
+            CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
+            if (null != centitUserDetails) {
+                return centitUserDetails.getUserInfo();
+            }
+            return null;
+        }
         if(WebOptUtils.requestInSpringCloud){
             return (JSONObject)JSON.toJSON(innerGetLoginUserFromCloud(request));
         }
@@ -277,6 +284,13 @@ public class WebOptUtils {
     }
 
     public static CentitUserDetails getCurrentUserDetails(HttpServletRequest request) {
+        if(request == null){
+            CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
+            if (null != centitUserDetails) {
+                return centitUserDetails;
+            }
+            return null;
+        }
         if(WebOptUtils.requestInSpringCloud){
             String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
             String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
@@ -303,6 +317,10 @@ public class WebOptUtils {
 
     public static String getCurrentTopUnit(HttpServletRequest request) {
         if(request==null || request.getSession()==null){
+            CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
+            if (null != centitUserDetails) {
+                return centitUserDetails.getTopUnitCode();
+            }
             return GlobalConstValue.NO_TENANT_TOP_UNIT;
         }
         if(WebOptUtils.requestInSpringCloud){
@@ -321,8 +339,20 @@ public class WebOptUtils {
         return ud.getTopUnitCode();
     }
 
+    private static CentitUserDetails getUserInfoByHttpContext() {
+        CentitUserDetails centitUserDetails = HttpContextUtils.getCurrentUserInfo();
+        if (null != centitUserDetails) {
+            return centitUserDetails;
+        }
+        return null;
+    }
+
     public static String getCurrentUserCode(HttpServletRequest request) {
         if(request == null){
+            CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
+            if (null != centitUserDetails) {
+                return centitUserDetails.getUserCode();
+            }
             return "";
         }
         if(WebOptUtils.requestInSpringCloud){
@@ -354,6 +384,13 @@ public class WebOptUtils {
     }
 
     public static String getCurrentUnitCode(HttpServletRequest request) {
+        if (request == null) {
+            CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
+            if (null != centitUserDetails) {
+                return centitUserDetails.getCurrentUnitCode();
+            }
+            return "";
+        }
         if(WebOptUtils.requestInSpringCloud){
             String unitCode = request.getHeader(WebOptUtils.CURRENT_UNIT_CODE_TAG);
             if(StringUtils.isNotBlank(unitCode)){
@@ -418,5 +455,9 @@ public class WebOptUtils {
             return false;
         }
         return true;
+    }
+
+    public static String getTraceId() {
+        return HttpContextUtils.getTraceId();
     }
 }
