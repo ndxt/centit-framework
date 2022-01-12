@@ -1,10 +1,12 @@
 package com.centit.framework.model.adapter;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.support.database.utils.PageDesc;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PlatformEnvironment {
 
@@ -211,6 +213,20 @@ public interface PlatformEnvironment {
      */
     List<? extends IRolePower> listAllRolePower(String topUnit);
 
+    /**
+     * 根据appId 获取角色对应的权限关系
+     * @param topUnit
+     * @return
+     */
+    JSONArray listRolePowerByTopUnitWithApiId(String topUnit);
+
+
+    /**
+     * 根据appId 获取所有匿名角色对应的权限关系
+     * @param roleCode
+     * @return
+     */
+    JSONArray listAllRolePowerByRoleCodeWithApiId(String roleCode);
 
     /**
      * 获取租户下业务操作信息
@@ -385,6 +401,16 @@ public interface PlatformEnvironment {
     default int countUnitByTopUnit(String topUnit){
         return 0;
     }
+
+    List<? extends IWorkGroup> listWorkGroupMember(String groupId , String roleCode);
+
+    List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc);
+
+    void batchWorkGroup(List<IWorkGroup> workGroups);
+
+    boolean  loginUserIsExistWorkGroup(String osId,String userCode);
+
+
 
 }
 
