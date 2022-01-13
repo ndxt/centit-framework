@@ -1,6 +1,5 @@
 package com.centit.framework.model.adapter;
 
-import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.database.utils.PageDesc;
@@ -212,21 +211,6 @@ public interface PlatformEnvironment {
      * @return List 操作方法信息
      */
     List<? extends IRolePower> listAllRolePower(String topUnit);
-
-    /**
-     * 根据appId 获取角色对应的权限关系
-     * @param topUnit
-     * @return
-     */
-    JSONArray listRolePowerByTopUnitWithApiId(String topUnit);
-
-
-    /**
-     * 根据appId 获取所有匿名角色对应的权限关系
-     * @param roleCode
-     * @return
-     */
-    JSONArray listAllRolePowerByRoleCodeWithApiId(String roleCode);
 
     /**
      * 获取租户下业务操作信息
