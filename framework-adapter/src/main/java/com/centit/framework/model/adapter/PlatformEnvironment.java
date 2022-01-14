@@ -386,8 +386,6 @@ public interface PlatformEnvironment {
         return 0;
     }
 
-    List<? extends IWorkGroup> listWorkGroupMember(String groupId , String roleCode);
-
     List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc);
 
     void batchWorkGroup(List<IWorkGroup> workGroups);
