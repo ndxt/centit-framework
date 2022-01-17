@@ -54,6 +54,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.centit.support</groupId>
+            <artifactId>centit-database</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

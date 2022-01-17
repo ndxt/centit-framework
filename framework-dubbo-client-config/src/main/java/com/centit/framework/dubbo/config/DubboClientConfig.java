@@ -20,6 +20,9 @@ public class DubboClientConfig {
 
     @Value("${centit.dubbo.consumer.check:false}")
     private Boolean check;
+
+    @Value("${centit.dubbo.consumer.retries:0}")
+    private Integer retries;
     /**
      * 应用名
      * @return
@@ -47,6 +50,7 @@ public class DubboClientConfig {
     public ConsumerConfig consumerConfig(){
         ConsumerConfig consumerConfig = new ConsumerConfig();
         consumerConfig.setCheck(check);
+        consumerConfig.setRetries(retries);
         return consumerConfig;
     }
 }
