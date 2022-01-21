@@ -4,6 +4,7 @@ import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.database.utils.PageDesc;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -152,6 +153,7 @@ public interface PlatformEnvironment {
     default IOptInfo addOptInfo(IOptInfo optInfo) {
         return null;
     }
+
     default IOptInfo updateOptInfo(IOptInfo optInfo) {
         return null;
     }
@@ -343,55 +345,67 @@ public interface PlatformEnvironment {
 
     /**
      * 操作定义所属业务模块（页面删除菜单时需要先将设计好的数据更新到其它业务模块下）
-     * @param optId  新业务模块id
+     *
+     * @param optId    新业务模块id
      * @param optCodes 需要更新数据的主键集合
      * @return
      */
-    default int[] updateOptIdByOptCodes(String optId,List<String> optCodes){
+    default int[] updateOptIdByOptCodes(String optId, List<String> optCodes) {
         return null;
     }
 
     /**
      * 根据optId删除业务模块信息
+     *
      * @param optId
      * @return
      */
-    default boolean deleteOptInfoByOptId(String optId){
+    default boolean deleteOptInfoByOptId(String optId) {
         return false;
-    };
+    }
+
+    ;
 
     /**
-     *根据optcode 删除optdef表 和 f_rolepower表数据
+     * 根据optcode 删除optdef表 和 f_rolepower表数据
      */
 
-    default boolean deleteOptDefAndRolepowerByOptCode(String optCode){
+    default boolean deleteOptDefAndRolepowerByOptCode(String optCode) {
         return false;
-    };
+    }
+
+    ;
 
     /**
      * 根据topUnit统计租户下用户个数
+     *
      * @param topUnit
      * @return
      */
-    default int countUserByTopUnit(String topUnit){
+    default int countUserByTopUnit(String topUnit) {
         return 0;
     }
 
     /**
      * 根据topUnit统计租户下单位个数
+     *
      * @param topUnit
      * @return
      */
-    default int countUnitByTopUnit(String topUnit){
+    default int countUnitByTopUnit(String topUnit) {
         return 0;
     }
 
-    List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc);
+    default List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc) {
+        return new ArrayList<>();
+    }
 
-    void batchWorkGroup(List<IWorkGroup> workGroups);
+    default void batchWorkGroup(List<IWorkGroup> workGroups) {
+    }
 
-    boolean  loginUserIsExistWorkGroup(String osId,String userCode);
-
+    default boolean loginUserIsExistWorkGroup(String osId, String userCode) {
+        return false;
+    }
 
 
 }
