@@ -277,6 +277,10 @@ public abstract class CodeRepositoryCache {
         new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllOptInfo(topUnit),
             CACHE_FRESH_PERIOD_SECONDS);
 
+    public static CachedMap<String, List<? extends IOptInfo>> roleOptInfoMap=
+        new CachedMap<>((roleCode)-> getPlatformEnvironment().listOptInfoByRole(roleCode),
+            CACHE_FRESH_PERIOD_SECONDS);
+
     public static CachedMap<String, ListAppendMap<? extends IOptMethod>> optMethodRepo=
         new CachedMap<>((topUnit)-> {
                 List<? extends IOptMethod> optInfos =
@@ -284,6 +288,13 @@ public abstract class CodeRepositoryCache {
                 return new ListAppendMap<>(optInfos, IOptMethod::getOptCode);
             },
             CACHE_FRESH_PERIOD_SECONDS);
+
+    public static CachedMap<String, ListAppendMap<? extends IOptMethod>> roleOptMethodMap=
+        new CachedMap<>((roleCode)-> {
+            List<? extends IOptMethod> optInfos =
+                getPlatformEnvironment().listOptMethodByRoleCode(roleCode);
+            return new ListAppendMap<>(optInfos, IOptMethod::getOptCode);
+    }, CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedMap<String, Map<String, List<IOptDataScope>>> optDataScopeRepo=
         new CachedMap<>((topUnit)->{
