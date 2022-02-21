@@ -4,7 +4,7 @@ import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.database.utils.PageDesc;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -228,7 +228,9 @@ public interface PlatformEnvironment {
      * @param roleCode
      * @return
      */
-    List<? extends IOptInfo> listOptInfoByRole(String roleCode);
+    default List<? extends IOptInfo> listOptInfoByRole(String roleCode) {
+        return Collections.emptyList();
+    }
 
     /**
      * 获取租户下操作方法信息
@@ -411,7 +413,7 @@ public interface PlatformEnvironment {
     }
 
     default List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc) {
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
     default void batchWorkGroup(List<IWorkGroup> workGroups) {
