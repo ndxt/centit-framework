@@ -375,6 +375,9 @@ public abstract class CodeRepositoryUtil {
             case GlobalConstValue.DATA_CATALOG_STATION:
                 sCatalog = topUnit + GlobalConstValue.DATA_CATALOG_STATION_SUFFIX;
                 break;
+            case GlobalConstValue.DATA_CATALOG_POSTRANK:
+                sCatalog = topUnit + GlobalConstValue.DATA_CATALOG_POSTRANK_SUFFIX;
+                break;
         }
         return sCatalog;
     }
