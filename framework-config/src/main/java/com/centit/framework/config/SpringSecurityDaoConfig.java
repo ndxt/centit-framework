@@ -1,7 +1,6 @@
 package com.centit.framework.config;
 
 import com.centit.framework.security.AjaxAuthenticationEntryPoint;
-import com.centit.framework.security.DaoAndLdapAuthenticationProvider;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
@@ -106,7 +105,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Override
     protected AuthenticationProvider getAuthenticationProvider() {
-        DaoAndLdapAuthenticationProvider authenticationProvider = new DaoAndLdapAuthenticationProvider();
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setHideUserNotFoundExceptions(false);
         authenticationProvider.setUserDetailsService(centitUserDetailsService);
         /*if( passwordEncoder instanceof org.springframework.security.authentication.encoding.PasswordEncoder) {
