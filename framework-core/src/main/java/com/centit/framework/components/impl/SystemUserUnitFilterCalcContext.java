@@ -38,8 +38,7 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
 
     @Override
     public List<? extends IUserUnit> listAllUserUnits() {
-        //return CodeRepositoryUtil.listAllUserUnits(this.getTopUnit());
-        return null;
+        return CodeRepositoryUtil.listAllUserUnits(this.getTopUnit());
     }
 
     @Override

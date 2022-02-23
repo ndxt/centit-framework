@@ -4,7 +4,7 @@ import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.support.database.utils.PageDesc;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -224,6 +224,15 @@ public interface PlatformEnvironment {
     List<? extends IOptInfo> listAllOptInfo(String topUnit);
 
     /**
+     * 根据角色code获取操作信息
+     * @param roleCode
+     * @return
+     */
+    default List<? extends IOptInfo> listOptInfoByRole(String roleCode) {
+        return Collections.emptyList();
+    }
+
+    /**
      * 获取租户下操作方法信息
      *
      * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
@@ -231,6 +240,13 @@ public interface PlatformEnvironment {
      * @return List 操作方法信息
      */
     List<? extends IOptMethod> listAllOptMethod(String topUnit);
+
+    /**
+     * 根据角色code获取操作方法信息信息
+     * @param roleCode
+     * @return
+     */
+    List<? extends IOptMethod> listOptMethodByRoleCode(String roleCode);
 
     default IOptMethod addOptMethod(IOptMethod optMethod) {
         return null;
@@ -397,7 +413,7 @@ public interface PlatformEnvironment {
     }
 
     default List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc) {
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
     default void batchWorkGroup(List<IWorkGroup> workGroups) {

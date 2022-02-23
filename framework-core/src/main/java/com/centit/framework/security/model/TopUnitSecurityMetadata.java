@@ -9,6 +9,7 @@ import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.AbstractCachedObject;
 import com.centit.support.common.CachedObject;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -53,16 +54,20 @@ public class TopUnitSecurityMetadata {
         }
 
         OptTreeNode optTreeNode = new OptTreeNode();
-        List<? extends IOptInfo> optInfos = CodeRepositoryCache.optInfoRepo.getCachedValue(this.topUnit);
+        List<? extends IOptInfo> optInfos = StringBaseOpt.isNvl(topUnit)
+            ? CodeRepositoryCache.roleOptInfoMap.getCachedValue(SecurityContextUtils.ANONYMOUS_ROLE_CODE)
+            :CodeRepositoryCache.optInfoRepo.getCachedValue(this.topUnit);
         Map<String, ? extends IOptInfo> optInfoMap = CollectionsOpt.createHashMap(optInfos, IOptInfo::getOptId);
-        for(IOptMethod ou : CodeRepositoryCache.optMethodRepo
-                .getCachedValue(this.topUnit).getListData()){
+        List<? extends IOptMethod> iOptMethods = StringBaseOpt.isNvl(topUnit)
+            ? CodeRepositoryCache.roleOptMethodMap.getCachedValue(SecurityContextUtils.ANONYMOUS_ROLE_CODE).getListData()
+            : CodeRepositoryCache.optMethodRepo.getCachedValue(this.topUnit).getListData();
+        for(IOptMethod ou : iOptMethods){
             IOptInfo oi = optInfoMap.get(ou.getOptId());
             if(oi!=null){
-                String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());
-                if(StringUtils.isNotBlank(optDefUrl) && StringUtils.isNotBlank(ou.getOptReq())) {
+                //String  optDefUrl = StringBaseOpt.concat(oi.getOptUrl(),ou.getOptUrl());
+                if(StringUtils.isNotBlank(ou.getOptUrl()) && StringUtils.isNotBlank(ou.getOptReq())) {
                     List<List<String>> sOpt = this.parsePowerDefineUrl(
-                        optDefUrl, ou.getOptReq());
+                        ou.getOptUrl(), ou.getOptReq());
 
                     for (List<String> surls : sOpt) {
                         OptTreeNode opt = optTreeNode;
@@ -181,6 +186,11 @@ public class TopUnitSecurityMetadata {
         }
         List<ConfigAttribute> roles = matchUrlToRole(
             optTreeNodeCache.getCachedTarget(), sUrl, request.getMethod());
+        if (!CollectionUtils.sizeIsEmpty(roles) && roles.contains(
+            new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + SecurityContextUtils.ANONYMOUS_ROLE_CODE))){
+            //角色列表中包含匿名角色，则放行
+            return null;
+        }
         if(roles == null && CentitSecurityMetadata.isForbiddenWhenAssigned){
             List<ConfigAttribute> defaultRole = new ArrayList<>(2);
             defaultRole.add(new SecurityConfig(SecurityContextUtils.FORBIDDEN_ROLE_CODE));
