@@ -55,7 +55,7 @@ public class WebOptUtils {
         WebOptUtils.requestInSpringCloud = requestInSpringCloud;
     }
 
-    public static boolean isTenant = false;
+    public static boolean isTenant = true;
 
     public static void setIsTenant(boolean isTenant) {
         WebOptUtils.isTenant = isTenant;
@@ -99,6 +99,9 @@ public class WebOptUtils {
     }
 
     private static CentitUserDetails innerGetUserDetailFromSession(HttpSession session) {
+        if(session==null){
+           return null;
+        }
         Object attr = session.getAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         if(attr==null){
@@ -120,7 +123,7 @@ public class WebOptUtils {
         return null;
     }
 
-    private static CentitUserDetails innerGetUserDetail(HttpSession session){
+    public static CentitUserDetails innerGetUserDetail(HttpSession session){
         CentitUserDetails ud = innerGetUserDetailFromSpringContext();
         if(ud!=null){
             return ud;
@@ -217,8 +220,13 @@ public class WebOptUtils {
         if(obj!=null)
             return String.valueOf(obj);
 
-        Locale local = (Locale)request.getSession().getAttribute(
-                SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
+        Locale local = null;
+        Object localeName = request.getSession().getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
+        if (localeName instanceof Locale) {
+             local = (Locale) localeName;
+        } else if (null != localeName){
+            local = new Locale(localeName.toString());
+        }
 
         if(local!=null){
             return local.getLanguage() +"_"+local.getCountry();
@@ -258,6 +266,13 @@ public class WebOptUtils {
     }
 
     public static JSONObject getCurrentUserInfo(HttpServletRequest request) {
+        if(request == null){
+            CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
+            if (null != centitUserDetails) {
+                return centitUserDetails.getUserInfo();
+            }
+            return null;
+        }
         if(WebOptUtils.requestInSpringCloud){
             return (JSONObject)JSON.toJSON(innerGetLoginUserFromCloud(request));
         }
@@ -269,6 +284,13 @@ public class WebOptUtils {
     }
 
     public static CentitUserDetails getCurrentUserDetails(HttpServletRequest request) {
+        if(request == null){
+            CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
+            if (null != centitUserDetails) {
+                return centitUserDetails;
+            }
+            return null;
+        }
         if(WebOptUtils.requestInSpringCloud){
             String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
             String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
@@ -294,7 +316,11 @@ public class WebOptUtils {
     }
 
     public static String getCurrentTopUnit(HttpServletRequest request) {
-        if(request==null){
+        if(request==null || request.getSession()==null){
+            CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
+            if (null != centitUserDetails) {
+                return centitUserDetails.getTopUnitCode();
+            }
             return GlobalConstValue.NO_TENANT_TOP_UNIT;
         }
         if(WebOptUtils.requestInSpringCloud){
@@ -304,14 +330,29 @@ public class WebOptUtils {
             }
         }
         CentitUserDetails ud = innerGetUserDetail(request.getSession());
-        if (ud == null || StringUtils.isBlank(ud.getTopUnitCode())) {
+        if (!WebOptUtils.isTenant) {
             return GlobalConstValue.NO_TENANT_TOP_UNIT;
+        }
+        if(ud==null || ud.getTopUnitCode()==null){
+            return "";
         }
         return ud.getTopUnitCode();
     }
 
+    private static CentitUserDetails getUserInfoByHttpContext() {
+        CentitUserDetails centitUserDetails = HttpContextUtils.getCurrentUserInfo();
+        if (null != centitUserDetails) {
+            return centitUserDetails;
+        }
+        return null;
+    }
+
     public static String getCurrentUserCode(HttpServletRequest request) {
         if(request == null){
+            CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
+            if (null != centitUserDetails) {
+                return centitUserDetails.getUserCode();
+            }
             return "";
         }
         if(WebOptUtils.requestInSpringCloud){
@@ -343,6 +384,13 @@ public class WebOptUtils {
     }
 
     public static String getCurrentUnitCode(HttpServletRequest request) {
+        if (request == null) {
+            CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
+            if (null != centitUserDetails) {
+                return centitUserDetails.getCurrentUnitCode();
+            }
+            return "";
+        }
         if(WebOptUtils.requestInSpringCloud){
             String unitCode = request.getHeader(WebOptUtils.CURRENT_UNIT_CODE_TAG);
             if(StringUtils.isNotBlank(unitCode)){
@@ -399,13 +447,17 @@ public class WebOptUtils {
                 return true;
             }
         }
-        String topUnit = getCurrentTopUnit(request);
-        if (GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit) || StringUtils.isBlank(topUnit)) {
-            return false;
-        }
         if (!WebOptUtils.isTenant) {
             return false;
         }
+        String topUnit = getCurrentTopUnit(request);
+        if (GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit)) {
+            return false;
+        }
         return true;
+    }
+
+    public static String getTraceId() {
+        return HttpContextUtils.getTraceId();
     }
 }

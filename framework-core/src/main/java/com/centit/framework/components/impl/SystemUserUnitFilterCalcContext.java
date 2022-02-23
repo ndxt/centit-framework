@@ -38,8 +38,7 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
 
     @Override
     public List<? extends IUserUnit> listAllUserUnits() {
-        //return CodeRepositoryUtil.listAllUserUnits(this.getTopUnit());
-        return null;
+        return CodeRepositoryUtil.listAllUserUnits(this.getTopUnit());
     }
 
     @Override
@@ -98,7 +97,7 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
      */
     @Override
     public int getXzRank(String rankCode) {
-        IDataDictionary dd = CodeRepositoryUtil.getDataPiece(GlobalConstValue.DATA_CATALOG_RANK, rankCode);
+        IDataDictionary dd = CodeRepositoryUtil.getDataPiece(GlobalConstValue.DATA_CATALOG_RANK, rankCode,null);
         if(dd!=null)
             return Integer.valueOf(dd.getExtraCode());
         return IUserUnit.MAX_XZ_RANK;

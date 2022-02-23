@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
@@ -127,10 +128,10 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Override
     protected LogoutFilter logoutFilter() {
-        String defaultTargetUrl = env.getProperty("logout.success.targetUrl");
-        defaultTargetUrl = StringBaseOpt.emptyValue(defaultTargetUrl,"/system/mainframe/login");
-
-        return new LogoutFilter(defaultTargetUrl,
+//        String defaultTargetUrl = env.getProperty("logout.success.targetUrl");
+//        defaultTargetUrl = StringBaseOpt.emptyValue(defaultTargetUrl,"/system/mainframe/login");
+        HttpStatusReturningLogoutSuccessHandler http=new HttpStatusReturningLogoutSuccessHandler();
+        return new LogoutFilter(http,
             new CsrfLogoutHandler(csrfTokenRepository),
             new CookieClearingLogoutHandler("JSESSIONID","remember-me"),
             new SecurityContextLogoutHandler());

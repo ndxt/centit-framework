@@ -94,4 +94,5 @@ public interface IOptInfo {
 
     default String getDocId(){return "";}
     default String getOsId(){return "";}
+    default String getFormCode(){return "";}
 }

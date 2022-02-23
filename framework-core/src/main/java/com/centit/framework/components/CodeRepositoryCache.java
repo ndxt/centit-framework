@@ -118,6 +118,7 @@ public abstract class CodeRepositoryCache {
                 }
                 break;
             case "UserUnit":
+                CodeRepositoryCache.userUnitRepo.evictCahce();
                 if(StringUtils.isNotBlank(mapKey)){
                     CodeRepositoryCache.userUnitsMap.evictIdentifiedCache(mapKey);
                 }else{
@@ -181,7 +182,7 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.userInfoRepo.evictCahce();
         CodeRepositoryCache.unitInfoRepo.evictCahce();
         //CodeRepositoryCache.catalogRepo.evictCahce();
-        //CodeRepositoryCache.userUnitRepo.evictCahce();
+        CodeRepositoryCache.userUnitRepo.evictCahce();
         CodeRepositoryCache.dictionaryRepo.evictCahce();
         CodeRepositoryCache.optInfoRepo.evictCahce();
         CodeRepositoryCache.optMethodRepo.evictCahce();
@@ -212,6 +213,13 @@ public abstract class CodeRepositoryCache {
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
             return new ListAppendMap(allunits, (ui)->((IUnitInfo)ui).getUnitCode());
          }, CACHE_FRESH_PERIOD_SECONDS);
+
+    /**
+     * 用户机构缓存
+     */
+    public static CachedMap<String, List<? extends IUserUnit>> userUnitRepo =
+        new CachedMap<>((topUnit) -> getPlatformEnvironment().listAllUserUnits(topUnit),
+            CACHE_FRESH_PERIOD_SECONDS);
 
      /**
      * 用户机构缓存
@@ -269,6 +277,10 @@ public abstract class CodeRepositoryCache {
         new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllOptInfo(topUnit),
             CACHE_FRESH_PERIOD_SECONDS);
 
+    public static CachedMap<String, List<? extends IOptInfo>> roleOptInfoMap=
+        new CachedMap<>((roleCode)-> getPlatformEnvironment().listOptInfoByRole(roleCode),
+            CACHE_FRESH_PERIOD_SECONDS);
+
     public static CachedMap<String, ListAppendMap<? extends IOptMethod>> optMethodRepo=
         new CachedMap<>((topUnit)-> {
                 List<? extends IOptMethod> optInfos =
@@ -276,6 +288,13 @@ public abstract class CodeRepositoryCache {
                 return new ListAppendMap<>(optInfos, IOptMethod::getOptCode);
             },
             CACHE_FRESH_PERIOD_SECONDS);
+
+    public static CachedMap<String, ListAppendMap<? extends IOptMethod>> roleOptMethodMap=
+        new CachedMap<>((roleCode)-> {
+            List<? extends IOptMethod> optInfos =
+                getPlatformEnvironment().listOptMethodByRoleCode(roleCode);
+            return new ListAppendMap<>(optInfos, IOptMethod::getOptCode);
+    }, CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedMap<String, Map<String, List<IOptDataScope>>> optDataScopeRepo=
         new CachedMap<>((topUnit)->{

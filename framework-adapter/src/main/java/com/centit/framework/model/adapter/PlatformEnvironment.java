@@ -1,10 +1,12 @@
 package com.centit.framework.model.adapter;
 
-import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.support.database.utils.PageDesc;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public interface PlatformEnvironment {
 
@@ -152,6 +154,11 @@ public interface PlatformEnvironment {
         return null;
     }
 
+    default IOptInfo updateOptInfo(IOptInfo optInfo) {
+        return null;
+    }
+
+
     /**
      * 获取租户下用户所有角色
      *
@@ -207,7 +214,6 @@ public interface PlatformEnvironment {
      */
     List<? extends IRolePower> listAllRolePower(String topUnit);
 
-
     /**
      * 获取租户下业务操作信息
      *
@@ -218,6 +224,15 @@ public interface PlatformEnvironment {
     List<? extends IOptInfo> listAllOptInfo(String topUnit);
 
     /**
+     * 根据角色code获取操作信息
+     * @param roleCode
+     * @return
+     */
+    default List<? extends IOptInfo> listOptInfoByRole(String roleCode) {
+        return Collections.emptyList();
+    }
+
+    /**
      * 获取租户下操作方法信息
      *
      * @param topUnit 租户代码，对应f_unitinfo表中最顶层的机构代码
@@ -226,7 +241,14 @@ public interface PlatformEnvironment {
      */
     List<? extends IOptMethod> listAllOptMethod(String topUnit);
 
-    default IOptMethod addOptMethod(JSONObject optMethod) {
+    /**
+     * 根据角色code获取操作方法信息信息
+     * @param roleCode
+     * @return
+     */
+    List<? extends IOptMethod> listOptMethodByRoleCode(String roleCode);
+
+    default IOptMethod addOptMethod(IOptMethod optMethod) {
         return null;
     }
 
@@ -336,6 +358,70 @@ public interface PlatformEnvironment {
      * @return List 所有数据字典类别信息
      */
     List<? extends IDataDictionary> listDataDictionaries(String catalogCode);
+
+    /**
+     * 操作定义所属业务模块（页面删除菜单时需要先将设计好的数据更新到其它业务模块下）
+     *
+     * @param optId    新业务模块id
+     * @param optCodes 需要更新数据的主键集合
+     * @return
+     */
+    default int[] updateOptIdByOptCodes(String optId, List<String> optCodes) {
+        return null;
+    }
+
+    /**
+     * 根据optId删除业务模块信息
+     *
+     * @param optId
+     * @return
+     */
+    default boolean deleteOptInfoByOptId(String optId) {
+        return false;
+    }
+
+    ;
+
+    /**
+     * 根据optcode 删除optdef表 和 f_rolepower表数据
+     */
+
+    default boolean deleteOptDefAndRolepowerByOptCode(String optCode) {
+        return false;
+    }
+
+    ;
+
+    /**
+     * 根据topUnit统计租户下用户个数
+     *
+     * @param topUnit
+     * @return
+     */
+    default int countUserByTopUnit(String topUnit) {
+        return 0;
+    }
+
+    /**
+     * 根据topUnit统计租户下单位个数
+     *
+     * @param topUnit
+     * @return
+     */
+    default int countUnitByTopUnit(String topUnit) {
+        return 0;
+    }
+
+    default List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc) {
+        return Collections.emptyList();
+    }
+
+    default void batchWorkGroup(List<IWorkGroup> workGroups) {
+    }
+
+    default boolean loginUserIsExistWorkGroup(String osId, String userCode) {
+        return false;
+    }
 
 
 }

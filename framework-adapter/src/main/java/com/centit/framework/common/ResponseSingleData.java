@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class ResponseSingleData implements ResponseData{
 
+    private static final long serialVersionUID = 1L;
     /**
      * 返回代码，0 表示正确，其他的为错误代码
      */

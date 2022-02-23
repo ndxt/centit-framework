@@ -1,5 +1,6 @@
 package com.centit.framework.common;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class ResponseMapData extends ResponseSingleData {
+
+    private static final long serialVersionUID = 1L;
 
     public ResponseMapData() {
         super();

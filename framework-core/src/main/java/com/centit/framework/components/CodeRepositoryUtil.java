@@ -16,6 +16,7 @@ import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
 import com.centit.support.common.ListAppendMap;
 import com.centit.support.compiler.Lexer;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,10 +112,19 @@ public abstract class CodeRepositoryUtil {
             .getCachedValue(topUnit).getListData();
     }
 
+    public static List<? extends IUserUnit> listAllUserUnits(String topUnit) {
+        topUnit = CodeRepositoryUtil.cacheByTopUnit ? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        return CodeRepositoryCache.userUnitRepo.getCachedValue(topUnit);
+    }
+
     public static Map<String,? extends IUserInfo> getUserRepo(String topUnit) {
         topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
-        return CodeRepositoryCache.userInfoRepo
-            .getCachedValue(topUnit).getAppendMap();
+        ListAppendMap<? extends IUserInfo> listAppendMap= CodeRepositoryCache.userInfoRepo
+            .getCachedValue(topUnit);
+        if(listAppendMap!=null){
+            return listAppendMap.getAppendMap();
+        }
+        return Collections.emptyMap();
     }
 
     public static List<? extends IUserUnit> listUserUnits(String topUnit, String userCode) {
@@ -332,8 +342,7 @@ public abstract class CodeRepositoryUtil {
                         String svalue = extendRepo.getCachedTarget().get(sKey);
                         return svalue != null ? svalue : sKey;
                     }
-
-                    IDataDictionary dictPiece = getDataPiece(sCatalog, sKey);
+                    IDataDictionary dictPiece = getDataPiece(sCatalog, sKey,topUnit);
                     if (dictPiece == null) {
                         return sKey;
                     }
@@ -343,6 +352,31 @@ public abstract class CodeRepositoryUtil {
             logger.error(e.getMessage(),e);
             return sKey;
         }
+    }
+
+    /**
+     * 转换租户初始化字典catalog
+     *
+     * @param sCatalog 需要被转换的catalog
+     * @param topUnit  租户机构
+     * @return
+     */
+    private static String transformTenantInitCatalog(String sCatalog, String topUnit) {
+        switch (sCatalog) {
+            case GlobalConstValue.DATA_CATALOG_UESR_TYPE:
+                sCatalog = topUnit + GlobalConstValue.DATA_CATALOG_UESR_TYPE_SUFFIX;
+                break;
+            case GlobalConstValue.DATA_CATALOG_UNIT_TYPE:
+                sCatalog = topUnit + GlobalConstValue.DATA_CATALOG_UNIT_TYPE_SUFFIX;
+                break;
+            case GlobalConstValue.DATA_CATALOG_RANK:
+                sCatalog = topUnit + GlobalConstValue.DATA_CATALOG_RANK_SUFFIX;
+                break;
+            case GlobalConstValue.DATA_CATALOG_STATION:
+                sCatalog = topUnit + GlobalConstValue.DATA_CATALOG_STATION_SUFFIX;
+                break;
+        }
+        return sCatalog;
     }
 
     /**
@@ -408,11 +442,12 @@ public abstract class CodeRepositoryUtil {
      *
      * @param sCatalog 字典类别代码
      * @param sKey     字典代码
+     * @param topUnit
      * @return 数据字典条目的状态
      */
-    public static String getItemState(String sCatalog, String sKey) {
+    public static String getItemState(String sCatalog, String sKey,String topUnit) {
         try {
-            IDataDictionary dictPiece = getDataPiece(sCatalog, sKey);
+            IDataDictionary dictPiece = getDataPiece(sCatalog, sKey,topUnit);
             if (dictPiece == null) {
                 return "";
             }
@@ -745,8 +780,8 @@ public abstract class CodeRepositoryUtil {
         return primaryUnit.getUnitCode();
     }
 
-    private static int getXzRank(String rankCode){
-        IDataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode);
+    private static int getXzRank(String rankCode,String topUnit){
+        IDataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode,topUnit);
         return dd!=null ? NumberBaseOpt.castObjectToInteger(dd.getExtraCode(),
                 IUserUnit.MAX_XZ_RANK )
             : IUserUnit.MAX_XZ_RANK;
@@ -776,8 +811,8 @@ public abstract class CodeRepositoryUtil {
         Integer nRank = IUserUnit.MAX_XZ_RANK;
         for (IUserUnit uu : uus) {
             if (StringUtils.equals(rankUnitCode,uu.getUnitCode())
-                && getXzRank(uu.getUserRank()) < nRank) {
-                nRank = getXzRank(uu.getUserRank());
+                && getXzRank(uu.getUserRank(),topUnit) < nRank) {
+                nRank = getXzRank(uu.getUserRank(),topUnit);
             }
         }
         return nRank;
@@ -1148,7 +1183,7 @@ public abstract class CodeRepositoryUtil {
                 if(extendRepo != null){
                     return extendRepo.getCachedTarget();
                 }
-
+                sCatalog = transformTenantInitCatalog(sCatalog, topUnit);
                 List<? extends IDataDictionary> dcMap = getDictionary(sCatalog);
                 if (dcMap != null) {
                     for (IDataDictionary value : dcMap) {
@@ -1255,7 +1290,10 @@ public abstract class CodeRepositoryUtil {
      * @param sKey     字典代码
      * @return 字典条目
      */
-    public static IDataDictionary getDataPiece(String sCatalog, String sKey) {
+    public static IDataDictionary getDataPiece(String sCatalog, String sKey,String topUnit) {
+        if (!GlobalConstValue.NO_TENANT_TOP_UNIT.equals(topUnit)&&StringUtils.isNotBlank(topUnit)) {
+            sCatalog = transformTenantInitCatalog(sCatalog, topUnit);
+        }
         Map<String, ? extends IDataDictionary> dcMap =
             CodeRepositoryCache.dictionaryRepo.getCachedValue(sCatalog).getAppendMap();
         return dcMap==null? null : dcMap.get(sKey);
@@ -1598,6 +1636,23 @@ public abstract class CodeRepositoryUtil {
                     return osInfo;
                 }
             }
+        }
+        return null;
+    }
+    public final static String OPT_INFO_FORM_CODE_COMMON = "C";
+    public static IOptInfo getCommonOptId(String topUnit,String optId){
+        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        List<? extends IOptInfo> optInfos = CodeRepositoryUtil.getOptInfoRepo(topUnit);
+        if (CollectionUtils.sizeIsEmpty(optInfos)){
+            return null;
+        }
+        IOptInfo optInfo=optInfos.stream().filter(key-> key.getOptId().equals(optId)).findAny().orElse(null);
+        if(optInfo!=null){
+            if(OPT_INFO_FORM_CODE_COMMON.equals(optInfo.getFormCode())){
+                return optInfo;
+            }
+            List<? extends IOptInfo> osOptInfos=CodeRepositoryUtil.getOptinfoList(topUnit,optInfo.getTopOptId());
+            return osOptInfos.stream().filter(key-> OPT_INFO_FORM_CODE_COMMON.equals(key.getFormCode())).findAny().orElse(null);
         }
         return null;
     }

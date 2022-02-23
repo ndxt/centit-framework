@@ -33,8 +33,13 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.stereotype.Controller;
@@ -212,6 +217,18 @@ public class MainFrameController extends BaseController {
         } else {
             return "redirect:/logout"; //j_spring_security_logout
         }
+    }
+
+    @ApiOperation(value = "locode退出登录", notes = "locode退出登录")
+    @GetMapping("/logoutlocode")
+    @WrapUpResponseBody
+    public String logoutLocode(HttpServletRequest request, HttpServletResponse response,
+                             Authentication auth){
+        CookieClearingLogoutHandler cookieClearingLogoutHandler=new CookieClearingLogoutHandler("JSESSIONID","remember-me");
+        cookieClearingLogoutHandler.logout(request,response,auth);
+        SecurityContextLogoutHandler securityContextLogoutHandler=new SecurityContextLogoutHandler();
+        securityContextLogoutHandler.logout(request,response,auth);
+        return "ok";
     }
 
     /**
@@ -925,14 +942,14 @@ public class MainFrameController extends BaseController {
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
-        Set<String> sUnits= SysUnitFilterEngine.calcSystemUnitsByExp(
+        Set<String> sUnits = SysUnitFilterEngine.calcSystemUnitsByExp(
             jsonObject.getString("formula"),
             unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
         List<IUnitInfo> unitInfos = new ArrayList<>();
         for (String uc : sUnits) {
-            unitInfos.add(CodeRepositoryUtil.getUnitInfoByCode("all",uc));
+            unitInfos.add(CodeRepositoryUtil.getUnitInfoByCode("all", uc));
         }
         unitInfos.sort((o1, o2) -> compareUnitTwoRow(o1, o2));
         return (JSONArray) JSONArray.toJSON(unitInfos);

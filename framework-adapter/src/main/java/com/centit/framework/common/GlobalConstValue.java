@@ -27,4 +27,8 @@ public abstract class GlobalConstValue {
     public static final String DATA_CATALOG_STATION = "StationType";
     //在多租户系统中用户岗位数据字典为 租户代码+这个后缀
     public static final String DATA_CATALOG_STATION_SUFFIX = "-ST";
+    //用户职级字典
+    public static final String DATA_CATALOG_POSTRANK = "PostRank";
+    //在多租户系统中用户职级字典为 租户代码+这个后缀
+    public static final String DATA_CATALOG_POSTRANK_SUFFIX = "-PR";
 }
