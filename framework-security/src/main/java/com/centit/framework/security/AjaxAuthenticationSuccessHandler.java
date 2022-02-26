@@ -71,7 +71,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
 
         if(writeLog){
             String remoteHost = request.getRemoteHost();
-            String loginIp = WebOptUtils.getRequestAddr(request);
+            String loginIp = ud.getLoginIp();
             if(!loginIp.startsWith(remoteHost)){
                 loginIp = remoteHost + ":" + loginIp;
             }
