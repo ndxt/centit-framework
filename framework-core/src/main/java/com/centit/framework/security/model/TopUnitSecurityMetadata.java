@@ -15,10 +15,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TopUnitSecurityMetadata {
 
@@ -54,13 +51,9 @@ public class TopUnitSecurityMetadata {
         }
 
         OptTreeNode optTreeNode = new OptTreeNode();
-        List<? extends IOptInfo> optInfos = StringBaseOpt.isNvl(topUnit)
-            ? CodeRepositoryCache.roleOptInfoMap.getCachedValue(SecurityContextUtils.ANONYMOUS_ROLE_CODE)
-            :CodeRepositoryCache.optInfoRepo.getCachedValue(this.topUnit);
+        List<? extends IOptInfo> optInfos = getOptInfos();
         Map<String, ? extends IOptInfo> optInfoMap = CollectionsOpt.createHashMap(optInfos, IOptInfo::getOptId);
-        List<? extends IOptMethod> iOptMethods = StringBaseOpt.isNvl(topUnit)
-            ? CodeRepositoryCache.roleOptMethodMap.getCachedValue(SecurityContextUtils.ANONYMOUS_ROLE_CODE).getListData()
-            : CodeRepositoryCache.optMethodRepo.getCachedValue(this.topUnit).getListData();
+        List<? extends IOptMethod> iOptMethods = getOptMethods();
         for(IOptMethod ou : iOptMethods){
             IOptInfo oi = optInfoMap.get(ou.getOptId());
             if(oi!=null){
@@ -84,6 +77,36 @@ public class TopUnitSecurityMetadata {
         return optTreeNode;
     }
 
+    private List<? extends IOptInfo> getOptInfos(){
+        if (StringBaseOpt.isNvl(topUnit)){
+            return CodeRepositoryCache.roleOptInfoMap.getCachedValue(SecurityContextUtils.ANONYMOUS_ROLE_CODE);
+        }
+
+        List<? extends IOptInfo> optInfos = CodeRepositoryCache.optInfoRepo.getCachedValue(this.topUnit);
+        if (!"system".equals(topUnit)){
+            List<? extends IOptInfo> tenantadminOptInfos = CodeRepositoryCache.roleOptInfoMap.getCachedValue("tenantadmin");
+            ArrayList<IOptInfo> iOptInfos = new ArrayList<>();
+            iOptInfos.addAll(optInfos);
+            iOptInfos.addAll(tenantadminOptInfos);
+            return iOptInfos;
+        }
+        return optInfos;
+    }
+    private List<? extends IOptMethod> getOptMethods(){
+        if (StringBaseOpt.isNvl(topUnit)){
+            return CodeRepositoryCache.roleOptMethodMap.getCachedValue(SecurityContextUtils.ANONYMOUS_ROLE_CODE).getListData();
+        }
+
+        List<? extends IOptMethod> topUnitOptMethod = CodeRepositoryCache.optMethodRepo.getCachedValue(this.topUnit).getListData();
+        if (!"system".equals(topUnit)){
+            List<? extends IOptMethod> tenantadminOptMethod = CodeRepositoryCache.roleOptMethodMap.getCachedValue("tenantadmin").getListData();
+            ArrayList<IOptMethod> optMethods = new ArrayList<>();
+            optMethods.addAll(topUnitOptMethod);
+            optMethods.addAll(tenantadminOptMethod);
+            return optMethods;
+        }
+        return topUnitOptMethod;
+    }
     public List<String> parseRequestUrl(String sUrl, String httpMethod){
         List<String> swords = new ArrayList<>();
         String sFunUrl ;
@@ -153,6 +176,16 @@ public class TopUnitSecurityMetadata {
         return swords;
     }
 
+    /**
+     * 根据url路径和请求类型匹配出权限角色。
+     * 匹配规则：
+     *          当optTree中某一路径为/a/b时 可以匹配的路径包括 /a  /a/b /a/b/c
+     *
+     * @param curOpt 权限操作树
+     * @param sUrl 需要被匹配的url路径
+     * @param httpMethod 方法类型 GET POST PUT DELETE
+     * @return null 代表未匹配到
+     */
     private List<ConfigAttribute> matchUrlToRole(OptTreeNode curOpt, String sUrl, String httpMethod){
         if(curOpt==null){
             return null;
@@ -177,6 +210,37 @@ public class TopUnitSecurityMetadata {
         return null;
     }
 
+    /**
+     * 根据url路径和请求类型匹配出权限角色。
+     * 匹配规则：
+     *          当optTree中某一路径为/a/b时 只能匹配的路径包括 /a/b
+     *
+     * @param curOpt 权限操作树
+     * @param sUrl 需要被匹配的url路径
+     * @param httpMethod 方法类型 GET POST PUT DELETE
+     * @return null 代表未匹配到或者匹配到后的角色列表为空
+     */
+    private List<ConfigAttribute> matchCompleteUrlToRole(OptTreeNode curOpt, String sUrl, String httpMethod){
+        if(curOpt==null){
+            return null;
+        }
+        List<String> urls = parseRequestUrl(sUrl,httpMethod);
+        for (String url : urls) {
+            if (null == curOpt || null == curOpt.childList){
+                return null;
+            }
+            OptTreeNode subOpt = curOpt.childList.get(url);
+            if(subOpt == null){
+                subOpt = curOpt.childList.get("*");
+            }
+            curOpt = subOpt;
+        }
+        if (null == curOpt){
+            return null;
+        }
+        return curOpt.getRoleList();
+    }
+
     public List<ConfigAttribute> matchUrlToRole(String sUrl,HttpServletRequest request){
         if (requestInSpringCloud) {
             int count = sUrl.split("/").length - 1;
@@ -184,12 +248,20 @@ public class TopUnitSecurityMetadata {
                 sUrl = sUrl.substring(StringUtils.ordinalIndexOf(sUrl, "/", 2), sUrl.length());
             }
         }
-        List<ConfigAttribute> roles = matchUrlToRole(
+        /*List<ConfigAttribute> roles = matchUrlToRole(
+            optTreeNodeCache.getCachedTarget(), sUrl, request.getMethod());*/
+        List<ConfigAttribute> roles = matchCompleteUrlToRole(
             optTreeNodeCache.getCachedTarget(), sUrl, request.getMethod());
-        if (!CollectionUtils.sizeIsEmpty(roles) && roles.contains(
-            new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + SecurityContextUtils.ANONYMOUS_ROLE_CODE))){
-            //角色列表中包含匿名角色，则放行
-            return null;
+        if (StringBaseOpt.isNvl(topUnit)){
+            //topUnit 为空，可能是未登录用户，也可能是登录但未加入任何租户的用户，这两种情况统一作为匿名用户处理
+            SecurityConfig anonymousRole = new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + SecurityContextUtils.ANONYMOUS_ROLE_CODE);
+            if (!CollectionUtils.sizeIsEmpty(roles) && roles.contains(anonymousRole)){
+                return null;
+            }else {
+                List<ConfigAttribute> defaultRole = new ArrayList<>(2);
+                defaultRole.add(new SecurityConfig(SecurityContextUtils.FORBIDDEN_ROLE_CODE));
+                return defaultRole;
+            }
         }
         if(roles == null && CentitSecurityMetadata.isForbiddenWhenAssigned){
             List<ConfigAttribute> defaultRole = new ArrayList<>(2);
