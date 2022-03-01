@@ -254,14 +254,15 @@ public class TopUnitSecurityMetadata {
             optTreeNodeCache.getCachedTarget(), sUrl, request.getMethod());
         if (StringBaseOpt.isNvl(topUnit)){
             //topUnit 为空，可能是未登录用户，也可能是登录但未加入任何租户的用户，这两种情况统一作为匿名用户处理
-            SecurityConfig anonymousRole = new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + SecurityContextUtils.ANONYMOUS_ROLE_CODE);
+            return null;
+            /*SecurityConfig anonymousRole = new SecurityConfig(CentitSecurityMetadata.ROLE_PREFIX + SecurityContextUtils.ANONYMOUS_ROLE_CODE);
             if (!CollectionUtils.sizeIsEmpty(roles) && roles.contains(anonymousRole)){
                 return null;
             }else {
                 List<ConfigAttribute> defaultRole = new ArrayList<>(2);
                 defaultRole.add(new SecurityConfig(SecurityContextUtils.FORBIDDEN_ROLE_CODE));
                 return defaultRole;
-            }
+            }*/
         }
         if(roles == null && CentitSecurityMetadata.isForbiddenWhenAssigned){
             List<ConfigAttribute> defaultRole = new ArrayList<>(2);
