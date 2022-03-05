@@ -246,7 +246,9 @@ public interface PlatformEnvironment {
      * @param roleCode
      * @return
      */
-    List<? extends IOptMethod> listOptMethodByRoleCode(String roleCode);
+    default List<? extends IOptMethod> listOptMethodByRoleCode(String roleCode) {
+        return Collections.emptyList();
+    }
 
     default IOptMethod addOptMethod(IOptMethod optMethod) {
         return null;
@@ -380,8 +382,6 @@ public interface PlatformEnvironment {
         return false;
     }
 
-    ;
-
     /**
      * 根据optcode 删除optdef表 和 f_rolepower表数据
      */
@@ -389,8 +389,6 @@ public interface PlatformEnvironment {
     default boolean deleteOptDefAndRolepowerByOptCode(String optCode) {
         return false;
     }
-
-    ;
 
     /**
      * 根据topUnit统计租户下用户个数
