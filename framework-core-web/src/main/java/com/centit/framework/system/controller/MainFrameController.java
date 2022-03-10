@@ -16,10 +16,7 @@ import com.centit.framework.core.controller.WrapUpContentType;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.framework.model.basedata.IOptInfo;
-import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.framework.model.basedata.IUserRole;
-import com.centit.framework.model.basedata.IUserUnit;
+import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.ThirdPartyCheckUserDetails;
@@ -616,13 +613,20 @@ public class MainFrameController extends BaseController {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录或者超时，请重新登录！");
         }
-        //Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
-        boolean asAdmin = BooleanBaseOpt.castObjectToBoolean(asadmin, false);
+        if(WebOptUtils.isTenantTopUnit(request)){
+            String topUnit=WebOptUtils.getCurrentTopUnit(request);
+            List<? extends IOsInfo> osInfos = platformEnvironment.listOsInfos(topUnit);
+            boolean findOsId= osInfos.stream().anyMatch(osInfo -> osInfo.getOsId().equals(optid));
+            if(!findOsId) {
+                throw new ObjectException(ResponseData.ERROR_FORBIDDEN,
+                    "用户不属于当前租户，请切换租户！");
+            }
+        }
         List<? extends IOptInfo> menuFunsByUser = platformEnvironment
-            .listUserMenuOptInfosUnderSuperOptId(userCode, optid, asAdmin);
+            .listUserMenuOptInfosUnderSuperOptId(userCode,optid,BooleanBaseOpt.castObjectToBoolean(asadmin, false));
         if (menuFunsByUser == null) {
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录,或者没有给用户任何权限，请重新登录！");
+            throw new ObjectException(ResponseData.ERROR_BAD_PROCESS_POWER,
+                "该用户没有任何权限！");
         }
         return makeMenuFuncsJson(menuFunsByUser);
     }
