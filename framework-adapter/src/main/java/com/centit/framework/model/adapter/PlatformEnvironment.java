@@ -2,7 +2,9 @@ package com.centit.framework.model.adapter;
 
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.framework.security.model.OptTreeNode;
 import com.centit.support.database.utils.PageDesc;
+import org.springframework.security.access.ConfigAttribute;
 
 import java.util.Collections;
 import java.util.List;
@@ -225,6 +227,7 @@ public interface PlatformEnvironment {
 
     /**
      * 根据角色code获取操作信息
+     *
      * @param roleCode
      * @return
      */
@@ -241,8 +244,13 @@ public interface PlatformEnvironment {
      */
     List<? extends IOptMethod> listAllOptMethod(String topUnit);
 
+    default OptTreeNode getSysOptTree() {
+        return new OptTreeNode();
+    }
+
     /**
      * 根据角色code获取操作方法信息信息
+     *
      * @param roleCode
      * @return
      */
@@ -252,6 +260,16 @@ public interface PlatformEnvironment {
 
     default IOptMethod addOptMethod(IOptMethod optMethod) {
         return null;
+    }
+
+    /**
+     * 根据角色code获取操作方法信息信息
+     *
+     * @param apiId
+     * @return
+     */
+    default List<ConfigAttribute> getRolesWithApiId(String apiId) {
+        return Collections.emptyList();
     }
 
     /**

@@ -1,21 +1,20 @@
 package com.centit.framework.security.model;
 
 import com.centit.support.algorithm.StringBaseOpt;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.*;
 
 
-public class OptTreeNode {
+public class OptTreeNode implements Serializable {
     //public String urlWord;
     public List<ConfigAttribute> roleList;
     public Map<String, OptTreeNode> childList;
 
     public OptTreeNode(){
-        roleList = null;
+        roleList = new ArrayList<>();
         childList = null;
     }
 
@@ -73,5 +72,57 @@ public class OptTreeNode {
         System.out.println(StringBaseOpt.castObjectToString(this.roleList));
         printTreeNode(this,1);
         System.out.println("--------------------------------");
+    }
+
+    /**
+     * C D R  U  :  POST DELETE GET PUT
+     *
+     * @param sOptDefUrl sOptDefUrl
+     * @param sMethod    sMethod
+     * @return List parseUrl
+     */
+    public List<List<String>> parsePowerDefineUrl(String sOptDefUrl, String sMethod) {
+
+        String sUrls[] = (sOptDefUrl).split("/");
+        List<String> sopts = new ArrayList<>();
+        for (String s : sUrls) {
+            if (StringUtils.isNotBlank(s)/* && !"*".equals(s)*/)
+                sopts.add(s);
+        }
+
+        List<List<String>> swords = new ArrayList<>();
+        /*if(StringUtils.isBlank(sMethod)){
+            List<String> fullOpts = new ArrayList<>(sopts.size()+2);
+            fullOpts.add("GET");
+            fullOpts.addAll(sopts);
+            swords.add(fullOpts);
+            return swords;
+        }*/
+        if (sMethod.indexOf('C') >= 0) {
+            List<String> fullOpts = new ArrayList<>(sopts.size() + 2);
+            fullOpts.add("POST");
+            fullOpts.addAll(sopts);
+            swords.add(fullOpts);
+        }
+        if (sMethod.indexOf('D') >= 0) {
+            List<String> fullOpts = new ArrayList<>(sopts.size() + 2);
+            fullOpts.add("DELETE");
+            fullOpts.addAll(sopts);
+            swords.add(fullOpts);
+        }
+        if (sMethod.indexOf('R') >= 0) {
+            List<String> fullOpts = new ArrayList<>(sopts.size() + 2);
+            fullOpts.add("GET");
+            fullOpts.addAll(sopts);
+            swords.add(fullOpts);
+        }
+        if (sMethod.indexOf('U') >= 0) {
+            List<String> fullOpts = new ArrayList<>(sopts.size() + 2);
+            fullOpts.add("PUT");
+            fullOpts.addAll(sopts);
+            swords.add(fullOpts);
+        }
+
+        return swords;
     }
 }

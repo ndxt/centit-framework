@@ -51,27 +51,12 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
     protected void makeUserAuthorities(){
         arrayAuths = new ArrayList<>();
         JSONArray rolesJson = this.getUserRoles();
-        if (rolesJson == null || rolesJson.size() < 1) {
-            arrayAuths.add(new SimpleGrantedAuthority(CentitSecurityMetadata.ROLE_PREFIX
-                + SecurityContextUtils.PUBLIC_ROLE_CODE));
-            return;
-        }
-
-        boolean havePublicRole = false;
         for (Object obj : rolesJson) {
             JSONObject role  =(JSONObject) obj;
             arrayAuths.add(new SimpleGrantedAuthority(CentitSecurityMetadata.ROLE_PREFIX
                     + StringUtils.trim(role.getString("roleCode"))));
-            if(SecurityContextUtils.PUBLIC_ROLE_CODE.equalsIgnoreCase(role.getString("roleCode"))){
-                havePublicRole = true;
-            }
-        }
 
-        if(!havePublicRole){
-            arrayAuths.add(new SimpleGrantedAuthority(CentitSecurityMetadata.ROLE_PREFIX
-                    + SecurityContextUtils.PUBLIC_ROLE_CODE));
         }
-
         //排序便于后面比较
         Collections.sort(arrayAuths,
             Comparator.comparing(GrantedAuthority::getAuthority));

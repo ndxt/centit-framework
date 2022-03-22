@@ -4,7 +4,6 @@ import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.security.model.CentitSecurityMetadata;
-import com.centit.framework.security.model.TopUnitSecurityMetadata;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
@@ -14,8 +13,7 @@ import java.util.Collection;
 
 //@Component("centitSecurityMetadataSource")
 public class DaoInvocationSecurityMetadataSource
-            implements FilterInvocationSecurityMetadataSource
-         {
+    implements FilterInvocationSecurityMetadataSource {
     //private static final Logger logger = LoggerFactory.getLogger(DaoInvocationSecurityMetadataSource.class);
     //private static boolean logDebug = logger.isDebugEnabled();
     @Override
@@ -44,12 +42,7 @@ public class DaoInvocationSecurityMetadataSource
         /* if (logDebug) {
             logger.debug("通过权限过滤器 请求url = " + requestUrl + " 请求类型 = " + request.getMethod());
         }*/
-
-        String topUnit = CodeRepositoryUtil.cacheByTopUnit?
-            WebOptUtils.getCurrentTopUnit(request) : GlobalConstValue.NO_TENANT_TOP_UNIT;
-
-        TopUnitSecurityMetadata metadata = CentitSecurityMetadata.securityMetadata.getCachedValue(topUnit);
-        return metadata==null? null : metadata.matchUrlToRole(requestUrl, request);
+        return CentitSecurityMetadata.matchUrlToRole(requestUrl, request);
 /*        Collection<ConfigAttribute> needRoles = CentitSecurityMetadata.matchUrlToRole(requestUrl,request);
         if(needRoles==null && requestUrl.contains("/mainframe/logincas")){
             needRoles = new ArrayList<>(1);

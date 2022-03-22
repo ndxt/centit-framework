@@ -21,4 +21,6 @@ public interface IRolePower{
      * @return 业务操作范围代码 集合
      */
      String[] getOptScopeCodeSet();
+
+     default String getTopOptId(){return "";}
 }

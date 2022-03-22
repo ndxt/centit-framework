@@ -3,13 +3,16 @@ package com.centit.framework.components;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
+import com.centit.framework.security.model.OptTreeNode;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.CachedMap;
+import com.centit.support.common.CachedObject;
 import com.centit.support.common.ICachedObject;
 import com.centit.support.common.ListAppendMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.ConfigAttribute;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +67,7 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.evictCacheExtOpt = evictCacheExtOpt;
     }
 
-    private static PlatformEnvironment getPlatformEnvironment() {
+    public static PlatformEnvironment getPlatformEnvironment() {
         if(platformEnvironment==null) {
             platformEnvironment = WebOptUtils.getWebAppContextBean("platformEnvironment", PlatformEnvironment.class);
         }
@@ -288,6 +291,9 @@ public abstract class CodeRepositoryCache {
                 return new ListAppendMap<>(optInfos, IOptMethod::getOptCode);
             },
             CACHE_FRESH_PERIOD_SECONDS);
+
+    public static CachedObject<OptTreeNode> sysOptTreeRepo=
+        new CachedObject<>(()->getPlatformEnvironment().getSysOptTree(),CACHE_FRESH_PERIOD_SECONDS);
 
     public static CachedMap<String, ListAppendMap<? extends IOptMethod>> roleOptMethodMap=
         new CachedMap<>((roleCode)-> {
