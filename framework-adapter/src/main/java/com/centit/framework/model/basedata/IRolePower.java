@@ -22,5 +22,5 @@ public interface IRolePower{
      */
      String[] getOptScopeCodeSet();
 
-     default String getTopOptId(){return "";}
+     default String getTopUnit(){return "";}
 }
