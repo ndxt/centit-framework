@@ -22,6 +22,7 @@ public abstract class CentitSecurityMetadata {
         new CachedMap<>((apiId)->CodeRepositoryCache.getPlatformEnvironment().getRolesWithApiId(apiId),
             CodeRepositoryCache.CACHE_FRESH_PERIOD_SECONDS);
     private static final String DDE_RUN = "/dde/run/";
+    private static final String DDE_RUN_DRAFT = "/dde/run/draft";
 
     /**
      * @param isForbiddenWhenAssigned 设置为true时，将url分配到菜单后 该url需要授权才能访问；
@@ -42,7 +43,7 @@ public abstract class CentitSecurityMetadata {
 
     private static String parseUrlToApi(String sUrl) {
         String apiId = "";
-        boolean isApi= StringUtils.contains(sUrl,DDE_RUN);
+        boolean isApi= StringUtils.contains(sUrl,DDE_RUN)&&!StringUtils.contains(sUrl,DDE_RUN_DRAFT);
         if (isApi){
             String[] sUrls = sUrl.split("/");
             int length=sUrls.length;
