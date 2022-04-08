@@ -379,6 +379,15 @@ public interface PlatformEnvironment {
      */
     List<? extends IDataDictionary> listDataDictionaries(String catalogCode);
 
+
+    /**
+     * 根据catalogCode删除数据字典以及子项
+     * @param catalogCode
+     * @return
+     */
+    default void deleteDataDictionary(String catalogCode){
+    }
+
     /**
      * 操作定义所属业务模块（页面删除菜单时需要先将设计好的数据更新到其它业务模块下）
      *
