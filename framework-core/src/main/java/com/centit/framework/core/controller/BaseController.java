@@ -82,10 +82,11 @@ public abstract class BaseController {
                     JsonResultUtils.writeHttpErrorMessage(objex.getExceptionCode(),
                         objex.getLocalizedMessage(), response);
                 }else {
-                    ResponseSingleData responseData =
-                        new ResponseSingleData(objex.getExceptionCode(),
-                            ObjectException.extortExceptionMessage(objex));
-                    responseData.setData(objex.getObjectData());
+                    ResponseMapData responseData =
+                        new ResponseMapData(objex.getExceptionCode(),
+                            ObjectException.extortExceptionOriginMessage(objex));
+                    responseData.addResponseData("trace",ObjectException.extortExceptionTraceMessage(objex));
+                    responseData.addResponseData("object",objex.getObjectData());
                     JsonResultUtils.writeResponseDataAsJson(responseData, response);
                 }
                 return;
@@ -113,8 +114,11 @@ public abstract class BaseController {
                 return;
             }
             // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误
-            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
-                ObjectException.extortExceptionMessage(ex), response);
+            ResponseMapData responseData =
+                new ResponseMapData(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
+                    ObjectException.extortExceptionOriginMessage(ex));
+            responseData.addResponseData("trace",ObjectException.extortExceptionTraceMessage(ex));
+            JsonResultUtils.writeResponseDataAsJson(responseData, response);
         } else {
             if (ex instanceof ObjectException) {
                 logger.error(ex.getMessage());
