@@ -58,15 +58,18 @@ public class SystemSecurityMetadata {
             sFunUrl = sUrl.substring(0, p);
         }
 
+        int nPos = sFunUrl.lastIndexOf('.');
+        if(nPos > 0) {
+            int nPos2 = sFunUrl.lastIndexOf('/');
+            if (nPos > nPos2) {
+                sFunUrl = sFunUrl.substring(0, nPos);
+            }
+        }
+
         swords.add(httpMethod);
         for (String s : sFunUrl.split("/")) {
             if (StringUtils.isNotBlank(s)) {
-                int nPos = s.indexOf('.');
-                if(nPos>1){
-                    swords.add(s.substring(0,nPos));
-                } else {
-                    swords.add(s);
-                }
+                swords.add(s);
             }
         }
         return swords;
