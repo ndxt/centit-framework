@@ -61,7 +61,12 @@ public class SystemSecurityMetadata {
         swords.add(httpMethod);
         for (String s : sFunUrl.split("/")) {
             if (StringUtils.isNotBlank(s)) {
-                swords.add(s);
+                int nPos = s.indexOf('.');
+                if(nPos>1){
+                    swords.add(s.substring(0,nPos));
+                } else {
+                    swords.add(s);
+                }
             }
         }
         return swords;
@@ -95,10 +100,7 @@ public class SystemSecurityMetadata {
             }
             curOpt = subOpt;
         }
-        if (curOpt != null) {
-            return curOpt.getRoleList();
-        }
-        return null;
+        return curOpt.getRoleList();
     }
 
     /**
