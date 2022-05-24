@@ -67,6 +67,8 @@ public interface IOsInfo {
 
     String getPicId();
 
+    String getLogoFileId();
+
     default boolean isDeleted(){return false;}
 
     Date getCreateTime();
