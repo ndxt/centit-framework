@@ -45,7 +45,22 @@ public abstract class CentitSecurityMetadata {
         String apiId = "";
         boolean isApi= StringUtils.contains(sUrl,DDE_RUN)&&!StringUtils.contains(sUrl,DDE_RUN_DRAFT);
         if (isApi){
-            String[] sUrls = sUrl.split("/");
+            String sFunUrl ;
+            int p = sUrl.indexOf('?');
+            if(p<1) {
+                sFunUrl = sUrl;
+            }else {
+                sFunUrl = sUrl.substring(0, p);
+            }
+
+            int nPos = sFunUrl.lastIndexOf('.');
+            if(nPos > 0) {
+                int nPos2 = sFunUrl.lastIndexOf('/');
+                if (nPos > nPos2) {
+                    sFunUrl = sFunUrl.substring(0, nPos);
+                }
+            }
+            String[] sUrls = sFunUrl.split("/");
             int length=sUrls.length;
             apiId = sUrls[length-1];
         }
