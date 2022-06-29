@@ -34,35 +34,35 @@ public class SM4Util extends GMBaseUtil {
         return kg.generateKey().getEncoded();
     }
 
-    public static byte[] encrypt_Ecb_Padding(byte[] key, byte[] data)
+    public static byte[] encryptEcbPadding(byte[] key, byte[] data)
         throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException,
         NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         Cipher cipher = generateEcbCipher(ALGORITHM_NAME_ECB_PADDING, Cipher.ENCRYPT_MODE, key);
         return cipher.doFinal(data);
     }
 
-    public static byte[] decrypt_Ecb_Padding(byte[] key, byte[] cipherText)
+    public static byte[] decryptEcbPadding(byte[] key, byte[] cipherText)
         throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
         NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException {
         Cipher cipher = generateEcbCipher(ALGORITHM_NAME_ECB_PADDING, Cipher.DECRYPT_MODE, key);
         return cipher.doFinal(cipherText);
     }
 
-    public static byte[] encrypt_Ecb_NoPadding(byte[] key, byte[] data)
+    public static byte[] encryptEcbNoPadding(byte[] key, byte[] data)
         throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException,
         NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         Cipher cipher = generateEcbCipher(ALGORITHM_NAME_ECB_NOPADDING, Cipher.ENCRYPT_MODE, key);
         return cipher.doFinal(data);
     }
 
-    public static byte[] decrypt_Ecb_NoPadding(byte[] key, byte[] cipherText)
+    public static byte[] decryptEcbNoPadding(byte[] key, byte[] cipherText)
         throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
         NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException {
         Cipher cipher = generateEcbCipher(ALGORITHM_NAME_ECB_NOPADDING, Cipher.DECRYPT_MODE, key);
         return cipher.doFinal(cipherText);
     }
 
-    public static byte[] encrypt_Cbc_Padding(byte[] key, byte[] iv, byte[] data)
+    public static byte[] encryptCbcPadding(byte[] key, byte[] iv, byte[] data)
         throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException,
         NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
         InvalidAlgorithmParameterException {
@@ -70,7 +70,7 @@ public class SM4Util extends GMBaseUtil {
         return cipher.doFinal(data);
     }
 
-    public static byte[] decrypt_Cbc_Padding(byte[] key, byte[] iv, byte[] cipherText)
+    public static byte[] decryptCbcPadding(byte[] key, byte[] iv, byte[] cipherText)
         throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
         NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException,
         InvalidAlgorithmParameterException {
@@ -78,7 +78,7 @@ public class SM4Util extends GMBaseUtil {
         return cipher.doFinal(cipherText);
     }
 
-    public static byte[] encrypt_Cbc_NoPadding(byte[] key, byte[] iv, byte[] data)
+    public static byte[] encryptCbcNoPadding(byte[] key, byte[] iv, byte[] data)
         throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException,
         NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
         InvalidAlgorithmParameterException {
@@ -86,7 +86,7 @@ public class SM4Util extends GMBaseUtil {
         return cipher.doFinal(data);
     }
 
-    public static byte[] decrypt_Cbc_NoPadding(byte[] key, byte[] iv, byte[] cipherText)
+    public static byte[] decryptCbcNoPadding(byte[] key, byte[] iv, byte[] cipherText)
         throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException,
         NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException,
         InvalidAlgorithmParameterException {

@@ -8,7 +8,7 @@ public class TestSM3 {
     public static void main(String[] args) {
         System.out.println(
             Hex.encodeHex(SM3Util.hash(
-                Base64.encodeBase64("2nsykc".getBytes()))));
+                Base64.encodeBase64("codefan@sina.com".getBytes()))));
     }
 }
 
