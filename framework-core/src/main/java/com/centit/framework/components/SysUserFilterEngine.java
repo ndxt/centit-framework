@@ -80,8 +80,9 @@ public abstract class SysUserFilterEngine {
                 }
             }
         } else {
-            if(ecc.listAllUserUnits()!=null) {
-                lsUserunit.addAll(ecc.listAllUserUnits());
+            List<? extends IUserUnit> userlist = ecc.listAllUserUnits();
+            if(userlist!=null) {
+                lsUserunit.addAll(userlist);
             }
         }
 
@@ -200,9 +201,14 @@ public abstract class SysUserFilterEngine {
                     lsUserInfo.add(ecc.getUserInfoByCode(userCode));
                 }
             } else if (!hasUnitFilter) {
+                // 剔除禁用用户
                 List<? extends IUserInfo> extUserInfo = ecc.listAllUserInfo();
                 lsUserInfo = new ArrayList<>(extUserInfo.size() + 1);
-                lsUserInfo.addAll(extUserInfo);
+                for(IUserInfo ui : extUserInfo) {
+                    if("T".equals(ui.getIsValid())) {
+                        lsUserInfo.add(ui);
+                    }
+                }
             }
 
             if (lsUserInfo != null) {

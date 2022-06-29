@@ -262,6 +262,13 @@ public interface PlatformEnvironment {
         return null;
     }
 
+    default IOptMethod mergeOptMethod(IOptMethod optMethod) {
+        return null;
+    }
+
+    default void deleteOptMethod(String optCode) {
+    }
+
     /**
      * 根据角色code获取操作方法信息信息
      *
