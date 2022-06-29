@@ -1,9 +1,6 @@
 package com.centit.framework.security.cert;
 
-import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1Encoding;
-import org.bouncycastle.asn1.ASN1Primitive;
-import org.bouncycastle.asn1.DERBitString;
+import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
@@ -18,7 +15,7 @@ import java.io.IOException;
 import java.security.spec.ECParameterSpec;
 
 public class SM2PrivateKey extends BCECPrivateKey {
-    private transient DERBitString sm2PublicKey;
+    private transient ASN1BitString sm2PublicKey;
     private boolean withCompression;
 
     public SM2PrivateKey(BCECPrivateKey privateKey, BCECPublicKey publicKey) {
@@ -69,7 +66,7 @@ public class SM2PrivateKey extends BCECPrivateKey {
         }
     }
 
-    private DERBitString getSM2PublicKeyDetails(SM2PublicKey pub) {
+    private ASN1BitString getSM2PublicKeyDetails(SM2PublicKey pub) {
         try {
             SubjectPublicKeyInfo info = SubjectPublicKeyInfo.getInstance(ASN1Primitive.fromByteArray(pub.getEncoded()));
 
