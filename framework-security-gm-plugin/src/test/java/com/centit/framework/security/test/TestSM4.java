@@ -1,8 +1,6 @@
 package com.centit.framework.security.test;
 
-import com.centit.framework.security.utils.SM3Util;
 import com.centit.framework.security.utils.SM4Util;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
 import javax.crypto.BadPaddingException;
