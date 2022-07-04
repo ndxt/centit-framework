@@ -191,6 +191,7 @@ public abstract class CodeRepositoryCache {
         CodeRepositoryCache.optMethodRepo.evictCahce();
         CodeRepositoryCache.rolePowerRepo.evictCahce();
         CodeRepositoryCache.osInfoCache.evictCahce();
+        CodeRepositoryCache.optDataScopeRepo.evictCahce();
         if(CodeRepositoryCache.evictCacheExtOpt != null){
             CodeRepositoryCache.evictCacheExtOpt.evictAllCache();
         }

@@ -78,7 +78,7 @@ public class EnvironmentController extends BaseController {
         CodeRepositoryCache.evictCache("RoleUsers");
         CodeRepositoryCache.evictCache("UnitRoles");
         CodeRepositoryCache.evictCache("RoleUnits");
-
+        CodeRepositoryCache.evictCache("optDataScope");
         return ResponseData.makeErrorMessage(0,"和权限有关的缓存全部失效！");
     }
 }
