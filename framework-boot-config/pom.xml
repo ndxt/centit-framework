@@ -13,7 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sprign.boot.version>2.1.3.RELEASE</sprign.boot.version>
+        <sprign.boot.version>2.2.11.RELEASE</sprign.boot.version>
     </properties>
     <dependencies>
 
