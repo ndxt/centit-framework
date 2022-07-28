@@ -24,9 +24,6 @@ public class SmartHttpSessionResolver implements HttpSessionIdResolver {
     public SmartHttpSessionResolver(boolean cookieFirst, String cookiePath) {
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
         cookieSerializer.setCookiePath(cookiePath);
-        if(!cookieFirst){
-            cookieSerializer.setCookieName(WebOptUtils.SESSION_ID_TOKEN);
-        }
         browser = new CookieHttpSessionIdResolver();
         browser.setCookieSerializer(cookieSerializer);
         api = new HeaderHttpSessionIdResolver(WebOptUtils.SESSION_ID_TOKEN);
