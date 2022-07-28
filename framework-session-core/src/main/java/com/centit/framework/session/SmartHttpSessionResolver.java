@@ -1,5 +1,6 @@
 package com.centit.framework.session;
 
+import com.centit.framework.common.WebOptUtils;
 import org.springframework.session.web.http.CookieHttpSessionIdResolver;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
@@ -23,9 +24,12 @@ public class SmartHttpSessionResolver implements HttpSessionIdResolver {
     public SmartHttpSessionResolver(boolean cookieFirst, String cookiePath) {
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
         cookieSerializer.setCookiePath(cookiePath);
+        if(!cookieFirst){
+            cookieSerializer.setCookieName(WebOptUtils.SESSION_ID_TOKEN);
+        }
         browser = new CookieHttpSessionIdResolver();
         browser.setCookieSerializer(cookieSerializer);
-        api = new HeaderHttpSessionIdResolver("x-auth-token");
+        api = new HeaderHttpSessionIdResolver(WebOptUtils.SESSION_ID_TOKEN);
         this.cookieFirst = cookieFirst;
     }
 
