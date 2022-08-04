@@ -21,22 +21,7 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba.nacos</groupId>
-            <artifactId>nacos-spring-context</artifactId>
-            <version>1.1.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.alibaba.nacos</groupId>
-                    <artifactId>nacos-client</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.nacos</groupId>
-            <artifactId>nacos-client</artifactId>
-            <version>2.0.3</version>
-        </dependency>
+
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-security</artifactId>
@@ -47,6 +32,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-cas</artifactId>
+            <scope>provided</scope>
             <!--<exclusions>
                 <exclusion>
                     <artifactId>commons-lang</artifactId>
@@ -58,6 +44,7 @@
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-core</artifactId>
+            <scope>provided</scope>
         </dependency>
         <!--引入h2嵌入式数据库来管理session的持久化问题-->
         <dependency>
@@ -68,6 +55,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
