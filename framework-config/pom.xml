@@ -32,7 +32,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-cas</artifactId>
-            <scope>provided</scope>
             <!--<exclusions>
                 <exclusion>
                     <artifactId>commons-lang</artifactId>
@@ -44,7 +43,6 @@
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-core</artifactId>
-            <scope>provided</scope>
         </dependency>
         <!--引入h2嵌入式数据库来管理session的持久化问题-->
         <dependency>
