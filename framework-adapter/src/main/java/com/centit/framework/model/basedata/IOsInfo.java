@@ -76,6 +76,7 @@ public interface IOsInfo {
     Date getLastModifyDate();
 
     String getCreated();
+    String getOsDesc();
 
     default void setCreated(String created) {
         return;
