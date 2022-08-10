@@ -53,6 +53,9 @@ public class OperationLog implements java.io.Serializable {
     public static final String P_OPT_LOG_METHOD_U = "update";
     public static final String P_OPT_LOG_METHOD_D = "delete";
 
+    /*日志主键*/
+    private String logId;
+
     /**
      * 日志级别，用户可以自己解释这个属性
      */
