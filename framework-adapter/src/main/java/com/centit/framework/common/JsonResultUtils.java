@@ -2,7 +2,7 @@ package com.centit.framework.common;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.PropertyPreFilter;
+import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.centit.support.algorithm.ReflectionOpt;
@@ -372,10 +372,10 @@ public class JsonResultUtils {
      * @param message 返回提示信息
      * @param objValue 返回数据对象
      * @param response HttpServletResponse
-     * @param simplePropertyPreFilter PropertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
+     * @param simplePropertyPreFilter SerializeFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
      */
     public static void writeSingleDataJson(int code,String message, Object objValue, HttpServletResponse response,
-                                           PropertyPreFilter simplePropertyPreFilter) {
+                                           SerializeFilter simplePropertyPreFilter) {
 
         Map<String, Object> param = new HashMap<>();
         param.put(ResponseData.RES_CODE_FILED, code );
@@ -416,7 +416,7 @@ public class JsonResultUtils {
      * @param propertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
      */
     public static void writeResponseDataAsJson(ResponseData resData, HttpServletResponse response,
-                                        PropertyPreFilter propertyPreFilter) {
+                                               SerializeFilter propertyPreFilter) {
         writeSingleDataJson(resData.getCode(),resData.getMessage(),
                 resData.getData(), response, propertyPreFilter);
     }
@@ -519,7 +519,7 @@ public class JsonResultUtils {
      * @param simplePropertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
      */
     public static void writeSingleDataJson(Object objValue, HttpServletResponse response,
-            PropertyPreFilter simplePropertyPreFilter) {
+                                           SerializeFilter simplePropertyPreFilter) {
         writeSingleDataJson(0,"OK",objValue,response,simplePropertyPreFilter);
     }
     /**

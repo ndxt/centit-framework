@@ -1,7 +1,7 @@
 package com.centit.framework.common;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.PropertyPreFilter;
+import com.alibaba.fastjson.serializer.SerializeFilter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,7 +79,7 @@ public class ResponseSingleData implements ResponseData{
         return oldObj;
     }
 
-    public String toJSONString(PropertyPreFilter simplePropertyPreFilter){
+    public String toJSONString(SerializeFilter simplePropertyPreFilter){
         Map<String, Object> param = new HashMap<>();
         param.put(ResponseData.RES_CODE_FILED, code);
         param.put(ResponseData.RES_MSG_FILED, message);
