@@ -25,6 +25,7 @@ public class OsInfo implements IOsInfo, java.io.Serializable {
     private Date lastModifyDate;
     private String created;
     private String logoFileId;
+    private String osDesc;
 
     public OsInfo(String osId, String osName) {
         this.osId = osId;
