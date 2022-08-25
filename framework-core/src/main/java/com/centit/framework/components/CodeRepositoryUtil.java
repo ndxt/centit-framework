@@ -244,8 +244,8 @@ public abstract class CodeRepositoryUtil {
     public static String getValue(String sCatalog, String sKey) {
         HttpServletRequest request = RequestThreadLocal.getLocalThreadWrapperRequest();
         return getValue(sCatalog,sKey,
-            WebOptUtils.getCurrentTopUnit(request),
-            WebOptUtils.getCurrentLang(request)
+            request == null ? GlobalConstValue.NO_TENANT_TOP_UNIT : WebOptUtils.getCurrentTopUnit(request),
+             WebOptUtils.getCurrentLang(request)
         );
     }
     /**
