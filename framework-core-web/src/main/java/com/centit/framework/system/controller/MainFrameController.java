@@ -18,6 +18,7 @@ import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.security.SecurityContextUtils;
+import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.ThirdPartyCheckUserDetails;
 import com.centit.support.algorithm.*;
@@ -83,6 +84,12 @@ public class MainFrameController extends BaseController {
     private boolean useCas;
     @Value("${login.cas.localHome:}")
     private String localHome;
+
+    @Value("${login.password.minLength:8}")
+    private int passwordMinLength;
+
+    @Value("${login.password.strength:3}")
+    private int passwordStrength;
 
     @Value("${logout.success.targetUrl:}")
     private String logoutTargetUrl;
@@ -254,6 +261,10 @@ public class MainFrameController extends BaseController {
         }
         if (StringUtils.isBlank(newPassword)) {
             newPassword = request.getParameter("newPassword");
+        }
+
+        if (CentitPasswordEncoder.checkPasswordStrength(newPassword, passwordMinLength ) < passwordStrength) {
+            return ResponseData.makeErrorMessage("新的密码强度太低，请输入符合要求的密码！");
         }
 
         String userCode = WebOptUtils.getCurrentUserCode(request);
