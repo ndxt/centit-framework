@@ -13,7 +13,7 @@ public interface CentitPasswordEncoder {
      *
      * @param password 密码
      * @param minLength 最小长度
-     * @return 返回值 <0 不符合要求， 1～4 之间为密码强度
+     * @return 返回值 &lt; 0 不符合要求， 1～4 之间为密码强度
      */
     static int checkPasswordStrength(String password, int minLength){
         if(StringUtils.isNotBlank(password)){
