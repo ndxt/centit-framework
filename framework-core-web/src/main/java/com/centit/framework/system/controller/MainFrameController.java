@@ -3,10 +3,7 @@ package com.centit.framework.system.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.ResponseData;
-import com.centit.framework.common.ResponseSingleData;
-import com.centit.framework.common.ViewDataTransform;
-import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.common.*;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.SysUnitFilterEngine;
 import com.centit.framework.components.SysUserFilterEngine;
@@ -146,14 +143,14 @@ public class MainFrameController extends BaseController {
      */
     @GetMapping("/login")
     @ApiOperation(value = "登录界面入口", notes = "登录界面入口")
-    public String login(HttpServletRequest request, HttpSession session) {
+    public String login(HttpServletRequest request, HttpSession session,HttpServletResponse response) {
         //不允许ajax强求登录页面
-        if (WebOptUtils.isAjax(request)) {
+        if(useCas){
             return "redirect:/system/exception/error/401";
         }
-        //输入实施人员链接后未登录，后直接输入 普通用户登录链接
-        session.setAttribute(ENTRANCE_TYPE, NORMAL_LOGIN);
-        return useCas ? "redirect:/system/mainframe/logincas" : "sys/login";
+        JsonResultUtils.writeHttpErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
+            "用户没有登录！", response);
+        return null;
     }
 
     /**
@@ -187,7 +184,7 @@ public class MainFrameController extends BaseController {
      */
     @ApiOperation(value = "登录失败回到登录页", notes = "登录失败回到登录页")
     @GetMapping("/login/error")
-    public String loginError(HttpServletRequest request, HttpSession session) {
+    public String loginError(HttpServletRequest request, HttpSession session,HttpServletResponse response) {
         //在系统中设定Spring Security 相关的错误信息
         AuthenticationException authException = (AuthenticationException)
             session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
@@ -196,7 +193,7 @@ public class MainFrameController extends BaseController {
             session.setAttribute(LOGIN_AUTH_ERROR_MSG, authException.getMessage());
         }
         //重新登录
-        return login(request, session);
+        return login(request, session,response);
     }
 
     /**

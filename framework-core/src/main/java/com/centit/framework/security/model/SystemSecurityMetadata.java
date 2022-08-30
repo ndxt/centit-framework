@@ -141,6 +141,9 @@ public class SystemSecurityMetadata {
         /**
          * 添加 logincas 的角色定义
          */
+        if (optTreeNode==null){
+            return;
+        }
         List<ConfigAttribute> roles = matchUrlToRole(optTreeNode, "/system/mainframe/logincas", "GET");
         if (roles == null || roles.size() == 0) {
             List<List<String>> sOpt = optTreeNode.parsePowerDefineUrl(
