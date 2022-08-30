@@ -75,15 +75,16 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
 
         StringBuilder needRoles = new StringBuilder();
         for(ConfigAttribute ca : configAttributes){
-            needRoles.append(ca.getAttribute().substring(2)).append(" ");
+            needRoles.append(ca.getAttribute().substring(2)).append(",");
         }
-        String sErrMsg = "无权限访问资源:"+requestUrl+",需要角色 "+needRoles+"中的一个。";
-
-        fi.getRequest().setAttribute("CENTIT_SYSTEM_ERROR_MSG", sErrMsg);
+        String sErrMsg = "no auth:"+requestUrl+";need role:"+needRoles;
+        //fi.getRequest().setAttribute("CENTIT_SYSTEM_ERROR_MSG", sErrMsg);
+        fi.getResponse().setHeader("CENTIT_SYSTEM_ERROR_MSG", sErrMsg);
         logger.error(sErrMsg);
         throw new AccessDeniedException(sErrMsg);
     }
 
+    @Override
     public boolean supports(ConfigAttribute arg0) {
         return true;
     }
