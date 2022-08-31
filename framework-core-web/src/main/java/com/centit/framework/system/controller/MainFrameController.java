@@ -137,20 +137,14 @@ public class MainFrameController extends BaseController {
     /**
      * 登录界面入口
      *
-     * @param session session
-     * @param request HttpServletRequest
      * @return 登录界面
      */
     @GetMapping("/login")
     @ApiOperation(value = "登录界面入口", notes = "登录界面入口")
-    public String login(HttpServletRequest request, HttpSession session,HttpServletResponse response) {
+    @WrapUpResponseBody
+    public void login(HttpServletResponse response) {
         //不允许ajax强求登录页面
-        if(useCas){
-            return "redirect:/system/exception/error/401";
-        }
-        JsonResultUtils.writeHttpErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
-            "用户没有登录！", response);
-        return null;
+        JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！",response);
     }
 
     /**
@@ -184,7 +178,8 @@ public class MainFrameController extends BaseController {
      */
     @ApiOperation(value = "登录失败回到登录页", notes = "登录失败回到登录页")
     @GetMapping("/login/error")
-    public String loginError(HttpServletRequest request, HttpSession session,HttpServletResponse response) {
+    @WrapUpResponseBody
+    public void loginError(HttpSession session,HttpServletResponse response) {
         //在系统中设定Spring Security 相关的错误信息
         AuthenticationException authException = (AuthenticationException)
             session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
@@ -193,7 +188,7 @@ public class MainFrameController extends BaseController {
             session.setAttribute(LOGIN_AUTH_ERROR_MSG, authException.getMessage());
         }
         //重新登录
-        return login(request, session,response);
+        login(response);
     }
 
     /**
