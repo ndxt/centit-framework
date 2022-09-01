@@ -2,6 +2,7 @@ package com.centit.framework.common;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
@@ -351,7 +352,8 @@ public class JsonResultUtils {
                     JSON.toJSONString(objValue), response);
         }else {
             writeOriginalResponse("application/json; charset=utf-8",
-                    JSON.toJSONString(objValue), response);
+                    JSON.toJSONString(objValue, SerializeConfig.globalInstance,new SerializeFilter[0],
+                        JSON.DEFFAULT_DATE_FORMAT,JSON.DEFAULT_GENERATE_FEATURE), response);
         }
     }
 
