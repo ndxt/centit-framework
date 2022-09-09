@@ -9,6 +9,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
@@ -42,7 +43,7 @@ public class RedisSessionPersistenceConfig{
         if(StringUtils.isNotBlank(password)){
             configuration.setPassword(RedisPassword.of(password));
         }
-        return new JedisConnectionFactory(configuration);
+        return new LettuceConnectionFactory(configuration);
     }
 
     @Bean
