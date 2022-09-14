@@ -5,5 +5,5 @@ package com.centit.framework.model.adapter;
  *
  */
 public interface UserUnitFilterCalcContextFactory {
-    UserUnitFilterCalcContext createCalcContext();
+    UserUnitFilterCalcContext createCalcContext(String topUnit);
 }
