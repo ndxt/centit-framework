@@ -14,6 +14,7 @@ import com.centit.framework.security.model.JsonCentitUserDetails;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.CachedObject;
+import com.centit.support.common.ListAppendMap;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -449,6 +450,19 @@ public abstract class AbstractStaticPlatformEnvironment
         return null;
     }
 
+    @Override
+    public IUnitInfo loadUnitInfo(String unitCode){
+        ListAppendMap<? extends IUnitInfo> us =
+            CodeRepositoryCache.unitInfoRepo.getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT);
+        if(us==null){
+            return null;
+        }
+        for(IUnitInfo ud : us.getListData()){
+            if(StringUtils.equals(ud.getUnitCode(), unitCode))
+                return ud;
+        }
+        return null;
+    }
 
     @Override
     public UserSetting getUserSetting(String userCode, String paramCode) {

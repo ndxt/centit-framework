@@ -319,6 +319,12 @@ public interface PlatformEnvironment {
      */
     CentitUserDetails loadUserDetailsByRegCellPhone(String regCellPhone);
 
+    /**
+     * 从源头获取机构信息，不是从缓存中获取
+     * @param unitCode 机构的代码
+     * @return 机构信息
+     */
+    IUnitInfo loadUnitInfo(String unitCode);
     /*
      * 获取用户信息
      * @param userCode 用户主键
@@ -454,7 +460,6 @@ public interface PlatformEnvironment {
     default boolean loginUserIsExistWorkGroup(String osId, String userCode) {
         return false;
     }
-
 
 }
 
