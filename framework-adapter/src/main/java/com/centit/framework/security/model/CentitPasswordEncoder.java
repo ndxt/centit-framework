@@ -16,7 +16,7 @@ public interface CentitPasswordEncoder {
      * @return 返回值 &lt; 0 不符合要求， 1～4 之间为密码强度
      */
     static int checkPasswordStrength(String password, int minLength){
-        if(StringUtils.isNotBlank(password)){
+        if(StringUtils.isBlank(password)){
             return -1;
         }
         int passwrodLen = password.length();

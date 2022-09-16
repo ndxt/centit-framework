@@ -1,6 +1,7 @@
 package com.centit.framework.test;
 
 import com.centit.framework.appclient.HttpReceiveJSON;
+import com.centit.framework.security.model.CentitPasswordEncoder;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class TestJson {
         System.out.println(resData.toJSONString());
         System.out.println(JSON.toJSONString(true));
 */
+        System.out.println(CentitPasswordEncoder.checkPasswordStrength("zs@SN123",8));
         String jsonStr = "{\"code\":0,\"message\":\"ok\"," +
             "\"data\":{\"hello\":\"Say Hello to\", \"world\":\" json world!\"," +
             "\"int\":1024, \"bool\":false, \"intArr\":[1,2,3,4]}}";
