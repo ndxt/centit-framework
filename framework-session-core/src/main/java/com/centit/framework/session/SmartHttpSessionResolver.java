@@ -1,6 +1,8 @@
 package com.centit.framework.session;
 
+import com.centit.framework.appclient.AppSession;
 import com.centit.framework.common.WebOptUtils;
+import com.centit.support.algorithm.CollectionsOpt;
 import org.springframework.session.web.http.CookieHttpSessionIdResolver;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
@@ -20,6 +22,10 @@ public class SmartHttpSessionResolver implements HttpSessionIdResolver {
     private HeaderHttpSessionIdResolver api; // = new HeaderHttpSessionStrategy();
 
     private boolean cookieFirst;
+
+    public List<String> resolveAccessTokenSessionId(HttpServletRequest request) {
+        return CollectionsOpt.createList(request.getParameter(AppSession.SECURITY_CONTEXT_TOKENNAME));
+    }
 
     public SmartHttpSessionResolver(boolean cookieFirst, String cookiePath) {
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
@@ -43,9 +49,15 @@ public class SmartHttpSessionResolver implements HttpSessionIdResolver {
             List<String> sessionIds = browser.resolveSessionIds(request);
             if(sessionIds!=null && sessionIds.size()>0)
                 return sessionIds;
-            return api.resolveSessionIds(request);
+            sessionIds = api.resolveSessionIds(request);
+            if(sessionIds!=null && sessionIds.size()>0)
+                return sessionIds;
+            return resolveAccessTokenSessionId(request);
         }else {
             List<String> sessionIds = api.resolveSessionIds(request);
+            if(sessionIds!=null && sessionIds.size()>0)
+                return sessionIds;
+            sessionIds = resolveAccessTokenSessionId(request);
             if(sessionIds!=null && sessionIds.size()>0)
                 return sessionIds;
             return browser.resolveSessionIds(request);
