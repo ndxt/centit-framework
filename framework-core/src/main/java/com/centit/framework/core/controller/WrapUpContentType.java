@@ -5,7 +5,7 @@ package com.centit.framework.core.controller;
  */
 public enum WrapUpContentType {
     DATA, // json data，默认属性，返回json格式的数据
-    RAW,  // 返回函数返回值的元素数据，如果不是String类型，转换为String类型，复制类型转换为json
+    RAW,  // 返回函数返回值的元素数据，如果不是String类型，转换为String类型，非标量类型转换为json， 等价于 @RespondBody
     JAVASCRIPT, // 返回脚本
     IMAGE, // 返回图片流
     XML,  //将对象转换为xml返回
