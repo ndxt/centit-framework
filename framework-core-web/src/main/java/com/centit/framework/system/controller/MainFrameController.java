@@ -141,7 +141,6 @@ public class MainFrameController extends BaseController {
      */
     @GetMapping("/login")
     @ApiOperation(value = "登录界面入口", notes = "登录界面入口")
-    @WrapUpResponseBody
     public void login(HttpServletResponse response) {
         //不允许ajax强求登录页面
         JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！",response);
@@ -172,14 +171,14 @@ public class MainFrameController extends BaseController {
     /**
      * 登录失败回到登录页
      *
-     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      * @param session session
      * @return 登录界面
      */
     @ApiOperation(value = "登录失败回到登录页", notes = "登录失败回到登录页")
     @GetMapping("/login/error")
     @WrapUpResponseBody
-    public void loginError(HttpSession session,HttpServletResponse response) {
+    public void loginError(HttpSession session, HttpServletResponse response) {
         //在系统中设定Spring Security 相关的错误信息
         AuthenticationException authException = (AuthenticationException)
             session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
