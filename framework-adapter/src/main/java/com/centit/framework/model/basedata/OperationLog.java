@@ -81,6 +81,14 @@ public class OperationLog implements java.io.Serializable {
      */
     private Date optTime;
     /**
+     * 所属租户
+     */
+    private String topUnit;
+    /**
+     * 所属业务id
+     */
+    private String osId;//application id
+    /**
      * 操作业务编号
      */
     private String optId;
@@ -132,6 +140,16 @@ public class OperationLog implements java.io.Serializable {
 
     public OperationLog correlation(String correlationId){
         this.correlationId = correlationId;
+        return this;
+    }
+
+    public OperationLog topUnit(String topUnit){
+        this.topUnit = topUnit;
+        return this;
+    }
+
+    public OperationLog application(String osId){
+        this.osId = osId;
         return this;
     }
 

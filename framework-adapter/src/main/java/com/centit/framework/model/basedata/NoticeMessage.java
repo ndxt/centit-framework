@@ -20,6 +20,10 @@ public class NoticeMessage implements java.io.Serializable {
      */
     private String msgContent;
     /**
+     * 所属租户
+     */
+    private String topUnit;
+    /**
      * 所属业务id
      */
     private String osId;//application id
@@ -57,6 +61,11 @@ public class NoticeMessage implements java.io.Serializable {
 
     public NoticeMessage content(String scontent){
         this.msgContent = scontent;
+        return this;
+    }
+
+    public NoticeMessage topUnit(String stopUnit){
+        this.topUnit = stopUnit;
         return this;
     }
 
