@@ -122,7 +122,7 @@ public abstract class OperationLogCenter {
                                     String optContent, Object newObject) {
         log(OperationLog.create().level(OperationLog.LEVEL_INFO)
             .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).tag(optTag).method(optMethod)
-            .unit(WebOptUtils.getCurrentUnitCode(request))
+            .unit(WebOptUtils.getCurrentUnitCode(request)).topUnit(WebOptUtils.getCurrentTopUnit(request))
             .correlation(WebOptUtils.getCorrelationId(request))
             .content(optContent).newObject(newObject)
             .time(DatetimeOpt.currentUtilDate()).loginIp(WebOptUtils.getRequestAddr(request)));
@@ -142,7 +142,7 @@ public abstract class OperationLogCenter {
                                 String queryDesc, Map<String, Object> queryMap) {
         log(OperationLog.create().level(OperationLog.LEVEL_INFO)
             .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).method(optMethod)
-            .unit(WebOptUtils.getCurrentUnitCode(request))
+            .unit(WebOptUtils.getCurrentUnitCode(request)).topUnit(WebOptUtils.getCurrentTopUnit(request))
             .correlation(WebOptUtils.getCorrelationId(request))
             .content(queryDesc).newObject(queryMap)
             .time(DatetimeOpt.currentUtilDate()).loginIp(WebOptUtils.getRequestAddr(request)));
@@ -162,7 +162,7 @@ public abstract class OperationLogCenter {
                                        String optContent, Object oldObject) {
         log(OperationLog.create().level(OperationLog.LEVEL_INFO)
             .user(WebOptUtils.getCurrentUserCode(request)).operation(optId).tag(optTag).method(optMethod)
-            .unit(WebOptUtils.getCurrentUnitCode(request))
+            .unit(WebOptUtils.getCurrentUnitCode(request)).topUnit(WebOptUtils.getCurrentTopUnit(request))
             .correlation(WebOptUtils.getCorrelationId(request))
             .content(optContent)
             .oldObject(oldObject).time(DatetimeOpt.currentUtilDate()).loginIp(WebOptUtils.getRequestAddr(request)));
@@ -182,7 +182,7 @@ public abstract class OperationLogCenter {
     public static void logUpdateObject(HttpServletRequest request, String optId, String optTag, String optMethod,
                                        String optContent, Object newObject, Object oldObject) {
         log(OperationLog.create().user(WebOptUtils.getCurrentUserCode(request)).operation(optId)
-            .unit(WebOptUtils.getCurrentUnitCode(request))
+            .unit(WebOptUtils.getCurrentUnitCode(request)).topUnit(WebOptUtils.getCurrentTopUnit(request))
             .correlation(WebOptUtils.getCorrelationId(request))
             .tag(optTag).method(optMethod).content(optContent)
             .makeDifference(oldObject, newObject)
