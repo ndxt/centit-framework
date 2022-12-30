@@ -11,6 +11,7 @@ import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.IUserSetting;
 import com.centit.framework.model.basedata.NoticeMessage;
+import com.centit.framework.model.basedata.OperationLog;
 import com.centit.support.common.DoubleAspect;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -249,7 +250,10 @@ public class NotificationCenterImpl implements NotificationCenter {
         sysNotify.put("notifyState", notifyState);
         sysNotify.put("errorText", errorText);
 
-        OperationLogCenter.log(sender, "Notify", message.getOptTag(),"notify", JSON.toJSONString(sysNotify));
+        OperationLogCenter.log(OperationLog.create().user(sender).application(message.getOsId())
+            .operation(message.getOptId()).topUnit(message.getTopUnit())
+            .tag(message.getOptTag()).method("Notify").content(message.getMsgContent())
+            .newObject(JSON.toJSONString(sysNotify)));
 
     }
 

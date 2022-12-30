@@ -12,7 +12,6 @@ import com.centit.support.common.ListAppendMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.ConfigAttribute;
 
 import java.util.ArrayList;
 import java.util.HashMap;

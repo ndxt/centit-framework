@@ -1,12 +1,9 @@
 package com.centit.framework.security.model;
 
 import com.centit.framework.components.CodeRepositoryCache;
-import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.support.algorithm.StringBaseOpt;
-import com.centit.support.common.AbstractCachedObject;
 import com.centit.support.common.CachedMap;
 import com.centit.support.common.CachedObject;
-import com.centit.support.common.ICachedObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 

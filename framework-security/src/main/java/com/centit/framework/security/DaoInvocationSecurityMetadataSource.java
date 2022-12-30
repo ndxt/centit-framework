@@ -1,8 +1,5 @@
 package com.centit.framework.security;
 
-import com.centit.framework.common.GlobalConstValue;
-import com.centit.framework.common.WebOptUtils;
-import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.security.model.CentitSecurityMetadata;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.FilterInvocation;
