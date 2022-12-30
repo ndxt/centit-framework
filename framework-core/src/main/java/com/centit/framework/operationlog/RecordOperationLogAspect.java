@@ -158,6 +158,7 @@ public class RecordOperationLogAspect {
             OperationLog.create().level(logLevel)
                 .user(userInfo==null? loginIp : userInfo.getString("userCode"))
                 .unit(WebOptUtils.getCurrentUnitCode(request))
+                .topUnit(WebOptUtils.getCurrentTopUnit(request))
                 .correlation(WebOptUtils.getCorrelationId(request))
                 .operation(optId).tag(optTag).method(optMethod)
                 .content(optContent).newObject(newValue)
