@@ -1,12 +1,10 @@
 package com.centit.framework.model.basedata;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.core.dao.DictionaryMap;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.DatetimeOpt;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,11 +107,11 @@ public class OperationLog implements java.io.Serializable {
     /**
      * 更新前旧值，json格式，这个字段不是必须的
      */
-    private String newValue;
+    private Object newValue;
     /**
      * 更新后新值，json格式，这个字段不是必须的
      */
-    private String oldValue;
+    private Object oldValue;
     private String loginIp;
 
     public OperationLog() {
@@ -191,28 +189,15 @@ public class OperationLog implements java.io.Serializable {
     }
 
     public OperationLog newObject(Object obj){
-        this.newValue = castObjectToJsonStr(obj);
+        this.newValue = obj;//castObjectToJsonStr(obj);
         return this;
     }
 
     public OperationLog oldObject(Object obj){
-        this.oldValue = castObjectToJsonStr(obj);
+        this.oldValue = obj;//castObjectToJsonStr(obj);
         return this;
     }
 
-    public Object getNewObject() {
-        if(StringUtils.isBlank(this.newValue)){
-            return null;
-        }
-        return JSON.parse(this.newValue);
-    }
-
-    public Object getOldObject() {
-        if(StringUtils.isBlank(this.oldValue)){
-            return null;
-        }
-        return JSON.parse(this.oldValue);
-    }
     /**
      * 更新后新值，json格式，这个字段不是必须的
      */
