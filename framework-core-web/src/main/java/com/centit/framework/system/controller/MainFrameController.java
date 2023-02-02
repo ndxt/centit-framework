@@ -541,7 +541,8 @@ public class MainFrameController extends BaseController {
                 "url", "optRoute",
                 "icon", "icon",
                 "children", "children",
-                "isInToolbar", "isInToolbar"
+                "isInToolbar", "isInToolbar",
+                "orderInd","orderInd"
                 //"attributes.external","pageType"
             ), (jsonObject, obj) -> jsonObject.put("external", !("D".equals(obj.getPageType()))));
     }
