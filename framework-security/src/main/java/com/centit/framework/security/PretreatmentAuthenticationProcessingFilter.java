@@ -65,7 +65,7 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
 
             request.getSession().removeAttribute(CaptchaImageUtil.SESSIONCHECKCODE);
 
-            if(! "nocheckcode".equals(requestCheckcode)){
+            if(! "nocheckcode".equals(requestCheckcode) || !StringBaseOpt.isNvl(sessionCheckcode)){
                 if(!CaptchaImageUtil.checkcodeMatch(sessionCheckcode, requestCheckcode))
                 //if(request_checkcode==null || ! request_checkcode.equalsIgnoreCase(session_checkcode)  )
                     throw new AuthenticationServiceException("bad checkcode");
