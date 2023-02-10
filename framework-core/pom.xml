@@ -5,7 +5,7 @@
     <parent>
         <artifactId>framework-parent</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>5.2-SNAPSHOT</version>
+        <version>5.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,12 +14,6 @@
     <description>框架的核心包，整合了多个开源框架，并定义了组织机构和权限体系</description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.centit.framework</groupId>
-            <artifactId>framework-system-entity</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
