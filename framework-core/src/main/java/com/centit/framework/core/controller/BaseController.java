@@ -7,6 +7,8 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.QueryUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
@@ -143,7 +145,7 @@ public abstract class BaseController {
      */
     public static Map<String, Object> collectRequestParameters(HttpServletRequest request) {
         Map<String, String[]> parameterMap = request.getParameterMap();
-        Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>();
         //map.put("isValid", "T");
         for (Map.Entry<String, String[]> ent : parameterMap.entrySet()) {
             String key = ent.getKey();
@@ -153,26 +155,17 @@ public abstract class BaseController {
             if(values==null)
                 continue;
             Object paramValue = values.length==1 ? values[0] : values;
-            String paramAlias = key;
-            /*int e = key.indexOf('-');
-            if (e > 0) {
-                String pretreatment = key.substring(0, e).trim();
-                paramAlias = key.substring(e + 1).trim();
-                paramValue = QueryUtils.pretreatParameter(pretreatment,paramValue);
-            }*/
-            //和 QueryUtils 中的语法保存一致
-            int nPos = key.indexOf('(');
-            int nRevPos = key.lastIndexOf(')');
-            if(nPos>=0 && nRevPos>=0){
-                String pretreatment = key.substring(nPos+1, nRevPos).trim();
-                paramAlias = nPos>0? key.substring(0,nPos).trim()
-                    :key.substring(nRevPos+1).trim();
+            String pretreatmentSql = key;
+
+            ImmutableTriple<String, String, String> paramDesc = QueryUtils.parseParameter(pretreatmentSql);
+            String pretreatment = paramDesc.getRight();
+            String valueName = StringUtils.isBlank(paramDesc.getMiddle()) ? paramDesc.getLeft() : paramDesc.getMiddle();
+
+            if(StringUtils.isNotBlank(pretreatment)){
                 paramValue = QueryUtils.pretreatParameter(pretreatment, paramValue);
             }
-            map.put(paramAlias, paramValue);
+            map.put(valueName, paramValue);
         }
         return map;
     }
-
-
 }
