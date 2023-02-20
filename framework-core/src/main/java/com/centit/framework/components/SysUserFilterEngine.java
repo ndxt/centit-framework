@@ -198,7 +198,10 @@ public abstract class SysUserFilterEngine {
             if (rf.getUsers() != null && rf.getUsers().size() > 0) {
                 lsUserInfo = new ArrayList<>(rf.getUsers().size() + 1);
                 for (String userCode : rf.getUsers()) {
-                    lsUserInfo.add(ecc.getUserInfoByCode(userCode));
+                    IUserInfo userInfo = ecc.getUserInfoByCode(userCode);
+                    if (null != userInfo) {
+                        lsUserInfo.add(userInfo);
+                    }
                 }
             } else if (!hasUnitFilter) {
                 // 剔除禁用用户

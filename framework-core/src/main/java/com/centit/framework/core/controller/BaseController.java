@@ -154,14 +154,13 @@ public abstract class BaseController {
             Map<String, Object> map = new HashMap<>();
         //map.put("isValid", "T");
         for (Map.Entry<String, String[]> ent : parameterMap.entrySet()) {
-            String key = ent.getKey();
-            if(key.startsWith("_"))
+            String pretreatmentSql = ent.getKey();
+            if(pretreatmentSql.startsWith("_"))
                 continue;
             String[] values = CollectionsOpt.removeBlankString(ent.getValue());
             if(values==null)
                 continue;
             Object paramValue = values.length==1 ? values[0] : values;
-            String pretreatmentSql = key;
 
             ImmutableTriple<String, String, String> paramDesc = QueryUtils.parseParameter(pretreatmentSql);
             String pretreatment = paramDesc.getRight();
