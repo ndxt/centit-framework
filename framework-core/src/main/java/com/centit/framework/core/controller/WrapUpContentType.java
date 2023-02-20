@@ -11,5 +11,6 @@ public enum WrapUpContentType {
     XML,  //将对象转换为xml返回
     HTML, // 返回html文本
     FILE, // 返回文件流
-    MAP_DICT // 将对象中的 DictionaryMap 注解 映射为 对应的字段添加到json
+    MAP_DICT, // 将对象中的 DictionaryMap 注解 映射为 对应的字段添加到json
+    BASE64 // 对data部分进行 base64 编码
 }

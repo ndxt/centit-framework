@@ -80,7 +80,7 @@ public abstract class BaseController {
         if (WebOptUtils.isAjax(request)) {
             if (ex instanceof ObjectException){
                 logger.error(ex.getMessage());
-                ObjectException objex = (ObjectException)ex;
+                ObjectException objex = (ObjectException) ex;
                 if(WebOptUtils.exceptionNotAsHttpError &&
                     (objex.getExceptionCode() == ResponseData.ERROR_USER_NOT_LOGIN ||
                     objex.getExceptionCode() == ResponseData.ERROR_UNAUTHORIZED ) ){
@@ -89,9 +89,13 @@ public abstract class BaseController {
                 }else {
                     ResponseMapData responseData =
                         new ResponseMapData(objex.getExceptionCode(),
-                            ObjectException.extortExceptionOriginMessage(objex));
-                    responseData.addResponseData("trace",ObjectException.extortExceptionTraceMessage(objex));
-                    responseData.addResponseData("object",objex.getObjectData());
+                            this.logDebug ? ObjectException.extortExceptionOriginMessage(objex) : "内部错误，请联系管理员；开发人员请查看后台日志。");
+                    if(this.logDebug) {
+                        responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(objex));
+                    } else {
+                        logger.error(ObjectException.extortExceptionTraceMessage(objex));
+                    }
+                    responseData.addResponseData("object", objex.getObjectData());
                     JsonResultUtils.writeResponseDataAsJson(responseData, response);
                 }
                 return;
@@ -121,8 +125,10 @@ public abstract class BaseController {
             // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误
             ResponseMapData responseData =
                 new ResponseMapData(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
-                    ObjectException.extortExceptionOriginMessage(ex));
-            responseData.addResponseData("trace",ObjectException.extortExceptionTraceMessage(ex));
+                    this.logDebug ? ObjectException.extortExceptionOriginMessage(ex) : "内部错误，请联系管理员；开发人员请查看后台日志。");
+            if(this.logDebug) {
+                responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(ex));
+            }
             JsonResultUtils.writeResponseDataAsJson(responseData, response);
         } else {
             if (ex instanceof ObjectException) {

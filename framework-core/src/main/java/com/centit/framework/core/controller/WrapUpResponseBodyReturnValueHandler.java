@@ -29,6 +29,9 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import org.apache.commons.codec.binary.Base64;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 /**
@@ -151,6 +154,19 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                     }
                     messageConverter.write(
                         ResponseData.makeResponseData(outputValue), MediaType.APPLICATION_JSON, outputMessage);
+                }
+                break;
+
+            case BASE64: {
+                    ResponseData outputValue;
+                    if(value == null) {
+                        outputValue = ResponseData.successResponse;
+                    } else {
+                        String jsonStr = JSON.toJSONString(value);
+                        outputValue = ResponseData.makeResponseData(Base64.encodeBase64String(jsonStr.getBytes(StandardCharsets.UTF_8)));
+                    }
+                    messageConverter.write(
+                        outputValue, MediaType.APPLICATION_JSON, outputMessage);
                 }
                 break;
             case DATA:
