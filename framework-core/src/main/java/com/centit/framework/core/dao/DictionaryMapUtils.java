@@ -230,7 +230,7 @@ public abstract class DictionaryMapUtils {
         if(obj==null)
             return null;
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(obj.getClass());
-        return objectToJSON(obj,fieldDictionaryMaps);
+        return objectToJSON(obj, fieldDictionaryMaps);
 
     }
 

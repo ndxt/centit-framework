@@ -93,15 +93,16 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
 
     protected void writeWithMessageConverters(Object value,
                                                   MethodParameter returnType,
-                                                  ServletServerHttpResponse outputMessage)
+                                                  ServletServerHttpResponse httpResponse)
         throws IOException, HttpMessageNotWritableException {
 
         WrapUpResponseBody wrap = returnType.getMethodAnnotation(WrapUpResponseBody.class);
         WrapUpContentType wrapUpType = wrap != null ? wrap.contentType()
                             : WrapUpContentType.DATA;
+
         switch (wrapUpType) {
             case RAW:
-                JsonResultUtils.writeOriginalObject(value,outputMessage.getServletResponse());
+                JsonResultUtils.writeOriginalObject(value, httpResponse.getServletResponse());
                 break;
             case JAVASCRIPT:
                 String scriptValue;
@@ -110,12 +111,12 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                 }else {
                     scriptValue = JSON.toJSONString(value);
                 }
-                JsonResultUtils.writeJavaScript(scriptValue,outputMessage.getServletResponse());
+                JsonResultUtils.writeJavaScript(scriptValue,httpResponse.getServletResponse());
                 break;
             case IMAGE:
                 if(value instanceof RenderedImage){
                     JsonResultUtils.writeOriginalImage((RenderedImage)value,
-                        outputMessage.getServletResponse());
+                        httpResponse.getServletResponse());
                 }else{
                     throw new ObjectException(500, "需要image/gif格式的RenderedImage对象。");
                 }
@@ -127,33 +128,40 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                     } else {
                         xmlValue = XMLObject.objectToXMLString("response", value);
                     }
-                    JsonResultUtils.writeOriginalXml(xmlValue, outputMessage.getServletResponse());
+                    JsonResultUtils.writeOriginalXml(xmlValue, httpResponse.getServletResponse());
                 }
                 break;
             case HTML:
-                JsonResultUtils.writeOriginalHtml(value,outputMessage.getServletResponse());
+                JsonResultUtils.writeOriginalHtml(value, httpResponse.getServletResponse());
                 break;
             case FILE:
                 if(value instanceof File){
                     JsonResultUtils.writeOriginalFile((File) value,
-                        outputMessage.getServletResponse());
+                        httpResponse.getServletResponse());
                 } else if(value instanceof InputStream){
                     JsonResultUtils.writeOriginalFile((InputStream) value, "未命名文件",
-                        outputMessage.getServletResponse());
+                        httpResponse.getServletResponse());
                 } else {
                     throw new ObjectException(500, "需要File对象。");
                 }
                 break;
+
             case MAP_DICT:{
-                    Object outputValue;
-                    if (value instanceof Collection) {
+                    ResponseData outputValue;
+                    if(value == null) {
+                        outputValue = ResponseData.successResponse;
+                    } else if (value instanceof ToResponseData){
+                        outputValue = ((ToResponseData)value).toResponseData();
+                    } else if (value instanceof ResponseData) {
+                        outputValue = (ResponseData) value;
+                    } else if (value instanceof Collection) {
                         outputValue =
-                            DictionaryMapUtils.objectsToJSONArray((Collection<? extends Object>)value);
+                            ResponseData.makeResponseData(
+                                DictionaryMapUtils.objectsToJSONArray((Collection<? extends Object>)value));
                     } else {
-                        outputValue = DictionaryMapUtils.objectToJSON(value);
+                        outputValue = ResponseData.makeResponseData(DictionaryMapUtils.objectToJSON(value));
                     }
-                    messageConverter.write(
-                        ResponseData.makeResponseData(outputValue), MediaType.APPLICATION_JSON, outputMessage);
+                    messageConverter.write(outputValue, MediaType.APPLICATION_JSON, httpResponse);
                 }
                 break;
 
@@ -161,14 +169,26 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                     ResponseData outputValue;
                     if(value == null) {
                         outputValue = ResponseData.successResponse;
+                    }  else if (value instanceof ToResponseData){
+                        outputValue = ((ToResponseData)value).toResponseData();
+                        outputValue = ResponseData.makeErrorMessageWithData(
+                            Base64.encodeBase64String(JSON.toJSONString(outputValue.getData()).getBytes(StandardCharsets.UTF_8)),
+                            outputValue.getCode(), outputValue.getMessage());
+
+                    } else if (value instanceof ResponseData) {
+                        outputValue = (ResponseData)value;
+                        outputValue = ResponseData.makeErrorMessageWithData(
+                            Base64.encodeBase64String(JSON.toJSONString(outputValue.getData()).getBytes(StandardCharsets.UTF_8)),
+                            outputValue.getCode(), outputValue.getMessage());
                     } else {
                         String jsonStr = JSON.toJSONString(value);
                         outputValue = ResponseData.makeResponseData(Base64.encodeBase64String(jsonStr.getBytes(StandardCharsets.UTF_8)));
                     }
                     messageConverter.write(
-                        outputValue, MediaType.APPLICATION_JSON, outputMessage);
+                        outputValue, MediaType.APPLICATION_JSON, httpResponse);
                 }
                 break;
+
             case DATA:
             default: {
                     ResponseData outputValue;
@@ -182,7 +202,7 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                         outputValue = ResponseData.makeResponseData(value);
                     }
                     messageConverter.write(
-                        outputValue, MediaType.APPLICATION_JSON, outputMessage);
+                        outputValue, MediaType.APPLICATION_JSON, httpResponse);
                 }
                 break;
         }
