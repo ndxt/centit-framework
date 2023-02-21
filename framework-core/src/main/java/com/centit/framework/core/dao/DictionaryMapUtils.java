@@ -203,12 +203,10 @@ public abstract class DictionaryMapUtils {
      * @return Po对象转换为JSONObject
      */
     private static Object objectToJSON(Object obj, List<DictionaryMapColumn> fieldDictionaryMaps ){
-        if(obj==null)
-            return null;
+        if(obj==null || fieldDictionaryMaps==null || fieldDictionaryMaps.size()==0)
+            return obj;
         Object jsonObject= ( obj instanceof  Map) ? obj : JSON.toJSON(obj);
         if(jsonObject instanceof Map){
-            if(fieldDictionaryMaps==null||fieldDictionaryMaps.size()==0)
-                return jsonObject;
             Map<String,Object> jsonObj = ( Map<String,Object>) jsonObject;
             for(DictionaryMapColumn col: fieldDictionaryMaps){
                 if( jsonObj.get(col.getFieldName()) !=null) {
