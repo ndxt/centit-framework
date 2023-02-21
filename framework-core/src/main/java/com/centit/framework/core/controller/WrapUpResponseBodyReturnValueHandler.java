@@ -103,25 +103,28 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
         switch (wrapUpType) {
             case RAW:
                 JsonResultUtils.writeOriginalObject(value, httpResponse.getServletResponse());
-                break;
+                return;
             case JAVASCRIPT:
-                String scriptValue;
-                if(ReflectionOpt.isScalarType(value.getClass())){
-                    scriptValue = StringBaseOpt.objectToString(value);
-                }else {
-                    scriptValue = JSON.toJSONString(value);
+                {
+                    String scriptValue;
+                    if (ReflectionOpt.isScalarType(value.getClass())) {
+                        scriptValue = StringBaseOpt.objectToString(value);
+                    } else {
+                        scriptValue = JSON.toJSONString(value);
+                    }
+                    JsonResultUtils.writeJavaScript(scriptValue, httpResponse.getServletResponse());
                 }
-                JsonResultUtils.writeJavaScript(scriptValue,httpResponse.getServletResponse());
-                break;
+                return;
             case IMAGE:
-                if(value instanceof RenderedImage){
-                    JsonResultUtils.writeOriginalImage((RenderedImage)value,
+                if (value instanceof RenderedImage) {
+                    JsonResultUtils.writeOriginalImage((RenderedImage) value,
                         httpResponse.getServletResponse());
-                }else{
+                } else {
                     throw new ObjectException(500, "需要image/gif格式的RenderedImage对象。");
                 }
-                break;
-            case XML: {
+                return;
+            case XML:
+                {
                     String xmlValue;
                     if (ReflectionOpt.isScalarType(value.getClass())) {
                         xmlValue = StringBaseOpt.objectToString(value);
@@ -130,82 +133,68 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
                     }
                     JsonResultUtils.writeOriginalXml(xmlValue, httpResponse.getServletResponse());
                 }
-                break;
+                return;
             case HTML:
                 JsonResultUtils.writeOriginalHtml(value, httpResponse.getServletResponse());
-                break;
+                return;
             case FILE:
-                if(value instanceof File){
+                if (value instanceof File) {
                     JsonResultUtils.writeOriginalFile((File) value,
                         httpResponse.getServletResponse());
-                } else if(value instanceof InputStream){
+                } else if (value instanceof InputStream) {
                     JsonResultUtils.writeOriginalFile((InputStream) value, "未命名文件",
                         httpResponse.getServletResponse());
                 } else {
                     throw new ObjectException(500, "需要File对象。");
                 }
-                break;
-
-            case MAP_DICT:{
-                    ResponseData outputValue;
-                    if(value == null) {
-                        outputValue = ResponseData.successResponse;
-                    } else if (value instanceof ToResponseData){
-                        outputValue = ((ToResponseData)value).toResponseData();
-                    } else if (value instanceof ResponseData) {
-                        outputValue = (ResponseData) value;
-                    } else if (value instanceof Collection) {
-                        outputValue =
-                            ResponseData.makeResponseData(
-                                DictionaryMapUtils.objectsToJSONArray((Collection<? extends Object>)value));
-                    } else {
-                        outputValue = ResponseData.makeResponseData(DictionaryMapUtils.objectToJSON(value));
-                    }
-                    messageConverter.write(outputValue, MediaType.APPLICATION_JSON, httpResponse);
-                }
-                break;
-
-            case BASE64: {
-                    ResponseData outputValue;
-                    if(value == null) {
-                        outputValue = ResponseData.successResponse;
-                    }  else if (value instanceof ToResponseData){
-                        outputValue = ((ToResponseData)value).toResponseData();
-                        outputValue = ResponseData.makeErrorMessageWithData(
-                            Base64.encodeBase64String(JSON.toJSONString(outputValue.getData()).getBytes(StandardCharsets.UTF_8)),
-                            outputValue.getCode(), outputValue.getMessage());
-
-                    } else if (value instanceof ResponseData) {
-                        outputValue = (ResponseData)value;
-                        outputValue = ResponseData.makeErrorMessageWithData(
-                            Base64.encodeBase64String(JSON.toJSONString(outputValue.getData()).getBytes(StandardCharsets.UTF_8)),
-                            outputValue.getCode(), outputValue.getMessage());
-                    } else {
-                        String jsonStr = JSON.toJSONString(value);
-                        outputValue = ResponseData.makeResponseData(Base64.encodeBase64String(jsonStr.getBytes(StandardCharsets.UTF_8)));
-                    }
-                    messageConverter.write(
-                        outputValue, MediaType.APPLICATION_JSON, httpResponse);
-                }
-                break;
-
-            case DATA:
-            default: {
-                    ResponseData outputValue;
-                    if(value == null) {
-                        outputValue = ResponseData.successResponse;
-                    } else if (value instanceof ToResponseData){
-                        outputValue = ((ToResponseData)value).toResponseData();
-                    } else if (value instanceof ResponseData) {
-                        outputValue = (ResponseData)value;
-                    } else {
-                        outputValue = ResponseData.makeResponseData(value);
-                    }
-                    messageConverter.write(
-                        outputValue, MediaType.APPLICATION_JSON, httpResponse);
-                }
+                return;
+            default:
                 break;
         }
+
+        ResponseData outputValue;
+        if(value == null) {
+            outputValue = ResponseData.successResponse;
+            messageConverter.write(
+                outputValue, MediaType.APPLICATION_JSON, httpResponse);
+            return;
+        }
+
+        if (value instanceof ToResponseData){
+            outputValue = ((ToResponseData)value).toResponseData();
+        } else if (value instanceof ResponseData) {
+            outputValue = (ResponseData) value;
+        } else {
+            outputValue = ResponseData.makeResponseData(value);
+        }
+
+        switch (wrapUpType) {
+            case MAP_DICT:{
+                Object data = outputValue.getData();
+                if (data instanceof Collection) {
+                    outputValue = ResponseData.makeErrorMessageWithData(
+                        DictionaryMapUtils.objectsToJSONArray((Collection<? extends Object>)data),
+                        outputValue.getCode(), outputValue.getMessage());
+                } else {
+                    outputValue = ResponseData.makeErrorMessageWithData(
+                        DictionaryMapUtils.objectToJSON(data),
+                        outputValue.getCode(), outputValue.getMessage());
+
+                }
+            }
+            break;
+            case BASE64: {
+                outputValue = ResponseData.makeErrorMessageWithData(
+                    Base64.encodeBase64String(JSON.toJSONString(outputValue.getData()).getBytes(StandardCharsets.UTF_8)),
+                    outputValue.getCode(), outputValue.getMessage());
+            }
+            break;
+            case DATA:
+            default:
+            break;
+        }
+        messageConverter.write(
+            outputValue, MediaType.APPLICATION_JSON, httpResponse);
     }
 
 }
