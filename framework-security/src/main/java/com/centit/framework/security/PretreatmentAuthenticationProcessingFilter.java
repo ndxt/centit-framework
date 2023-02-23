@@ -3,7 +3,10 @@ package com.centit.framework.security;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
+import com.centit.support.security.AESSecurityUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -44,6 +47,17 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
 
     public void setRetryCheckTimeTnterval(int checkTimeTnterval) {
         CheckFailLogs.setCheckTimeTnterval(checkTimeTnterval);
+    }
+
+    private String decodeSecurityString(String sStr){
+        if(sStr==null)
+            return "";
+        sStr = sStr.trim();
+        if (sStr.startsWith("cipher:")) {
+            return new String(Base64.decodeBase64(sStr.substring(7))).trim();
+        } else {
+            return sStr;
+        }
     }
 
     @Override
@@ -89,7 +103,18 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
 
         //if(!onlyPretreat || writeLog || CheckFailLogs.getMaxTryTimes() > 0){
         try{
-            Authentication auth = super.attemptAuthentication(request, response);
+
+            String username = obtainUsername(request);
+            username = decodeSecurityString(username);
+            String password = obtainPassword(request);
+            password = decodeSecurityString(password);
+
+            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+            // Allow subclasses to set the "details" property
+            setDetails(request, authRequest);
+            Authentication auth = this.getAuthenticationManager().authenticate(authRequest);
+
+            //Authentication auth = super.attemptAuthentication(request, response);
 //            if(request.getSession(false)!=null) {
 //                request.changeSessionId();
 //            }
