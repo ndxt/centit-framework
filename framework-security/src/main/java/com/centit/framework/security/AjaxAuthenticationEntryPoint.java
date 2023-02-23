@@ -25,7 +25,8 @@ public class AjaxAuthenticationEntryPoint implements AuthenticationEntryPoint {
     }
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+        throws IOException, ServletException {
         if(WebOptUtils.isAjax(request)){
             if(WebOptUtils.exceptionNotAsHttpError) {
                 ResponseSingleData responseData =
