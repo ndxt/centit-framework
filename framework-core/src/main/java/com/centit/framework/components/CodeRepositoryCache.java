@@ -156,6 +156,9 @@ public abstract class CodeRepositoryCache {
             case "OsInfo":
                 CodeRepositoryCache.osInfoCache.evictCahce();
                 break;
+            case "SystemOpt":
+                CodeRepositoryCache.sysOptTreeRepo.evictCahce();
+                break;
         }
     }
 
