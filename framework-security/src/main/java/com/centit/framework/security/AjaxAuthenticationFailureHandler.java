@@ -7,6 +7,7 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.security.SecurityOptUtils;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
@@ -32,19 +33,19 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
             throws IOException, ServletException {
 
         if(writeLog){
-            String loginName = request.getParameter("username");
+            String loginName = SecurityOptUtils.decodeSecurityString(request.getParameter("username"));
             String loginHost = request.getRemoteHost()+":"+request.getRemotePort();
             OperationLogCenter.log(
                 OperationLog.create().user(loginName).method("loginError").application("mainframe")
                     .operation("login").content(
                         "用户 ："+loginName+"于"+DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate())
-                    + "从主机"+loginHost+"尝试登录,失败原因:"+exception.getMessage()+"。").loginIp(loginHost));
+                    + "从主机"+loginHost+"尝试登录,失败原因:"+exception.getMessage()).loginIp(loginHost));
         }
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
         boolean isAjaxQuery = WebOptUtils.isAjax(request);
         if(isAjaxQuery){
             ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_LOGIN_ERROR,
-                    exception.getMessage() + "!");
+                    exception.getMessage());
             resData.addResponseData("hasTriedTimes",tryTimes);
             JsonResultUtils.writeResponseDataAsJson(resData, response);
         }else {
