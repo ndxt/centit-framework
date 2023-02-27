@@ -3,8 +3,7 @@ package com.centit.framework.security;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
-import com.centit.support.security.AESSecurityUtils;
-import org.apache.commons.codec.binary.Base64;
+import com.centit.support.security.SecurityOptUtils;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,17 +46,6 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
 
     public void setRetryCheckTimeTnterval(int checkTimeTnterval) {
         CheckFailLogs.setCheckTimeTnterval(checkTimeTnterval);
-    }
-
-    private String decodeSecurityString(String sStr){
-        if(sStr==null)
-            return "";
-        sStr = sStr.trim();
-        if (sStr.startsWith("cipher:")) {
-            return new String(Base64.decodeBase64(sStr.substring(7))).trim();
-        } else {
-            return sStr;
-        }
     }
 
     @Override
@@ -105,9 +93,9 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
         try{
 
             String username = obtainUsername(request);
-            username = decodeSecurityString(username);
+            username = SecurityOptUtils.decodeSecurityString(username);
             String password = obtainPassword(request);
-            password = decodeSecurityString(password);
+            password = SecurityOptUtils.decodeSecurityString(password);
 
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
             // Allow subclasses to set the "details" property
