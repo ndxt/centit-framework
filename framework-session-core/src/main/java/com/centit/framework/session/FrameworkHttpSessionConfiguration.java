@@ -11,9 +11,11 @@ public class FrameworkHttpSessionConfiguration {
     private boolean cookieFist;
     @Value("${session.strategy.cookie.path:/}")
     private String cookiePath;
+    @Value("${session.strategy.addAccessToken:true}")
+    private boolean addAccessToken;
 
     @Bean
     public SmartHttpSessionResolver smartHttpSessionStrategy(){
-        return new SmartHttpSessionResolver(cookieFist, cookiePath);
+        return new SmartHttpSessionResolver(cookieFist, cookiePath,addAccessToken);
     }
 }
