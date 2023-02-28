@@ -37,7 +37,7 @@ public class HttpReceiveJSON implements ToResponseData {
     }
 
     public boolean isJSON() {
-        return resObj instanceof JSON;
+        return resObj instanceof JSONObject || resObj instanceof JSONArray;
     }
 
     public boolean isResponseData() {
@@ -85,7 +85,7 @@ public class HttpReceiveJSON implements ToResponseData {
             return null;
         }
         if(data instanceof JSONObject) {
-            return JSON.toJavaObject((JSONObject)data, clazz);
+            return ((JSONObject)data).toJavaObject(clazz);
         }
         if(clazz.isAssignableFrom(data.getClass())){
             return (T) data;
@@ -239,9 +239,9 @@ public class HttpReceiveJSON implements ToResponseData {
         return null;
     }
 
-    public JSON getOriginalJSON() {
+    public Object getOriginalJSON() {
         if(isJSON()){
-            return (JSON)resObj;
+            return resObj;
         }
         return null;
     }
