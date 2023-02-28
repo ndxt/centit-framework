@@ -1,6 +1,5 @@
 package com.centit.framework.config;
 
-import com.alibaba.fastjson2.support.spring.http.converter.FastJsonHttpMessageConverter;
 import com.centit.framework.core.controller.MvcConfigUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -24,19 +23,9 @@ import java.util.List;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class BaseSpringMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
 
-    private FastJsonHttpMessageConverter jsonHttpMessageConverter = null;
-
-    private synchronized FastJsonHttpMessageConverter fastJsonHttpMessageConverter(){
-        if(jsonHttpMessageConverter != null){
-            return jsonHttpMessageConverter;
-        }
-        jsonHttpMessageConverter = MvcConfigUtil.fastJsonHttpMessageConverter();
-        return jsonHttpMessageConverter;
-    }
-
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(fastJsonHttpMessageConverter());
+        converters.add(MvcConfigUtil.fastJsonHttpMessageConverter());
         converters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
     }
 
@@ -65,7 +54,7 @@ public class BaseSpringMvcConfig implements WebMvcConfigurer, ApplicationContext
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        MvcConfigUtil.setApplicationContext(applicationContext, fastJsonHttpMessageConverter());
+        MvcConfigUtil.setApplicationContext(applicationContext, MvcConfigUtil.fastJsonHttpMessageConverter());
     }
 
     /*@Override
