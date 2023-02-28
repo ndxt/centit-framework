@@ -1,6 +1,6 @@
 package com.centit.framework.components;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.common.WebOptUtils;

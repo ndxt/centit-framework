@@ -1,7 +1,7 @@
 package com.centit.framework.web.demo;
 
 
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.alibaba.fastjson2.support.spring.FastJsonHttpMessageConverter;
 import com.centit.framework.core.controller.MvcConfigUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;

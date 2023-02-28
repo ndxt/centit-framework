@@ -1,6 +1,6 @@
 package com.centit.framework.staticsystem.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSONArray;
 import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.framework.core.dao.ExtendedQueryPool;

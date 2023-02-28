@@ -1,8 +1,8 @@
 package com.centit.framework.system.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.centit.framework.common.*;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.SysUnitFilterEngine;
@@ -901,7 +901,7 @@ public class MainFrameController extends BaseController {
             }
         }
         allUserInfos.sort((o1, o2) -> compareUserTwoRow(o1, o2));
-        JSONArray jsonArray = (JSONArray) JSONArray.toJSON(allUserInfos);
+        JSONArray jsonArray =JSONArray.copyOf(allUserInfos);
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject1 = jsonArray.getJSONObject(i);
             String userName = CodeRepositoryUtil.getUserName("all", jsonObject1.getString("userCode"));
@@ -957,7 +957,7 @@ public class MainFrameController extends BaseController {
             unitInfos.add(CodeRepositoryUtil.getUnitInfoByCode("all", uc));
         }
         unitInfos.sort((o1, o2) -> compareUnitTwoRow(o1, o2));
-        return (JSONArray) JSONArray.toJSON(unitInfos);
+        return JSONArray.copyOf(unitInfos);
     }
 
     private static int compareUnitTwoRow(IUnitInfo data1, IUnitInfo data2) {

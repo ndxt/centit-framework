@@ -1,11 +1,10 @@
 package com.centit.framework.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.alibaba.fastjson.serializer.SerializeFilter;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.filter.PropertyPreFilter;
+import com.alibaba.fastjson2.filter.SimplePropertyPreFilter;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.file.FileType;
 import com.centit.support.xml.XMLObject;
@@ -34,9 +33,9 @@ public class JsonResultUtils {
     private static Logger logger = LoggerFactory.getLogger(JsonResultUtils.class);
     private final static String DEFAULT_RESPONSE_CHARACTER = "UTF-8";
 
-    static {
+    /*static {
         JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.getMask();
-    }
+    }*/
 
     private JsonResultUtils() {
 
@@ -246,9 +245,15 @@ public class JsonResultUtils {
      *@param json JSON格式
      * @param response HttpServletResponse
      */
-    public static void writeOriginalJson(JSON json, HttpServletResponse response) {
+    public static void writeOriginalJson(Object json, HttpServletResponse response) {
+        String objectString;
+        if(json instanceof JSONObject || json instanceof JSONArray){
+            objectString = json.toString();
+        } else {
+            objectString = JSON.toJSONString(json);
+        }
         writeOriginalResponse("application/json; charset=utf-8",
-                json.toJSONString(), response);
+            objectString , response);
     }
 
     /**
@@ -351,9 +356,14 @@ public class JsonResultUtils {
             writeOriginalResponse("text/plain; charset=utf-8",
                     JSON.toJSONString(objValue), response);
         }else {
+            String objectString;
+            if(objValue instanceof JSONObject || objValue instanceof JSONArray){
+                objectString = objValue.toString();
+            } else {
+                objectString = JSON.toJSONString(objValue);
+            }
             writeOriginalResponse("application/json; charset=utf-8",
-                    JSON.toJSONString(objValue, SerializeConfig.globalInstance,new SerializeFilter[0],
-                        JSON.DEFFAULT_DATE_FORMAT,JSON.DEFAULT_GENERATE_FEATURE), response);
+                    objectString, response);
         }
     }
 
@@ -376,8 +386,8 @@ public class JsonResultUtils {
      * @param response HttpServletResponse
      * @param simplePropertyPreFilter SerializeFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
      */
-    public static void writeSingleDataJson(int code,String message, Object objValue, HttpServletResponse response,
-                                           SerializeFilter simplePropertyPreFilter) {
+    public static void writeSingleDataJson(int code, String message, Object objValue, HttpServletResponse response,
+                                           PropertyPreFilter simplePropertyPreFilter) {
 
         Map<String, Object> param = new HashMap<>();
         param.put(ResponseData.RES_CODE_FILED, code );
@@ -385,7 +395,7 @@ public class JsonResultUtils {
         if(objValue!=null) {
             param.put(ResponseData.RES_DATA_FILED, objValue);
         }
-        String text = JSONObject.toJSONString(param, simplePropertyPreFilter);
+        String text = JSON.toJSONString(param, simplePropertyPreFilter);
 
         writeOriginalJson(text,response);
     }
@@ -418,7 +428,7 @@ public class JsonResultUtils {
      * @param propertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
      */
     public static void writeResponseDataAsJson(ResponseData resData, HttpServletResponse response,
-                                               SerializeFilter propertyPreFilter) {
+                                               PropertyPreFilter propertyPreFilter) {
         writeSingleDataJson(resData.getCode(),resData.getMessage(),
                 resData.getData(), response, propertyPreFilter);
     }
@@ -521,8 +531,8 @@ public class JsonResultUtils {
      * @param simplePropertyPreFilter {@link SimplePropertyPreFilter} 格式化时过滤指定的属性
      */
     public static void writeSingleDataJson(Object objValue, HttpServletResponse response,
-                                           SerializeFilter simplePropertyPreFilter) {
-        writeSingleDataJson(0,"OK",objValue,response,simplePropertyPreFilter);
+                                           PropertyPreFilter simplePropertyPreFilter) {
+        writeSingleDataJson(0,"OK", objValue, response, simplePropertyPreFilter);
     }
     /**
      * 格式化Json数据输出

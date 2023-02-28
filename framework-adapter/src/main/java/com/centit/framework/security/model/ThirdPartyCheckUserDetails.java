@@ -1,6 +1,6 @@
 package com.centit.framework.security.model;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 
 /**

@@ -1,6 +1,6 @@
 package com.centit.framework.common;
 
-import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.alibaba.fastjson2.filter.PropertyPreFilter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -277,7 +277,7 @@ public interface ResponseData  extends Serializable {
     @ApiModelProperty(value = "JSON格式的数据内容，根据业务的需要定义;前端可以通过在线调试查看详细信息。")
     Object getData();
 
-    String toJSONString(SerializeFilter simplePropertyPreFilter);
+    String toJSONString(PropertyPreFilter simplePropertyPreFilter);
 
     default String toJSONString(){
         return toJSONString(null);

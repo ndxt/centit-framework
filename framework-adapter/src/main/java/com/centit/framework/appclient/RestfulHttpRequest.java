@@ -1,6 +1,6 @@
 package com.centit.framework.appclient;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.centit.support.common.ObjectException;
 import com.centit.support.network.UrlOptUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
