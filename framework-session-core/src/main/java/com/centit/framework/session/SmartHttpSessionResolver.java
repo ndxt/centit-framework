@@ -22,18 +22,24 @@ public class SmartHttpSessionResolver implements HttpSessionIdResolver {
     private HeaderHttpSessionIdResolver api; // = new HeaderHttpSessionStrategy();
 
     private boolean cookieFirst;
+    private boolean addAccessToken;
 
     public List<String> resolveAccessTokenSessionId(HttpServletRequest request) {
-        return CollectionsOpt.createList(request.getParameter(AppSession.SECURITY_CONTEXT_TOKENNAME));
+        if(addAccessToken) {
+            return CollectionsOpt.createList(request.getParameter(AppSession.SECURITY_CONTEXT_TOKENNAME));
+        }else{
+            return CollectionsOpt.createList();
+        }
     }
 
-    public SmartHttpSessionResolver(boolean cookieFirst, String cookiePath) {
+    public SmartHttpSessionResolver(boolean cookieFirst, String cookiePath,boolean addAccessToken) {
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
         cookieSerializer.setCookiePath(cookiePath);
         browser = new CookieHttpSessionIdResolver();
         browser.setCookieSerializer(cookieSerializer);
         api = new HeaderHttpSessionIdResolver(WebOptUtils.SESSION_ID_TOKEN);
         this.cookieFirst = cookieFirst;
+        this.addAccessToken=addAccessToken;
     }
 
     /**
