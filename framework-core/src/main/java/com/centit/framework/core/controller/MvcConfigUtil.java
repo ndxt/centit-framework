@@ -1,6 +1,5 @@
 package com.centit.framework.core.controller;
 
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONReader;
 import com.alibaba.fastjson2.JSONWriter;
 import com.alibaba.fastjson2.support.config.FastJsonConfig;
@@ -17,7 +16,13 @@ import java.util.List;
 
 public abstract class MvcConfigUtil {
 
+    private  static FastJsonHttpMessageConverter jsonHttpMessageConverter
+         = createFastJsonHttpMessageConverter();
+
     public static FastJsonHttpMessageConverter fastJsonHttpMessageConverter(){
+        return jsonHttpMessageConverter;
+    }
+    public static FastJsonHttpMessageConverter createFastJsonHttpMessageConverter(){
         FastJsonHttpMessageConverter fastJsonHttpMessageConverter =
             new FastJsonHttpMessageConverter();
 
@@ -27,6 +32,7 @@ public abstract class MvcConfigUtil {
 
         fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
 
+        JSONOpt.fastjsonGlobalConfig();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         //Feature.AllowArbitraryCommas, Feature.DisableCircularReferenceDetect
         fastJsonConfig.setReaderFeatures(JSONReader.Feature.AllowUnQuotedFieldNames);
