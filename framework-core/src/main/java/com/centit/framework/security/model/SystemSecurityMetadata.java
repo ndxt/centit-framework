@@ -21,8 +21,8 @@ public class SystemSecurityMetadata {
             new CachedObject<>(this::reloadOptTreeNode);
     }
 
-    public void evictCahce(){
-        optTreeNodeCache.evictCahce();
+    public void evictCache(){
+        optTreeNodeCache.evictCache();
     }
 
     public static void setRequestInSpringCloud(boolean requestInSpringCloud) {
@@ -47,7 +47,7 @@ public class SystemSecurityMetadata {
     }
 
     private OptTreeNode reloadOptTreeNode() {
-        OptTreeNode optTreeNode = CodeRepositoryCache.sysOptTreeRepo.getCachedTarget();
+        OptTreeNode optTreeNode = CodeRepositoryCache.getPlatformEnvironment().getSysOptTree();
         this.confirmLoginCasMustBeAuthed(optTreeNode);
         return optTreeNode;
     }

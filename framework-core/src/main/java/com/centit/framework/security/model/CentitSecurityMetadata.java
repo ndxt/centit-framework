@@ -20,9 +20,12 @@ public abstract class CentitSecurityMetadata {
     private static final String DDE_RUN = "/dde/run/";
     private static final String DDE_RUN_DRAFT = "/dde/run/draft";
 
-    public static void evictCache(){
-        systemSecurityMetadata.evictCahce();
-        apiSecurityMetadata.evictCahce();
+    public static void evictCache(int apiOrSystem){
+        if(apiOrSystem==0){
+            apiSecurityMetadata.evictCache();
+        }else {
+            systemSecurityMetadata.evictCache();
+        }
     }
     /**
      * @param isForbiddenWhenAssigned 设置为true时，将url分配到菜单后 该url需要授权才能访问；
