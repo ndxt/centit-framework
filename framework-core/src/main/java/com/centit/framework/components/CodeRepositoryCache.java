@@ -156,7 +156,7 @@ public abstract class CodeRepositoryCache {
                 CodeRepositoryCache.osInfoCache.evictCache();
                 break;
             case "SystemOpt":
-                CentitSecurityMetadata.evictCache(1);
+                CentitSecurityMetadata.evictCache(0);
                 break;
         }
     }

@@ -22,9 +22,9 @@ public abstract class CentitSecurityMetadata {
 
     public static void evictCache(int apiOrSystem){
         if(apiOrSystem==0){
-            apiSecurityMetadata.evictCache();
-        }else {
             systemSecurityMetadata.evictCache();
+        }else /*if(apiOrSystem==1) */{
+            apiSecurityMetadata.evictCache();
         }
     }
     /**
