@@ -21,6 +21,10 @@ public class SystemSecurityMetadata {
             new CachedObject<>(this::reloadOptTreeNode);
     }
 
+    public void evictCahce(){
+        optTreeNodeCache.evictCahce();
+    }
+
     public static void setRequestInSpringCloud(boolean requestInSpringCloud) {
         SystemSecurityMetadata.requestInSpringCloud = requestInSpringCloud;
     }

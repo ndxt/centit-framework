@@ -3,7 +3,6 @@ package com.centit.framework.security.model;
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.CachedMap;
-import com.centit.support.common.CachedObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 
@@ -14,13 +13,17 @@ public abstract class CentitSecurityMetadata {
 
     public static final String ROLE_PREFIX = "R_";
     public static boolean isForbiddenWhenAssigned = false;
-    private static CachedObject<SystemSecurityMetadata> systemSecurityMetadata=new CachedObject<>(SystemSecurityMetadata::new);
-    private static CachedMap<String,List<ConfigAttribute>> apiSecurityMetadata=
+    private static SystemSecurityMetadata systemSecurityMetadata = new SystemSecurityMetadata();
+    private static CachedMap<String,List<ConfigAttribute>> apiSecurityMetadata =
         new CachedMap<>((apiId)->CodeRepositoryCache.getPlatformEnvironment().getRolesWithApiId(apiId),
             CodeRepositoryCache.CACHE_FRESH_PERIOD_SECONDS);
     private static final String DDE_RUN = "/dde/run/";
     private static final String DDE_RUN_DRAFT = "/dde/run/draft";
 
+    public static void evictCache(){
+        systemSecurityMetadata.evictCahce();
+        apiSecurityMetadata.evictCahce();
+    }
     /**
      * @param isForbiddenWhenAssigned 设置为true时，将url分配到菜单后 该url需要授权才能访问；
      *                                设置为false时，将url分配到菜单后不会对该url进行拦截，只有将该url分配给某个角色，其他角色才会被拦截
@@ -32,8 +35,7 @@ public abstract class CentitSecurityMetadata {
     public static List<ConfigAttribute> matchUrlToRole(String sUrl, HttpServletRequest request) {
         String apiId = parseUrlToApi(sUrl);
         if (StringBaseOpt.isNvl(apiId)) {
-            SystemSecurityMetadata metadata = systemSecurityMetadata.getCachedTarget();
-            return metadata.matchUrlToRole(sUrl, request);
+            return systemSecurityMetadata.matchUrlToRole(sUrl, request);
         }
         return apiSecurityMetadata.getCachedValue(apiId);
     }
