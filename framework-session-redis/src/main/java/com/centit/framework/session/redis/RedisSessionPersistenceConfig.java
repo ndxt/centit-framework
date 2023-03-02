@@ -1,6 +1,5 @@
 package com.centit.framework.session.redis;
 
-import com.alibaba.fastjson2.support.spring.data.redis.FastJsonRedisSerializer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +48,7 @@ public class RedisSessionPersistenceConfig{
     @Bean
     public SessionRegistry sessionRegistry(
         @Autowired RedisIndexedSessionRepository sessionRepository){
-        sessionRepository.setDefaultSerializer(new FastJsonRedisSerializer<>(Object.class));
+        // sessionRepository.setDefaultSerializer(new FastJsonRedisSerializer<>(Object.class));
         return new SpringSessionBackedSessionRegistry(sessionRepository);
     }
 }
