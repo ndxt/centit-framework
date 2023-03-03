@@ -3,10 +3,9 @@ package com.centit.framework.components;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
-import com.centit.framework.security.model.OptTreeNode;
+import com.centit.framework.security.model.CentitSecurityMetadata;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.CachedMap;
-import com.centit.support.common.CachedObject;
 import com.centit.support.common.ICachedObject;
 import com.centit.support.common.ListAppendMap;
 import org.apache.commons.lang3.StringUtils;
@@ -102,62 +101,62 @@ public abstract class CodeRepositoryCache {
                 if(StringUtils.isNotBlank(mapKey)){
                     CodeRepositoryCache.userInfoRepo.evictIdentifiedCache(mapKey);
                 }else{
-                    CodeRepositoryCache.userInfoRepo.evictCahce();
+                    CodeRepositoryCache.userInfoRepo.evictCache();
                 }
                 break;
             case "UnitInfo":
                 if(StringUtils.isNotBlank(mapKey)){
                     CodeRepositoryCache.unitInfoRepo.evictIdentifiedCache(mapKey);
                 }else{
-                    CodeRepositoryCache.unitInfoRepo.evictCahce();
+                    CodeRepositoryCache.unitInfoRepo.evictCache();
                 }
                 break;
             case "UnitUser":
                 if(StringUtils.isNotBlank(mapKey)){
                     CodeRepositoryCache.unitUsersMap.evictIdentifiedCache(mapKey);
                 }else{
-                    CodeRepositoryCache.unitUsersMap.evictCahce();
+                    CodeRepositoryCache.unitUsersMap.evictCache();
                 }
                 break;
             case "UserUnit":
-                CodeRepositoryCache.userUnitRepo.evictCahce();
+                CodeRepositoryCache.userUnitRepo.evictCache();
                 if(StringUtils.isNotBlank(mapKey)){
                     CodeRepositoryCache.userUnitsMap.evictIdentifiedCache(mapKey);
                 }else{
-                    CodeRepositoryCache.userUnitsMap.evictCahce();
+                    CodeRepositoryCache.userUnitsMap.evictCache();
                 }
                 break;
             case "DataDictionary":
                 if(StringUtils.isNotBlank(mapKey)){
                     CodeRepositoryCache.dictionaryRepo.evictIdentifiedCache(mapKey);;
                 }else{
-                    CodeRepositoryCache.dictionaryRepo.evictCahce();
+                    CodeRepositoryCache.dictionaryRepo.evictCache();
                 }
                 break;
             case "OptInfo":
-                CodeRepositoryCache.optInfoRepo.evictCahce();
+                CodeRepositoryCache.optInfoRepo.evictCache();
                 break;
             case "RoleInfo":
-                CodeRepositoryCache.roleInfoRepo.evictCahce();
+                CodeRepositoryCache.roleInfoRepo.evictCache();
                 break;
             case "UserRoles":
-                CodeRepositoryCache.userRolesRepo.evictCahce();
+                CodeRepositoryCache.userRolesRepo.evictCache();
                 break;
 
             case "OptMethod":
-                CodeRepositoryCache.optMethodRepo.evictCahce();
+                CodeRepositoryCache.optMethodRepo.evictCache();
                 break;
             case "optDataScope":
-                CodeRepositoryCache.optDataScopeRepo.evictCahce();
+                CodeRepositoryCache.optDataScopeRepo.evictCache();
                 break;
             case "RolePower":
-                CodeRepositoryCache.rolePowerRepo.evictCahce();
+                CodeRepositoryCache.rolePowerRepo.evictCache();
                 break;
             case "OsInfo":
-                CodeRepositoryCache.osInfoCache.evictCahce();
+                CodeRepositoryCache.osInfoCache.evictCache();
                 break;
             case "SystemOpt":
-                CodeRepositoryCache.sysOptTreeRepo.evictCahce();
+                CentitSecurityMetadata.evictCache(0);
                 break;
         }
     }
@@ -184,16 +183,16 @@ public abstract class CodeRepositoryCache {
     }
 
     public static void evictAllCache(){
-        CodeRepositoryCache.userInfoRepo.evictCahce();
-        CodeRepositoryCache.unitInfoRepo.evictCahce();
-        //CodeRepositoryCache.catalogRepo.evictCahce();
-        CodeRepositoryCache.userUnitRepo.evictCahce();
-        CodeRepositoryCache.dictionaryRepo.evictCahce();
-        CodeRepositoryCache.optInfoRepo.evictCahce();
-        CodeRepositoryCache.optMethodRepo.evictCahce();
-        CodeRepositoryCache.rolePowerRepo.evictCahce();
-        CodeRepositoryCache.osInfoCache.evictCahce();
-        CodeRepositoryCache.optDataScopeRepo.evictCahce();
+        CodeRepositoryCache.userInfoRepo.evictCache();
+        CodeRepositoryCache.unitInfoRepo.evictCache();
+        //CodeRepositoryCache.catalogRepo.evictCache();
+        CodeRepositoryCache.userUnitRepo.evictCache();
+        CodeRepositoryCache.dictionaryRepo.evictCache();
+        CodeRepositoryCache.optInfoRepo.evictCache();
+        CodeRepositoryCache.optMethodRepo.evictCache();
+        CodeRepositoryCache.rolePowerRepo.evictCache();
+        CodeRepositoryCache.osInfoCache.evictCache();
+        CodeRepositoryCache.optDataScopeRepo.evictCache();
         if(CodeRepositoryCache.evictCacheExtOpt != null){
             CodeRepositoryCache.evictCacheExtOpt.evictAllCache();
         }
@@ -295,8 +294,7 @@ public abstract class CodeRepositoryCache {
             },
             CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedObject<OptTreeNode> sysOptTreeRepo=
-        new CachedObject<>(()->getPlatformEnvironment().getSysOptTree(),CACHE_FRESH_PERIOD_SECONDS);
+
 
     public static CachedMap<String, ListAppendMap<? extends IOptMethod>> roleOptMethodMap=
         new CachedMap<>((roleCode)-> {

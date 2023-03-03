@@ -11,11 +11,14 @@ import com.centit.framework.security.SecurityContextUtils;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.framework.security.model.JsonCentitUserDetails;
+import com.centit.framework.security.model.OptTreeNode;
 import com.centit.framework.staticsystem.po.*;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.CachedObject;
 import com.centit.support.common.ListAppendMap;
+import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.ConfigAttribute;
 
 import java.util.*;
 
@@ -348,6 +351,21 @@ public abstract class AbstractStaticPlatformEnvironment
         return formatMenuTree(allUserOpt,superOptId);
     }
 
+    @Override
+    public List<? extends IOptInfo> listMenuOptInfosUnderOsId(String osId) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public IOptInfo addOptInfo(IOptInfo optInfo) {
+        return optInfo;
+    }
+
+    @Override
+    public IOptInfo updateOptInfo(IOptInfo optInfo) {
+        return optInfo;
+    }
+
 
     @Override
     public List<DataDictionary> listDataDictionaries(String catalogCode) {
@@ -358,6 +376,51 @@ public abstract class AbstractStaticPlatformEnvironment
             }
         }
         return dictionaries.isEmpty()?null:dictionaries;
+    }
+
+    @Override
+    public void deleteDataDictionary(String catalogCode) {
+
+    }
+
+    @Override
+    public int[] updateOptIdByOptCodes(String optId, List<String> optCodes) {
+        return new int[0];
+    }
+
+    @Override
+    public boolean deleteOptInfoByOptId(String optId) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteOptDefAndRolepowerByOptCode(String optCode) {
+        return false;
+    }
+
+    @Override
+    public int countUserByTopUnit(String topUnit) {
+        return 0;
+    }
+
+    @Override
+    public int countUnitByTopUnit(String topUnit) {
+        return 0;
+    }
+
+    @Override
+    public List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc)  {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void batchWorkGroup(List<IWorkGroup> workGroups) {
+
+    }
+
+    @Override
+    public boolean loginUserIsExistWorkGroup(String osId, String userCode) {
+        return false;
     }
 
     @Override
@@ -525,6 +588,26 @@ public abstract class AbstractStaticPlatformEnvironment
     }
 
     @Override
+    public IOsInfo getOsInfo(String osId) {
+        return null;
+    }
+
+    @Override
+    public IOsInfo deleteOsInfo(String osId) {
+        return null;
+    }
+
+    @Override
+    public IOsInfo updateOsInfo(IOsInfo osInfo) {
+        return null;
+    }
+
+    @Override
+    public IOsInfo addOsInfo(IOsInfo osInfo) {
+        return null;
+    }
+
+    @Override
     public List<? extends IUnitInfo> listAllUnits(String topUnit) {
         reloadPlatformData();
         //return CodeRepositoryCache.unitInfoRepo.getCachedTarget(topUnit);
@@ -567,6 +650,11 @@ public abstract class AbstractStaticPlatformEnvironment
         reloadPlatformData();
         return CodeRepositoryCache.optInfoRepo
             .getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT);
+    }
+
+    @Override
+    public List<? extends IOptInfo> listOptInfoByRole(String roleCode) {
+        return null;
     }
 
     /**
@@ -617,6 +705,36 @@ public abstract class AbstractStaticPlatformEnvironment
         return allOptMethod.getCachedTarget();
     }
 
+    @Override
+    public OptTreeNode getSysOptTree() {
+        return null;
+    }
+
+    @Override
+    public List<? extends IOptMethod> listOptMethodByRoleCode(String roleCode) {
+        return null;
+    }
+
+    @Override
+    public IOptMethod addOptMethod(IOptMethod optMethod) {
+        return optMethod;
+    }
+
+    @Override
+    public IOptMethod mergeOptMethod(IOptMethod optMethod) {
+        return optMethod;
+    }
+
+    @Override
+    public void deleteOptMethod(String optCode) {
+
+    }
+
+    @Override
+    public List<ConfigAttribute> getRolesWithApiId(String apiId) {
+        return Collections.emptyList();
+    }
+
     /**
      * 获取租户下所有的数据范围定义表达式
      *
@@ -642,12 +760,12 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @Override
     public List<? extends IUnitRole> listUnitRoles(String unitCode) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public List<? extends IUnitRole> listRoleUnits(String roleCode) {
-        return null;
+        return Collections.emptyList();
     }
 
 

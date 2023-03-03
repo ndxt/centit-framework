@@ -55,7 +55,8 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
             String userRole = userRolesItr.next().getAuthority();
             while(true){
                 int n = needRole.compareTo(userRole);
-                if(n==0) return; // 匹配成功
+                if(n==0)
+                    return; // 匹配成功 完成认证
 
                 if(n<0){
                     if(!needRolesItr.hasNext())
@@ -73,11 +74,29 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
         FilterInvocation fi = (FilterInvocation) object;
         String requestUrl = fi.getRequestUrl();
 
-        StringBuilder needRoles = new StringBuilder();
-        for(ConfigAttribute ca : configAttributes){
-            needRoles.append(ca.getAttribute().substring(2)).append(",");
+        StringBuilder errorMsgBuilder = new StringBuilder("no auth: ").append(requestUrl)
+            .append("; user role: ");
+        boolean firstRole = true;
+        for(GrantedAuthority ur : userRoles){
+            if(firstRole){
+                firstRole = false;
+            } else {
+                errorMsgBuilder.append(", ");
+            }
+            errorMsgBuilder.append(ur.getAuthority().substring(2));
         }
-        String sErrMsg = "no auth:"+requestUrl+";need role:"+needRoles;
+        errorMsgBuilder.append("; need role: ");
+        firstRole = true;
+        for(ConfigAttribute ca : configAttributes){
+            if(firstRole){
+                firstRole = false;
+            } else {
+                errorMsgBuilder.append(", ");
+            }
+            errorMsgBuilder.append(ca.getAttribute().substring(2));
+        }
+        errorMsgBuilder.append(".");
+        String sErrMsg = errorMsgBuilder.toString();
         //fi.getRequest().setAttribute("CENTIT_SYSTEM_ERROR_MSG", sErrMsg);
         fi.getResponse().setHeader("CENTIT_SYSTEM_ERROR_MSG", sErrMsg);
         logger.error(sErrMsg);

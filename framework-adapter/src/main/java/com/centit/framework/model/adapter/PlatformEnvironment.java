@@ -108,21 +108,13 @@ public interface PlatformEnvironment {
      */
     List<? extends IOsInfo> listOsInfos(String topUnit);
 
-    default IOsInfo getOsInfo(String osId) {
-        return null;
-    }
+    IOsInfo getOsInfo(String osId);
 
-    default IOsInfo deleteOsInfo(String osId) {
-        return null;
-    }
+    IOsInfo deleteOsInfo(String osId);
 
-    default IOsInfo updateOsInfo(IOsInfo osInfo) {
-        return null;
-    }
+    IOsInfo updateOsInfo(IOsInfo osInfo);;
 
-    default IOsInfo addOsInfo(IOsInfo osInfo) {
-        return null;
-    }
+    IOsInfo addOsInfo(IOsInfo osInfo);
 
     /*
      * 获取用户所有菜单功能; 获取某个应用的菜单
@@ -131,9 +123,10 @@ public interface PlatformEnvironment {
      * @return  List 用户所有菜单功能
      * 这个接口可以废弃调，用 listUserMenuOptInfosUnderSuperOptId 代替
      */
-    /*@Deprecated
+    /*
+    @Deprecated
     List<? extends IOptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin);
-*/
+    */
 
     /**
      * 获取租户下用户所有菜单功能
@@ -148,17 +141,11 @@ public interface PlatformEnvironment {
     List<? extends IOptInfo> listUserMenuOptInfosUnderSuperOptId(
         String userCode, String superOptId, boolean asAdmin);
 
-    default List<? extends IOptInfo> listMenuOptInfosUnderOsId(String osId) {
-        return null;
-    }
+    List<? extends IOptInfo> listMenuOptInfosUnderOsId(String osId);
 
-    default IOptInfo addOptInfo(IOptInfo optInfo) {
-        return null;
-    }
+    IOptInfo addOptInfo(IOptInfo optInfo);
 
-    default IOptInfo updateOptInfo(IOptInfo optInfo) {
-        return null;
-    }
+    IOptInfo updateOptInfo(IOptInfo optInfo);
 
 
     /**
@@ -231,10 +218,7 @@ public interface PlatformEnvironment {
      * @param roleCode
      * @return
      */
-    default List<? extends IOptInfo> listOptInfoByRole(String roleCode) {
-        return Collections.emptyList();
-    }
-
+    List<? extends IOptInfo> listOptInfoByRole(String roleCode);
     /**
      * 获取租户下操作方法信息
      *
@@ -244,9 +228,7 @@ public interface PlatformEnvironment {
      */
     List<? extends IOptMethod> listAllOptMethod(String topUnit);
 
-    default OptTreeNode getSysOptTree() {
-        return new OptTreeNode();
-    }
+    OptTreeNode getSysOptTree();
 
     /**
      * 根据角色code获取操作方法信息信息
@@ -254,20 +236,13 @@ public interface PlatformEnvironment {
      * @param roleCode
      * @return
      */
-    default List<? extends IOptMethod> listOptMethodByRoleCode(String roleCode) {
-        return Collections.emptyList();
-    }
+    List<? extends IOptMethod> listOptMethodByRoleCode(String roleCode);
 
-    default IOptMethod addOptMethod(IOptMethod optMethod) {
-        return null;
-    }
+    IOptMethod addOptMethod(IOptMethod optMethod);
 
-    default IOptMethod mergeOptMethod(IOptMethod optMethod) {
-        return null;
-    }
+    IOptMethod mergeOptMethod(IOptMethod optMethod);
 
-    default void deleteOptMethod(String optCode) {
-    }
+    void deleteOptMethod(String optCode);
 
     /**
      * 根据角色code获取操作方法信息信息
@@ -275,9 +250,7 @@ public interface PlatformEnvironment {
      * @param apiId
      * @return
      */
-    default List<ConfigAttribute> getRolesWithApiId(String apiId) {
-        return Collections.emptyList();
-    }
+    List<ConfigAttribute> getRolesWithApiId(String apiId);
 
     /**
      * 获取租户下所有的数据范围定义表达式
@@ -398,8 +371,7 @@ public interface PlatformEnvironment {
      * @param catalogCode
      * @return
      */
-    default void deleteDataDictionary(String catalogCode){
-    }
+    void deleteDataDictionary(String catalogCode);
 
     /**
      * 操作定义所属业务模块（页面删除菜单时需要先将设计好的数据更新到其它业务模块下）
@@ -408,9 +380,7 @@ public interface PlatformEnvironment {
      * @param optCodes 需要更新数据的主键集合
      * @return
      */
-    default int[] updateOptIdByOptCodes(String optId, List<String> optCodes) {
-        return null;
-    }
+    int[] updateOptIdByOptCodes(String optId, List<String> optCodes);
 
     /**
      * 根据optId删除业务模块信息
@@ -418,17 +388,13 @@ public interface PlatformEnvironment {
      * @param optId
      * @return
      */
-    default boolean deleteOptInfoByOptId(String optId) {
-        return false;
-    }
+    boolean deleteOptInfoByOptId(String optId);
 
     /**
      * 根据optcode 删除optdef表 和 f_rolepower表数据
      */
 
-    default boolean deleteOptDefAndRolepowerByOptCode(String optCode) {
-        return false;
-    }
+    boolean deleteOptDefAndRolepowerByOptCode(String optCode);
 
     /**
      * 根据topUnit统计租户下用户个数
@@ -436,30 +402,20 @@ public interface PlatformEnvironment {
      * @param topUnit
      * @return
      */
-    default int countUserByTopUnit(String topUnit) {
-        return 0;
-    }
-
+    int countUserByTopUnit(String topUnit);
     /**
      * 根据topUnit统计租户下单位个数
      *
      * @param topUnit
      * @return
      */
-    default int countUnitByTopUnit(String topUnit) {
-        return 0;
-    }
+     int countUnitByTopUnit(String topUnit);
 
-    default List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc) {
-        return Collections.emptyList();
-    }
+    List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc);
 
-    default void batchWorkGroup(List<IWorkGroup> workGroups) {
-    }
+    void batchWorkGroup(List<IWorkGroup> workGroups);
 
-    default boolean loginUserIsExistWorkGroup(String osId, String userCode) {
-        return false;
-    }
+    boolean loginUserIsExistWorkGroup(String osId, String userCode);
 
 }
 
