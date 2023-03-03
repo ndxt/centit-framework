@@ -114,6 +114,7 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
     /**
      * 刷新数据字典
      */
+    @Override
     protected synchronized void reloadPlatformData() {
         try {
             CodeRepositoryCache.evictAllCache();
