@@ -1,10 +1,14 @@
 package com.centit.framework.common;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.filter.PropertyPreFilter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -277,16 +281,33 @@ public interface ResponseData  extends Serializable {
     @ApiModelProperty(value = "JSON格式的数据内容，根据业务的需要定义;前端可以通过在线调试查看详细信息。")
     Object getData();
 
-    String toJSONString(PropertyPreFilter simplePropertyPreFilter);
+    default String toJSONString(PropertyPreFilter simplePropertyPreFilter){
+        Map<String, Object> param = new HashMap<>();
+        param.put(ResponseData.RES_CODE_FILED, getCode());
+        param.put(ResponseData.RES_MSG_FILED, getMessage());
+        if(getData() !=null) {
+            param.put(ResponseData.RES_DATA_FILED, getData());
+            if (simplePropertyPreFilter != null) {
+                return JSON.toJSONString(param, simplePropertyPreFilter);
+            }
+        }
+        return JSONObject.toJSONString(param);
+    }
 
     default String toJSONString(){
         return toJSONString(null);
     }
 
-    ResponseData successResponse = new ResponseSingleData();
-    ResponseData errorResponse =
-        new ResponseSingleData(ERROR_INTERNAL_SERVER_ERROR, "内部未知错误！");
 
+    ResponseData successResponse = new ImmutableResponseData();
+
+    ResponseData errorResponse =
+        new ImmutableResponseData(ERROR_INTERNAL_SERVER_ERROR, "内部未知错误！");
+
+    /**
+     * 如果直接返回建议使用 successResponse
+     * @return  ResponseSingleData
+     */
     static ResponseSingleData makeSuccessResponse(){
         return new ResponseSingleData();
     }

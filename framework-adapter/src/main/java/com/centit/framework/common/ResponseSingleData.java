@@ -29,22 +29,22 @@ public class ResponseSingleData implements ResponseData{
     protected Object data;
 
     public ResponseSingleData() {
-        code = RESULT_OK;
-        message = "OK";
+        this.code = RESULT_OK;
+        this.message = "OK";
     }
 
     public ResponseSingleData(int nCode) {
-        code = nCode;
-        message = nCode==RESULT_OK ? "OK" : "ERROR";
+        this.code = nCode;
+        this.message = nCode==RESULT_OK ? "OK" : "ERROR";
     }
 
     public ResponseSingleData(String message) {
-        code = RESULT_OK;
+        this.code = RESULT_OK;
         this.message = message;
     }
 
     public ResponseSingleData(int nCode, String message) {
-        code = nCode;
+        this.code = nCode;
         this.message = message;
     }
 
@@ -79,20 +79,6 @@ public class ResponseSingleData implements ResponseData{
         this.data = objValue;
         return oldObj;
     }
-
-    public String toJSONString(PropertyPreFilter simplePropertyPreFilter){
-        Map<String, Object> param = new HashMap<>();
-        param.put(ResponseData.RES_CODE_FILED, code);
-        param.put(ResponseData.RES_MSG_FILED, message);
-        if(data !=null) {
-            param.put(ResponseData.RES_DATA_FILED, data);
-            if (simplePropertyPreFilter != null) {
-                return JSON.toJSONString(param, simplePropertyPreFilter);
-            }
-        }
-        return JSONObject.toJSONString(param);
-    }
-
 
     @Override
     public String toString(){
