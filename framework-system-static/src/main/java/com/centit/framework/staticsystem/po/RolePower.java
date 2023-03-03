@@ -25,6 +25,8 @@ public class RolePower implements IRolePower, java.io.Serializable{
 
     private String optCode; //操作代码
 
+    private String topUnit; //租户代码
+
     // Property accessors
     public String getRoleCode() {
         return this.roleCode;
@@ -65,5 +67,14 @@ public class RolePower implements IRolePower, java.io.Serializable{
     public void copy(RolePower other) {
         this.optScopeCodes = other.getOptScopeCodes();
 
+    }
+
+    @Override
+    public String getTopUnit() {
+        return topUnit;
+    }
+
+    public void setTopUnit(String topUnit) {
+        this.topUnit = topUnit;
     }
 }

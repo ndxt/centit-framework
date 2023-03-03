@@ -14,7 +14,7 @@ public abstract class CentitSecurityMetadata {
     public static final String ROLE_PREFIX = "R_";
     public static boolean isForbiddenWhenAssigned = false;
     private static SystemSecurityMetadata systemSecurityMetadata = new SystemSecurityMetadata();
-    private static CachedMap<String,List<ConfigAttribute>> apiSecurityMetadata =
+    private static CachedMap<String, List<ConfigAttribute>> apiSecurityMetadata =
         new CachedMap<>((apiId)->CodeRepositoryCache.getPlatformEnvironment().getRolesWithApiId(apiId),
             CodeRepositoryCache.CACHE_FRESH_PERIOD_SECONDS);
     private static final String DDE_RUN = "/dde/run/";
@@ -37,7 +37,7 @@ public abstract class CentitSecurityMetadata {
 
     public static List<ConfigAttribute> matchUrlToRole(String sUrl, HttpServletRequest request) {
         String apiId = parseUrlToApi(sUrl);
-        if (StringBaseOpt.isNvl(apiId)) {
+        if (StringUtils.isBlank(apiId)) {
             return systemSecurityMetadata.matchUrlToRole(sUrl, request);
         }
         return apiSecurityMetadata.getCachedValue(apiId);
