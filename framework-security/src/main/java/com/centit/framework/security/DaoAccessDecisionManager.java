@@ -83,7 +83,7 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
             } else {
                 errorMsgBuilder.append(", ");
             }
-            errorMsgBuilder.append(ur.getAuthority());
+            errorMsgBuilder.append(ur.getAuthority().substring(2));
         }
         errorMsgBuilder.append("; need role: ");
         firstRole = true;
