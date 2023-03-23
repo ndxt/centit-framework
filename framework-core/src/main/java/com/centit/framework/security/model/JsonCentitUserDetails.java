@@ -82,14 +82,17 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
         JSONArray uus = this.getUserUnits();
         String currentStationId = userInfo.getString("currentStationId");
         if (uus != null) {
+            if(StringUtils.isNotBlank(currentStationId)){
+                for (Object uu : uus) {
+                    JSONObject userUnit = (JSONObject) uu;
+                    if (StringUtils.equals(currentStationId, userUnit.getString("userUnitId"))) {
+                        return userUnit;
+                    }
+                }
+            }
             for (Object uu : uus) {
                 JSONObject userUnit = (JSONObject) uu;
-                if (StringUtils.equals(currentStationId, userUnit.getString("userUnitId"))) {
-                    return userUnit;
-                }
-
-                if (StringUtils.isBlank(currentStationId) &&
-                    "T".equals(userUnit.getString("relType"))) {
+                if ("T".equals(userUnit.getString("relType"))) {
                     return userUnit;
                 }
             }
@@ -112,7 +115,7 @@ public class JsonCentitUserDetails implements CentitUserDetails, java.io.Seriali
     @Override
     public String getCurrentUnitCode(){
         JSONObject cs = getCurrentStation();
-        return cs != null? cs.getString("unitCode"): getUserInfo().getString("primaryUnit");
+        return cs != null? cs.getString("unitCode") : getUserInfo().getString("primaryUnit");
     }
 
     @Override
