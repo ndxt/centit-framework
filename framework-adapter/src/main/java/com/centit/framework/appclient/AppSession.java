@@ -94,7 +94,12 @@ public class AppSession {
         if(jsonData==null || jsonData.getCode()!=0){
             throw new ObjectException(jsonData==null?"访问服务器失败":jsonData.getMessage());
         }
-        accessToken = jsonData.getDataAsString(/*SecurityContextUtils.*/SECURITY_CONTEXT_TOKENNAME);
+        if(jsonData.getData() instanceof String){ // data 中只有这个 token
+            accessToken = jsonData.getDataAsString();
+        } else {
+            accessToken = jsonData.getDataAsString(/*SecurityContextUtils.*/SECURITY_CONTEXT_TOKENNAME);
+        }
+
         HttpReceiveJSON csrfData = HttpReceiveJSON.valueOfJson(
             HttpExecutor.simpleGet(httpContext, getAppLoginUrl() + "/mainframe/csrf"));
         if(csrfData!=null){
