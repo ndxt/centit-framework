@@ -116,7 +116,7 @@ public class OperationLog implements java.io.Serializable {
 
     public OperationLog() {
         this.logLevel = LEVEL_INFO;
-        this.optTime = DatetimeOpt.currentSqlDate();
+        this.optTime = DatetimeOpt.currentUtilDate();
     }
 
     public static OperationLog create(){
