@@ -419,11 +419,35 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/captchaimage", method = RequestMethod.GET)
     @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
     public RenderedImage captchaImage(HttpServletRequest request, HttpServletResponse response) {
-        String checkcode = CaptchaImageUtil.getRandomString();
-        request.getSession().setAttribute(
-            CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
         response.setHeader("Cache-Control", "no-cache");
-        return CaptchaImageUtil.generateCaptchaImage(checkcode);
+        String sType = request.getParameter("imageType");
+        if("formula".equals(sType)){
+            Random random = new Random();
+            int a = random.nextInt(100);
+            int b = random.nextInt(100);
+            boolean c = (random.nextInt(100) % 2) == 1;
+            String code, value;
+            if(c){
+                if(a<b){
+                    int d=a;
+                    a=b;
+                    b=d;
+                }
+                code = String.valueOf(a) + "-" + String.valueOf(b);
+                value = String.valueOf(a-b);
+            } else {
+                code = String.valueOf(a) + "+" + String.valueOf(b);
+                value = String.valueOf(a+b);
+            }
+            request.getSession().setAttribute(
+                CaptchaImageUtil.SESSIONCHECKCODE, value);
+            return CaptchaImageUtil.generateCaptchaImage(code);
+        } else {
+            String checkcode = CaptchaImageUtil.getRandomString();
+            request.getSession().setAttribute(
+                CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
+            return CaptchaImageUtil.generateCaptchaImage(checkcode);
+        }
     }
 
     /**
