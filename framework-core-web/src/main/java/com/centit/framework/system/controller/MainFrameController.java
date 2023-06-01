@@ -883,6 +883,7 @@ public class MainFrameController extends BaseController {
     @PostMapping(value = "/testUserEngine")
     @WrapUpResponseBody
     public JSONArray testUserEngine(@RequestBody String jsonStr, HttpServletRequest request) {
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
@@ -897,21 +898,21 @@ public class MainFrameController extends BaseController {
             }
         }
         Set<String> sUsers = SysUserFilterEngine.calcSystemOperators(
-            jsonObject.getString("formula"),
+            jsonObject.getString("formula"), topUnit,
             unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
             userParams == null ? null : StringBaseOpt.objectToMapStrSet(userParams),
             rankMap,
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
         Set<String> sUnits = SysUnitFilterEngine.calcSystemUnitsByExp(
-            jsonObject.getString("formula"),
+            jsonObject.getString("formula"), topUnit,
             unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
         List<IUserUnit> allUserInfos = new ArrayList<>();
         if (sUsers != null) {
             for (String uc : sUsers) {
-                List<IUserUnit> userInfos = (List<IUserUnit>) CodeRepositoryUtil.listUserUnits("all", uc);
+                List<IUserUnit> userInfos = (List<IUserUnit>) CodeRepositoryUtil.listUserUnits(topUnit, uc);
                 if (sUnits == null) {
                     allUserInfos.addAll(userInfos);
                 } else {
@@ -968,17 +969,18 @@ public class MainFrameController extends BaseController {
     @PostMapping(value = "/testUnitEngine")
     @WrapUpResponseBody
     public JSONArray testUnitEngine(@RequestBody String jsonStr, HttpServletRequest request) {
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
         Set<String> sUnits = SysUnitFilterEngine.calcSystemUnitsByExp(
-            jsonObject.getString("formula"),
+            jsonObject.getString("formula"), topUnit,
             unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
         List<IUnitInfo> unitInfos = new ArrayList<>();
         for (String uc : sUnits) {
-            unitInfos.add(CodeRepositoryUtil.getUnitInfoByCode("all", uc));
+            unitInfos.add(CodeRepositoryUtil.getUnitInfoByCode(topUnit, uc));
         }
         unitInfos.sort((o1, o2) -> compareUnitTwoRow(o1, o2));
         return JSONArray.copyOf(unitInfos);

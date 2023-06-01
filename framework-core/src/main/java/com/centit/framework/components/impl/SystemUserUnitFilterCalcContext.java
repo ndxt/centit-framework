@@ -12,8 +12,8 @@ import java.util.Map;
 public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcContext
     implements UserUnitFilterCalcContext {
 
-    public SystemUserUnitFilterCalcContext(){
-        super();
+    public SystemUserUnitFilterCalcContext(String topUnit){
+        super(topUnit);
     }
 
     @Override

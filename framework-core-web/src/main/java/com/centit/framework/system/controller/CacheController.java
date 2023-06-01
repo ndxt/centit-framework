@@ -534,9 +534,10 @@ public class CacheController extends BaseController {
     @WrapUpResponseBody
     public List<IUnitInfo> unitfilter(@PathVariable String unitfilter,
                            HttpServletRequest request) {
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
         Set<String> units = SysUnitFilterEngine.calcSystemUnitsByExp(
-            StringEscapeUtils.unescapeHtml4(unitfilter), null,
+            StringEscapeUtils.unescapeHtml4(unitfilter), topUnit,null,
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
 
@@ -565,12 +566,13 @@ public class CacheController extends BaseController {
     public  List<IUserInfo> userfilter(@PathVariable String userfilter,
                            //@RequestBody Map<String,Object> varMap,
                            HttpServletRequest request) {
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
         Set<String> users = SysUserFilterEngine.calcSystemOperators(
-                StringEscapeUtils.unescapeHtml4(userfilter),
+                StringEscapeUtils.unescapeHtml4(userfilter), topUnit,
             null,null,null,
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails)));
-        return CodeRepositoryUtil.getUserInfosByCodes(WebOptUtils.getCurrentTopUnit(request), users);
+        return CodeRepositoryUtil.getUserInfosByCodes(topUnit, users);
     }
 
     private JSONArray makeMenuFuncsJson(List<IOptInfo> menuFunsByUser) {

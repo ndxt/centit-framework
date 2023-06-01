@@ -22,13 +22,14 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     protected UserUnitVariableTranslate varTrans;
     protected String topUnit;
 
-    public AbstractUserUnitFilterCalcContext() {
-        lexer = new Lexer();
-        unitParams = new HashMap<>();
-        userParams = new HashMap<>();
-        rankParams = new HashMap<>();
-        hasError = false;
-        varTrans = null;
+    public AbstractUserUnitFilterCalcContext(String topUnit) {
+        this.lexer = new Lexer();
+        this.unitParams = new HashMap<>();
+        this.userParams = new HashMap<>();
+        this.rankParams = new HashMap<>();
+        this.hasError = false;
+        this.varTrans = null;
+        this.topUnit = topUnit;
     }
 
     @Override

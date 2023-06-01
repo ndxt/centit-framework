@@ -413,7 +413,7 @@ public abstract class SysUserFilterEngine {
         }
     }
 
-    public static Set<String> calcSystemOperators(String roleExp,
+    public static Set<String> calcSystemOperators(String roleExp, String topUnit,
                                                 Map<String, Set<String>> unitParams,
                                                 Map<String, Set<String>> userParams,
                                                 Map<String, Integer> rankParams,
@@ -421,7 +421,7 @@ public abstract class SysUserFilterEngine {
         if (StringUtils.isBlank(roleExp)) {
             return null;
         }
-        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
+        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext(topUnit);
         ecc.setFormula(roleExp);
         ecc.setVarTrans(varTrans);
         if(unitParams!=null) {
@@ -445,7 +445,7 @@ public abstract class SysUserFilterEngine {
     }
 
     public static String validateRolesExp(String rolesExp) {
-        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
+        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext("system");
         ecc.setFormula(rolesExp);
         calcRolesExp(ecc);
         if (ecc.hasError())
@@ -453,8 +453,8 @@ public abstract class SysUserFilterEngine {
         return "T";
     }
 
-    public static Set<String> calcAllLeaderByUser(String userCode){
-        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
+    public static Set<String> calcAllLeaderByUser(String userCode, String topUnit){
+        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext(topUnit);
         IUserInfo userInfo = ecc.getUserInfoByCode(userCode);
         if(userInfo==null){
             logger.error("系统中无此用户！");
@@ -471,8 +471,8 @@ public abstract class SysUserFilterEngine {
         return sUsers;
     }
 
-    public static Set<String> calcUnitLeaderByUser(String userCode, String unitCode){
-        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
+    public static Set<String> calcUnitLeaderByUser(String userCode, String topUnit, String unitCode){
+        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext(topUnit);
         ecc.addUserParam("self",userCode);
         ecc.addUserParam("unit",unitCode);
         ecc.addRankParam("userRank",

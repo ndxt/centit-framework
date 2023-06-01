@@ -501,13 +501,13 @@ public abstract class SysUnitFilterEngine {
      * @param varTrans UserUnitVariableTranslate
      * @return calcSystemUnitsByExp
      */
-    public static Set<String> calcSystemUnitsByExp(String unitExp,
+    public static Set<String> calcSystemUnitsByExp(String unitExp, String topUnit,
                                              Map<String, Set<String>> unitParams,
                                              UserUnitVariableTranslate varTrans) {
         if (StringUtils.isBlank(unitExp)) {
             return null;
         }
-        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
+        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext(topUnit);
         ecc.setFormula(unitExp);
         ecc.setVarTrans(varTrans);
         if(unitParams!=null) {
@@ -540,11 +540,12 @@ public abstract class SysUnitFilterEngine {
         return untis.iterator().next();
     }
 
-    public static String calcSingleSystemUnitByExp(String unitExp, Map<String, Set<String>> unitParams , UserUnitVariableTranslate varTrans) {
+    public static String calcSingleSystemUnitByExp(String unitExp, String topUnit,
+                                                   Map<String, Set<String>> unitParams , UserUnitVariableTranslate varTrans) {
         if (StringUtils.isBlank(unitExp)) {
             return null;
         }
-        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
+        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext(topUnit);
         ecc.setFormula(unitExp);
         ecc.setVarTrans(varTrans);
         ecc.addAllUnitParam(unitParams);
@@ -552,7 +553,7 @@ public abstract class SysUnitFilterEngine {
     }
 
     public static String validateUnitsExp(String unitExp) {
-        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext();
+        UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext("system");
         ecc.setFormula(unitExp);
         calcUnitsExp(ecc);
         if (ecc.hasError())
