@@ -231,7 +231,6 @@ public class MainFrameController extends BaseController {
      * @param password    旧密码
      * @param newPassword 新密码
      * @param request     request
-     * @param response    response
      * @return ResponseData
      */
     @ApiOperation(value = "修改密码", notes = "修改用户登录密码")
