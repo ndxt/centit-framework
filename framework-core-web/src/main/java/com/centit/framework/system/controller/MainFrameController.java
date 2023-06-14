@@ -227,9 +227,6 @@ public class MainFrameController extends BaseController {
 
     /**
      * 修改密码
-     *
-     * @param password    旧密码
-     * @param newPassword 新密码
      * @param request     request
      * @return ResponseData
      */
