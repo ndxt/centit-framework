@@ -21,6 +21,7 @@ import com.centit.framework.security.model.ThirdPartyCheckUserDetails;
 import com.centit.support.algorithm.*;
 import com.centit.support.common.ObjectException;
 import com.centit.support.image.CaptchaImageUtil;
+import com.centit.support.security.SecurityOptUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -244,12 +245,12 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/changepwd", method = RequestMethod.PUT)
     @WrapUpResponseBody
     public ResponseData changepassword(String password, String newPassword,
-                                       HttpServletRequest request, HttpServletResponse response) {
+                                       HttpServletRequest request) {
         if (StringUtils.isBlank(password)) {
-            password = request.getParameter("password");
+            password = SecurityOptUtils.decodeSecurityString(request.getParameter("password"));
         }
         if (StringUtils.isBlank(newPassword)) {
-            newPassword = request.getParameter("newPassword");
+            newPassword = SecurityOptUtils.decodeSecurityString(request.getParameter("newPassword"));
         }
 
         if (CentitPasswordEncoder.checkPasswordStrength(newPassword, passwordMinLength ) < passwordStrength) {
