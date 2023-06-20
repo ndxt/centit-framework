@@ -231,18 +231,12 @@ public class MainFrameController extends BaseController {
      * @return ResponseData
      */
     @ApiOperation(value = "修改密码", notes = "修改用户登录密码")
-    @ApiImplicitParams({@ApiImplicitParam(
-        name = "password", value = "旧密码",
-        required = true, paramType = "form", dataType = "String"
-    ), @ApiImplicitParam(
-        name = "newPassword", value = "新密码",
-        required = true, paramType = "form", dataType = "String"
-    )})
     @RequestMapping(value = "/changepwd", method = RequestMethod.PUT)
     @WrapUpResponseBody
-    public ResponseData changepassword(HttpServletRequest request) {
-        String password = SecurityOptUtils.decodeSecurityString(request.getParameter("password"));
-        String newPassword = SecurityOptUtils.decodeSecurityString(request.getParameter("newPassword"));
+    public ResponseData changepassword(@RequestBody String jsonBody, HttpServletRequest request) {
+        JSONObject objBody = JSONObject.parseObject(jsonBody);
+        String password = SecurityOptUtils.decodeSecurityString(objBody.getString("password"));
+        String newPassword = SecurityOptUtils.decodeSecurityString(objBody.getString("newPassword"));
 
         if (CentitPasswordEncoder.checkPasswordStrength(newPassword, passwordMinLength ) < passwordStrength) {
             return ResponseData.makeErrorMessage("新的密码强度太低，请输入符合要求的密码！");
