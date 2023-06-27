@@ -63,8 +63,6 @@ public abstract class CodeRepositoryUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(CodeRepositoryUtil.class);
 
-
-
     public final static Map<String, CachedObject<Map<String, String>>> extendedCodeRepo =
         new ConcurrentHashMap<>(16);
 
@@ -107,7 +105,7 @@ public abstract class CodeRepositoryUtil {
     }
 
     public static List<? extends IUserInfo> listAllUsers(String topUnit) {
-        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        topUnit = CodeRepositoryUtil.cacheByTopUnit ? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         return CodeRepositoryCache.userInfoRepo
             .getCachedValue(topUnit).getListData();
     }
@@ -118,8 +116,8 @@ public abstract class CodeRepositoryUtil {
     }
 
     public static Map<String,? extends IUserInfo> getUserRepo(String topUnit) {
-        topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
-        ListAppendMap<? extends IUserInfo> listAppendMap= CodeRepositoryCache.userInfoRepo
+        topUnit = CodeRepositoryUtil.cacheByTopUnit ? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
+        ListAppendMap<? extends IUserInfo> listAppendMap = CodeRepositoryCache.userInfoRepo
             .getCachedValue(topUnit);
         if(listAppendMap!=null){
             return listAppendMap.getAppendMap();
@@ -165,7 +163,6 @@ public abstract class CodeRepositoryUtil {
         return CodeRepositoryCache.optInfoRepo.getCachedValue(topUnit);
     }
 
-
     public static ListAppendMap<? extends IOptMethod> getOptMethodRepo(String topUnit) {
         topUnit = CodeRepositoryUtil.cacheByTopUnit ? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         return CodeRepositoryCache.optMethodRepo.getCachedValue(topUnit);
@@ -180,7 +177,6 @@ public abstract class CodeRepositoryUtil {
         topUnit = CodeRepositoryUtil.cacheByTopUnit ? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
         return CodeRepositoryCache.rolePowerMap.getCachedValue(topUnit);
     }
-
 
     /**
      * 获取用户在某个职务的用户组列表
@@ -390,32 +386,64 @@ public abstract class CodeRepositoryUtil {
      * @return 部门编码映射key值
      */
     public static String getCode(String sCatalog, String sValue) {
+        HttpServletRequest request = RequestThreadLocal.getLocalThreadWrapperRequest();
+        return getCode(sCatalog, sValue,
+            request == null ? GlobalConstValue.NO_TENANT_TOP_UNIT : WebOptUtils.getCurrentTopUnit(request),
+            request == null ? "zh_CN" : WebOptUtils.getCurrentLang(request));
+    }
+
+    public static String getCode(String sCatalog, String sValue, String topUnit, String localLang) {
         if (StringUtils.isBlank(sValue)) {
             logger.info("sValue 为空中空字符串");
             return "";
         }
-        try{
-            CachedObject<Map<String, String>> extendRepo = extendedCodeRepo.get(sCatalog);
-            if(extendRepo != null){
-                for(Map.Entry<String, String> ent : extendRepo.getCachedTarget().entrySet()) {
-                    if(StringUtils.equals(ent.getValue(),sValue)){
-                        return ent.getKey();
-                    }
-                }
-                return sValue;
-            }
 
-            IDataDictionary dictPiece = getDataPieceByValue(sCatalog, sValue);
-            if (dictPiece == null) {
-                return sValue;
+        try {
+            switch (sCatalog) {
+                case CodeRepositoryUtil.USER_CODE:{
+                    List<? extends IUserInfo> usList= listAllUsers(topUnit);
+                    if(usList==null)
+                        return sValue;
+                    for(IUserInfo ui : usList){
+                        if(StringUtils.equals(sValue, ui.getUserName()))
+                            return ui.getUserCode();
+                    }
+                    return sValue;
+                }
+
+                case CodeRepositoryUtil.UNIT_CODE:{
+                    List<? extends IUnitInfo> uuList= listAllUnits(topUnit);
+                    if(uuList==null)
+                        return sValue;
+                    for(IUnitInfo ui : uuList){
+                        if(StringUtils.equals(sValue, ui.getUnitName()))
+                            return ui.getUnitCode();
+                    }
+                    return sValue;
+                }
+
+                default:
+                    CachedObject<Map<String, String>> extendRepo = extendedCodeRepo.get(sCatalog);
+                    if(extendRepo != null){
+                        for(Map.Entry<String, String> ent : extendRepo.getCachedTarget().entrySet()) {
+                            if(StringUtils.equals(ent.getValue(), sValue)){
+                                return ent.getKey();
+                            }
+                        }
+                        return sValue;
+                    }
+
+                    IDataDictionary dictPiece = getDataPieceByValue(sCatalog, sValue, localLang);
+                    if (dictPiece == null) {
+                        return sValue;
+                    }
+                    return dictPiece.getDataCode();
             }
-            return dictPiece.getDataCode();
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
             return sValue;
         }
     }
-
     /**
      * 把表达式中的字典代码都 转换为 数据字典值，其他的字符 位置不变，
      *
@@ -1309,14 +1337,14 @@ public abstract class CodeRepositoryUtil {
      * @param sValue   字典值
      * @return 字典条目
      */
-    public static IDataDictionary getDataPieceByValue(String sCatalog, String sValue) {
+    public static IDataDictionary getDataPieceByValue(String sCatalog, String sValue, String localLang) {
         List<? extends IDataDictionary> dcList = getDictionary(sCatalog);
         if (dcList == null) {
             return null;
         }
 
         for (IDataDictionary fd : dcList) {
-            if (fd.getDataValue().equals(sValue)) {
+            if (StringUtils.equals(fd.getLocalDataValue(localLang),sValue)) {
                 return fd;
             }
         }
