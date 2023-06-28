@@ -9,10 +9,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.filter.DelegatingFilterProxy;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
-import org.springframework.web.filter.HttpPutFormContentFilter;
+import org.springframework.web.filter.*;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.DispatcherType;
@@ -182,6 +179,17 @@ public abstract class WebConfig  {
             makeUrlPatterns(servletUrlPatterns,"/login/*" ,"/logout/*"));
         springSecurityFilterChain.setAsyncSupported(true);
         return springSecurityFilterChain;
+    }
+
+    public static FilterRegistration.Dynamic registerHttpPutFormContentFilter (ServletContext servletContext) {
+        FilterRegistration.Dynamic httpPutFormContentFilter
+            = servletContext.addFilter("springFormContentFilter ", FormContentFilter.class);
+
+        httpPutFormContentFilter.addMappingForUrlPatterns(
+            null, true,
+            new String[]{"/*"} );
+        httpPutFormContentFilter.setAsyncSupported(true);
+        return httpPutFormContentFilter;
     }
 
     /**

@@ -33,5 +33,6 @@ public class WebInitializer implements WebApplicationInitializer {
         WebConfig.registerHiddenHttpMethodFilter(servletContext, servletUrlPatterns);
         WebConfig.registerRequestThreadLocalFilter(servletContext);
         WebConfig.registerSpringSecurityFilter(servletContext, servletUrlPatterns);
+        WebConfig.registerHttpPutFormContentFilter(servletContext);
     }
 }
