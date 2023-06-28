@@ -9,7 +9,10 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.filter.*;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.filter.FormContentFilter;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.DispatcherType;
@@ -120,20 +123,6 @@ public abstract class WebConfig  {
         return encodingFilter;
     }
 
-    /**
-     * 注册HttpPutFormContentFilter过滤器 （让put也可以想post一样接收form表单中的数据）
-     * @param servletContext ServletContext
-     * @param servletUrlPatterns Servlet 名称列表
-     * @return FilterRegistration.Dynamic 可以再次配置属性
-     */
-    public static FilterRegistration.Dynamic registerHttpPutFormContentFilter(ServletContext servletContext, String [] servletUrlPatterns) {
-        FilterRegistration.Dynamic httpPutFormContentFilter
-                = servletContext.addFilter("httpPutFormContentFilter", HttpPutFormContentFilter.class);
-        httpPutFormContentFilter.addMappingForUrlPatterns(null, false,
-            makeUrlPatterns(servletUrlPatterns));
-        httpPutFormContentFilter.setAsyncSupported(true);
-        return httpPutFormContentFilter;
-    }
 
     /**
      * 注册HiddenHttpMethodFilter过滤器 （过滤请求方式）
@@ -181,13 +170,19 @@ public abstract class WebConfig  {
         return springSecurityFilterChain;
     }
 
-    public static FilterRegistration.Dynamic registerHttpPutFormContentFilter (ServletContext servletContext) {
+    /**
+     * 注册HttpPutFormContentFilter过滤器 （让put也可以想post一样接收form表单中的数据）
+     * @param servletContext ServletContext
+     * @param servletUrlPatterns Servlet 名称列表
+     * @return FilterRegistration.Dynamic 可以再次配置属性
+     */
+    public static FilterRegistration.Dynamic registerHttpPutFormContentFilter(ServletContext servletContext, String [] servletUrlPatterns) {
         FilterRegistration.Dynamic httpPutFormContentFilter
-            = servletContext.addFilter("springFormContentFilter ", FormContentFilter.class);
+            = servletContext.addFilter("httpPutFormContentFilter", FormContentFilter.class);
 
-        httpPutFormContentFilter.addMappingForUrlPatterns(
-            null, true,
-            new String[]{"/*"} );
+        httpPutFormContentFilter.addMappingForUrlPatterns(null, false,
+            makeUrlPatterns(servletUrlPatterns));
+
         httpPutFormContentFilter.setAsyncSupported(true);
         return httpPutFormContentFilter;
     }
