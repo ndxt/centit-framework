@@ -37,8 +37,6 @@ public abstract class MvcConfigUtil {
         //Feature.AllowArbitraryCommas, Feature.DisableCircularReferenceDetect
         fastJsonConfig.setReaderFeatures(JSONReader.Feature.AllowUnQuotedFieldNames);
         fastJsonConfig.setWriterFeatures(JSONWriter.Feature.WriteEnumsUsingName);
-
-
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
 
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);

@@ -17,7 +17,6 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <centit.ui.version>3.1.1809</centit.ui.version>
     </properties>
 
     <dependencies>
@@ -30,12 +29,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.centit.framework</groupId>
-            <artifactId>framework-base-view-easyui</artifactId>
-            <version>3.1.1809</version>
         </dependency>
 
         <dependency>
@@ -67,7 +60,7 @@
             <groupId>com.sun</groupId>
             <artifactId>tools</artifactId>
             <version>${jdk.version}</version>
-            <systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
+            <systemPath>${java.home}/../lib/tools.jar</systemPath>
             <scope>system</scope>
         </dependency>
 
