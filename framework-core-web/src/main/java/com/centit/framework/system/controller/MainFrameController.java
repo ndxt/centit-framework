@@ -729,6 +729,13 @@ public class MainFrameController extends BaseController {
         return null;
     }
 
+    @ApiOperation(value = "获取当前租户下所有的机构", notes = "获取当前租户下所有的机构。")
+    @RequestMapping(value = "/currentunits", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public List<? extends IUnitInfo> listCurrentUnits(HttpServletRequest request) {
+        return platformEnvironment.listAllUnits(WebOptUtils.getCurrentTopUnit(request));
+    }
+
     @ApiOperation(value = "查询当前用户所属租户", notes = "查询当前用户所属租户")
     @GetMapping(value = {"/topUnit", "/tenant"})
     @WrapUpResponseBody
