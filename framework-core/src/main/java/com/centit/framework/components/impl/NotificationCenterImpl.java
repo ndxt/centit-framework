@@ -77,7 +77,9 @@ public class NotificationCenterImpl implements NotificationCenter {
      */
     @Override
     public NotificationCenter registerMessageSender(String sendType,MessageSender sender){
-        msgSenders.put(sendType, sender);
+        if( sender != this) {
+            msgSenders.put(sendType, sender);
+        }
         return this;
     }
 
