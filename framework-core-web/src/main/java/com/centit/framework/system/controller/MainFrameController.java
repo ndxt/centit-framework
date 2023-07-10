@@ -736,6 +736,29 @@ public class MainFrameController extends BaseController {
         return platformEnvironment.listAllUnits(WebOptUtils.getCurrentTopUnit(request));
     }
 
+    @ApiOperation(value = "获取当前租户下的所有的用户", notes = "获取当前租户下所有的用户。")
+    @RequestMapping(value = "/currentusers", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public List<? extends IUserInfo> listCurrentUsers(HttpServletRequest request) {
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if (StringUtils.isBlank(userCode)) {
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,"您未登录!");
+        }
+        String topUnit=WebOptUtils.getCurrentTopUnit(request);
+        List<? extends IUserUnit> userUnits = CodeRepositoryUtil.listAllUserUnits(topUnit);
+        List<IUserInfo> result = new ArrayList<>();
+        for(IUserUnit un : userUnits){
+            if(Objects.equals(un.getRelType(),"T")){
+                IUserInfo userInfo= CodeRepositoryUtil.getUserInfoByCode(topUnit, un.getUserCode());
+                if(userInfo!=null) {
+                    //userInfo.setPrimaryUnit(un.getUnitCode());
+                    result.add(userInfo);
+                }
+            }
+        }
+        return result;
+    }
+
     @ApiOperation(value = "查询当前用户所属租户", notes = "查询当前用户所属租户")
     @GetMapping(value = {"/topUnit", "/tenant"})
     @WrapUpResponseBody
