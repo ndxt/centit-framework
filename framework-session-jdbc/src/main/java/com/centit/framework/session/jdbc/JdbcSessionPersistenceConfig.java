@@ -25,7 +25,7 @@ import java.sql.Driver;
  * Created by zou_wy on 2017/6/14.
  */
 @Configuration
-@EnableJdbcHttpSession(maxInactiveIntervalInSeconds = -1)
+@EnableJdbcHttpSession(maxInactiveIntervalInSeconds = 7200)
 public class JdbcSessionPersistenceConfig {
 
     private Logger logger = LoggerFactory.getLogger(JdbcSessionPersistenceConfig.class);
