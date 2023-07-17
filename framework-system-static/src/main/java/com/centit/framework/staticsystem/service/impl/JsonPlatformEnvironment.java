@@ -15,7 +15,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
@@ -87,12 +90,6 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             allUserUnitRepo.setFreshData(userunits);
         }
 
-        tempJa = json.getJSONArray("dataCatalogs");
-        if (tempJa != null) {
-            List<DataCatalog> datacatalogs = tempJa.toJavaList(DataCatalog.class);
-            catalogRepo.setFreshData(datacatalogs);
-        }
-
         tempJa = json.getJSONArray("osInfos");
         if (tempJa != null) {
             List<OsInfo> osInfos = tempJa.toJavaList(OsInfo.class);
@@ -100,11 +97,6 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
                 osInfos);
         }
 
-        tempJa = json.getJSONArray("dataDictionaries");
-        if (tempJa != null) {
-            List<DataDictionary> datadictionaies = tempJa.toJavaList(DataDictionary.class);
-            allDictionaryRepo.setFreshData(datadictionaies);
-        }
     }
 
     public String loadJsonStringFormConfigFile(String fileName) throws IOException {
@@ -115,6 +107,30 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             return FileIOOpt.readStringFromInputStream(
                     new ClassPathResource(fileName).getInputStream(),"UTF-8");
         }
+    }
+
+    protected void reloadDictionaryData(){
+        String dictionaryDir = appHome + File.separator +  "config" + File.separator + "dictionary";
+        List<File> files = FileSystemOpt.findFiles(dictionaryDir, "*.json");
+        List<DataCatalog> dataCatalogs = new ArrayList<>(files.size()+1);
+
+        for(File f :files) {
+            //String catalog = StringUtils.substringBefore(f.getName(), '.');
+            try {
+                JSONObject catalogJson = JSON.parseObject(new FileInputStream(f));
+                DataCatalog dataCatalog = catalogJson.toJavaObject(DataCatalog.class);
+                Object josnArray = catalogJson.get("details");
+                if (josnArray instanceof JSONArray) {
+                    JSONArray details = (JSONArray) josnArray;
+                    List<DataDictionary> dictionaries = details.toJavaList(DataDictionary.class);
+                    dataCatalog.setDataDictionaries(dictionaries);
+                }
+                dataCatalogs.add(dataCatalog);
+            } catch (IOException e){
+                logger.error(e.getMessage());
+            }
+        }
+        catalogRepo.setFreshData(dataCatalogs);
     }
     /**
      * 刷新数据字典
@@ -128,6 +144,8 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         } catch (IOException e) {
             logger.error(e.getLocalizedMessage());
         }
+        reloadDictionaryData();
+
         organizePlatformData();
         //static_system_user_pwd.json
         try {

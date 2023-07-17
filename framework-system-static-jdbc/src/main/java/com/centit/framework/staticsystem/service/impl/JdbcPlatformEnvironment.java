@@ -10,6 +10,7 @@ import com.centit.support.database.utils.DataSourceDescription;
 import com.centit.support.database.utils.DatabaseAccess;
 import com.centit.support.database.utils.DbcpConnectPools;
 import com.centit.support.database.utils.TransactionHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentException;
@@ -33,10 +34,6 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
     private <T> List<T> jsonArrayToObjectList(JSONArray jsonArray, Class<T> clazz) {
         if(jsonArray==null)
             return new ArrayList<>();
-        /*List<T> resList =  new ArrayList<>(jsonArray.size()+1);
-        for(int i=0;i<jsonArray.size();i++){
-            resList.add( jsonArray.getObject(i,clazz));
-        }*/
         return jsonArray.toJavaList(clazz);
     }
 
@@ -97,12 +94,21 @@ public class JdbcPlatformEnvironment extends AbstractStaticPlatformEnvironment {
             JSONArray dataCatalogsJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_DATACATALOG"));
             List<DataCatalog> datacatalogs = jsonArrayToObjectList(dataCatalogsJSONArray, DataCatalog.class);
-            catalogRepo.setFreshData(datacatalogs);
 
             JSONArray dataDictionaryJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_DICTIONARY"));
             List<DataDictionary> datadictionaies = jsonArrayToObjectList(dataDictionaryJSONArray, DataDictionary.class);
-            allDictionaryRepo.setFreshData(datadictionaies);
+
+            for (DataCatalog dd : datacatalogs) {
+                List<DataDictionary> dictionaries = new ArrayList<>(20);
+                for(DataDictionary data : datadictionaies){
+                    if( StringUtils.equals(dd.getCatalogCode(), data.getCatalogCode())){
+                        dictionaries.add(data);
+                    }
+                }
+                dd.setDataDictionaries(dictionaries);
+            }
+            catalogRepo.setFreshData(datacatalogs);
 
             JSONArray osInfoJSONArray = DatabaseAccess.findObjectsAsJSON(conn,
                 ExtendedQueryPool.getExtendedSql("LIST_ALL_OS"));

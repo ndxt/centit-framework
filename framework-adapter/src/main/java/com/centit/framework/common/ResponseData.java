@@ -5,7 +5,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.filter.PropertyPreFilter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 import java.util.HashMap;

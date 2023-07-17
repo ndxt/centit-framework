@@ -1,0 +1,37 @@
+{
+  "catalogCode": "YesOrNo",
+  "catalogName": "是否对应",
+  "optId": "system",
+  "catalogType": "L",
+  "catalogDesc": "Y:是，N:否",
+  "details": [
+    {
+      "catalogCode": "YesOrNo",
+      "dataCode": "Y",
+      "dataValue": "是",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "YesOrNo",
+      "dataCode": "N",
+      "dataValue": "否",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "YesOrNo",
+      "dataCode": "yes",
+      "dataValue": "是",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "YesOrNo",
+      "dataCode": "no",
+      "dataValue": "否",
+      "dataTag": "N",
+      "dataOrder": "1"
+    }
+  ]
+}

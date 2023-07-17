@@ -1,7 +1,6 @@
 package com.centit.framework.security.model;
 
 import com.centit.framework.components.CodeRepositoryCache;
-import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.CachedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;

@@ -1,0 +1,51 @@
+{
+  "catalogCode": "TrueOrFalse",
+  "catalogName": "真假对应",
+  "optId": "system",
+  "catalogType": "L",
+  "catalogDesc": "T:真true，F:假false",
+  "details": [
+    {
+      "catalogCode": "TrueOrFalse",
+      "dataCode": "T",
+      "dataValue": "真",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "TrueOrFalse",
+      "dataCode": "F",
+      "dataValue": "假",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "TrueOrFalse",
+      "dataCode": "true",
+      "dataValue": "真",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "TrueOrFalse",
+      "dataCode": "false",
+      "dataValue": "假",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "TrueOrFalse",
+      "dataCode": "1",
+      "dataValue": "真",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "TrueOrFalse",
+      "dataCode": "0",
+      "dataValue": "假",
+      "dataTag": "N",
+      "dataOrder": "1"
+    }
+  ]
+}

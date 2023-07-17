@@ -1,12 +1,5 @@
 package com.centit.framework.common;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.filter.PropertyPreFilter;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * 响应 http 请求 返回的单个数据
  */

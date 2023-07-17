@@ -6,7 +6,6 @@ import com.centit.framework.security.model.OptTreeNode;
 import com.centit.support.database.utils.PageDesc;
 import org.springframework.security.access.ConfigAttribute;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 

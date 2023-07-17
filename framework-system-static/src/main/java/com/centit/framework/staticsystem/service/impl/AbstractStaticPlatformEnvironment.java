@@ -32,6 +32,7 @@ public abstract class AbstractStaticPlatformEnvironment
         new CachedObject<>(this::loadOptDataScope,
             CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
 
+    /**数据字典**/
     public CachedObject<List<DataCatalog>> catalogRepo  =
         new CachedObject<>(this::loadAllDataCatalog,
             CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
@@ -42,10 +43,6 @@ public abstract class AbstractStaticPlatformEnvironment
 
     public CachedObject<List<OptMethod>> allOptMethod =
         new CachedObject<>(this::loadAllOptMethod,
-            CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
-
-    public CachedObject<List<DataDictionary>> allDictionaryRepo =
-        new CachedObject<>(this::loadAllDataDictionary,
             CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
 
     public CachedObject<List<UserRole>> allUserRoleRepo =
@@ -70,10 +67,6 @@ public abstract class AbstractStaticPlatformEnvironment
 
     @SuppressWarnings("unchecked")
     protected void organizePlatformData() {
-        for (DataCatalog dd : this.catalogRepo.getCachedTarget()) {
-            dd.setDataDictionaries(
-                listDataDictionaries(dd.getCatalogCode()));
-        }
 
         for (IRoleInfo ri : CodeRepositoryCache.roleInfoRepo.getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT)) {
             for (IRolePower rp : CodeRepositoryCache.rolePowerMap
@@ -366,16 +359,14 @@ public abstract class AbstractStaticPlatformEnvironment
         return optInfo;
     }
 
-
     @Override
     public List<DataDictionary> listDataDictionaries(String catalogCode) {
-        List<DataDictionary> dictionaries = new ArrayList<>(20);
-        for(DataDictionary data : allDictionaryRepo.getCachedTarget()){
-            if( StringUtils.equals(catalogCode,data.getCatalogCode())){
-                dictionaries.add(data);
+        for(DataCatalog data : catalogRepo.getCachedTarget()){
+            if( StringUtils.equals(catalogCode, data.getCatalogCode())){
+                return data.getDataDictionaries();
             }
         }
-        return dictionaries.isEmpty()?null:dictionaries;
+        return null;
     }
 
     @Override
@@ -674,11 +665,6 @@ public abstract class AbstractStaticPlatformEnvironment
     protected List<DataCatalog> loadAllDataCatalog() {
         reloadPlatformData();
         return catalogRepo.getCachedTarget();
-    }
-
-    protected List<DataDictionary> loadAllDataDictionary() {
-        reloadPlatformData();
-        return allDictionaryRepo.getCachedTarget();
     }
 
     protected List<UserRole> loadAllUserRole() {
