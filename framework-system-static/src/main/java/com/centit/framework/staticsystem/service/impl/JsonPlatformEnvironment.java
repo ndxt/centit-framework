@@ -100,12 +100,12 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
     }
 
     public String loadJsonStringFormConfigFile(String fileName) throws IOException {
-        String jsonFile = appHome +"/config"+ fileName;
+        String jsonFile = appHome + File.separator +  "config" + File.separator + fileName;
         if(FileSystemOpt.existFile(jsonFile)) {
             return FileIOOpt.readStringFromFile(jsonFile,"UTF-8");
         }else{
             return FileIOOpt.readStringFromInputStream(
-                    new ClassPathResource(fileName).getInputStream(),"UTF-8");
+                    new ClassPathResource("config" + File.separator + fileName).getInputStream(),"UTF-8");
         }
     }
 
@@ -139,7 +139,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
     protected synchronized void reloadPlatformData() {
         try {
             //CodeRepositoryCache.evictAllCache();
-            String jsonstr = loadJsonStringFormConfigFile("/static_system_config.json");
+            String jsonstr = loadJsonStringFormConfigFile("static_system_config.json");
             loadConfigFromJSONString(jsonstr);
         } catch (IOException e) {
             logger.error(e.getLocalizedMessage());
@@ -149,7 +149,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         organizePlatformData();
         //static_system_user_pwd.json
         try {
-            String jsonStr = loadJsonStringFormConfigFile("/static_system_user_pwd.json");
+            String jsonStr = loadJsonStringFormConfigFile("static_system_user_pwd.json");
             JSONObject json = JSON.parseObject(jsonStr);
             for(IUserInfo u :CodeRepositoryCache.userInfoRepo
                     .getCachedValue(GlobalConstValue.NO_TENANT_TOP_UNIT)
@@ -177,7 +177,7 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         if(ui==null)
             return;
         JSONObject json = null;
-        String jsonFile = "/static_system_user_pwd.json";
+        String jsonFile = "static_system_user_pwd.json";
         try {
             String jsonstr = loadJsonStringFormConfigFile(jsonFile);
             json = JSON.parseObject(jsonstr);
@@ -190,7 +190,8 @@ public class JsonPlatformEnvironment extends AbstractStaticPlatformEnvironment {
         try {
             ui.setUserPin(passwordEncoder.encodePassword(userPassword, userCode));
             json.put(userCode,ui.getUserPin());
-            FileIOOpt.writeStringToFile(json.toJSONString(),appHome +"/config"+jsonFile);
+            FileIOOpt.writeStringToFile(json.toJSONString(),
+                appHome + File.separator +  "config" + File.separator + jsonFile);
         } catch (IOException e) {
             logger.error(e.getMessage(),e);
         }
