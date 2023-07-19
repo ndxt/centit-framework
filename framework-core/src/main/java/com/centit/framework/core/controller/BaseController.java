@@ -128,6 +128,8 @@ public abstract class BaseController {
                     this.logDebug ? ObjectException.extortExceptionOriginMessage(ex) : "内部错误，请联系管理员；开发人员请查看后台日志。");
             if(this.logDebug) {
                 responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(ex));
+            } else {
+                logger.error(ObjectException.extortExceptionTraceMessage(ex));
             }
             JsonResultUtils.writeResponseDataAsJson(responseData, response);
         } else {
