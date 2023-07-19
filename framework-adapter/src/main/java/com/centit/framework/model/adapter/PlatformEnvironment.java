@@ -412,6 +412,10 @@ public interface PlatformEnvironment {
 
     List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc);
 
+    /**
+     * 批量报错用户组； 这个名字怎么起的，sign
+     * @param workGroups 用户组列表
+     */
     void batchWorkGroup(List<IWorkGroup> workGroups);
 
     boolean loginUserIsExistWorkGroup(String osId, String userCode);
