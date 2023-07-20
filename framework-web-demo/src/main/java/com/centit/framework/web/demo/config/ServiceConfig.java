@@ -2,7 +2,6 @@ package com.centit.framework.web.demo.config;
 
 import com.centit.framework.components.impl.NotificationCenterImpl;
 import com.centit.framework.components.impl.TextOperationLogWriterImpl;
-import com.centit.framework.config.InitialWebRuntimeEnvironment;
 import com.centit.framework.config.SpringSecurityCasConfig;
 import com.centit.framework.config.SpringSecurityDaoConfig;
 import com.centit.framework.model.adapter.NotificationCenter;
@@ -26,12 +25,6 @@ public class ServiceConfig {
 
     @Value("${app.home:./}")
     private String appHome;
-
-    @Bean(initMethod = "initialEnvironment")
-    @Lazy(value = false)
-    public InitialWebRuntimeEnvironment initialEnvironment() {
-        return new InitialWebRuntimeEnvironment();
-    }
 
     /**
      * 这个bean必须要有

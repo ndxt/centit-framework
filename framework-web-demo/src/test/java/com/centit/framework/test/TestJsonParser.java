@@ -2,10 +2,10 @@ package com.centit.framework.test;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.centit.framework.config.InitialWebRuntimeEnvironment;
 import com.centit.framework.staticsystem.po.RoleInfo;
 import com.centit.framework.staticsystem.po.UserInfo;
 import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.json.JSONOpt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +21,7 @@ public class TestJsonParser {
         JSONObject jo= new JSONObject();
         jo.put("Date", DatetimeOpt.currentUtilDate());
         System.out.println(jo.toJSONString());
-        InitialWebRuntimeEnvironment iwr = new InitialWebRuntimeEnvironment();
-        iwr.initialEnvironment();
+        JSONOpt.fastjsonGlobalConfig();
         System.out.println(jo.toJSONString());
     }
 
