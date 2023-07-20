@@ -1412,16 +1412,18 @@ public abstract class CodeRepositoryUtil {
      * @param unitCode unitCode
      * @return 机构的下级机构,并按照树形排列
      */
-    public static List<IUnitInfo> getAllSubUnits(String topUnit, String unitCode) {
-        //TODO 先判断属于那个租户；
+    public static List<IUnitInfo> fetchAllSubUnits(String topUnit, String unitCode, boolean includeRoot) {
         List<? extends IUnitInfo> allunits = listAllUnits(topUnit);
         List<IUnitInfo> units = new ArrayList<>();
-        List<IUnitInfo> subunits = fetchSubUnits(allunits,unitCode);
+        if(includeRoot){
+            units.add(getUnitInfoByCode(topUnit, unitCode));
+        }
+        List<IUnitInfo> subunits = fetchSubUnits(allunits, unitCode);
         while( subunits!=null && subunits.size()>0){
             units.addAll(subunits);
             List<IUnitInfo> subunits1 = new ArrayList<>();
             for(IUnitInfo u1: subunits){
-                List<IUnitInfo> subunits2 = fetchSubUnits(allunits,u1.getUnitCode());
+                List<IUnitInfo> subunits2 = fetchSubUnits(allunits, u1.getUnitCode());
                 if(subunits2!=null)
                     subunits1.addAll(subunits2);
             }
@@ -1430,6 +1432,10 @@ public abstract class CodeRepositoryUtil {
         CollectionsOpt.sortAsTree(units,
             (p,c) -> StringUtils.equals(p.getUnitCode(), c.getParentUnit()));
         return units;
+    }
+
+    public static List<IUnitInfo> getAllSubUnits(String topUnit, String unitCode) {
+        return fetchAllSubUnits(topUnit, unitCode, false);
     }
 
     public static Set<String> listUnitAllUsers(String topUnit, String unitCode, boolean includeSubUnit) {

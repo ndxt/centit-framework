@@ -729,36 +729,6 @@ public class MainFrameController extends BaseController {
         return null;
     }
 
-    @ApiOperation(value = "获取当前租户下所有的机构", notes = "获取当前租户下所有的机构。")
-    @RequestMapping(value = "/currentunits", method = RequestMethod.GET)
-    @WrapUpResponseBody
-    public List<? extends IUnitInfo> listCurrentUnits(HttpServletRequest request) {
-        return platformEnvironment.listAllUnits(WebOptUtils.getCurrentTopUnit(request));
-    }
-
-    @ApiOperation(value = "获取当前租户下的所有的用户", notes = "获取当前租户下所有的用户。")
-    @RequestMapping(value = "/currentusers", method = RequestMethod.GET)
-    @WrapUpResponseBody
-    public List<? extends IUserInfo> listCurrentUsers(HttpServletRequest request) {
-        String userCode = WebOptUtils.getCurrentUserCode(request);
-        if (StringUtils.isBlank(userCode)) {
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,"您未登录!");
-        }
-        String topUnit=WebOptUtils.getCurrentTopUnit(request);
-        List<? extends IUserUnit> userUnits = CodeRepositoryUtil.listAllUserUnits(topUnit);
-        List<IUserInfo> result = new ArrayList<>();
-        for(IUserUnit un : userUnits){
-            if(Objects.equals(un.getRelType(),"T")){
-                IUserInfo userInfo= CodeRepositoryUtil.getUserInfoByCode(topUnit, un.getUserCode());
-                if(userInfo!=null) {
-                    //userInfo.setPrimaryUnit(un.getUnitCode());
-                    result.add(userInfo);
-                }
-            }
-        }
-        return result;
-    }
-
     @ApiOperation(value = "查询当前用户所属租户", notes = "查询当前用户所属租户")
     @GetMapping(value = {"/topUnit", "/tenant"})
     @WrapUpResponseBody
@@ -894,19 +864,88 @@ public class MainFrameController extends BaseController {
                 CodeRepositoryUtil.listUserUnitsByStation(topUnit, userCode, station)));
     }
 
+    @ApiOperation(value = "机构树", notes = "获取当前租户下的指定机构下面的所有机构，并以树形形式提供。")
+    @ApiImplicitParam(
+        name = "unitCode", value = "起始机构，空就用topUnit代替",  paramType = "query", dataType = "String"
+    )
+    @RequestMapping(value = "/unitTree", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public List<IUnitInfo> listUnitTree(String unitCode,  HttpServletRequest request) {
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if (StringUtils.isBlank(userCode)) {
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,"您未登录!");
+        }
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
+        if(StringUtils.isBlank(unitCode)){
+            unitCode = topUnit;
+        }
+        return CodeRepositoryUtil.fetchAllSubUnits(topUnit, unitCode, true);
+    }
 
-    @ApiOperation(value = "测试权限表达式引擎", notes = "测试权限表达式引擎")
+    @ApiOperation(value = "机构用户树", notes = "获取当前租户下的指定机构下面的所有用户，并以树形形式提供。")
+    @ApiImplicitParams({@ApiImplicitParam(
+            name = "unitCode", value = "起始机构， 空就用topUnit代替", paramType = "query", dataType = "String"
+        ), @ApiImplicitParam(
+            name = "relType", value = "用户关联关系：归属部门 T 工作部门 F 借出部门 O 借入部门 I，所有 A或者 空",
+            paramType = "query", dataType = "String"
+        )})
+    @RequestMapping(value = "/unitUserTree", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public JSONArray listUnitUserTree(String unitCode, String relType, HttpServletRequest request) {
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if (StringUtils.isBlank(userCode)) {
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,"您未登录!");
+        }
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
+        if(StringUtils.isBlank(unitCode)){
+            unitCode = topUnit;
+        }
+
+        JSONArray allUnits = new JSONArray();
+        List<IUnitInfo> unitInfos = CodeRepositoryUtil.fetchAllSubUnits(topUnit, unitCode, true);
+        for(IUnitInfo unitInfo : unitInfos){
+            List<? extends IUserUnit> userUnits = CodeRepositoryUtil.listUnitUsers(unitInfo.getUnitCode());
+
+            JSONArray allSubUser = new JSONArray();
+            for(IUserUnit uc : userUnits) {
+                if(StringUtils.isBlank(relType) || "A".equalsIgnoreCase(relType) || relType.equalsIgnoreCase(uc.getRelType())) {
+                    allSubUser.add(JSON.toJSON(CodeRepositoryUtil.getUserInfoByCode(topUnit, uc.getUserCode())));
+                }
+            }
+            JSONObject jsonObject = JSONObject.from(unitInfo);
+            jsonObject.put("users", allSubUser);
+            allUnits.add(jsonObject);
+        }
+        return allUnits;
+    }
+
+    @ApiOperation(value = "预览权限表达式对应用户", notes =
+        "表达式为itemExp ([或| itemExp][与& itemExp][非! itemExp])的形式，itemExp为下列形式\n" +
+            "D()P()DT()DL()GW()XZ()R()UT()UL()U()RO()\n" +
+            "* D 根据机构代码过滤 D(机构表达式)\n" +
+            "* P 根据机构代码过滤主要机构\n" +
+            "* DT 根据机构类型过滤 DT(\"角色代码常量\" [,\"角色代码常量\"])\n" +
+            "* DL 根据机构标签过滤 DL(\"角色代码常量\" [,\"角色代码常量\"])\n" +
+            "* GW 根据岗位过滤 GW(\"角色代码常量\" [,\"角色代码常量\"])\n" +
+            "* XZ 根据行政职务过滤 XZ(\"角色代码常量\" [,\"角色代码常量\"])\n" +
+            "* R 根据行政职务等级过滤 R(U) / R(U-) / R(U-1) / R(U--) /R(U-1--)\n" +
+            "* U 根据用户代码过滤 U(用户变量|\"用户代码常量\" [,用户变量|\"用户代码常量])\n" +
+            "* UT 根据用户类型过滤 UT(\"用户类型常量\" [,\"用户类型常量\"])\n" +
+            "* UL 根据用户标签过滤 UL(\"用户标记常量\" [,\"用户标记常量\"])\n" +
+            "* RO 根据用户角色过滤 RO(\"系统角色代码常量\" [,\"系统角色代码常量\"])")
     @ApiImplicitParam(
         name = "jsonStr", value = "参数格式josn示例: \u007B formula:unitParams:\u007BU: \u005B \u005D \u007D,userParams:\u007BU:\u005B \u005D\u007D,rankParams:\u007BU:\u005B \u005D\u007D\u007D",
         required = true, paramType = "body", dataType = "String"
     )
-
-    @PostMapping(value = "/testUserEngine")
+    @PostMapping(value = "/userEngine")
     @WrapUpResponseBody
-    public JSONArray testUserEngine(@RequestBody String jsonStr, HttpServletRequest request) {
+    public JSONArray viewFormulaUsers(@RequestBody String jsonStr, HttpServletRequest request) {
+        if(StringBaseOpt.isNvl(jsonStr)){
+            return null;
+        }
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
-        JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
+        JSONObject jsonObject = JSONObject.parse(jsonStr);
         Object unitParams = jsonObject.getJSONObject("unitParams");
         Object userParams = jsonObject.getJSONObject("userParams");
         Object rankParams = jsonObject.getJSONObject("rankParams");
@@ -925,71 +964,29 @@ public class MainFrameController extends BaseController {
             rankMap,
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
-        Set<String> sUnits = SysUnitFilterEngine.calcSystemUnitsByExp(
-            jsonObject.getString("formula"), topUnit,
-            unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
-            new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
-        );
-        List<IUserUnit> allUserInfos = new ArrayList<>();
-        if (sUsers != null) {
-            for (String uc : sUsers) {
-                List<IUserUnit> userInfos = (List<IUserUnit>) CodeRepositoryUtil.listUserUnits(topUnit, uc);
-                if (sUnits == null) {
-                    allUserInfos.addAll(userInfos);
-                } else {
-                    userInfos.forEach(userInfo -> {
-                            if (sUnits.contains(userInfo.getUnitCode())) {
-                                allUserInfos.add(userInfo);
-                            }
-                        }
-                    );
-                }
-            }
+
+        List<IUserInfo> userInfos = new ArrayList<>();
+        for (String uc : sUsers) {
+            userInfos.add(CodeRepositoryUtil.getUserInfoByCode(topUnit, uc));
         }
-        allUserInfos.sort((o1, o2) -> compareUserTwoRow(o1, o2));
-        JSONArray jsonArray =JSONArray.copyOf(allUserInfos);
-        for (int i = 0; i < jsonArray.size(); i++) {
-            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-            String userName = CodeRepositoryUtil.getUserName("all", jsonObject1.getString("userCode"));
-            jsonObject1.put("userName", userName);
-            String unitName = CodeRepositoryUtil.getUnitName("all", jsonObject1.getString("unitCode"));
-            jsonObject1.put("unitName", unitName);
-        }
-        return jsonArray;
+        Collections.sort(userInfos, (o1, o2) -> GeneralAlgorithm.compareTwoObject(o1.getUserOrder(), o2.getUserOrder(), false));
+        return JSONArray.copyOf(userInfos);
     }
 
-    private static int compareUserTwoRow(IUserUnit data1, IUserUnit data2) {
-        if (data1 == null && data2 == null) {
-            return 0;
-        }
-        if (data1 == null) {
-            return -1;
-        }
-        if (data2 == null) {
-            return 1;
-        }
-        int cr = GeneralAlgorithm.compareTwoObject(
-            data1.getUnitCode(), data2.getUnitCode());
-        if (cr != 0) {
-            return cr;
-        }
-        cr = GeneralAlgorithm.compareTwoObject(
-            data1.getUserOrder(), data2.getUserOrder(), false);
-        if (cr != 0) {
-            return cr;
-        }
-        return 0;
-    }
-
-    @ApiOperation(value = "测试机构表达式引擎", notes = "测试机构表达式引擎")
+    @ApiOperation(value = "预览权限表达式对应机构", notes =
+        "表达式为itemExp ([或| itemExp][与& itemExp][非! itemExp])的形式，itemExp为下列形式\n" +
+            "D()P()DT()DL()\n" +
+            "* D 根据机构代码过滤 D(机构表达式)\n" +
+            "* P 根据机构代码过滤主要机构\n" +
+            "* DT 根据机构类型过滤 DT(\"角色代码常量\" [,\"角色代码常量\"])\n" +
+            "* DL 根据机构标签过滤 DL(\"角色代码常量\" [,\"角色代码常量\"])])")
     @ApiImplicitParam(
         name = "jsonStr", value = "参数格式josn示例: \u007Bformula:\"\",unitParams:\u007BU:\u005B \u005D\u007D\u007D",
         required = true, paramType = "body", dataType = "String"
     )
-
-    @PostMapping(value = "/testUnitEngine")
     @WrapUpResponseBody
-    public JSONArray testUnitEngine(@RequestBody String jsonStr, HttpServletRequest request) {
+    @PostMapping(value = "/unitEngine")
+    public JSONArray viewFormulaUnits(@RequestBody String jsonStr, HttpServletRequest request) {
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
         JSONObject jsonObject = (JSONObject) JSONObject.parse(jsonStr);
@@ -1003,25 +1000,42 @@ public class MainFrameController extends BaseController {
         for (String uc : sUnits) {
             unitInfos.add(CodeRepositoryUtil.getUnitInfoByCode(topUnit, uc));
         }
-        unitInfos.sort((o1, o2) -> compareUnitTwoRow(o1, o2));
+        unitInfos.sort((o1, o2) -> GeneralAlgorithm.compareTwoObject(o1.getUnitOrder(), o2.getUnitOrder(), false));
         return JSONArray.copyOf(unitInfos);
     }
 
-    private static int compareUnitTwoRow(IUnitInfo data1, IUnitInfo data2) {
-        if (data1 == null && data2 == null) {
-            return 0;
+    @ApiOperation(value = "获取当前租户下所有的机构", notes = "获取当前租户下所有的机构。")
+    @RequestMapping(value = "/currentunits", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public List<? extends IUnitInfo> listCurrentUnits(HttpServletRequest request) {
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if (StringUtils.isBlank(userCode)) {
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录!");
         }
-        if (data1 == null) {
-            return -1;
-        }
-        if (data2 == null) {
-            return 1;
-        }
-        int cr = GeneralAlgorithm.compareTwoObject(
-            data1.getUnitOrder(), data2.getUnitOrder(), false);
-        if (cr != 0) {
-            return cr;
-        }
-        return 0;
+        return platformEnvironment.listAllUnits(WebOptUtils.getCurrentTopUnit(request));
     }
+
+    @ApiOperation(value = "获取当前租户下的所有的用户", notes = "获取当前租户下所有的用户。")
+    @RequestMapping(value = "/currentusers", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public List<? extends IUserInfo> listCurrentUsers(HttpServletRequest request) {
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if (StringUtils.isBlank(userCode)) {
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录!");
+        }
+        String topUnit=WebOptUtils.getCurrentTopUnit(request);
+        List<? extends IUserUnit> userUnits = CodeRepositoryUtil.listAllUserUnits(topUnit);
+        List<IUserInfo> result = new ArrayList<>();
+        for(IUserUnit un : userUnits){
+            if(Objects.equals(un.getRelType(),"T")){
+                IUserInfo userInfo= CodeRepositoryUtil.getUserInfoByCode(topUnit, un.getUserCode());
+                if(userInfo!=null) {
+                    //userInfo.setPrimaryUnit(un.getUnitCode());
+                    result.add(userInfo);
+                }
+            }
+        }
+        return result;
+    }
+
 }
