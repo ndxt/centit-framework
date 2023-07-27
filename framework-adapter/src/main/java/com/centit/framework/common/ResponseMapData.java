@@ -66,4 +66,9 @@ public class ResponseMapData extends ResponseSingleData {
         }
         return ((Map<String, Object>) data).get(sKey);
     }
+
+    @Override
+    public String toString(){
+        return toJSONString();
+    }
 }
