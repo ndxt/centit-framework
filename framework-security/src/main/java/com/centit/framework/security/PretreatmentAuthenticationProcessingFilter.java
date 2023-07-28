@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class PretreatmentAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
 
     private int checkCaptchaTime = 0 ; // 0 不验证, 1 登陆失败后 再次登陆验证, 2 始终验证
-    private int checkCaptchaType = 0;  // 0 不验证、任意一个地方验证, 1 一起验证, 2 ajax 验证
+    private int checkCaptchaType = 0;  // 0 不验证、 1 一起验证, 2 ajax 验证
 
     public void setCheckCaptchaTime(int checkCaptchaTime) {
         this.checkCaptchaTime = checkCaptchaTime;
