@@ -74,8 +74,9 @@ public abstract class SysUserFilterEngine {
                         }
                     }
                 }else {
-                    if(ecc.listUnitUsers(unitCode)!=null) {
-                        lsUserunit.addAll(ecc.listUnitUsers(unitCode));
+                    List<? extends IUserUnit> userUnits = ecc.listUnitUsers(unitCode);
+                    if(userUnits!=null) {
+                        lsUserunit.addAll(userUnits);
                     }
                 }
             }
