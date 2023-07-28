@@ -474,6 +474,11 @@ public class MainFrameController extends BaseController {
             request.getSession().getAttribute(
                 CaptchaImageUtil.SESSIONCHECKCODE));
         Boolean checkResult = CaptchaImageUtil.checkcodeMatch(sessionCode, checkcode);
+
+        //清除临时验证码，避免多次重复验证
+        request.getSession().setAttribute(
+            CaptchaImageUtil.SESSIONCHECKCODE, CaptchaImageUtil.getRandomString(6));
+
         request.getSession().setAttribute(
             SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT,
             checkResult);
