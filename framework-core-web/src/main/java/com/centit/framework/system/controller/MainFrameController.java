@@ -407,6 +407,10 @@ public class MainFrameController extends BaseController {
     public RenderedImage captchaImage(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Cache-Control", "no-cache");
         String sType = request.getParameter("imageType");
+
+        request.getSession().setAttribute(
+            SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
+
         if("formula".equals(sType)){
             Random random = new Random();
             int a = random.nextInt(100);

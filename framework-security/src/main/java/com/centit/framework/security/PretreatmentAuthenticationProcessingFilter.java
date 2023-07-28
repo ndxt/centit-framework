@@ -16,13 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class PretreatmentAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
 
     private int checkCaptchaTime = 0 ; // 0 不验证, 1 登陆失败后 再次登陆验证, 2 始终验证
-    private int checkCaptchaType = 0;  // 0 不验证, 1 一起验证, 2 ajax 验证
-
-    /*private SessionRegistry sessionRegistry;
-
-    public void setSessionRegistry(SessionRegistry sessionManger) {
-        this.sessionRegistry = sessionManger;
-    }*/
+    private int checkCaptchaType = 0;  // 0 不验证、任意一个地方验证, 1 一起验证, 2 ajax 验证
 
     public void setCheckCaptchaTime(int checkCaptchaTime) {
         this.checkCaptchaTime = checkCaptchaTime;
@@ -56,10 +50,9 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
         }
 
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
+
         if(checkCaptchaType == 1 && ( checkCaptchaTime == 2 ||
-                (checkCaptchaTime == 1
-                        //&& CheckFailLogs.getMaxTryTimes() >= 0
-                        && tryTimes > 0 ))){
+                (checkCaptchaTime == 1 && tryTimes > 0 ))){  //&& CheckFailLogs.getMaxTryTimes() >= 0
             String requestCheckcode = request.getParameter(CaptchaImageUtil.REQUESTCHECKCODE);
 
             String sessionCheckcode = StringBaseOpt.castObjectToString(
@@ -120,19 +113,5 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
         //}
     }
 
-    // 新建session
-    // 代替 AjaxAuthenticationSuccessHandler 中的
-    /*@Override
-    protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response,
-                                            FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authResult);
 
-        CentitUserDetails ud = (CentitUserDetails) authResult.getPrincipal();
-        //tokenKey = UuidOpt.getUuidAsString();
-        // 这个代码应该迁移到 AuthenticationProcessingFilter 的 successfulAuthentication 方法中
-        ud.setLoginIp(WebOptUtils.getRequestAddr(request));
-        sessionRegistry.registerNewSession(request.getSession().getId() ,ud);
-    }*/
 }
