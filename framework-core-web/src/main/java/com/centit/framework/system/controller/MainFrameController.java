@@ -979,7 +979,10 @@ public class MainFrameController extends BaseController {
 
         List<IUserInfo> userInfos = new ArrayList<>();
         for (String uc : sUsers) {
-            userInfos.add(CodeRepositoryUtil.getUserInfoByCode(topUnit, uc));
+            IUserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc);
+            if(tempUi != null) {
+                userInfos.add(tempUi);
+            }
         }
         Collections.sort(userInfos, (o1, o2) -> GeneralAlgorithm.compareTwoObject(o1.getUserOrder(), o2.getUserOrder(), false));
         return JSONArray.copyOf(userInfos);
@@ -1010,7 +1013,10 @@ public class MainFrameController extends BaseController {
         );
         List<IUnitInfo> unitInfos = new ArrayList<>();
         for (String uc : sUnits) {
-            unitInfos.add(CodeRepositoryUtil.getUnitInfoByCode(topUnit, uc));
+            IUnitInfo tempUi = CodeRepositoryUtil.getUnitInfoByCode(topUnit, uc);
+            if(tempUi != null) {
+                unitInfos.add(tempUi);
+            }
         }
         unitInfos.sort((o1, o2) -> GeneralAlgorithm.compareTwoObject(o1.getUnitOrder(), o2.getUnitOrder(), false));
         return JSONArray.copyOf(unitInfos);
@@ -1041,7 +1047,7 @@ public class MainFrameController extends BaseController {
         for(IUserUnit un : userUnits){
             if(Objects.equals(un.getRelType(),"T")){
                 IUserInfo userInfo= CodeRepositoryUtil.getUserInfoByCode(topUnit, un.getUserCode());
-                if(userInfo!=null) {
+                if(userInfo != null) {
                     //userInfo.setPrimaryUnit(un.getUnitCode());
                     result.add(userInfo);
                 }
