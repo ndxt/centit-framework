@@ -918,7 +918,10 @@ public class MainFrameController extends BaseController {
             JSONArray allSubUser = new JSONArray();
             for(IUserUnit uc : userUnits) {
                 if(StringUtils.isBlank(relType) || "A".equalsIgnoreCase(relType) || relType.equalsIgnoreCase(uc.getRelType())) {
-                    allSubUser.add(JSON.toJSON(CodeRepositoryUtil.getUserInfoByCode(topUnit, uc.getUserCode())));
+                    IUserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc.getUserCode());
+                    if(tempUi != null) {
+                        allSubUser.add(JSON.toJSON(tempUi));
+                    }
                 }
             }
             JSONObject jsonObject = JSONObject.from(unitInfo);
