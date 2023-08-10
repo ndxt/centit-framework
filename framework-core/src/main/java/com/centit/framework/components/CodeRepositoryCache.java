@@ -203,9 +203,9 @@ public abstract class CodeRepositoryCache {
      */
     public static CachedMap<String, ListAppendMap<? extends IUserInfo>> userInfoRepo =
         new CachedMap<>( (topUnit) ->
-               new ListAppendMap(
+               new ListAppendMap<>(
                     getPlatformEnvironment().listAllUsers(topUnit),
-                    (ui)->((IUserInfo)ui).getUserCode()),
+                    (ui)-> ui.getUserCode()),
             CACHE_FRESH_PERIOD_SECONDS);
 
     /**
@@ -216,7 +216,8 @@ public abstract class CodeRepositoryCache {
             List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits(topUnit);
             CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
-            return new ListAppendMap(allunits, (ui)->((IUnitInfo)ui).getUnitCode());
+
+            return new ListAppendMap<>((List<IUnitInfo>) allunits, (ui)-> ui.getUnitCode());
          }, CACHE_FRESH_PERIOD_SECONDS);
 
     /**
