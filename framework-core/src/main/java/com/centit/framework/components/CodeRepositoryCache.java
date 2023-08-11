@@ -246,9 +246,9 @@ public abstract class CodeRepositoryCache {
 
     public static CachedMap<String, ListAppendMap<? extends IDataDictionary>> dictionaryRepo =
         new CachedMap<>((sCatalog)->
-            new ListAppendMap(
+            new ListAppendMap<>(
                 getPlatformEnvironment().listDataDictionaries(sCatalog),
-                (ui)->((IDataDictionary)ui).getDataCode()),
+                (ui)->ui.getDataCode()),
             CACHE_FRESH_PERIOD_SECONDS);
 
     /**
