@@ -203,6 +203,18 @@ public class WebOptUtils {
         return correlationId;
     }
 
+    private static Locale fetchLocaleFromRequest(HttpServletRequest request) {
+        Locale local = request.getLocale();
+        if(local == null) {
+            Object localeName = request.getSession().getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
+            if (localeName instanceof Locale) {
+                local = (Locale) localeName;
+            } else if (null != localeName) {
+                local = new Locale(localeName.toString());
+            }
+        }
+        return local;
+    }
     /**
      * 获取请求端希望的语言，策略是
      *     1，首先看请求中有没有通过 LOCAL_LANGUAGE_LABLE="LOCAL_LANG" 参数指定语言
@@ -220,15 +232,7 @@ public class WebOptUtils {
         if(obj!=null)
             return String.valueOf(obj);
 
-        Locale local = request.getLocale();
-        if(local == null) {
-            Object localeName = request.getSession().getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
-            if (localeName instanceof Locale) {
-                local = (Locale) localeName;
-            } else if (null != localeName) {
-                local = new Locale(localeName.toString());
-            }
-        }
+        Locale local = fetchLocaleFromRequest(request);
 
         if(local!=null){
             return local.getLanguage() +"_"+local.getCountry();
@@ -246,6 +250,36 @@ public class WebOptUtils {
 
         return "zh_CN";
     }
+
+    public static Locale getCurrentLocale(HttpServletRequest request) {
+        if(request==null)
+            return Locale.SIMPLIFIED_CHINESE; // createConstant("zh", "CN");
+        Object obj = request.getParameter(LOCAL_LANGUAGE_LABLE);
+        if(obj!=null) {
+            String localLang =  String.valueOf(obj);
+            if(localLang.length()>5) {
+                return new Locale(localLang.substring(0, 2), localLang.substring(3, 5));
+            }
+        }
+
+        Locale local = fetchLocaleFromRequest(request);
+
+        if(local!=null){
+            return local;
+        }
+        /**
+         * Accept-Language: zh-cn
+         */
+        String localLang = request.getHeader("Accept-Language");
+        if(StringUtils.isNotBlank(localLang)){
+            String [] langs = localLang.split("-");
+            if(langs.length>1)
+                return new Locale(StringUtils.lowerCase(langs[0]), StringUtils.upperCase(langs[1]));
+        }
+
+        return Locale.SIMPLIFIED_CHINESE;
+    }
+
 
     public static void setCurrentLang(HttpSession session ,String localLang){
         if(StringUtils.isBlank(localLang))
