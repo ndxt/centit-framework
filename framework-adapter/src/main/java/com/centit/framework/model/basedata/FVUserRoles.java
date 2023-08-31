@@ -1,6 +1,7 @@
 package com.centit.framework.model.basedata;
 
 import com.centit.framework.core.dao.DictionaryMap;
+import com.centit.support.algorithm.DatetimeOpt;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.CollectionUtils;
 
@@ -215,5 +216,24 @@ public class FVUserRoles implements java.io.Serializable {
 
     public void setChangeDesc(String changeDesc) {
         this.changeDesc = changeDesc;
+    }
+
+    public UserRole toUserRole(){
+        UserRole ur = new UserRole(new UserRoleId(this.getUserCode(), this.getRoleCode()),
+            DatetimeOpt.addDays(DatetimeOpt.currentUtilDate(), -1), this.getChangeDesc());
+        ur.setObtainType(this.getObtainType());
+        ur.setInheritedFrom(this.getInheritedFrom());
+        return ur;
+    }
+
+    public static List<UserRole> mapToUserRoles(List<FVUserRoles> roles){
+        if(roles==null){
+            return null;
+        }
+        List<UserRole> userRoles = new ArrayList<>(roles.size());
+        for(FVUserRoles ur : roles){
+            userRoles.add(ur.toUserRole());
+        }
+        return userRoles;
     }
 }

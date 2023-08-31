@@ -1,9 +1,8 @@
 package com.centit.framework.model.security;
 
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.centit.framework.model.basedata.UserInfo;
-import com.centit.framework.model.basedata.UserRole;
-import com.centit.framework.model.basedata.UserUnit;
+import com.centit.framework.model.basedata.*;
+import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -56,9 +55,10 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
     }
 
     protected void makeUserAuthorities(){
-        arrayAuths = new ArrayList<>();
-        List<UserRole> rolesJson = this.getUserRoles();
-        for (UserRole role : rolesJson) {
+        if(this.userRoles == null)
+            return;
+        this.arrayAuths = new ArrayList<>();
+        for (UserRole role : this.userRoles) {
             arrayAuths.add(new SimpleGrantedAuthority("R_" //CentitSecurityMetadata.ROLE_PREFIX
                     + StringUtils.trim(role.getRoleCode())));
 
@@ -314,6 +314,20 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
     public void setAuthoritiesByRoles(List<UserRole> roles) {
         this.userRoles = roles;
         makeUserAuthorities();
+    }
+
+    public void mapAuthoritiesByRoles(List<RoleInfo> roles) {
+
+        this.userRoles = new ArrayList<>();
+        if(roles !=null ) {
+            Date yesterday = DatetimeOpt.addDays(DatetimeOpt.currentUtilDate(), -1);
+            for(RoleInfo ri : roles){
+                UserRole ur = new UserRole(new UserRoleId(this.getUserCode(), ri.getRoleCode()),
+                    yesterday, "角色映射");
+                this.userRoles.add(ur);
+            }
+            makeUserAuthorities();
+        }
     }
 
     public List<UserUnit> getUserUnits() {

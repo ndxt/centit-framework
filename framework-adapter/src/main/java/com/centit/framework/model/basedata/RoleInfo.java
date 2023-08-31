@@ -274,4 +274,7 @@ public class RoleInfo implements java.io.Serializable {
         }
         getRolePowers().addAll(rolePowers);
     }
+    public void addRolePower(RolePower rp){
+        getRolePowers().add(rp);
+    }
 }
