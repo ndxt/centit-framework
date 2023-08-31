@@ -2,7 +2,7 @@ package com.centit.framework.components;
 
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
-import com.centit.framework.model.basedata.IUnitInfo;
+import com.centit.framework.model.basedata.UnitInfo;
 import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.compiler.VariableFormula;
 import org.slf4j.Logger;
@@ -108,7 +108,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
         String w = ecc.getAWord();
         if (ecc.isLabel(w)) { // 变量
             if ("all".equalsIgnoreCase(w)) {
-                for (IUnitInfo unitEnt: ecc.listAllUnitInfo()) {
+                for (UnitInfo unitEnt: ecc.listAllUnitInfo()) {
                     units.add(unitEnt.getUnitCode());
                 }
             } else if ("empty".equalsIgnoreCase(w)) {

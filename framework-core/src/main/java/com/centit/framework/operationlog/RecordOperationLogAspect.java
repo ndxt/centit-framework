@@ -1,11 +1,11 @@
 package com.centit.framework.operationlog;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.model.basedata.OperationLog;
+import com.centit.framework.model.basedata.UserInfo;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ParamName;
@@ -101,7 +101,7 @@ public class RecordOperationLogAspect {
             map.putAll(params);
         }
 
-        JSONObject userInfo = WebOptUtils.getCurrentUserInfo(request);
+        UserInfo userInfo = WebOptUtils.getCurrentUserInfo(request);
         //JSONObject userInfo = (userDetails==null)?null:userDetails.getUserInfo();
         if(userInfo!=null) {
             map.put("loginUser", userInfo);
@@ -155,7 +155,7 @@ public class RecordOperationLogAspect {
 
         OperationLogCenter.log(
             OperationLog.create().level(logLevel)
-                .user(userInfo==null? loginIp : userInfo.getString("userCode"))
+                .user(userInfo==null? loginIp : userInfo.getUserCode())//.getString("userCode"))
                 .unit(WebOptUtils.getCurrentUnitCode(request))
                 .topUnit(WebOptUtils.getCurrentTopUnit(request))
                 .correlation(WebOptUtils.getCorrelationId(request))

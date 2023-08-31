@@ -17,56 +17,56 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     }
 
     @Override
-    public List<? extends IUserInfo> listAllUserInfo(){
+    public List<UserInfo> listAllUserInfo(){
         return CodeRepositoryUtil.listAllUsers(this.getTopUnit());
     }
 
     @Override
-    public List<? extends IUnitInfo> listAllUnitInfo() {
+    public List<UnitInfo> listAllUnitInfo() {
         return CodeRepositoryUtil.listAllUnits(this.getTopUnit());
     }
 
     @Override
-    public List<? extends IUnitInfo> listSubUnit(String unitCode) {
+    public List<UnitInfo> listSubUnit(String unitCode) {
         return CodeRepositoryUtil.getSubUnits(this.getTopUnit(), unitCode);
     }
 
     @Override
-    public IUnitInfo getUnitInfoByCode(String unitCode) {
+    public UnitInfo getUnitInfoByCode(String unitCode) {
         return CodeRepositoryUtil.getUnitInfoByCode(this.getTopUnit(), unitCode);
     }
 
     @Override
-    public List<? extends IUserUnit> listAllUserUnits() {
+    public List<UserUnit> listAllUserUnits() {
         return CodeRepositoryUtil.listAllUserUnits(this.getTopUnit());
     }
 
     @Override
-    public List<? extends IUserUnit> listUnitUsers(String unitCode) {
+    public List<UserUnit> listUnitUsers(String unitCode) {
         return CodeRepositoryUtil.listUnitUsers(unitCode);
     }
 
     @Override
-    public List<? extends IUserUnit> listUserUnits(String userCode){
+    public List<UserUnit> listUserUnits(String userCode){
         return CodeRepositoryUtil.listUserUnits(this.getTopUnit(), userCode);
     }
 
     @Override
-    public List<? extends IUserRole> listUserRoles(String userCode) {
+    public List<UserRole> listUserRoles(String userCode) {
         return CodeRepositoryUtil.listUserRoles(this.getTopUnit(), userCode);
     }
 
     @Override
-    public List<? extends IUserRole> listRoleUsers(String roleCode) {
+    public List<UserRole> listRoleUsers(String roleCode) {
         return CodeRepositoryUtil.listRoleUsers(this.getTopUnit(), roleCode);
     }
 
     @Override
     public Map<String, String> listAllSystemRole() {
-        List<? extends IRoleInfo> roles = CodeRepositoryUtil.listAllRole(this.getTopUnit());
+        List<RoleInfo> roles = CodeRepositoryUtil.listAllRole(this.getTopUnit());
         Map<String, String> roleMap = new HashMap<>();
         if(roles!=null){
-            for(IRoleInfo r: roles){
+            for(RoleInfo r: roles){
                 roleMap.put(r.getRoleCode(), r.getRoleName());
             }
         }
@@ -85,7 +85,7 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
     }
 
     @Override
-    public IUserInfo getUserInfoByCode(String userCode) {
+    public UserInfo getUserInfoByCode(String userCode) {
         return CodeRepositoryUtil.getUserInfoByCode(this.getTopUnit(), userCode);
     }
 
@@ -97,9 +97,9 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
      */
     @Override
     public int getXzRank(String rankCode) {
-        IDataDictionary dd = CodeRepositoryUtil.getDataPiece(GlobalConstValue.DATA_CATALOG_RANK, rankCode,null);
+        DataDictionary dd = CodeRepositoryUtil.getDataPiece(GlobalConstValue.DATA_CATALOG_RANK, rankCode,null);
         if(dd!=null)
             return Integer.valueOf(dd.getExtraCode());
-        return IUserUnit.MAX_XZ_RANK;
+        return UserUnit.MAX_XZ_RANK;
     }
 }

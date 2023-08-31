@@ -6,8 +6,7 @@ import com.centit.framework.common.HttpContextUtils;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.filter.HttpThreadWrapper;
 import com.centit.framework.filter.RequestThreadLocal;
-import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.framework.security.model.JsonCentitUserDetails;
+import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.support.algorithm.UuidOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.rpc.*;
@@ -74,7 +73,7 @@ public class DubboClientCallContextFilter implements Filter {
             }
             if (StringUtils.isNotBlank(userDetails)) {
                 logger.info("生产端调用开始");
-                CentitUserDetails centitUserDetails = JSON.parseObject(JSONObject.parse(userDetails).toString(), JsonCentitUserDetails.class);
+                CentitUserDetails centitUserDetails = JSON.parseObject(JSONObject.parse(userDetails).toString(), CentitUserDetails.class);
                 Map<String, Object> data = new HashMap<>();
                 data.put("sessionid", sessionId);
                 data.put("userinfo", centitUserDetails);

@@ -14,10 +14,10 @@ import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
+import com.centit.framework.model.security.CentitPasswordEncoder;
+import com.centit.framework.model.security.CentitUserDetails;
+import com.centit.framework.model.security.ThirdPartyCheckUserDetails;
 import com.centit.framework.security.SecurityContextUtils;
-import com.centit.framework.security.model.CentitPasswordEncoder;
-import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.framework.security.model.ThirdPartyCheckUserDetails;
 import com.centit.support.algorithm.*;
 import com.centit.support.common.ObjectException;
 import com.centit.support.image.CaptchaImageUtil;
@@ -496,13 +496,13 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/currentuserinfo", method = RequestMethod.GET)
     @WrapUpResponseBody
     public ResponseData getCurrentUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject userInfo = WebOptUtils.getCurrentUserInfo(request);
+        UserInfo userInfo = WebOptUtils.getCurrentUserInfo(request);
         if (userInfo == null) {
             return ResponseData.makeErrorMessageWithData(
                 request.getSession().getId(), ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录或者超时，请重新登录！");
         } else {
-            userInfo.remove("idCardNo");
+            userInfo.setIdCardNo(null);//.remove("idCardNo");
             return ResponseData.makeResponseData(userInfo);
         }
     }
@@ -523,7 +523,7 @@ public class MainFrameController extends BaseController {
                 "用户没有登录或者超时，请重新登录！");
         } else {
             if(ud instanceof CentitUserDetails){
-                ((CentitUserDetails) ud).getUserInfo().remove("idCardNo");
+                ((CentitUserDetails) ud).getUserInfo().setIdCardNo(null);//.remove("idCardNo");
             }
             return ud;
         }
@@ -538,7 +538,7 @@ public class MainFrameController extends BaseController {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录或者超时，请重新登录！");
         } else {
-            ud.getUserInfo().remove("idCardNo");
+            ud.getUserInfo().setIdCardNo(null);//.remove("idCardNo");
             return ud;
         }
     }
@@ -557,7 +557,7 @@ public class MainFrameController extends BaseController {
         return StringUtils.isNotBlank(userCode);
     }
 
-    private JSONArray makeMenuFuncsJson(List<? extends IOptInfo> menuFunsByUser) {
+    private JSONArray makeMenuFuncsJson(List<OptInfo> menuFunsByUser) {
         return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
             ViewDataTransform.createStringHashMap("id", "optId",
                 "pid", "preOptId",
@@ -594,7 +594,7 @@ public class MainFrameController extends BaseController {
         }
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
         boolean asAdmin = obj != null && DEPLOY_LOGIN.equals(obj.toString());
-        List<? extends IOptInfo> menuFunsByUser = null;
+        List<OptInfo> menuFunsByUser = null;
 
         menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, osId, asAdmin);
 
@@ -640,14 +640,14 @@ public class MainFrameController extends BaseController {
         }
         if(WebOptUtils.isTenantTopUnit(request)){
             String topUnit=WebOptUtils.getCurrentTopUnit(request);
-            List<? extends IOsInfo> osInfos = platformEnvironment.listOsInfos(topUnit);
+            List<OsInfo> osInfos = platformEnvironment.listOsInfos(topUnit);
             boolean findOsId= osInfos.stream().anyMatch(osInfo -> osInfo.getOsId().equals(optid));
             if(!findOsId) {
                 throw new ObjectException(ResponseData.ERROR_FORBIDDEN,
                     "用户不属于当前租户，请切换租户！");
             }
         }
-        List<? extends IOptInfo> menuFunsByUser = platformEnvironment
+        List<OptInfo> menuFunsByUser = platformEnvironment
             .listUserMenuOptInfosUnderSuperOptId(userCode,optid,BooleanBaseOpt.castObjectToBoolean(asadmin, false));
         if (menuFunsByUser == null) {
             throw new ObjectException(ResponseData.ERROR_BAD_PROCESS_POWER,
@@ -676,7 +676,7 @@ public class MainFrameController extends BaseController {
     @WrapUpResponseBody
     public ResponseData getMemuByUsercode(@PathVariable String osId, @PathVariable String userCode) {
 
-        List<? extends IOptInfo> menuFunsByUser = null;
+        List<OptInfo> menuFunsByUser = null;
 
         menuFunsByUser = platformEnvironment.listUserMenuOptInfosUnderSuperOptId(userCode, osId, false);
 
@@ -705,7 +705,7 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/useSubrMenu/{userCode}/{menuOptId}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public ResponseData getSubMemuByUsercode(@PathVariable String userCode, @PathVariable String menuOptId) {
-        List<? extends IOptInfo> menuFunsByUser = platformEnvironment
+        List<OptInfo> menuFunsByUser = platformEnvironment
             .listUserMenuOptInfosUnderSuperOptId(userCode, menuOptId, false);
         return ResponseData.makeResponseData(makeMenuFuncsJson(menuFunsByUser));
     }
@@ -732,8 +732,8 @@ public class MainFrameController extends BaseController {
             throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
         }
         if (currentUser instanceof CentitUserDetails) {
-            return DictionaryMapUtils.mapJsonArray(
-                ((CentitUserDetails) currentUser).getUserUnits(), IUserUnit.class);
+            return DictionaryMapUtils.objectsToJSONArray(
+                ((CentitUserDetails) currentUser).getUserUnits());
         }
         return null;
     }
@@ -741,7 +741,7 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "查询当前用户所属租户", notes = "查询当前用户所属租户")
     @GetMapping(value = {"/topUnit", "/tenant"})
     @WrapUpResponseBody
-    public List<? extends IUnitInfo> listCurrentTopUnits(HttpServletRequest request) {
+    public List<UnitInfo> listCurrentTopUnits(HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         //String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if (StringUtils.isBlank(userCode)) {
@@ -753,7 +753,7 @@ public class MainFrameController extends BaseController {
 
     @GetMapping(value = "/userroles")
     @WrapUpResponseBody
-    public List<? extends IUserRole> listCurrentUserRoles(HttpServletRequest request) {
+    public List<UserRole> listCurrentUserRoles(HttpServletRequest request) {
         return platformEnvironment
             .listUserRoles(WebOptUtils.getCurrentTopUnit(request), WebOptUtils.getCurrentUserCode(request));
     }
@@ -770,9 +770,8 @@ public class MainFrameController extends BaseController {
     public Map<String, Object> getUserCurrentStaticn(HttpServletRequest request) {
         Object currentUser = WebOptUtils.getLoginUser(request);
         if (currentUser instanceof CentitUserDetails) {
-            return DictionaryMapUtils.mapJsonObject(
-                ((CentitUserDetails) currentUser).getCurrentStation(),
-                IUserUnit.class);
+            return (JSONObject) DictionaryMapUtils.objectToJSON(
+                ((CentitUserDetails) currentUser).getCurrentStation());
         }
         throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT,
             "用户没有登录或者超时，请重新登录。");
@@ -879,7 +878,7 @@ public class MainFrameController extends BaseController {
     )
     @RequestMapping(value = "/unitTree", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUnitInfo> listUnitTree(String unitCode,  HttpServletRequest request) {
+    public List<UnitInfo> listUnitTree(String unitCode,  HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,"您未登录!");
@@ -911,14 +910,14 @@ public class MainFrameController extends BaseController {
         }
 
         JSONArray allUnits = new JSONArray();
-        List<IUnitInfo> unitInfos = CodeRepositoryUtil.fetchAllSubUnits(topUnit, unitCode, true);
-        for(IUnitInfo unitInfo : unitInfos){
-            List<? extends IUserUnit> userUnits = CodeRepositoryUtil.listUnitUsers(unitInfo.getUnitCode());
+        List<UnitInfo> unitInfos = CodeRepositoryUtil.fetchAllSubUnits(topUnit, unitCode, true);
+        for(UnitInfo unitInfo : unitInfos){
+            List<UserUnit> userUnits = CodeRepositoryUtil.listUnitUsers(unitInfo.getUnitCode());
 
             JSONArray allSubUser = new JSONArray();
-            for(IUserUnit uc : userUnits) {
+            for(UserUnit uc : userUnits) {
                 if(StringUtils.isBlank(relType) || "A".equalsIgnoreCase(relType) || relType.equalsIgnoreCase(uc.getRelType())) {
-                    IUserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc.getUserCode());
+                    UserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc.getUserCode());
                     if(tempUi != null) {
                         allSubUser.add(JSON.toJSON(tempUi));
                     }
@@ -977,9 +976,9 @@ public class MainFrameController extends BaseController {
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
 
-        List<IUserInfo> userInfos = new ArrayList<>();
+        List<UserInfo> userInfos = new ArrayList<>();
         for (String uc : sUsers) {
-            IUserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc);
+            UserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc);
             if(tempUi != null) {
                 userInfos.add(tempUi);
             }
@@ -1011,9 +1010,9 @@ public class MainFrameController extends BaseController {
             unitParams == null ? null : StringBaseOpt.objectToMapStrSet(unitParams),
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
-        List<IUnitInfo> unitInfos = new ArrayList<>();
+        List<UnitInfo> unitInfos = new ArrayList<>();
         for (String uc : sUnits) {
-            IUnitInfo tempUi = CodeRepositoryUtil.getUnitInfoByCode(topUnit, uc);
+            UnitInfo tempUi = CodeRepositoryUtil.getUnitInfoByCode(topUnit, uc);
             if(tempUi != null) {
                 unitInfos.add(tempUi);
             }
@@ -1025,7 +1024,7 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "获取当前租户下所有的机构", notes = "获取当前租户下所有的机构。")
     @RequestMapping(value = "/currentunits", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<? extends IUnitInfo> listCurrentUnits(HttpServletRequest request) {
+    public List<UnitInfo> listCurrentUnits(HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录!");
@@ -1036,17 +1035,17 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "获取当前租户下的所有的用户", notes = "获取当前租户下所有的用户。")
     @RequestMapping(value = "/currentusers", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<? extends IUserInfo> listCurrentUsers(HttpServletRequest request) {
+    public List<UserInfo> listCurrentUsers(HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录!");
         }
         String topUnit=WebOptUtils.getCurrentTopUnit(request);
-        List<? extends IUserUnit> userUnits = CodeRepositoryUtil.listAllUserUnits(topUnit);
-        List<IUserInfo> result = new ArrayList<>();
-        for(IUserUnit un : userUnits){
+        List<UserUnit> userUnits = CodeRepositoryUtil.listAllUserUnits(topUnit);
+        List<UserInfo> result = new ArrayList<>();
+        for(UserUnit un : userUnits){
             if(Objects.equals(un.getRelType(),"T")){
-                IUserInfo userInfo= CodeRepositoryUtil.getUserInfoByCode(topUnit, un.getUserCode());
+                UserInfo userInfo= CodeRepositoryUtil.getUserInfoByCode(topUnit, un.getUserCode());
                 if(userInfo != null) {
                     //userInfo.setPrimaryUnit(un.getUnitCode());
                     result.add(userInfo);

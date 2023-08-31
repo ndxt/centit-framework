@@ -3,7 +3,7 @@ package com.centit.framework.components.impl;
 import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
-import com.centit.framework.model.basedata.IUserUnit;
+import com.centit.framework.model.basedata.UserUnit;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.compiler.Lexer;
@@ -175,10 +175,10 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
 
     @Override
     public int getUserRank(String userCode) {
-        List<? extends IUserUnit> uus = listUserUnits(userCode);
-        int nRank = IUserUnit.MAX_XZ_RANK;
+        List<UserUnit> uus = listUserUnits(userCode);
+        int nRank = UserUnit.MAX_XZ_RANK;
         if (uus != null) {
-            for (IUserUnit uu : uus) {
+            for (UserUnit uu : uus) {
                 int nr = getXzRank(uu.getUserRank());
                 if (nr < nRank) {
                     nRank = nr;
@@ -190,10 +190,10 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
 
     @Override
     public int getUserUnitRank(String userCode, String unitCode) {
-        List<? extends IUserUnit> uus = listUserUnits(userCode);
-        int nRank = IUserUnit.MAX_XZ_RANK;
+        List<UserUnit> uus = listUserUnits(userCode);
+        int nRank = UserUnit.MAX_XZ_RANK;
         if (uus != null) {
-            for (IUserUnit uu : uus) {
+            for (UserUnit uu : uus) {
                 if (StringUtils.equals(uu.getUnitCode(), unitCode)) {
                     int nr = getXzRank(uu.getUserRank());
                     if (nr < nRank) {

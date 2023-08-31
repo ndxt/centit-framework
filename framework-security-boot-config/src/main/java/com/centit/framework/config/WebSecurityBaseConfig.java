@@ -1,7 +1,7 @@
 package com.centit.framework.config;
 
 import com.centit.framework.security.*;
-import com.centit.framework.security.model.CentitUserDetailsService;
+import com.centit.framework.model.security.CentitUserDetailsService;
 import com.centit.support.algorithm.StringBaseOpt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

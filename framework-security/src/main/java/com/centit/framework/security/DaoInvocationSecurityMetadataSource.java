@@ -1,6 +1,5 @@
 package com.centit.framework.security;
 
-import com.centit.framework.security.model.CentitSecurityMetadata;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;

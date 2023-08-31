@@ -3,7 +3,7 @@ package com.centit.framework.components;
 import com.centit.framework.components.impl.SystemUserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
-import com.centit.framework.model.basedata.IUnitInfo;
+import com.centit.framework.model.basedata.UnitInfo;
 import com.centit.support.common.ObjectException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public abstract class SysUnitFilterEngine {
         if (nTiers < 1)
             return units;
         // 找到所有根机构
-        for (IUnitInfo  unitEnt: ecc.listAllUnitInfo() ) {
+        for (UnitInfo unitEnt: ecc.listAllUnitInfo() ) {
             String puc = unitEnt.getParentUnit();
             if ((puc == null || "0".equals(puc) || "".equals(puc)) && "T".equals(unitEnt.getIsValid()))
                 units.add(unitEnt.getUnitCode());
@@ -54,8 +54,8 @@ public abstract class SysUnitFilterEngine {
         if (nTiers < 1)
             return units;
         // 找到所有的叶子机构
-        for (IUnitInfo  unitEnt: ecc.listAllUnitInfo() ) {
-            List<? extends IUnitInfo> subUS = ecc.listSubUnit(unitEnt.getUnitCode());
+        for (UnitInfo  unitEnt: ecc.listAllUnitInfo() ) {
+            List<UnitInfo> subUS = ecc.listSubUnit(unitEnt.getUnitCode());
             if ((subUS == null || subUS.size() == 0) && "T".equals(unitEnt.getIsValid()))
                 units.add(unitEnt.getUnitCode());
         }
@@ -119,7 +119,7 @@ public abstract class SysUnitFilterEngine {
         while(true) {
             Set<String> retUnits = new HashSet<>();
             for (String suc : midUnits) {
-                IUnitInfo u = ecc.getUnitInfoByCode(suc);
+                UnitInfo u = ecc.getUnitInfoByCode(suc);
                 String puc = u.getParentUnit();
                 if ((puc != null) && (!"0".equals(puc)) && (!"".equals(puc)))
                     retUnits.add(puc);
@@ -148,8 +148,8 @@ public abstract class SysUnitFilterEngine {
         for (int i = 0; i < nTiers; i++) {
             Set<String> retUnits = new HashSet<>();
             for (String suc : midUnits) {
-                //IUnitInfo u = ecc.getUnitInfoByCode(suc);
-                for(IUnitInfo ui: ecc.listSubUnit(suc))
+                //UnitInfo u = ecc.getUnitInfoByCode(suc);
+                for(UnitInfo ui: ecc.listSubUnit(suc))
                     retUnits.add(ui.getUnitCode());
             }
             midUnits = retUnits;
@@ -181,12 +181,12 @@ public abstract class SysUnitFilterEngine {
             return units;
         Set<String> resUnits =  new HashSet<>();
         for (String suc : units) {
-            List<IUnitInfo> midUnits =  new ArrayList<>();
+            List<UnitInfo> midUnits =  new ArrayList<>();
             midUnits.add(ecc.getUnitInfoByCode(suc));
             while(midUnits.size()>0) {
                 boolean hasFound = false;
-                List<IUnitInfo> tempUnits = new ArrayList<>();
-                for (IUnitInfo ui : midUnits) {
+                List<UnitInfo> tempUnits = new ArrayList<>();
+                for (UnitInfo ui : midUnits) {
                     if(typeOrTag.equals(ui.getUnitType()) || matchUnitTag(typeOrTag, ui.getUnitTag())){
                         resUnits.add(ui.getUnitCode());
                         hasFound = true;
@@ -217,7 +217,7 @@ public abstract class SysUnitFilterEngine {
         for (int i = 0; i < nTiers; i++) {
             Set<String> retUnits = new HashSet<>();
             for (String suc : midUnits) {
-                IUnitInfo u = ecc.getUnitInfoByCode(suc);
+                UnitInfo u = ecc.getUnitInfoByCode(suc);
                 String puc = u.getParentUnit();
                 if ((puc != null) && (!"0".equals(puc)) && (!"".equals(puc)))
                     retUnits.add(puc);
@@ -240,7 +240,7 @@ public abstract class SysUnitFilterEngine {
             return units;
         Set<String> midUnits =  new HashSet<>();
         for (String suc : units) {
-            IUnitInfo u = ecc.getUnitInfoByCode(suc);
+            UnitInfo u = ecc.getUnitInfoByCode(suc);
             while(u != null) {
                 if(typeOrTag.equals(u.getUnitType()) || matchUnitTag(typeOrTag, u.getUnitTag())){
                     midUnits.add(u.getUnitCode());
@@ -267,7 +267,7 @@ public abstract class SysUnitFilterEngine {
         String topUnit = null;
         String retUnitCode = unitCode;
         while (true) {
-            IUnitInfo u = ecc.getUnitInfoByCode(retUnitCode);
+            UnitInfo u = ecc.getUnitInfoByCode(retUnitCode);
             if (u == null)
                 return topUnit;
             topUnit = retUnitCode; // 记录下有小的机构代码
@@ -324,8 +324,8 @@ public abstract class SysUnitFilterEngine {
         for (int i = 0; i < nTiers; i++) {
             retUnits = new HashSet<>();
             for (String suc : midUnits) {
-                //IUnitInfo u = ecc.getUnitInfoByCode(suc);
-                for(IUnitInfo ui: ecc.listSubUnit(suc))
+                //UnitInfo u = ecc.getUnitInfoByCode(suc);
+                for(UnitInfo ui: ecc.listSubUnit(suc))
                     retUnits.add(ui.getUnitCode());
             }
             serUnits.addAll(midUnits);
@@ -446,7 +446,7 @@ public abstract class SysUnitFilterEngine {
 
         boolean hasUnitFilter =  rf.isHasUnitTagFilter() || rf.isHasUnitTypeFilter();
         if( hasUnitFilter && rf.getUnits() != null && rf.getUnits().size()>0) {
-            List<IUnitInfo> lsUnitInfo = new ArrayList<>(rf.getUnits().size()+1);
+            List<UnitInfo> lsUnitInfo = new ArrayList<>(rf.getUnits().size()+1);
             for (String unitCode  : rf.getUnits()) {
                 lsUnitInfo.add(ecc.getUnitInfoByCode(unitCode));
             }
@@ -457,8 +457,8 @@ public abstract class SysUnitFilterEngine {
                 }
 
                 if (rf.isHasUnitTagFilter()) {
-                    for (Iterator<IUnitInfo> it = lsUnitInfo.iterator(); it.hasNext(); ) {
-                        IUnitInfo unit = it.next();
+                    for (Iterator<UnitInfo> it = lsUnitInfo.iterator(); it.hasNext(); ) {
+                        UnitInfo unit = it.next();
                         boolean hasTag = false;
                         if (StringUtils.isNotBlank(unit.getUnitTag())) {
                             String tags[] = unit.getUnitTag().split(",");
@@ -475,7 +475,7 @@ public abstract class SysUnitFilterEngine {
                 }
 
                 rf.getUnits().clear();
-                for (IUnitInfo unit : lsUnitInfo) {
+                for (UnitInfo unit : lsUnitInfo) {
                     rf.addUnit(unit.getUnitCode());
                 }
             }

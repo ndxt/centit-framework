@@ -5,7 +5,7 @@
     <parent>
         <artifactId>framework-parent</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>5.3-SNAPSHOT</version>
+        <version>5.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -101,11 +101,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
         </dependency>
 
         <dependency>

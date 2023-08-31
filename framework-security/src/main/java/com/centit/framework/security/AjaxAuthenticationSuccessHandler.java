@@ -5,8 +5,8 @@ import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.model.basedata.OperationLog;
-import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.framework.security.model.CentitUserDetailsService;
+import com.centit.framework.model.security.CentitUserDetails;
+import com.centit.framework.model.security.CentitUserDetailsService;
 import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
@@ -79,7 +79,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             OperationLogCenter.log(
                 OperationLog.create().user(ud.getUserCode()).operation("mainframe")
                         .unit(ud.getCurrentUnitCode()).method("login")
-                        .content("用户 ："+ud.getUserInfo().getString("userName")+"于"
+                        .content("用户 ："+ud.getUserInfo().getUserName() + " 于"
                             +DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate()) + "从主机"+loginIp+"登录。")
                     .loginIp(loginIp).topUnit(ud.getTopUnitCode()));
         }

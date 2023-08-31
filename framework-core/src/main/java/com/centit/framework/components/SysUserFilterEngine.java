@@ -3,10 +3,10 @@ package com.centit.framework.components;
 import com.centit.framework.components.impl.SystemUserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
-import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.framework.model.basedata.IUserInfo;
-import com.centit.framework.model.basedata.IUserRole;
-import com.centit.framework.model.basedata.IUserUnit;
+import com.centit.framework.model.basedata.UnitInfo;
+import com.centit.framework.model.basedata.UserInfo;
+import com.centit.framework.model.basedata.UserRole;
+import com.centit.framework.model.basedata.UserUnit;
 import com.centit.support.common.ObjectException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -63,25 +63,25 @@ public abstract class SysUserFilterEngine {
     public static Set<String> getUsersByRoleAndUnit(UserUnitFilterCalcContext ecc,
                     String roleType,String roleCode,
                     String unitCode, boolean onlyGetPrimary) {
-        List<IUserUnit> lsUserunit = new LinkedList<>();
+        List<UserUnit> lsUserunit = new LinkedList<>();
         if (unitCode != null && !"".equals(unitCode)) {
-            IUnitInfo unit = ecc.getUnitInfoByCode(unitCode);
+            UnitInfo unit = ecc.getUnitInfoByCode(unitCode);
             if (unit != null){
                 if(onlyGetPrimary){
-                    for(IUserUnit uu: ecc.listUnitUsers(unitCode)){
+                    for(UserUnit uu: ecc.listUnitUsers(unitCode)){
                         if("T".equals(uu.getRelType())){
                             lsUserunit.add(uu);
                         }
                     }
                 }else {
-                    List<? extends IUserUnit> userUnits = ecc.listUnitUsers(unitCode);
+                    List<UserUnit> userUnits = ecc.listUnitUsers(unitCode);
                     if(userUnits!=null) {
                         lsUserunit.addAll(userUnits);
                     }
                 }
             }
         } else {
-            List<? extends IUserUnit> userlist = ecc.listAllUserUnits();
+            List<UserUnit> userlist = ecc.listAllUserUnits();
             if(userlist!=null) {
                 lsUserunit.addAll(userlist);
             }
@@ -95,10 +95,10 @@ public abstract class SysUserFilterEngine {
             lsUserunit.removeIf(uu -> !roleCode.equals(uu.getUserRank()));
         } else if(ROLE_TYPE_SYSTEM.equalsIgnoreCase(roleType)) {
             // 获取系统角色用户
-            List<? extends IUserRole> userRoles = ecc.listRoleUsers(roleCode);
+            List<UserRole> userRoles = ecc.listRoleUsers(roleCode);
             Set<String> users = new HashSet<>();
-            for(IUserRole ur : userRoles){
-                for(IUserUnit uu : lsUserunit){
+            for(UserRole ur : userRoles){
+                for(UserUnit uu : lsUserunit){
                     if(StringUtils.equals( uu.getUserCode(), ur.getUserCode())){
                         users.add(uu.getUserCode());
                         break;
@@ -111,7 +111,7 @@ public abstract class SysUserFilterEngine {
         }
         // 获取所有 符合条件的用户代码
         Set<String> users = new HashSet<>();
-        for (IUserUnit uu : lsUserunit) {
+        for (UserUnit uu : lsUserunit) {
             users.add(uu.getUserCode());
         }
         return users;
@@ -129,16 +129,16 @@ public abstract class SysUserFilterEngine {
 
         if(hasUnitFilter && (!rf.isHasUserFilter())) {
             // 获取所有候选人的岗位、职务信息
-            List<IUserUnit> lsUserunit = new LinkedList<>();
+            List<UserUnit> lsUserunit = new LinkedList<>();
             if (rf.isHasUnitFilter()) {
                 for (String unitCode : rf.getUnits()) {
-                    List<? extends IUserUnit> uus = ecc.listUnitUsers(unitCode);
+                    List<UserUnit> uus = ecc.listUnitUsers(unitCode);
                     if(uus != null || uus.size()>0) {
                         lsUserunit.addAll(uus);
                     }
                 }
             } else {
-                List<? extends IUserUnit> uus = ecc.listAllUserUnits();
+                List<UserUnit> uus = ecc.listAllUserUnits();
                 if(uus!=null) {
                     lsUserunit.addAll(uus);
                 }
@@ -165,7 +165,7 @@ public abstract class SysUserFilterEngine {
                 } else {
                     // 针对不同的部门，分别找出这个部门对应的等级
                     Map<String, Integer> unitRank = new HashMap<>();
-                    for (IUserUnit uu : lsUserunit) {
+                    for (UserUnit uu : lsUserunit) {
                         if (rf.matchRank(ecc.getXzRank(uu.getUserRank()))) {
                             Integer nR = unitRank.get(uu.getUnitCode());
                             if (nR == null) {
@@ -178,8 +178,8 @@ public abstract class SysUserFilterEngine {
                         }
                     }
 
-                    for (Iterator<IUserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-                        IUserUnit uu = it.next();
+                    for (Iterator<UserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
+                        UserUnit uu = it.next();
                         // 过滤掉不符合要求的职位
                         Integer nR = unitRank.get(uu.getUnitCode());
                         if (nR == null || nR != ecc.getXzRank(uu.getUserRank()))
@@ -189,26 +189,26 @@ public abstract class SysUserFilterEngine {
             }
             // 获取所有 符合条件的用户代码
             rf.getUsers().clear();
-            for (IUserUnit uu : lsUserunit) {
+            for (UserUnit uu : lsUserunit) {
                 rf.addUser(uu.getUserCode());
             }
         }
 
         if(hasTypeTagFilter) {
-            List<IUserInfo> lsUserInfo = null;
+            List<UserInfo> lsUserInfo = null;
             if (rf.getUsers() != null && rf.getUsers().size() > 0) {
                 lsUserInfo = new ArrayList<>(rf.getUsers().size() + 1);
                 for (String userCode : rf.getUsers()) {
-                    IUserInfo userInfo = ecc.getUserInfoByCode(userCode);
+                    UserInfo userInfo = ecc.getUserInfoByCode(userCode);
                     if (null != userInfo) {
                         lsUserInfo.add(userInfo);
                     }
                 }
             } else if (!hasUnitFilter) {
                 // 剔除禁用用户
-                List<? extends IUserInfo> extUserInfo = ecc.listAllUserInfo();
+                List<UserInfo> extUserInfo = ecc.listAllUserInfo();
                 lsUserInfo = new ArrayList<>(extUserInfo.size() + 1);
-                for(IUserInfo ui : extUserInfo) {
+                for(UserInfo ui : extUserInfo) {
                     if("T".equals(ui.getIsValid())) {
                         lsUserInfo.add(ui);
                     }
@@ -222,8 +222,8 @@ public abstract class SysUserFilterEngine {
                 }
 
                 if (rf.isHasUserTagFilter()) {
-                    for (Iterator<IUserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
-                        IUserInfo user = it.next();
+                    for (Iterator<UserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
+                        UserInfo user = it.next();
                         boolean hasTag = false;
                         if (StringUtils.isNotBlank(user.getUserTag())) {
                             String tags[] = user.getUserTag().split(",");
@@ -245,11 +245,11 @@ public abstract class SysUserFilterEngine {
                     // 优化计算 效率
                     if(nUserSize > rf.getOptRoles().size() ){
                         //将 lsUserInfo 转换为map 效率可能更好
-                        Map<String, IUserInfo> tmpUserInfo = new HashMap<>(nUserSize + 1);
+                        Map<String, UserInfo> tmpUserInfo = new HashMap<>(nUserSize + 1);
                         for (String roleCode :rf.getOptRoles()) {
-                            List<? extends IUserRole> userRoles = ecc.listRoleUsers(roleCode);
-                            for(IUserRole ur : userRoles){
-                                for(IUserInfo userInfo : lsUserInfo){
+                            List<UserRole> userRoles = ecc.listRoleUsers(roleCode);
+                            for(UserRole ur : userRoles){
+                                for(UserInfo userInfo : lsUserInfo){
                                     if(StringUtils.equals( userInfo.getUserCode(), ur.getUserCode())){
                                         tmpUserInfo.put(userInfo.getUserCode(), userInfo);
                                         break;
@@ -260,12 +260,12 @@ public abstract class SysUserFilterEngine {
                         lsUserInfo.clear();
                         lsUserInfo.addAll(tmpUserInfo.values());
                     } else { // 和上面的 效果应该是等价的，主要是考虑性能问题
-                        for (Iterator<IUserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
-                            IUserInfo user = it.next();
+                        for (Iterator<UserInfo> it = lsUserInfo.iterator(); it.hasNext(); ) {
+                            UserInfo user = it.next();
                             boolean hasRole = false;
-                            List<? extends IUserRole> userRoles = ecc.listUserRoles(user.getUserCode());
+                            List<UserRole> userRoles = ecc.listUserRoles(user.getUserCode());
                             if (userRoles != null) {
-                                for (IUserRole ur : userRoles) {
+                                for (UserRole ur : userRoles) {
                                     if (rf.getOptRoles().contains(ur.getRoleCode())) {
                                         hasRole = true;
                                         break;
@@ -280,7 +280,7 @@ public abstract class SysUserFilterEngine {
                 }
                 rf.getUsers().clear();
 
-                for (IUserInfo user : lsUserInfo) {
+                for (UserInfo user : lsUserInfo) {
                     rf.addUser(user.getUserCode());
                 }
             }
@@ -456,7 +456,7 @@ public abstract class SysUserFilterEngine {
 
     public static Set<String> calcAllLeaderByUser(String userCode, String topUnit){
         UserUnitFilterCalcContext ecc = new SystemUserUnitFilterCalcContext(topUnit);
-        IUserInfo userInfo = ecc.getUserInfoByCode(userCode);
+        UserInfo userInfo = ecc.getUserInfoByCode(userCode);
         if(userInfo==null){
             logger.error("系统中无此用户！");
             return null;

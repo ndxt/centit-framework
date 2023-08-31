@@ -5,7 +5,7 @@
     <parent>
         <artifactId>framework-parent</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>5.3-SNAPSHOT</version>
+        <version>5.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>framework-adapter</artifactId>
@@ -21,6 +21,23 @@
         </dependency>
 
         <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
         </dependency>
@@ -31,14 +48,6 @@
             <optional>true</optional>
             <!--<scope>provided</scope>-->
         </dependency>
-
-        <!--<dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>tools</artifactId>
-            <version>${jdk.version}</version>
-            <systemPath>${java.home}/../lib/tools.jar</systemPath>
-            <scope>system</scope>
-        </dependency>-->
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -54,11 +63,13 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.centit.support</groupId>
             <artifactId>centit-database</artifactId>
             <version>${project.version}</version>
         </dependency>
+
     </dependencies>
 
 </project>

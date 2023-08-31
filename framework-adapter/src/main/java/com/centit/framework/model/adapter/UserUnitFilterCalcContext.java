@@ -1,9 +1,9 @@
 package com.centit.framework.model.adapter;
 
-import com.centit.framework.model.basedata.IUnitInfo;
-import com.centit.framework.model.basedata.IUserInfo;
-import com.centit.framework.model.basedata.IUserRole;
-import com.centit.framework.model.basedata.IUserUnit;
+import com.centit.framework.model.basedata.UnitInfo;
+import com.centit.framework.model.basedata.UserInfo;
+import com.centit.framework.model.basedata.UserRole;
+import com.centit.framework.model.basedata.UserUnit;
 
 import java.util.List;
 import java.util.Map;
@@ -63,30 +63,30 @@ public interface UserUnitFilterCalcContext {
 
     boolean seekToRightBracket();
 
-    List<? extends IUserInfo> listAllUserInfo();
+    List<UserInfo> listAllUserInfo();
 
-    List<? extends IUnitInfo> listAllUnitInfo();
+    List<UnitInfo> listAllUnitInfo();
 
     /**
      * 获得机构所有的子机构
      * @param unitCode 机构代码
      * @return 子机构集合
      */
-    List<? extends IUnitInfo> listSubUnit(String unitCode);
+    List<UnitInfo> listSubUnit(String unitCode);
 
-    IUserInfo getUserInfoByCode(String userCode);
+    UserInfo getUserInfoByCode(String userCode);
 
-    IUnitInfo getUnitInfoByCode(String unitCode);
+    UnitInfo getUnitInfoByCode(String unitCode);
 
-    List<? extends IUserUnit> listAllUserUnits();
+    List<UserUnit> listAllUserUnits();
 
-    List<? extends IUserUnit> listUnitUsers(String unitCode);
+    List<UserUnit> listUnitUsers(String unitCode);
 
-    List<? extends IUserUnit> listUserUnits(String userCode);
+    List<UserUnit> listUserUnits(String userCode);
 
-    List<? extends IUserRole> listUserRoles(String userCode);
+    List<UserRole> listUserRoles(String userCode);
 
-    List<? extends IUserRole> listRoleUsers(String roleCode);
+    List<UserRole> listRoleUsers(String roleCode);
 
     //-----------------通用的常量---------------------
     // 系统角色
@@ -102,10 +102,10 @@ public interface UserUnitFilterCalcContext {
      * @return 行政角色等级
      */
     int getXzRank(String rankCode);
-       /* IDataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode);
+       /* DataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode);
         if(dd!=null)
             return Integer.valueOf(dd.getExtraCode());
-        return IUserUnit.MAX_XZ_RANK;
+        return UserUnit.MAX_XZ_RANK;
     }*/
     int getUserRank(String userCode);
 

@@ -3,7 +3,7 @@ package com.centit.framework.components;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
-import com.centit.framework.security.model.CentitSecurityMetadata;
+import com.centit.framework.security.CentitSecurityMetadata;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.CachedMap;
 import com.centit.support.common.ICachedObject;
@@ -201,7 +201,7 @@ public abstract class CodeRepositoryCache {
     /**
      * 缓存用户信息, 按照租户隔离
      */
-    public static CachedMap<String, ListAppendMap<? extends IUserInfo>> userInfoRepo =
+    public static CachedMap<String, ListAppendMap<UserInfo>> userInfoRepo =
         new CachedMap<>( (topUnit) ->
                new ListAppendMap<>(
                     getPlatformEnvironment().listAllUsers(topUnit),
@@ -211,26 +211,26 @@ public abstract class CodeRepositoryCache {
     /**
      * 缓存机构信息, 按照租户隔离
      */
-    public static CachedMap<String, ListAppendMap<? extends IUnitInfo>> unitInfoRepo =
+    public static CachedMap<String, ListAppendMap<UnitInfo>> unitInfoRepo =
         new CachedMap<>((topUnit)->{
-            List<? extends IUnitInfo> allunits = getPlatformEnvironment().listAllUnits(topUnit);
+            List<UnitInfo> allunits = getPlatformEnvironment().listAllUnits(topUnit);
             CollectionsOpt.sortAsTree(allunits,
                 ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
 
-            return new ListAppendMap<>((List<IUnitInfo>) allunits, (ui)-> ui.getUnitCode());
+            return new ListAppendMap<>((List<UnitInfo>) allunits, (ui)-> ui.getUnitCode());
          }, CACHE_FRESH_PERIOD_SECONDS);
 
     /**
      * 用户机构缓存
      */
-    public static CachedMap<String, List<? extends IUserUnit>> userUnitRepo =
+    public static CachedMap<String, List<UserUnit>> userUnitRepo =
         new CachedMap<>((topUnit) -> getPlatformEnvironment().listAllUserUnits(topUnit),
             CACHE_FRESH_PERIOD_SECONDS);
 
      /**
      * 用户机构缓存
      */
-    public static CachedMap<String, CachedMap<String, List<? extends IUserUnit>>> userUnitsMap =
+    public static CachedMap<String, CachedMap<String, List<UserUnit>>> userUnitsMap =
          new CachedMap<>((topUnit)->
              new CachedMap<>((userCode)-> getPlatformEnvironment().listUserUnits(topUnit, userCode),
                 CACHE_FRESH_PERIOD_SECONDS, 300),
@@ -238,13 +238,13 @@ public abstract class CodeRepositoryCache {
     /**
      * 机构用户缓存
      */
-    public static CachedMap<String, List<? extends IUserUnit>> unitUsersMap=
+    public static CachedMap<String, List<UserUnit>> unitUsersMap=
         new CachedMap<>(
             (unitCode)-> getPlatformEnvironment().listUnitUsers(unitCode),
             CACHE_FRESH_PERIOD_SECONDS, 100);
 
 
-    public static CachedMap<String, ListAppendMap<? extends IDataDictionary>> dictionaryRepo =
+    public static CachedMap<String, ListAppendMap<DataDictionary>> dictionaryRepo =
         new CachedMap<>((sCatalog)->
             new ListAppendMap<>(
                 getPlatformEnvironment().listDataDictionaries(sCatalog),
@@ -254,17 +254,17 @@ public abstract class CodeRepositoryCache {
     /**
      * 权限相关缓存
      */
-    public static CachedMap<String, List<? extends IOsInfo>> osInfoCache =
+    public static CachedMap<String, List<OsInfo>> osInfoCache =
         new CachedMap<>((topUnit)->getPlatformEnvironment().listOsInfos(topUnit),
             CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedMap<String, CachedMap<String, List<? extends IUserRole>>> userRolesRepo =
+    public static CachedMap<String, CachedMap<String, List<UserRole>>> userRolesRepo =
         new CachedMap<>((topUnit)->
             new CachedMap<>((sUserCode)-> getPlatformEnvironment().listUserRoles(topUnit, sUserCode),
                  CACHE_FRESH_PERIOD_SECONDS),
             ICachedObject.NOT_REFRESH_PERIOD);
 
-    public static CachedMap<String, CachedMap<String, List<? extends IUserRole>>> roleUsersRepo =
+    public static CachedMap<String, CachedMap<String, List<UserRole>>> roleUsersRepo =
         new CachedMap<>((topUnit)->
             new CachedMap<>((sRoleCode)-> getPlatformEnvironment().listRoleUsers(topUnit, sRoleCode),
                 CACHE_FRESH_PERIOD_SECONDS),
@@ -274,43 +274,43 @@ public abstract class CodeRepositoryCache {
      * 下面的缓存信息用于spring security 中的用户的权限信息缓存
      */
 
-    public static CachedMap<String, List<? extends IRoleInfo>> roleInfoRepo=
+    public static CachedMap<String, List<RoleInfo>> roleInfoRepo=
         new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllRoleInfo(topUnit),
             CACHE_FRESH_PERIOD_SECONDS);
 
 
-    public static CachedMap<String, List<? extends IOptInfo>> optInfoRepo=
+    public static CachedMap<String, List<OptInfo>> optInfoRepo=
         new CachedMap<>((topUnit)-> getPlatformEnvironment().listAllOptInfo(topUnit),
             CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedMap<String, List<? extends IOptInfo>> roleOptInfoMap=
+    public static CachedMap<String, List<OptInfo>> roleOptInfoMap=
         new CachedMap<>((roleCode)-> getPlatformEnvironment().listOptInfoByRole(roleCode),
             CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedMap<String, ListAppendMap<? extends IOptMethod>> optMethodRepo=
+    public static CachedMap<String, ListAppendMap<OptMethod>> optMethodRepo=
         new CachedMap<>((topUnit)-> {
-                List<? extends IOptMethod> optInfos =
+                List<OptMethod> optInfos =
                     getPlatformEnvironment().listAllOptMethod(topUnit);
-                return new ListAppendMap<>(optInfos, IOptMethod::getOptCode);
+                return new ListAppendMap<>(optInfos, OptMethod::getOptCode);
             },
             CACHE_FRESH_PERIOD_SECONDS);
 
 
 
-    public static CachedMap<String, ListAppendMap<? extends IOptMethod>> roleOptMethodMap=
+    public static CachedMap<String, ListAppendMap<OptMethod>> roleOptMethodMap=
         new CachedMap<>((roleCode)-> {
-            List<? extends IOptMethod> optInfos =
+            List<OptMethod> optInfos =
                 getPlatformEnvironment().listOptMethodByRoleCode(roleCode);
-            return new ListAppendMap<>(optInfos, IOptMethod::getOptCode);
+            return new ListAppendMap<>(optInfos, OptMethod::getOptCode);
     }, CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedMap<String, Map<String, List<IOptDataScope>>> optDataScopeRepo=
+    public static CachedMap<String, Map<String, List<OptDataScope>>> optDataScopeRepo=
         new CachedMap<>((topUnit)->{
-            List<? extends IOptDataScope> optDataScopes = getPlatformEnvironment().listAllOptDataScope(topUnit);
-            Map<String, List<IOptDataScope>> optDataScopeMap = new HashMap<>(200);
+            List<OptDataScope> optDataScopes = getPlatformEnvironment().listAllOptDataScope(topUnit);
+            Map<String, List<OptDataScope>> optDataScopeMap = new HashMap<>(200);
             if(optDataScopes != null) {
-                for (IOptDataScope dataScope : optDataScopes) {
-                    List<IOptDataScope> odss = optDataScopeMap.get(dataScope.getOptId());
+                for (OptDataScope dataScope : optDataScopes) {
+                    List<OptDataScope> odss = optDataScopeMap.get(dataScope.getOptId());
                     if (odss == null) {
                         odss = new ArrayList<>(4);
                     }
@@ -321,16 +321,16 @@ public abstract class CodeRepositoryCache {
             return optDataScopeMap;
         }, CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedMap<String, List<? extends IRolePower>> rolePowerRepo =
+    public static CachedMap<String, List<RolePower>> rolePowerRepo =
         new CachedMap<>((topUnit)->
             getPlatformEnvironment().listAllRolePower(topUnit), CACHE_FRESH_PERIOD_SECONDS);
 
-    public static CachedMap<String, Map<String, List<IRolePower>>> rolePowerMap =
+    public static CachedMap<String, Map<String, List<RolePower>>> rolePowerMap =
         new CachedMap<>((topUnit)->{
-            List<? extends IRolePower> allRowPowers = rolePowerRepo.getCachedValue(topUnit);
-            Map<String, List<IRolePower>> rolePowerMap = new HashMap<>(100);
-            for(IRolePower rolePower: allRowPowers){
-                List<IRolePower> odss = rolePowerMap.get(rolePower.getRoleCode());
+            List<RolePower> allRowPowers = rolePowerRepo.getCachedValue(topUnit);
+            Map<String, List<RolePower>> rolePowerMap = new HashMap<>(100);
+            for(RolePower rolePower: allRowPowers){
+                List<RolePower> odss = rolePowerMap.get(rolePower.getRoleCode());
                 if(odss==null){
                     odss = new ArrayList<>(4);
                 }

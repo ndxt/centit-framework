@@ -1,8 +1,7 @@
 package com.centit.framework.config;
 
+import com.centit.framework.model.security.CentitUserDetailsService;
 import com.centit.framework.security.*;
-import com.centit.framework.security.model.CentitSecurityMetadata;
-import com.centit.framework.security.model.CentitUserDetailsService;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;

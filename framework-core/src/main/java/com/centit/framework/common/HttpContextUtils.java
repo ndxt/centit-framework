@@ -4,7 +4,7 @@ package com.centit.framework.common;
  * @author zfg
  */
 
-import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.framework.model.security.CentitUserDetails;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 

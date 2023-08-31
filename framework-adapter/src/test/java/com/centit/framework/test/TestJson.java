@@ -1,7 +1,7 @@
 package com.centit.framework.test;
 
 import com.centit.framework.appclient.HttpReceiveJSON;
-import com.centit.framework.security.model.CentitPasswordEncoder;
+import com.centit.framework.model.security.CentitPasswordEncoder;
 
 import java.util.List;
 

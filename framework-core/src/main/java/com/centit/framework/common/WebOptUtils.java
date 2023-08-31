@@ -1,13 +1,9 @@
 package com.centit.framework.common;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.model.basedata.IUserInfo;
-import com.centit.framework.model.basedata.IUserUnit;
-import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.framework.security.model.JsonCentitUserDetails;
+import com.centit.framework.model.basedata.UserInfo;
+import com.centit.framework.model.basedata.UserUnit;
+import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.file.FileIOOpt;
@@ -136,7 +132,7 @@ public class WebOptUtils {
         return innerGetUserDetail(session);
     }
 
-    private static IUserInfo innerGetLoginUserFromCloud(HttpServletRequest request){
+    private static UserInfo innerGetLoginUserFromCloud(HttpServletRequest request){
         String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
         String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
         if(userCode!=null){
@@ -147,7 +143,7 @@ public class WebOptUtils {
     /**
      * 返回IUserInfo or CentitUserDetails
      * @param request HttpServletRequest
-     * @return IUserInfo or CentitUserDetails
+     * @return UserInfo or CentitUserDetails
      */
     public static Object getLoginUser(HttpServletRequest request) {
         if(request==null){
@@ -301,7 +297,7 @@ public class WebOptUtils {
         setCurrentLang(request.getSession(),localLang);
     }
 
-    public static JSONObject getCurrentUserInfo(HttpServletRequest request) {
+    public static UserInfo getCurrentUserInfo(HttpServletRequest request) {
         if(request == null){
             CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
             if (null != centitUserDetails) {
@@ -310,7 +306,7 @@ public class WebOptUtils {
             return null;
         }
         if(WebOptUtils.requestInSpringCloud){
-            return (JSONObject)JSON.toJSON(innerGetLoginUserFromCloud(request));
+            return innerGetLoginUserFromCloud(request);
         }
         CentitUserDetails ud = innerGetUserDetail(request.getSession());
         if(ud != null) {
@@ -331,14 +327,14 @@ public class WebOptUtils {
             String userCode = request.getHeader(WebOptUtils.CURRENT_USER_CODE_TAG);
             String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
             if(userCode!=null){
-                IUserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(topUnit, userCode);
-                JsonCentitUserDetails userDetails = new JsonCentitUserDetails();
-                userDetails.setUserInfo((JSONObject) JSON.toJSON(userinfo));
-                List<? extends IUserUnit> uulist = CodeRepositoryUtil.listUserUnits(topUnit, userCode);
-                userDetails.setUserUnits((JSONArray) JSON.toJSON(uulist));
+                UserInfo userinfo = CodeRepositoryUtil.getUserInfoByCode(topUnit, userCode);
+                CentitUserDetails userDetails = new CentitUserDetails();
+                userDetails.setUserInfo(userinfo);
+                List<UserUnit> uulist = CodeRepositoryUtil.listUserUnits(topUnit, userCode);
+                userDetails.setUserUnits(uulist);
                 String unitCode = request.getHeader(WebOptUtils.CURRENT_UNIT_CODE_TAG);
                 if(uulist!=null && uulist.size()>0) {
-                    for (IUserUnit uu : uulist) {
+                    for (UserUnit uu : uulist) {
                         if(StringUtils.equals(unitCode, uu.getUnitCode())){
                             userDetails.setCurrentStationId(uu.getUserUnitId());
                             break;
@@ -406,17 +402,17 @@ public class WebOptUtils {
     }
 
     public static String getCurrentUserName(HttpServletRequest request) {
-        JSONObject ud = getCurrentUserInfo(request);
+        UserInfo ud = getCurrentUserInfo(request);
         if (ud == null)
             return "";
-        return ud.getString("userName");
+        return ud.getUserName();//.getString("userName");
     }
 
     public static String getCurrentUserLoginName(HttpServletRequest request) {
-        JSONObject ud = getCurrentUserInfo(request);
+        UserInfo ud = getCurrentUserInfo(request);
         if (ud == null)
             return "";
-        return ud.getString("loginName");
+        return ud.getLoginName();//("loginName");
     }
 
     public static String getCurrentUnitCode(HttpServletRequest request) {

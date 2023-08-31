@@ -1,6 +1,6 @@
 package com.centit.framework.test;
 
-import com.centit.framework.security.model.StandardPasswordEncoderImpl;
+import com.centit.framework.security.StandardPasswordEncoderImpl;
 import org.junit.Test;
 
 /**

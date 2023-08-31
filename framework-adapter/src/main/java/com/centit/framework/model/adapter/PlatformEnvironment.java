@@ -1,8 +1,8 @@
 package com.centit.framework.model.adapter;
 
 import com.centit.framework.model.basedata.*;
-import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.framework.security.model.OptTreeNode;
+import com.centit.framework.model.security.CentitUserDetails;
+import com.centit.framework.model.security.OptTreeNode;
 import com.centit.support.database.utils.PageDesc;
 import org.springframework.security.access.ConfigAttribute;
 
@@ -35,7 +35,7 @@ public interface PlatformEnvironment {
      *
      * @return List 所有用户
      */
-    List<? extends IUserInfo> listAllUsers(String topUnit);
+    List<UserInfo> listAllUsers(String topUnit);
 
     /**
      * 获取当前租户的所有机构
@@ -45,14 +45,14 @@ public interface PlatformEnvironment {
      *                通过 unitpath来过滤
      * @return List 所有机构
      */
-    List<? extends IUnitInfo> listAllUnits(String topUnit);
+    List<UnitInfo> listAllUnits(String topUnit);
 
     /*
      * 获取机构信息
      * @param unitCode 机构主键
      * @return 机构信息
 
-     IUnitInfo getUnitrInfo(String unitCode);
+     UnitInfo getUnitrInfo(String unitCode);
     */
 
     /**
@@ -63,7 +63,7 @@ public interface PlatformEnvironment {
      *                通过 unitpath来过滤
      * @return List 所有用户和机构关联关系
      */
-    List<? extends IUserUnit> listAllUserUnits(String topUnit);
+    List<UserUnit> listAllUserUnits(String topUnit);
 
 
     /**
@@ -72,7 +72,7 @@ public interface PlatformEnvironment {
      * @param userCode userCode
      * @return List 用户所有的机构信息
      */
-    List<? extends IUnitInfo> listUserTopUnits(String userCode);
+    List<UnitInfo> listUserTopUnits(String userCode);
 
     /**
      * 根据用户代码获得 用户所有的机构信息
@@ -83,7 +83,7 @@ public interface PlatformEnvironment {
      * @param userCode userCode
      * @return List 用户所有的机构信息
      */
-    List<? extends IUserUnit> listUserUnits(String topUnit, String userCode);
+    List<UserUnit> listUserUnits(String topUnit, String userCode);
 
 
     /**
@@ -92,7 +92,7 @@ public interface PlatformEnvironment {
      * @param unitCode unitCode
      * @return List 机构所有用户信息
      */
-    List<? extends IUserUnit> listUnitUsers(/*String topUnit, */String unitCode);
+    List<UserUnit> listUnitUsers(/*String topUnit, */String unitCode);
 
     /*权限相关的*/
 
@@ -105,27 +105,16 @@ public interface PlatformEnvironment {
      *                通过 unitpath来过滤
      * @return 所有注册的业务系统
      */
-    List<? extends IOsInfo> listOsInfos(String topUnit);
+    List<OsInfo> listOsInfos(String topUnit);
 
-    IOsInfo getOsInfo(String osId);
+    OsInfo getOsInfo(String osId);
 
-    IOsInfo deleteOsInfo(String osId);
+    OsInfo deleteOsInfo(String osId);
 
-    IOsInfo updateOsInfo(IOsInfo osInfo);;
+    OsInfo updateOsInfo(OsInfo osInfo);;
 
-    IOsInfo addOsInfo(IOsInfo osInfo);
+    OsInfo addOsInfo(OsInfo osInfo);
 
-    /*
-     * 获取用户所有菜单功能; 获取某个应用的菜单
-     * @param userCode userCode
-     * @param asAdmin 是否是作为管理员
-     * @return  List 用户所有菜单功能
-     * 这个接口可以废弃调，用 listUserMenuOptInfosUnderSuperOptId 代替
-     */
-    /*
-    @Deprecated
-    List<? extends IOptInfo> listUserMenuOptInfos(String userCode, boolean asAdmin);
-    */
 
     /**
      * 获取租户下用户所有菜单功能
@@ -137,14 +126,14 @@ public interface PlatformEnvironment {
      * @param asAdmin    是否是作为管理员
      * @return List 用户所有菜单功能
      */
-    List<? extends IOptInfo> listUserMenuOptInfosUnderSuperOptId(
+    List<OptInfo> listUserMenuOptInfosUnderSuperOptId(
         String userCode, String superOptId, boolean asAdmin);
 
-    List<? extends IOptInfo> listMenuOptInfosUnderOsId(String osId);
+    List<OptInfo> listMenuOptInfosUnderOsId(String osId);
 
-    IOptInfo addOptInfo(IOptInfo optInfo);
+    OptInfo addOptInfo(OptInfo optInfo);
 
-    IOptInfo updateOptInfo(IOptInfo optInfo);
+    OptInfo updateOptInfo(OptInfo optInfo);
 
 
     /**
@@ -155,7 +144,7 @@ public interface PlatformEnvironment {
      * @param userCode 用户代码
      * @return List 用户所有菜单功能
      */
-    List<? extends IUserRole> listUserRoles(String topUnit, String userCode);
+    List<UserRole> listUserRoles(String topUnit, String userCode);
 
     /**
      * 获取租户下拥有该角色的所有用户
@@ -165,7 +154,7 @@ public interface PlatformEnvironment {
      * @param roleCode 角色代码
      * @return List 用户所有菜单功能
      */
-    List<? extends IUserRole> listRoleUsers(String topUnit, String roleCode);
+    List<UserRole> listRoleUsers(String topUnit, String roleCode);
 
     /**
      * 获取用户所有角色
@@ -173,7 +162,7 @@ public interface PlatformEnvironment {
      * @param unitCode 机构代码
      * @return List 用户所有菜单功能
      */
-    List<? extends IUnitRole> listUnitRoles(String unitCode);
+    List<UnitRole> listUnitRoles(String unitCode);
 
     /**
      * 获取拥有该角色的所有用户
@@ -181,7 +170,7 @@ public interface PlatformEnvironment {
      * @param roleCode 角色代码
      * @return List 用户所有菜单功能
      */
-    List<? extends IUnitRole> listRoleUnits(String roleCode);
+    List<UnitRole> listRoleUnits(String roleCode);
 
 
     /**
@@ -191,7 +180,7 @@ public interface PlatformEnvironment {
      *                如果 topUnit = 'all' 返回所有机构
      * @return List 操作方法信息
      */
-    List<? extends IRoleInfo> listAllRoleInfo(String topUnit);
+    List<RoleInfo> listAllRoleInfo(String topUnit);
 
     /**
      * 获取租户下所有角色和权限对应关系
@@ -200,7 +189,7 @@ public interface PlatformEnvironment {
      *                如果 topUnit = 'all' 返回所有机构
      * @return List 操作方法信息
      */
-    List<? extends IRolePower> listAllRolePower(String topUnit);
+    List<RolePower> listAllRolePower(String topUnit);
 
     /**
      * 获取租户下业务操作信息
@@ -209,7 +198,7 @@ public interface PlatformEnvironment {
      *                如果 topUnit = 'all' 返回所有机构
      * @return List 业务信息
      */
-    List<? extends IOptInfo> listAllOptInfo(String topUnit);
+    List<OptInfo> listAllOptInfo(String topUnit);
 
     /**
      * 根据角色code获取操作信息
@@ -217,7 +206,7 @@ public interface PlatformEnvironment {
      * @param roleCode
      * @return
      */
-    List<? extends IOptInfo> listOptInfoByRole(String roleCode);
+    List<OptInfo> listOptInfoByRole(String roleCode);
     /**
      * 获取租户下操作方法信息
      *
@@ -225,7 +214,7 @@ public interface PlatformEnvironment {
      *                如果 topUnit = 'all' 返回所有机构
      * @return List 操作方法信息
      */
-    List<? extends IOptMethod> listAllOptMethod(String topUnit);
+    List<OptMethod> listAllOptMethod(String topUnit);
 
     OptTreeNode getSysOptTree();
 
@@ -235,11 +224,11 @@ public interface PlatformEnvironment {
      * @param roleCode
      * @return
      */
-    List<? extends IOptMethod> listOptMethodByRoleCode(String roleCode);
+    List<OptMethod> listOptMethodByRoleCode(String roleCode);
 
-    IOptMethod addOptMethod(IOptMethod optMethod);
+    OptMethod addOptMethod(OptMethod optMethod);
 
-    IOptMethod mergeOptMethod(IOptMethod optMethod);
+    OptMethod mergeOptMethod(OptMethod optMethod);
 
     void deleteOptMethod(String optCode);
 
@@ -257,7 +246,7 @@ public interface PlatformEnvironment {
      * @param superOptId
      * @return 所有的数据范围定义表达式
      */
-    List<? extends IOptDataScope> listAllOptDataScope(String superOptId);
+    List<OptDataScope> listAllOptDataScope(String superOptId);
 
     /**
      * 获取用户信息放到Session中，内容包括用户基本信息，用户机构信息，用户权限信息等等
@@ -296,13 +285,13 @@ public interface PlatformEnvironment {
      * @param unitCode 机构的代码
      * @return 机构信息
      */
-    IUnitInfo loadUnitInfo(String unitCode);
+    UnitInfo loadUnitInfo(String unitCode);
     /*
      * 获取用户信息
      * @param userCode 用户主键
      * @return 用户信息
      *
-      IUserInfo getUserInfo(String userCode);
+      UserInfo getUserInfo(String userCode);
     */
 
     /**
@@ -310,7 +299,7 @@ public interface PlatformEnvironment {
      *
      * @param userInfo 用户信息
      */
-    void updateUserInfo(IUserInfo userInfo);
+    void updateUserInfo(UserInfo userInfo);
 
     /**
      * 获得用户设置参数
@@ -319,7 +308,7 @@ public interface PlatformEnvironment {
      * @param paramCode paramCode
      * @return 用户设置参数
      */
-    IUserSetting getUserSetting(String userCode, String paramCode);
+    UserSetting getUserSetting(String userCode, String paramCode);
 
     /**
      * 获取全部个人设置
@@ -327,14 +316,14 @@ public interface PlatformEnvironment {
      * @param userCode 用户编码
      * @return 个人设置列表
      */
-    List<? extends IUserSetting> listUserSettings(String userCode);
+    List<UserSetting> listUserSettings(String userCode);
 
     /**
      * 设置用户参数
      *
      * @param userSetting 用户参数， paramValue = null 则为删除
      */
-    void saveUserSetting(IUserSetting userSetting);
+    void saveUserSetting(UserSetting userSetting);
 
     /*
      * 新增菜单和操作
@@ -342,8 +331,8 @@ public interface PlatformEnvironment {
      * @param optMethods 操作对象集合
      */
     /*
-    void insertOrUpdateMenu(List<? extends IOptInfo> optInfos,
-                            List<? extends IOptMethod> optMethods);*/
+    void insertOrUpdateMenu(List<OptInfo> optInfos,
+                            List<IOptMethod> optMethods);*/
 
     /*数据字典相关接口*/
 
@@ -354,7 +343,7 @@ public interface PlatformEnvironment {
      *                如果 topUnit = 'all' 返回所有机构
      * @return List 所有数据字典类别信息
      */
-    List<? extends IDataCatalog> listAllDataCatalogs(String topUnit);
+    List<DataCatalog> listAllDataCatalogs(String topUnit);
 
     /**
      * 获取所有数据字典类别信息
@@ -362,7 +351,7 @@ public interface PlatformEnvironment {
      * @param catalogCode catalogCode
      * @return List 所有数据字典类别信息
      */
-    List<? extends IDataDictionary> listDataDictionaries(String catalogCode);
+    List<DataDictionary> listDataDictionaries(String catalogCode);
 
 
     /**
@@ -410,13 +399,13 @@ public interface PlatformEnvironment {
      */
      int countUnitByTopUnit(String topUnit);
 
-    List<? extends IWorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc);
+    List<WorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc);
 
     /**
      * 批量报错用户组； 这个名字怎么起的，sign
      * @param workGroups 用户组列表
      */
-    void batchWorkGroup(List<IWorkGroup> workGroups);
+    void batchWorkGroup(List<WorkGroup> workGroups);
 
     boolean loginUserIsExistWorkGroup(String osId, String userCode);
 

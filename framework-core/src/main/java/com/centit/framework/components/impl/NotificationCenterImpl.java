@@ -9,9 +9,9 @@ import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.framework.model.basedata.IUserSetting;
 import com.centit.framework.model.basedata.NoticeMessage;
 import com.centit.framework.model.basedata.OperationLog;
+import com.centit.framework.model.basedata.UserSetting;
 import com.centit.support.common.DoubleAspect;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -110,7 +110,7 @@ public class NotificationCenterImpl implements NotificationCenter {
              *  从用户设置中获得用户希望的接收消息的方式，可能是多个，比如用户希望同时接收到Email和短信，这样就要发送两天
              *  并在数据库中记录发送信息，在发送方式中用逗号把多个方式拼接在一起保存在对应的字段中
              */
-            IUserSetting userReceiveWays = getPlatformEnvironment().getUserSetting(receiver, "receiveways");
+            UserSetting userReceiveWays = getPlatformEnvironment().getUserSetting(receiver, "receiveways");
             String receiveways = userReceiveWays == null ? null : userReceiveWays.getParamValue();
             if (StringUtils.isNotBlank(receiveways)) {
                 noticeType = receiveways;

@@ -20,7 +20,7 @@ public interface OperationLogWriter {
 
     void save(List<OperationLog> optLogs);
 
-    default List<? extends OperationLog>
+    default List<OperationLog>
         listOptLog(String optId, Map<String, Object> filterMap, int startPos, int maxRows){
         return null;
     }

@@ -12,7 +12,7 @@ import com.centit.framework.components.impl.UserUnitMapTranslate;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.model.basedata.*;
-import com.centit.framework.security.model.CentitUserDetails;
+import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.common.ObjectException;
 import io.swagger.annotations.Api;
@@ -176,7 +176,7 @@ public class CacheController extends BaseController {
     )})
     @RequestMapping(value = "/subunits/{unitCode}/{unitType}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUnitInfo> subunits(@PathVariable String unitCode, @PathVariable String unitType, HttpServletRequest request) {
+    public List<UnitInfo> subunits(@PathVariable String unitCode, @PathVariable String unitType, HttpServletRequest request) {
         return CodeRepositoryUtil.getSortedSubUnits(WebOptUtils.getCurrentTopUnit(request), unitCode, unitType);
     }
 
@@ -194,7 +194,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/allunits/{state}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUnitInfo> allunits(@PathVariable String state, HttpServletRequest request) {
+    public List<UnitInfo> allunits(@PathVariable String state, HttpServletRequest request) {
         return CodeRepositoryUtil.getAllUnits(WebOptUtils.getCurrentTopUnit(request), state);
     }
 
@@ -211,7 +211,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/userinfo/{userCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public IUserInfo getUserInfo(@PathVariable String userCode, HttpServletRequest request) {
+    public UserInfo getUserInfo(@PathVariable String userCode, HttpServletRequest request) {
         return CodeRepositoryUtil.getUserInfoByCode(WebOptUtils.getCurrentTopUnit(request), userCode);
     }
 
@@ -228,7 +228,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/unitinfo/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public IUnitInfo getUintInfo(@PathVariable String unitCode, HttpServletRequest request) {
+    public UnitInfo getUintInfo(@PathVariable String unitCode, HttpServletRequest request) {
         return CodeRepositoryUtil.getUnitInfoByCode(WebOptUtils.getCurrentTopUnit(request), unitCode);
     }
 
@@ -246,7 +246,7 @@ public class CacheController extends BaseController {
     @RequestMapping(value = "/parentunit/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public String getParentUintInfo(@PathVariable String unitCode, HttpServletRequest request) {
-        IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(WebOptUtils.getCurrentTopUnit(request), unitCode);
+        UnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(WebOptUtils.getCurrentTopUnit(request), unitCode);
         if(ui!=null){
            return ui.getParentUnit();
         }else {
@@ -268,15 +268,15 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/parentpath/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUnitInfo> getParentUintPath(@PathVariable String unitCode, HttpServletRequest request) {
-        IUnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(WebOptUtils.getCurrentTopUnit(request), unitCode);
+    public List<UnitInfo> getParentUintPath(@PathVariable String unitCode, HttpServletRequest request) {
+        UnitInfo ui = CodeRepositoryUtil.getUnitInfoByCode(WebOptUtils.getCurrentTopUnit(request), unitCode);
         if(ui!=null){
-            List<IUnitInfo> parentUnits = new ArrayList<>();
+            List<UnitInfo> parentUnits = new ArrayList<>();
             while(true) {
                 if(StringUtils.isBlank(ui.getParentUnit())){
                     break;
                 }
-                IUnitInfo parentUnit = CodeRepositoryUtil.getUnitInfoByCode(ui.getTopUnit(), ui.getParentUnit());
+                UnitInfo parentUnit = CodeRepositoryUtil.getUnitInfoByCode(ui.getTopUnit(), ui.getParentUnit());
                 if(parentUnit==null){
                     break;
                 }
@@ -303,7 +303,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/recurseunits/{parentUnit}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public Map<String, IUnitInfo> recurseUnits(@PathVariable String parentUnit, HttpServletRequest request) {
+    public Map<String, UnitInfo> recurseUnits(@PathVariable String parentUnit, HttpServletRequest request) {
         return CodeRepositoryUtil.getUnitMapBuyParaentRecurse(WebOptUtils.getCurrentTopUnit(request), parentUnit);
     }
 
@@ -329,13 +329,13 @@ public class CacheController extends BaseController {
     @WrapUpResponseBody
     public JSONArray dictionary(@PathVariable String catalog, String extraCode,
             HttpServletRequest request) {
-        List<? extends IDataDictionary> listObjects = CodeRepositoryUtil.getDictionary(catalog);
+        List<DataDictionary> listObjects = CodeRepositoryUtil.getDictionary(catalog);
         if(listObjects==null){
             return null;
         }
         String lang = WebOptUtils.getCurrentLang(request);
         JSONArray dictJson = new JSONArray();
-        for(IDataDictionary dict : listObjects){
+        for(DataDictionary dict : listObjects){
             // 级联或者树形数据字典明细查询
             if (StringUtils.isNotBlank(extraCode) && !extraCode.equals(dict.getExtraCode()))
                 continue;
@@ -363,13 +363,13 @@ public class CacheController extends BaseController {
     @WrapUpResponseBody
     public JSONArray dictionaryd(@PathVariable String catalog,
             HttpServletRequest request) {
-        List<? extends IDataDictionary> listObjects = CodeRepositoryUtil.getDictionaryIgnoreD(catalog);
+        List<DataDictionary> listObjects = CodeRepositoryUtil.getDictionaryIgnoreD(catalog);
         if(listObjects==null){
             return null;
         }
         String lang = WebOptUtils.getCurrentLang(request);
         JSONArray dictJson = new JSONArray();
-        for(IDataDictionary dict : listObjects){
+        for(DataDictionary dict : listObjects){
             JSONObject obj = (JSONObject)JSON.toJSON(dict);
             obj.put("dataValue", dict.getLocalDataValue(lang));
             dictJson.add(obj);
@@ -391,8 +391,8 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/unituser/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUserInfo> unituser(@PathVariable String unitCode, HttpServletRequest request) {
-        List<IUserInfo> userInfos = CodeRepositoryUtil.getSortedUnitUsers(WebOptUtils.getCurrentTopUnit(request), unitCode);
+    public List<UserInfo> unituser(@PathVariable String unitCode, HttpServletRequest request) {
+        List<UserInfo> userInfos = CodeRepositoryUtil.getSortedUnitUsers(WebOptUtils.getCurrentTopUnit(request), unitCode);
         String relType = request.getParameter("relType");
         if (StringUtils.isNotBlank(relType) && "T".equals(relType) && CollectionUtils.isNotEmpty(userInfos)) {
             userInfos.removeIf(user -> !unitCode.equals(user.getPrimaryUnit()));
@@ -414,7 +414,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/alluser/{state}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<? extends IUserInfo> alluser(@PathVariable String state,HttpServletRequest request) {
+    public List<UserInfo> alluser(@PathVariable String state,HttpServletRequest request) {
         return CodeRepositoryUtil.getAllUsers(WebOptUtils.getCurrentTopUnit(request),state);
     }
 
@@ -432,7 +432,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/subunits/{unitcode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUnitInfo> getSubUnits(@PathVariable String unitcode, HttpServletRequest request) {
+    public List<UnitInfo> getSubUnits(@PathVariable String unitcode, HttpServletRequest request) {
         return CodeRepositoryUtil.getSubUnits(WebOptUtils.getCurrentTopUnit(request), unitcode);
     }
 
@@ -449,7 +449,7 @@ public class CacheController extends BaseController {
     )
     @WrapUpResponseBody
     @RequestMapping(value = "/allsubunits/{unitcode}", method = RequestMethod.GET)
-    public List<IUnitInfo> getAllSubUnits(@PathVariable String unitcode, HttpServletRequest request) {
+    public List<UnitInfo> getAllSubUnits(@PathVariable String unitcode, HttpServletRequest request) {
         return CodeRepositoryUtil.getAllSubUnits(WebOptUtils.getCurrentTopUnit(request), unitcode);
 
     }
@@ -459,7 +459,7 @@ public class CacheController extends BaseController {
         if(ud == null){
             return dpf;
         }
-        JSONObject userInfo = null;
+        UserInfo userInfo = null;
         CentitUserDetails userDetails = null;
         String userCode = null;
         String topUnit = null;
@@ -468,10 +468,9 @@ public class CacheController extends BaseController {
             userInfo = userDetails.getUserInfo();
             userCode = userDetails.getUserCode();
             topUnit = userDetails.getTopUnitCode();
-        }else if(ud instanceof IUserInfo){
-            userInfo = (JSONObject) JSON.toJSON(ud);
-            userCode = ((IUserInfo)ud).getUserCode();
-            topUnit = ((IUserInfo)ud).getTopUnit();
+        }else if(ud instanceof UserInfo){
+            userCode = ((UserInfo)ud).getUserCode();
+            topUnit = ((UserInfo)ud).getTopUnit();
         }
         //当前用户信息
         dpf.put("currentUser", userInfo);
@@ -479,28 +478,28 @@ public class CacheController extends BaseController {
             dpf.put("currentStation", userDetails.getCurrentStation());
             //当前用户主机构信息
             dpf.put("primaryUnit", CodeRepositoryUtil
-                .getUnitInfoByCode(userDetails.getUserInfo().getString("topUnit"),
-                    userDetails.getUserInfo().getString("primaryUnit")));
+                .getUnitInfoByCode(userDetails.getUserInfo().getTopUnit(),
+                    userDetails.getUserInfo().getPrimaryUnit()));
             //当前用户的角色信息
             dpf.put("userRoles", userDetails.getUserRoles());
         }
         //当前用户所有机构关联关系信息
         if(StringUtils.isNotBlank(userCode)) {
-            List<? extends IUserUnit> userUnits = CodeRepositoryUtil
+            List<UserUnit> userUnits = CodeRepositoryUtil
                 .listUserUnits(topUnit, userCode);
             if (userUnits != null) {
                 dpf.put("userUnits", userUnits);
-                Map<String, List<IUserUnit>> rankUnits = new HashMap<>(5);
-                Map<String, List<IUserUnit>> stationUnits = new HashMap<>(5);
-                for (IUserUnit uu : userUnits) {
-                    List<IUserUnit> rankUnit = rankUnits.get(uu.getUserRank());
+                Map<String, List<UserUnit>> rankUnits = new HashMap<>(5);
+                Map<String, List<UserUnit>> stationUnits = new HashMap<>(5);
+                for (UserUnit uu : userUnits) {
+                    List<UserUnit> rankUnit = rankUnits.get(uu.getUserRank());
                     if (rankUnit == null) {
                         rankUnit = new ArrayList<>(4);
                     }
                     rankUnit.add(uu);
                     rankUnits.put(uu.getUserRank(), rankUnit);
 
-                    List<IUserUnit> stationUnit = stationUnits.get(uu.getUserStation());
+                    List<UserUnit> stationUnit = stationUnits.get(uu.getUserStation());
                     if (stationUnit == null) {
                         stationUnit = new ArrayList<>(4);
                     }
@@ -520,7 +519,7 @@ public class CacheController extends BaseController {
      *
      * @param unitfilter 机构代码
      * @param request HttpServletRequest
-     * @return IUnitInfo 机构列表
+     * @return UnitInfo 机构列表
      */
     @ApiOperation(value = "根据机构表达式获取符合条件的机构",
         notes = "根据机构表达式获取符合条件的结构，系统通过机构规则引擎计算;表达式完整式 D()DT()DL()")
@@ -532,7 +531,7 @@ public class CacheController extends BaseController {
     // @ParamName("unitfilter")
     @RequestMapping(value = "/unitfilter/{unitfilter}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<IUnitInfo> unitfilter(@PathVariable String unitfilter,
+    public List<UnitInfo> unitfilter(@PathVariable String unitfilter,
                            HttpServletRequest request) {
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
         Object centitUserDetails = WebOptUtils.getLoginUser(request);
@@ -541,7 +540,7 @@ public class CacheController extends BaseController {
             new UserUnitMapTranslate(CacheController.makeCalcParam(centitUserDetails))
         );
 
-        List<IUnitInfo> retUntis = CodeRepositoryUtil.getUnitInfosByCodes(WebOptUtils.getCurrentTopUnit(request), units);
+        List<UnitInfo> retUntis = CodeRepositoryUtil.getUnitInfosByCodes(WebOptUtils.getCurrentTopUnit(request), units);
         CollectionsOpt.sortAsTree(retUntis,
             ( p,  c) -> StringUtils.equals(p.getUnitCode(),c.getParentUnit()) );
         return retUntis;
@@ -553,7 +552,7 @@ public class CacheController extends BaseController {
      *
      * @param userfilter 用户代码
      * @param request request
-     * @return IUserInfo 用户列表
+     * @return UserInfo 用户列表
      */
     @ApiOperation(value = "根据用户表达式计算符合条件的用户",
         notes = "根据用户表达式计算符合条件的用户; 表达式完整式 D()DT()DL()GW()XZ()R()UT()UL()U()")
@@ -563,7 +562,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/userfilter/{userfilter}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public  List<IUserInfo> userfilter(@PathVariable String userfilter,
+    public  List<UserInfo> userfilter(@PathVariable String userfilter,
                            //@RequestBody Map<String,Object> varMap,
                            HttpServletRequest request) {
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
@@ -575,7 +574,7 @@ public class CacheController extends BaseController {
         return CodeRepositoryUtil.getUserInfosByCodes(topUnit, users);
     }
 
-    private JSONArray makeMenuFuncsJson(List<IOptInfo> menuFunsByUser) {
+    private JSONArray makeMenuFuncsJson(List<OptInfo> menuFunsByUser) {
         return ViewDataTransform.makeTreeViewJson(menuFunsByUser,
                 ViewDataTransform.createStringHashMap("id", "optId",
                         "optId", "optId",
@@ -607,7 +606,7 @@ public class CacheController extends BaseController {
     @RequestMapping(value = "/optinfo/{optType}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public JSONArray optinfoByTypeAsMenu(@PathVariable String optType,HttpServletRequest request) {
-        List<IOptInfo> listObjects = CodeRepositoryUtil.getOptinfoList(WebOptUtils.getCurrentTopUnit(request),optType);
+        List<OptInfo> listObjects = CodeRepositoryUtil.getOptinfoList(WebOptUtils.getCurrentTopUnit(request),optType);
         return makeMenuFuncsJson(listObjects);
     }
 
@@ -625,7 +624,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/optdef/{optID}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<? extends IOptMethod> optdef(@PathVariable String optID, HttpServletRequest request) {
+    public List<OptMethod> optdef(@PathVariable String optID, HttpServletRequest request) {
         return CodeRepositoryUtil.getOptMethodByOptID(WebOptUtils.getCurrentTopUnit(request), optID);
     }
 
@@ -641,7 +640,7 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/roleinfo/{topUnit}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<? extends IRoleInfo> roleinfo(@PathVariable String topUnit, HttpServletRequest request) {
+    public List<RoleInfo> roleinfo(@PathVariable String topUnit, HttpServletRequest request) {
         return CodeRepositoryUtil.listAllRole(topUnit);
     }
 
