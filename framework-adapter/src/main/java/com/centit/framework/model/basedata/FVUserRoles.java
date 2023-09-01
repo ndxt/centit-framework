@@ -226,6 +226,16 @@ public class FVUserRoles implements java.io.Serializable {
         return ur;
     }
 
+    public RoleInfo toRoleInfo(){
+        RoleInfo roleInfo = new RoleInfo(
+            this.getRoleCode(), this.getRoleName(), this.getRoleType(),
+            this.getUnitCode(), this.getIsValid(), this.getRoleDesc()
+        );
+        roleInfo.setRoleOwner(this.getRoleOwner());
+        roleInfo.setRolePowers(this.getRolePowers());
+        return roleInfo;
+    }
+
     public static List<UserRole> mapToUserRoles(List<FVUserRoles> roles){
         if(roles==null){
             return null;
