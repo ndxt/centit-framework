@@ -31,9 +31,12 @@ public class OsInfo implements  java.io.Serializable {
     @ApiModelProperty(value = "应用名称",name = "osName")
     private String osName;
 
+    public static final String OSTYPE_PLATFORM = "P";
+    public static final String OSTYPE_LOCODE = "L";
+
     @Column(name = "OS_TYPE")
     @Length(max = 16, message = "字段长度不能大于{max}")
-    @ApiModelProperty(value = "应用类型 P(PaaS平台业务） I(基于框架研发的业务） T(第三方研发的业务） O（外部业务）", name = "osName")
+    @ApiModelProperty(value = "应用类型 P(PaaS平台业务） L(基于Locde研发的业务) I(基于框架研发的业务） T(第三方研发的业务） O（外部业务）", name = "osName")
     private String osType;
     /**
      * 业务系统后台url
