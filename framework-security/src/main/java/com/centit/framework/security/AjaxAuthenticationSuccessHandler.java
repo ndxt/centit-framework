@@ -92,7 +92,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             ResponseMapData resData = new ResponseMapData();
             resData.addResponseData(SecurityContextUtils.SecurityContextTokenName,
                 request.getSession().getId());
-            resData.addResponseData("userInfo", ud);
+            resData.addResponseData("userInfo", ud.toJsonWithoutSensitive());
             JsonResultUtils.writeResponseDataAsJson(resData, response);
             //request.getSession().setAttribute("SPRING_SECURITY_AUTHENTICATION", authentication);
             //JsonResultUtils.writeSingleErrorDataJson(0,authentication.getName() + " login ok！",request.getSession().getId(), response);

@@ -502,8 +502,7 @@ public class MainFrameController extends BaseController {
                 request.getSession().getId(), ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录或者超时，请重新登录！");
         } else {
-            userInfo.setIdCardNo(null);//.remove("idCardNo");
-            return ResponseData.makeResponseData(userInfo);
+            return ResponseData.makeResponseData(userInfo.toJsonWithoutSensitive());
         }
     }
 
@@ -523,7 +522,7 @@ public class MainFrameController extends BaseController {
                 "用户没有登录或者超时，请重新登录！");
         } else {
             if(ud instanceof CentitUserDetails){
-                ((CentitUserDetails) ud).getUserInfo().setIdCardNo(null);//.remove("idCardNo");
+                return ((CentitUserDetails) ud).toJsonWithoutSensitive();
             }
             return ud;
         }
@@ -538,8 +537,7 @@ public class MainFrameController extends BaseController {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 "用户没有登录或者超时，请重新登录！");
         } else {
-            ud.getUserInfo().setIdCardNo(null);//.remove("idCardNo");
-            return ud;
+            return ud.toJsonWithoutSensitive();
         }
     }
 

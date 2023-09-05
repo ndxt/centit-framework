@@ -1,5 +1,7 @@
 package com.centit.framework.model.basedata;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.framework.core.dao.DictionaryMap;
 import com.centit.support.database.orm.GeneratorCondition;
@@ -418,7 +420,6 @@ public class UserInfo implements java.io.Serializable{
             this.userName = other.getUserName();
         if (other.getUserDesc() != null)
             this.userDesc = other.getUserDesc();
-
         if (other.getIdCardNo() != null)
             this.idCardNo = other.getIdCardNo();
         if (other.getRegEmail() != null)
@@ -470,6 +471,16 @@ public class UserInfo implements java.io.Serializable{
 
     private void removeUserRole(UserRole odt) {
         this.getUserRoles().remove(odt);
+    }
+
+    public JSONObject toJsonWithoutSensitive(){
+        JSONObject jsonObject = (JSONObject)JSON.toJSON(this);
+        for(String pm : new String[]{"idCardNo","regCellPhone", "regEmail", "userPin", "userPwd"}){
+            //if(jsonObject.containsKey(pm)){
+                jsonObject.remove(pm);
+            //}
+        }
+        return jsonObject;
     }
 
 }

@@ -1,5 +1,7 @@
 package com.centit.framework.model.security;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.framework.model.basedata.*;
 import com.centit.support.algorithm.DatetimeOpt;
@@ -33,6 +35,7 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
     private String topUnitName;
     private String currentUnitName;
 
+    private String tenantRole;
 
     @JSONField(serialize = false)
     private List<GrantedAuthority> arrayAuths;
@@ -97,6 +100,14 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
 
     public void setCurrentUnitName(String currentUnitName) {
         this.currentUnitName = currentUnitName;
+    }
+
+    public String getTenantRole() {
+        return tenantRole;
+    }
+
+    public void setTenantRole(String tenantRole) {
+        this.tenantRole = tenantRole;
     }
 
     @JSONField(serialize = false)
@@ -336,5 +347,11 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
 
     public void setUserUnits(List<UserUnit> userUnits) {
         this.userUnits = userUnits;
+    }
+
+    public JSONObject toJsonWithoutSensitive(){
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(this);
+        jsonObject.put("userInfo", this.userInfo.toJsonWithoutSensitive());
+        return jsonObject;
     }
 }
