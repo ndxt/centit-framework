@@ -171,6 +171,8 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
     @Override
     @JSONField(serialize = false)
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.arrayAuths ==null || this.arrayAuths.size()==0)
+            makeUserAuthorities();
         return this.arrayAuths;
     }
 
