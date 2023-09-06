@@ -38,7 +38,7 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
     private String tenantRole;
 
     @JSONField(serialize = false)
-    private List<GrantedAuthority> arrayAuths;
+    private transient List<GrantedAuthority> arrayAuths;
 
     @JSONField(serialize = false)
     public String getUserCode(){
@@ -281,7 +281,6 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
     @Override
     public void setAuthenticated(boolean isAuthenticated)
         throws IllegalArgumentException {
-
     }
 
     @Override
@@ -321,6 +320,9 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
         return this.userRoles;
     }
 
+    public void setUserRoles(List<UserRole> roles) {
+        setAuthoritiesByRoles(roles);
+    }
 
     public void setAuthoritiesByRoles(List<UserRole> roles) {
         this.userRoles = roles;
@@ -328,7 +330,6 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
     }
 
     public void mapAuthoritiesByRoles(List<RoleInfo> roles) {
-
         this.userRoles = new ArrayList<>();
         if(roles !=null ) {
             Date yesterday = DatetimeOpt.addDays(DatetimeOpt.currentUtilDate(), -1);
