@@ -29,7 +29,7 @@ public class SystemSecurityMetadata {
         SystemSecurityMetadata.requestInSpringCloud = requestInSpringCloud;
     }
 
-    List<ConfigAttribute> matchUrlToRole(String sUrl, HttpServletRequest request) {
+    public List<ConfigAttribute> matchUrlToRole(String sUrl, HttpServletRequest request) {
         if (requestInSpringCloud) {
             int count = sUrl.split("/").length - 1;
             if (count > 1) {
