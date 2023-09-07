@@ -16,7 +16,7 @@ public class SystemSecurityMetadata {
     private CachedObject<OptTreeNode> optTreeNodeCache;
     public static boolean requestInSpringCloud = false;
 
-    SystemSecurityMetadata() {
+    public SystemSecurityMetadata() {
         this.optTreeNodeCache =
             new CachedObject<>(this::reloadOptTreeNode);
     }
