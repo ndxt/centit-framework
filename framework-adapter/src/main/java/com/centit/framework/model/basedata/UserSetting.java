@@ -1,5 +1,6 @@
 package com.centit.framework.model.basedata;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.support.algorithm.DatetimeOpt;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,6 +21,7 @@ import java.util.Date;
 public class UserSetting implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
+    @JSONField(serialize = false, deserialize = false)
     @EmbeddedId
     private UserSettingId cid;
     /**

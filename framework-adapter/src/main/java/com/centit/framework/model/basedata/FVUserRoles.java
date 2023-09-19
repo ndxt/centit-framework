@@ -1,5 +1,6 @@
 package com.centit.framework.model.basedata;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.framework.core.dao.DictionaryMap;
 import com.centit.support.algorithm.DatetimeOpt;
 import org.hibernate.validator.constraints.Length;
@@ -17,7 +18,7 @@ public class FVUserRoles implements java.io.Serializable {
      */
     private static final long serialVersionUID = -7725372179862779056L;
 
-
+    @JSONField(serialize = false, deserialize = false)
     @EmbeddedId
     private UserRoleId id;
 

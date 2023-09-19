@@ -1,5 +1,6 @@
 package com.centit.framework.model.basedata;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.database.orm.GeneratorCondition;
 import com.centit.support.database.orm.GeneratorTime;
@@ -26,6 +27,7 @@ public class RolePower implements java.io.Serializable{
     // Fields
     private static final long serialVersionUID = 1L;
 
+    @JSONField(serialize = false, deserialize = false)
     @EmbeddedId
     private RolePowerId id; // 主键id
 

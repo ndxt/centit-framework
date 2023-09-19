@@ -1,5 +1,6 @@
 package com.centit.framework.model.basedata;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.support.database.orm.GeneratorCondition;
 import com.centit.support.database.orm.GeneratorTime;
 import com.centit.support.database.orm.GeneratorType;
@@ -29,6 +30,7 @@ public class UserRole implements java.io.Serializable {
     public static final String PLAT_ADMIN="platadmin";
     public static final String TENANT_ADMIN="tenantadmin";
 
+    @JSONField(serialize = false, deserialize = false)
     @EmbeddedId
     private UserRoleId id; // 主键
 

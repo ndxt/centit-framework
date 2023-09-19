@@ -3,6 +3,7 @@ package com.centit.framework.model.basedata;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.framework.core.dao.DictionaryMap;
 import com.centit.support.database.orm.GeneratorCondition;
 import com.centit.support.database.orm.GeneratorTime;
@@ -32,6 +33,8 @@ public class DataDictionary implements java.io.Serializable {
 
     // Fields
     private static final long serialVersionUID = -4063651885248484498L;
+
+    @JSONField(serialize = false, deserialize = false)
     @EmbeddedId
     private DataDictionaryId id; // 主键id
 
