@@ -1,5 +1,6 @@
 package com.centit.framework.config;
 
+import com.centit.framework.model.security.CentitUserDetailsService;
 import com.centit.framework.security.AjaxAuthenticationEntryPoint;
 import com.centit.framework.security.PretreatmentAuthenticationProcessingFilter;
 import com.centit.support.algorithm.BooleanBaseOpt;
@@ -39,6 +40,9 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 
     @Autowired(required = false)
     private MessageSource messageSource;
+
+    @Autowired
+    protected CentitUserDetailsService centitUserDetailsService;
 
     @Override
     protected String[] getAuthenticatedUrl() {

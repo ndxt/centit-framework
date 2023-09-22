@@ -1,6 +1,6 @@
 package com.centit.framework.config;
 
-import com.centit.framework.model.security.CentitUserDetailsService;
+import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.security.*;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
@@ -43,7 +43,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
     protected SessionRegistry sessionRegistry;
 
     @Autowired
-    protected CentitUserDetailsService centitUserDetailsService;
+    protected PlatformEnvironment platformEnvironment;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -197,7 +197,7 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
                 env.getProperty("login.success.writeLog"),true));
         /*ajaxSuccessHandler.setRegistToken(BooleanBaseOpt.castObjectToBoolean(
                 env.getProperty("login.success.registToken"),false));*/
-        ajaxSuccessHandler.setUserDetailsService(centitUserDetailsService);
+        ajaxSuccessHandler.setPlatformEnvironment(platformEnvironment);
         return ajaxSuccessHandler;
     }
 

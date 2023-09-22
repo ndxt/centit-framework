@@ -303,10 +303,10 @@ public class MainFrameController extends BaseController {
         }
         CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(userCode);
         SecurityContextHolder.getContext().setAuthentication(ud);
+        SecurityContextUtils.fetchAndSetLocalParams(ud, request, platformEnvironment);
         //new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
-        return ResponseData.makeResponseData(
-            SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
+        return SecurityContextUtils.makeLoginSuccessResponse(ud, request);
     }
 
     /**
@@ -344,14 +344,13 @@ public class MainFrameController extends BaseController {
         if (ud == null) {
             return ResponseData.makeErrorMessage("第三方验证失败: " + formJson);
         }
-
+        SecurityContextUtils.fetchAndSetLocalParams(ud, request, platformEnvironment);
         SecurityContextHolder.getContext().setAuthentication(ud);
         /*request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
             new UsernamePasswordAuthenticationToken(ud, ud.getCredentials(), ud.getAuthorities()));*/
         // 如果是为了和第三方做模拟的单点登录也可以用这个函数，但是需要把下面这一行代码注释去掉
         // SecurityContextUtils.setSecurityContext(ud,request.getSession());
-        return ResponseData.makeResponseData(
-            SecurityContextUtils.SecurityContextTokenName, request.getSession().getId());
+        return SecurityContextUtils.makeLoginSuccessResponse(ud, request);
     }
 
     /**

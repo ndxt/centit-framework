@@ -1,9 +1,11 @@
 package com.centit.framework.config;
 
+import com.centit.framework.model.security.CentitUserDetailsService;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.cas.ServiceProperties;
@@ -27,6 +29,9 @@ import javax.servlet.Filter;
 @EnableWebSecurity
 @Conditional(SecurityCasCondition.class)
 public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
+
+    @Autowired
+    protected CentitUserDetailsService centitUserDetailsService;
 
     @Override
     protected String[] getAuthenticatedUrl() {

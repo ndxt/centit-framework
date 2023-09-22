@@ -1,14 +1,13 @@
 package com.centit.framework.security;
 
 import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.ResponseMapData;
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
+import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.framework.model.security.CentitUserDetails;
-import com.centit.framework.model.security.CentitUserDetailsService;
 import com.centit.support.algorithm.DatetimeOpt;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
@@ -26,16 +25,10 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         this.writeLog = writeLog;
     }
 
-    /*private boolean registToken = false;
+    private PlatformEnvironment platformEnvironment;
 
-    public void setRegistToken(boolean registToken) {
-        this.registToken = registToken;
-    }*/
-
-    private CentitUserDetailsService userDetailsService;
-
-    public void setUserDetailsService(CentitUserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public void setPlatformEnvironment(PlatformEnvironment platformEnvironment) {
+        this.platformEnvironment = platformEnvironment;
     }
 
     public AjaxAuthenticationSuccessHandler() {
@@ -45,30 +38,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             Authentication authentication) throws IOException, ServletException {
 
         CentitUserDetails ud = (CentitUserDetails) authentication.getPrincipal();
-        String lang = WebOptUtils.getLocalLangParameter(request);
-        if(StringUtils.isNotBlank(lang)){
-            //request.getSession().setAttribute("LOCAL_LANG", lang);
-            WebOptUtils.setCurrentLang(request, lang);
-            String userLang = ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE);
-            if(! lang.equals(userLang)){
-                ud.setUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE, userLang);
-                if(userDetailsService!=null){
-                    userDetailsService.saveUserSetting(ud.getUserCode(),
-                            WebOptUtils.LOCAL_LANGUAGE_LABLE, lang, "SYS", "用户默认区域语言");
-                }
-            }
-        }else{
-            lang = ud.getUserSettingValue(WebOptUtils.LOCAL_LANGUAGE_LABLE);
-            if(StringUtils.isNotBlank(lang)){
-                WebOptUtils.setCurrentLang(request, lang);
-                //request.getSession().setAttribute("LOCAL_LANG", lang);
-                request.setAttribute(WebOptUtils.LOCAL_LANGUAGE_LABLE,lang);
-            }
-        }
-
-        //tokenKey = UuidOpt.getUuidAsString();
-        // 这个代码应该迁移到 AuthenticationProcessingFilter 的 successfulAuthentication 方法中
-        ud.setLoginIp(WebOptUtils.getRequestAddr(request));
+        SecurityContextUtils.fetchAndSetLocalParams(ud, request, platformEnvironment);
 
         if(writeLog){
             String remoteHost = request.getRemoteHost();
@@ -89,10 +59,7 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
         response.addCookie(cookie);
         boolean isAjaxQuery = WebOptUtils.isAjax(request);
         if(isAjaxQuery){
-            ResponseMapData resData = new ResponseMapData();
-            resData.addResponseData(SecurityContextUtils.SecurityContextTokenName,
-                request.getSession().getId());
-            resData.addResponseData("userInfo", ud.toJsonWithoutSensitive());
+            ResponseData resData = SecurityContextUtils.makeLoginSuccessResponse(ud, request);
             JsonResultUtils.writeResponseDataAsJson(resData, response);
             //request.getSession().setAttribute("SPRING_SECURITY_AUTHENTICATION", authentication);
             //JsonResultUtils.writeSingleErrorDataJson(0,authentication.getName() + " login ok！",request.getSession().getId(), response);
