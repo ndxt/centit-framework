@@ -17,7 +17,9 @@ public abstract class CentitSecurityMetadata {
         new CachedMap<>((apiId)->CodeRepositoryCache.getPlatformEnvironment().getRolesWithApiId(apiId),
             CodeRepositoryCache.CACHE_FRESH_PERIOD_SECONDS);
     private static final String DDE_RUN = "/dde/run/";
-    private static final String DDE_RUN_DRAFT = "/dde/run/draft";
+    private static final int DDE_RUN_TAG_LENGTH = 9;
+    private static final String DDE_RUN_DRAFT = "draft";
+
 
     public static void evictCache(int apiOrSystem){
         if(apiOrSystem==0){
@@ -44,26 +46,20 @@ public abstract class CentitSecurityMetadata {
 
     private static String parseUrlToApi(String sUrl) {
         String apiId = "";
-        boolean isApi= StringUtils.contains(sUrl,DDE_RUN)&&!StringUtils.contains(sUrl,DDE_RUN_DRAFT);
-        if (isApi){
-            String sFunUrl ;
-            int p = sUrl.indexOf('?');
-            if(p<1) {
-                sFunUrl = sUrl;
-            }else {
-                sFunUrl = sUrl.substring(0, p);
+        int nPos = sUrl.indexOf(DDE_RUN);
+        if (nPos>0){
+            int beginPos = nPos + DDE_RUN_TAG_LENGTH;
+            int endPos = sUrl.indexOf('/', beginPos);
+            if(endPos<=0){
+                endPos = sUrl.indexOf('?', beginPos);
             }
-
-            int nPos = sFunUrl.lastIndexOf('.');
-            if(nPos > 0) {
-                int nPos2 = sFunUrl.lastIndexOf('/');
-                if (nPos > nPos2) {
-                    sFunUrl = sFunUrl.substring(0, nPos);
-                }
+            if(endPos<=0){
+                endPos = sUrl.length();
             }
-            String[] sUrls = sFunUrl.split("/");
-            int length=sUrls.length;
-            apiId = sUrls[length-1];
+            apiId = sUrl.substring(beginPos, endPos);
+            if(DDE_RUN_DRAFT.equals(apiId)){
+                return "";
+            }
         }
         return apiId;
     }

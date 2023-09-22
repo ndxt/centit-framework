@@ -1,5 +1,6 @@
 package com.centit.framework.model.basedata;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Column;
@@ -19,6 +20,7 @@ public class FVUserOptList implements java.io.Serializable {
 
     // Fields
     private static final long serialVersionUID = 1L;
+    @JSONField(serialize = false, deserialize = false)
     @EmbeddedId
     private FVUserOptListId id; //主键
 

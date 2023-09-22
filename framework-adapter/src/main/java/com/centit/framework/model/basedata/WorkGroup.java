@@ -1,5 +1,6 @@
 package com.centit.framework.model.basedata;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.support.database.orm.GeneratorCondition;
 import com.centit.support.database.orm.GeneratorTime;
 import com.centit.support.database.orm.GeneratorType;
@@ -16,7 +17,6 @@ import java.util.Date;
 
 /**
  * create by scaffold 2020-08-18 13:38:15
- *
  * @author codefan@sina.com
  * <p>
  * 项目组成员
@@ -29,7 +29,9 @@ public class WorkGroup implements java.io.Serializable {
     public static final String WORKGROUP_ROLE_CODE_LEADER = "组长";
     public static final String WORKGROUP_ROLE_CODE_MEMBER = "组员";
     public static final String WORKGROUP_ROLE_CODE_ADMIN = "ZHGLY";
+
     // 主键
+    @JSONField(serialize = false, deserialize = false)
     @EmbeddedId
     WorkGroupParameter workGroupParameter;
 
@@ -94,5 +96,26 @@ public class WorkGroup implements java.io.Serializable {
             return "";
         }
         return workGroupParameter.getRoleCode();
+    }
+
+    public void setGroupId(String groupId) {
+        if (null == workGroupParameter){
+            workGroupParameter = new WorkGroupParameter();
+        }
+        workGroupParameter.setGroupId(groupId);
+    }
+
+    public void setUserCode(String userCode) {
+        if (null == workGroupParameter){
+            workGroupParameter = new WorkGroupParameter();
+        }
+        workGroupParameter.setUserCode(userCode);
+    }
+
+    public void setRoleCode(String roleCode) {
+        if (null == workGroupParameter){
+            workGroupParameter = new WorkGroupParameter();
+        }
+        workGroupParameter.setRoleCode(roleCode);
     }
 }
