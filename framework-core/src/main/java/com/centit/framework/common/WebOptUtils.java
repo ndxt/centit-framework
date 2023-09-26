@@ -16,11 +16,14 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * 系统Web常用工具类可以和spring WebUtils配合使用
@@ -491,5 +494,15 @@ public class WebOptUtils {
 
     public static String getTraceId() {
         return HttpContextUtils.getTraceId();
+    }
+    public static Map<String, String> fetchRequestCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if(cookies == null || cookies.length == 0)
+            return null;
+        Map<String, String> cookiesMap = new HashMap<>();
+        for (Cookie cookie : cookies) {
+            cookiesMap.put(cookie.getName(), cookie.getValue());
+        }
+        return cookiesMap;
     }
 }
