@@ -20,10 +20,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 系统Web常用工具类可以和spring WebUtils配合使用
@@ -495,6 +492,7 @@ public class WebOptUtils {
     public static String getTraceId() {
         return HttpContextUtils.getTraceId();
     }
+
     public static Map<String, String> fetchRequestCookies(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if(cookies == null || cookies.length == 0)
@@ -505,4 +503,20 @@ public class WebOptUtils {
         }
         return cookiesMap;
     }
+
+    public static Map<String, String> fetchRequestHeaders(HttpServletRequest request) {
+        Enumeration<String>  names = request.getHeaderNames();
+        if(names == null)
+            return null;
+        Map<String, String> headersMap = new HashMap<>();
+        while(names.hasMoreElements()) {
+            String name = names.nextElement();
+            //cookie
+            if(!"Cookie".equalsIgnoreCase(name)) {
+                headersMap.put(name, request.getHeader(name));
+            }
+        }
+        return headersMap;
+    }
+
 }
