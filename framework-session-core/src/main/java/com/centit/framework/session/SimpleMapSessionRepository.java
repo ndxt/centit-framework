@@ -7,11 +7,12 @@ import org.springframework.session.SessionRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class SimpleMapSessionRepository implements FindByIndexNameSessionRepository<MapSession> {
+public class SimpleMapSessionRepository implements FindByIndexNameSessionRepository<MapSession>, CentitSessionRepo {
     private Map<String, MapSession> sessionMap;
     public SimpleMapSessionRepository(){
-        sessionMap = new HashMap<>(80);
+        sessionMap = new ConcurrentHashMap<>(80);
     }
     /**
      * Find a {@link Map} of the session id to the {@link Session} of all sessions that
@@ -97,5 +98,23 @@ public class SimpleMapSessionRepository implements FindByIndexNameSessionReposit
     @Override
     public void deleteById(String id) {
         sessionMap.remove(id);
+    }
+
+    @Override
+    public void kickSessionByName(String loginName) {
+        for(Map.Entry<String, MapSession> mapSessionEntry : sessionMap.entrySet()){
+            if(loginName.equals(mapSessionEntry.getValue().getAttribute("username"))){
+                sessionMap.remove(mapSessionEntry.getKey());
+            }
+        }
+    }
+
+    @Override
+    public void kickSessionByPrincipal(String principalName) {
+        for(Map.Entry<String, MapSession> mapSessionEntry : sessionMap.entrySet()){
+            if(principalName.equals(mapSessionEntry.getValue().getAttribute("principal"))){
+                sessionMap.remove(mapSessionEntry.getKey());
+            }
+        }
     }
 }

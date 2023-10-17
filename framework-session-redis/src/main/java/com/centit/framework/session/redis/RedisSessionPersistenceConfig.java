@@ -1,5 +1,6 @@
 package com.centit.framework.session.redis;
 
+import com.centit.framework.session.CentitSessionRepo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,10 +53,9 @@ public class RedisSessionPersistenceConfig{
         return new SpringSessionBackedSessionRegistry(sessionRepository);
     }
 
-    //@Bean("springSessionDefaultRedisSerializer")
-    /*
-    public RedisSerializer<Object> redisSerializer() {
-        return new FastJsonRedisSerializer(Object.class);
+    @Bean
+    public CentitSessionRepo centitSessionRepo(@Autowired RedisIndexedSessionRepository sessionRepository){
+        return new CentitSessionRedisRepo(sessionRepository);
     }
-    */
+
 }

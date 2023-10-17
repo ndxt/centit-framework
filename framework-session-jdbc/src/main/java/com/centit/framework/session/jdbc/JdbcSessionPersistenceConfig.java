@@ -1,5 +1,6 @@
 package com.centit.framework.session.jdbc;
 
+import com.centit.framework.session.CentitSessionRepo;
 import com.centit.support.database.utils.DBType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,5 +110,10 @@ public class JdbcSessionPersistenceConfig {
     public SessionRegistry sessionRegistry(
         @Autowired FindByIndexNameSessionRepository sessionRepository){
         return new SpringSessionBackedSessionRegistry(sessionRepository);
+    }
+
+    @Bean
+    public CentitSessionRepo centitSessionRepo(@Autowired FindByIndexNameSessionRepository sessionRepository){
+        return new CentitSessionJdbcRepo(sessionRepository);
     }
 }
