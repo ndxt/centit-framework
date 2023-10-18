@@ -99,6 +99,7 @@
         <module>framework-security-gm-plugin</module>
         <module>framework-session-redis</module>
         <module>framework-session-jdbc</module>
+        <module>centit-persistence-extend</module>
     </modules>
 
     <build>
