@@ -28,16 +28,6 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-
-        <!-- server runtime library -->
-        <dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>tools</artifactId>
-            <version>${jdk.version}</version>
-            <systemPath>${java.home}/../lib/tools.jar</systemPath>
-            <scope>system</scope>
-        </dependency>
-
     </dependencies>
 
 </project>

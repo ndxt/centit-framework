@@ -147,14 +147,5 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- server runtime library -->
-        <!--<dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>tools</artifactId>
-            <version>${jdk.version}</version>
-            <scope>system</scope>
-            <systemPath>${java.home}/../lib/tools.jar</systemPath>
-        </dependency>-->
-
     </dependencies>
 </project>
