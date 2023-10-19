@@ -226,10 +226,24 @@ public interface PlatformEnvironment {
      */
     List<OptMethod> listOptMethodByRoleCode(String roleCode);
 
+    /**
+     * 添加业务操作
+     * @param optMethod 添加业务操作
+     * @return 更改后的对象
+     */
     OptMethod addOptMethod(OptMethod optMethod);
 
+    /**
+     * 修改业务操作
+     * @param optMethod 业务操作
+     * @return 更改后的对象
+     */
     OptMethod mergeOptMethod(OptMethod optMethod);
 
+    /**
+     * 删除操作
+     * 根据optcode 删除optdef表 和 f_rolepower表数据
+     */
     void deleteOptMethod(String optCode);
 
     /**
@@ -378,11 +392,6 @@ public interface PlatformEnvironment {
      */
     boolean deleteOptInfoByOptId(String optId);
 
-    /**
-     * 根据optcode 删除optdef表 和 f_rolepower表数据
-     */
-
-    boolean deleteOptDefAndRolepowerByOptCode(String optCode);
 
     /**
      * 根据topUnit统计租户下用户个数
