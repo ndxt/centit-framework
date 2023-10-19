@@ -47,7 +47,7 @@ public abstract class CentitSecurityMetadata {
     private static String parseUrlToApi(String sUrl) {
         String apiId = "";
         int nPos = sUrl.indexOf(DDE_RUN);
-        if (nPos>0){
+        if (nPos>=0){
             int beginPos = nPos + DDE_RUN_TAG_LENGTH;
             int endPos = sUrl.indexOf('/', beginPos);
             if(endPos<=0){
