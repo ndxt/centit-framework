@@ -73,14 +73,14 @@ public class DataCatalog implements java.io.Serializable{
      * 类别描述
      */
     @Column(name = "CATALOG_DESC")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 2048, message = "字段长度不能大于{max}")
     private String catalogDesc;
 
     /**
      * 字典字段描述
      */
     @Column(name = "FIELD_DESC")
-    @Length(max = 1024, message = "字段长度不能大于{max}")
+    @Length(max = 2048, message = "字段长度不能大于{max}")
     private String fieldDesc;
 
     /**
