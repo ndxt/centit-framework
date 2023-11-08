@@ -77,73 +77,60 @@ public abstract class BaseController {
             logger.error("未知错误，cause by " + request.getRequestURL().toString());
             return;
         }
-        if (WebOptUtils.isAjax(request)) {
-            if (ex instanceof ObjectException){
-                logger.error(ex.getMessage());
-                ObjectException objex = (ObjectException) ex;
-                if(WebOptUtils.exceptionNotAsHttpError &&
-                    (objex.getExceptionCode() == ResponseData.ERROR_USER_NOT_LOGIN ||
-                    objex.getExceptionCode() == ResponseData.ERROR_UNAUTHORIZED ) ){
-                    JsonResultUtils.writeHttpErrorMessage(objex.getExceptionCode(),
-                        objex.getLocalizedMessage(), response);
-                }else {
-                    ResponseMapData responseData =
-                        new ResponseMapData(objex.getExceptionCode(),
-                            this.logDebug ? ObjectException.extortExceptionOriginMessage(objex) : "内部错误，请联系管理员；开发人员请查看后台日志。");
-                    if(this.logDebug) {
-                        responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(objex));
-                    } else {
-                        logger.error(ObjectException.extortExceptionTraceMessage(objex));
-                    }
-                    responseData.addResponseData("object", objex.getObjectData());
-                    JsonResultUtils.writeResponseDataAsJson(responseData, response);
-                }
-                return;
-            }
-            logger.error(ObjectException.extortExceptionMessage(ex));
-            BindingResult bindingResult = null;
-            if(ex instanceof BindException){
-                bindingResult =((BindException)ex).getBindingResult();
-            }else if(ex instanceof MethodArgumentNotValidException){
-                bindingResult =((MethodArgumentNotValidException)ex).getBindingResult();
-            }
-            if(bindingResult!=null){
-                ResponseMapData responseData = new ResponseMapData(ResponseData.ERROR_BAD_REQUEST);
-                StringBuilder errMsg = new StringBuilder();
-
-                if (bindingResult.hasErrors()) {
-                    for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                        responseData.addResponseData(fieldError.getField(), fieldError.getDefaultMessage());
-                        errMsg.append(fieldError.getField()).append("：")
-                            .append(fieldError.getDefaultMessage()).append("；");
-                    }
-                }
-                responseData.setMessage(errMsg.toString());
-                JsonResultUtils.writeResponseDataAsJson(responseData, response);
-                return;
-            }
-            // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误
-            ResponseMapData responseData =
-                new ResponseMapData(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
-                    this.logDebug ? ObjectException.extortExceptionOriginMessage(ex) : "内部错误，请联系管理员；开发人员请查看后台日志。");
-            if(this.logDebug) {
-                responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(ex));
-            } else {
-                logger.error(ObjectException.extortExceptionTraceMessage(ex));
-            }
-            JsonResultUtils.writeResponseDataAsJson(responseData, response);
-        } else {
-            if (ex instanceof ObjectException) {
-                logger.error(ex.getMessage());
-                ObjectException objex = (ObjectException) ex;
-                response.sendRedirect(request.getContextPath()
-                    + "/system/exception/error/" + objex.getExceptionCode());
+        if (ex instanceof ObjectException){
+            logger.error(ex.getMessage());
+            ObjectException objex = (ObjectException) ex;
+            if(WebOptUtils.exceptionNotAsHttpError &&
+                (objex.getExceptionCode() == ResponseData.ERROR_USER_NOT_LOGIN ||
+                objex.getExceptionCode() == ResponseData.ERROR_UNAUTHORIZED ) ){
+                JsonResultUtils.writeHttpErrorMessage(objex.getExceptionCode(),
+                    objex.getLocalizedMessage(), response);
             }else {
-                logger.error(ObjectException.extortExceptionMessage(ex));
-                response.sendRedirect(request.getContextPath()
-                    + "/system/exception/error/500");
+                ResponseMapData responseData =
+                    new ResponseMapData(objex.getExceptionCode(),
+                        this.logDebug ? ObjectException.extortExceptionOriginMessage(objex) : "内部错误，请联系管理员；开发人员请查看后台日志。");
+                if(this.logDebug) {
+                    responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(objex));
+                } else {
+                    logger.error(ObjectException.extortExceptionTraceMessage(objex));
+                }
+                responseData.addResponseData("object", objex.getObjectData());
+                JsonResultUtils.writeResponseDataAsJson(responseData, response);
             }
+            return;
         }
+        logger.error(ObjectException.extortExceptionMessage(ex));
+        BindingResult bindingResult = null;
+        if(ex instanceof BindException){
+            bindingResult =((BindException)ex).getBindingResult();
+        }else if(ex instanceof MethodArgumentNotValidException){
+            bindingResult =((MethodArgumentNotValidException)ex).getBindingResult();
+        }
+        if(bindingResult!=null){
+            ResponseMapData responseData = new ResponseMapData(ResponseData.ERROR_BAD_REQUEST);
+            StringBuilder errMsg = new StringBuilder();
+
+            if (bindingResult.hasErrors()) {
+                for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                    responseData.addResponseData(fieldError.getField(), fieldError.getDefaultMessage());
+                    errMsg.append(fieldError.getField()).append("：")
+                        .append(fieldError.getDefaultMessage()).append("；");
+                }
+            }
+            responseData.setMessage(errMsg.toString());
+            JsonResultUtils.writeResponseDataAsJson(responseData, response);
+            return;
+        }
+        // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误
+        ResponseMapData responseData =
+            new ResponseMapData(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
+                this.logDebug ? ObjectException.extortExceptionOriginMessage(ex) : "内部错误，请联系管理员；开发人员请查看后台日志。");
+        if(this.logDebug) {
+            responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(ex));
+        } else {
+            logger.error(ObjectException.extortExceptionTraceMessage(ex));
+        }
+        JsonResultUtils.writeResponseDataAsJson(responseData, response);
     }
 
     /**
