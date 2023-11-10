@@ -39,7 +39,7 @@ public class PageQueryResult<T> implements ToResponseData, Serializable {
 
     private static <D> PageQueryResult<D>
     innerCreateResult(Collection<D> objList, PageDesc pageDesc, boolean mapDict, String[] filterFields){
-        PageQueryResult result = new PageQueryResult();
+        PageQueryResult<D> result = new PageQueryResult<>();
         result.objList = objList;
         result.pageDesc = pageDesc;
         result.mapDictionary = mapDict;
@@ -57,7 +57,7 @@ public class PageQueryResult<T> implements ToResponseData, Serializable {
      */
     public static <D> PageQueryResult<D>
         createResult(Collection<D> objList, PageDesc pageDesc, String[] filterFields){
-        return innerCreateResult(objList, pageDesc, true, filterFields);
+        return innerCreateResult(objList, pageDesc, false, filterFields);
     }
 
     /**
@@ -82,7 +82,7 @@ public class PageQueryResult<T> implements ToResponseData, Serializable {
      */
     public static <D> PageQueryResult<D>
         createResult(Collection<D> objList, PageDesc pageDesc){
-        return innerCreateResult(objList, pageDesc, true, null);
+        return innerCreateResult(objList, pageDesc, false, null);
     }
 
     /**

@@ -1,8 +1,8 @@
 package com.centit.framework.session;
 
-import com.centit.framework.appclient.AppSession;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.support.algorithm.CollectionsOpt;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.session.web.http.CookieHttpSessionIdResolver;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
@@ -26,10 +26,11 @@ public class SmartHttpSessionResolver implements HttpSessionIdResolver {
 
     public List<String> resolveAccessTokenSessionId(HttpServletRequest request) {
         if(addAccessToken) {
-            return CollectionsOpt.createList(request.getParameter(AppSession.SECURITY_CONTEXT_TOKENNAME));
-        }else{
-            return CollectionsOpt.createList();
+            String sessionId = request.getParameter(WebOptUtils.SESSION_ID_TOKEN);
+            if(StringUtils.isNotBlank(sessionId))
+                return CollectionsOpt.createList(sessionId);
         }
+        return CollectionsOpt.createList();
     }
 
     public SmartHttpSessionResolver(boolean cookieFirst, String cookiePath,boolean addAccessToken) {
