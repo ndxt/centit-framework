@@ -96,6 +96,10 @@ public class MainFrameController extends BaseController {
     @Value("${app.menu.topoptid:}")
     private String topOptId;
 
+    public void setThirdPartyCheckUserDetails(ThirdPartyCheckUserDetails thirdPartyCheckUserDetails) {
+        this.thirdPartyCheckUserDetails = thirdPartyCheckUserDetails;
+    }
+
     /**
      * 登录首页链接，具体登录完成后跳转路径由spring-security-dao.xml中配置
      * param request request

@@ -59,6 +59,10 @@ public class FVUserRoles implements java.io.Serializable {
     @Length(max = 32, message = "字段长度不能大于{max}")
     private String unitCode; // 角色所属机构
 
+    @Column(name = "OS_ID")
+    @Length(max = 32, message = "字段长度不能大于{max}")
+    private String osId; // 角色所属机构
+
     @Column(name = "CHANGE_DESC")
     @Length(max = 256, message = "字段长度不能大于{max}")
     private String changeDesc; // 说明
@@ -184,8 +188,12 @@ public class FVUserRoles implements java.io.Serializable {
       return unitCode;
     }
 
-    public String getRoleOwner() {
-      return unitCode;
+    public String getOsId() {
+        return osId;
+    }
+
+    public void setOsId(String osId) {
+        this.osId = osId;
     }
 
     public void setUnitCode(String unitCode) {
@@ -232,7 +240,8 @@ public class FVUserRoles implements java.io.Serializable {
             this.getRoleCode(), this.getRoleName(), this.getRoleType(),
             this.getUnitCode(), this.getIsValid(), this.getRoleDesc()
         );
-        roleInfo.setRoleOwner(this.getRoleOwner());
+        roleInfo.setUnitCode(this.getUnitCode());
+        roleInfo.setOsId(this.getOsId());
         roleInfo.setRolePowers(this.getRolePowers());
         return roleInfo;
     }

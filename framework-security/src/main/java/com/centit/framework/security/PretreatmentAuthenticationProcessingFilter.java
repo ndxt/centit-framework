@@ -71,10 +71,13 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
                 (checkCaptchaTime == 1
                         //&& CheckFailLogs.getMaxTryTimes() >= 0
                         && tryTimes > 0 ))) {
+
             if (!BooleanBaseOpt.castObjectToBoolean(
                     request.getSession().getAttribute(
                             SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
-                    false)) {
+                    false) &&
+                ! "nocheckcode".equals(request.getParameter(CaptchaImageUtil.REQUESTCHECKCODE)) ) {
+
                 throw new AuthenticationServiceException(
                         "Captcha input is error, please try late!");
             }

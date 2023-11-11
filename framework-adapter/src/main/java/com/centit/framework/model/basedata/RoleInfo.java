@@ -69,8 +69,15 @@ public class RoleInfo implements java.io.Serializable {
      */
     @Column(name = "UNIT_CODE")
     @Length(max = 32, message = "字段长度不能大于{max}")
-    @DictionaryMap(fieldName="topUnitName",value="unitCode")
+    @DictionaryMap(fieldName="topUnitName", value="unitCode")
+    @ApiModelProperty(value = "topUnit 租户代码", name = "unitCode")
     private String unitCode; // 角色所属机构
+
+
+    @Column(name = "OS_ID")
+    @Length(max = 32, message = "字段长度不能大于{max}")
+    @ApiModelProperty(value = "角色所属项目", name = "osId")
+    private String osId; // 角色所属项目
 
     @Column(name = "ROLE_DESC")
     @Length(max = 256, message = "字段长度不能大于{max}")
@@ -215,12 +222,12 @@ public class RoleInfo implements java.io.Serializable {
         this.unitCode = unitCode;
     }
 
-    public String getRoleOwner() {
-        return unitCode;
+    public String getOsId() {
+        return this.osId;
     }
 
-    public void setRoleOwner(String roleOwner) {
-        this.unitCode = roleOwner;
+    public void setOsId(String osId) {
+        this.osId = osId;
     }
 
     public Date getLastModifyDate() {
