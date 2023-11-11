@@ -23,7 +23,11 @@ public class UserDetailsServiceImpl implements
 
     @Override
     public UserDetails loadUserByUsername(String userLoginName) throws UsernameNotFoundException {
-        return loadDetailsByLoginName(userLoginName);
+        UserDetails ud=loadDetailsByLoginName(userLoginName);
+        if(ud==null) {
+            throw new UsernameNotFoundException("用户名或密码错误");
+        }
+        return ud;
     }
 
     @Override
@@ -34,8 +38,9 @@ public class UserDetailsServiceImpl implements
     @Override
     public Collection<? extends GrantedAuthority> loadUserAuthorities(String loginname) throws UsernameNotFoundException {
         CentitUserDetails ud = loadDetailsByLoginName(loginname);
-        if(ud==null)
+        if(ud==null) {
             return null;
+        }
         return ud.getAuthorities();
     }
 
