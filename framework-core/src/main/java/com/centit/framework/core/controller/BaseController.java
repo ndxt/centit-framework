@@ -71,8 +71,7 @@ public abstract class BaseController {
      */
     //(value = {BindException.class,MethodArgumentNotValidException.class})
     @ExceptionHandler
-    public void exceptionHandler(Exception ex, HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public void exceptionHandler(Exception ex, HttpServletRequest request, HttpServletResponse response) {
         if (ex == null){
             logger.error("未知错误，cause by " + request.getRequestURL().toString());
             return;

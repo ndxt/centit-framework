@@ -74,7 +74,7 @@ public class RoleInfo implements java.io.Serializable {
     private String unitCode; // 角色所属机构
 
 
-    //@Column(name = "OS_ID")
+    @Column(name = "OS_ID")
     @Length(max = 32, message = "字段长度不能大于{max}")
     @ApiModelProperty(value = "角色所属项目", name = "osId")
     private String osId; // 角色所属项目

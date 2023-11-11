@@ -240,6 +240,7 @@ public class FVUserRoles implements java.io.Serializable {
             this.getRoleCode(), this.getRoleName(), this.getRoleType(),
             this.getUnitCode(), this.getIsValid(), this.getRoleDesc()
         );
+        roleInfo.setUnitCode(this.getUnitCode());
         roleInfo.setOsId(this.getOsId());
         roleInfo.setRolePowers(this.getRolePowers());
         return roleInfo;
