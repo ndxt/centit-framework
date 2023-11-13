@@ -26,7 +26,7 @@ public class SmartHttpSessionResolver implements HttpSessionIdResolver {
 
     public List<String> resolveAccessTokenSessionId(HttpServletRequest request) {
         if(addAccessToken) {
-            String sessionId = request.getParameter(WebOptUtils.SESSION_ID_TOKEN);
+            String sessionId = request.getParameter(WebOptUtils.REQUEST_ACCESS_TOKEN);
             if(StringUtils.isNotBlank(sessionId))
                 return CollectionsOpt.createList(sessionId);
         }

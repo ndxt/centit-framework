@@ -36,7 +36,8 @@ public class WebOptUtils {
     public static final String CURRENT_STATION_ID_TAG   = "cnt-current-station-id";
     public static final String CORRELATION_ID = "cnt-correlation-id";
     public static final String AUTHORIZATION_TOKEN  = "Authorization";
-    public static final String SESSION_ID_TOKEN     = "x-auth-token";
+    public static final String SESSION_ID_TOKEN     = "X-Auth-Token";
+    public static final String REQUEST_ACCESS_TOKEN     = "accessToken";
 
     //不使用http的状态码来标识错误状态
     public static boolean exceptionNotAsHttpError = true;

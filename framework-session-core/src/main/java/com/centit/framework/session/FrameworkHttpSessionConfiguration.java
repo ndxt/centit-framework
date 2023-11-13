@@ -16,6 +16,6 @@ public class FrameworkHttpSessionConfiguration {
 
     @Bean
     public SmartHttpSessionResolver smartHttpSessionStrategy(){
-        return new SmartHttpSessionResolver(cookieFist, cookiePath,addAccessToken);
+        return new SmartHttpSessionResolver(cookieFist, cookiePath, addAccessToken);
     }
 }
