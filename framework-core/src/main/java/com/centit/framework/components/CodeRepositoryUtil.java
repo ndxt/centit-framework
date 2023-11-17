@@ -9,7 +9,6 @@ import com.centit.framework.model.basedata.*;
 import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.CachedMap;
@@ -808,13 +807,6 @@ public abstract class CodeRepositoryUtil {
         return primaryUnit.getUnitCode();
     }
 
-    private static int getXzRank(String rankCode,String topUnit){
-        DataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode,topUnit);
-        return dd!=null ? NumberBaseOpt.castObjectToInteger(dd.getExtraCode(),
-                UserUnit.MAX_XZ_RANK )
-            : UserUnit.MAX_XZ_RANK;
-    }
-
     /**
      * 获取用户行政角色
      *
@@ -822,7 +814,7 @@ public abstract class CodeRepositoryUtil {
      * @param unitCode 机构代码如果是 null 系统会默认的找用户的主机构
      * @return 用户行政角色
      */
-    public static Integer getUserUnitXzRank(String topUnit, String userCode, String unitCode) {
+    public static String getUserUnitXzRank(String topUnit, String userCode, String unitCode) {
         if (userCode == null) {
             return UserUnit.MAX_XZ_RANK;
         }
@@ -836,11 +828,11 @@ public abstract class CodeRepositoryUtil {
         }
 
         List<UserUnit> uus = listUserUnits(topUnit, userCode);
-        Integer nRank = UserUnit.MAX_XZ_RANK;
+        String nRank = UserUnit.MAX_XZ_RANK;
         for (UserUnit uu : uus) {
-            if (StringUtils.equals(rankUnitCode,uu.getUnitCode())
-                && getXzRank(uu.getUserRank(),topUnit) < nRank) {
-                nRank = getXzRank(uu.getUserRank(),topUnit);
+            if (StringUtils.equals(rankUnitCode, uu.getUnitCode())
+                && StringUtils.compare(uu.getPostRank(), nRank) < 0) {
+                nRank = uu.getPostRank();
             }
         }
         return nRank;

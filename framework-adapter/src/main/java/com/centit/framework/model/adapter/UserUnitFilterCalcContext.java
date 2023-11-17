@@ -39,17 +39,15 @@ public interface UserUnitFilterCalcContext {
 
     void addUserParam(String paramName, Set<String> userCodes);
 
-    void addRankParam(String paramName, int r);
+    void addRankParam(String paramName, String r);
 
-    void addAllRankParam(Map<String,Integer> rankParam);
+    void addAllRankParam(Map<String, String> rankParam);
 
     Set<String> getUnitCode(String paramName);
 
     Set<String> getUserCode(String paramName);
 
-    int stringToRank(String srank);
-
-    int getRank(String paramName);
+    String getRank(String paramName);
 
     void setFormula(String sFormula);
 
@@ -96,18 +94,8 @@ public interface UserUnitFilterCalcContext {
 
     // 行政角色 代码、名称 、等级
     Map<String, String> listAllRank();
-    /**
-     * 从数据字典中获取 Rank 的等级
-     * @param rankCode 行政角色代码
-     * @return 行政角色等级
-     */
-    int getXzRank(String rankCode);
-       /* DataDictionary dd = CodeRepositoryUtil.getDataPiece("RankType", rankCode);
-        if(dd!=null)
-            return Integer.valueOf(dd.getExtraCode());
-        return UserUnit.MAX_XZ_RANK;
-    }*/
-    int getUserRank(String userCode);
 
-    int getUserUnitRank(String userCode, String unitCode);
+    String getUserRank(String userCode);
+
+    String getUserUnitRank(String userCode, String unitCode);
 }

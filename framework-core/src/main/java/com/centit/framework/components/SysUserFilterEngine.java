@@ -161,19 +161,19 @@ public abstract class SysUserFilterEngine {
             if (rf.isHasRankFilter()) {
                 //如果是 所有上下级，直接过滤
                 if (rf.isRankAllSub() || rf.isRankAllTop()) { // 所有下级
-                    lsUserunit.removeIf(uu -> !rf.matchRank(ecc.getXzRank(uu.getUserRank())));
+                    lsUserunit.removeIf(uu -> !rf.matchRank(uu.getPostRank()));
                 } else {
                     // 针对不同的部门，分别找出这个部门对应的等级
-                    Map<String, Integer> unitRank = new HashMap<>();
+                    Map<String, String> unitRank = new HashMap<>();
                     for (UserUnit uu : lsUserunit) {
-                        if (rf.matchRank(ecc.getXzRank(uu.getUserRank()))) {
-                            Integer nR = unitRank.get(uu.getUnitCode());
+                        if (rf.matchRank(uu.getPostRank())) {
+                            String nR = unitRank.get(uu.getUnitCode());
                             if (nR == null) {
-                                unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
+                                unitRank.put(uu.getUnitCode(), uu.getPostRank());
                             } else {
-                                if(  (rf.isRankPlus() && nR > ecc.getXzRank(uu.getUserRank()))
-                                   ||(rf.isRankMinus() && nR < ecc.getXzRank(uu.getUserRank())) )
-                                    unitRank.put(uu.getUnitCode(), ecc.getXzRank(uu.getUserRank()));
+                                if(   (rf.isRankPlus()  && StringUtils.compare(nR, uu.getPostRank())>0)
+                                   || (rf.isRankMinus() && StringUtils.compare(nR, uu.getPostRank())<0) )
+                                    unitRank.put(uu.getUnitCode(), uu.getPostRank());
                             }
                         }
                     }
@@ -181,8 +181,8 @@ public abstract class SysUserFilterEngine {
                     for (Iterator<UserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
                         UserUnit uu = it.next();
                         // 过滤掉不符合要求的职位
-                        Integer nR = unitRank.get(uu.getUnitCode());
-                        if (nR == null || nR != ecc.getXzRank(uu.getUserRank()))
+                        String nR = unitRank.get(uu.getUnitCode());
+                        if (nR == null || !nR.equals(uu.getPostRank()))
                             it.remove();
                     }
                 }
@@ -417,7 +417,7 @@ public abstract class SysUserFilterEngine {
     public static Set<String> calcSystemOperators(String roleExp, String topUnit,
                                                 Map<String, Set<String>> unitParams,
                                                 Map<String, Set<String>> userParams,
-                                                Map<String, Integer> rankParams,
+                                                Map<String, String> rankParams,
                                                 UserUnitVariableTranslate varTrans) {
         if (StringUtils.isBlank(roleExp)) {
             return null;
@@ -464,7 +464,7 @@ public abstract class SysUserFilterEngine {
         ecc.addUserParam("self",userCode);
         ecc.addUserParam("unit",userInfo.getPrimaryUnit());
         ecc.addRankParam("userRank",
-                ecc.getUserUnitRank( userCode,userInfo.getPrimaryUnit()) );
+                ecc.getUserUnitRank( userCode, userInfo.getPrimaryUnit()) );
         ecc.setFormula("D(unit--)R(userRank--)");
         Set<String> sUsers = calcRolesExp(ecc);
         if (sUsers == null || ecc.hasError())

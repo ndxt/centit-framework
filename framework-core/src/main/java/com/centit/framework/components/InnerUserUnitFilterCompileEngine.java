@@ -3,6 +3,7 @@ package com.centit.framework.components;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.UnitInfo;
+import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.compiler.VariableFormula;
 import org.slf4j.Logger;
@@ -615,16 +616,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
             return true;
         }
         // -1 表示错误，没有等级，0 表示虚拟的最高值  1 等级最高 越大等级越低
-        int rank = -1 ;
-
-        if (ecc.isLabel(w)) { // 变量
-            rank = ecc.getRank(w);
-        } else if (StringRegularOpt.isNumber(w)) { // 常量
-            rank = ecc.stringToRank(w);
-        } else { // 语法错误
-            ecc.setLastErrMsg(w + " is unexpected, expect label or number [rolerank]; calcXzRank label . ");
-            return false;
-        }
+        String rank =  ecc.getRank(w);
         w = ecc.getAWord();
         if ("+".equals(w)) {
             gene.setRankPlus();
@@ -636,11 +628,12 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 } /*else
                     ecc.writeBackAWord(w);*/
             } else {
-                if(rank>=0)
-                    rank += Integer.valueOf(StringRegularOpt.trimString(w));
+                int n = Integer.valueOf(StringRegularOpt.trimString(w), 0);
+                for(int i=0; i<n; i++){
+                    rank = StringBaseOpt.nextCode(rank);
+                }
                 w = ecc.getAWord();
             }
-
         } else if ("-".equals(w)) {
             w = ecc.getAWord();
             gene.setRankMinus();
@@ -651,8 +644,10 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 } /*else
                     ecc.writeBackAWord(w);*/
             } else {
-                if(rank>=0)
-                    rank -= Integer.valueOf(StringRegularOpt.trimString(w));
+                int n = Integer.valueOf(StringRegularOpt.trimString(w), 0);
+                for(int i=0; i<n; i++){
+                    rank = StringBaseOpt.prevCode(rank);
+                }
                 w = ecc.getAWord();
             }
         }
@@ -665,9 +660,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
             w = ecc.getAWord();
         }
 
-        if (rank >= 0) {
-            gene.setXzRank(rank);
-        }
+        gene.setXzRank(rank);
 
         if (")".equals(w)) {
             return true;

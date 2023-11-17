@@ -18,7 +18,10 @@ import com.centit.framework.model.security.CentitPasswordEncoder;
 import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.framework.model.security.ThirdPartyCheckUserDetails;
 import com.centit.framework.security.SecurityContextUtils;
-import com.centit.support.algorithm.*;
+import com.centit.support.algorithm.BooleanBaseOpt;
+import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.GeneralAlgorithm;
+import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.image.CaptchaImageUtil;
 import com.centit.support.security.SecurityOptUtils;
@@ -961,12 +964,12 @@ public class MainFrameController extends BaseController {
         Object unitParams = jsonObject.getJSONObject("unitParams");
         Object userParams = jsonObject.getJSONObject("userParams");
         Object rankParams = jsonObject.getJSONObject("rankParams");
-        Map<String, Integer> rankMap = null;
+        Map<String, String> rankMap = null;
         if (rankParams != null) {
             Map<String, Object> objMap = CollectionsOpt.objectToMap(rankParams);
             rankMap = new HashMap<>(objMap.size() + 1);
             for (Map.Entry<String, Object> ent : objMap.entrySet()) {
-                rankMap.put(ent.getKey(), NumberBaseOpt.castObjectToInteger(ent.getValue()));
+                rankMap.put(ent.getKey(), StringBaseOpt.castObjectToString(ent.getValue()));
             }
         }
         Set<String> sUsers = SysUserFilterEngine.calcSystemOperators(

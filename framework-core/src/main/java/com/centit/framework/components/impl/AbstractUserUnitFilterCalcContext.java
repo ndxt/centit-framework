@@ -4,7 +4,6 @@ import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.UserUnit;
-import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.compiler.Lexer;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +15,7 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     protected Lexer lexer;
     protected Map<String, Set<String>> unitParams;
     protected Map<String, Set<String>> userParams;
-    protected Map<String, Integer> rankParams;
+    protected Map<String, String> rankParams;
     protected boolean hasError;
     protected String lastErrMsg;
     protected UserUnitVariableTranslate varTrans;
@@ -123,12 +122,12 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     }
 
     @Override
-    public void addRankParam(String paramName, int r) {
+    public void addRankParam(String paramName, String r) {
         rankParams.put(paramName, r);
     }
 
     @Override
-    public void addAllRankParam(Map<String, Integer> rankParam) {
+    public void addAllRankParam(Map<String, String> rankParam) {
         this.rankParams.putAll(rankParam);
     }
 
@@ -158,29 +157,27 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
         else return null;
     }
 
-    @Override
-    public int stringToRank(String srank) {
-        return NumberBaseOpt.castObjectToInteger(srank, -1);
-    }
 
     @Override
-    public int getRank(String paramName) {
-        Integer rank = rankParams.get(paramName);
+    public String getRank(String paramName) {
+        String rank = rankParams.get(paramName);
         if (rank != null)
             return rank;
-        String srank = StringBaseOpt.objectToString(
+        rank = StringBaseOpt.objectToString(
             varTrans.getVarValue(paramName));
-        return stringToRank(srank);
+        if (rank != null)
+            return rank;
+        return paramName;
     }
 
     @Override
-    public int getUserRank(String userCode) {
+    public String getUserRank(String userCode) {
         List<UserUnit> uus = listUserUnits(userCode);
-        int nRank = UserUnit.MAX_XZ_RANK;
+        String nRank = UserUnit.MAX_XZ_RANK;
         if (uus != null) {
             for (UserUnit uu : uus) {
-                int nr = getXzRank(uu.getUserRank());
-                if (nr < nRank) {
+                String nr = uu.getPostRank();
+                if (StringUtils.compare(nr , nRank) < 0){
                     nRank = nr;
                 }
             }
@@ -189,14 +186,14 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     }
 
     @Override
-    public int getUserUnitRank(String userCode, String unitCode) {
+    public String getUserUnitRank(String userCode, String unitCode) {
         List<UserUnit> uus = listUserUnits(userCode);
-        int nRank = UserUnit.MAX_XZ_RANK;
+        String nRank = UserUnit.MAX_XZ_RANK;
         if (uus != null) {
             for (UserUnit uu : uus) {
                 if (StringUtils.equals(uu.getUnitCode(), unitCode)) {
-                    int nr = getXzRank(uu.getUserRank());
-                    if (nr < nRank) {
+                    String nr = uu.getPostRank();
+                    if (StringUtils.compare(nr , nRank) < 0){
                         nRank = nr;
                     }
                 }

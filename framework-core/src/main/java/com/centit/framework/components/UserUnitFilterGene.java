@@ -1,5 +1,6 @@
 package com.centit.framework.components;
 
+import com.centit.support.algorithm.StringBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class UserUnitFilterGene {
     private Set<String> optRoles;
     private Set<String> userUnitRelTypes;
 
-    private int xzRank;
+    private String xzRank; //postRank
     private boolean rankPlus;
     private boolean rankMinus;
     private boolean rankAllTop;
@@ -54,7 +55,7 @@ public class UserUnitFilterGene {
         gwRoles = new HashSet<>();
         optRoles = new HashSet<>();
         userUnitRelTypes = new HashSet<>();
-        xzRank = 0;
+        xzRank = null;
     }
 
     public boolean isHasUnitTypeFilter() {
@@ -131,8 +132,8 @@ public class UserUnitFilterGene {
         return gwRoles;
     }
 
-    public void setXzRank(int r) {
-        xzRank = r;
+    public void setXzRank(String postRank) {
+        xzRank = postRank;
         hasRankFilter = true;
     }
 
@@ -201,7 +202,8 @@ public class UserUnitFilterGene {
     public void setRankAllTop() {
         this.rankAllTop = true;
         this.rankAllSub = false;
-        xzRank--;
+        StringBaseOpt.prevCode(xzRank);
+        //xzRank--;
         setRankMinus();
     }
 
@@ -212,7 +214,8 @@ public class UserUnitFilterGene {
     public void setRankAllSub() {
         this.rankAllTop = false;
         this.rankAllSub = true;
-        xzRank++;
+        //xzRank++;
+        StringBaseOpt.nextCode(xzRank);
         setRankPlus();
     }
 
@@ -255,8 +258,10 @@ public class UserUnitFilterGene {
         hasGWFilter = true;
     }
 
-    public boolean matchRank(int nR) {
-        return rankPlus ? (nR >= xzRank) : (rankMinus ? nR <= xzRank : nR == xzRank);
+    public boolean matchRank(String nR) {
+        int nc = StringUtils.compare(nR, xzRank);
+        return rankPlus ?
+            (nc >= 0) : (rankMinus ? nc < 0 : nc == 0);
     }
 
 }// end of class RoleFilterGene

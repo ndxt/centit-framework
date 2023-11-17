@@ -25,7 +25,7 @@ public class UserUnit implements java.io.Serializable {
 
     // Fields
     private static final long serialVersionUID = 1L;
-    public static final int MAX_XZ_RANK = 100000;
+    public static final String MAX_XZ_RANK = "ZZZZZZZZZ";
 
     @Id
     @Column(name = "USER_UNIT_ID")
@@ -68,8 +68,8 @@ public class UserUnit implements java.io.Serializable {
     @Column(name = "POST_RANK")
     @Length(max = 32, message = "字段长度不能大于{max}")
     @DictionaryMap(fieldName="userPostText",value="PostRank")
-    @ApiModelProperty(value = "职务",name = "postRank")
-    private String postRank; // 职务
+    @ApiModelProperty(value = "职级",name = "postRank")
+    private String postRank; // 职级
 
     @Column(name = "RANK_MEMO")
     @Length(max = 256, message = "字段长度不能大于{max}")
@@ -112,13 +112,6 @@ public class UserUnit implements java.io.Serializable {
         condition = GeneratorCondition.ALWAYS, value="today()" )
     private Date  updateDate;
     //结束
-
-
-    /**
-     * 仅在系统缓存中使用
-     */
-    @Transient
-    private int xzRank;
 
     // Constructors
 
@@ -236,14 +229,6 @@ public class UserUnit implements java.io.Serializable {
 
     public void setUnitName(String unitname) {
         this.unitName = unitname;
-    }
-
-    public int getXzRank() {
-        return xzRank;
-    }
-
-    public void setXzRank(int xzRank) {
-        this.xzRank = xzRank;
     }
 
     public Long getUserOrder() {

@@ -89,17 +89,4 @@ public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcC
         return CodeRepositoryUtil.getUserInfoByCode(this.getTopUnit(), userCode);
     }
 
-    /**
-     * 从数据字典中获取 Rank 的等级
-     *
-     * @param rankCode 行政角色代码
-     * @return 行政角色等级
-     */
-    @Override
-    public int getXzRank(String rankCode) {
-        DataDictionary dd = CodeRepositoryUtil.getDataPiece(GlobalConstValue.DATA_CATALOG_RANK, rankCode,null);
-        if(dd!=null)
-            return Integer.valueOf(dd.getExtraCode());
-        return UserUnit.MAX_XZ_RANK;
-    }
 }
