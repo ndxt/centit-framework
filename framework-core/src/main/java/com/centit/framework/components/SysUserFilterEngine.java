@@ -177,7 +177,7 @@ public abstract class SysUserFilterEngine {
                             }
                         }
                     }
-
+                    //TODO 这个地方需要重新 实现，不是精确匹配，是匹配最接近的
                     for (Iterator<UserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
                         UserUnit uu = it.next();
                         // 过滤掉不符合要求的职位
