@@ -60,8 +60,8 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
 
             request.getSession().removeAttribute(CaptchaImageUtil.SESSIONCHECKCODE);
 
-            if(! "nocheckcode".equals(requestCheckcode) && !StringBaseOpt.isNvl(sessionCheckcode)){
-                if(!CaptchaImageUtil.checkcodeMatch(sessionCheckcode, requestCheckcode))
+            if(!StringBaseOpt.isNvl(sessionCheckcode) &&
+                !CaptchaImageUtil.checkcodeMatch(sessionCheckcode, requestCheckcode)) {
                 //if(request_checkcode==null || ! request_checkcode.equalsIgnoreCase(session_checkcode)  )
                     throw new AuthenticationServiceException("bad checkcode");
             }
@@ -75,8 +75,7 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
             if (!BooleanBaseOpt.castObjectToBoolean(
                     request.getSession().getAttribute(
                             SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
-                    false) &&
-                ! "nocheckcode".equals(request.getParameter(CaptchaImageUtil.REQUESTCHECKCODE)) ) {
+                    false) ) {
 
                 throw new AuthenticationServiceException(
                         "Captcha input is error, please try late!");
