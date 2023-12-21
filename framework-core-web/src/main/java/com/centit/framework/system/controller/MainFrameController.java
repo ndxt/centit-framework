@@ -412,6 +412,7 @@ public class MainFrameController extends BaseController {
     @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
     public RenderedImage captchaImage(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Cache-Control", "no-cache");
+        response.setHeader(WebOptUtils.SESSION_ID_TOKEN, request.getSession().getId());
         String sType = request.getParameter("imageType");
 
         request.getSession().setAttribute(
