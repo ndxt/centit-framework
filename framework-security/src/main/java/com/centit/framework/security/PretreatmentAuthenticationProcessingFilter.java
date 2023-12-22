@@ -4,6 +4,7 @@ import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
 import com.centit.support.security.SecurityOptUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,34 +52,26 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
 
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
 
-        if(checkCaptchaType == 1 && ( checkCaptchaTime == 2 ||
-                (checkCaptchaTime == 1 && tryTimes > 0 ))){  //&& CheckFailLogs.getMaxTryTimes() >= 0
-            String requestCheckcode = request.getParameter(CaptchaImageUtil.REQUESTCHECKCODE);
-
-            String sessionCheckcode = StringBaseOpt.castObjectToString(
-                    request.getSession().getAttribute(CaptchaImageUtil.SESSIONCHECKCODE));
-
-            request.getSession().removeAttribute(CaptchaImageUtil.SESSIONCHECKCODE);
-
-            if(!StringBaseOpt.isNvl(sessionCheckcode) &&
-                !CaptchaImageUtil.checkcodeMatch(sessionCheckcode, requestCheckcode)) {
-                //if(request_checkcode==null || ! request_checkcode.equalsIgnoreCase(session_checkcode)  )
-                    throw new AuthenticationServiceException("验证码输入有误，请检查后重新输入！");
-            }
-        }
-
-        if(checkCaptchaType == 2 && ( checkCaptchaTime == 2 ||
-                (checkCaptchaTime == 1
-                        //&& CheckFailLogs.getMaxTryTimes() >= 0
-                        && tryTimes > 0 ))) {
-
+        if(checkCaptchaType != 0 &&
+            (checkCaptchaTime == 2 ||  (checkCaptchaTime == 1  && tryTimes > 0 ))) {
+            //判断是否通过ajax方式已经验证过
             if (!BooleanBaseOpt.castObjectToBoolean(
                     request.getSession().getAttribute(
                             SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
                     false) ) {
 
-                throw new AuthenticationServiceException(
-                        "Captcha input is error, please try late!");
+                String requestCheckcode = request.getParameter(CaptchaImageUtil.REQUESTCHECKCODE);
+                String sessionCheckcode = StringBaseOpt.castObjectToString(
+                    request.getSession().getAttribute(CaptchaImageUtil.SESSIONCHECKCODE));
+                if(StringUtils.isNotBlank(sessionCheckcode)){
+                    //清除临时验证码，避免多次重复验证
+                    request.getSession().setAttribute(
+                        CaptchaImageUtil.SESSIONCHECKCODE, CaptchaImageUtil.getRandomString(6));
+
+                    if (!CaptchaImageUtil.checkcodeMatch(sessionCheckcode, requestCheckcode)) {
+                        throw new AuthenticationServiceException("验证码输入有误，请检查后重新输入！");
+                    }
+                }
             }
             request.getSession().setAttribute(
                     SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
@@ -97,22 +90,13 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
             setDetails(request, authRequest);
             Authentication auth = this.getAuthenticationManager().authenticate(authRequest);
 
-            //Authentication auth = super.attemptAuthentication(request, response);
-//            if(request.getSession(false)!=null) {
-//                request.changeSessionId();
-//            }
-            //if(CheckFailLogs.getMaxTryTimes() >= 0){
-                CheckFailLogs.removeCheckFail(request);
-            //}
+            CheckFailLogs.removeCheckFail(request);
             return auth;
         }catch (AuthenticationException failed) {
-            //System.err.println(failed.getMessage());
-            //if(CheckFailLogs.getMaxTryTimes() >= 0){
-                CheckFailLogs.plusCheckFail(request);
-            //}
+            CheckFailLogs.plusCheckFail(request);
             throw failed;
         }
-        //}
+
     }
 
 
