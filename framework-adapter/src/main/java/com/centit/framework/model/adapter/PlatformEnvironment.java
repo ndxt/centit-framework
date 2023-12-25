@@ -37,6 +37,9 @@ public interface PlatformEnvironment {
      */
     List<UserInfo> listAllUsers(String topUnit);
 
+
+    List<UserInfo> listUsersByProperties(Map<String, Object> filters, String topUnit);
+
     /**
      * 获取当前租户的所有机构
      *
@@ -47,13 +50,7 @@ public interface PlatformEnvironment {
      */
     List<UnitInfo> listAllUnits(String topUnit);
 
-    /*
-     * 获取机构信息
-     * @param unitCode 机构主键
-     * @return 机构信息
-
-     UnitInfo getUnitrInfo(String unitCode);
-    */
+    List<UnitInfo> listUnitsByProperties(Map<String, Object> filters, String topUnit);
 
     /**
      * 获取租户下所有用户和机构关联关系
@@ -107,6 +104,11 @@ public interface PlatformEnvironment {
      */
     List<OsInfo> listOsInfos(String topUnit);
 
+    /**
+     * 获取应用信息
+     * @param osId 应用ID， applicationId
+     * @return 应用基本信息
+     */
     OsInfo getOsInfo(String osId);
 
     OsInfo deleteOsInfo(String osId);
@@ -114,7 +116,6 @@ public interface PlatformEnvironment {
     OsInfo updateOsInfo(OsInfo osInfo);;
 
     OsInfo addOsInfo(OsInfo osInfo);
-
 
     /**
      * 获取租户下用户所有菜单功能
