@@ -258,6 +258,17 @@ public abstract class CodeRepositoryUtil {
                 ReflectionOpt.getFieldValue(ui, sCatalog.substring(9)));
         }
 
+        if(sCatalog.startsWith("loginName")){
+            List<UserInfo> userInfos = listAllUsers(topUnit);
+            if(userInfos==null)
+                return sKey;
+            for(UserInfo userInfo:userInfos){
+                if(StringUtils.equals(sKey, userInfo.getLoginName()))
+                    return userInfo.getUserName();
+            }
+            return sKey;
+        }
+
         if(sCatalog.startsWith("unitInfo.")){
             UnitInfo ui= getUnitRepo(topUnit).get(sKey);
             if(ui==null)
