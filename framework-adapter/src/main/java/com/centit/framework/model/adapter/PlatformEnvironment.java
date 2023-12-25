@@ -37,8 +37,7 @@ public interface PlatformEnvironment {
      */
     List<UserInfo> listAllUsers(String topUnit);
 
-
-    List<UserInfo> listUsersByProperties(Map<String, Object> filters, String topUnit);
+    //List<UserInfo> listUsersByProperties(Map<String, Object> filters, String topUnit);
 
     /**
      * 获取当前租户的所有机构
@@ -50,7 +49,7 @@ public interface PlatformEnvironment {
      */
     List<UnitInfo> listAllUnits(String topUnit);
 
-    List<UnitInfo> listUnitsByProperties(Map<String, Object> filters, String topUnit);
+    //List<UnitInfo> listUnitsByProperties(Map<String, Object> filters, String topUnit);
 
     /**
      * 获取租户下所有用户和机构关联关系
