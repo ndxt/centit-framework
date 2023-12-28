@@ -1,8 +1,7 @@
-package com.centit.framework.security.model;
-
+package com.centit.framework.security;
 
 import com.centit.framework.model.security.CentitPasswordEncoder;
-import com.centit.framework.security.utils.SM3Util;
+import com.centit.support.security.SM3Util;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;

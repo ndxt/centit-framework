@@ -96,7 +96,6 @@
         <module>framework-security</module>
         <module>framework-core-web</module>
         <module>framework-session-core</module>
-        <module>framework-security-gm-plugin</module>
         <module>framework-session-redis</module>
         <module>framework-session-jdbc</module>
         <module>centit-persistence-extend</module>
