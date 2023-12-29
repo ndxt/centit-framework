@@ -149,7 +149,7 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "登录界面入口", notes = "登录界面入口")
     public void login(HttpServletResponse response) {
         //不允许ajax强求登录页面
-        JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！",response);
+        JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_USER_NOT_LOGIN, ResponseData.ERROR_NOT_LOGIN_MSG,response);
     }
 
     /**
@@ -251,7 +251,7 @@ public class MainFrameController extends BaseController {
 
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
-            return ResponseData.makeErrorMessage("用户没有登录，不能修改密码！");
+            return ResponseData.makeErrorMessage(ResponseData.ERROR_NOT_LOGIN_MSG);
         } else {
             boolean bo = platformEnvironment.checkUserPassword(userCode, password);
             if (bo) {
@@ -283,7 +283,7 @@ public class MainFrameController extends BaseController {
         }
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
-            return ResponseData.makeErrorMessage(ResponseData.ERROR_UNAUTHORIZED, "用户没有登录，不能修改密码！");
+            return ResponseData.makeErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN, ResponseData.ERROR_NOT_LOGIN_MSG);
         } else {
             boolean bo = platformEnvironment.checkUserPassword(userCode, password);
             return ResponseData.makeResponseData(bo);
@@ -507,7 +507,7 @@ public class MainFrameController extends BaseController {
         if (userInfo == null) {
             return ResponseData.makeErrorMessageWithData(
                 request.getSession().getId(), ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录或者超时，请重新登录！");
+                ResponseData.ERROR_NOT_LOGIN_MSG);
         } else {
             return ResponseData.makeResponseData(userInfo.toJsonWithoutSensitive());
         }
@@ -526,7 +526,7 @@ public class MainFrameController extends BaseController {
         Object ud = WebOptUtils.getLoginUser(request);
         if (ud == null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录或者超时，请重新登录！");
+                ResponseData.ERROR_NOT_LOGIN_MSG);
         } else {
             if(ud instanceof CentitUserDetails){
                 return ((CentitUserDetails) ud).toJsonWithoutSensitive();
@@ -542,7 +542,7 @@ public class MainFrameController extends BaseController {
         CentitUserDetails ud = WebOptUtils.getCurrentUserDetails(request);
         if (ud == null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录或者超时，请重新登录！");
+                ResponseData.ERROR_NOT_LOGIN_MSG);
         } else {
             return ud.toJsonWithoutSensitive();
         }
@@ -594,7 +594,7 @@ public class MainFrameController extends BaseController {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录或者超时，请重新登录！");
+                ResponseData.ERROR_NOT_LOGIN_MSG);
 
         }
         Object obj = request.getSession().getAttribute(ENTRANCE_TYPE);
@@ -609,7 +609,7 @@ public class MainFrameController extends BaseController {
 
         if (menuFunsByUser == null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录,或者没有给用户任何权限，请重新登录！");
+                ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         return makeMenuFuncsJson(menuFunsByUser);
     }
@@ -641,7 +641,7 @@ public class MainFrameController extends BaseController {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                "用户没有登录或者超时，请重新登录！");
+                ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         if(WebOptUtils.isTenantTopUnit(request)){
             String topUnit=WebOptUtils.getCurrentTopUnit(request);
@@ -734,7 +734,7 @@ public class MainFrameController extends BaseController {
     public JSONArray listCurrentUserUnits(HttpServletRequest request) {
         Object currentUser = WebOptUtils.getLoginUser(request);
         if (currentUser == null) {
-            throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         if (currentUser instanceof CentitUserDetails) {
             return DictionaryMapUtils.objectsToJSONArray(
@@ -750,7 +750,7 @@ public class MainFrameController extends BaseController {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         //String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if (StringUtils.isBlank(userCode)) {
-            throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         return platformEnvironment.listUserTopUnits(userCode);
 
@@ -778,8 +778,8 @@ public class MainFrameController extends BaseController {
             return (JSONObject) DictionaryMapUtils.objectToJSON(
                 ((CentitUserDetails) currentUser).getCurrentStation());
         }
-        throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT,
-            "用户没有登录或者超时，请重新登录。");
+        throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+            ResponseData.ERROR_NOT_LOGIN_MSG);
     }
 
     /**
@@ -801,7 +801,7 @@ public class MainFrameController extends BaseController {
         if (currentUser instanceof CentitUserDetails) {
             ((CentitUserDetails) currentUser).setCurrentStationId(userUnitId);
         } else {
-            throw new ObjectException(ResponseData.ERROR_SESSION_TIMEOUT, "用户没有登录或者超时，请重新登录。");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, ResponseData.ERROR_NOT_LOGIN_MSG);
         }
     }
 
@@ -846,7 +846,7 @@ public class MainFrameController extends BaseController {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if (StringUtils.isBlank(userCode)) {
-            throw new ObjectException("用户没有登录或者超时，请重新登录。");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         return DictionaryMapUtils.objectsToJSONArray(
             CodeRepositoryUtil.listUserUnitsByRank(topUnit, userCode, rank));
@@ -870,7 +870,7 @@ public class MainFrameController extends BaseController {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if (StringUtils.isBlank(userCode)) {
-            return new ResponseSingleData("用户没有登录或者超时，请重新登录");
+            return new ResponseSingleData(ResponseData.ERROR_USER_NOT_LOGIN,ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         return ResponseSingleData.makeResponseData(
             DictionaryMapUtils.objectsToJSONArray(
@@ -886,7 +886,7 @@ public class MainFrameController extends BaseController {
     public List<UnitInfo> listUnitTree(String unitCode,  HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,"您未登录!");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if(StringUtils.isBlank(unitCode)){
@@ -907,7 +907,7 @@ public class MainFrameController extends BaseController {
     public JSONArray listUnitUserTree(String unitCode, String relType, HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,"您未登录!");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if(StringUtils.isBlank(unitCode)){
@@ -1032,7 +1032,7 @@ public class MainFrameController extends BaseController {
     public List<UnitInfo> listCurrentUnits(HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录!");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         return platformEnvironment.listAllUnits(WebOptUtils.getCurrentTopUnit(request));
     }
@@ -1043,7 +1043,7 @@ public class MainFrameController extends BaseController {
     public List<UserInfo> listCurrentUsers(HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录!");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         String topUnit=WebOptUtils.getCurrentTopUnit(request);
         List<UserUnit> userUnits = CodeRepositoryUtil.listAllUserUnits(topUnit);
