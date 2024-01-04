@@ -644,12 +644,32 @@ public class MainFrameController extends BaseController {
                 ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         if(WebOptUtils.isTenantTopUnit(request)){
-            String topUnit=WebOptUtils.getCurrentTopUnit(request);
-            List<OsInfo> osInfos = platformEnvironment.listOsInfos(topUnit);
-            boolean findOsId= osInfos.stream().anyMatch(osInfo -> osInfo.getOsId().equals(optid));
-            if(!findOsId) {
-                throw new ObjectException(ResponseData.ERROR_FORBIDDEN,
-                    "用户不属于当前租户，请切换租户！");
+            String topUnit = WebOptUtils.getCurrentTopUnit(request);
+            OsInfo osInfo = platformEnvironment.getOsInfo(optid);
+            if(!StringUtils.equals(topUnit, osInfo.getTopUnit())) {
+                UserUnit tempUU = null;
+                CentitUserDetails ud = WebOptUtils.getCurrentUserDetails(request);
+                for(UserUnit uu : ud.getUserUnits()){
+                    if(StringUtils.equals(uu.getTopUnit(), osInfo.getTopUnit())){
+                        tempUU = uu;
+                        break;
+                    }
+                }
+
+                if (tempUU == null) {
+                    throw new ObjectException(ResponseData.ERROR_FORBIDDEN,
+                        "用户不属于当前租户，没有权限操作！");
+                } else { //切换租户
+                    Map<String, Object> userMap = CollectionsOpt.createHashMap(
+                        "primaryUnit", tempUU.getUnitCode(),
+                                "userCode", tempUU.getUserCode(),
+                        "currentStationId", tempUU.getUserUnitId(),
+                        "topUnit", tempUU.getTopUnit()
+                    );
+
+                    throw new ObjectException(userMap ,ResponseData.ERROR_USER_CONFIG,
+                        "用户当前租户和应用不一致，请重新加载！");
+                }
             }
         }
         List<OptInfo> menuFunsByUser = platformEnvironment
