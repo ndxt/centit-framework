@@ -277,7 +277,6 @@ public class WebOptUtils {
         return Locale.SIMPLIFIED_CHINESE;
     }
 
-
     public static void setCurrentLang(HttpSession session ,String localLang){
         if(StringUtils.isBlank(localLang))
             return;
@@ -314,6 +313,14 @@ public class WebOptUtils {
             return ud.getUserInfo();
         }
         return null;
+    }
+
+    public static UserInfo assertUserLogin(HttpServletRequest request) {
+        UserInfo userInfo =  getCurrentUserInfo(request);
+        if(userInfo == null){ // anonymous
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, ResponseData.ERROR_NOT_LOGIN_MSG);
+        }
+        return userInfo;
     }
 
     public static CentitUserDetails getCurrentUserDetails(HttpServletRequest request) {
