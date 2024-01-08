@@ -30,11 +30,11 @@ import java.util.*;
  */
 public class WebOptUtils {
     public static final String LOCAL_LANGUAGE_LABLE = "LOCAL_LANG";
-    public static final String CURRENT_USER_CODE_TAG   = "cnt-current-user-code";
-    public static final String CURRENT_TOP_UNIT_TAG   = "cnt-current-top-unit";
-    public static final String CURRENT_UNIT_CODE_TAG   = "cnt-current-uint-code";
-    public static final String CURRENT_STATION_ID_TAG   = "cnt-current-station-id";
-    public static final String CORRELATION_ID = "cnt-correlation-id";
+    public static final String CURRENT_USER_CODE_TAG   = "currentUserCode";
+    public static final String CURRENT_TOP_UNIT_TAG   = "currentTopUnit";
+    public static final String CURRENT_UNIT_CODE_TAG   = "currentUintCode";
+    public static final String CURRENT_STATION_ID_TAG   = "currentStationId";
+    public static final String CORRELATION_ID = "correlationId";
     public static final String AUTHORIZATION_TOKEN  = "Authorization";
     public static final String SESSION_ID_TOKEN     = "X-Auth-Token";
     public static final String REQUEST_ACCESS_TOKEN     = "accessToken";
