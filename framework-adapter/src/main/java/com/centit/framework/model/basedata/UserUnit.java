@@ -77,6 +77,7 @@ public class UserUnit implements java.io.Serializable {
 
     @Column(name = "REL_TYPE")
     @Length(max = 1, message = "字段长度必须为{max}")
+    @DictionaryMap(fieldName="relTypeText",value="UserUnitRelType")
     private String relType; // 是否为主
 
     @OrderBy
