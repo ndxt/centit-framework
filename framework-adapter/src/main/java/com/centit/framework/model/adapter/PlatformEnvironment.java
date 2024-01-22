@@ -1,5 +1,6 @@
 package com.centit.framework.model.adapter;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.framework.model.security.OptTreeNode;
@@ -418,5 +419,11 @@ public interface PlatformEnvironment {
 
     boolean loginUserIsExistWorkGroup(String osId, String userCode);
 
+    /**
+     * 根据topUnit获取租户基本信息
+     * @param topUnit 租户code
+     * @return
+     */
+    JSONObject getTenantInfoByTopUnit(String topUnit);
 }
 
