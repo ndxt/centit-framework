@@ -47,7 +47,7 @@ public class UserDetailsServiceImpl implements
 
     @Override
     public UserDetails loadUserDetails(Authentication token) throws UsernameNotFoundException {
-        return loadDetailsByLoginName(token.getName());
+        return loadUserByUsername(token.getName());
     }
 
     @Override
