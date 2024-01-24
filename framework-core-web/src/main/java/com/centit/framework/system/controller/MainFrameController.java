@@ -493,33 +493,12 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     * 当前登录用户
-     *
-     * @param request  request
-     * @param response response
-     * @return ResponseData
-     */
-    @ApiOperation(value = "当前登录用户", notes = "获取当前登录用户详情")
-    @RequestMapping(value = "/currentuserinfo", method = RequestMethod.GET)
-    @WrapUpResponseBody
-    public ResponseData getCurrentUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        UserInfo userInfo = WebOptUtils.getCurrentUserInfo(request);
-        if (userInfo == null) {
-            return ResponseData.makeErrorMessageWithData(
-                request.getSession().getId(), ResponseData.ERROR_USER_NOT_LOGIN,
-                ResponseData.ERROR_NOT_LOGIN_MSG);
-        } else {
-            return ResponseData.makeResponseData(userInfo.toJsonWithoutSensitive());
-        }
-    }
-
-    /**
      * 当前登录者
      *
      * @param request request
      * @return ResponseData
      */
-    @ApiOperation(value = "当前登录者信息（可能是userInfo也可能是userDetails）", notes = "当前登录者，CentitUser对象信息")
+    @ApiOperation(value = "当前登录者信息", notes = "当前登录者信息，包括用户的权限信息和租户的权限信息")
     @RequestMapping(value = "/currentuser", method = RequestMethod.GET)
     @WrapUpResponseBody
     public JSONObject getCurrentUser(HttpServletRequest request) {
@@ -545,19 +524,6 @@ public class MainFrameController extends BaseController {
             }
         }
         return jsonObject;
-    }
-
-    @ApiOperation(value = "当前登录者详细信息", notes = "当前登录者，CentitUserDetails对象信息")
-    @RequestMapping(value = "/currentuserdetails", method = RequestMethod.GET)
-    @WrapUpResponseBody
-    public Object getCurrentUserDetails(HttpServletRequest request) {
-        CentitUserDetails ud = WebOptUtils.getCurrentUserDetails(request);
-        if (ud == null) {
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                ResponseData.ERROR_NOT_LOGIN_MSG);
-        } else {
-            return ud.toJsonWithoutSensitive();
-        }
     }
 
     /**
