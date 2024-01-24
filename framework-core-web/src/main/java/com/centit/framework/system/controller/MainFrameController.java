@@ -522,17 +522,29 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "当前登录者信息（可能是userInfo也可能是userDetails）", notes = "当前登录者，CentitUser对象信息")
     @RequestMapping(value = "/currentuser", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public Object getCurrentUser(HttpServletRequest request) {
+    public JSONObject getCurrentUser(HttpServletRequest request) {
         Object ud = WebOptUtils.getLoginUser(request);
+
         if (ud == null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 ResponseData.ERROR_NOT_LOGIN_MSG);
-        } else {
-            if(ud instanceof CentitUserDetails){
-                return ((CentitUserDetails) ud).toJsonWithoutSensitive();
-            }
-            return ud;
         }
+        JSONObject jsonObject;
+        if(ud instanceof CentitUserDetails){
+            CentitUserDetails userDetails = (CentitUserDetails) ud;
+            jsonObject = userDetails.toJsonWithoutSensitive();
+            jsonObject.putAll(platformEnvironment.fetchUserTenantGroupInfo(
+                userDetails.getUserCode(), userDetails.getTopUnitCode()));
+        } else {
+            jsonObject = JSONObject.from(ud);
+            String userCode = WebOptUtils.getCurrentUserCode(request);
+            String topUnit = WebOptUtils.getCurrentTopUnit(request);
+            if(StringUtils.isNotBlank(userCode) && StringUtils.isNotBlank(topUnit)){
+                jsonObject.putAll(platformEnvironment.fetchUserTenantGroupInfo(
+                    userCode, topUnit));
+            }
+        }
+        return jsonObject;
     }
 
     @ApiOperation(value = "当前登录者详细信息", notes = "当前登录者，CentitUserDetails对象信息")
