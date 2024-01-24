@@ -414,6 +414,6 @@ public interface PlatformEnvironment {
      * 获取用户相关的租户和工作组信息
      * @param userCode 用户code
      */
-    JSONObject fetchUserTenantGroupInfo(String userCode);
+    JSONObject fetchUserTenantGroupInfo(String userCode, String topUnit);
 }
 
