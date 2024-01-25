@@ -3,6 +3,9 @@ package com.centit.framework.model.basedata;
 import com.alibaba.fastjson2.JSON;
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
 public class NoticeMessage implements java.io.Serializable {
 
@@ -37,11 +40,18 @@ public class NoticeMessage implements java.io.Serializable {
      */
     private String optTag;
 
+    /**
+     * 扩展属性
+     * 用于不同的消息类别提供不同的 发送消息参数
+     */
+    private Map<String, Object> extProps;
+
     public static void setDefaultMsgType(String defaultMsgType) {
         NoticeMessage.defaultMsgType = defaultMsgType;
     }
 
     public NoticeMessage(){
+        this.extProps = null;
         this.msgType = defaultMsgType;
     }
 
@@ -87,6 +97,21 @@ public class NoticeMessage implements java.io.Serializable {
     public NoticeMessage tag(String stag){
         this.optTag = stag;
         return this;
+    }
+
+    public NoticeMessage extProp(String skey, Object svalue){
+        if(this.extProps==null){
+            this.extProps = new HashMap<>();
+        }
+        this.extProps.put(skey, svalue);
+        return this;
+    }
+
+    public Object getExtProp(String skey){
+        if(this.extProps==null){
+            return null;
+        }
+        return this.extProps.get(skey);
     }
 
     @Override
