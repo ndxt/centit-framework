@@ -48,7 +48,7 @@ public class JdbcSessionPersistenceConfig {
         switch (type){
             case MySql:
                 schema = String.format(schema, "mysql");
-                driverClass = com.mysql.jdbc.Driver.class;
+                driverClass = com.mysql.cj.jdbc.Driver.class;
                 break;
             case Oracle:
                 schema = String.format(schema, "oracle");
