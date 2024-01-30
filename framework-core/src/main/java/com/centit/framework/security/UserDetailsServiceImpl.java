@@ -3,6 +3,7 @@ package com.centit.framework.security;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.framework.model.security.CentitUserDetailsService;
+import com.centit.support.algorithm.CollectionsOpt;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;

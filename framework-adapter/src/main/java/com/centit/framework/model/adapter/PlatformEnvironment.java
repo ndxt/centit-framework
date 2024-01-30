@@ -1,5 +1,6 @@
 package com.centit.framework.model.adapter;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.framework.model.security.OptTreeNode;
@@ -367,7 +368,6 @@ public interface PlatformEnvironment {
      */
     List<DataDictionary> listDataDictionaries(String catalogCode);
 
-
     /**
      * 根据catalogCode删除数据字典以及子项
      * @param catalogCode
@@ -392,31 +392,28 @@ public interface PlatformEnvironment {
      */
     boolean deleteOptInfoByOptId(String optId);
 
-
-    /**
-     * 根据topUnit统计租户下用户个数
-     *
-     * @param topUnit
-     * @return
-     */
-    int countUserByTopUnit(String topUnit);
-    /**
-     * 根据topUnit统计租户下单位个数
-     *
-     * @param topUnit
-     * @return
-     */
-     int countUnitByTopUnit(String topUnit);
-
     List<WorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc);
 
     /**
-     * 批量报错用户组； 这个名字怎么起的，sign
+     * 批量保存用户组； 这个名字怎么起的，sign
      * @param workGroups 用户组列表
      */
     void batchWorkGroup(List<WorkGroup> workGroups);
 
     boolean loginUserIsExistWorkGroup(String osId, String userCode);
 
+    /**
+     * 根据topUnit获取租户基本信息，
+     * TODO 需要添加 现有的资源占有量，用于平台判断是否可以增加资源
+     * @param topUnit 租户code
+     * @return 获取TenantInfo
+     */
+    JSONObject getTenantInfoByTopUnit(String topUnit);
+
+    /**
+     * 获取用户相关的租户和工作组信息
+     * @param userCode 用户code
+     */
+    JSONObject fetchUserTenantGroupInfo(String userCode, String topUnit);
 }
 

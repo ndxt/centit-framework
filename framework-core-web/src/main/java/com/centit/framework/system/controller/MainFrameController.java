@@ -493,59 +493,37 @@ public class MainFrameController extends BaseController {
     }
 
     /**
-     * 当前登录用户
-     *
-     * @param request  request
-     * @param response response
-     * @return ResponseData
-     */
-    @ApiOperation(value = "当前登录用户", notes = "获取当前登录用户详情")
-    @RequestMapping(value = "/currentuserinfo", method = RequestMethod.GET)
-    @WrapUpResponseBody
-    public ResponseData getCurrentUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        UserInfo userInfo = WebOptUtils.getCurrentUserInfo(request);
-        if (userInfo == null) {
-            return ResponseData.makeErrorMessageWithData(
-                request.getSession().getId(), ResponseData.ERROR_USER_NOT_LOGIN,
-                ResponseData.ERROR_NOT_LOGIN_MSG);
-        } else {
-            return ResponseData.makeResponseData(userInfo.toJsonWithoutSensitive());
-        }
-    }
-
-    /**
      * 当前登录者
      *
      * @param request request
      * @return ResponseData
      */
-    @ApiOperation(value = "当前登录者信息（可能是userInfo也可能是userDetails）", notes = "当前登录者，CentitUser对象信息")
+    @ApiOperation(value = "当前登录者信息", notes = "当前登录者信息，包括用户的权限信息和租户的权限信息")
     @RequestMapping(value = "/currentuser", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public Object getCurrentUser(HttpServletRequest request) {
+    public JSONObject getCurrentUser(HttpServletRequest request) {
         Object ud = WebOptUtils.getLoginUser(request);
-        if (ud == null) {
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                ResponseData.ERROR_NOT_LOGIN_MSG);
-        } else {
-            if(ud instanceof CentitUserDetails){
-                return ((CentitUserDetails) ud).toJsonWithoutSensitive();
-            }
-            return ud;
-        }
-    }
 
-    @ApiOperation(value = "当前登录者详细信息", notes = "当前登录者，CentitUserDetails对象信息")
-    @RequestMapping(value = "/currentuserdetails", method = RequestMethod.GET)
-    @WrapUpResponseBody
-    public Object getCurrentUserDetails(HttpServletRequest request) {
-        CentitUserDetails ud = WebOptUtils.getCurrentUserDetails(request);
         if (ud == null) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 ResponseData.ERROR_NOT_LOGIN_MSG);
-        } else {
-            return ud.toJsonWithoutSensitive();
         }
+        JSONObject jsonObject;
+        if(ud instanceof CentitUserDetails){
+            CentitUserDetails userDetails = (CentitUserDetails) ud;
+            jsonObject = userDetails.toJsonWithoutSensitive();
+            jsonObject.putAll(platformEnvironment.fetchUserTenantGroupInfo(
+                userDetails.getUserCode(), userDetails.getTopUnitCode()));
+        } else {
+            jsonObject = JSONObject.from(ud);
+            String userCode = WebOptUtils.getCurrentUserCode(request);
+            String topUnit = WebOptUtils.getCurrentTopUnit(request);
+            if(StringUtils.isNotBlank(userCode) && StringUtils.isNotBlank(topUnit)){
+                jsonObject.putAll(platformEnvironment.fetchUserTenantGroupInfo(
+                    userCode, topUnit));
+            }
+        }
+        return jsonObject;
     }
 
     /**
