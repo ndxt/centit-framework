@@ -1,6 +1,7 @@
 package com.centit.framework.config;
 
 import com.centit.framework.common.SysParametersUtils;
+import com.centit.framework.filter.AssertUserLoginFilter;
 import com.centit.framework.filter.RequestThreadLocalFilter;
 import com.centit.support.algorithm.StringRegularOpt;
 import org.apache.commons.lang3.StringUtils;
@@ -150,6 +151,20 @@ public abstract class WebConfig  {
         FilterRegistration.Dynamic requestThreadLocalFilter
                 = servletContext.addFilter("requestThreadLocalFilter", RequestThreadLocalFilter.class);
         requestThreadLocalFilter.addMappingForUrlPatterns(null, false, "/*");
+        requestThreadLocalFilter.setAsyncSupported(true);
+        return requestThreadLocalFilter;
+    }
+
+    /**
+     * 添加用户 登录验证filter
+     * @param servletContext ServletContext
+     * @param urlPatterns urlPatterns
+     * @return FilterRegistration.Dynamic 可以再次配置属性
+     */
+    public static FilterRegistration.Dynamic registerAssertUserLoginFilter(ServletContext servletContext, String [] urlPatterns) {
+        FilterRegistration.Dynamic requestThreadLocalFilter
+            = servletContext.addFilter("assertUserLoginFilter", AssertUserLoginFilter.class);
+        requestThreadLocalFilter.addMappingForUrlPatterns(null, false, urlPatterns);
         requestThreadLocalFilter.setAsyncSupported(true);
         return requestThreadLocalFilter;
     }
