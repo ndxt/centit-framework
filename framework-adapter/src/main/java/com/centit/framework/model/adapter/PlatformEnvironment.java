@@ -309,6 +309,7 @@ public interface PlatformEnvironment {
      */
     UserInfo getUserInfoByIdCardNo(String idCardNo);
 
+    UserInfo getUserInfoByUserWord(String userWord);
     /**
      * 根据用户ID修改用户信息
      *
