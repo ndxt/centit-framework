@@ -1058,4 +1058,20 @@ public class MainFrameController extends BaseController {
         return result;
     }
 
+    @ApiOperation(value = "根据userWord获取用户信息", notes = "根据userWord获取用户信息")
+    @GetMapping("/userByUserWord/{userWord}")
+    @WrapUpResponseBody()
+    public UserInfo getUserInfoByUserWord(@PathVariable String userWord, HttpServletRequest request) {
+        WebOptUtils.assertUserLogin(request);
+        return platformEnvironment.getUserInfoByUserWord(userWord);
+    }
+
+    @ApiOperation(value = "根据idCardNo获取用户信息", notes = "根据idCardNo获取用户信息")
+    @GetMapping("/userByIdCardNo/{idCardNo}")
+    @WrapUpResponseBody()
+    public UserInfo getUserInfoByIdCardNo(@PathVariable String idCardNo, HttpServletRequest request) {
+        WebOptUtils.assertUserLogin(request);
+        return platformEnvironment.getUserInfoByIdCardNo(idCardNo);
+    }
+
 }
