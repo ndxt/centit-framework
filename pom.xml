@@ -4,7 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.centit.framework</groupId>
+    <parent>
+        <groupId>com.centit.framework</groupId>
+        <artifactId>centit-project-bulid-parent</artifactId>
+        <version>5.4.2401</version>
+    </parent>
+
     <artifactId>framework-parent</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
@@ -98,19 +103,6 @@
         <module>framework-session-jdbc</module>
         <module>centit-persistence-extend</module>
     </modules>
-
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.centit.framework</groupId>
-                <artifactId>centit-project-bulid-parent</artifactId>
-                <version>${project.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <distributionManagement>
         <repository>
