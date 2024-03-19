@@ -31,7 +31,7 @@ public class WorkGroup implements java.io.Serializable {
     public static final String WORKGROUP_ROLE_CODE_ADMIN = "ZHGLY";
 
     // 主键
-    @JSONField(serialize = false, deserialize = false)
+//   @JSONField(serialize = false, deserialize = false)
     @EmbeddedId
     WorkGroupParameter workGroupParameter;
 
