@@ -150,6 +150,8 @@ public class DataPowerFilter implements UserUnitVariableTranslate {
          * @return 返回对应的值
          */
         public Object mapParamFormula(String paramName){
+            if(StringUtils.isBlank(paramName))
+                return null;
             // 判断是否为机构表达式， 如果 首字母为 * 则为用户表达式
             if(paramName.contains("(")){
                 String formula =  StringEscapeUtils.unescapeHtml4(paramName).trim();
@@ -262,7 +264,7 @@ public class DataPowerFilter implements UserUnitVariableTranslate {
     }
 
     /**
-     * 符合条件 返回1 否在 返回 -1， 返回 0 表示不适用
+     * 符合条件 返回 1 否则 返回 -1， 返回 0 表示不适用
      * @param obj 验证对象
      * @param filter 过滤条件爱呢
      * @return  1 、-1 or 0
@@ -322,7 +324,6 @@ public class DataPowerFilter implements UserUnitVariableTranslate {
                 ImmutableTriple<String, String, String> paramMeta = QueryUtils.parseParameter(valueDesc);
                 String paramName = StringUtils.isBlank(paramMeta.left) ? paramMeta.middle : paramMeta.left;
                 Object fieldValue = translater.mapParamFormula(paramName);
-
                 checkStatement.append(QueryUtils.buildObjectStringForQuery(fieldValue));
             }
             sWord = varMorp.getAWord();
@@ -330,8 +331,8 @@ public class DataPowerFilter implements UserUnitVariableTranslate {
         if(!hasFetchField) return 0;
         checkStatement.append(filter.substring(prePos));
         return BooleanBaseOpt.castObjectToBoolean(
-                VariableFormula.calculate(checkStatement.toString()),false)?
-                1:-1;
+                VariableFormula.calculate(checkStatement.toString()),false) ?
+                1 : -1;
     }
 
     public int checkObjectFilter(Object obj, String filter){
