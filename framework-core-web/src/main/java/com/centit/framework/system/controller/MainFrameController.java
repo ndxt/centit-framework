@@ -1062,7 +1062,7 @@ public class MainFrameController extends BaseController {
     @GetMapping("/userByUserWord/{userWord}")
     @WrapUpResponseBody()
     public UserInfo getUserInfoByUserWord(@PathVariable String userWord, HttpServletRequest request) {
-        WebOptUtils.assertUserLogin(request);
+//        WebOptUtils.assertUserLogin(request);
         return platformEnvironment.getUserInfoByUserWord(userWord);
     }
 
@@ -1070,7 +1070,7 @@ public class MainFrameController extends BaseController {
     @GetMapping("/userByIdCardNo/{idCardNo}")
     @WrapUpResponseBody()
     public UserInfo getUserInfoByIdCardNo(@PathVariable String idCardNo, HttpServletRequest request) {
-        WebOptUtils.assertUserLogin(request);
+//        WebOptUtils.assertUserLogin(request);
         return platformEnvironment.getUserInfoByIdCardNo(idCardNo);
     }
 
