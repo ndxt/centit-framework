@@ -301,14 +301,15 @@ public interface PlatformEnvironment {
      * @return 机构信息
      */
     UnitInfo loadUnitInfo(String unitCode);
-    /*
-     * 获取用户信息
-     * @param userCode 用户主键
-     * @return 用户信息
-     *
-      UserInfo getUserInfo(String userCode);
-    */
 
+    /**
+     *
+     * @param idCardNo 用户身份证号（焦点HR员工ID）
+     * @return 用户信息
+     */
+    UserInfo getUserInfoByIdCardNo(String idCardNo);
+
+    UserInfo getUserInfoByUserWord(String userWord);
     /**
      * 根据用户ID修改用户信息
      *
@@ -339,15 +340,6 @@ public interface PlatformEnvironment {
      * @param userSetting 用户参数， paramValue = null 则为删除
      */
     void saveUserSetting(UserSetting userSetting);
-
-    /*
-     * 新增菜单和操作
-     * @param optInfos 菜单对象集合
-     * @param optMethods 操作对象集合
-     */
-    /*
-    void insertOrUpdateMenu(List<OptInfo> optInfos,
-                            List<IOptMethod> optMethods);*/
 
     /*数据字典相关接口*/
 
@@ -400,6 +392,12 @@ public interface PlatformEnvironment {
      */
     void batchWorkGroup(List<WorkGroup> workGroups);
 
+    /**
+     *
+     * @param osId 应用id
+     * @param userCode 用户代码
+     * @return 用户是否在这个应用的开发组中
+     */
     boolean loginUserIsExistWorkGroup(String osId, String userCode);
 
     /**
