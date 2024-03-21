@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.centit.framework</groupId>
         <artifactId>centit-project-bulid-parent</artifactId>
-        <version>5.4.2401</version>
+        <version>5.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>framework-parent</artifactId>
@@ -21,7 +21,7 @@
     <url>https://github.com/ndxt/centit-framework</url>
 
     <properties>
-        <revision>0.0.1-SNAPSHOT</revision>
+        <revision>5.5-SNAPSHOT</revision>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <centit.ui.version>3.1.2007</centit.ui.version>
