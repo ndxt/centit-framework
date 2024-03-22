@@ -106,7 +106,8 @@ public abstract class BaseController {
             bindingResult =((MethodArgumentNotValidException)ex).getBindingResult();
         }
         if(bindingResult!=null){
-            ResponseMapData responseData = new ResponseMapData(ResponseData.ERROR_BAD_REQUEST);
+            // 输入对象属性验证错误
+            ResponseMapData responseData = new ResponseMapData(ResponseData.ERROR_FIELD_INPUT_NOT_VALID);
             StringBuilder errMsg = new StringBuilder();
 
             if (bindingResult.hasErrors()) {
