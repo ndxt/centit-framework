@@ -43,7 +43,7 @@ public class DataCatalog implements java.io.Serializable{
      * 类别名称
      */
     @Column(name = "CATALOG_NAME")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     @ApiModelProperty(value = "类别名称",name = "catalogName",required = true)
     private String catalogName;
 
@@ -52,8 +52,8 @@ public class DataCatalog implements java.io.Serializable{
      */
     @Column(name = "CATALOG_STYLE")
     @ValueGenerator(strategy = GeneratorType.CONSTANT, occasion = GeneratorTime.NEW, value = "U")
-    @Length(max = 1, message = "字段长度必须为{max}")
-    @Pattern(regexp = "[SUF]", message = "字段只能填写F,S,U")
+    @Length(max = 1)
+    @Pattern(regexp = "[SUF]")
     @ApiModelProperty(value = "类别状态 字段只能填写F,S,U",name = "catalogStyle",required = true)
     @DictionaryMap(fieldName = "catalogStyleText", value = "CatalogStyle")
     private String catalogStyle;
@@ -63,8 +63,8 @@ public class DataCatalog implements java.io.Serializable{
      */
     @Column(name = "CATALOG_TYPE")
     @ValueGenerator(strategy = GeneratorType.CONSTANT, occasion = GeneratorTime.NEW, value = "L")
-    @Length(max = 1, message = "字段长度必须为{max}")
-    @Pattern(regexp = "[LT]", message = "字段只能填写L或T")
+    @Length(max = 1)
+    @Pattern(regexp = "[LT]")
     @ApiModelProperty(value = "字段只能填写L(列表)或T(树)",name = "catalogType",required = true)
     @DictionaryMap(fieldName = "catalogTypeText", value = "CatalogType")
     private String catalogType;
@@ -73,21 +73,21 @@ public class DataCatalog implements java.io.Serializable{
      * 类别描述
      */
     @Column(name = "CATALOG_DESC")
-    @Length(max = 2048, message = "字段长度不能大于{max}")
+    @Length(max = 2048)
     private String catalogDesc;
 
     /**
      * 字典字段描述
      */
     @Column(name = "FIELD_DESC")
-    @Length(max = 2048, message = "字段长度不能大于{max}")
+    @Length(max = 2048)
     private String fieldDesc;
 
     /**
      * 是否需要缓存
      */
     @Column(name = "NEED_CACHE")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     @ValueGenerator(strategy = GeneratorType.CONSTANT, occasion = GeneratorTime.NEW, value = "1")
     @ApiModelProperty(value = "是否需要缓存，字段不能为空可以默认设置为1",name = "needCache",required = true)
     private String needCache;
@@ -96,7 +96,7 @@ public class DataCatalog implements java.io.Serializable{
      * 顶级机构，用于帐套、租户管理
      */
     @Column(name = "TOP_UNIT")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String topUnit; // 顶级机构，用于帐套
 
     /**
@@ -104,7 +104,7 @@ public class DataCatalog implements java.io.Serializable{
      * 内置变量 system 系统数据字典 public 公用数据字典
      */
     @Column(name = "OS_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @DictionaryMap(fieldName="osId", value="osId")
     private String osId;
 
@@ -113,7 +113,7 @@ public class DataCatalog implements java.io.Serializable{
      * 内置变量 system 系统数据字典 public 公用数据字典
      */
     @Column(name = "OPT_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @DictionaryMap(fieldName="optName", value="optId")
     @ValueGenerator(strategy = GeneratorType.CONSTANT, occasion = GeneratorTime.NEW, value = "public")
     private String optId;
@@ -125,13 +125,13 @@ public class DataCatalog implements java.io.Serializable{
      * CREATOR(创建人) 创建人
      */
     @Column(name = "CREATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  creator;
        /**
      * UPDATOR(更新人) 更新人
      */
     @Column(name = "UPDATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  updator;
     /**
      * UPDATEDATE(更新时间) 更新时间
@@ -142,7 +142,7 @@ public class DataCatalog implements java.io.Serializable{
     private Date  updateDate;
 
     @Column(name = "SOURCE_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @JSONField(serialize = false)
     private String sourceId;
 

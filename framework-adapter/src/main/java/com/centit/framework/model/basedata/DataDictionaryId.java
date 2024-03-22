@@ -19,11 +19,11 @@ public class DataDictionaryId implements java.io.Serializable {
     // Fields
     @OrderBy
     @Column(name = "CATALOG_CODE")
-    @NotBlank(message = "字段不能为空")
+    @NotBlank
     private String catalogCode; // 类别代码
 
     @Column(name = "DATA_CODE")
-    @NotBlank(message = "字段不能为空")
+    @NotBlank
     private String dataCode; // 数据代码
 
     // Constructors

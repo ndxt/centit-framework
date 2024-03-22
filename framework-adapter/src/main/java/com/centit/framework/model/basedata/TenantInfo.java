@@ -121,12 +121,12 @@ public class TenantInfo implements Serializable {
 
     @ApiModelProperty(value = "图片id")
     @Column(name = "PIC_ID")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     private String picId;
 
     @ApiModelProperty(value = "网页logo图片主键")
     @Column(name = "LOGO_FILE_ID")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     private String logoFileId;
 
     @Override

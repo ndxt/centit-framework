@@ -39,22 +39,22 @@ public class DataDictionary implements java.io.Serializable {
     private DataDictionaryId id; // 主键id
 
     @Column(name = "EXTRA_CODE")
-    @Length(max = 16, message = "字段长度不能大于{max}")
+    @Length(max = 16)
     private String extraCode; // 附加代码1
 
     @Column(name = "EXTRA_CODE2")
-    @Length(max = 16, message = "字段长度不能大于{max}")
+    @Length(max = 16)
     private String extraCode2; // 附加代码2
 
     @Column(name = "DATA_TAG")
     @ValueGenerator(strategy = GeneratorType.CONSTANT, occasion = GeneratorTime.NEW, value = "T")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     @ApiModelProperty(value = "标志符字段不能为空，长度为1",name = "dataTag",required = true)
     private String dataTag; // 标志符
 
     @Column(name = "DATA_VALUE")
-    @NotBlank(message = "字段不能为空")
-    @Length(max = 2048, message = "字段长度不能大于{max}")
+    @NotBlank()
+    @Length(max = 2048)
     @ApiModelProperty(value = "数据值字段不能为空，字段长度不能大于2048",name = "dataValue",required = true)
     private String dataValue; // 数据值
 
@@ -63,8 +63,8 @@ public class DataDictionary implements java.io.Serializable {
 
     @Column(name = "DATA_STYLE")
     @ValueGenerator(strategy = GeneratorType.CONSTANT, occasion = GeneratorTime.NEW, value = "U")
-    @Length(max = 1, message = "字段长度必须为{max}")
-    @Pattern(regexp = "[SUF]", message = "字段只能填写F,S,U")
+    @Length(max = 1)
+    @Pattern(regexp = "[SUF]")
     @ApiModelProperty(value = "数据值字段不能为空，字段长度不能大于1，字段只能填写F,S,U",name = "dataStyle",required = true)
     @DictionaryMap(fieldName = "dataStyle", value = "CatalogStyleText")
     private String dataStyle; // 属性
@@ -75,7 +75,7 @@ public class DataDictionary implements java.io.Serializable {
     private Integer dataOrder;
 
     @Column(name = "DATA_DESC")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String dataDesc; // 备注
 
     @Column(name = "CREATE_DATE", nullable = false)

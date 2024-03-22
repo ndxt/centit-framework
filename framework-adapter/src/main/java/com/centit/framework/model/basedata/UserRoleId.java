@@ -19,12 +19,12 @@ public class UserRoleId implements java.io.Serializable {
     private static final long serialVersionUID = 893187890652550538L;
 
     @Column(name = "USER_CODE")
-    @NotBlank(message = "字段不能为空")
+    @NotBlank
     @DictionaryMap(value="userCode", fieldName = "userName")
     private String userCode;// 用户代码
 
     @Column(name = "ROLE_CODE")
-    @NotBlank(message = "字段不能为空")
+    @NotBlank
     @DictionaryMap(value="roleCode", fieldName = "roleName")
     private String roleCode; // 角色代码
 

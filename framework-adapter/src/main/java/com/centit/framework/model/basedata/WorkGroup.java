@@ -1,6 +1,5 @@
 package com.centit.framework.model.basedata;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.support.database.orm.GeneratorCondition;
 import com.centit.support.database.orm.GeneratorTime;
 import com.centit.support.database.orm.GeneratorType;

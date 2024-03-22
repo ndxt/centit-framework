@@ -34,22 +34,22 @@ public class Platform implements java.io.Serializable {
 
     @Column(name = "PLAY_TYPE")
     @DictionaryMap(fieldName = "platName", value = "platType")
-    @Length(max = 16, message = "字段长度不能大于{max}")
+    @Length(max = 16)
     @ApiModelProperty(value = "平台类型 C:常用平台,T:技术平台,F:国外平台,Q:企业平台,O:其他平台", name = "platType")
     private String platType; // 平台类型
 
     @Column(name = "APP_KEY")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     @ApiModelProperty(value = "AppKey", name = "appKey")
     private String appKey; // appKey
 
     @Column(name = "APP_SECRET")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     @ApiModelProperty(value = "AppSecret", name = "appSecret")
     private String appSecret; // appSecret
 
     @Column(name = "PLAT_DESC")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String platDesc; // 备注
 
     @Column(name = "CREATE_DATE", nullable = false)
@@ -58,11 +58,11 @@ public class Platform implements java.io.Serializable {
     protected Date createDate;
 
     @Column(name = "CREATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String creator;
 
     @Column(name = "UPDATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String updator;
 
     @Column(name = "UPDATE_DATE")
@@ -71,7 +71,7 @@ public class Platform implements java.io.Serializable {
     private Date updateDate;
 
     @Column(name = "CORP_ID")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     @ApiModelProperty(value = "公司id", name = "corpId")
     private String corpId;
 

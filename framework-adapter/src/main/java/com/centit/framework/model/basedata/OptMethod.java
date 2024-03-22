@@ -34,7 +34,7 @@ public class OptMethod implements java.io.Serializable{
     private String optCode;// 操作代码
 
     @Column(name = "OPT_NAME")
-    @Length(max = 100, message = "字段长度必须小于{max}")
+    @Length(max = 100)
     @ApiModelProperty(value = "操作名称",name = "optName")
     private String optName; // 操作名称
 
@@ -42,25 +42,25 @@ public class OptMethod implements java.io.Serializable{
     private String optId;
 
     @Column(name = "OPT_METHOD")
-    @Length(max = 50, message = "字段长度必须小于{max}")
+    @Length(max = 50)
     @ApiModelProperty(value = "操作方法",name = "optMethod")
     private String optMethod;// 操作方法
 
     @Column(name = "OPT_DESC")
-    @Length(max = 256, message = "字段长度必须小于{max}")
+    @Length(max = 256)
     @ApiModelProperty(value = "操作说明",name = "optDesc")
     private String optDesc; // 操作说明
 
     @Column(name = "IS_IN_WORKFLOW")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     private String isInWorkflow;// 是否是流程操作
 
     @Column(name = "OPT_URL")
-    @Length(max = 256, message = "字段长度必须小于{max}")
+    @Length(max = 256)
     private String optUrl;
 
     @Column(name = "OPT_REQ")
-    @Length(max = 20, message = "字段长度必须小于{max}")
+    @Length(max = 20)
     private String optReq;
 
 
@@ -73,13 +73,13 @@ public class OptMethod implements java.io.Serializable{
      * CREATOR(创建人) 创建人
      */
     @Column(name = "CREATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  creator;
        /**
      * UPDATOR(更新人) 更新人
      */
     @Column(name = "UPDATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  updator;
     /**
      * UPDATEDATE(更新时间) 更新时间
@@ -100,7 +100,7 @@ public class OptMethod implements java.io.Serializable{
     @Column(name = "API_ID")
     private String apiId;
     @Column(name = "SOURCE_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @JSONField(serialize = false)
     private String sourceId;
     @Transient

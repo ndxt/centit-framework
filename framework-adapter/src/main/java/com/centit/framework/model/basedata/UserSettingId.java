@@ -26,7 +26,7 @@ public class UserSettingId implements java.io.Serializable {
      * 参数代码
      */
     @Column(name = "PARAM_CODE")
-    @Length(max = 16, message = "字段长度不能大于{max}")
+    @Length(max = 16)
     private String paramCode;
 
     // Constructors

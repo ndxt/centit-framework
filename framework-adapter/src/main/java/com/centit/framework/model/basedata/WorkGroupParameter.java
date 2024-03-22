@@ -19,16 +19,16 @@ public class WorkGroupParameter implements java.io.Serializable {
 
     @ApiModelProperty(value = "组id")
     @Column(name = "group_id")
-    @NotBlank(message = "组id不能为空")
+    @NotBlank
     private  String groupId;
 
     @ApiModelProperty(value = "用户代码")
-    @NotBlank(message = "用户代码不能为空")
+    @NotBlank
     @Column(name = "user_code")
     private  String userCode;
 
     @ApiModelProperty(value = "角色代码")
-    @NotBlank(message = "角色代码不能为空")
+    @NotBlank
     @Column(name = "role_code")
     private  String  roleCode;
 

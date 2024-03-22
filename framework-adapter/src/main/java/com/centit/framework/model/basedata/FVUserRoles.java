@@ -52,19 +52,19 @@ public class FVUserRoles implements java.io.Serializable {
      *  角色的类别 F/G/P/D/I/W
      */
     @Column(name = "ROLE_TYPE")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     private String roleType; // 角色类别
 
     @Column(name = "UNIT_CODE")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String unitCode; // 角色所属机构
 
     @Column(name = "OS_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String osId; // 角色所属机构
 
     @Column(name = "CHANGE_DESC")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String changeDesc; // 说明
 
     @Transient

@@ -27,7 +27,7 @@ public class OsInfo implements  java.io.Serializable {
     private String osId;
 
     @Column(name = "OS_NAME")
-    @Length(max = 200, message = "字段长度不能大于{max}")
+    @Length(max = 200)
     @ApiModelProperty(value = "应用名称",name = "osName")
     private String osName;
 
@@ -35,36 +35,36 @@ public class OsInfo implements  java.io.Serializable {
     public static final String OSTYPE_LOCODE = "L";
 
     @Column(name = "OS_TYPE")
-    @Length(max = 16, message = "字段长度不能大于{max}")
+    @Length(max = 16)
     @ApiModelProperty(value = "应用类型 P(PaaS平台业务） L(基于Locde研发的业务) I(基于框架研发的业务） T(第三方研发的业务） O（外部业务）", name = "osName")
     private String osType;
     /**
      * 业务系统后台url
      */
     @Column(name = "OS_URL")
-    @Length(max = 200, message = "字段长度不能大于{max}")
+    @Length(max = 200)
     @ApiModelProperty(value = "应用后台url",name = "osUrl")
     private String osUrl;
 
     @Column(name = "TOP_UNIT")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @ApiModelProperty(value = "所属租户",name = "osUrl")
     private String topUnit;
     /**
      * 业务系统首页
      */
     @Column(name = "OS_HOME_PAGE")
-    @Length(max = 300, message = "字段长度不能大于{max}")
+    @Length(max = 300)
     @ApiModelProperty(value = "应用系统首页",name = "osHomePage")
     private String osHomePage;
 
     @Column(name = "OAUTH_USER")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @ApiModelProperty(value = "oauth2 登录用户名",name = "oauthUser")
     private String oauthUser;
 
     @Column(name = "OAUTH_PASSWORD")
-    @Length(max = 128, message = "字段长度不能大于{max}")
+    @Length(max = 128)
     @ApiModelProperty(value = "oauth2 登录密码 密文",name = "oauthPassword")
     private String oauthPassword;
 
@@ -73,12 +73,12 @@ public class OsInfo implements  java.io.Serializable {
      * 这个现在默认为 os_id
      */
     @Column(name = "REL_OPT_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     // 顶层业务编号
     private String relOptId;
 
     @Column(name = "CREATED")
-    @Length(max = 8, message = "字段长度不能大于{max}")
+    @Length(max = 8)
     @DictionaryMap(fieldName = "createUserName", value = "userCode")
     private String created;
 
@@ -96,27 +96,27 @@ public class OsInfo implements  java.io.Serializable {
     private String  pageFlow;
 
     @Column(name = "IS_DELETE")
-    @NotBlank(message = "字段不能为空[T/F]")
-    @Length(max = 1, message = "字段长度不能大于{max}")
+    @NotBlank
+    @Length(max = 1)
     private boolean deleted;
 
     @ApiModelProperty(value = "图片id")
     @Column(name = "PIC_ID")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     private String  picId;
 
     @ApiModelProperty(value = "默认数据库,用于后台根据表单自动创建表")
     @Column(name = "DEFAULT_DATABASE")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     private String  defaultDatabase;
 
     @ApiModelProperty(value = "网页logo图片主键")
     @Column(name = "LOGO_FILE_ID")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     private String  logoFileId;
     @ApiModelProperty(value = "应用描述")
     @Column(name = "OS_DESC")
-    @Length(max = 1023, message = "字段长度不能大于{max}")
+    @Length(max = 1023)
     private String  osDesc;
     @ApiModelProperty(value = "群聊id")
     @Column(name = "GROUP_ID")

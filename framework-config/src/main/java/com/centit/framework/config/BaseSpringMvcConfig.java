@@ -44,7 +44,7 @@ public class BaseSpringMvcConfig implements WebMvcConfigurer, ApplicationContext
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("classpath:messagesource/base/messages/**");
+        registry.addResourceHandler("classpath:i18n/**");
     }
 
     /**

@@ -20,12 +20,12 @@ public class UnitRoleId implements java.io.Serializable {
     private static final long serialVersionUID = 893187890652550538L;
 
     @Column(name = "UNIT_CODE")
-    @NotBlank(message = "字段不能为空")
+    @NotBlank
     @DictionaryMap(value="unitCode", fieldName = "unitName")
     private String unitCode;// 用户代码
 
     @Column(name = "ROLE_CODE")
-    @NotBlank(message = "字段不能为空")
+    @NotBlank
     @DictionaryMap(value="roleCode", fieldName = "roleName")
     private String roleCode; // 角色代码
 

@@ -44,7 +44,7 @@ public class UserUnit implements java.io.Serializable {
      * 顶级机构，用于帐套、租户管理
      */
     @Column(name = "TOP_UNIT")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @DictionaryMap(fieldName="topUnitName",value="unitCode")
     private String topUnit; // 顶级机构，用于帐套
 
@@ -54,29 +54,29 @@ public class UserUnit implements java.io.Serializable {
     private String userCode; // 用户代码
 
     @Column(name = "USER_STATION")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @DictionaryMap(fieldName="userStationText",value="StationType")
     @ApiModelProperty(value = "岗位",name = "userStation")
     private String userStation; // 岗位
 
     @Column(name = "USER_RANK")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @DictionaryMap(fieldName="userRankText",value="RankType")
     @ApiModelProperty(value = "职务",name = "userRank")
     private String userRank; // 职务
 
     @Column(name = "POST_RANK")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @DictionaryMap(fieldName="userPostText",value="PostRank")
     @ApiModelProperty(value = "职级",name = "postRank")
     private String postRank; // 职级
 
     @Column(name = "RANK_MEMO")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String rankMemo; // 备注
 
     @Column(name = "REL_TYPE")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     @DictionaryMap(fieldName="relTypeText",value="UserUnitRelType")
     private String relType; // 是否为主
 
@@ -97,13 +97,13 @@ public class UserUnit implements java.io.Serializable {
      * CREATOR(创建人) 创建人
      */
     @Column(name = "CREATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  creator;
        /**
      * UPDATOR(更新人) 更新人
      */
     @Column(name = "UPDATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  updator;
     /**
      * UPDATEDATE(更新时间) 更新时间

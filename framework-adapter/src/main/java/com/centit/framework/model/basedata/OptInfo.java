@@ -44,79 +44,79 @@ public class OptInfo implements java.io.Serializable {
     private String optId;
 
     @Column(name = "OS_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @ApiModelProperty(value = "应用系统ID", name = "osId", required = true)
     private String osId;
 
     @OrderBy
     @Column(name = "PRE_OPT_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String preOptId;
     @Column(name = "OPT_NAME")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     @ApiModelProperty(value = "业务菜单名称，字段长度不能大于256", name = "optName", required = true)
     private String optName;
     /**
      * S:实施业务, O:普通业务, W:流程业务, I:项目业务
      */
     @Column(name = "OPT_TYPE")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     @ApiModelProperty(value = "业务类别 S:实施业务, O:普通业务, W:流程业务, I:项目业务, C:通用模块, A:应用入口页面", name = "optType")
     @DictionaryMap(fieldName = "optTypeText", value = "OptType")
     private String optType;
     @Column(name = "FORM_CODE")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @ApiModelProperty(value = "业务类别 O:普通业务C:通用模块A:应用入口页面", name = "formCode")
     private String formCode;
     @Column(name = "OPT_ROUTE")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String optRoute;
     @Column(name = "OPT_URL")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String optUrl;
     @Column(name = "IS_IN_TOOLBAR")
     private String isInToolbar;
     @Column(name = "IMG_INDEX")
-    @Range(max = 100000, message = "数值不能大于{max}")
+    @Range(max = 100000)
     private Long imgIndex;
     @Column(name = "TOP_OPT_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @ValueGenerator(strategy = GeneratorType.FUNCTION, value = "optId")
     private String topOptId;
     @Column(name = "PAGE_TYPE")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     @ApiModelProperty(value = "页面打开方式 D: DIV I： iFrame", name = "pageType", required = true)
     private String pageType;
     @OrderBy
     @Column(name = "ORDER_IND")
-    @Range(max = 100000, message = "数值不能大于{max}")
+    @Range(max = 100000)
     private Long orderInd;
     @Column(name = "ICON")
-    @Length(max = 512, message = "字段长度不能大于{max}")
+    @Length(max = 512)
     private String icon;
     @Column(name = "HEIGHT")
-    @Range(max = 100000, message = "数值不能大于{max}")
+    @Range(max = 100000)
     private Long height;
     @Column(name = "WIDTH")
-    @Range(max = 100000, message = "数值不能大于{max}")
+    @Range(max = 100000)
     private Long width;
     @Column(name = "CREATE_DATE", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     protected Date createDate;
     @Column(name = "CREATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String creator;
     @Column(name = "UPDATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String updator;
     @Column(name = "UPDATE_DATE")
     @ValueGenerator(strategy = GeneratorType.FUNCTION, condition = GeneratorCondition.ALWAYS, value = "today()")
     private Date updateDate;
     @Column(name = "DOC_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String docId;
     @Column(name = "SOURCE_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @JSONField(serialize = false)
     private String sourceId;
     @Transient

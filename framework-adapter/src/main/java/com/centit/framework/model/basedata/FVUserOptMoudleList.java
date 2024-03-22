@@ -24,23 +24,23 @@ public class FVUserOptMoudleList implements java.io.Serializable {
     private String optId;           //业务模块类
 
     @Column(name = "USER_CODE")
-    @Length(max = 8, message = "字段长度不能大于{max}")
+    @Length(max = 8)
     private String userCode;        //用户代码
 
     @Column(name = "OPT_NAME")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String optName;
 
     @Column(name = "PRE_OPT_ID")
-    @Length(max = 8, message = "字段长度不能大于{max}")
+    @Length(max = 8)
     private String preOptId;
 
     @Column(name = "FORM_CODE")
-    @Length(max = 4, message = "字段长度不能大于{max}")
+    @Length(max = 4)
     private String formCode;
 
     @Column(name = "OPT_URL")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String optUrl;
 
     /**
@@ -49,39 +49,39 @@ public class FVUserOptMoudleList implements java.io.Serializable {
      * 与angularjs路由匹配
      */
     @Column(name = "OPT_ROUTE")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String optRoute;
 
     @Column(name = "OPT_TYPE")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     private String optType;
 
     @Column(name = "MSG_NO")
-    @Length(max = 10, message = "字段长度不能大于{max}")
+    @Length(max = 10)
     private Long msgNo;
 
     @Column(name = "MSG_PRM")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String msgPrm;
 
     @Column(name = "IS_IN_TOOLBAR")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     private String isInToolbar;
 
     @Column(name = "IMG_INDEX")
-    @Length(max = 10, message = "字段长度不能大于{max}")
+    @Length(max = 10)
     private Long imgIndex;
 
     @Column(name = "TOP_OPT_ID")
-    @Length(max = 8, message = "字段长度不能大于{max}")
+    @Length(max = 8)
     private String topOptId;
 
     @Column(name = "ORDER_IND")
-    @Length(max = 4, message = "字段长度不能大于{max}")
+    @Length(max = 4)
     private Long orderInd;
 
     @Column(name = "PAGE_TYPE")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     private String pageType;  //页面打开方式 D: DIV I： iFrame
 
     // Constructors

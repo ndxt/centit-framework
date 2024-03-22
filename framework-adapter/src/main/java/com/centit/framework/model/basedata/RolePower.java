@@ -37,7 +37,7 @@ public class RolePower implements java.io.Serializable{
     protected Date createDate;
 
     @Column(name = "OPT_SCOPE_CODES")
-    @Length(max = 1000, message = "字段长度必须小于{max}")
+    @Length(max = 1000)
     private String optScopeCodes;// 操作代码
     // Constructors
 
@@ -46,13 +46,13 @@ public class RolePower implements java.io.Serializable{
      * CREATOR(创建人) 创建人
      */
     @Column(name = "CREATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  creator;
        /**
      * UPDATOR(更新人) 更新人
      */
     @Column(name = "UPDATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  updator;
     /**
      * UPDATEDATE(更新时间) 更新时间

@@ -28,8 +28,8 @@ public class UserSetting implements java.io.Serializable {
      * 参数值
      */
     @Column(name = "PARAM_VALUE")
-    @NotBlank(message = "不能为空")
-    @Length(max = 2000, message = "字段长度不能大于{max}")
+    @NotBlank
+    @Length(max = 2000)
     @ApiModelProperty(value = "参数值 不能为空",name = "paramValue",required = true)
     private String paramValue;
 
@@ -37,14 +37,14 @@ public class UserSetting implements java.io.Serializable {
      * 业务ID
      */
     @Column(name = "OPT_ID")
-    @Length(max = 16, message = "字段长度不能大于{max}")
+    @Length(max = 16)
     @ApiModelProperty(value = "业务ID",name = "optId")
     private String optId;
     /**
      * 参数中文名称
      */
     @Column(name = "PARAM_NAME")
-    @Length(max = 200, message = "字段长度不能大于{max}")
+    @Length(max = 200)
     @ApiModelProperty(value = "参数中文名称",name = "paramName")
     private String paramName;
     /**

@@ -43,7 +43,7 @@ public class UserRole implements java.io.Serializable {
     private Date secedeDate;
 
     @Column(name = "CHANGE_DESC")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String changeDesc; // 说明
 
     @Column(name = "CREATE_DATE", nullable = false)
@@ -55,13 +55,13 @@ public class UserRole implements java.io.Serializable {
      * CREATOR(创建人) 创建人
      */
     @Column(name = "CREATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  creator;
        /**
      * UPDATOR(更新人) 更新人
      */
     @Column(name = "UPDATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  updator;
     /**
      * UPDATEDATE(更新时间) 更新时间

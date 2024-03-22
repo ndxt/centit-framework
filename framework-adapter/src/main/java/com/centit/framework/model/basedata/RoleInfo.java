@@ -38,14 +38,14 @@ public class RoleInfo implements java.io.Serializable {
     private String roleCode; // 角色代码
 
     @Column(name = "ROLE_NAME")
-    @Length(max = 300, message = "字段长度不能大于{max}")
+    @Length(max = 300)
     @ApiModelProperty(value = "角色名称", name = "roleName", required = true)
     private String roleName; // 角色名称
 
     @Column(name = "IS_VALID")
     @ValueGenerator(strategy = GeneratorType.CONSTANT, occasion = GeneratorTime.NEW, value = "T")
-    @Length(max = 1, message = "字段长度必须为{max}")
-    @Pattern(regexp = "[TFA]", message = "字段值必须是T或F,A为新建可以删除")
+    @Length(max = 1)
+    @Pattern(regexp = "[TFA]")
     @ApiModelProperty(value = "是否生效 T:生效 F:失效 A:新建可以删除", name = "isValid", required = true)
     private String isValid; // 是否生效
     /**
@@ -60,7 +60,7 @@ public class RoleInfo implements java.io.Serializable {
      * 角色的类别 F/G/P/D/S/I/W/H
      */
     @Column(name = "ROLE_TYPE")
-    @Length(max = 1, message = "字段长度必须为{max}")
+    @Length(max = 1)
     @ApiModelProperty(value = "角色的类别 F:系统内置的 G:全局的 P:公用的 D:部门（机构）特有的角色 I:项目角色 W:工作流角色", name = "roleType", required = true)
     @DictionaryMap(fieldName = "roleTypeText", value = "RoleType")
     private String roleType; // 角色类别
@@ -68,33 +68,33 @@ public class RoleInfo implements java.io.Serializable {
      * 这个 应该改成owner_code 如果是 部门角色就是 unitCode 如果是 子系统 就是系统代码
      */
     @Column(name = "UNIT_CODE")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @DictionaryMap(fieldName="topUnitName", value="unitCode")
     @ApiModelProperty(value = "topUnit 租户代码", name = "unitCode")
     private String unitCode; // 角色所属机构
 
 
     @Column(name = "OS_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     @ApiModelProperty(value = "角色所属项目", name = "osId")
     private String osId; // 角色所属项目
 
     @Column(name = "ROLE_DESC")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String roleDesc; // 角色描述
 
     /**
      * CREATOR(创建人) 创建人
      */
     @Column(name = "CREATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String creator;
 
     /**
      * UPDATOR(更新人) 更新人
      */
     @Column(name = "UPDATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String updator;
 
     @Column(name = "CREATE_DATE", nullable = false)

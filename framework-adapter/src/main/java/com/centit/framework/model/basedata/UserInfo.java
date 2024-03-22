@@ -43,41 +43,41 @@ public class UserInfo implements java.io.Serializable{
     //密码不参与返回序列化
     @JSONField(serialize = false)
     @Column(name = "USER_PIN")
-    @Length(max = 100, message = "字段长度不能大于{max}")
+    @Length(max = 100)
     @ApiModelProperty(value = "用户密码",name = "userPin")
     private String userPin; // 用户密码
 
     @Column(name = "IS_VALID")
-    @NotBlank(message = "字段不能为空")
-    @Pattern(regexp = "[TFAW]", message = "字段值必须是T或F,A为新建可以删除,W未加入任何组织")
+    @NotBlank
+    @Pattern(regexp = "[TFAW]")
     @ApiModelProperty(value = "是否生效 T:生效 F:失效 A:新建可以删除,W未加入任何组织",name = "isValid",required = true)
     private String isValid; // 状态
 
 
     @Column(name = "USER_TYPE")
-    @Length(max = 1, message = "字段长度不能大于{max}")
+    @Length(max = 1)
     @ApiModelProperty(value = "和数据字典关联，业务系统可以自行解释这个字段", name = "userType")
     private String userType; // 用户类别
 
     @Column(name = "LOGIN_NAME")
-    @NotBlank(message = "字段不能为空")
-    @Length(max = 100, message = "字段长度不能大于{max}")
+    @NotBlank
+    @Length(max = 100)
     @ApiModelProperty(value = "用户登录名 字段不能为空",name = "loginName",required = true)
     private String loginName; // 用户登录名
 
     @Column(name = "USER_NAME")
-    @NotBlank(message = "字段不能为空")
-    @Length(max = 300, message = "字段长度不能大于{max}")
+    @NotBlank
+    @Length(max = 300)
     @ApiModelProperty(value = "用户姓名 字段不能为空",name = "userName",required = true)
     private String userName; // 用户姓名
 
     @Column(name = "ENGLISH_NAME")
-    @Length(max = 300, message = "字段长度不能大于{max}")
+    @Length(max = 300)
     @ApiModelProperty(value = "用户英文姓名",name = "englishName")
     private String englishName;// 用户英文姓名
 
     @Column(name = "USER_DESC")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String userDesc; // 用户描述
 
     @Column(name = "LOGIN_TIMES")
@@ -92,17 +92,17 @@ public class UserInfo implements java.io.Serializable{
     private Date pwdExpiredTime; // 密码失效时间
 
     @Column(name = "REG_EMAIL")
-    @Email(message = "Email格式不正确")
-    @Length(max = 60, message = "字段长度不能大于{max}")
+    @Email
+    @Length(max = 60)
     private String regEmail; // 注册email
 
     @Column(name = "USER_PWD")
-    @Length(max = 20, message = "字段长度不能大于{max}")
+    @Length(max = 20)
     @JSONField(serialize = false)
     private String userPwd;
 
     @Column(name = "REG_CELL_PHONE")
-    @Length(max = 15, message = "字段长度不能大于{max}")
+    @Length(max = 15)
     private String regCellPhone;
 
     @Column(name="ID_CARD_NO")
@@ -110,22 +110,22 @@ public class UserInfo implements java.io.Serializable{
     private String idCardNo;
 
     @Column(name = "USER_WORD")
-    @Length(max = 100, message = "字段长度不能大于{max}")
+    @Length(max = 100)
     private String userWord;
 
     @Column(name = "USER_TAG")
-    @Length(max = 200, message = "字段长度不能大于{max}")
+    @Length(max = 200)
     private String userTag;
 
     @Column(name = "USER_ORDER")
-    @Range(max = 99999,min=1, message = "字段不能小于{min}或大于{max}")
+    @Range(max = 99999, min=1)
     private Long userOrder; // 用户排序
 
     /**
      * 顶级机构，用于帐套、租户管理
      */
     @Column(name = "TOP_UNIT")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String topUnit; // 顶级机构，用于帐套
 
     @Column(name = "PRIMARY_UNIT")
@@ -141,13 +141,13 @@ public class UserInfo implements java.io.Serializable{
      * CREATOR(创建人) 创建人
      */
     @Column(name = "CREATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  creator;
        /**
      * UPDATOR(更新人) 更新人
      */
     @Column(name = "UPDATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  updator;
     /**
      * UPDATEDATE(更新时间) 更新时间
@@ -159,7 +159,7 @@ public class UserInfo implements java.io.Serializable{
 
 
     @Column(name = "CURRENT_STATION_ID")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String  currentStationId;
 
     @Transient

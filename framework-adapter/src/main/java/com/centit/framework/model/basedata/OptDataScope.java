@@ -27,7 +27,7 @@ public class OptDataScope implements java.io.Serializable{
     private String optScopeCode;// 操作代码
 
     @Column(name = "SCOPE_NAME")
-    @Length(max = 64, message = "字段长度必须小于{max}")
+    @Length(max = 64)
     private String scopeName; // 操作名称
 
     @Column(name = "OPT_ID")
@@ -37,18 +37,18 @@ public class OptDataScope implements java.io.Serializable{
      * 数据范围条件
      */
     @Column(name = "FILTER_CONDITION")
-    @Length(max = 1000, message = "字段长度必须小于{max}")
+    @Length(max = 1000)
     private String filterCondition;
 
    /*
      * 数据范围条件分组，同一组内的条件用 或，不同组件的条件用与
      *
     @Column(name = "FILTERGROUP")
-    @Length(max = 16, message = "字段长度必须小于{max}")
+    @Length(max = 16)
     private String filterGroup;// 操作方法
    */
        @Column(name = "SCOPE_MEMO")
-    @Length(max = 1000, message = "字段长度必须小于{max}")
+    @Length(max = 1000)
     private String scopeMemo; // 操作说明
 
 

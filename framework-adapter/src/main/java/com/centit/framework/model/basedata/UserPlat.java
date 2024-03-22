@@ -39,17 +39,17 @@ public class UserPlat implements java.io.Serializable {
     private String userCode; // 用户代码
 
     @Column(name = "CORP_ID")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     @ApiModelProperty(value = "公司id", name = "corpId")
     private String corpId;
 
     @Column(name = "APP_KEY")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     @ApiModelProperty(value = "平台应用AppKey", name = "appKey")
     private String appKey; // appKey
 
     @Column(name = "APP_SECRET")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 64)
     @ApiModelProperty(value = "平台应用AppSecret", name = "appSecret")
     private String appSecret; // appSecret
 
@@ -62,7 +62,7 @@ public class UserPlat implements java.io.Serializable {
     private String userId;
 
     @Column(name = "CHANGE_DESC")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String changeDesc; // 备注
 
     @Column(name = "CREATE_DATE", nullable = false)
@@ -75,13 +75,13 @@ public class UserPlat implements java.io.Serializable {
      * CREATOR(创建人) 创建人
      */
     @Column(name = "CREATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String creator;
     /**
      * UPDATOR(更新人) 更新人
      */
     @Column(name = "UPDATOR")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Length(max = 32)
     private String updator;
     /**
      * UPDATEDATE(更新时间) 更新时间
