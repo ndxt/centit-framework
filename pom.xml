@@ -104,7 +104,7 @@
         <module>centit-persistence-extend</module>
     </modules>
 
-    <distributionManagement>
+<!--    <distributionManagement>
         <repository>
             <id>aplan-releases</id>
             <name>aplan releases</name>
@@ -116,7 +116,7 @@
             <url>http://maven.mic.com/nexus/content/repositories/base-snapshot/</url>
             <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
-    </distributionManagement>
+    </distributionManagement>-->
 
     <build>
         <plugins>
