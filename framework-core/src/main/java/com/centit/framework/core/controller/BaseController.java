@@ -66,6 +66,13 @@ public abstract class BaseController {
         binder.registerCustomEditor(java.sql.Timestamp.class, new SqlTimestampPropertiesEditor());
     }
 
+    protected String getI18nMessage(String code, Object[] args, HttpServletRequest request) {
+        return  messageSource.getMessage(code, args, "Message:" + code, WebOptUtils.getCurrentLocale(request));
+    }
+
+    protected String getI18nMessage(String code, HttpServletRequest request) {
+        return  messageSource.getMessage(code, null, "Message:" + code, WebOptUtils.getCurrentLocale(request));
+    }
     /**
      * 前端统一异常处理，
      *
@@ -94,7 +101,7 @@ public abstract class BaseController {
                 ResponseMapData responseData =
                     new ResponseMapData(objex.getExceptionCode(),
                         this.logDebug ? ObjectException.extortExceptionOriginMessage(objex) :
-                            messageSource.getMessage("error.500.unknown", null, WebOptUtils.getCurrentLocale(request)));
+                            getI18nMessage("error.500.unknown", request));
                 if(this.logDebug) {
                     responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(objex));
                 } else {
@@ -116,7 +123,7 @@ public abstract class BaseController {
             // 输入对象属性验证错误
             ResponseMapData responseData = new ResponseMapData(ResponseData.ERROR_FIELD_INPUT_NOT_VALID);
             StringBuilder errMsg = new StringBuilder(
-                messageSource.getMessage("error.701.input_not_valid", null, WebOptUtils.getCurrentLocale(request)));
+                getI18nMessage("error.701.input_not_valid", request));
 
             if (bindingResult.hasErrors()) {
                 for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -133,7 +140,7 @@ public abstract class BaseController {
         ResponseMapData responseData =
             new ResponseMapData(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
                 this.logDebug ? ObjectException.extortExceptionOriginMessage(ex) :
-                    messageSource.getMessage("error.500.unknown", null, WebOptUtils.getCurrentLocale(request)));
+                    getI18nMessage("error.500.unknown", request));
         if(this.logDebug) {
             responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(ex));
         } else {
