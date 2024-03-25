@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -44,6 +46,9 @@ public abstract class BaseController {
      */
     protected boolean logDebug = logger.isDebugEnabled();
 
+    // 添加国际化支持
+    @Autowired
+    protected MessageSource messageSource;
     /*public  String getOptId(){
         return "NOT_DEFINED";
     }*/
@@ -84,10 +89,12 @@ public abstract class BaseController {
                 objex.getExceptionCode() == ResponseData.ERROR_UNAUTHORIZED ) ){
                 JsonResultUtils.writeHttpErrorMessage(objex.getExceptionCode(),
                     objex.getLocalizedMessage(), response);
-            }else {
+            } else {
+                //String error500 =  messageSource.getMessage("error.500.unknown", null, WebOptUtils.getCurrentLocale(request));
                 ResponseMapData responseData =
                     new ResponseMapData(objex.getExceptionCode(),
-                        this.logDebug ? ObjectException.extortExceptionOriginMessage(objex) : "内部错误，请联系管理员；开发人员请查看后台日志。");
+                        this.logDebug ? ObjectException.extortExceptionOriginMessage(objex) :
+                            messageSource.getMessage("error.500.unknown", null, WebOptUtils.getCurrentLocale(request)));
                 if(this.logDebug) {
                     responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(objex));
                 } else {
@@ -108,12 +115,13 @@ public abstract class BaseController {
         if(bindingResult!=null){
             // 输入对象属性验证错误
             ResponseMapData responseData = new ResponseMapData(ResponseData.ERROR_FIELD_INPUT_NOT_VALID);
-            StringBuilder errMsg = new StringBuilder();
+            StringBuilder errMsg = new StringBuilder(
+                messageSource.getMessage("error.701.input_not_valid", null, WebOptUtils.getCurrentLocale(request)));
 
             if (bindingResult.hasErrors()) {
                 for (FieldError fieldError : bindingResult.getFieldErrors()) {
                     responseData.addResponseData(fieldError.getField(), fieldError.getDefaultMessage());
-                    errMsg.append(fieldError.getField()).append("：")
+                    errMsg.append("\r\n").append(fieldError.getField()).append("：")
                         .append(fieldError.getDefaultMessage()).append("；");
                 }
             }
@@ -124,7 +132,8 @@ public abstract class BaseController {
         // 如果是非绑定错误，需要显示抛出异常帮助前台调试错误
         ResponseMapData responseData =
             new ResponseMapData(ResponseData.ERROR_INTERNAL_SERVER_ERROR,
-                this.logDebug ? ObjectException.extortExceptionOriginMessage(ex) : "内部错误，请联系管理员；开发人员请查看后台日志。");
+                this.logDebug ? ObjectException.extortExceptionOriginMessage(ex) :
+                    messageSource.getMessage("error.500.unknown", null, WebOptUtils.getCurrentLocale(request)));
         if(this.logDebug) {
             responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(ex));
         } else {
