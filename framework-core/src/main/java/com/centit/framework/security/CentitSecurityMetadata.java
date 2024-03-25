@@ -44,7 +44,7 @@ public abstract class CentitSecurityMetadata {
         return apiSecurityMetadata.getCachedValue(apiId);
     }
 
-    private static String parseUrlToApi(String sUrl) {
+    public static String parseUrlToApi(String sUrl) {
         String apiId = "";
         int nPos = sUrl.indexOf(DDE_RUN);
         if (nPos>=0){
@@ -58,11 +58,18 @@ public abstract class CentitSecurityMetadata {
             }
             apiId = sUrl.substring(beginPos, endPos);
             if(DDE_RUN_DRAFT.equals(apiId)){
-                return "";
+                beginPos = endPos +1;
+                endPos = sUrl.indexOf('/', beginPos);
+                if(endPos<=0){
+                    endPos = sUrl.indexOf('?', beginPos);
+                }
+                if(endPos<=0){
+                    endPos = sUrl.length();
+                }
+                return sUrl.substring(beginPos, endPos);
             }
         }
         return apiId;
     }
-
 
 }
