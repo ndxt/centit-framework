@@ -94,7 +94,7 @@ public abstract class BaseController {
             if(WebOptUtils.exceptionNotAsHttpError &&
                 (objex.getExceptionCode() == ResponseData.ERROR_USER_NOT_LOGIN ||
                 objex.getExceptionCode() == ResponseData.ERROR_UNAUTHORIZED ) ){
-                JsonResultUtils.writeHttpErrorMessage(objex.getExceptionCode(),
+                JsonResultUtils.writeHttpErrorMessage(ResponseData.ERROR_UNAUTHORIZED, //objex.getExceptionCode(),
                     objex.getLocalizedMessage(), response);
             } else {
                 //String error500 =  messageSource.getMessage("error.500.unknown", null, WebOptUtils.getCurrentLocale(request));

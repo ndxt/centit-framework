@@ -22,11 +22,15 @@ public class AssertUserLoginFilter  implements Filter {
         ServletException {
         if(request!=null && response!=null) {
             if(request instanceof HttpServletRequest) {
-                UserInfo userInfo =  WebOptUtils.getCurrentUserInfo((HttpServletRequest)request);
-                if(userInfo == null){
-                    JsonResultUtils.writeHttpErrorMessage(ResponseData.ERROR_USER_NOT_LOGIN,
-                        ResponseData.ERROR_NOT_LOGIN_MSG, (HttpServletResponse) response);
-                    return ;
+                HttpServletRequest httpRequest = (HttpServletRequest)request;
+                String requestUrl = httpRequest.getRequestURI();
+                if(!requestUrl.contains("no-auth")) {
+                    UserInfo userInfo = WebOptUtils.getCurrentUserInfo(httpRequest);
+                    if (userInfo == null) {
+                        JsonResultUtils.writeHttpErrorMessage(ResponseData.ERROR_UNAUTHORIZED,
+                            ResponseData.ERROR_NOT_LOGIN_MSG, (HttpServletResponse) response);
+                        return;
+                    }
                 }
             }
             if(chain!=null) {
