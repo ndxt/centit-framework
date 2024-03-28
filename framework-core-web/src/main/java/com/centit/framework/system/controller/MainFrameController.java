@@ -512,8 +512,11 @@ public class MainFrameController extends BaseController {
         if(ud instanceof CentitUserDetails){
             CentitUserDetails userDetails = (CentitUserDetails) ud;
             jsonObject = userDetails.toJsonWithoutSensitive();
-            jsonObject.putAll(platformEnvironment.fetchUserTenantGroupInfo(
-                userDetails.getUserCode(), userDetails.getTopUnitCode()));
+            String topUnit = userDetails.getTopUnitCode();
+            if(StringUtils.isNotBlank(topUnit)) {
+                jsonObject.putAll(platformEnvironment.fetchUserTenantGroupInfo(
+                    userDetails.getUserCode(), userDetails.getTopUnitCode()));
+            }
         } else {
             jsonObject = JSONObject.from(ud);
             String userCode = WebOptUtils.getCurrentUserCode(request);
