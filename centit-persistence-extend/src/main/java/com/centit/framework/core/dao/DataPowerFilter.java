@@ -328,11 +328,11 @@ public class DataPowerFilter implements UserUnitVariableTranslate {
             }
             sWord = varMorp.getAWord();
         }
-        if(!hasFetchField) return 0;
+
         checkStatement.append(filter.substring(prePos));
         return BooleanBaseOpt.castObjectToBoolean(
                 VariableFormula.calculate(checkStatement.toString()),false) ?
-                1 : -1;
+                1 : (hasFetchField ? -1 : 0);
     }
 
     public int checkObjectFilter(Object obj, String filter){
