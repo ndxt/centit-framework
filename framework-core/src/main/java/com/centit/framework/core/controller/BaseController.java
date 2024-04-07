@@ -66,13 +66,10 @@ public abstract class BaseController {
         binder.registerCustomEditor(java.sql.Timestamp.class, new SqlTimestampPropertiesEditor());
     }
 
-    protected String getI18nMessage(String code, Object[] args, HttpServletRequest request) {
+    protected String getI18nMessage(String code, HttpServletRequest request, Object... args) {
         return  messageSource.getMessage(code, args, "Message:" + code, WebOptUtils.getCurrentLocale(request));
     }
 
-    protected String getI18nMessage(String code, HttpServletRequest request) {
-        return  messageSource.getMessage(code, null, "Message:" + code, WebOptUtils.getCurrentLocale(request));
-    }
     /**
      * 前端统一异常处理，
      *
@@ -95,7 +92,7 @@ public abstract class BaseController {
                 (objex.getExceptionCode() == ResponseData.ERROR_USER_NOT_LOGIN ||
                 objex.getExceptionCode() == ResponseData.ERROR_UNAUTHORIZED ) ){
                 JsonResultUtils.writeHttpErrorMessage(ResponseData.ERROR_UNAUTHORIZED, //objex.getExceptionCode(),
-                    objex.getLocalizedMessage(), response);
+                    getI18nMessage(ResponseData.ERROR_NOT_LOGIN_MSG, request), response);
             } else {
                 //String error500 =  messageSource.getMessage("error.500.unknown", null, WebOptUtils.getCurrentLocale(request));
                 ResponseMapData responseData =

@@ -318,7 +318,8 @@ public class WebOptUtils {
     public static UserInfo assertUserLogin(HttpServletRequest request) {
         UserInfo userInfo =  getCurrentUserInfo(request);
         if(userInfo == null){ // anonymous
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, ResponseData.ERROR_NOT_LOGIN_MSG);
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+                ResponseData.ERROR_NOT_LOGIN_MSG);
         }
         return userInfo;
     }

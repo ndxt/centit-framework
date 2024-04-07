@@ -107,10 +107,11 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/lvb/{catalog}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public Map<String,String> lvb(@PathVariable String catalog) {
+    public Map<String,String> lvb(@PathVariable String catalog, HttpServletRequest request) {
         Map<String,String> keyValueMap = CodeRepositoryUtil.getLabelValueMap(catalog);
         if(keyValueMap==null || keyValueMap.isEmpty()){
-            throw new ObjectException(catalog, ObjectException.DATA_NOT_FOUND_EXCEPTION,"找不到对应的数据字典内容。");
+            throw new ObjectException(catalog, ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                getI18nMessage("error.604.dictionary_not_found", request));
         }
         return keyValueMap;
     }
@@ -251,7 +252,7 @@ public class CacheController extends BaseController {
            return ui.getParentUnit();
         }else {
            throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION,
-               "没有代码为: "+ unitCode+" 的机构！");
+               getI18nMessage("error.604.unit_not_found", request, unitCode));
         }
     }
 
@@ -286,7 +287,7 @@ public class CacheController extends BaseController {
             return parentUnits;
         }else {
             throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION,
-                "没有代码为: "+ unitCode+" 的机构！");
+                getI18nMessage("error.604.unit_not_found", request, unitCode));
         }
     }
     /**

@@ -118,7 +118,7 @@ public interface ResponseData  extends Serializable {
      * 302   （临时移动）  服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。
      */
     int ERROR_USER_NOT_LOGIN=302;
-    String ERROR_NOT_LOGIN_MSG="用户没有登录或者超时，请重新登录！";
+    String ERROR_NOT_LOGIN_MSG="error.302.user_not_login";
     int HTTP_SEE_OTHER=303;
     int HTTP_NOT_MODIFIED=304;
     int HTTP_USE_PROXY=305;

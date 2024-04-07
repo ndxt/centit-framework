@@ -3,6 +3,7 @@ package com.centit.framework.system.controller;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.core.controller.BaseController;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import java.io.IOException;
 @SuppressWarnings("unused")
 @Controller
 @RequestMapping("/exception")
-public class ExceptionController {
+public class ExceptionController extends BaseController {
 
     private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
     public String getOptId (){
@@ -62,7 +63,7 @@ public class ExceptionController {
 
             switch (code) {
                 case 404:
-                    errorMessage = "未找到此资源";
+                    errorMessage = getI18nMessage("error.404.resource_not_found", request);
                     break;
                 case 403:
                     {
@@ -88,25 +89,25 @@ public class ExceptionController {
                             if (null != ex) {
                                 errorMessage = ex.getMessage();
                             }else
-                                errorMessage = "无权限访问此资源 !";
+                                errorMessage = getI18nMessage("error.403.access_forbidden", request);
                         }
                     }
                     break;
                 case 302:
                 case 401:
-                    errorMessage = "用户未登录或者session失效 !";
+                    errorMessage = getI18nMessage("error.302.user_not_login", request);
                     break;
                 default:
-                    errorMessage = "服务器内部错误";
+                    errorMessage = getI18nMessage("error.500.inner_error_1", request, "exception-"+code);
                     Exception ex = (Exception) request.getAttribute("CENTIT_SYSTEM_ERROR_EXCEPTION");
                     //触发异常的类
                     if (null != ex) {
                         errorMessage = ex.getMessage();
                         HandlerMethod handler = (HandlerMethod) request.getAttribute("CENTIT_SYSTEM_ERROR_HANDLER");
                         if (null != handler) {
-                            errorMessage = "异常信息由 " + handler.getBean().getClass().getName()
-                                + " 类 " + handler.getMethod().getName() + " 方法触发异常，异常类型为 "
-                                + ex.getClass().getName() + " 异常信息为 " + ex.getMessage();
+                            errorMessage = getI18nMessage("error.500.exception_4_cmem", request,
+                                handler.getBean().getClass().getName(), handler.getMethod().getName(),
+                                ex.getClass().getName(), ex.getMessage());
                             logger.error(errorMessage);
                         }
                     }
@@ -132,7 +133,7 @@ public class ExceptionController {
         HttpServletRequest request,HttpServletResponse response) {
         if (WebOptUtils.isAjax(request)) {
             JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_SESSION_TIMEOUT,
-                "session超时，请重新登录。", response);
+                getI18nMessage("error.709.session_timeout", request), response);
             return null;
         }else{
             return "exception/timeout";
