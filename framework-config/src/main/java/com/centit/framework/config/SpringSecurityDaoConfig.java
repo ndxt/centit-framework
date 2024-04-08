@@ -38,7 +38,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
     @Qualifier("passwordEncoder")
     protected PasswordEncoder passwordEncoder;
 
-    @Autowired(required = false)
+    @Autowired
     private MessageSource messageSource;
 
     @Autowired
@@ -65,7 +65,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
     @Override
     protected AbstractAuthenticationProcessingFilter getAuthenticationFilter() {
         PretreatmentAuthenticationProcessingFilter
-            pretreatmentAuthenticationProcessingFilter = new PretreatmentAuthenticationProcessingFilter();
+            pretreatmentAuthenticationProcessingFilter = new PretreatmentAuthenticationProcessingFilter(messageSource);
         pretreatmentAuthenticationProcessingFilter.setAuthenticationManager(createAuthenticationManager());
         pretreatmentAuthenticationProcessingFilter.setCheckCaptchaTime(
             NumberBaseOpt.castObjectToInteger(env.getProperty("login.captcha.checkTime"),0));

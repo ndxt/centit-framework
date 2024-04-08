@@ -1,10 +1,12 @@
 package com.centit.framework.security;
 
+import com.centit.framework.common.WebOptUtils;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
 import com.centit.support.security.SecurityOptUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,15 +45,22 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
         CheckFailLogs.setCheckTimeTnterval(checkTimeTnterval);
     }
 
+    protected MessageSource messageSource;
+
+    public PretreatmentAuthenticationProcessingFilter(MessageSource messageSource){
+        this.messageSource = messageSource;
+    }
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         if (CheckFailLogs.getMaxTryTimes() > 0 && CheckFailLogs.isLocked(request)) {
-            throw new AuthenticationServiceException("User is locked, please try late!");
+            throw new AuthenticationServiceException(
+                messageSource.getMessage("error.302.user_is_locked",null,
+                    "User is locked, please try late!",WebOptUtils.getCurrentLocale(request)));
         }
 
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
-
         if(checkCaptchaType != 0 &&
             (checkCaptchaTime == 2 ||  (checkCaptchaTime == 1  && tryTimes > 0 ))) {
             //判断是否通过ajax方式已经验证过
@@ -69,7 +78,9 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
                         CaptchaImageUtil.SESSIONCHECKCODE, CaptchaImageUtil.getRandomString(6));
 
                     if (!CaptchaImageUtil.checkcodeMatch(sessionCheckcode, requestCheckcode)) {
-                        throw new AuthenticationServiceException("验证码输入有误，请检查后重新输入！");
+                        throw new AuthenticationServiceException(
+                            messageSource.getMessage("error.701.invalid_check_code",null,
+                                "Invalid check code.",WebOptUtils.getCurrentLocale(request)));
                     }
                 }
             }
@@ -96,8 +107,6 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
             CheckFailLogs.plusCheckFail(request);
             throw failed;
         }
-
     }
-
 
 }

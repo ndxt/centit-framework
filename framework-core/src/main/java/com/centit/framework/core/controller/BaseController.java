@@ -67,7 +67,7 @@ public abstract class BaseController {
     }
 
     protected String getI18nMessage(String code, HttpServletRequest request, Object... args) {
-        return  messageSource.getMessage(code, args, "Message:" + code, WebOptUtils.getCurrentLocale(request));
+        return messageSource.getMessage(code, args, "Message:" + code, WebOptUtils.getCurrentLocale(request));
     }
 
     /**

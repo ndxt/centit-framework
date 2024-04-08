@@ -29,7 +29,7 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
             throws AccessDeniedException, InsufficientAuthenticationException {
 
         if(configAttributes.contains(new SecurityConfig(SecurityContextUtils.FORBIDDEN_ROLE_CODE))){
-            String sErrMsg = "资源被禁止访问";
+            String sErrMsg = "Accessing resource is forbidden, because it is bound with forbidden-role.";
             logger.error(sErrMsg);
             throw new AccessDeniedException(sErrMsg);
         }

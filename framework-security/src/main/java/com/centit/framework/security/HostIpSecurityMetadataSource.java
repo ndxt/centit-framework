@@ -17,7 +17,6 @@ public class HostIpSecurityMetadataSource
     //private static final Logger logger = LoggerFactory.getLogger(DaoInvocationSecurityMetadataSource.class);
     //private static boolean logDebug = logger.isDebugEnabled();
 
-
     private String appHome;
 
     public void setAppHome(String appHome) {
@@ -46,18 +45,18 @@ public class HostIpSecurityMetadataSource
         }
         return hostIpAttributes.get(urlIp);
     }
-    
+
     private void loadConfigAttributes(){
         if(hostIpAttributes!=null)
             hostIpAttributes.clear();
         else
             hostIpAttributes = new HashMap<>();
-        
+
         Properties hosts = PropertiesReader.getFilePathProperties(
                 appHome +"/config/host_white_list.properties");
         if(hosts!=null){
             Set<Map.Entry<Object,Object>> hostset = hosts.entrySet();
-            if(hostset!=null){                
+            if(hostset!=null){
                 for(Map.Entry<Object,Object> dd : hostset){
                     Set<ConfigAttribute> httpServerRole = new HashSet<ConfigAttribute>();
                     httpServerRole.add(new SecurityConfig(dd.getValue().toString()));
@@ -88,12 +87,12 @@ public class HostIpSecurityMetadataSource
         if ((object == null) || !this.supports(object.getClass())) {
             throw new IllegalArgumentException("对不起,目标对象不是类型");
         }
-        
+
         if(hostIpAttributes==null){
             //放到数据字典的httpserver的字典中
             loadConfigAttributes();
         }
-        
+
         FilterInvocation fi = (FilterInvocation) object;
         HttpServletRequest request = fi.getHttpRequest();
         String urlIp = request.getRemoteHost();
