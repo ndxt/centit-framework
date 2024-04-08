@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,6 +62,7 @@ public class RoleInfo implements java.io.Serializable {
      */
     @Column(name = "ROLE_TYPE")
     @Length(max = 1)
+    @NotBlank
     @ApiModelProperty(value = "角色的类别 F:系统内置的 G:全局的 P:公用的 D:部门（机构）特有的角色 I:项目角色 W:工作流角色", name = "roleType", required = true)
     @DictionaryMap(fieldName = "roleTypeText", value = "RoleType")
     private String roleType; // 角色类别
