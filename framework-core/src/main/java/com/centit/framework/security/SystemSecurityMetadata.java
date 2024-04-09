@@ -126,17 +126,17 @@ public class SystemSecurityMetadata {
         }
         List<String> urls = parseRequestUrl(sUrl, httpMethod);
         for (String url : urls) {
-            if (null == curOpt || null == curOpt.childList) {
+            if (curOpt == null) {
                 return null;
+            }
+            if(curOpt.isLeafNode()){ // 前缀匹配 可以批量设置
+                return curOpt.getRoleList();
             }
             OptTreeNode subOpt = curOpt.childList.get(url);
             if (subOpt == null) {
                 subOpt = curOpt.childList.get("*");
             }
             curOpt = subOpt;
-        }
-        if (null == curOpt) {
-            return null;
         }
         return curOpt.getRoleList();
     }

@@ -26,7 +26,6 @@ public class OptTreeNode implements Serializable {
         if(attributes==null){
             return;
         }
-
         if(this.roleList == null) {
             this.roleList = attributes;
         } else {
@@ -45,6 +44,10 @@ public class OptTreeNode implements Serializable {
 
     public Map<String, OptTreeNode> getChildList() {
         return childList;
+    }
+
+    public boolean isLeafNode() {
+        return childList==null || childList.isEmpty();
     }
 
     public OptTreeNode setChildPath(String surl){
