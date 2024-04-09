@@ -126,9 +126,6 @@ public class SystemSecurityMetadata {
         }
         List<String> urls = parseRequestUrl(sUrl, httpMethod);
         for (String url : urls) {
-            if (curOpt == null) {
-                return null;
-            }
             if(curOpt.isLeafNode()){ // 前缀匹配 可以批量设置
                 return curOpt.getRoleList();
             }
@@ -136,9 +133,12 @@ public class SystemSecurityMetadata {
             if (subOpt == null) {
                 subOpt = curOpt.childList.get("*");
             }
+            if (subOpt == null) {
+                return null;
+            }
             curOpt = subOpt;
         }
-        return curOpt==null ? null : curOpt.getRoleList();
+        return curOpt.getRoleList();
     }
 
     private void confirmLoginCasMustBeAuthed(OptTreeNode optTreeNode) {
