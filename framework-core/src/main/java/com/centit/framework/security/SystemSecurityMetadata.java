@@ -138,7 +138,7 @@ public class SystemSecurityMetadata {
             }
             curOpt = subOpt;
         }
-        return curOpt.getRoleList();
+        return curOpt==null ? null : curOpt.getRoleList();
     }
 
     private void confirmLoginCasMustBeAuthed(OptTreeNode optTreeNode) {
