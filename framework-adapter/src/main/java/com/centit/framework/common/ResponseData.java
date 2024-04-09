@@ -281,6 +281,16 @@ public interface ResponseData  extends Serializable {
     @ApiModelProperty(value = "JSON格式的数据内容，根据业务的需要定义;前端可以通过在线调试查看详细信息。")
     Object getData();
 
+    default JSONObject toJSONObject(){
+        JSONObject json = new JSONObject();
+        json.put(ResponseData.RES_CODE_FILED, getCode());
+        json.put(ResponseData.RES_MSG_FILED, getMessage());
+        if(getData() !=null) {
+            json.put(ResponseData.RES_DATA_FILED, getData());
+        }
+        return json;
+    }
+
     default String toJSONString(PropertyPreFilter simplePropertyPreFilter){
         Map<String, Object> param = new HashMap<>();
         param.put(ResponseData.RES_CODE_FILED, getCode());
@@ -297,7 +307,6 @@ public interface ResponseData  extends Serializable {
     default String toJSONString(){
         return toJSONString(null);
     }
-
 
     ResponseData successResponse = new ImmutableResponseData();
 

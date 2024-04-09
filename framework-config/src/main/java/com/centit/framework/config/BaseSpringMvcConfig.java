@@ -54,7 +54,8 @@ public class BaseSpringMvcConfig implements WebMvcConfigurer, ApplicationContext
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        MvcConfigUtil.setApplicationContext(applicationContext, MvcConfigUtil.fastJsonHttpMessageConverter());
+        MvcConfigUtil.setApplicationContext(applicationContext,
+            MvcConfigUtil.fastJsonHttpMessageConverter());
     }
 
     /*@Override
