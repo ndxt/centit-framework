@@ -98,10 +98,29 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
         WrapUpResponseBody wrap = returnType.getMethodAnnotation(WrapUpResponseBody.class);
         WrapUpContentType wrapUpType = wrap != null ? wrap.contentType()
                             : WrapUpContentType.DATA;
+        if(value == null){
+            if(wrapUpType == WrapUpContentType.RAW){
+                JsonResultUtils.writeOriginalObject("", httpResponse.getServletResponse());
+                return;
+            }
+            if(wrapUpType == WrapUpContentType.FILE || wrapUpType == WrapUpContentType.IMAGE){
+                messageConverter.write(
+                    ResponseData.makeErrorMessage(500, "缺少文件对象！"),
+                    MediaType.APPLICATION_JSON, httpResponse);
+                return;
+            }
+            messageConverter.write(
+                ResponseData.successResponse, MediaType.APPLICATION_JSON, httpResponse);
+            return;
+        }
 
         switch (wrapUpType) {
             case RAW:
-                JsonResultUtils.writeOriginalObject(value, httpResponse.getServletResponse());
+                if(value instanceof ResponseData || value instanceof ToResponseData){
+                    break;
+                } else {
+                    JsonResultUtils.writeOriginalObject(value, httpResponse.getServletResponse());
+                }
                 return;
             case JAVASCRIPT:
                 {
@@ -152,13 +171,6 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
         }
 
         ResponseData outputValue;
-        if(value == null) {
-            outputValue = ResponseData.successResponse;
-            messageConverter.write(
-                outputValue, MediaType.APPLICATION_JSON, httpResponse);
-            return;
-        }
-
         if (value instanceof ToResponseData){
             outputValue = ((ToResponseData)value).toResponseData();
         } else if (value instanceof ResponseData) {
