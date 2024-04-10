@@ -232,17 +232,15 @@ public class WebOptUtils {
         Locale local = fetchLocaleFromRequest(request);
 
         if(local!=null){
-            return local.getLanguage() +"_"+local.getCountry();
+            return local.getLanguage() +"_"+ local.getCountry();
         }
         /**
          * Accept-Language: zh-cn
          */
         String localLang = request.getHeader("Accept-Language");
         if(StringUtils.isNotBlank(localLang)){
-            String [] langs = localLang.split("-");
-            if(langs.length>1)
-                return StringUtils.lowerCase(langs[0])
-                        +"_"+StringUtils.upperCase(langs[1]);
+            if(localLang.length()>4)
+                return localLang.substring(0, 2) +"_"+ localLang.substring(3, 5).toUpperCase();
         }
 
         return "zh_CN";
@@ -265,13 +263,12 @@ public class WebOptUtils {
             return local;
         }
         /**
-         * Accept-Language: zh-cn
+         * Accept-Language: zh-CN
          */
         String localLang = request.getHeader("Accept-Language");
         if(StringUtils.isNotBlank(localLang)){
-            String [] langs = localLang.split("-");
-            if(langs.length>1)
-                return new Locale(StringUtils.lowerCase(langs[0]), StringUtils.upperCase(langs[1]));
+            if(localLang.length()>4)
+                return new Locale(localLang.substring(0, 2), localLang.substring(3, 5));
         }
 
         return Locale.SIMPLIFIED_CHINESE;
