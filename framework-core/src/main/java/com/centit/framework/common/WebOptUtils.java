@@ -517,11 +517,8 @@ public class WebOptUtils {
         Map<String, String> headersMap = new HashMap<>();
         while(names.hasMoreElements()) {
             String name = names.nextElement();
-            //accept-language:"zh-CN,zh;q=0.9"
-            //x-auth-token:"e4fcbbb5-db3a-4b4c-a065-a261f7d4d8fa"
-            if("x-auth-token".equalsIgnoreCase(name)) {
-                headersMap.put(name, request.getHeader(name));
-            } else if("accept-language".equalsIgnoreCase(name)) {
+            //cookie
+            if(!"Cookie".equalsIgnoreCase(name)) {
                 headersMap.put(name, request.getHeader(name));
             }
         }
