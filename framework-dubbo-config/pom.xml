@@ -8,7 +8,7 @@
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>framework-dubbo-server-config</artifactId>
+    <artifactId>framework-dubbo-config</artifactId>
     <name>com.centit.framework:framework-dubbo-server-config</name>
     <packaging>jar</packaging>
     <dependencies>

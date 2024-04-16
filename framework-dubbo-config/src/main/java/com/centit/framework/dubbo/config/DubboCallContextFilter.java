@@ -21,9 +21,9 @@ import java.util.Map;
  * 客户端调用远程服务之前设置CallContext信息
  */
 //@Activate(group = {Constants.PROVIDER_PROTOCOL, Constants.CONSUMER_PROTOCOL})
-public class DubboClientCallContextFilter implements Filter {
+public class DubboCallContextFilter implements Filter {
 
-    private Logger logger = LoggerFactory.getLogger(DubboClientCallContextFilter.class);
+    private Logger logger = LoggerFactory.getLogger(DubboCallContextFilter.class);
 
     //todo:考虑是否需要在调用完成后清除ThreadLocal中的对象
     @Override
@@ -44,40 +44,40 @@ public class DubboClientCallContextFilter implements Filter {
             }
             if (request == null) {
                 //logger.warn("客户端未从RequestThreadLocal中获取到request对象...");
-                String sessionId = invocation.getAttachment(WebOptUtils.REQUEST_ACCESS_TOKEN);
+                String sessionId = invocation.getAttachment("sessionid");
                 logger.info("从Attachment中获取sessionId {}", sessionId);
             } else {
                 logger.info("消费端调用开始");
-                invocation.setAttachment(WebOptUtils.REQUEST_ACCESS_TOKEN, request.getRequestedSessionId());
+                invocation.setAttachment("sessionid", request.getRequestedSessionId());
                 CentitUserDetails centitUserDetails = WebOptUtils.getCurrentUserDetails(request);
                 if (null != centitUserDetails) {
                     invocation.setAttachment("userinfo", JSON.toJSONString(centitUserDetails));
                 }
             }
-            String traceId = invocation.getAttachment(WebOptUtils.CORRELATION_ID);
+            String traceId = invocation.getAttachment("traceid");
             if (StringUtils.isBlank(traceId)) {
                 String uuidAsString22 = UuidOpt.getUuidAsString22();
-                invocation.setAttachment(WebOptUtils.CORRELATION_ID, uuidAsString22);
+                invocation.setAttachment("traceid", uuidAsString22);
             }
         }
 
         if (providerSide) {
-            String sessionId = invocation.getAttachment(WebOptUtils.REQUEST_ACCESS_TOKEN);
+            String sessionId = invocation.getAttachment("sessionid");
             String userDetails = invocation.getAttachment("userinfo");
-            String traceId = invocation.getAttachment(WebOptUtils.CORRELATION_ID);
+            String traceId = invocation.getAttachment("traceid");
             if (StringUtils.isNotBlank(sessionId)) {
                 if (StringUtils.isBlank(traceId)) {
                     String uuidAsString22 = UuidOpt.getUuidAsString22();
-                    invocation.setAttachment(WebOptUtils.CORRELATION_ID, uuidAsString22);
+                    invocation.setAttachment("traceid", uuidAsString22);
                 }
             }
             if (StringUtils.isNotBlank(userDetails)) {
                 logger.info("生产端调用开始");
                 CentitUserDetails centitUserDetails = JSON.parseObject(JSONObject.parse(userDetails).toString(), CentitUserDetails.class);
                 Map<String, Object> data = new HashMap<>();
-                data.put(WebOptUtils.REQUEST_ACCESS_TOKEN, sessionId);
+                data.put("sessionid", sessionId);
                 data.put("userinfo", centitUserDetails);
-                data.put(WebOptUtils.CORRELATION_ID, traceId);
+                data.put("traceId", traceId);
                 HttpContextUtils.threadLocal.set(data);
             }
         }
