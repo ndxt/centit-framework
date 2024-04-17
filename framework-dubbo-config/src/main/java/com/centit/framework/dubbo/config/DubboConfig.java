@@ -28,10 +28,10 @@ public class DubboConfig {
 
     @Value("${centit.dubbo.consumer.retries:0}")
     private Integer retries;
-    /**
+
     /**
      * 应用名
-     * @return
+     * @return ApplicationConfig
      */
     @Bean
     public ApplicationConfig applicationConfig() {
@@ -42,8 +42,7 @@ public class DubboConfig {
 
     /**
      * 地址配置 <dubbo:registry address="zookeeper://127.0.0.1:2181" client="zkclient"/>
-     *
-     * @return
+     * @return registryConfig
      */
     @Bean
     public RegistryConfig registryConfig() {
@@ -54,8 +53,7 @@ public class DubboConfig {
 
     /**
      * <dubbo:provider timeout="10000" />
-     *
-     * @return
+     * @return providerConfig
      */
     @Bean
     public ProviderConfig providerConfig() {
