@@ -270,7 +270,7 @@ public interface ResponseData  extends Serializable {
     int ERROR_OPERATION = 800;
 
     int ERROR_DUPLICATE_OPERATION = 801;
-    int ERROR_OPERATION_FAIL = 802;
+
     String RES_CODE_FILED="code";
     String RES_MSG_FILED="message";
     String RES_DATA_FILED="data";
