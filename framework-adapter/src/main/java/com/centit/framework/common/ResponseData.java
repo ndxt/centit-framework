@@ -267,10 +267,10 @@ public interface ResponseData  extends Serializable {
     /**
      *  8xx 业务系统自定义错误
      */
-    int ERROR_OPERATION=800;
+    int ERROR_OPERATION = 800;
 
-    int ERROR_DUPLICATE_OPERATION=801;
-
+    int ERROR_DUPLICATE_OPERATION = 801;
+    int ERROR_OPERATION_FAIL = 802;
     String RES_CODE_FILED="code";
     String RES_MSG_FILED="message";
     String RES_DATA_FILED="data";
