@@ -93,12 +93,12 @@ public class UnitInfo implements java.io.Serializable{
     private String unitDesc; // 机构描述
 
     @Column(name = "UNIT_ORDER")
-    @Range(max = 9999, min=1)
+    @Range(max = 99999, min=0)
     @OrderBy
     private Long unitOrder; // 机构排序
 
     @Column(name = "UNIT_GRADE")
-    @Range(max = 9999)
+    @Range(max = 99999)
     private Long unitGrade;//机构等级
 
     @Column(name = "DEP_NO")// 机构编码

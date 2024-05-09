@@ -118,7 +118,7 @@ public class UserInfo implements java.io.Serializable{
     private String userTag;
 
     @Column(name = "USER_ORDER")
-    @Range(max = 99999, min=1)
+    @Range(max = 99999, min=0)
     private Long userOrder; // 用户排序
 
     /**
