@@ -86,7 +86,7 @@ public abstract class BaseController {
             return;
         }
         if (ex instanceof ObjectException){
-            logger.error(ex.getMessage());
+            logger.error("请求：" + request.getRequestURL().toString() + "发生错误：\r\n " + ex.getMessage());
             ObjectException objex = (ObjectException) ex;
             if(WebOptUtils.exceptionNotAsHttpError &&
                 (objex.getExceptionCode() == ResponseData.ERROR_USER_NOT_LOGIN ||
@@ -109,7 +109,8 @@ public abstract class BaseController {
             }
             return;
         }
-        logger.error(ObjectException.extortExceptionMessage(ex));
+        logger.error("请求：" + request.getRequestURL().toString() + "发生错误：\r\n "
+            + ObjectException.extortExceptionMessage(ex));
         BindingResult bindingResult = null;
         if(ex instanceof BindException){
             bindingResult =((BindException)ex).getBindingResult();
@@ -143,7 +144,11 @@ public abstract class BaseController {
         } else {
             logger.error(ObjectException.extortExceptionTraceMessage(ex));
         }
-        JsonResultUtils.writeResponseDataAsJson(responseData, response);
+        try {
+            JsonResultUtils.writeResponseDataAsJson(responseData, response);
+        } catch (Exception e){
+            logger.error("无法将错误信息推送到前端：" + e.getMessage(), e);
+        }
     }
 
     /**
