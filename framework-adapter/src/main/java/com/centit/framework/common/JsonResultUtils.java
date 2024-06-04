@@ -5,7 +5,10 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.filter.PropertyPreFilter;
 import com.alibaba.fastjson2.filter.SimplePropertyPreFilter;
+import com.centit.support.algorithm.ByteBaseOpt;
 import com.centit.support.algorithm.ReflectionOpt;
+import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.common.ObjectException;
 import com.centit.support.file.FileType;
 import com.centit.support.xml.XMLObject;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -229,14 +232,19 @@ public class JsonResultUtils {
         response.setCharacterEncoding(DEFAULT_RESPONSE_CHARACTER);
         response.setContentType(contentType);//"application/json; charset=utf-8");
         try {
-            if(objValue instanceof String) {
+            String dataString = StringBaseOpt.castObjectToString(objValue);
+            byte[] bytes = dataString.getBytes(); // ByteBaseOpt.castObjectToBytes(objValue);//
+            ServletOutputStream outputStream = response.getOutputStream(); // 获取输出流
+            outputStream.write(bytes); // 写入字节数据
+            outputStream.flush();
+            /*if(objValue instanceof String) {
                 response.getWriter().write((String) objValue);
             } else {
                 response.getWriter().print(objValue);
-            }
+            }*/
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-            //throw new ObjectException(objValue, e.getMessage());
+            throw new ObjectException(objValue, ResponseData.HTTP_IO_EXCEPTION, e.getMessage());
         }
     }
 
@@ -439,7 +447,7 @@ public class JsonResultUtils {
      * @param response HttpServletResponse
      */
     public static void writeResponseDataAsJson(ResponseData resData, HttpServletResponse response) {
-        writeSingleDataJson(resData.getCode(),resData.getMessage(),
+        writeSingleDataJson(resData.getCode(), resData.getMessage(),
                 resData.getData(), response, null);
     }
 

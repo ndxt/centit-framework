@@ -144,11 +144,7 @@ public abstract class BaseController {
         } else {
             logger.error(ObjectException.extortExceptionTraceMessage(ex));
         }
-        try {
-            JsonResultUtils.writeResponseDataAsJson(responseData, response);
-        } catch (Exception e){
-            logger.error("无法将错误信息推送到前端：" + e.getMessage(), e);
-        }
+        JsonResultUtils.writeResponseDataAsJson(responseData, response);
     }
 
     /**

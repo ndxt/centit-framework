@@ -192,6 +192,7 @@ public interface ResponseData  extends Serializable {
     int HTTP_INSUFFICIENT_STORAGE=507;
     int HTTP_BANDWIDTH_LIMIT_EXCEEDED=509;
     int HTTP_NOT_EXTENDED=510;
+    int HTTP_IO_EXCEPTION=511;
 
     int HTTP_UNPARSEABLE_RESPONSE_HEADERS=600;
 
