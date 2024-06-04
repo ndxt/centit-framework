@@ -304,7 +304,7 @@ public class JsonResultUtils {
      * @param response HttpServletResponse
      */
     public static void writeOriginalImage(RenderedImage image, HttpServletResponse response) {
-        response.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding(DEFAULT_RESPONSE_CHARACTER);
         response.setContentType("image/gif");
         //response.setContentType("application/json; charset=utf-8");
         try(ServletOutputStream os = response.getOutputStream()) {
@@ -322,7 +322,7 @@ public class JsonResultUtils {
      * @param response HttpServletResponse
      */
     public static void writeOriginalFile(InputStream is, String fileName, HttpServletResponse response) {
-        response.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding(DEFAULT_RESPONSE_CHARACTER);
         response.setContentType(FileType.getFileMimeType(fileName));
         response.setHeader("Content-Disposition",
                 "attachment; filename=" +
