@@ -81,7 +81,6 @@ public class OptInfo implements java.io.Serializable {
     private Long imgIndex;
     @Column(name = "TOP_OPT_ID")
     @Length(max = 32)
-    @ValueGenerator(strategy = GeneratorType.FUNCTION, value = "optId")
     private String topOptId;
     @Column(name = "PAGE_TYPE")
     @Length(max = 1)
