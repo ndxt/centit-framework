@@ -119,7 +119,6 @@ public class RoleInfo implements java.io.Serializable {
      * default constructor
      */
     public RoleInfo() {
-        roleType = "G";
     }
 
     /**
@@ -131,7 +130,6 @@ public class RoleInfo implements java.io.Serializable {
     public RoleInfo(String rolecode, String isvalid) {
         this.roleCode = rolecode;
         this.isValid = isvalid;
-        this.roleType = "G";
     }
 
     public RoleInfo(String rolecode, String rolename, String roleType,
