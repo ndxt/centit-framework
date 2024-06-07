@@ -46,6 +46,7 @@ public class RedisSessionPersistenceConfig{
         RedisStandaloneConfiguration configuration =
             new RedisStandaloneConfiguration(host,port);
         logger.debug("Redis Session服务器URL："+host+":"+port);
+        System.out.println("Redis Session服务器URL："+host+":"+port);
         configuration.setDatabase(database);
         if(StringUtils.isNotBlank(password)){
             configuration.setPassword(RedisPassword.of(password));
