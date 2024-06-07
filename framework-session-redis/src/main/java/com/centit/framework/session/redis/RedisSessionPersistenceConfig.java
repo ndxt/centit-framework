@@ -4,6 +4,8 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.support.spring.data.redis.GenericFastJsonRedisSerializer;
 import com.centit.framework.session.CentitSessionRepo;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +27,7 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 @Configuration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 7200)
 public class RedisSessionPersistenceConfig{
-    //private Logger logger = LoggerFactory.getLogger(RedisSessionPersistenceConfig.class);
+    private Logger logger = LoggerFactory.getLogger(RedisSessionPersistenceConfig.class);
 
     @Value("${session.redis.host:}")
     private String host;
@@ -43,6 +45,7 @@ public class RedisSessionPersistenceConfig{
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration configuration =
             new RedisStandaloneConfiguration(host,port);
+        logger.debug("Redis Session服务器URL："+host+":"+port);
         configuration.setDatabase(database);
         if(StringUtils.isNotBlank(password)){
             configuration.setPassword(RedisPassword.of(password));
