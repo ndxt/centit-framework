@@ -15,7 +15,7 @@ public class FrameworkHttpSessionConfiguration {
     private boolean addAccessToken;
 
     @Bean
-    public SmartHttpSessionResolver smartHttpSessionStrategy(){
+    public SmartHttpSessionResolver httpSessionIdResolver(){
         return new SmartHttpSessionResolver(cookieFist, cookiePath, addAccessToken);
     }
 }
