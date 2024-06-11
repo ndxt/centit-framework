@@ -1,7 +1,5 @@
 package com.centit.framework.session.redis;
 
-import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.support.spring.data.redis.GenericFastJsonRedisSerializer;
 import com.centit.framework.session.CentitSessionRepo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,8 +12,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
@@ -42,7 +38,7 @@ public class RedisSessionPersistenceConfig{
     private Integer database;
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
+    public RedisConnectionFactory springSessionRedisConnectionFactory() {
         RedisStandaloneConfiguration configuration =
             new RedisStandaloneConfiguration(host,port);
         logger.debug("Redis Session服务器URL："+host+":"+port);
@@ -66,20 +62,4 @@ public class RedisSessionPersistenceConfig{
         return new CentitSessionRedisRepo(sessionRepository);
     }
 
-    /**
-     * @param redisConnectionFactory 这个是 framework-session-redis中的bean耦合
-     * @return RedisTemplate bean
-     */
-    @Bean
-    public RedisTemplate<String, JSONObject> redisTemplate(@Autowired RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, JSONObject> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory);
-        GenericFastJsonRedisSerializer serializer = new GenericFastJsonRedisSerializer();
-        template.setValueSerializer(serializer);
-        // 使用StringRedisSerializer来序列化和反序列化redis的key值
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setHashKeySerializer(new StringRedisSerializer());
-        template.afterPropertiesSet();
-        return template;
-    }
 }
