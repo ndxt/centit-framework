@@ -2,6 +2,7 @@ package com.centit.framework.session;
 
 import com.centit.framework.common.WebOptUtils;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.session.web.http.CookieHttpSessionIdResolver;
 import org.springframework.session.web.http.DefaultCookieSerializer;
@@ -54,20 +55,28 @@ public class SmartHttpSessionResolver implements HttpSessionIdResolver {
     public List<String> resolveSessionIds(HttpServletRequest request) {
         if(cookieFirst){
             List<String> sessionIds = browser.resolveSessionIds(request);
+            System.out.print("Resolve Session , X-Auth-Token: " + request.getHeader("X-Auth-Token"));
+            System.out.println(" Session from cookie: " + StringBaseOpt.castObjectToString(sessionIds));
             if(sessionIds!=null && sessionIds.size()>0)
                 return sessionIds;
             sessionIds = api.resolveSessionIds(request);
+            System.out.println(" Session from header: " + StringBaseOpt.castObjectToString(sessionIds));
             if(sessionIds!=null && sessionIds.size()>0)
                 return sessionIds;
             return resolveAccessTokenSessionId(request);
         }else {
             List<String> sessionIds = api.resolveSessionIds(request);
+            System.out.print("Resolve Session , X-Auth-Token: " + request.getHeader("X-Auth-Token"));
+            System.out.println(" Session from header: " + StringBaseOpt.castObjectToString(sessionIds));
             if(sessionIds!=null && sessionIds.size()>0)
                 return sessionIds;
             sessionIds = resolveAccessTokenSessionId(request);
+            System.out.println(" Session from params: " + StringBaseOpt.castObjectToString(sessionIds));
             if(sessionIds!=null && sessionIds.size()>0)
                 return sessionIds;
-            return browser.resolveSessionIds(request);
+            sessionIds = browser.resolveSessionIds(request);
+            System.out.println(" Session from cookie: " + StringBaseOpt.castObjectToString(sessionIds));
+            return sessionIds;
         }
     }
 
