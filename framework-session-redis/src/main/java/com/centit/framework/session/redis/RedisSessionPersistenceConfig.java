@@ -1,6 +1,7 @@
 package com.centit.framework.session.redis;
 
 import com.centit.framework.session.CentitSessionRepo;
+import com.centit.support.security.SecurityOptUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,8 @@ public class RedisSessionPersistenceConfig{
         System.out.println("Redis Session服务器URL："+host+":"+port);
         configuration.setDatabase(database);
         if(StringUtils.isNotBlank(password)){
-            configuration.setPassword(RedisPassword.of(password));
+            configuration.setPassword(RedisPassword.of(
+                SecurityOptUtils.decodeSecurityString(password)));
         }
         return new LettuceConnectionFactory(configuration);
     }
