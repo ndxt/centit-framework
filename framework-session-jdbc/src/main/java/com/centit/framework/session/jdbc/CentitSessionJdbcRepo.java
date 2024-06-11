@@ -26,4 +26,9 @@ public class CentitSessionJdbcRepo implements CentitSessionRepo {
     public void kickSessionByPrincipal(String principalName) {
         kickSessionByName(principalName);
     }
+
+    @Override
+    public Session findById(String id) {
+        return this.sessionRepository.findById(id);
+    }
 }
