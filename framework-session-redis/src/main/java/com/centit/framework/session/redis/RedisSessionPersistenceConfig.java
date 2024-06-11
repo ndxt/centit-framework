@@ -16,7 +16,6 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
-
 /**
  * Created by zou_wy on 2017/6/14.
  */
