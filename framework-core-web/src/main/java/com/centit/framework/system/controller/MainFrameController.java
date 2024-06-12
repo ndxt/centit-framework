@@ -280,7 +280,7 @@ public class MainFrameController extends BaseController {
         }
 
         if (StringUtils.isBlank(userCode)) {
-            String userName = objBody.getString("username");
+            String userName = SecurityOptUtils.decodeSecurityString(objBody.getString("username"));
             CentitUserDetails ud;
             if(userName.indexOf('@')>=0){//邮箱
                 ud = platformEnvironment.loadUserDetailsByRegEmail(userName);
