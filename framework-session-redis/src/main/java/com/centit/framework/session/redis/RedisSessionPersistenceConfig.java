@@ -55,7 +55,8 @@ public class RedisSessionPersistenceConfig{
     public SessionRegistry sessionRegistry(
         @Autowired RedisIndexedSessionRepository sessionRepository){
         // sessionRepository.setDefaultSerializer(new FastJsonRedisSerializer<>(Object.class));
-        return new SpringSessionBackedSessionRegistry(sessionRepository);
+        SpringSessionBackedSessionRegistry sessionRegistry = new SpringSessionBackedSessionRegistry(sessionRepository);
+        return sessionRegistry;
     }
 
     @Bean
