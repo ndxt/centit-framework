@@ -251,6 +251,25 @@ public class MainFrameController extends BaseController {
         String password = SecurityOptUtils.decodeSecurityString(objBody.getString("password"));
         String newPassword = SecurityOptUtils.decodeSecurityString(objBody.getString("newPassword"));
 
+        if (!BooleanBaseOpt.castObjectToBoolean(
+            request.getSession().getAttribute(
+                SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
+            false) ) {
+
+            String sessionCheckCode = StringBaseOpt.castObjectToString(
+                request.getSession().getAttribute(CaptchaImageUtil.SESSIONCHECKCODE));
+            if(StringUtils.isNotBlank(sessionCheckCode)){
+                //清除临时验证码，避免多次重复验证
+                request.getSession().setAttribute(
+                    CaptchaImageUtil.SESSIONCHECKCODE, CaptchaImageUtil.getRandomString(6));
+                if (!CaptchaImageUtil.checkcodeMatch(sessionCheckCode, objBody.getString(CaptchaImageUtil.REQUESTCHECKCODE))) {
+                    return ResponseData.makeErrorMessage(701, getI18nMessage("error.701.invalid_check_code", request));
+                }
+            }
+        }
+        request.getSession().setAttribute(
+            SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
+
         if (CentitPasswordEncoder.checkPasswordStrength(newPassword, passwordMinLength ) < passwordStrength) {
             return ResponseData.makeErrorMessage(611, getI18nMessage("error.611.weak_password", request));
         }
