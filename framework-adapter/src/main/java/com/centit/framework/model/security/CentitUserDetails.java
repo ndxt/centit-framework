@@ -203,7 +203,8 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return isEnabled();
+        return userInfo.getPwdExpiredTime() == null
+            || DatetimeOpt.currentUtilDate().before(userInfo.getPwdExpiredTime());
     }
 
     public void setUserSettings(Map<String, String> userSettings) {

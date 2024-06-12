@@ -1,6 +1,7 @@
 package com.centit.framework.security;
 
 import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
@@ -90,7 +91,6 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
 
         //if(!onlyPretreat || writeLog || CheckFailLogs.getMaxTryTimes() > 0){
         try{
-
             String username = obtainUsername(request);
             username = SecurityOptUtils.decodeSecurityString(username);
             String password = obtainPassword(request);
@@ -100,8 +100,12 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
             // Allow subclasses to set the "details" property
             setDetails(request, authRequest);
             Authentication auth = this.getAuthenticationManager().authenticate(authRequest);
+            /*CheckFailLogs.removeCheckFail(request);
+            if(auth instanceof CentitUserDetails){
+                CentitUserDetails userDetails = (CentitUserDetails) auth;
 
-            CheckFailLogs.removeCheckFail(request);
+            }*/
+            //auth.getDetails()
             return auth;
         }catch (AuthenticationException failed) {
             CheckFailLogs.plusCheckFail(request);

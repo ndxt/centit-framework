@@ -249,10 +249,21 @@ public class MainFrameController extends BaseController {
         if (CentitPasswordEncoder.checkPasswordStrength(newPassword, passwordMinLength ) < passwordStrength) {
             return ResponseData.makeErrorMessage(611, getI18nMessage("error.611.weak_password", request));
         }
+        if (StringUtils.equals(password, newPassword)) {
+            return ResponseData.makeErrorMessage(611, getI18nMessage("error.611.cannt_use_old_password", request));
+        }
 
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
-            return ResponseData.makeErrorMessage(302, getI18nMessage(ResponseData.ERROR_NOT_LOGIN_MSG, request));
+            String userName = objBody.getString("username");
+            CentitUserDetails ud = platformEnvironment.loadUserDetailsByLoginName(userName);
+            if(ud!=null)
+                userCode = ud.getUserCode();
+        }
+
+        if (StringUtils.isBlank(userCode)) {
+            return ResponseData.makeErrorMessage(611,
+                    getI18nMessage("error.701.field_is_blank", request, "loginName"));
         } else {
             boolean bo = platformEnvironment.checkUserPassword(userCode, password);
             if (bo) {
