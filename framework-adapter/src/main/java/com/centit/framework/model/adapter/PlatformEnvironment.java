@@ -401,6 +401,14 @@ public interface PlatformEnvironment {
     boolean loginUserIsExistWorkGroup(String osId, String userCode);
 
     /**
+     *
+     * @param osId 应用id
+     * @param userCode 用户代码
+     * @return 用户是否应用的组长
+     */
+    boolean loginUserIsWorkGroupLeader(String osId, String userCode);
+
+    /**
      * 根据topUnit获取租户基本信息，
      * TODO 需要添加 现有的资源占有量，用于平台判断是否可以增加资源
      * @param topUnit 租户code
