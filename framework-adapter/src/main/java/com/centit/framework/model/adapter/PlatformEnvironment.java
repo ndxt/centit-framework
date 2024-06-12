@@ -384,29 +384,20 @@ public interface PlatformEnvironment {
      */
     boolean deleteOptInfoByOptId(String optId);
 
-    List<WorkGroup> listWorkGroup(Map<String, Object> filterMap, PageDesc pageDesc);
-
     /**
      * 批量保存用户组； 这个名字怎么起的，sign
      * @param workGroups 用户组列表
      */
-    void batchWorkGroup(List<WorkGroup> workGroups);
+    void batchSaveWorkGroup(List<WorkGroup> workGroups);
+
 
     /**
      *
-     * @param osId 应用id
+     * @param groupId 组ID
      * @param userCode 用户代码
-     * @return 用户是否在这个应用的开发组中
+     * @return 用户在组中的角色，null表示不在组中
      */
-    boolean loginUserIsExistWorkGroup(String osId, String userCode);
-
-    /**
-     *
-     * @param osId 应用id
-     * @param userCode 用户代码
-     * @return 用户是否应用的组长
-     */
-    boolean loginUserIsWorkGroupLeader(String osId, String userCode);
+    List<WorkGroup> listWorkGroup(String groupId, String userCode, String roleCode);
 
     /**
      * 根据topUnit获取租户基本信息，
