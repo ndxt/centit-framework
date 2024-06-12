@@ -45,17 +45,12 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
         boolean isAjaxQuery = WebOptUtils.isAjax(request);
         if(isAjaxQuery){
-            if(exception instanceof CredentialsExpiredException){
-                ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_LOGIN_ERROR,
-                    exception.getMessage());
-                resData.addResponseData("hasTriedTimes", tryTimes);
-                JsonResultUtils.writeResponseDataAsJson(resData, response);
-            } else {
-                ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_PASSWORD_EXPIRED,
-                    exception.getMessage());
-                resData.addResponseData("hasTriedTimes", tryTimes);
-                JsonResultUtils.writeResponseDataAsJson(resData, response);
-            }
+            ResponseMapData resData = new ResponseMapData(
+                exception instanceof CredentialsExpiredException ? ResponseData.ERROR_USER_PASSWORD_EXPIRED
+                    : ResponseData.ERROR_USER_LOGIN_ERROR ,
+                exception.getMessage());
+            resData.addResponseData("hasTriedTimes", tryTimes);
+            JsonResultUtils.writeResponseDataAsJson(resData, response);
         }else {
             request.setAttribute("hasTriedTimes",tryTimes);
             super.onAuthenticationFailure(request, response, exception);
