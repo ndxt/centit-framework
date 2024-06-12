@@ -16,6 +16,7 @@ import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.framework.model.basedata.*;
 import com.centit.framework.model.security.CentitPasswordEncoder;
 import com.centit.framework.model.security.CentitUserDetails;
+import com.centit.framework.model.security.CentitUserDetailsService;
 import com.centit.framework.model.security.ThirdPartyCheckUserDetails;
 import com.centit.framework.security.SecurityContextUtils;
 import com.centit.support.algorithm.BooleanBaseOpt;
@@ -48,6 +49,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.RenderedImage;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Api(value = "框架中用户权限相关的接口，用户登录接口，第三方认证接口，安全接口",
     tags = "登录、权限、安全控制等接口")
@@ -59,7 +62,7 @@ public class MainFrameController extends BaseController {
     public static final String NORMAL_LOGIN = "NORMAL";
     public static final String DEPLOY_LOGIN = "DEPLOY";
     public static final String LOGIN_AUTH_ERROR_MSG = "LOGIN_ERROR_MSG";
-
+    private static Pattern pattern = Pattern.compile("[0-9]*");
     public String getOptId() {
         return "mainframe";
     }
@@ -70,6 +73,8 @@ public class MainFrameController extends BaseController {
     @Autowired
     protected PlatformEnvironment platformEnvironment;
 
+    @Autowired
+    protected CentitUserDetailsService centitUserDetailsService;
     /**
      * 这一用户自定义验证，可以为null
      */
@@ -256,7 +261,17 @@ public class MainFrameController extends BaseController {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
             String userName = objBody.getString("username");
-            CentitUserDetails ud = platformEnvironment.loadUserDetailsByLoginName(userName);
+            CentitUserDetails ud;
+            if(userName.indexOf('@')>=0){//邮箱
+                ud = platformEnvironment.loadUserDetailsByRegEmail(userName);
+            } else {
+                Matcher isNum = pattern.matcher(userName);
+                if(userName.length() == 11 && isNum.matches()){
+                    ud = platformEnvironment.loadUserDetailsByRegCellPhone(userName);
+                }else{
+                    ud= platformEnvironment.loadUserDetailsByLoginName(userName);
+                }
+            }
             if(ud!=null)
                 userCode = ud.getUserCode();
         }
