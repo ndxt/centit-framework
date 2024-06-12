@@ -250,25 +250,27 @@ public class MainFrameController extends BaseController {
         JSONObject objBody = JSONObject.parseObject(jsonBody);
         String password = SecurityOptUtils.decodeSecurityString(objBody.getString("password"));
         String newPassword = SecurityOptUtils.decodeSecurityString(objBody.getString("newPassword"));
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if(StringUtils.isBlank(userCode)) { // 为登录是修改密码，需要提供 j_checkcode
+            if (!BooleanBaseOpt.castObjectToBoolean(
+                request.getSession().getAttribute(
+                    SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
+                false)) {
 
-        if (!BooleanBaseOpt.castObjectToBoolean(
-            request.getSession().getAttribute(
-                SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
-            false) ) {
-
-            String sessionCheckCode = StringBaseOpt.castObjectToString(
-                request.getSession().getAttribute(CaptchaImageUtil.SESSIONCHECKCODE));
-            if(StringUtils.isNotBlank(sessionCheckCode)){
-                //清除临时验证码，避免多次重复验证
-                request.getSession().setAttribute(
-                    CaptchaImageUtil.SESSIONCHECKCODE, CaptchaImageUtil.getRandomString(6));
-                if (!CaptchaImageUtil.checkcodeMatch(sessionCheckCode, objBody.getString(CaptchaImageUtil.REQUESTCHECKCODE))) {
-                    return ResponseData.makeErrorMessage(701, getI18nMessage("error.701.invalid_check_code", request));
+                String sessionCheckCode = StringBaseOpt.castObjectToString(
+                    request.getSession().getAttribute(CaptchaImageUtil.SESSIONCHECKCODE));
+                if (StringUtils.isNotBlank(sessionCheckCode)) {
+                    //清除临时验证码，避免多次重复验证
+                    request.getSession().setAttribute(
+                        CaptchaImageUtil.SESSIONCHECKCODE, CaptchaImageUtil.getRandomString(6));
+                    if (!CaptchaImageUtil.checkcodeMatch(sessionCheckCode, objBody.getString(CaptchaImageUtil.REQUESTCHECKCODE))) {
+                        return ResponseData.makeErrorMessage(701, getI18nMessage("error.701.invalid_check_code", request));
+                    }
                 }
             }
+            request.getSession().setAttribute(
+                SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
         }
-        request.getSession().setAttribute(
-            SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
 
         if (CentitPasswordEncoder.checkPasswordStrength(newPassword, passwordMinLength ) < passwordStrength) {
             return ResponseData.makeErrorMessage(611, getI18nMessage("error.611.weak_password", request));
@@ -277,7 +279,6 @@ public class MainFrameController extends BaseController {
             return ResponseData.makeErrorMessage(611, getI18nMessage("error.611.cannt_use_old_password", request));
         }
 
-        String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
             String userName = objBody.getString("username");
             CentitUserDetails ud;
@@ -298,14 +299,13 @@ public class MainFrameController extends BaseController {
         if (StringUtils.isBlank(userCode)) {
             return ResponseData.makeErrorMessage(611,
                     getI18nMessage("error.701.field_is_blank", request, "loginName"));
+        }
+        boolean bo = platformEnvironment.checkUserPassword(userCode, password);
+        if (bo) {
+            platformEnvironment.changeUserPassword(userCode, newPassword);
+            return ResponseData.successResponse;
         } else {
-            boolean bo = platformEnvironment.checkUserPassword(userCode, password);
-            if (bo) {
-                platformEnvironment.changeUserPassword(userCode, newPassword);
-                return ResponseData.successResponse;
-            } else {
-                return ResponseData.makeErrorMessage(701, getI18nMessage("error.701.invalid_password", request));
-            }
+            return ResponseData.makeErrorMessage(701, getI18nMessage("error.701.invalid_password", request));
         }
     }
 
