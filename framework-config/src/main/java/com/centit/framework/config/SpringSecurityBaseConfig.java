@@ -88,7 +88,8 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         }
         AjaxAccessDeniedHandlerImpl ajaxAccessDeniedHandler = new AjaxAccessDeniedHandlerImpl();
         ajaxAccessDeniedHandler.setErrorPage("/system/exception/error/403");
-        http.exceptionHandling().accessDeniedHandler(ajaxAccessDeniedHandler);
+        http.exceptionHandling()
+            .accessDeniedHandler(ajaxAccessDeniedHandler);
 
         http.httpBasic().authenticationEntryPoint(getAuthenticationEntryPoint());
 
@@ -144,10 +145,6 @@ public abstract class SpringSecurityBaseConfig extends WebSecurityConfigurerAdap
         DaoFilterSecurityInterceptor interceptor = new DaoFilterSecurityInterceptor();
         AuthenticationManager authenticationManager = createAuthenticationManager();
         Assert.notNull(authenticationManager, "authenticationManager不能为空");
-        AjaxAuthenticationSuccessHandler successHandler = createAjaxSuccessHandler();
-        Assert.notNull(successHandler, "successHandler不能为空");
-        AjaxAuthenticationFailureHandler failureHandler = createAjaxFailureHandler();
-        Assert.notNull(failureHandler, "failureHandler不能为空");
 
         interceptor.setAuthenticationManager(authenticationManager);
         interceptor.setAccessDecisionManager(createCentitAccessDecisionManager());

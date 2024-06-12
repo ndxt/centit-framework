@@ -8,6 +8,7 @@ import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.model.basedata.OperationLog;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.security.SecurityOptUtils;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
@@ -31,7 +32,7 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
     public void onAuthenticationFailure(HttpServletRequest request,
             HttpServletResponse response, AuthenticationException exception)
             throws IOException, ServletException {
-
+         CredentialsExpiredException cex = null;
         if(writeLog){
             String loginName = SecurityOptUtils.decodeSecurityString(request.getParameter("username"));
             String loginHost = request.getRemoteHost()+":"+request.getRemotePort();
@@ -44,10 +45,17 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         int tryTimes = CheckFailLogs.getHasTriedTimes(request);
         boolean isAjaxQuery = WebOptUtils.isAjax(request);
         if(isAjaxQuery){
-            ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_LOGIN_ERROR,
+            if(exception instanceof CredentialsExpiredException){
+                ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_LOGIN_ERROR,
                     exception.getMessage());
-            resData.addResponseData("hasTriedTimes",tryTimes);
-            JsonResultUtils.writeResponseDataAsJson(resData, response);
+                resData.addResponseData("hasTriedTimes", tryTimes);
+                JsonResultUtils.writeResponseDataAsJson(resData, response);
+            } else {
+                ResponseMapData resData = new ResponseMapData(ResponseData.ERROR_USER_PASSWORD_EXPIRED,
+                    exception.getMessage());
+                resData.addResponseData("hasTriedTimes", tryTimes);
+                JsonResultUtils.writeResponseDataAsJson(resData, response);
+            }
         }else {
             request.setAttribute("hasTriedTimes",tryTimes);
             super.onAuthenticationFailure(request, response, exception);

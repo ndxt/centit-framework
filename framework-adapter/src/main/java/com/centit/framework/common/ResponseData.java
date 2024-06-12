@@ -97,7 +97,7 @@ public interface ResponseData  extends Serializable {
      * 101 用户登录失败
      */
     int ERROR_USER_LOGIN_ERROR=101;
-
+    int ERROR_USER_PASSWORD_EXPIRED=102;
     int HTTP_CONTINUE=100;
     int HTTP_SWITCHING_PROTOCOLS=101;
     int HTTP_PROCESSING=102;
