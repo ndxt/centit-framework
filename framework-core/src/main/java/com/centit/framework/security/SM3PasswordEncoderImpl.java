@@ -56,10 +56,10 @@ public class SM3PasswordEncoderImpl
      * password after it too is encoded. Returns true if the passwords match, false if
      * they do not. The stored password itself is never decoded.
      *
-     * @param rawPassword     明文密码 the raw password to encode and match
+     * @param rawPassword 明文密码 the raw password to encode and match
      * @param encodedPassword the encoded password from storage to compare with
      * @return true if the raw password, after encoding, matches the encoded password from
-     * storage
+     * storage ; 这个接口不支持 salt
      */
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
