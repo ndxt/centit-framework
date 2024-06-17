@@ -53,17 +53,19 @@ public class RoleInfo implements java.io.Serializable {
      * 角色的类别 F (Fixe)系统内置的，固有的 这些角色不能删除，也不能赋给任何人，
      *          G (global) 全局的
      *          P (Public) 公用的，指 系统全局 和 部门之间公用的
-     *          D (Department)部门(机构)特有的角色
-     *          S (Sub System) 属于某个子系统
-     *          I (Item )为项目角色
-     *          W (workflow)工作流角色 ，这两个为保留类别，暂时没有使用
+     *          D (Department) 部门(机构)特有的角色
+     *          S (Sub System) 业务系统角色， 属于某个子系统
+     *          I (Item )为项目角色 （已废弃）
+     *          W (workflow)工作流角色 （已废弃） ，这两个为保留类别，暂时没有使用
      *          H (HIDE)系统内置的不要显示的，是部门可以自己支配的操作权限集合
      * 角色的类别 F/G/P/D/S/I/W/H
      */
     @Column(name = "ROLE_TYPE")
     @Length(max = 1)
     @NotBlank
-    @ApiModelProperty(value = "角色的类别 F:系统内置的 G:全局的 P:公用的 D:部门（机构）特有的角色 I:项目角色 W:工作流角色", name = "roleType", required = true)
+    @ApiModelProperty(value = "角色的类别 F:系统内置的 G:全局的 P:公用的" +
+        " D:部门（机构）特有的角色  S:业务系统角色 " +
+        " I:项目角色 （已废弃） W:工作流角色 （已废弃）", name = "roleType", required = true)
     @DictionaryMap(fieldName = "roleTypeText", value = "RoleType")
     private String roleType; // 角色类别
     /**
