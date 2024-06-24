@@ -5,6 +5,7 @@ import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.QueryUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -67,7 +68,10 @@ public abstract class BaseController {
     }
 
     public String getI18nMessage(String code, HttpServletRequest request, Object... args) {
-        return messageSource.getMessage(code, args, "Message:" + code, WebOptUtils.getCurrentLocale(request));
+        String defaultMsg = args==null?"Message:" + code:
+            "Message:" + code + " " + StringBaseOpt.castObjectToString(args);
+        return messageSource.getMessage(code, args, defaultMsg,
+            WebOptUtils.getCurrentLocale(request));
     }
 
     /**
