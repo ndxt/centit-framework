@@ -13,7 +13,6 @@ import org.springframework.security.cas.authentication.CasAuthenticationProvider
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -26,7 +25,6 @@ import javax.servlet.Filter;
 /**
  * Created by zou_wy on 2017/3/29.
  */
-@EnableWebSecurity
 @Conditional(SecurityCasCondition.class)
 public class SpringSecurityCasConfig extends SpringSecurityBaseConfig {
 
