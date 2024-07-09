@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.support.DelegatingMessageSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -30,7 +29,6 @@ import org.springframework.session.security.web.authentication.SpringSessionReme
 /**
  * Created by zou_wy on 2017/3/29.
  */
-@EnableWebSecurity
 @Conditional(SecurityDaoCondition.class)
 public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
 

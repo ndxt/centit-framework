@@ -21,7 +21,7 @@
     <url>https://github.com/ndxt/centit-framework</url>
 
     <properties>
-        <revision>5.5-SNAPSHOT</revision>
+<!--        <revision>5.5-SNAPSHOT</revision>-->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <centit.ui.version>3.1.2007</centit.ui.version>
