@@ -26,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -325,11 +326,16 @@ public class CacheController extends BaseController {
     ),@ApiImplicitParam(
         name = "extraCode", value="扩展代码",
         paramType = "query", dataType= "String"
+    ),@ApiImplicitParam(
+        name = "dataTag", value="数据标签",
+        paramType = "query", dataType= "String"
     )})
     @RequestMapping(value = "/dictionary/{catalog}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public JSONArray dictionary(@PathVariable String catalog, String extraCode,
-            HttpServletRequest request) {
+    public JSONArray dictionary(@PathVariable String catalog,
+                                @RequestParam(required=false, name = "extraCode") String extraCode,
+                                @RequestParam(required=false, name = "dataTag") String dataTag,
+                                HttpServletRequest request) {
         List<DataDictionary> listObjects = CodeRepositoryUtil.getDictionary(catalog);
         if(listObjects==null){
             return null;
@@ -339,6 +345,8 @@ public class CacheController extends BaseController {
         for(DataDictionary dict : listObjects){
             // 级联或者树形数据字典明细查询
             if (StringUtils.isNotBlank(extraCode) && !extraCode.equals(dict.getExtraCode()))
+                continue;
+            if (StringUtils.isNotBlank(dataTag) && !dataTag.equals(dict.getDataTag()))
                 continue;
             JSONObject obj = (JSONObject)JSON.toJSON(dict);
             obj.put("dataValue", dict.getLocalDataValue(lang));
