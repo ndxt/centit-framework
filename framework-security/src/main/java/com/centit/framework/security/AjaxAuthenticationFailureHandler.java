@@ -35,7 +35,7 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
          CredentialsExpiredException cex = null;
         if(writeLog){
             String loginName = SecurityOptUtils.decodeSecurityString(request.getParameter("username"));
-            String loginHost = request.getRemoteHost()+":"+request.getRemotePort();
+            String loginHost = WebOptUtils.getRequestAddr(request);//request.getRemoteHost()+":"+request.getRemotePort();
             OperationLogCenter.log(
                 OperationLog.create().user(loginName).method("loginError").application("mainframe")
                     .operation("login").content(
