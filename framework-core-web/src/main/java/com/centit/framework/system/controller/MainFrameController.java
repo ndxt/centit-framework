@@ -929,13 +929,24 @@ public class MainFrameController extends BaseController {
                 CodeRepositoryUtil.listUserUnitsByStation(topUnit, userCode, station)));
     }
 
+    private JSONArray unitInfosToJsonArray(List<UnitInfo> unitInfos) {
+        if(unitInfos==null || unitInfos.isEmpty())
+            return null;
+        JSONArray jsonArray = new JSONArray(unitInfos.size());
+        for(UnitInfo ui : unitInfos){
+            JSONObject uObj = JSONObject.from(ui);
+            uObj.put("unitNamePy", StringBaseOpt.getFirstLetter(ui.getUnitName()));
+            jsonArray.add(uObj);
+        }
+        return jsonArray;
+    }
     @ApiOperation(value = "机构树", notes = "获取当前租户下的指定机构下面的所有机构，并以树形形式提供。")
     @ApiImplicitParam(
         name = "unitCode", value = "起始机构，空就用topUnit代替",  paramType = "query", dataType = "String"
     )
     @RequestMapping(value = "/unitTree", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<UnitInfo> listUnitTree(String unitCode,  HttpServletRequest request) {
+    public JSONArray listUnitTree(String unitCode,  HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, getI18nMessage(ResponseData.ERROR_NOT_LOGIN_MSG, request));
@@ -944,7 +955,8 @@ public class MainFrameController extends BaseController {
         if(StringUtils.isBlank(unitCode)){
             unitCode = topUnit;
         }
-        return CodeRepositoryUtil.fetchAllSubUnits(topUnit, unitCode, true);
+        List<UnitInfo> unitInfos = CodeRepositoryUtil.fetchAllSubUnits(topUnit, unitCode, true);
+        return unitInfosToJsonArray(unitInfos);
     }
 
     @ApiOperation(value = "机构用户树", notes = "获取当前租户下的指定机构下面的所有用户，并以树形形式提供。")
@@ -976,12 +988,15 @@ public class MainFrameController extends BaseController {
                 if(StringUtils.isBlank(relType) || "A".equalsIgnoreCase(relType) || relType.equalsIgnoreCase(uc.getRelType())) {
                     UserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc.getUserCode());
                     if(tempUi != null) {
-                        allSubUser.add(JSON.toJSON(tempUi));
+                        JSONObject uObj = JSONObject.from(tempUi);
+                        uObj.put("userNamePy", StringBaseOpt.getFirstLetter(tempUi.getUserName()));
+                        allSubUser.add(uObj);
                     }
                 }
             }
             JSONObject jsonObject = JSONObject.from(unitInfo);
             jsonObject.put("users", allSubUser);
+            jsonObject.put("unitNamePy", StringBaseOpt.getFirstLetter(unitInfo.getUnitName()));
             allUnits.add(jsonObject);
         }
         return allUnits;
@@ -1041,7 +1056,13 @@ public class MainFrameController extends BaseController {
             }
         }
         Collections.sort(userInfos, (o1, o2) -> GeneralAlgorithm.compareTwoObject(o1.getUserOrder(), o2.getUserOrder(), false));
-        return JSONArray.copyOf(userInfos);
+        JSONArray jsonArray = new JSONArray(userInfos.size());
+        for(UserInfo ui : userInfos){
+            JSONObject uObj = JSONObject.from(ui);
+            uObj.put("userNamePy", StringBaseOpt.getFirstLetter(ui.getUserName()));
+            jsonArray.add(uObj);
+        }
+        return jsonArray;
     }
 
     @ApiOperation(value = "预览权限表达式对应机构", notes =
@@ -1075,41 +1096,48 @@ public class MainFrameController extends BaseController {
             }
         }
         unitInfos.sort((o1, o2) -> GeneralAlgorithm.compareTwoObject(o1.getUnitOrder(), o2.getUnitOrder(), false));
-        return JSONArray.copyOf(unitInfos);
+        return unitInfosToJsonArray(unitInfos);
     }
 
     @ApiOperation(value = "获取当前租户下所有的机构", notes = "获取当前租户下所有的机构。")
     @RequestMapping(value = "/currentunits", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<UnitInfo> listCurrentUnits(HttpServletRequest request) {
+    public JSONArray listCurrentUnits(HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, getI18nMessage(ResponseData.ERROR_NOT_LOGIN_MSG, request));
         }
-        return platformEnvironment.listAllUnits(WebOptUtils.getCurrentTopUnit(request));
+        List<UnitInfo> unitInfos = platformEnvironment.listAllUnits(WebOptUtils.getCurrentTopUnit(request));
+        if(unitInfos==null || unitInfos.isEmpty())
+            return null;
+        return unitInfosToJsonArray(unitInfos);
     }
 
     @ApiOperation(value = "获取当前租户下的所有的用户", notes = "获取当前租户下所有的用户。")
     @RequestMapping(value = "/currentusers", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public List<UserInfo> listCurrentUsers(HttpServletRequest request) {
+    public JSONArray listCurrentUsers(HttpServletRequest request) {
         String userCode = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(userCode)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, getI18nMessage(ResponseData.ERROR_NOT_LOGIN_MSG, request));
         }
         String topUnit=WebOptUtils.getCurrentTopUnit(request);
         List<UserUnit> userUnits = CodeRepositoryUtil.listAllUserUnits(topUnit);
-        List<UserInfo> result = new ArrayList<>();
+        if(userUnits==null || userUnits.isEmpty())
+            return null;
+        JSONArray jsonArray = new JSONArray(userUnits.size());
         for(UserUnit un : userUnits){
             if(Objects.equals(un.getRelType(),"T")){
                 UserInfo userInfo= CodeRepositoryUtil.getUserInfoByCode(topUnit, un.getUserCode());
                 if(userInfo != null) {
                     //userInfo.setPrimaryUnit(un.getUnitCode());
-                    result.add(userInfo);
+                    JSONObject uObj = JSONObject.from(userInfo);
+                    uObj.put("userNamePy", StringBaseOpt.getFirstLetter(userInfo.getUserName()));
+                    jsonArray.add(uObj);
                 }
             }
         }
-        return result;
+        return jsonArray;
     }
 
     @ApiOperation(value = "根据userWord获取用户信息", notes = "根据userWord获取用户信息")
