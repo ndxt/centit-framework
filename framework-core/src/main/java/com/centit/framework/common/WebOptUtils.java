@@ -321,6 +321,15 @@ public class WebOptUtils {
         return userInfo;
     }
 
+    public static CentitUserDetails assertUserDetails(HttpServletRequest request) {
+        CentitUserDetails userInfo =  getCurrentUserDetails(request);
+        if(userInfo == null){ // anonymous
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+                ResponseData.ERROR_NOT_LOGIN_MSG);
+        }
+        return userInfo;
+    }
+
     public static CentitUserDetails getCurrentUserDetails(HttpServletRequest request) {
         if(request == null){
             CentitUserDetails centitUserDetails = getUserInfoByHttpContext();
