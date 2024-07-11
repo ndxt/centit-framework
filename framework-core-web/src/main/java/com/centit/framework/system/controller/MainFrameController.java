@@ -935,7 +935,8 @@ public class MainFrameController extends BaseController {
         JSONArray jsonArray = new JSONArray(unitInfos.size());
         for(UnitInfo ui : unitInfos){
             JSONObject uObj = JSONObject.from(ui);
-            uObj.put("unitNamePy", StringBaseOpt.getFirstLetter(ui.getUnitName()));
+            uObj.put("unitNamePy", StringBaseOpt.getFirstLetter(ui.getUnitName())
+                + " " + StringBaseOpt.getPinYin(ui.getUnitName()) );
             jsonArray.add(uObj);
         }
         return jsonArray;
@@ -989,14 +990,16 @@ public class MainFrameController extends BaseController {
                     UserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc.getUserCode());
                     if(tempUi != null) {
                         JSONObject uObj = JSONObject.from(tempUi);
-                        uObj.put("userNamePy", StringBaseOpt.getFirstLetter(tempUi.getUserName()));
+                        uObj.put("userNamePy", StringBaseOpt.getFirstLetter(tempUi.getUserName())
+                            + " " + StringBaseOpt.getPinYin(tempUi.getUserName()) );
                         allSubUser.add(uObj);
                     }
                 }
             }
             JSONObject jsonObject = JSONObject.from(unitInfo);
             jsonObject.put("users", allSubUser);
-            jsonObject.put("unitNamePy", StringBaseOpt.getFirstLetter(unitInfo.getUnitName()));
+            jsonObject.put("unitNamePy", StringBaseOpt.getFirstLetter(unitInfo.getUnitName())
+                + " " + StringBaseOpt.getPinYin(unitInfo.getUnitName()) );
             allUnits.add(jsonObject);
         }
         return allUnits;
@@ -1059,7 +1062,8 @@ public class MainFrameController extends BaseController {
         JSONArray jsonArray = new JSONArray(userInfos.size());
         for(UserInfo ui : userInfos){
             JSONObject uObj = JSONObject.from(ui);
-            uObj.put("userNamePy", StringBaseOpt.getFirstLetter(ui.getUserName()));
+            uObj.put("userNamePy", StringBaseOpt.getFirstLetter(ui.getUserName())
+                + " " + StringBaseOpt.getPinYin(ui.getUserName()) );
             jsonArray.add(uObj);
         }
         return jsonArray;
@@ -1132,7 +1136,8 @@ public class MainFrameController extends BaseController {
                 if(userInfo != null) {
                     //userInfo.setPrimaryUnit(un.getUnitCode());
                     JSONObject uObj = JSONObject.from(userInfo);
-                    uObj.put("userNamePy", StringBaseOpt.getFirstLetter(userInfo.getUserName()));
+                    uObj.put("userNamePy", StringBaseOpt.getFirstLetter(userInfo.getUserName())
+                        + " " + StringBaseOpt.getPinYin(userInfo.getUserName()) );
                     jsonArray.add(uObj);
                 }
             }
