@@ -106,6 +106,7 @@ public abstract class BaseController {
                 if(this.logDebug) {
                     responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(objex));
                 } else {
+                    responseData.addResponseData("originMessage", ObjectException.extortExceptionOriginMessage(objex));
                     logger.error(ObjectException.extortExceptionTraceMessage(objex));
                 }
                 responseData.addResponseData("object", objex.getObjectData());
