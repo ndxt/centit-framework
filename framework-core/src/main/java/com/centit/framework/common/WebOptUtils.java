@@ -171,10 +171,7 @@ public class WebOptUtils {
         if (StringUtils.isNotBlank(sHostIp) && !"unKnown".equalsIgnoreCase(sHostIp)) {
             return sHostIp;
         }
-        if (StringUtils.isBlank(sHostIp)) {
-            sHostIp = request.getRemoteAddr();
-        }
-        return sHostIp;
+        return request.getRemoteAddr();
     }
 
     public static String getLocalLangParameter(HttpServletRequest request) {
