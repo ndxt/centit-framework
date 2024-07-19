@@ -970,10 +970,7 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/unitUserTree", method = RequestMethod.GET)
     @WrapUpResponseBody
     public JSONArray listUnitUserTree(String unitCode, String relType, HttpServletRequest request) {
-        String userCode = WebOptUtils.getCurrentUserCode(request);
-        if (StringUtils.isBlank(userCode)) {
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, getI18nMessage(ResponseData.ERROR_NOT_LOGIN_MSG, request));
-        }
+        WebOptUtils.assertUserLogin(request);
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if(StringUtils.isBlank(unitCode)){
             unitCode = topUnit;
@@ -981,28 +978,31 @@ public class MainFrameController extends BaseController {
 
         JSONArray allUnits = new JSONArray();
         List<UnitInfo> unitInfos = CodeRepositoryUtil.fetchAllSubUnits(topUnit, unitCode, true);
-        for(UnitInfo unitInfo : unitInfos){
-            List<UserUnit> userUnits = CodeRepositoryUtil.listUnitUsers(unitInfo.getUnitCode());
 
-            JSONArray allSubUser = new JSONArray();
-            for(UserUnit uc : userUnits) {
-                if(StringUtils.isBlank(relType) || "A".equalsIgnoreCase(relType) || relType.equalsIgnoreCase(uc.getRelType())) {
-                    UserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc.getUserCode());
-                    if(tempUi != null) {
-                        JSONObject uObj = JSONObject.from(tempUi);
-                        uObj.put("primaryUnitName",unitInfo.getUnitName());
-                        uObj.put("userNamePy", StringBaseOpt.getFirstLetter(tempUi.getUserName())
-                            + " " + StringBaseOpt.getPinYin(tempUi.getUserName()) );
-                        allSubUser.add(uObj);
+        for (UnitInfo unitInfo : unitInfos) {
+            if(unitInfo!=null) {
+                List<UserUnit> userUnits = CodeRepositoryUtil.listUnitUsers(unitInfo.getUnitCode());
+                JSONArray allSubUser = new JSONArray();
+                for (UserUnit uc : userUnits) {
+                    if (StringUtils.isBlank(relType) || "A".equalsIgnoreCase(relType) || relType.equalsIgnoreCase(uc.getRelType())) {
+                        UserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc.getUserCode());
+                        if (tempUi != null) {
+                            JSONObject uObj = JSONObject.from(tempUi);
+                            uObj.put("primaryUnitName", unitInfo.getUnitName());
+                            uObj.put("userNamePy", StringBaseOpt.getFirstLetter(tempUi.getUserName())
+                                + " " + StringBaseOpt.getPinYin(tempUi.getUserName()));
+                            allSubUser.add(uObj);
+                        }
                     }
                 }
+                JSONObject jsonObject = JSONObject.from(unitInfo);
+                jsonObject.put("users", allSubUser);
+                jsonObject.put("unitNamePy", StringBaseOpt.getFirstLetter(unitInfo.getUnitName())
+                    + " " + StringBaseOpt.getPinYin(unitInfo.getUnitName()));
+                allUnits.add(jsonObject);
             }
-            JSONObject jsonObject = JSONObject.from(unitInfo);
-            jsonObject.put("users", allSubUser);
-            jsonObject.put("unitNamePy", StringBaseOpt.getFirstLetter(unitInfo.getUnitName())
-                + " " + StringBaseOpt.getPinYin(unitInfo.getUnitName()) );
-            allUnits.add(jsonObject);
         }
+
         return allUnits;
     }
 
