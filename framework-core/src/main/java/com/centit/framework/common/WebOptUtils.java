@@ -157,7 +157,7 @@ public class WebOptUtils {
     }
 
     public static String getRequestAddr(HttpServletRequest request) {
-        String sHostIp = request.getHeader("x-forwarded-for");
+        String sHostIp = request.getHeader("X-Forwarded-For");
         if (StringUtils.isNotBlank(sHostIp) && !"unKnown".equalsIgnoreCase(sHostIp)) {
             //多次反向代理后会有多个ip值，第一个ip才是真实ip
             int index = sHostIp.indexOf(",");
@@ -167,7 +167,7 @@ public class WebOptUtils {
                 return sHostIp;
             }
         }
-        sHostIp = request.getHeader("X-Real-IP");
+        sHostIp = request.getHeader("X-Real-Ip");
         if (StringUtils.isNotBlank(sHostIp) && !"unKnown".equalsIgnoreCase(sHostIp)) {
             return sHostIp;
         }
