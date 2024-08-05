@@ -69,15 +69,10 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
                     request.getSession().getAttribute(
                             SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
                     false) ) {
-
                 String requestCheckcode = request.getParameter(CaptchaImageUtil.REQUESTCHECKCODE);
                 String sessionCheckcode = StringBaseOpt.castObjectToString(
                     request.getSession().getAttribute(CaptchaImageUtil.SESSIONCHECKCODE));
                 if(StringUtils.isNotBlank(sessionCheckcode)){
-                    //清除临时验证码，避免多次重复验证
-                    request.getSession().setAttribute(
-                        CaptchaImageUtil.SESSIONCHECKCODE, CaptchaImageUtil.getRandomString(6));
-
                     if (!CaptchaImageUtil.checkcodeMatch(sessionCheckcode, requestCheckcode)) {
                         throw new AuthenticationServiceException(
                             messageSource.getMessage("error.701.invalid_check_code",null,
@@ -85,6 +80,9 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
                     }
                 }
             }
+            //清除临时验证码，避免多次重复验证
+            request.getSession().setAttribute(
+                CaptchaImageUtil.SESSIONCHECKCODE, CaptchaImageUtil.getRandomString(6));
             request.getSession().setAttribute(
                     SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
         }
