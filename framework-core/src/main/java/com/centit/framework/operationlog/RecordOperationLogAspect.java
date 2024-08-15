@@ -121,10 +121,16 @@ public class RecordOperationLogAspect {
         }
 
         Object targetController = joinPoint.getTarget();
-        String optId =StringUtils.isBlank(operationLog.operation())?
-            StringBaseOpt.castObjectToString(
-                ReflectionOpt.getFieldValue(targetController,"optId"),"UNKNOWN")
-            :operationLog.operation();
+        String osId = request.getParameter("osId");
+        String optId =operationLog.operation();
+        if(StringUtils.isBlank(optId)){
+            osId = request.getParameter("optId");
+        }
+        if(StringUtils.isBlank(optId)){
+            osId = StringBaseOpt.castObjectToString(
+                ReflectionOpt.getFieldValue(targetController,"optId"),"UNKNOWN");
+        }
+
         String optMethod =StringUtils.isBlank(operationLog.method())?
             joinPoint.getSignature().getName()
             :operationLog.method();
@@ -160,6 +166,7 @@ public class RecordOperationLogAspect {
                 .topUnit(WebOptUtils.getCurrentTopUnit(request))
                 .correlation(WebOptUtils.getCorrelationId(request))
                 .operation(optId).tag(optTag).method(optMethod)
+                .application(osId)
                 .content(optContent).newObject(newValue)
                 .oldObject(oldValue).loginIp(loginIp));
     }

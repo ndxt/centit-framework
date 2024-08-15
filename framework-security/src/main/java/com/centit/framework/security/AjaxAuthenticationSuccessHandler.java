@@ -46,12 +46,14 @@ public class AjaxAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
             if(!loginIp.startsWith(remoteHost)){
                 loginIp = remoteHost + ":" + loginIp;
             }
+            String osId = request.getParameter("osId");
             OperationLogCenter.log(
                 OperationLog.create().user(ud.getUserCode()).operation("mainframe")
                         .unit(ud.getCurrentUnitCode()).method("login")
                         .content("用户 ："+ud.getUserInfo().getUserName() + " 于"
                             +DatetimeOpt.convertDatetimeToString(DatetimeOpt.currentUtilDate()) + "从主机"+loginIp+"登录。")
-                    .loginIp(loginIp).topUnit(ud.getTopUnitCode()));
+                    .loginIp(loginIp).topUnit(ud.getTopUnitCode())
+                    .application(osId));
         }
         Cookie cookie = new Cookie(WebOptUtils.SESSION_ID_TOKEN,
             request.getSession().getId());
