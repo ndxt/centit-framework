@@ -410,6 +410,39 @@ public class MainFrameController extends BaseController {
         return SecurityContextUtils.makeLoginSuccessResponse(ud, request);
     }
 
+
+    /**
+     * 针对移动段的自动登录
+     *
+     * @param formJson json格式的表单数据 {userCode:"u0000000", token:"231413241234"}
+     * @param request  HttpServletRequest
+     * @return ResponseData
+     */
+    @ApiOperation(value = "针对移动段的自动登录",
+        notes = "针对移动段的自动登录，自动登录失败后跳转到用户登录页面，" +
+            "该方法使用post调用，提交的对象中必须有userCode和token两个属性。")
+    @ApiImplicitParams(@ApiImplicitParam(
+        name = "formValue", value = "json格式的表单数据,示例：{userCode:\"u0000000\", token:\"231413241234\"}",
+        required = true, paramType = "body", dataType = "String"
+    ))
+    @RequestMapping(value = "/autologin", method = RequestMethod.POST)
+    @WrapUpResponseBody
+    public ResponseData autologin(HttpServletRequest request,
+                                     @RequestBody String formJson) {
+        JSONObject jsonObject = JSONObject.parseObject(formJson);
+
+        CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(jsonObject.getString("userCode"));
+        String accessToken = jsonObject.getString("token");
+
+        if (ud == null || StringUtils.length(accessToken)<16 ||
+            !StringUtils.equals(accessToken, ud.getUserInfo().getLastAccessToken())) {
+            return ResponseData.makeErrorMessageWithData(formJson,
+                611, getI18nMessage("error.611.autologin_error", request));
+        }
+        SecurityContextUtils.fetchAndSetLocalParams(ud, request, platformEnvironment);
+        SecurityContextHolder.getContext().setAuthentication(ud);
+        return SecurityContextUtils.makeLoginSuccessResponse(ud, request);
+    }
     /**
      * 防跨站请求伪造
      *

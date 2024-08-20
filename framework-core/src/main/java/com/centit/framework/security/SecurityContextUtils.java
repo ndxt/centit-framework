@@ -4,8 +4,10 @@ import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.model.adapter.PlatformEnvironment;
+import com.centit.framework.model.basedata.UserInfo;
 import com.centit.framework.model.basedata.UserSetting;
 import com.centit.framework.model.security.CentitUserDetails;
+import com.centit.support.algorithm.DatetimeOpt;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +46,10 @@ public abstract class SecurityContextUtils {
                 request.setAttribute(WebOptUtils.LOCAL_LANGUAGE_LABLE, lang);
             }
         }
+        UserInfo userinfo = ud.getUserInfo();
+        userinfo.setLastAccessToken(request.getSession().getId());
+        userinfo.setActiveTime(DatetimeOpt.currentUtilDate());
+        platformEnvironment.saveUserLoginInfo(userinfo);
     }
 
     public static ResponseData makeLoginSuccessResponse(CentitUserDetails ud,

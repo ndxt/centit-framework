@@ -317,6 +317,14 @@ public interface PlatformEnvironment {
      */
     void updateUserInfo(UserInfo userInfo);
 
+
+    /**
+     * 保存用户登录信息
+     *
+     * @param userInfo 用户信息
+     */
+    void saveUserLoginInfo(UserInfo userInfo);
+
     /**
      * 获得用户设置参数
      *

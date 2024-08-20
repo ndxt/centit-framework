@@ -162,6 +162,10 @@ public class UserInfo implements java.io.Serializable{
     @Length(max = 32)
     private String  currentStationId;
 
+    @Column(name = "LAST_ACCESS_TOKEN")
+    @Length(max = 80)
+    private String  lastAccessToken;
+
     @Transient
     private String userNamePinyin; //
     // 用户的主机构，只有在数据字典中有效
@@ -405,6 +409,14 @@ public class UserInfo implements java.io.Serializable{
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public String getLastAccessToken() {
+        return lastAccessToken;
+    }
+
+    public void setLastAccessToken(String lastAccessToken) {
+        this.lastAccessToken = lastAccessToken;
     }
 
     public void copyFromUserInfo(UserInfo other) {
