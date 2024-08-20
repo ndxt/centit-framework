@@ -754,7 +754,8 @@ public class MainFrameController extends BaseController {
                 getI18nMessage(ResponseData.ERROR_NOT_LOGIN_MSG, request));
         }
         if (StringUtils.isBlank(optid)) {
-            throw new ObjectException("缺少optid参数");
+            throw new ObjectException(ResponseData.ERROR_FIELD_INPUT_NOT_VALID,
+                getI18nMessage("error.701.field_is_blank", request, "optid"));
         }
         if(WebOptUtils.isTenantTopUnit(request)){
             String topUnit = WebOptUtils.getCurrentTopUnit(request);

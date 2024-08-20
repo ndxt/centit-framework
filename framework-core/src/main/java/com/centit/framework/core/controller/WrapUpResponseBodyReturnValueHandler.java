@@ -105,7 +105,7 @@ public class WrapUpResponseBodyReturnValueHandler implements HandlerMethodReturn
             }
             if(wrapUpType == WrapUpContentType.FILE || wrapUpType == WrapUpContentType.IMAGE){
                 messageConverter.write(
-                    ResponseData.makeErrorMessage(500, "缺少文件对象！"),
+                    ResponseData.makeErrorMessage(500, "Missing file object."),
                     MediaType.APPLICATION_JSON, httpResponse);
                 return;
             }
