@@ -526,11 +526,14 @@ public class MainFrameController extends BaseController {
         response.setHeader("Cache-Control", "no-cache");
 //        response.setHeader(WebOptUtils.SESSION_ID_TOKEN, request.getSession().getId());
         String sType = request.getParameter("imageType");
-
         request.getSession().setAttribute(
             SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
-
-        if("formula".equals(sType)){
+        if("number".equals(sType)){
+            String checkcode = CaptchaImageUtil.getRandomNumber(4);
+            request.getSession().setAttribute(
+                CaptchaImageUtil.SESSIONCHECKCODE, checkcode);
+            return CaptchaImageUtil.generateCaptchaImage(checkcode);
+        } else if("formula".equals(sType)){
             Random random = new Random();
             int a = random.nextInt(100);
             int b = random.nextInt(100);
