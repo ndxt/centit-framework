@@ -498,7 +498,7 @@ public class UserInfo implements java.io.Serializable{
             jsonObject.put("idCardNo", DesensitizeOptUtils.idCardNum(idCardNo));
         }
         String regCellPhone = jsonObject.getString("regCellPhone");
-        if(StringUtils.isNotBlank(idCardNo)){
+        if(StringUtils.isNotBlank(regCellPhone)){
             jsonObject.put("regCellPhone", DesensitizeOptUtils.phone(regCellPhone));
         }
         String regEmail = jsonObject.getString("regEmail");
