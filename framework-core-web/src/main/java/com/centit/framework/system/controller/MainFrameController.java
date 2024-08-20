@@ -708,6 +708,9 @@ public class MainFrameController extends BaseController {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
                 getI18nMessage(ResponseData.ERROR_NOT_LOGIN_MSG, request));
         }
+        if (StringUtils.isBlank(optid)) {
+            throw new ObjectException("缺少optid参数");
+        }
         if(WebOptUtils.isTenantTopUnit(request)){
             String topUnit = WebOptUtils.getCurrentTopUnit(request);
             OsInfo osInfo = platformEnvironment.getOsInfo(optid);
