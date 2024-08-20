@@ -19,10 +19,8 @@ import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.framework.model.security.CentitUserDetailsService;
 import com.centit.framework.model.security.ThirdPartyCheckUserDetails;
 import com.centit.framework.security.SecurityContextUtils;
-import com.centit.support.algorithm.BooleanBaseOpt;
-import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.algorithm.GeneralAlgorithm;
-import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.algorithm.*;
+import com.centit.support.common.DateTimeSpan;
 import com.centit.support.common.ObjectException;
 import com.centit.support.image.CaptchaImageUtil;
 import com.centit.support.security.SecurityOptUtils;
@@ -374,10 +372,10 @@ public class MainFrameController extends BaseController {
     @ApiOperation(value = "第三方认证接口",
         notes = "这时框架留的一个后门，系统如果要使用这个接口，必须配置一个名为thirdPartyCheckUserDetails的bean;" +
             "该方法使用post调用，提交的对象中必须有userCode和token两个属性。")
-    @ApiImplicitParams(@ApiImplicitParam(
+    @ApiImplicitParam(
         name = "formValue", value = "json格式的表单数据,示例：{userCode:\"u0000000\", token:\"231413241234\"}",
         required = true, paramType = "body", dataType = "String"
-    ))
+    )
     @RequestMapping(value = "/loginasthird", method = RequestMethod.POST)
     @WrapUpResponseBody
     public ResponseData loginAsThird(HttpServletRequest request,
@@ -418,13 +416,13 @@ public class MainFrameController extends BaseController {
      * @param request  HttpServletRequest
      * @return ResponseData
      */
-    @ApiOperation(value = "针对移动段的自动登录",
-        notes = "针对移动段的自动登录，自动登录失败后跳转到用户登录页面，" +
+    @ApiOperation(value = "针对移动端的自动登录",
+        notes = "针对移动端的自动登录，自动登录失败后跳转到用户登录页面，" +
             "该方法使用post调用，提交的对象中必须有userCode和token两个属性。")
-    @ApiImplicitParams(@ApiImplicitParam(
+    @ApiImplicitParam(
         name = "formValue", value = "json格式的表单数据,示例：{userCode:\"u0000000\", token:\"231413241234\"}",
         required = true, paramType = "body", dataType = "String"
-    ))
+    )
     @RequestMapping(value = "/autologin", method = RequestMethod.POST)
     @WrapUpResponseBody
     public ResponseData autologin(HttpServletRequest request,
@@ -442,6 +440,31 @@ public class MainFrameController extends BaseController {
         SecurityContextUtils.fetchAndSetLocalParams(ud, request, platformEnvironment);
         SecurityContextHolder.getContext().setAuthentication(ud);
         return SecurityContextUtils.makeLoginSuccessResponse(ud, request);
+    }
+
+
+    @ApiOperation(value = "针对移动端的滑动验证",
+        notes = "针对移动端的滑动验证")
+    @RequestMapping(value = "/beginSlide", method = RequestMethod.POST)
+    @ApiImplicitParam(
+        name = "dateEnc", value = "加密格式的时间",
+        required = true, paramType = "body", dataType = "String"
+    )
+    @WrapUpResponseBody
+    public String beginSlide(HttpServletRequest request,
+                                  @RequestBody String dateEnc) {
+        Date submitTime = DatetimeOpt.castObjectToDate(SecurityOptUtils.decodeSecurityString(dateEnc));
+        if(submitTime != null && DateTimeSpan.calcDateTimeSpanAsAbs(submitTime, DatetimeOpt.currentUtilDate())
+               .compareTo( DateTimeSpan.MINUTE_MILLISECONDS * 5) < 0){
+            String randomStr =  UuidOpt.randomString(12);
+
+            request.getSession().setAttribute(
+                SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
+            request.getSession().setAttribute(
+                    CaptchaImageUtil.SESSIONCHECKCODE, randomStr);
+            return randomStr;
+        }
+        throw new ObjectException(611, getI18nMessage("error.611.bad_slide_time", request));
     }
     /**
      * 防跨站请求伪造
@@ -558,9 +581,27 @@ public class MainFrameController extends BaseController {
         required = true, paramType = "path", dataType = "String"
     )
     @RequestMapping(value = "/checkcaptcha/{checkcode}", method = RequestMethod.GET)
+    @Deprecated
     @WrapUpResponseBody
     public ResponseData checkCaptchaImage(@PathVariable String checkcode, HttpServletRequest request) {
+        return checkCaptchaImageCode(checkcode, request);
+    }
 
+    /**
+     * 校验验证码
+     *
+     * @param checkcode checkcode
+     * @param request   request
+     * @return ResponseData
+     */
+    @ApiOperation(value = "校验验证码", notes = "校验验证码")
+    @ApiImplicitParam(
+        name = "checkcode", value = "验证码",
+        required = true, paramType = "body", dataType = "String"
+    )
+    @RequestMapping(value = "/checkcaptcha", method = RequestMethod.POST)
+    @WrapUpResponseBody
+    public ResponseData checkCaptchaImageCode(@RequestBody String checkcode, HttpServletRequest request) {
         String sessionCode = StringBaseOpt.objectToString(
             request.getSession().getAttribute(
                 CaptchaImageUtil.SESSIONCHECKCODE));
@@ -575,7 +616,6 @@ public class MainFrameController extends BaseController {
             checkResult);
         return ResponseData.makeResponseData(checkResult);
     }
-
     /**
      * 当前登录者
      *
