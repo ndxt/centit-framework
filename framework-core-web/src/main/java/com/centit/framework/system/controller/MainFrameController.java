@@ -249,7 +249,7 @@ public class MainFrameController extends BaseController {
         String password = SecurityOptUtils.decodeSecurityString(objBody.getString("password"));
         String newPassword = SecurityOptUtils.decodeSecurityString(objBody.getString("newPassword"));
         String userCode = WebOptUtils.getCurrentUserCode(request);
-        if(StringUtils.isBlank(userCode)) { // 为登录是修改密码，需要提供 j_checkcode
+        if(StringUtils.isBlank(userCode)) { // 未登录是修改密码，需要提供 j_checkcode
             if (!BooleanBaseOpt.castObjectToBoolean(
                 request.getSession().getAttribute(
                     SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT),
@@ -261,9 +261,9 @@ public class MainFrameController extends BaseController {
                     //清除临时验证码，避免多次重复验证
                     request.getSession().setAttribute(
                         CaptchaImageUtil.SESSIONCHECKCODE, CaptchaImageUtil.getRandomString(6));
-                    if (!CaptchaImageUtil.checkcodeMatch(sessionCheckCode, objBody.getString(CaptchaImageUtil.REQUESTCHECKCODE))) {
-                        return ResponseData.makeErrorMessage(701, getI18nMessage("error.701.invalid_check_code", request));
-                    }
+                }
+                if (!CaptchaImageUtil.checkcodeMatch(sessionCheckCode, objBody.getString(CaptchaImageUtil.REQUESTCHECKCODE))) {
+                    return ResponseData.makeErrorMessage(701, getI18nMessage("error.701.invalid_check_code", request));
                 }
             }
             request.getSession().setAttribute(
