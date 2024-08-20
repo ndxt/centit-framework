@@ -73,6 +73,7 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
                 String sessionCheckcode = StringBaseOpt.castObjectToString(
                     request.getSession().getAttribute(CaptchaImageUtil.SESSIONCHECKCODE));
                 if (!CaptchaImageUtil.checkcodeMatch(sessionCheckcode, requestCheckcode)) {
+                    CheckFailLogs.plusCheckFail(request);
                     throw new AuthenticationServiceException(
                         messageSource.getMessage("error.701.invalid_check_code", null,
                             "Invalid check code.", WebOptUtils.getCurrentLocale(request)));

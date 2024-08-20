@@ -70,7 +70,7 @@ public class SpringSecurityDaoConfig extends SpringSecurityBaseConfig {
         pretreatmentAuthenticationProcessingFilter.setCheckCaptchaType(
             NumberBaseOpt.castObjectToInteger(env.getProperty("login.captcha.checkType"),0));
         pretreatmentAuthenticationProcessingFilter.setRetryCheckType(
-            StringBaseOpt.emptyValue( env.getProperty("login.retry.checkType"),"H"));
+            StringBaseOpt.emptyValue( env.getProperty("login.retry.checkType"),"L"));
 
         pretreatmentAuthenticationProcessingFilter.setRetryMaxTryTimes(
             NumberBaseOpt.castObjectToInteger(env.getProperty("login.retry.maxTryTimes"),0));
