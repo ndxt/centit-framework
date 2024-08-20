@@ -86,7 +86,6 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
             request.getSession().setAttribute(
                     SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
         }
-
         //if(!onlyPretreat || writeLog || CheckFailLogs.getMaxTryTimes() > 0){
         try{
             String username = obtainUsername(request);
@@ -98,12 +97,7 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
             // Allow subclasses to set the "details" property
             setDetails(request, authRequest);
             Authentication auth = this.getAuthenticationManager().authenticate(authRequest);
-            /*CheckFailLogs.removeCheckFail(request);
-            if(auth instanceof CentitUserDetails){
-                CentitUserDetails userDetails = (CentitUserDetails) auth;
-
-            }*/
-            //auth.getDetails()
+            CheckFailLogs.removeCheckFail(request);
             return auth;
         }catch (AuthenticationException failed) {
             CheckFailLogs.plusCheckFail(request);
