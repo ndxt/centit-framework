@@ -164,6 +164,7 @@ public class UserInfo implements java.io.Serializable{
     @Length(max = 32)
     private String  currentStationId;
 
+    @JSONField(serialize = false, deserialize = false)
     @Column(name = "LAST_ACCESS_TOKEN")
     @Length(max = 80)
     private String  lastAccessToken;
