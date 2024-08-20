@@ -8,8 +8,10 @@ import com.centit.support.database.orm.GeneratorCondition;
 import com.centit.support.database.orm.GeneratorTime;
 import com.centit.support.database.orm.GeneratorType;
 import com.centit.support.database.orm.ValueGenerator;
+import com.centit.support.security.DesensitizeOptUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -487,10 +489,21 @@ public class UserInfo implements java.io.Serializable{
 
     public JSONObject toJsonWithoutSensitive(){
         JSONObject jsonObject = (JSONObject)JSON.toJSON(this);
-        for(String pm : new String[]{"idCardNo","regCellPhone", "regEmail", "userPin", "userPwd"}){
-            //if(jsonObject.containsKey(pm)){
-                jsonObject.remove(pm);
-            //}
+        for(String pm : new String[]{"userPin", "userPwd"}){
+            jsonObject.remove(pm);
+        }
+        //"idCardNo","regCellPhone", "regEmail",
+        String idCardNo = jsonObject.getString("idCardNo");
+        if(StringUtils.isNotBlank(idCardNo)){
+            jsonObject.put("idCardNo", DesensitizeOptUtils.idCardNum(idCardNo));
+        }
+        String regCellPhone = jsonObject.getString("regCellPhone");
+        if(StringUtils.isNotBlank(idCardNo)){
+            jsonObject.put("regCellPhone", DesensitizeOptUtils.phone(regCellPhone));
+        }
+        String regEmail = jsonObject.getString("regEmail");
+        if(StringUtils.isNotBlank(regEmail)){
+            jsonObject.put("regEmail", DesensitizeOptUtils.email(regEmail));
         }
         return jsonObject;
     }
