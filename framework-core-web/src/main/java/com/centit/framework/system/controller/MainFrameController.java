@@ -527,6 +527,8 @@ public class MainFrameController extends BaseController {
     public RenderedImage captchaImage(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader(WebOptUtils.SESSION_ID_TOKEN, request.getSession().getId());
+        response.setHeader("Content-Disposition", "inline; filename=vc"
+                +CaptchaImageUtil.getRandomString(6)+".gif");
         String sType = request.getParameter("imageType");
         request.getSession().setAttribute(
             SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
