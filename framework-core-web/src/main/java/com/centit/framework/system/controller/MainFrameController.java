@@ -456,7 +456,7 @@ public class MainFrameController extends BaseController {
         required = true, paramType = "body", dataType = "String"
     )
     @WrapUpResponseBody
-    public String beginSlide(HttpServletRequest request,
+    public String beginSlide(HttpServletRequest request,HttpServletResponse response,
                                   @RequestBody String dateEnc) {
         Date submitTime = DatetimeOpt.castObjectToDate(SecurityOptUtils.decodeSecurityString(dateEnc));
         if(submitTime != null && DateTimeSpan.calcDateTimeSpanAsAbs(submitTime, DatetimeOpt.currentUtilDate())
@@ -467,6 +467,7 @@ public class MainFrameController extends BaseController {
                 SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
             request.getSession().setAttribute(
                     CaptchaImageUtil.SESSIONCHECKCODE, randomStr);
+            response.setHeader(WebOptUtils.SESSION_ID_TOKEN, request.getSession().getId());
             return randomStr;
         }
         throw new ObjectException(611, getI18nMessage("error.611.bad_slide_time", request));
