@@ -456,8 +456,10 @@ public class MainFrameController extends BaseController {
         required = true, paramType = "body", dataType = "String"
     )
     @WrapUpResponseBody
-    public String beginSlide(HttpServletRequest request,
+    public String beginSlide(HttpServletRequest request, HttpServletResponse response,
                                   @RequestBody String dateEnc) {
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader(WebOptUtils.SESSION_ID_TOKEN, request.getSession().getId());
         Date submitTime = DatetimeOpt.castObjectToDate(SecurityOptUtils.decodeSecurityString(dateEnc));
         if(submitTime != null && DateTimeSpan.calcDateTimeSpanAsAbs(submitTime, DatetimeOpt.currentUtilDate())
                .compareTo( DateTimeSpan.MINUTE_MILLISECONDS * 5) < 0){
@@ -524,7 +526,9 @@ public class MainFrameController extends BaseController {
     @WrapUpResponseBody(contentType = WrapUpContentType.IMAGE)
     public RenderedImage captchaImage(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Cache-Control", "no-cache");
-//        response.setHeader(WebOptUtils.SESSION_ID_TOKEN, request.getSession().getId());
+        response.setHeader(WebOptUtils.SESSION_ID_TOKEN, request.getSession().getId());
+        response.setHeader("Content-Disposition", "inline; filename=vc"
+                +CaptchaImageUtil.getRandomString(6)+".gif");
         String sType = request.getParameter("imageType");
         request.getSession().setAttribute(
             SecurityContextUtils.AJAX_CHECK_CAPTCHA_RESULT, false);
