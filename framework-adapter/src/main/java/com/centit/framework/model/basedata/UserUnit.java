@@ -49,7 +49,7 @@ public class UserUnit implements java.io.Serializable {
     private String topUnit; // 顶级机构，用于帐套
 
     @Column(name = "USER_CODE")
-    @DictionaryMap(fieldName={"userName","loginName"},value={"userCode","userInfo.loginName"})
+    @DictionaryMap(fieldName={"userName","loginName","regCellPhone"},value={"userCode","userInfo.loginName","userInfo.regCellPhone"})
     @ApiModelProperty(value = "用户代码",name = "userCode")
     private String userCode; // 用户代码
 
