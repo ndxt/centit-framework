@@ -428,22 +428,34 @@ public class MainFrameController extends BaseController {
     public ResponseData autologin(HttpServletRequest request,
                                      @RequestBody String formJson) {
         JSONObject jsonObject = JSONObject.parseObject(formJson);
-        CentitUserDetails ud = platformEnvironment.loadUserDetailsByUserCode(jsonObject.getString("userCode"));
+        String currentUserCode = jsonObject.getString("userCode");
         String accessToken = jsonObject.getString(SecurityContextUtils.SecurityContextTokenName);
+        CentitUserDetails ud = WebOptUtils.getCurrentUserDetails(request);
+        if(ud!=null && StringUtils.equals(ud.getUserCode(), currentUserCode) &&
+            StringUtils.equals(ud.getUserInfo().getLastAccessToken(), accessToken) &&
+            StringUtils.equals(request.getSession().getId(), accessToken) ){
+            return SecurityContextUtils.makeLoginSuccessResponse(ud, request);
+        }
+
+        ud = platformEnvironment.loadUserDetailsByUserCode(currentUserCode);
+
         if( ud == null || ud.getUserInfo() == null){
             return ResponseData.makeErrorMessageWithData(formJson,
                 611, getI18nMessage("error.611.autologin_error", request));
         }
+
         Date lastActiveTime = ud.getUserInfo().getActiveTime();
-        if(StringUtils.length(accessToken)<16 ||
+        if(StringUtils.length(accessToken)<6 ||
             !StringUtils.equals(accessToken, ud.getUserInfo().getLastAccessToken()) ||
             lastActiveTime == null ||
-            DateTimeSpan.calcDateTimeSpanAsAbs(lastActiveTime, DatetimeOpt.currentUtilDate()).compareTo( DateTimeSpan.DAY_MILLISECONDS * 7) > 0){
+            DateTimeSpan.calcDateTimeSpanAsAbs(lastActiveTime, DatetimeOpt.currentUtilDate()).compareTo(
+                DateTimeSpan.DAY_MILLISECONDS * 7) > 0){
+
             return ResponseData.makeErrorMessageWithData(formJson,
                 611, getI18nMessage("error.611.autologin_error", request));
         }
         SecurityContextUtils.fetchAndSetLocalParams(ud, request, platformEnvironment);
-        SecurityContextHolder.getContext().setAuthentication(ud);
+//        SecurityContextHolder.getContext().setAuthentication(ud);
         return SecurityContextUtils.makeLoginSuccessResponse(ud, request);
     }
 
