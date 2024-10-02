@@ -7,6 +7,7 @@ import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ToResponseData;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -190,8 +191,6 @@ public class HttpReceiveJSON implements ToResponseData {
     }
 
     public static HttpReceiveJSON dataOf(Object json){
-        if(json==null)
-            return null;
         HttpReceiveJSON recvJson = new HttpReceiveJSON();
         recvJson.resJSONObject = new JSONObject();
         recvJson.resObj = JSON.toJSON(json);
@@ -203,14 +202,14 @@ public class HttpReceiveJSON implements ToResponseData {
     }
 
     public static HttpReceiveJSON valueOfJson(String jsonStr){
-        if(jsonStr==null)
+        if(StringUtils.isBlank(jsonStr))
             return null;
         return valueOf(JSON.parse(jsonStr));
     }
 
     public static HttpReceiveJSON dataOfJson(String jsonStr){
-        if(jsonStr==null)
-            return null;
+        if(StringUtils.isBlank(jsonStr))
+            return dataOf(null);
         return dataOf(JSON.parse(jsonStr));
     }
 
