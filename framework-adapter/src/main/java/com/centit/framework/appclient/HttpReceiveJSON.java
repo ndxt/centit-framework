@@ -189,6 +189,19 @@ public class HttpReceiveJSON implements ToResponseData {
         return recvJson;
     }
 
+    public static HttpReceiveJSON dataOf(Object json){
+        if(json==null)
+            return null;
+        HttpReceiveJSON recvJson = new HttpReceiveJSON();
+        recvJson.resJSONObject = new JSONObject();
+        recvJson.resObj = JSON.toJSON(json);
+        recvJson.isResponseData = true;
+        recvJson.resJSONObject.put(ResponseData.RES_MSG_FILED, "OK");
+        recvJson.resJSONObject.put(ResponseData.RES_CODE_FILED, 0);
+        recvJson.resJSONObject.put(ResponseData.RES_DATA_FILED, recvJson.resObj);
+        return recvJson;
+    }
+
     public static HttpReceiveJSON valueOfJson(String jsonStr){
         if(jsonStr==null)
             return null;
