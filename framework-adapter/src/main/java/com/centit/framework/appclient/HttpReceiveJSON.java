@@ -208,6 +208,12 @@ public class HttpReceiveJSON implements ToResponseData {
         return valueOf(JSON.parse(jsonStr));
     }
 
+    public static HttpReceiveJSON dataOfJson(String jsonStr){
+        if(jsonStr==null)
+            return null;
+        return dataOf(JSON.parse(jsonStr));
+    }
+
     public JSONObject getJSONObject() {
         Object data = getData();
         if(data==null) {
