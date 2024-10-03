@@ -7,6 +7,7 @@ import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ToResponseData;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.json.JSONOpt;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -26,7 +27,6 @@ public class HttpReceiveJSON implements ToResponseData {
      * isResponseData 表示 resJSONObject 中含有 code data message，是框架的标准回复
      */
     private Object resObj;
-
     private boolean isResponseData;
     private JSONObject resJSONObject;
 
@@ -55,7 +55,7 @@ public class HttpReceiveJSON implements ToResponseData {
     }
 
     public String getMessage() {
-        return isResponseData?
+        return isResponseData && resJSONObject.containsKey(ResponseData.RES_MSG_FILED) ?
             resJSONObject.getString(ResponseData.RES_MSG_FILED) :
             "OK";
     }
@@ -180,12 +180,42 @@ public class HttpReceiveJSON implements ToResponseData {
         recvJson.resObj = JSON.toJSON(json);
         recvJson.isResponseData = false;
         if (recvJson.resObj instanceof JSONObject) {
-            recvJson.resJSONObject = (JSONObject) recvJson.resObj;
-            recvJson.isResponseData =
-                recvJson.resJSONObject.containsKey(ResponseData.RES_CODE_FILED) &&
-                    recvJson.resJSONObject.containsKey(ResponseData.RES_MSG_FILED);
-            // ResponseData 可能没有data部分，但是code和message一定是有的。
-            // && recvJson.resJSONObject.containsKey(ResponseData.RES_DATA_FILED);
+            JSONObject resJson = (JSONObject) recvJson.resObj;
+            boolean hasCode = false, hasMessage = false, hasData = false;
+            Map<String, Object> extData = new HashMap<>();
+            for(Map.Entry<String, Object> ent : resJson.entrySet()){
+                switch (ent.getKey()) {
+                    case ResponseData.RES_CODE_FILED:
+                        hasCode = true;
+                        break;
+                    case ResponseData.RES_MSG_FILED:
+                        hasMessage = true;
+                        break;
+                    case ResponseData.RES_DATA_FILED:
+                        hasData = true;
+                        break;
+                    default:
+                        extData.put(ent.getKey(), ent.getValue());
+                        break;
+                }
+            }
+
+            recvJson.isResponseData = hasCode && hasMessage;
+            if(recvJson.isResponseData) {
+                recvJson.resJSONObject = new JSONObject();
+                recvJson.resJSONObject.put(ResponseData.RES_CODE_FILED, resJson.get(ResponseData.RES_CODE_FILED));
+                recvJson.resJSONObject.put(ResponseData.RES_MSG_FILED, resJson.get(ResponseData.RES_MSG_FILED));
+                if (!extData.isEmpty()) {
+                    if (hasData) {
+                        extData.put(ResponseData.RES_DATA_FILED,
+                            resJson.get(ResponseData.RES_DATA_FILED));
+                    }
+                    recvJson.resJSONObject.put(ResponseData.RES_DATA_FILED, extData);
+                } else if (hasData) {
+                    recvJson.resJSONObject.put(ResponseData.RES_DATA_FILED,
+                        resJson.get(ResponseData.RES_DATA_FILED));
+                }
+            }
         }
         return recvJson;
     }
@@ -195,8 +225,6 @@ public class HttpReceiveJSON implements ToResponseData {
         recvJson.resJSONObject = new JSONObject();
         recvJson.resObj = JSON.toJSON(json);
         recvJson.isResponseData = true;
-        recvJson.resJSONObject.put(ResponseData.RES_MSG_FILED, "OK");
-        recvJson.resJSONObject.put(ResponseData.RES_CODE_FILED, 0);
         recvJson.resJSONObject.put(ResponseData.RES_DATA_FILED, recvJson.resObj);
         return recvJson;
     }
@@ -204,13 +232,13 @@ public class HttpReceiveJSON implements ToResponseData {
     public static HttpReceiveJSON valueOfJson(String jsonStr){
         if(StringUtils.isBlank(jsonStr))
             return null;
-        return valueOf(JSON.parse(jsonStr));
+        return valueOf(JSONOpt.parseJsonString(jsonStr));
     }
 
     public static HttpReceiveJSON dataOfJson(String jsonStr){
         if(StringUtils.isBlank(jsonStr))
             return dataOf(null);
-        return dataOf(JSON.parse(jsonStr));
+        return dataOf(JSONOpt.parseJsonString(jsonStr));
     }
 
     public JSONObject getJSONObject() {
