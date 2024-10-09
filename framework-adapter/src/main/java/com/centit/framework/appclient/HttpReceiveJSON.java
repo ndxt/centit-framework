@@ -207,8 +207,16 @@ public class HttpReceiveJSON implements ToResponseData {
                 recvJson.resJSONObject.put(ResponseData.RES_MSG_FILED, resJson.get(ResponseData.RES_MSG_FILED));
                 if (!extData.isEmpty()) {
                     if (hasData) {
-                        extData.put(ResponseData.RES_DATA_FILED,
-                            resJson.get(ResponseData.RES_DATA_FILED));
+                        Object originalData = resJson.get(ResponseData.RES_DATA_FILED);
+                        if(originalData instanceof JSONObject){
+                            JSONObject jsonData = (JSONObject) originalData;
+                            extData.putAll(jsonData);
+                        } else if(originalData instanceof Map){
+                            Map<String, Object> mapData = (Map<String, Object>) originalData;
+                            extData.putAll(mapData);
+                        } else {
+                            extData.put(ResponseData.RES_DATA_FILED, originalData);
+                        }
                     }
                     recvJson.resJSONObject.put(ResponseData.RES_DATA_FILED, extData);
                 } else if (hasData) {
