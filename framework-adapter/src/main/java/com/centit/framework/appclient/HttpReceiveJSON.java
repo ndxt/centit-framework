@@ -88,6 +88,10 @@ public class HttpReceiveJSON implements ToResponseData {
         if(data instanceof JSONObject) {
             return ((JSONObject)data).toJavaObject(clazz);
         }
+        if(data instanceof Map) {
+            JSONObject jsonObject = JSONObject.from(data);
+            return jsonObject.toJavaObject(clazz);
+        }
         if(clazz.isAssignableFrom(data.getClass())){
             return (T) data;
         }
@@ -150,6 +154,10 @@ public class HttpReceiveJSON implements ToResponseData {
         }
         if(data instanceof JSONObject) {
             return ((JSONObject) data).getObject(sKey, clazz);
+        }
+        if(data instanceof Map) {
+            JSONObject jsonObject = JSONObject.from(data);
+            return jsonObject.toJavaObject(clazz);
         }
         return null;
     }
