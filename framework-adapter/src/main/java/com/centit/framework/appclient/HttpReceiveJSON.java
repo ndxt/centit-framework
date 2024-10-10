@@ -80,7 +80,7 @@ public class HttpReceiveJSON implements ToResponseData {
         return StringBaseOpt.objectToString(obj);
     }
 
-    public <T> T getDataAsObject( Class<T> clazz) {
+    public <T> T getDataAsObject(Class<T> clazz) {
         Object data = getData();
         if(data==null) {
             return null;
@@ -190,7 +190,7 @@ public class HttpReceiveJSON implements ToResponseData {
         if (recvJson.resObj instanceof JSONObject) {
             JSONObject resJson = (JSONObject) recvJson.resObj;
             boolean hasCode = false, hasMessage = false, hasData = false;
-            Map<String, Object> extData = new HashMap<>();
+            JSONObject extData = new JSONObject();
             for(Map.Entry<String, Object> ent : resJson.entrySet()){
                 switch (ent.getKey()) {
                     case ResponseData.RES_CODE_FILED:
