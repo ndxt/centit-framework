@@ -42,6 +42,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.ContextLoaderListener;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -425,7 +426,7 @@ public class MainFrameController extends BaseController {
     )
     @RequestMapping(value = "/autologin", method = RequestMethod.POST)
     @WrapUpResponseBody
-    public ResponseData autologin(HttpServletRequest request,
+    public ResponseData autologin(HttpServletRequest request, HttpServletResponse response,
                                      @RequestBody String formJson) {
         JSONObject jsonObject = JSONObject.parseObject(formJson);
         String currentUserCode = jsonObject.getString("userCode");
@@ -436,9 +437,7 @@ public class MainFrameController extends BaseController {
             StringUtils.equals(request.getSession().getId(), accessToken) ){
             return SecurityContextUtils.makeLoginSuccessResponse(ud, request);
         }
-
         ud = platformEnvironment.loadUserDetailsByUserCode(currentUserCode);
-
         if( ud == null || ud.getUserInfo() == null){
             return ResponseData.makeErrorMessageWithData(formJson,
                 611, getI18nMessage("error.611.autologin_error", request));
@@ -455,10 +454,12 @@ public class MainFrameController extends BaseController {
                 611, getI18nMessage("error.611.autologin_error", request));
         }
         SecurityContextUtils.fetchAndSetLocalParams(ud, request, platformEnvironment);
-//        SecurityContextHolder.getContext().setAuthentication(ud);
+        Cookie cookie = new Cookie(WebOptUtils.SESSION_ID_TOKEN,
+            request.getSession().getId());
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return SecurityContextUtils.makeLoginSuccessResponse(ud, request);
     }
-
 
     @ApiOperation(value = "针对移动端的滑动验证",
         notes = "针对移动端的滑动验证")
