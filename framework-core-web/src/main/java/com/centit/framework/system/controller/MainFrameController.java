@@ -454,6 +454,7 @@ public class MainFrameController extends BaseController {
                 611, getI18nMessage("error.611.autologin_error", request));
         }
         SecurityContextUtils.fetchAndSetLocalParams(ud, request, platformEnvironment);
+        SecurityContextHolder.getContext().setAuthentication(ud);
         Cookie cookie = new Cookie(WebOptUtils.SESSION_ID_TOKEN,
             request.getSession().getId());
         cookie.setPath("/");
