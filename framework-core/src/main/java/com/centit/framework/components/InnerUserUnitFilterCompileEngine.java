@@ -9,6 +9,7 @@ import com.centit.support.compiler.VariableFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -87,6 +88,15 @@ public abstract class InnerUserUnitFilterCompileEngine {
             if(variableTranslate != null){
                 Object obj = ecc.getVarTrans().getVarValue(w);
                 if(obj != null){
+                    if(obj instanceof Collection){
+                        Collection<Object> objects = (Collection<Object>) obj;
+                        if(objects.isEmpty()){
+                            return null;
+                        }
+                        if(objects.size() == 1){
+                            return objects.iterator().next();
+                        }
+                    }
                     return obj;
                 }
             }
