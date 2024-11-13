@@ -89,7 +89,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 Object obj = ecc.getVarTrans().getVarValue(w);
                 if(obj != null){
                     if(obj instanceof Collection){
-                        Collection<Object> objects = (Collection<Object>) obj;
+                        Collection<?> objects = (Collection<?>) obj;
                         if(objects.isEmpty()){
                             return null;
                         }
