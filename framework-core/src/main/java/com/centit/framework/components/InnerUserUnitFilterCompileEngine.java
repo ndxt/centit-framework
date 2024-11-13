@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -96,6 +97,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
         }
         return null;
     }
+
     /**
      * D(null) =>null D(all) => D1,D2,D11,D12,D111,D112,D1111,D1112 D("D12")
      * =>D12 D(null+1) =>D1,D2 D(all+1) => D11,D12,D111,D112,D1111,D1112 D(A) =>
@@ -125,7 +127,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 if (us != null)
                     units.addAll(us);
                 else{
-                    if( ecc.getUnitInfoByCode(w) !=null){
+                    if(ecc.getUnitInfoByCode(w) !=null){
                         units.add(w);
                     }
                 }
@@ -266,9 +268,15 @@ public abstract class InnerUserUnitFilterCompileEngine {
             Object obj = mapVariable(ecc,w);
             if (obj instanceof String) { // 变量
                 gene.addUnitType((String)obj);
-            } else { // 语法错误
-                ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Type]; calcUnitTypeFilter label . ");
-                return false;
+            } else {
+                List<String> tags = StringBaseOpt.objectToStringList(obj);
+                if(tags == null || tags.isEmpty()) { // 语法错误
+                    ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Type]; calcUnitTypeFilter label . ");
+                    return false;
+                }
+                for(String tag : tags) {
+                    gene.addUnitType(tag);
+                }
             }
 
             w = ecc.getAWord();
@@ -306,9 +314,15 @@ public abstract class InnerUserUnitFilterCompileEngine {
             Object obj = mapVariable(ecc,w);
             if (obj instanceof String){ // 变量
                 gene.addUnitTag((String)obj);
-            } else { // 语法错误
-                ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Tag]; calcUnitTagFilter label . ");
-                return false;
+            } else {
+                List<String> tags = StringBaseOpt.objectToStringList(obj);
+                if(tags == null || tags.isEmpty()) { // 语法错误
+                    ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Tag]; calcUnitTagFilter label . ");
+                    return false;
+                }
+                for(String tag : tags) {
+                    gene.addUnitTag(tag);
+                }
             }
 
             w = ecc.getAWord();
@@ -510,9 +524,15 @@ public abstract class InnerUserUnitFilterCompileEngine {
             Object obj = mapVariable(ecc,w);
             if (obj instanceof String){ // 变量
                 gene.addUserType((String)obj);
-            } else { // 语法错误
-                ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Type]; calcUserTypeFilter label . ");
-                return false;
+            } else {
+                List<String> tags = StringBaseOpt.objectToStringList(obj);
+                if(tags == null || tags.isEmpty()) { // 语法错误
+                    ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Type]; calcUserTypeFilter label . ");
+                    return false;
+                }
+                for(String tag : tags) {
+                    gene.addUserType(tag);
+                }
             }
 
             w = ecc.getAWord();
@@ -584,9 +604,15 @@ public abstract class InnerUserUnitFilterCompileEngine {
             Object obj = mapVariable(ecc,w);
             if (obj instanceof String){ // 变量
                 gene.addUserTag((String)obj);
-            } else { // 语法错误
-                ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Tag]; calcUserTagFilter label . ");
-                return false;
+            } else {
+                List<String> tags = StringBaseOpt.objectToStringList(obj);
+                if(tags == null || tags.isEmpty()) { // 语法错误
+                    ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Tag]; calcUserTagFilter label . ");
+                    return false;
+                }
+                for(String tag : tags) {
+                    gene.addUserTag(tag);
+                }
             }
 
             w = ecc.getAWord();
