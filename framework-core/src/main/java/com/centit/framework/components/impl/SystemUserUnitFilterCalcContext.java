@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SystemUserUnitFilterCalcContext extends AbstractUserUnitFilterCalcContext
-    implements UserUnitFilterCalcContext {
+public class SystemUserUnitFilterCalcContext
+    extends AbstractUserUnitFilterCalcContext {
 
     public SystemUserUnitFilterCalcContext(String topUnit){
         super(topUnit);

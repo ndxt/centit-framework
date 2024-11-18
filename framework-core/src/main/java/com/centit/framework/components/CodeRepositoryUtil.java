@@ -405,6 +405,29 @@ public abstract class CodeRepositoryUtil {
             logger.info("sValue 为空中空字符串");
             return "";
         }
+        if(sCatalog.startsWith("userInfo.")){
+            List<UserInfo> usList= listAllUsers(topUnit);
+            if(usList==null)
+                return sValue;
+            for(UserInfo ui : usList){
+                if(StringUtils.equals(sValue, StringBaseOpt.castObjectToString(
+                    ReflectionOpt.getFieldValue(ui, sCatalog.substring(9)))))
+                    return ui.getUserCode();
+            }
+            return sValue;
+        }
+
+        if(sCatalog.startsWith("unitInfo.")){
+            List<UnitInfo> uuList= listAllUnits(topUnit);
+            if(uuList==null)
+                return sValue;
+            for(UnitInfo ui : uuList){
+                if(StringUtils.equals(sValue, StringBaseOpt.castObjectToString(
+                    ReflectionOpt.getFieldValue(ui, sCatalog.substring(9)))))
+                    return ui.getUnitCode();
+            }
+            return sValue;
+        }
 
         try {
             switch (sCatalog) {
@@ -418,7 +441,6 @@ public abstract class CodeRepositoryUtil {
                     }
                     return sValue;
                 }
-
                 case CodeRepositoryUtil.UNIT_CODE:{
                     List<UnitInfo> uuList= listAllUnits(topUnit);
                     if(uuList==null)
@@ -429,7 +451,6 @@ public abstract class CodeRepositoryUtil {
                     }
                     return sValue;
                 }
-
                 default:
                     CachedObject<Map<String, String>> extendRepo = extendedCodeRepo.get(sCatalog);
                     if(extendRepo != null){
@@ -440,7 +461,6 @@ public abstract class CodeRepositoryUtil {
                         }
                         return sValue;
                     }
-
                     DataDictionary dictPiece = getDataPieceByValue(sCatalog, sValue, localLang);
                     if (dictPiece == null) {
                         return sValue;
@@ -452,6 +472,7 @@ public abstract class CodeRepositoryUtil {
             return sValue;
         }
     }
+
     /**
      * 把表达式中的字典代码都 转换为 数据字典值，其他的字符 位置不变，
      *
@@ -499,7 +520,6 @@ public abstract class CodeRepositoryUtil {
 
     /**
      * 按类别获取 业务定义信息
-     *
      * @param topUnit 顶级菜单目录
      * @return List 业务定义信息
      */

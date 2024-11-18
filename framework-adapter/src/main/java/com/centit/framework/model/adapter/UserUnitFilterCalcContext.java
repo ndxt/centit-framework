@@ -4,12 +4,13 @@ import com.centit.framework.model.basedata.UnitInfo;
 import com.centit.framework.model.basedata.UserInfo;
 import com.centit.framework.model.basedata.UserRole;
 import com.centit.framework.model.basedata.UserUnit;
+import com.centit.support.compiler.VariableTranslate;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface UserUnitFilterCalcContext {
+public interface UserUnitFilterCalcContext extends VariableTranslate {
 
     String getTopUnit();
 

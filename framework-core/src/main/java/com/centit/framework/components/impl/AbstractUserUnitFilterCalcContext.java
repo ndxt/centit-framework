@@ -42,6 +42,11 @@ public abstract class AbstractUserUnitFilterCalcContext implements UserUnitFilte
     }
 
     @Override
+    public Object getVarValue(String labelName){
+        return this.varTrans.getVarValue(labelName);
+    }
+
+    @Override
     public boolean hasError() {
         return hasError;
     }

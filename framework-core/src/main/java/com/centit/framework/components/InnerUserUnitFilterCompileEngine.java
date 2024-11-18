@@ -55,9 +55,14 @@ public abstract class InnerUserUnitFilterCompileEngine {
     public static final String USER_FILTER_UNIT_TYPE = "DT";
 
     /**
-     * 根据结构tag标记过滤 label
+     * 根据机构tag标记过滤 label
      */
     public static final String USER_FILTER_UNIT_LABEL = "DL";
+
+    /**
+     * 根据机构UNIT_WORD 编码过滤
+     */
+    public static final String USER_FILTER_UNIT_WORD = "DW";
     /**
      * 根据用户类别过滤
      */
@@ -67,6 +72,11 @@ public abstract class InnerUserUnitFilterCompileEngine {
      * 根据用户tag标记过滤 label
      */
     public static final String USER_FILTER_USER_LABEL = "UL";
+
+    /**
+     * 根据用户UNIT_WORD 编码过滤
+     */
+    public static final String USER_FILTER_USER_WORD = "UW";
     /**
      * 所有过滤方式
      */
@@ -347,7 +357,6 @@ public abstract class InnerUserUnitFilterCompileEngine {
 
     /**
      * U(用户变量|"用户代码常量" [,用户变量|"用户代码常量]* )
-     *
      * @param ecc 运行环境
      * @param gene 过滤条件
      * @return 是否正确运行
@@ -363,7 +372,6 @@ public abstract class InnerUserUnitFilterCompileEngine {
             if (w == null || "".equals(w)) {
                 return false;
             }
-
             if (")".equals(w)) {
                 return true;
             }
@@ -735,7 +743,6 @@ public abstract class InnerUserUnitFilterCompileEngine {
             } else /*过滤用户机构关联关系*/ if(USER_FILTER_RELTYPE.equalsIgnoreCase(w)){
                 if(!calcUserUnitRelType(ecc,gene))
                     return null;
-
             }else /*根据岗位角色过滤*/if (USER_FILTER_ROLE_TYPE_GW.equalsIgnoreCase(w)) {
                 if (!calcGwRoles(ecc, gene))
                     return null;
