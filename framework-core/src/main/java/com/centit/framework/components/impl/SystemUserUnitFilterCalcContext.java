@@ -2,8 +2,8 @@ package com.centit.framework.components.impl;
 
 import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.basedata.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +34,26 @@ public class SystemUserUnitFilterCalcContext
     @Override
     public UnitInfo getUnitInfoByCode(String unitCode) {
         return CodeRepositoryUtil.getUnitInfoByCode(this.getTopUnit(), unitCode);
+    }
+
+    @Override
+    public UserInfo getUserInfoByWord(String userWord) {
+        for(UserInfo ui : CodeRepositoryUtil.listAllUsers(this.getTopUnit())){
+            if(StringUtils.equals(userWord, ui.getUserWord())){
+                return ui;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public UnitInfo getUnitInfoByWord(String unitWord) {
+        for(UnitInfo ui : CodeRepositoryUtil.listAllUnits(this.getTopUnit())){
+            if(StringUtils.equals(unitWord, ui.getUnitWord())){
+                return ui;
+            }
+        }
+        return null;
     }
 
     @Override

@@ -441,9 +441,7 @@ public abstract class SysUnitFilterEngine {
         }
     }
 
-
     public static Set<String> getUnitsByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
-
         boolean hasUnitFilter =  rf.isHasUnitTagFilter() || rf.isHasUnitTypeFilter();
         if( hasUnitFilter && rf.getUnits() != null && rf.getUnits().size()>0) {
             List<UnitInfo> lsUnitInfo = new ArrayList<>(rf.getUnits().size()+1);
@@ -455,7 +453,6 @@ public abstract class SysUnitFilterEngine {
                     // 过滤掉不符合要求的岗位
                     lsUnitInfo.removeIf(unit -> !rf.getUnitTypes().contains(unit.getUnitType()));
                 }
-
                 if (rf.isHasUnitTagFilter()) {
                     for (Iterator<UnitInfo> it = lsUnitInfo.iterator(); it.hasNext(); ) {
                         UnitInfo unit = it.next();

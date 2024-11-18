@@ -3,6 +3,7 @@ package com.centit.framework.components;
 import com.centit.framework.model.adapter.UserUnitFilterCalcContext;
 import com.centit.framework.model.adapter.UserUnitVariableTranslate;
 import com.centit.framework.model.basedata.UnitInfo;
+import com.centit.framework.model.basedata.UserInfo;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.compiler.VariableFormula;
@@ -80,7 +81,8 @@ public abstract class InnerUserUnitFilterCompileEngine {
     /**
      * 所有过滤方式
      */
-    public static final String ALL_USER_FILTER_ROLE_RANK = "'D'、'P'、'U'、'GW'、'XZ'、'R'、'DT'、'DL'、'UT'、'UL'、'RO'";
+    public static final String ALL_USER_FILTER_ROLE_RANK =
+        "'D'、'P'、'U'、'GW'、'XZ'、'R'、'DT'、'DL'、'DW'、'UT'、'UL'、'UW'、'RO'";
 
     private InnerUserUnitFilterCompileEngine()
     {
@@ -310,7 +312,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
     }
 
     /**
-     * DL("角色代码常量" [,"角色代码常量"]* )
+     * DL("机构标签" [,"机构标签"]* )
      * @param ecc 运行环境
      * @param gene 过滤条件
      * @return 是否正确运行
@@ -337,7 +339,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
             } else {
                 List<String> tags = StringBaseOpt.objectToStringList(obj);
                 if(tags == null || tags.isEmpty()) { // 语法错误
-                    ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Tag]; calcUnitTagFilter label . ");
+                    ecc.setLastErrMsg(w + " is unexpected, expect label or string [Unit Tag]; calcUnitTagFilter label . ");
                     return false;
                 }
                 for(String tag : tags) {
@@ -356,6 +358,58 @@ public abstract class InnerUserUnitFilterCompileEngine {
     }
 
     /**
+     * DW("机构编码" [,"机构编码"]* )
+     * @param ecc 运行环境
+     * @param gene 过滤条件
+     * @return 是否正确运行
+     */
+    private static boolean calcUnitWordFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
+        String w = ecc.getAWord();
+        if (!"(".equals(w)) { // 语法错误
+            ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcUnitWordFilter begin .");
+            return false;
+        }
+        while (true) {
+            w = ecc.getAWord();
+            if (w == null || "".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' ; calcUnitWordFilter end .");
+                return false;
+            }
+
+            if (")".equals(w)) { // 逗号后没有变量 或略这个错误
+                return true;
+            }
+            Object obj = mapVariable(ecc,w);
+            if (obj instanceof String){ // 变量
+                UnitInfo ui = ecc.getUnitInfoByWord((String)obj);
+                if(ui!=null){
+                    gene.addUnit(ui.getUnitCode());
+                }
+            } else {
+                List<String> unitWords = StringBaseOpt.objectToStringList(obj);
+                if(unitWords == null || unitWords.isEmpty()) { // 语法错误
+                    ecc.setLastErrMsg(w + " is unexpected, expect label or string [Unit Word]; calcUnitWordFilter label . ");
+                    return false;
+                }
+                for(String uw : unitWords) {
+                    UnitInfo ui = ecc.getUnitInfoByWord(uw);
+                    if(ui!=null){
+                        gene.addUnit(ui.getUnitCode());
+                    }
+                }
+            }
+
+            w = ecc.getAWord();
+            if (")".equals(w)) {
+                return true;
+            } else if (!",".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' or ','  ; calcUnitWordFilter , .");
+                return false;
+            }
+        }
+    }
+
+    /**
      * U(用户变量|"用户代码常量" [,用户变量|"用户代码常量]* )
      * @param ecc 运行环境
      * @param gene 过滤条件
@@ -364,7 +418,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
     private static boolean calcUsers(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
         String w = ecc.getAWord();
         if (!"(".equals(w)) { // 语法错误
-            ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcRoleUsers begin .");
+            ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcUsers begin .");
             return false;
         }
         while (true) {
@@ -642,6 +696,60 @@ public abstract class InnerUserUnitFilterCompileEngine {
             }
         }
     }
+
+
+    /**
+     * UW("用户编码" [,"用户编码"]* )
+     * @param ecc 运行环境
+     * @param gene 过滤条件
+     * @return 是否正确运行
+     */
+    private static boolean calcUserWordFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
+        String w = ecc.getAWord();
+        if (!"(".equals(w)) { // 语法错误
+            ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcUserWordFilter begin .");
+            return false;
+        }
+        while (true) {
+            w = ecc.getAWord();
+            if (w == null || "".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' ; calcUserWordFilter end .");
+                return false;
+            }
+
+            if (")".equals(w)) { // 逗号后没有变量 或略这个错误
+                return true;
+            }
+            Object obj = mapVariable(ecc,w);
+            if (obj instanceof String){ // 变量
+                UserInfo ui = ecc.getUserInfoByWord((String)obj);
+                if(ui!=null){
+                    gene.addUser(ui.getUserCode());
+                }
+            } else {
+                List<String> userWords = StringBaseOpt.objectToStringList(obj);
+                if(userWords == null || userWords.isEmpty()) { // 语法错误
+                    ecc.setLastErrMsg(w + " is unexpected, expect label or string [User Word]; calcUserWordFilter label . ");
+                    return false;
+                }
+                for(String uw : userWords) {
+                    UserInfo ui = ecc.getUserInfoByWord(uw);
+                    if(ui!=null){
+                        gene.addUser(ui.getUserCode());
+                    }
+                }
+            }
+
+            w = ecc.getAWord();
+            if (")".equals(w)) {
+                return true;
+            } else if (!",".equals(w)) {
+                ecc.setLastErrMsg(w + " is unexpected, expect ')' or ','  ; calcUserWordFilter , .");
+                return false;
+            }
+        }
+    }
+
     //R(U) / R(U-) / R(U-1) / R(U--) /R(U-1--)
     //一共5种情况，上面的U为一个变量，也可以是一个 数字 常量
     private static boolean calcXzRank(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
@@ -740,10 +848,13 @@ public abstract class InnerUserUnitFilterCompileEngine {
             } else /*根据用户标签过滤*/if (USER_FILTER_UNIT_LABEL.equalsIgnoreCase(w)) {
                 if (!calcUnitTagFilter(ecc, gene))
                     return null;
-            } else /*过滤用户机构关联关系*/ if(USER_FILTER_RELTYPE.equalsIgnoreCase(w)){
+            } else /*过滤机构编码*/ if(USER_FILTER_UNIT_WORD.equalsIgnoreCase(w)){
+                if(!calcUnitWordFilter(ecc,gene))
+                    return null;
+            }else /*过滤用户机构关联关系*/ if(USER_FILTER_RELTYPE.equalsIgnoreCase(w)){
                 if(!calcUserUnitRelType(ecc,gene))
                     return null;
-            }else /*根据岗位角色过滤*/if (USER_FILTER_ROLE_TYPE_GW.equalsIgnoreCase(w)) {
+            } else /*根据岗位角色过滤*/if (USER_FILTER_ROLE_TYPE_GW.equalsIgnoreCase(w)) {
                 if (!calcGwRoles(ecc, gene))
                     return null;
             } else /*根据行政角色过滤*/if (USER_FILTER_ROLE_TYPE_XZ.equalsIgnoreCase(w)) {
@@ -763,6 +874,9 @@ public abstract class InnerUserUnitFilterCompileEngine {
                     return null;
             } else /*根据用户代码过滤*/ if (USER_FILTER_USERCODE.equalsIgnoreCase(w)) {
                 if (!calcUsers(ecc, gene))
+                    return null;
+            }  else /*根据用户编码过滤*/ if (USER_FILTER_USER_WORD.equalsIgnoreCase(w)) {
+                if (!calcUserWordFilter(ecc, gene))
                     return null;
             } else { // 语法错误
                 ecc.setLastErrMsg(w + " is unexpected, expect "+ ALL_USER_FILTER_ROLE_RANK+" ; calcSimpleRole ");

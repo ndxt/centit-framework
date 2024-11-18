@@ -1,12 +1,10 @@
 package com.centit.framework.security;
 
 import com.centit.framework.common.WebOptUtils;
-import com.centit.framework.model.security.CentitUserDetails;
 import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.image.CaptchaImageUtil;
 import com.centit.support.security.SecurityOptUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

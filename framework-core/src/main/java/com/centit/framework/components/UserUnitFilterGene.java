@@ -3,7 +3,6 @@ package com.centit.framework.components;
 import com.centit.support.algorithm.StringBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,9 +31,6 @@ public class UserUnitFilterGene {
     private Set<String> optRoles;
     private Set<String> userUnitRelTypes;
 
-    private Set<String> unitWords; // DW
-    private Set<String> userWords; // UW
-
     private String xzRank; //postRank
     private boolean rankPlus;
     private boolean rankMinus;
@@ -56,8 +52,6 @@ public class UserUnitFilterGene {
         xzRoles = new HashSet<>();
         gwRoles = new HashSet<>();
         optRoles = new HashSet<>();
-        unitWords = new HashSet<>();
-        userWords = new HashSet<>();
         userUnitRelTypes = new HashSet<>();
         xzRank = null;
     }
@@ -94,21 +88,6 @@ public class UserUnitFilterGene {
         return userTags;
     }
 
-    public Set<String> getUserWords(){
-        return userWords;
-    }
-
-    public Set<String> getUnitWords(){
-        return unitWords;
-    }
-
-    public void addUserWord(String word){
-        userWords.add(word);
-    }
-    public void addUserWords(Collection<String> words){
-        userWords.addAll(words);
-    }
-
     public void addUserTag(String rc) {
         userTags.add(rc);
         hasUserTagFilter = true;
@@ -122,14 +101,6 @@ public class UserUnitFilterGene {
     public void addUnitTag(String rc) {
         unitTags.add(rc);
         hasUnitTagFilter = true;
-    }
-
-    public void addUnitWord(String word) {
-        unitWords.add(word);
-    }
-
-    public void addUnitWords(Collection<String> words) {
-        unitWords.addAll(words);
     }
 
     public void addUnitType(String rc) {

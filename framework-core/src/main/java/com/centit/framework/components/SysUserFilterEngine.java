@@ -29,7 +29,7 @@ public abstract class SysUserFilterEngine {
      */
     public static final String ROLE_TYPE_XZ = InnerUserUnitFilterCompileEngine.USER_FILTER_ROLE_TYPE_XZ; // "XZ";
 
-   /**
+    /**
      * 项目（办件）角色类别代码
      */
     public static final String ROLE_TYPE_ITEM = "BJ";
