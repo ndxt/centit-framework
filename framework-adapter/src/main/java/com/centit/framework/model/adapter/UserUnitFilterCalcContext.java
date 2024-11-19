@@ -80,6 +80,8 @@ public interface UserUnitFilterCalcContext {
 
     UnitInfo getUnitInfoByWord(String unitWord);
 
+    UnitInfo getUnitInfoByDepNo(String depNo);
+
     List<UserUnit> listAllUserUnits();
 
     List<UserUnit> listUnitUsers(String unitCode);

@@ -65,6 +65,10 @@ public abstract class InnerUserUnitFilterCompileEngine {
      */
     public static final String USER_FILTER_UNIT_WORD = "DW";
     /**
+     * 根据机构 DEP_NO 过滤
+     */
+    public static final String USER_FILTER_UNIT_DEP_NO = "DN";
+    /**
      * 根据用户类别过滤
      */
     public static final String USER_FILTER_USER_TYPE = "UT";
@@ -82,7 +86,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
      * 所有过滤方式
      */
     public static final String ALL_USER_FILTER_ROLE_RANK =
-        "'D'、'P'、'U'、'GW'、'XZ'、'R'、'DT'、'DL'、'DW'、'UT'、'UL'、'UW'、'RO'";
+        "'D'、'P'、'U'、'GW'、'XZ'、'R'、'DT'、'DL'、'DN'、'DW'、'UT'、'UL'、'UW'、'RO'";
 
     private InnerUserUnitFilterCompileEngine()
     {
@@ -363,7 +367,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
      * @param gene 过滤条件
      * @return 是否正确运行
      */
-    private static boolean calcUnitWordFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene) {
+    private static boolean calcUnitWordFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene gene, boolean isUnitWord) {
         String w = ecc.getAWord();
         if (!"(".equals(w)) { // 语法错误
             ecc.setLastErrMsg(w + " is unexpected, expect '(' ; calcUnitWordFilter begin .");
@@ -381,9 +385,12 @@ public abstract class InnerUserUnitFilterCompileEngine {
             }
             Object obj = mapVariable(ecc,w);
             if (obj instanceof String){ // 变量
-                UnitInfo ui = ecc.getUnitInfoByWord((String)obj);
+                UnitInfo ui = isUnitWord ? ecc.getUnitInfoByWord((String)obj) : ecc.getUnitInfoByDepNo((String)obj);
                 if(ui!=null){
                     gene.addUnit(ui.getUnitCode());
+                } else {
+                    ecc.setLastErrMsg("找不到对应的机构：" + obj +".");
+                    return false;
                 }
             } else {
                 List<String> unitWords = StringBaseOpt.objectToStringList(obj);
@@ -392,7 +399,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
                     return false;
                 }
                 for(String uw : unitWords) {
-                    UnitInfo ui = ecc.getUnitInfoByWord(uw);
+                    UnitInfo ui = isUnitWord ? ecc.getUnitInfoByWord(uw) : ecc.getUnitInfoByDepNo(uw);
                     if(ui!=null){
                         gene.addUnit(ui.getUnitCode());
                     }
@@ -716,7 +723,6 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 ecc.setLastErrMsg(w + " is unexpected, expect ')' ; calcUserWordFilter end .");
                 return false;
             }
-
             if (")".equals(w)) { // 逗号后没有变量 或略这个错误
                 return true;
             }
@@ -725,6 +731,9 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 UserInfo ui = ecc.getUserInfoByWord((String)obj);
                 if(ui!=null){
                     gene.addUser(ui.getUserCode());
+                } else {
+                    ecc.setLastErrMsg("找不到对应的人员：" + obj +".");
+                    return false;
                 }
             } else {
                 List<String> userWords = StringBaseOpt.objectToStringList(obj);
@@ -849,9 +858,12 @@ public abstract class InnerUserUnitFilterCompileEngine {
                 if (!calcUnitTagFilter(ecc, gene))
                     return null;
             } else /*过滤机构编码*/ if(USER_FILTER_UNIT_WORD.equalsIgnoreCase(w)){
-                if(!calcUnitWordFilter(ecc,gene))
+                if(!calcUnitWordFilter(ecc,gene, true))
                     return null;
-            }else /*过滤用户机构关联关系*/ if(USER_FILTER_RELTYPE.equalsIgnoreCase(w)){
+            } else /*过滤机构编码*/ if(USER_FILTER_UNIT_DEP_NO.equalsIgnoreCase(w)){
+                if(!calcUnitWordFilter(ecc,gene, false))
+                    return null;
+            } else /*过滤用户机构关联关系*/ if(USER_FILTER_RELTYPE.equalsIgnoreCase(w)){
                 if(!calcUserUnitRelType(ecc,gene))
                     return null;
             } else /*根据岗位角色过滤*/if (USER_FILTER_ROLE_TYPE_GW.equalsIgnoreCase(w)) {

@@ -57,6 +57,16 @@ public class SystemUserUnitFilterCalcContext
     }
 
     @Override
+    public UnitInfo getUnitInfoByDepNo(String depNo) {
+        for(UnitInfo ui : CodeRepositoryUtil.listAllUnits(this.getTopUnit())){
+            if(StringUtils.equals(depNo, ui.getDepNo())){
+                return ui;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<UserUnit> listAllUserUnits() {
         return CodeRepositoryUtil.listAllUserUnits(this.getTopUnit());
     }
