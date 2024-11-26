@@ -61,10 +61,11 @@ public abstract class SysUserFilterEngine {
     }
 
     public static Set<String> getUsersByRoleAndUnit(UserUnitFilterCalcContext ecc,
-                    String roleType,String roleCode,
+                    String roleType, String roleCode,
                     String unitCode, boolean onlyGetPrimary) {
-        List<UserUnit> lsUserunit = new LinkedList<>();
-        if (unitCode != null && !"".equals(unitCode)) {
+        boolean filterByUnitCode = StringUtils.isNotBlank(unitCode);
+        List<UserUnit> lsUserunit = new ArrayList<>();
+        if (filterByUnitCode) {
             UnitInfo unit = ecc.getUnitInfoByCode(unitCode);
             if (unit != null){
                 if(onlyGetPrimary){
@@ -80,10 +81,31 @@ public abstract class SysUserFilterEngine {
                     }
                 }
             }
-        } else {
+        }
+
+        if(ROLE_TYPE_SYSTEM.equalsIgnoreCase(roleType)) {
+            // 获取系统角色用户
+            List<UserRole> userRoles = ecc.listRoleUsers(roleCode);
+            Set<String> users = new HashSet<>();
+            for (UserRole ur : userRoles) {
+                if(filterByUnitCode) {
+                    for (UserUnit uu : lsUserunit) {
+                        if (StringUtils.equals(uu.getUserCode(), ur.getUserCode())) {
+                            users.add(uu.getUserCode());
+                            break;
+                        }
+                    }
+                } else {
+                    users.add(ur.getUserCode());
+                }
+            }
+            return users;
+        }
+
+        if (!filterByUnitCode){
             List<UserUnit> userlist = ecc.listAllUserUnits();
-            if(userlist!=null) {
-                lsUserunit.addAll(userlist);
+            if(userlist!=null && !userlist.isEmpty()) {
+                lsUserunit =  userlist;
             }
         }
 
@@ -93,20 +115,7 @@ public abstract class SysUserFilterEngine {
         } else if (ROLE_TYPE_XZ.equalsIgnoreCase(roleType)) {
             // 过滤掉不符合要求的职位
             lsUserunit.removeIf(uu -> !roleCode.equals(uu.getUserRank()));
-        } else if(ROLE_TYPE_SYSTEM.equalsIgnoreCase(roleType)) {
-            // 获取系统角色用户
-            List<UserRole> userRoles = ecc.listRoleUsers(roleCode);
-            Set<String> users = new HashSet<>();
-            for(UserRole ur : userRoles){
-                for(UserUnit uu : lsUserunit){
-                    if(StringUtils.equals( uu.getUserCode(), ur.getUserCode())){
-                        users.add(uu.getUserCode());
-                        break;
-                    }
-                }
-            }
-            return users;
-        } else {
+        }  else {
             lsUserunit.clear();
         }
         // 获取所有 符合条件的用户代码

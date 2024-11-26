@@ -20,7 +20,7 @@ import java.util.Date;
 // 用户所属机构表
 @Entity
 @Table(name = "F_USERUNIT")
-@ApiModel(value="系统用户机构对象",description="系统用户机构对象 UserUnit")
+@ApiModel(value="系统用户机构对象", description="系统用户机构对象 UserUnit")
 public class UserUnit implements java.io.Serializable {
 
     // Fields
@@ -32,12 +32,12 @@ public class UserUnit implements java.io.Serializable {
     //@GeneratedValue(generator = "assignedGenerator")
     @ValueGenerator(strategy = GeneratorType.UUID22)
     @Length(max = 64)
-    @ApiModelProperty(value = "用户机构ID",name = "userUnitId")
+    @ApiModelProperty(value = "用户机构ID", name = "userUnitId")
     private String userUnitId;
 
     @Column(name = "UNIT_CODE")
-    @DictionaryMap(fieldName="unitName",value="unitCode")
-    @ApiModelProperty(value = "机构代码",name = "unitCode")
+    @DictionaryMap(fieldName="unitName", value="unitCode")
+    @ApiModelProperty(value = "机构代码", name = "unitCode")
     private String unitCode; // 机构代码
 
     /**
@@ -45,30 +45,30 @@ public class UserUnit implements java.io.Serializable {
      */
     @Column(name = "TOP_UNIT")
     @Length(max = 32)
-    @DictionaryMap(fieldName="topUnitName",value="unitCode")
+    @DictionaryMap(fieldName="topUnitName", value="unitCode")
     private String topUnit; // 顶级机构，用于帐套
 
     @Column(name = "USER_CODE")
-    @DictionaryMap(fieldName={"userName","loginName","regCellPhone"},value={"userCode","userInfo.loginName","userInfo.regCellPhone"})
-    @ApiModelProperty(value = "用户代码",name = "userCode")
+    @DictionaryMap(fieldName={"userName","loginName","regCellPhone"}, value={"userCode","userInfo.loginName","userInfo.regCellPhone"})
+    @ApiModelProperty(value = "用户代码", name = "userCode")
     private String userCode; // 用户代码
 
     @Column(name = "USER_STATION")
     @Length(max = 32)
-    @DictionaryMap(fieldName="userStationText",value="StationType")
-    @ApiModelProperty(value = "岗位",name = "userStation")
+    @DictionaryMap(fieldName="userStationText", value="StationType")
+    @ApiModelProperty(value = "岗位", name = "userStation")
     private String userStation; // 岗位
 
     @Column(name = "USER_RANK")
     @Length(max = 32)
-    @DictionaryMap(fieldName="userRankText",value="RankType")
-    @ApiModelProperty(value = "职务",name = "userRank")
+    @DictionaryMap(fieldName="userRankText", value="RankType")
+    @ApiModelProperty(value = "职务", name = "userRank")
     private String userRank; // 职务
 
     @Column(name = "POST_RANK")
     @Length(max = 32)
-    @DictionaryMap(fieldName="userPostText",value="PostRank")
-    @ApiModelProperty(value = "职级",name = "postRank")
+    @DictionaryMap(fieldName="userPostText", value="PostRank")
+    @ApiModelProperty(value = "职级", name = "postRank")
     private String postRank; // 职级
 
     @Column(name = "RANK_MEMO")
@@ -77,7 +77,7 @@ public class UserUnit implements java.io.Serializable {
 
     @Column(name = "REL_TYPE")
     @Length(max = 1)
-    @DictionaryMap(fieldName="relTypeText",value="UserUnitRelType")
+    @DictionaryMap(fieldName="relTypeText", value="UserUnitRelType")
     private String relType; // 是否为主
 
     @OrderBy
