@@ -475,20 +475,6 @@ public class WebOptUtils {
         return null;
     }
 
-    public static boolean isTenantTopUnit(HttpServletRequest request) {
-        /*if(WebOptUtils.requestInSpringCloud){
-            String topUnit = request.getHeader(WebOptUtils.CURRENT_TOP_UNIT_TAG);
-            if(StringUtils.isNotBlank(topUnit) && !GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit)){
-                return true;
-            }
-        }
-        String topUnit = getCurrentTopUnit(request);
-        if (GlobalConstValue.NO_TENANT_TOP_UNIT.equalsIgnoreCase(topUnit)) {
-            return false;
-        }*/
-        return true;
-    }
-
     public static String getTraceId() {
         return HttpContextUtils.getTraceId();
     }

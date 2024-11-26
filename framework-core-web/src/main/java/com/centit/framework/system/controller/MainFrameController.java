@@ -778,35 +778,35 @@ public class MainFrameController extends BaseController {
             throw new ObjectException(ResponseData.ERROR_FIELD_INPUT_NOT_VALID,
                 getI18nMessage("error.701.field_is_blank", request, "optid"));
         }
-        if(WebOptUtils.isTenantTopUnit(request)){
-            String topUnit = WebOptUtils.getCurrentTopUnit(request);
-            OsInfo osInfo = platformEnvironment.getOsInfo(optid);
-            if(!StringUtils.equals(topUnit, osInfo.getTopUnit())) {
-                UserUnit tempUU = null;
-                CentitUserDetails ud = WebOptUtils.getCurrentUserDetails(request);
-                for(UserUnit uu : ud.getUserUnits()){
-                    if(StringUtils.equals(uu.getTopUnit(), osInfo.getTopUnit())){
-                        tempUU = uu;
-                        break;
-                    }
-                }
 
-                if (tempUU == null) {
-                    throw new ObjectException(ResponseData.ERROR_FORBIDDEN,
-                        getI18nMessage("error.403.user_not_in_tenant", request));
-                } else { //切换租户
-                    Map<String, Object> userMap = CollectionsOpt.createHashMap(
-                        "primaryUnit", tempUU.getUnitCode(),
-                                "userCode", tempUU.getUserCode(),
-                        "currentStationId", tempUU.getUserUnitId(),
-                        "topUnit", tempUU.getTopUnit()
-                    );
-
-                    throw new ObjectException(userMap ,ResponseData.ERROR_USER_CONFIG,
-                        getI18nMessage("error.711.bad_tenant", request));
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
+        OsInfo osInfo = platformEnvironment.getOsInfo(optid);
+        if(!StringUtils.equals(topUnit, osInfo.getTopUnit())) {
+            UserUnit tempUU = null;
+            CentitUserDetails ud = WebOptUtils.getCurrentUserDetails(request);
+            for(UserUnit uu : ud.getUserUnits()){
+                if(StringUtils.equals(uu.getTopUnit(), osInfo.getTopUnit())){
+                    tempUU = uu;
+                    break;
                 }
             }
+
+            if (tempUU == null) {
+                throw new ObjectException(ResponseData.ERROR_FORBIDDEN,
+                    getI18nMessage("error.403.user_not_in_tenant", request));
+            } else { //切换租户
+                Map<String, Object> userMap = CollectionsOpt.createHashMap(
+                    "primaryUnit", tempUU.getUnitCode(),
+                            "userCode", tempUU.getUserCode(),
+                    "currentStationId", tempUU.getUserUnitId(),
+                    "topUnit", tempUU.getTopUnit()
+                );
+
+                throw new ObjectException(userMap ,ResponseData.ERROR_USER_CONFIG,
+                    getI18nMessage("error.711.bad_tenant", request));
+            }
         }
+
         List<OptInfo> menuFunsByUser = platformEnvironment
             .listUserMenuOptInfosUnderSuperOptId(userCode,optid,BooleanBaseOpt.castObjectToBoolean(asadmin, false));
         if (menuFunsByUser == null) {
