@@ -200,19 +200,19 @@ public abstract class InnerUserUnitFilterCompileEngine {
                     Object objTiers = mapVariable(ecc, w);
                     if (objTiers instanceof Integer) {
                         units = SysUnitFilterEngine.topUnits(ecc, units, (Integer) objTiers);
-                    } else {
+                    } else {  // TODO 添加 根据 标签过滤
                         ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *+.");
                         return null;
                     }
-
                 } else if ("-".equals(w)) {// 所有节点的上层节点中， 指定层次的节点
                     w = ecc.getAWord();
                     Object objTiers = mapVariable(ecc, w);
                     if (objTiers instanceof Integer) {
                         Set<String> parUnits = SysUnitFilterEngine.allParentUnits(ecc, units);
+                        parUnits.addAll(units); // 添加本身
                         units = SysUnitFilterEngine.topUnits(ecc, units, (Integer) objTiers);
                         units.retainAll(parUnits);
-                    } else {
+                    } else { // TODO 添加 根据 标签过滤
                         ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *-.");
                         return null;
                     }
@@ -220,7 +220,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
                     Object objTiers = mapVariable(ecc, w);
                     if (objTiers instanceof Integer) {
                         units = SysUnitFilterEngine.seriesUnits(ecc, units, (Integer) objTiers);
-                    } else {
+                    } else { // TODO 添加 根据 标签过滤
                         ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *.");
                         return null;
                     }
