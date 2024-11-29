@@ -210,6 +210,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
                     Object objTiers = mapVariable(ecc, w);
                     if (objTiers instanceof Integer) {
                         Set<String> parUnits = SysUnitFilterEngine.allParentUnits(ecc, units);
+                        parUnits.addAll(units);
                         units = SysUnitFilterEngine.topUnits(ecc, units, (Integer) objTiers);
                         units.retainAll(parUnits);
                     } else {
