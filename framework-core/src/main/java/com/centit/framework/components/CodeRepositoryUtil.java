@@ -235,7 +235,7 @@ public abstract class CodeRepositoryUtil {
      */
     public static String getValue(String sCatalog, String sKey) {
         HttpServletRequest request = RequestThreadLocal.getLocalThreadWrapperRequest();
-        return getValue(sCatalog,sKey,
+        return getValue(sCatalog, sKey,
             request == null ? GlobalConstValue.NO_TENANT_TOP_UNIT : WebOptUtils.getCurrentTopUnit(request),
             request == null ? "zh_CN" : WebOptUtils.getCurrentLang(request)
         );
@@ -346,7 +346,7 @@ public abstract class CodeRepositoryUtil {
                         String svalue = extendRepo.getCachedTarget().get(sKey);
                         return svalue != null ? svalue : sKey;
                     }
-                    DataDictionary dictPiece = getDataPiece(sCatalog, sKey,topUnit);
+                    DataDictionary dictPiece = getDataPiece(sCatalog, sKey, topUnit);
                     if (dictPiece == null) {
                         return sKey;
                     }
@@ -496,7 +496,20 @@ public abstract class CodeRepositoryUtil {
 
         return sb.toString();
     }
-
+    public static String transExpression(String sCatalog, String sExpression, String topUnit, String localLang) {
+        StringBuilder sb = new StringBuilder();
+        Lexer lex = new Lexer();
+        lex.setFormula(sExpression);
+        while (true) {
+            String aWord = lex.getAString();
+            if (StringUtils.isBlank(aWord)) {
+                break;
+            }
+            aWord = getValue(sCatalog, aWord, topUnit, localLang);
+            sb.append(aWord);
+        }
+        return sb.toString();
+    }
     /**
      * 获得数据字典条目的状态
      *
@@ -1342,8 +1355,8 @@ public abstract class CodeRepositoryUtil {
      * @param sKey     字典代码
      * @return 字典条目
      */
-    public static DataDictionary getDataPiece(String sCatalog, String sKey,String topUnit) {
-        if (!GlobalConstValue.NO_TENANT_TOP_UNIT.equals(topUnit)&&StringUtils.isNotBlank(topUnit)) {
+    public static DataDictionary getDataPiece(String sCatalog, String sKey, String topUnit) {
+        if (!GlobalConstValue.NO_TENANT_TOP_UNIT.equals(topUnit) && StringUtils.isNotBlank(topUnit)) {
             sCatalog = transformTenantInitCatalog(sCatalog, topUnit);
         }
         Map<String, DataDictionary> dcMap =

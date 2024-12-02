@@ -34,7 +34,10 @@ public class PageQueryResult<T> implements ToResponseData, Serializable {
     // 属性过滤器，如果不为null则只有类表中的字段才会被返回
     private String[] filterFields;
 
+    private String topUnit;
+
     private PageQueryResult(){
+        this.topUnit = null;
     }
 
     private static <D> PageQueryResult<D>
@@ -97,6 +100,13 @@ public class PageQueryResult<T> implements ToResponseData, Serializable {
         return innerCreateResult(objList, pageDesc, true, null);
     }
 
+    public static <D> PageQueryResult<D>
+    createResultMapDict(String topUnit, Collection<D> objList, PageDesc pageDesc){
+        PageQueryResult<D> result = innerCreateResult(objList, pageDesc, true, null);
+        result.topUnit = topUnit;
+        return result;
+    }
+
     /**
      * 将对象转换为分页返回结果
      * @param objList 查询返回结果，需要 Collection 类型，并且类别中的对象不能为null
@@ -154,11 +164,11 @@ public class PageQueryResult<T> implements ToResponseData, Serializable {
         ResponseMapData respData = new ResponseMapData();
         if(this.mapDictionary){
             respData.addResponseData(PageQueryResult.OBJECT_LIST_LABEL,
-                DictionaryMapUtils.objectsToJSONArray(this.objList, this.filterFields));
+                DictionaryMapUtils.objectsToJSONArray(this.topUnit, this.objList, this.filterFields));
         } else {
             if(this.filterFields != null && this.filterFields.length > 0){
                 respData.addResponseData(PageQueryResult.OBJECT_LIST_LABEL,
-                    DictionaryMapUtils.objectsToJSONArrayNotMapDict(this.objList, this.filterFields));
+                    DictionaryMapUtils.objectsToJSONArrayNotMapDict(this.topUnit, this.objList, this.filterFields));
             }else {
                 respData.addResponseData(PageQueryResult.OBJECT_LIST_LABEL, this.objList);
             }

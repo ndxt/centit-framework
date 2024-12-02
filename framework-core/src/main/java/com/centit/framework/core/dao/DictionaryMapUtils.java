@@ -8,6 +8,7 @@ import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.LeftRightPair;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.EmbeddedId;
 import java.io.Serializable;
@@ -118,7 +119,7 @@ public abstract class DictionaryMapUtils {
 
         Field[] objFields = objType.getDeclaredFields();
         List<DictionaryMapColumn> fieldDictionaryMaps = getDictionaryMapColumns(objType);
-        if(fields==null || fields.length==0 || fieldDictionaryMaps.size()<1){
+        if(fields==null || fields.length==0 || fieldDictionaryMaps.isEmpty()){
             return fieldDictionaryMaps;
         }
 
@@ -132,13 +133,26 @@ public abstract class DictionaryMapUtils {
         return tempDictionaryMaps;
     }
 
-    private final static String mapDictinaryValue(DictionaryMapColumn col, Object obj){
+    private static String mapDictinaryValue(DictionaryMapColumn col, Object obj){
         return col.isExpression()?
-            CodeRepositoryUtil.transExpression( col.getDictCatalog(),
+            CodeRepositoryUtil.transExpression(col.getDictCatalog(),
                 StringBaseOpt.objectToString(obj)) :
-            CodeRepositoryUtil.getValue( col.getDictCatalog(),
+            CodeRepositoryUtil.getValue(col.getDictCatalog(),
                 StringBaseOpt.objectToString(obj));
     }
+
+    private static String mapDictinaryValue(String topUnit, DictionaryMapColumn col, Object obj){
+        if(StringUtils.isBlank(topUnit)){
+            return mapDictinaryValue(col, obj);
+        }
+        return col.isExpression()?
+            CodeRepositoryUtil.transExpression(col.getDictCatalog(),
+                StringBaseOpt.objectToString(obj), topUnit, null) :
+            CodeRepositoryUtil.getValue(col.getDictCatalog(),
+                StringBaseOpt.objectToString(obj), topUnit, null);
+    }
+
+
     /**
      * 将一个Po对象转换为JSONObject 同时检查对象上面的的属性是否有DictionaryMap注解，如果有转换数据字典
      * @param obj Object
@@ -147,10 +161,14 @@ public abstract class DictionaryMapUtils {
      * @return Po对象转换为JSONObject
      */
     public static Object objectToJSON(Object obj, String[] fields, List<DictionaryMapColumn> fieldDictionaryMaps ){
+        return objectToJSON(null, obj, fields, fieldDictionaryMaps);
+    }
+
+    public static Object objectToJSON(String topUnit, Object obj, String[] fields, List<DictionaryMapColumn> fieldDictionaryMaps ){
         if(obj==null)
             return null;
         if(fields==null || fields.length==0){
-            return objectToJSON(obj,fieldDictionaryMaps);
+            return objectToJSON(obj, fieldDictionaryMaps);
         }
         Object json = JSON.toJSON(obj);
         if(json instanceof JSONObject){
@@ -159,12 +177,12 @@ public abstract class DictionaryMapUtils {
             for(String fieldName : fields ){
                 newJsonObj.put(fieldName, jsonObj.get(fieldName));
             }
-            if(fieldDictionaryMaps==null || fieldDictionaryMaps.size()==0)
+            if(fieldDictionaryMaps==null || fieldDictionaryMaps.isEmpty())
                 return newJsonObj;
 
             for(DictionaryMapColumn col:fieldDictionaryMaps){
                 newJsonObj.put(col.getMapFieldName(),
-                    mapDictinaryValue(col, jsonObj.get(col.getFieldName())));
+                    mapDictinaryValue(topUnit, col, jsonObj.get(col.getFieldName())));
             }
             return newJsonObj;
         }
@@ -308,16 +326,20 @@ public abstract class DictionaryMapUtils {
      * @return Po对象列表转换为JSONArray
      */
     public static JSONArray objectsToJSONArray(Collection<? extends Object> objs, String[] fields){
+        return objectsToJSONArray(null, objs, fields);
+    }
+
+    public static JSONArray objectsToJSONArray(String topUnit, Collection<? extends Object> objs, String[] fields){
         JSONArray ja = new JSONArray();
         if(objs==null||objs.isEmpty())
             return ja;
 
         List<DictionaryMapColumn> fieldDictionaryMaps =
-                getDictionaryMapColumns(fields,
-                        objs.iterator().next().getClass());
+            getDictionaryMapColumns(fields,
+                objs.iterator().next().getClass());
 
         for(Object obj : objs){
-            ja.add(objectToJSON(obj, fields, fieldDictionaryMaps));
+            ja.add(objectToJSON(topUnit, obj, fields, fieldDictionaryMaps));
         }
         return ja;
     }
@@ -329,11 +351,21 @@ public abstract class DictionaryMapUtils {
      * @return Po对象列表转换为JSONArray
      */
     public static JSONArray objectsToJSONArrayNotMapDict(Collection<? extends Object> objs, String[] fields){
+        return objectsToJSONArrayNotMapDict(null, objs, fields);
+    }
+
+    /**
+     * 将一个Po对象列表转换为JSONArray 不检查对象上面的的属性是否有DictionaryMap注解，只做fields的过滤
+     * @param objs Collection Object
+     * @param fields 过滤相关字段
+     * @return Po对象列表转换为JSONArray
+     */
+    public static JSONArray objectsToJSONArrayNotMapDict(String topUnit, Collection<? extends Object> objs, String[] fields){
         JSONArray ja = new JSONArray();
         if(objs==null||objs.isEmpty())
             return ja;
         for(Object obj : objs){
-            ja.add(objectToJSON(obj, fields, null));
+            ja.add(objectToJSON(topUnit, obj, fields, null));
         }
         return ja;
     }
