@@ -168,7 +168,7 @@ public abstract class DictionaryMapUtils {
         if(obj==null)
             return null;
         if(fields==null || fields.length==0){
-            return objectToJSON(obj, fieldDictionaryMaps);
+            return objectToJSON(topUnit, obj, fieldDictionaryMaps);
         }
         Object json = JSON.toJSON(obj);
         if(json instanceof JSONObject){
@@ -221,7 +221,11 @@ public abstract class DictionaryMapUtils {
      * @return Po对象转换为JSONObject
      */
     private static Object objectToJSON(Object obj, List<DictionaryMapColumn> fieldDictionaryMaps ){
-        if(obj==null || fieldDictionaryMaps==null || fieldDictionaryMaps.size()==0)
+        return objectToJSON(null, obj, fieldDictionaryMaps);
+    }
+
+    private static Object objectToJSON(String topUnit, Object obj, List<DictionaryMapColumn> fieldDictionaryMaps ){
+        if(obj==null || fieldDictionaryMaps==null || fieldDictionaryMaps.isEmpty())
             return obj;
         Object jsonObject= ( obj instanceof  Map) ? obj : JSON.toJSON(obj);
         if(jsonObject instanceof Map){
@@ -229,7 +233,7 @@ public abstract class DictionaryMapUtils {
             for(DictionaryMapColumn col: fieldDictionaryMaps){
                 if( jsonObj.get(col.getFieldName()) !=null) {
                     jsonObj.put(col.getMapFieldName(),
-                        mapDictinaryValue(col, jsonObj.get(col.getFieldName())));
+                        mapDictinaryValue(topUnit, col, jsonObj.get(col.getFieldName())));
                 }
             }
             return jsonObj;
@@ -249,7 +253,6 @@ public abstract class DictionaryMapUtils {
         return objectToJSON(obj, fieldDictionaryMaps);
 
     }
-
 
     private static Map<String,Object> mapJsonObjectCascade(Map<String,Object> jsonObj, Object object) {
         Map<String,Object> jsonObject = mapJsonObject(jsonObj, object.getClass() );
