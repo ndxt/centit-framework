@@ -409,6 +409,54 @@ public class CacheController extends BaseController {
         return userInfos;
     }
 
+
+    /**
+     * CP标签中UNITROLE实现
+     * 获取一个机构下面的用户的岗位 或者 行政职务
+     * @param request 请求体
+     * @param unitCode 机构代码
+     * @param roleType 角色类别 ST 岗位 RT 行政职务
+     * @return ResponseData
+     */
+    @ApiOperation(value = "获取一个机构下面的所有用户", notes = "获取一个机构下面的所有用户，并且根据排序号排序")
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "unitCode", value="机构代码",
+            required= true, paramType = "path", dataType= "String"
+        ),
+        @ApiImplicitParam(
+            name = "roleType", value="角色类别 ST 岗位 RT 行政职务",
+            required= true, paramType = "path", dataType= "String"
+        )})
+    @RequestMapping(value = "/unitrole/{roleType}/{unitCode}", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public List<DataDictionary> unitRole(@PathVariable String roleType, @PathVariable String unitCode, HttpServletRequest request) {
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
+        List<DataDictionary> dataDictionaries = new ArrayList<>();
+        List<UserUnit> unitUsers = CodeRepositoryUtil.listUnitUsers(unitCode);
+        Set<String> roles = new HashSet<>();
+        List<DataDictionary> allDataDictionaries = null;
+        if("RT".equals(roleType)){
+            allDataDictionaries = CodeRepositoryUtil.getDictionary(topUnit + "-RT");
+            for(UserUnit uu : unitUsers){
+                roles.add(uu.getUserRank());
+            }
+        } else if("ST".equals(roleType)){
+            allDataDictionaries = CodeRepositoryUtil.getDictionary(topUnit + "-ST");
+            for(UserUnit uu : unitUsers){
+                roles.add(uu.getUserStation());
+            }
+        }
+        if(allDataDictionaries!=null) {
+            for (DataDictionary dict : allDataDictionaries) {
+                if (roles.contains(dict.getDataCode())) {
+                    dataDictionaries.add(dict);
+                }
+            }
+        }
+        return dataDictionaries;
+    }
+
     /**
      * CP标签中ALLUSER实现
      * 获取当前租户所有的用户信息
@@ -424,7 +472,7 @@ public class CacheController extends BaseController {
     @RequestMapping(value = "/alluser/{state}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public List<UserInfo> alluser(@PathVariable String state,HttpServletRequest request) {
-        return CodeRepositoryUtil.getAllUsers(WebOptUtils.getCurrentTopUnit(request),state);
+        return CodeRepositoryUtil.getAllUsers(WebOptUtils.getCurrentTopUnit(request), state);
     }
 
     /**
