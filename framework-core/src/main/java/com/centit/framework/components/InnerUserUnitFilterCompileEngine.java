@@ -200,8 +200,10 @@ public abstract class InnerUserUnitFilterCompileEngine {
                     Object objTiers = mapVariable(ecc, w);
                     if (objTiers instanceof Integer) {
                         units = SysUnitFilterEngine.topUnits(ecc, units, (Integer) objTiers);
-                    } else {  // TODO 添加 根据 标签过滤
-                        ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *+.");
+                    } else if (objTiers instanceof String) {
+                        units = SysUnitFilterEngine.topUnits(ecc, units, (String) objTiers);
+                    } else {
+                        ecc.setLastErrMsg(w + " is unexpected, expect number or tag/label; calcSimpleUnit *+ .");
                         return null;
                     }
                 } else if ("-".equals(w)) {// 所有节点的上层节点中， 指定层次的节点
@@ -212,16 +214,23 @@ public abstract class InnerUserUnitFilterCompileEngine {
                         parUnits.addAll(units); // 添加本身
                         units = SysUnitFilterEngine.topUnits(ecc, units, (Integer) objTiers);
                         units.retainAll(parUnits);
-                    } else { // TODO 添加 根据 标签过滤
-                        ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *-.");
+                    } else if (objTiers instanceof String) {
+                        Set<String> parUnits = SysUnitFilterEngine.allParentUnits(ecc, units);
+                        parUnits.addAll(units); // 添加本身
+                        units = SysUnitFilterEngine.topUnits(ecc, units, (String) objTiers);
+                        units.retainAll(parUnits);
+                    }  else {
+                        ecc.setLastErrMsg(w + " is unexpected, expect number or tag/label; calcSimpleUnit *- .");
                         return null;
                     }
                 } else {  //所有同一系列最上面几层节点
                     Object objTiers = mapVariable(ecc, w);
                     if (objTiers instanceof Integer) {
                         units = SysUnitFilterEngine.seriesUnits(ecc, units, (Integer) objTiers);
-                    } else { // TODO 添加 根据 标签过滤
-                        ecc.setLastErrMsg(w + " is unexpected, expect number ; calcSimpleUnit *.");
+                    } else if (objTiers instanceof String) {
+                        units = SysUnitFilterEngine.seriesUnits(ecc, units, (String) objTiers);
+                    } else {
+                        ecc.setLastErrMsg(w + " is unexpected, expect number or tag/label; calcSimpleUnit * .");
                         return null;
                     }
                 }

@@ -183,7 +183,7 @@ public abstract class SysUnitFilterEngine {
         for (String suc : units) {
             List<UnitInfo> midUnits =  new ArrayList<>();
             midUnits.add(ecc.getUnitInfoByCode(suc));
-            while(midUnits.size()>0) {
+            while(!midUnits.isEmpty()) {
                 boolean hasFound = false;
                 List<UnitInfo> tempUnits = new ArrayList<>();
                 for (UnitInfo ui : midUnits) {
@@ -278,6 +278,15 @@ public abstract class SysUnitFilterEngine {
         }
     }
 
+    public static Set<String> topUnits(UserUnitFilterCalcContext ecc, Set<String> units){
+        Set<String> retUnits = new HashSet<>();
+        for (String unitCode : units) {
+            String tu = topUnit(ecc,unitCode);
+            if (tu != null)
+                retUnits.add(tu);
+        }
+        return retUnits;
+    }
     /**
      * D(U*5)
      * @param ecc UserUnitFilterCalcContext
@@ -286,15 +295,15 @@ public abstract class SysUnitFilterEngine {
      * @return Set 最上层机构
      */
     public static Set<String> topUnits(UserUnitFilterCalcContext ecc, Set<String> units, int nTiers) {
+        Set<String> retUnits = topUnits(ecc, units);
         if (nTiers < 1)
-            return units;
-        Set<String> retUnits = new HashSet<>();
-        for (String unitCode : units) {
-            String tu = topUnit(ecc,unitCode);
-            if (tu != null)
-                retUnits.add(tu);
-        }
-        return subUnits(ecc,retUnits, nTiers);
+            return retUnits;
+        return subUnits(ecc, retUnits, nTiers);
+    }
+
+    public static Set<String> topUnits(UserUnitFilterCalcContext ecc, Set<String> units, String typeOrTag) {
+        Set<String> retUnits = topUnits(ecc, units);
+        return subUnits(ecc, retUnits, typeOrTag);
     }
 
     /**
@@ -305,20 +314,12 @@ public abstract class SysUnitFilterEngine {
      * @return 同一系列最上面几层节点
      */
     public static Set<String> seriesUnits(UserUnitFilterCalcContext ecc, Set<String> units, int nTiers) {
-
-        if ( units == null || units.size() == 0)
+        if ( units == null || units.isEmpty())
             return units;
-
-        Set<String> retUnits = new HashSet<>();
-        for (String unitCode : units) {
-            String tu = topUnit(ecc,unitCode);
-            if (tu != null)
-                retUnits.add(tu);
-        }
+        Set<String> retUnits = topUnits(ecc, units);
         if(nTiers < 1) {
             return retUnits;
         }
-
         Set<String> midUnits = retUnits;
         Set<String> serUnits = new HashSet<>();
         for (int i = 0; i < nTiers; i++) {
@@ -335,6 +336,19 @@ public abstract class SysUnitFilterEngine {
         return serUnits;
     }
 
+    public static Set<String> seriesUnits(UserUnitFilterCalcContext ecc, Set<String> units, String typeOrTag) {
+        if ( units == null || units.isEmpty())
+            return units;
+        Set<String> midUnits = topUnits(ecc, units);
+        Set<String> retUnits = new HashSet<>();
+        for (String suc : midUnits) {
+            UnitInfo ui = ecc.getUnitInfoByCode(suc);
+            if(typeOrTag.equals(ui.getUnitType()) || matchUnitTag(typeOrTag, ui.getUnitTag())){
+                retUnits.add(ui.getUnitCode());
+            }
+        }
+        return retUnits;
+    }
 
     /**
      * S(unitExp[,unitExp]* )
