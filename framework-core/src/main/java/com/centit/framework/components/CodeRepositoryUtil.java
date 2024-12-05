@@ -1342,12 +1342,6 @@ public abstract class CodeRepositoryUtil {
         return lbvs;
     }
 
-    public static List<OptionItem> getOptionForSelect(String topUnit, String sCatalog) {
-        return getOptionForSelect(topUnit, sCatalog,
-            WebOptUtils.getCurrentLang(
-                RequestThreadLocal.getLocalThreadWrapperRequest()));
-    }
-
     /**
      * 获取字典条目
      *
@@ -1502,18 +1496,10 @@ public abstract class CodeRepositoryUtil {
      *
      * @param optId optId
      * @param OptMethod OptMethod
+     * @param request HttpServletRequest
      * @return 操作方法的权限
      */
-    public static boolean checkUserOptPower(String optId, String OptMethod) {
-        Object userDetails = WebOptUtils.getLoginUser(
-            RequestThreadLocal.getLocalThreadWrapperRequest());
-        if (userDetails instanceof CentitUserDetails) {
-            return ((CentitUserDetails)userDetails).checkOptPower(optId, OptMethod);
-        }
-        return false;
-    }
-
-    public static boolean checkUserOptPower(String optId, String OptMethod,HttpServletRequest request) {
+    public static boolean checkUserOptPower(String optId, String OptMethod, HttpServletRequest request) {
         Object userDetails = WebOptUtils.getLoginUser(request);
         if (userDetails instanceof CentitUserDetails) {
             return ((CentitUserDetails)userDetails).checkOptPower(optId, OptMethod);
@@ -1525,54 +1511,19 @@ public abstract class CodeRepositoryUtil {
      * 获取用户所有的 操作方法
      * @return 返回一个map，key为optid+‘-’+method value 为 'T'
      */
-    public static Map<String,String> getUserAllOptPowers() {
-        Object userDetails = WebOptUtils.getLoginUser(
-            RequestThreadLocal.getLocalThreadWrapperRequest());
-        if (userDetails instanceof CentitUserDetails) {
-            return ((CentitUserDetails)userDetails).getUserOptList();
-        }
-        return null;
-    }
-    public static Map<String,String> getUserAllOptPowers(HttpServletRequest request) {
-        Object userDetails = WebOptUtils.getLoginUser(request);
-        if (userDetails instanceof CentitUserDetails) {
-            return ((CentitUserDetails)userDetails).getUserOptList();
-        }
-        return null;
-    }
-    /**
-     * 获取用户参数设置
-     *
-     * @param paramCode 参数代码
-     * @return 用户参数设置
-     */
-    public static String getUserSettingValue(String paramCode) {
-        Object userDetails = WebOptUtils.getLoginUser(
-            RequestThreadLocal.getLocalThreadWrapperRequest());
-        if (userDetails instanceof CentitUserDetails) {
-            return ((CentitUserDetails)userDetails).getUserSettingValue(paramCode);
-        }
-        return null;
-    }
 
-    /**
-     * 获取用户所有参数设置
-     * @return 返回 key - value 对（map）
-     */
-    public static Map<String, String> getUserAllSettings() {
-        Object userDetails = WebOptUtils.getLoginUser(
-            RequestThreadLocal.getLocalThreadWrapperRequest());
-        if (userDetails instanceof CentitUserDetails) {
-            return ((CentitUserDetails)userDetails).getUserSettings();
+    public static Map<String,String> getUserAllOptPowers(HttpServletRequest request) {
+        CentitUserDetails userDetails = WebOptUtils.getCurrentUserDetails(request);
+        if (userDetails == null) {
+            return null;
         }
-        return null;
+        return userDetails.getUserOptList();
     }
 
     /**
      * 获取System.properties文件属性值
      * @return System.properties文件属性值
      */
-
     private static Properties loadProperties() {
         /*try{
             return PropertiesLoaderUtils.loadAllProperties("system.properties");

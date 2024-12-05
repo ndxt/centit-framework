@@ -978,8 +978,8 @@ public class MainFrameController extends BaseController {
     })
     @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = {RequestMethod.GET})
     @WrapUpResponseBody
-    public ResponseData checkUserOptPower(@PathVariable String optId, @PathVariable String method) {
-        boolean s = CodeRepositoryUtil.checkUserOptPower(optId, method);
+    public ResponseData checkUserOptPower(@PathVariable String optId, @PathVariable String method, HttpServletRequest request) {
+        boolean s = CodeRepositoryUtil.checkUserOptPower(optId, method, request);
         return ResponseData.makeResponseData(s);
     }
 

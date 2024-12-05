@@ -753,8 +753,12 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/usersetting/{paramCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public String getUserSettingValue(@PathVariable String paramCode) {
-        return CodeRepositoryUtil.getUserSettingValue(paramCode);
+    public String getUserSettingValue(@PathVariable String paramCode, HttpServletRequest request) {
+        CentitUserDetails userDetails = WebOptUtils.getCurrentUserDetails(request);
+        if (userDetails == null) {
+            return null;
+        }
+        return userDetails.getUserSettingValue(paramCode);
     }
 
     /**
@@ -764,8 +768,11 @@ public class CacheController extends BaseController {
     @ApiOperation(value = "获取用户所有设置", notes = "获取用户所有设置")
     @RequestMapping(value = "/usersettings", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public Map<String, String> getUserAllSettings() {
-        return CodeRepositoryUtil.getUserAllSettings();
+    public Map<String, String> getUserAllSettings(HttpServletRequest request) {
+        CentitUserDetails userDetails = WebOptUtils.getCurrentUserDetails(request);
+        if(userDetails==null)
+            return null;
+        return userDetails.getUserSettings();
     }
 
     /**
@@ -787,8 +794,8 @@ public class CacheController extends BaseController {
     })
     @RequestMapping(value = "/checkuserpower/{optId}/{method}", method = { RequestMethod.GET })
     @WrapUpResponseBody
-    public boolean checkUserOptPower(@PathVariable String optId,@PathVariable String method,HttpServletRequest request) {
-        return CodeRepositoryUtil.checkUserOptPower(optId,method,request);
+    public boolean checkUserOptPower(@PathVariable String optId,@PathVariable String method, HttpServletRequest request) {
+        return CodeRepositoryUtil.checkUserOptPower(optId, method, request);
     }
 
     /**

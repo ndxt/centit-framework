@@ -136,9 +136,6 @@ public class OptInfo implements java.io.Serializable {
 
     public String getLocalOptName() {
         String lang = "";
-      /*  String lang = WebOptUtils.getCurrentLang(
-            RequestThreadLocal.getLocalThreadWrapperRequest()
-        );*/
         if (optName == null) {
             return null;
         }

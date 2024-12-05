@@ -5,7 +5,6 @@ import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.components.OperationLogCenter;
-import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.adapter.MessageSender;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.adapter.PlatformEnvironment;
@@ -169,8 +168,7 @@ public class NotificationCenterImpl implements NotificationCenter {
      */
     @Override
     public ResponseData sendUnitMessage(String sender, String unitCode, boolean includeSubUnit, NoticeMessage message){
-        Set<String> users = CodeRepositoryUtil.listUnitAllUsers(
-            WebOptUtils.getCurrentTopUnit(RequestThreadLocal.getLocalThreadWrapperRequest()),
+        Set<String> users = CodeRepositoryUtil.listUnitAllUsers(message.getTopUnit(),
             unitCode, includeSubUnit);
         return sendMessage(sender, users, message);
     }
@@ -189,8 +187,7 @@ public class NotificationCenterImpl implements NotificationCenter {
             null,null,
             new UserUnitMapTranslate(CollectionsOpt.createHashMap("unitCode", unitCode)));
             */
-        Set<String> users = CodeRepositoryUtil.listUnitAllUsers(
-            WebOptUtils.getCurrentTopUnit(RequestThreadLocal.getLocalThreadWrapperRequest()),
+        Set<String> users = CodeRepositoryUtil.listUnitAllUsers(message.getTopUnit(),
             unitCode, includeSubUnit);
         return pushMessage(sender, users, message);
     }
