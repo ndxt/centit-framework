@@ -400,10 +400,11 @@ public class CacheController extends BaseController {
     )
     @RequestMapping(value = "/unituser/{unitCode}", method = RequestMethod.GET)
     @WrapUpResponseBody
+    @Deprecated
     public List<UserInfo> unituser(@PathVariable String unitCode, HttpServletRequest request) {
         List<UserInfo> userInfos = CodeRepositoryUtil.getSortedUnitUsers(WebOptUtils.getCurrentTopUnit(request), unitCode);
         String relType = request.getParameter("relType");
-        if (StringUtils.isNotBlank(relType) && "T".equals(relType) && CollectionUtils.isNotEmpty(userInfos)) {
+        if ("T".equals(relType) && CollectionUtils.isNotEmpty(userInfos)) {
             userInfos.removeIf(user -> !unitCode.equals(user.getPrimaryUnit()));
         }
         return userInfos;

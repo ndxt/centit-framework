@@ -128,6 +128,34 @@ public abstract class SysUserFilterEngine {
         return users;
     }
 
+    private static boolean matchFilter(UserUnitFilterGene rf, UserUnit uu){
+        if (rf.isHasRelationFilter()) {
+            // 过滤掉关联关系不一致的用户
+            // 这个地方 暂时没有考虑 类别嵌套（默认类别）的情况
+            if(!rf.getUserUnitRelTypes().contains(uu.getRelType())){
+                return false;
+            }
+        }
+        if (rf.isHasGWFilter()) {
+            // 过滤掉不符合要求的岗位
+            if(!rf.getGwRoles().contains(uu.getUserStation())){
+                return false;
+            }
+        }
+
+        if (rf.isHasXZFilter()) {
+            // 过滤掉不符合要求的职位
+            if(!rf.getXzRoles().contains(uu.getUserRank())){
+                return false;
+            }
+        }
+
+        if (rf.isHasRankFilter() && (rf.isRankAllSub() || rf.isRankAllTop()) ) { // 所有下级
+            return rf.matchRank(uu.getPostRank());
+        }
+        return true;
+    }
+
     private static Set<String> getUsersByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
 
         boolean hasUnitFilter = rf.isHasGWFilter() || rf.isHasRankFilter()
@@ -140,67 +168,58 @@ public abstract class SysUserFilterEngine {
 
         if(hasUnitFilter && (!rf.isHasUserFilter())) {
             // 获取所有候选人的岗位、职务信息
-            List<UserUnit> lsUserunit = new LinkedList<>();
+            List<UserUnit> lsUserUnits = new LinkedList<>();
+
             if (rf.isHasUnitFilter()) {
                 for (String unitCode : rf.getUnits()) {
                     List<UserUnit> uus = ecc.listUnitUsers(unitCode);
-                    if(uus != null || uus.size()>0) {
-                        lsUserunit.addAll(uus);
+                    if(uus != null && !uus.isEmpty()) {
+                        for(UserUnit uu: uus) {
+                            if(matchFilter(rf, uu)) {
+                                lsUserUnits.add(uu);
+                            }
+                        }
                     }
                 }
             } else {
                 List<UserUnit> uus = ecc.listAllUserUnits();
                 if(uus!=null) {
-                    lsUserunit.addAll(uus);
-                }
-            }
-            if (rf.isHasRelationFilter()) {
-                // 过滤掉关联关系不一致的用户
-                // 这个地方 暂时没有考虑 类别嵌套（默认类别）的情况
-                lsUserunit.removeIf(uu -> !rf.getUserUnitRelTypes().contains(uu.getRelType()));
-            }
-            if (rf.isHasGWFilter()) {
-                // 过滤掉不符合要求的岗位
-                lsUserunit.removeIf(uu -> !rf.getGwRoles().contains(uu.getUserStation()));
-            }
-
-            if (rf.isHasXZFilter()) {
-                // 过滤掉不符合要求的职位
-                lsUserunit.removeIf(uu -> !rf.getXzRoles().contains(uu.getUserRank()));
-            }
-
-            if (rf.isHasRankFilter()) {
-                //如果是 所有上下级，直接过滤
-                if (rf.isRankAllSub() || rf.isRankAllTop()) { // 所有下级
-                    lsUserunit.removeIf(uu -> !rf.matchRank(uu.getPostRank()));
-                } else {
-                    // 针对不同的部门，分别找出这个部门对应的等级
-                    Map<String, String> unitRank = new HashMap<>();
-                    for (UserUnit uu : lsUserunit) {
-                        if (rf.matchRank(uu.getPostRank())) {
-                            String nR = unitRank.get(uu.getUnitCode());
-                            if (nR == null) {
-                                unitRank.put(uu.getUnitCode(), uu.getPostRank());
-                            } else {
-                                if(   (rf.isRankPlus()  && StringUtils.compare(nR, uu.getPostRank())>0)
-                                   || (rf.isRankMinus() && StringUtils.compare(nR, uu.getPostRank())<0) )
-                                    unitRank.put(uu.getUnitCode(), uu.getPostRank());
-                            }
+                    for(UserUnit uu: uus) {
+                        if(matchFilter(rf, uu)) {
+                        lsUserUnits.add(uu);
                         }
                     }
-                    //TODO 这个地方需要重新 实现，不是精确匹配，是匹配最接近的
-                    for (Iterator<UserUnit> it = lsUserunit.iterator(); it.hasNext(); ) {
-                        UserUnit uu = it.next();
-                        // 过滤掉不符合要求的职位
-                        String nR = unitRank.get(uu.getUnitCode());
-                        if (nR == null || !nR.equals(uu.getPostRank()))
-                            it.remove();
-                    }
                 }
             }
+
+            if (rf.isHasRankFilter() && !rf.isRankAllSub() && !rf.isRankAllTop()){
+                // 针对不同的部门，分别找出这个部门对应的等级
+                Map<String, String> unitRank = new HashMap<>();
+                for (UserUnit uu : lsUserUnits) {
+                    if (rf.matchRank(uu.getPostRank())) {
+                        String nR = unitRank.get(uu.getUnitCode());
+                        if (nR == null) {
+                            unitRank.put(uu.getUnitCode(), uu.getPostRank());
+                        } else {
+                            if( (rf.isRankPlus()  && StringUtils.compare(nR, uu.getPostRank())>0)
+                               || (rf.isRankMinus() && StringUtils.compare(nR, uu.getPostRank())<0) )
+                                unitRank.put(uu.getUnitCode(), uu.getPostRank());
+                        }
+                    }
+                }
+                //TODO 这个地方需要重新 实现，不是精确匹配，是匹配最接近的
+                for (Iterator<UserUnit> it = lsUserUnits.iterator(); it.hasNext(); ) {
+                    UserUnit uu = it.next();
+                    // 过滤掉不符合要求的职位
+                    String nR = unitRank.get(uu.getUnitCode());
+                    if (nR == null || !nR.equals(uu.getPostRank()))
+                        it.remove();
+                }
+            }
+
             // 获取所有 符合条件的用户代码
             rf.getUsers().clear();
-            for (UserUnit uu : lsUserunit) {
+            for (UserUnit uu : lsUserUnits) {
                 rf.addUser(uu.getUserCode());
             }
         }
