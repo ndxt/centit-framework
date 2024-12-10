@@ -105,23 +105,25 @@ public abstract class SysUserFilterEngine {
         if (!filterByUnitCode){
             List<UserUnit> userlist = ecc.listAllUserUnits();
             if(userlist!=null && !userlist.isEmpty()) {
-                lsUserunit.addAll(userlist);
+                lsUserunit =  userlist;
             }
         }
 
+        Set<String> users = new HashSet<>();
         if (ROLE_TYPE_GW.equalsIgnoreCase(roleType)) {
             // 过滤掉不符合要求的岗位
-            lsUserunit.removeIf(uu -> !roleCode.equals(uu.getUserStation()));
+            for(UserUnit uu: lsUserunit){
+                if(roleCode.equals(uu.getUserStation())) {
+                    users.add(uu.getUserCode());
+                }
+            }
         } else if (ROLE_TYPE_XZ.equalsIgnoreCase(roleType)) {
             // 过滤掉不符合要求的职位
-            lsUserunit.removeIf(uu -> !roleCode.equals(uu.getUserRank()));
-        }  else {
-            lsUserunit.clear();
-        }
-        // 获取所有 符合条件的用户代码
-        Set<String> users = new HashSet<>();
-        for (UserUnit uu : lsUserunit) {
-            users.add(uu.getUserCode());
+            for(UserUnit uu: lsUserunit){
+                if(roleCode.equals(uu.getUserRank())) {
+                    users.add(uu.getUserCode());
+                }
+            }
         }
         return users;
     }
