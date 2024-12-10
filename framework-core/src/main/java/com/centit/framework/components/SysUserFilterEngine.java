@@ -105,7 +105,7 @@ public abstract class SysUserFilterEngine {
         if (!filterByUnitCode){
             List<UserUnit> userlist = ecc.listAllUserUnits();
             if(userlist!=null && !userlist.isEmpty()) {
-                lsUserunit =  userlist;
+                lsUserunit = userlist;
             }
         }
 
