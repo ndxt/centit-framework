@@ -166,10 +166,9 @@ public abstract class SysUserFilterEngine {
         //获取机构列表
         SysUnitFilterEngine.getUnitsByFilter(ecc, rf);
 
-        if(hasUnitFilter && (!rf.isHasUserFilter())) {
+        if(hasUnitFilter && !rf.isHasUserFilter() ) {
             // 获取所有候选人的岗位、职务信息
             List<UserUnit> lsUserUnits = new LinkedList<>();
-
             if (rf.isHasUnitFilter()) {
                 for (String unitCode : rf.getUnits()) {
                     List<UserUnit> uus = ecc.listUnitUsers(unitCode);
