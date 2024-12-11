@@ -225,7 +225,7 @@ public abstract class SysUserFilterEngine {
 
         if(hasTypeTagFilter) {
             List<UserInfo> lsUserInfo = null;
-            if (rf.getUsers() != null && rf.getUsers().size() > 0) {
+            if (rf.getUsers() != null && !rf.getUsers().isEmpty()) {
                 lsUserInfo = new ArrayList<>(rf.getUsers().size() + 1);
                 for (String userCode : rf.getUsers()) {
                     UserInfo userInfo = ecc.getUserInfoByCode(userCode);
