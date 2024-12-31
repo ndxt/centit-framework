@@ -366,7 +366,7 @@ public abstract class SysUnitFilterEngine {
         // if(units==null)//语法错误
         // return null;
 
-        while (units == null || units.size() == 0) {
+        while (units == null || units.isEmpty()) {
             w = ecc.getAWord();
             if (")".equals(w))
                 return units;
