@@ -1069,10 +1069,13 @@ public class MainFrameController extends BaseController {
         ), @ApiImplicitParam(
             name = "relType", value = "用户关联关系：归属部门 T 工作部门 F 借出部门 O 借入部门 I，所有 A或者 空",
             paramType = "query", dataType = "String"
-        )})
+        ), @ApiImplicitParam(
+        name = "userType", value = "用户类型，可以为空",
+        paramType = "query", dataType = "String"
+    )})
     @RequestMapping(value = "/unitUserTree", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public JSONArray listUnitUserTree(String unitCode, String relType,String userType, HttpServletRequest request) {
+    public JSONArray listUnitUserTree(String unitCode, String relType, String userType, HttpServletRequest request) {
         WebOptUtils.assertUserLogin(request);
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if(StringUtils.isBlank(unitCode)){
