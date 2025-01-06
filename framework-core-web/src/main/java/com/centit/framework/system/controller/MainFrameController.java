@@ -1072,7 +1072,7 @@ public class MainFrameController extends BaseController {
         )})
     @RequestMapping(value = "/unitUserTree", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public JSONArray listUnitUserTree(String unitCode, String relType, HttpServletRequest request) {
+    public JSONArray listUnitUserTree(String unitCode, String relType,String userType, HttpServletRequest request) {
         WebOptUtils.assertUserLogin(request);
         String topUnit = WebOptUtils.getCurrentTopUnit(request);
         if(StringUtils.isBlank(unitCode)){
@@ -1095,7 +1095,9 @@ public class MainFrameController extends BaseController {
                             uObj.put("primaryUnitName", unitInfo.getUnitName());
                             uObj.put("userNamePy", StringBaseOpt.getFirstLetter(tempUi.getUserName())
                                 + " " + StringBaseOpt.getPinYin(tempUi.getUserName()));
-                            allSubUser.add(uObj);
+                            if(StringUtils.isBlank(userType) || tempUi.getUserType().equalsIgnoreCase(userType)) {
+                                allSubUser.add(uObj);
+                            }
                         }
                     }
                 }
