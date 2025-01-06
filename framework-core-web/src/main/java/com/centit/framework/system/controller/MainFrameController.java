@@ -1091,6 +1091,7 @@ public class MainFrameController extends BaseController {
                         UserInfo tempUi = CodeRepositoryUtil.getUserInfoByCode(topUnit, uc.getUserCode());
                         if (tempUi != null) {
                             JSONObject uObj = JSONObject.from(tempUi);
+                            uObj.put("primaryUnit", unitInfo.getUnitCode());
                             uObj.put("primaryUnitName", unitInfo.getUnitName());
                             uObj.put("userNamePy", StringBaseOpt.getFirstLetter(tempUi.getUserName())
                                 + " " + StringBaseOpt.getPinYin(tempUi.getUserName()));
