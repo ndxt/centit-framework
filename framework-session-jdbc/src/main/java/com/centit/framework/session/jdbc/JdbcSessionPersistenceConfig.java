@@ -15,9 +15,12 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.embedded.*;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.session.FindByIndexNameSessionRepository;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.session.jdbc.JdbcOperationsSessionRepository;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -98,22 +101,21 @@ public class JdbcSessionPersistenceConfig {
                 .addScript(schema).build();
     }
 
+
     @Bean
-    public FindByIndexNameSessionRepository sessionRepository(
+    public JdbcIndexedSessionRepository sessionRepository(
         @Qualifier(value = "jdbcSessionDataSource") EmbeddedDatabase dataSource) {
-        JdbcOperationsSessionRepository repository =
-            new JdbcOperationsSessionRepository(new JdbcTemplate(dataSource), new DataSourceTransactionManager(dataSource));
-        return repository;
+        return new JdbcIndexedSessionRepository(new JdbcTemplate(dataSource), new TransactionTemplate(new DataSourceTransactionManager(dataSource)));
     }
 
     @Bean
     public SessionRegistry sessionRegistry(
-        @Autowired FindByIndexNameSessionRepository sessionRepository){
+        @Autowired JdbcIndexedSessionRepository sessionRepository){
         return new SpringSessionBackedSessionRegistry(sessionRepository);
     }
 
     @Bean
-    public CentitSessionRepo centitSessionRepo(@Autowired FindByIndexNameSessionRepository sessionRepository){
+    public CentitSessionRepo centitSessionRepo(@Autowired JdbcIndexedSessionRepository sessionRepository){
         return new CentitSessionJdbcRepo(sessionRepository);
     }
 }
