@@ -44,6 +44,7 @@ public class UserDetailsServiceImpl implements
         return ud;
     }
 
+    //来自 AuthenticationUserDetailsService
     @Override
     public UserDetails loadUserDetails(Authentication token) throws UsernameNotFoundException {
         return loadUserByUsername(token.getName());
