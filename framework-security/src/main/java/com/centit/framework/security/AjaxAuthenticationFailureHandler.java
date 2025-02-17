@@ -32,7 +32,6 @@ public class AjaxAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
     public void onAuthenticationFailure(HttpServletRequest request,
             HttpServletResponse response, AuthenticationException exception)
             throws IOException, ServletException {
-         CredentialsExpiredException cex = null;
         if(writeLog){
             String loginName = SecurityOptUtils.decodeSecurityString(request.getParameter("username"));
             String loginHost = WebOptUtils.getRequestAddr(request);//request.getRemoteHost()+":"+request.getRemotePort();
