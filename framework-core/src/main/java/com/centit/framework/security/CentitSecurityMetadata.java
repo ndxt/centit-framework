@@ -44,6 +44,10 @@ public abstract class CentitSecurityMetadata {
         return apiSecurityMetadata.getCachedValue(apiId);
     }
 
+    public static List<ConfigAttribute> getApiRoleList(String apiId) {
+        return apiSecurityMetadata.getCachedValue(apiId);
+    }
+
     public static String parseUrlToApi(String sUrl) {
         String apiId = "";
         int nPos = sUrl.indexOf(DDE_RUN);
