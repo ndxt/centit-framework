@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SystemSecurityMetadata {
 
-    private CachedObject<OptTreeNode> optTreeNodeCache;
+    private final CachedObject<OptTreeNode> optTreeNodeCache;
     public static boolean requestInSpringCloud = false;
 
     public SystemSecurityMetadata() {
