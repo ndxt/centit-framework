@@ -323,6 +323,17 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
         return this.userRoles;
     }
 
+    public boolean checkUserRole(String roleCode){
+        if(this.userRoles !=null){
+            for(UserRole ur : this.userRoles){
+                if(StringUtils.equals(ur.getRoleCode(),roleCode)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void setUserRoles(List<UserRole> roles) {
         setAuthoritiesByRoles(roles);
     }
