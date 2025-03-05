@@ -12,16 +12,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public abstract class OperationLogCenter {
 
     private static final Logger logger = LoggerFactory.getLogger(OperationLogCenter.class);
     private static OperationLogWriter logWriter = null;
-    private static BlockingQueue<OperationLog> waitingForWriteLogs = new LinkedBlockingQueue<>();
+    private static ConcurrentLinkedQueue<OperationLog> waitingForWriteLogs = new ConcurrentLinkedQueue<>();
     private static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(3);
 
     private static Set<String> includeOpts = null;
@@ -100,7 +97,7 @@ public abstract class OperationLogCenter {
             (includeOpts==null || includeOpts.isEmpty() || includeOpts.contains(optLog.getOptId())) &&
             (excludeOpts==null || excludeOpts.isEmpty() || !excludeOpts.contains(optLog.getOptId())) ){
             try {
-                waitingForWriteLogs.put(optLog);
+                waitingForWriteLogs.add(optLog);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 //throw new RuntimeException(e);
