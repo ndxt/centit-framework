@@ -25,9 +25,6 @@ import java.util.Date;
 @Table(name = "work_group")
 public class WorkGroup implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
-    public static final String WORKGROUP_ROLE_CODE_LEADER = "组长";
-    public static final String WORKGROUP_ROLE_CODE_MEMBER = "组员";
-    public static final String WORKGROUP_ROLE_CODE_ADMIN = "ZHGLY";
 
     // 主键
 //   @JSONField(serialize = false, deserialize = false)
