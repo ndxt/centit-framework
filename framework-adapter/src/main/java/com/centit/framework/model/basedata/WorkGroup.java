@@ -36,45 +36,45 @@ public class WorkGroup implements java.io.Serializable {
 
     @ApiModelProperty(value = "是否生效")
     @Column(name = "is_valid")
-    private  String  isValid;
+    private String  isValid;
 
     @ApiModelProperty(value = "创建时间",hidden = true)
     @Column(name = "AUTH_TIME")
     @ValueGenerator(strategy = GeneratorType.FUNCTION, occasion = GeneratorTime.NEW,
         condition = GeneratorCondition.ALWAYS, value="today()" )
-    private  Date authTime;
+    private Date authTime;
 
     @ApiModelProperty(value = "创建人")
     @Column(name = "creator")
-    private  String  creator;
+    private String  creator;
 
     @ApiModelProperty(value = "更新人")
     @Column(name = "updator")
-    private  String updator;
+    private String updator;
 
     @ApiModelProperty(value = "更新时间",hidden = true)
     @Column(name = "UPDATE_DATE")
     @ValueGenerator(strategy = GeneratorType.FUNCTION, occasion = GeneratorTime.NEW_UPDATE,
         condition = GeneratorCondition.ALWAYS, value="today()" )
-    private  Date updateDate;
+    private Date updateDate;
 
     @ApiModelProperty(value = "排序号")
     @Column(name = "USER_ORDER")
     private BigDecimal userOrder;
 
-    @ApiModelProperty(value = "运行令牌")
+    @ApiModelProperty(value = "运行令牌， 角色参数")
     @Column(name = "RUN_TOKEN")
-    private  String   runToken;
+    private String  runToken;
 
     @ApiModelProperty(value = "授权说明")
     @Column(name = "AUTH_DESC")
-    private  String authDesc;
+    private String authDesc;
 
     /**
      * 这个roleCode是用作更新主键中的roleCode使用
      */
     @ApiModelProperty(value = "角色代码")
-    private  String  roleCode;
+    private String  roleCode;
 
     public String getGroupId() {
         if (null == workGroupParameter){

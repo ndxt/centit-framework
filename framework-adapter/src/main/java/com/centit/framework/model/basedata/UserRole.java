@@ -26,8 +26,11 @@ public class UserRole implements java.io.Serializable {
     // SimpleDateFormat("yyyy-MM-dd");
 
     private static final long serialVersionUID = 8079422314053320707L;
+    @JSONField(serialize = false)
     public static final String OS_MEMBER="osmember";
+    @JSONField(serialize = false)
     public static final String PLAT_ADMIN="platadmin";
+    @JSONField(serialize = false)
     public static final String TENANT_ADMIN="tenantadmin";
 
     @JSONField(serialize = false, deserialize = false)
