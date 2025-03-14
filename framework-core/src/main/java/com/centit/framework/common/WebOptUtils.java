@@ -487,9 +487,6 @@ public class WebOptUtils {
         for (Cookie cookie : cookies) {
             cookiesMap.put(cookie.getName(), cookie.getValue());
         }
-        if(request.getSession()!=null) {
-            cookiesMap.put("__sessionId", request.getSession().getId());
-        }
         return cookiesMap;
     }
 
@@ -504,6 +501,10 @@ public class WebOptUtils {
             if(!"Cookie".equalsIgnoreCase(name)) {
                 headersMap.put(name, request.getHeader(name));
             }
+        }
+        if(request.getSession()!=null) {
+            if(StringUtils.isBlank(headersMap.get(SESSION_ID_TOKEN)))
+                headersMap.put(SESSION_ID_TOKEN, request.getSession().getId());
         }
         return headersMap;
     }
