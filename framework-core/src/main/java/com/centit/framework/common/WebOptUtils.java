@@ -487,6 +487,9 @@ public class WebOptUtils {
         for (Cookie cookie : cookies) {
             cookiesMap.put(cookie.getName(), cookie.getValue());
         }
+        if(request.getSession()!=null) {
+            cookiesMap.put("__sessionId", request.getSession().getId());
+        }
         return cookiesMap;
     }
 
