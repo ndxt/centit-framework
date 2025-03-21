@@ -349,7 +349,7 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
             Date yesterday = DatetimeOpt.addDays(DatetimeOpt.currentUtilDate(), -1);
             for(RoleInfo ri : roles){
                 UserRole ur = new UserRole(new UserRoleId(this.getUserCode(), ri.getRoleCode()),
-                    yesterday, "角色映射");
+                    yesterday, ri.getUnitCode());
                 this.userRoles.add(ur);
             }
             makeUserAuthorities();
