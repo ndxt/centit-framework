@@ -642,6 +642,8 @@ public class MainFrameController extends BaseController {
             checkResult);
         return ResponseData.makeResponseData(checkResult);
     }
+
+
     /**
      * 当前登录者
      *
@@ -652,30 +654,23 @@ public class MainFrameController extends BaseController {
     @RequestMapping(value = "/currentuser", method = RequestMethod.GET)
     @WrapUpResponseBody
     public JSONObject getCurrentUser(HttpServletRequest request) {
-        Object ud = WebOptUtils.getLoginUser(request);
-
-        if (ud == null) {
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                getI18nMessage(ResponseData.ERROR_NOT_LOGIN_MSG, request));
-        }
+        CentitUserDetails userDetails = WebOptUtils.assertUserDetails(request);
         JSONObject jsonObject;
-        if(ud instanceof CentitUserDetails){
-            CentitUserDetails userDetails = (CentitUserDetails) ud;
-            jsonObject = userDetails.toJsonWithoutSensitive();
-            String topUnit = userDetails.getTopUnitCode();
-            if(StringUtils.isNotBlank(topUnit)) {
-                jsonObject.putAll(platformEnvironment.fetchUserTenantGroupInfo(
-                    userDetails.getUserCode(), userDetails.getTopUnitCode()));
-            }
-        } else {
-            jsonObject = JSONObject.from(ud);
-            String userCode = WebOptUtils.getCurrentUserCode(request);
-            String topUnit = WebOptUtils.getCurrentTopUnit(request);
-            if(StringUtils.isNotBlank(userCode) && StringUtils.isNotBlank(topUnit)){
-                jsonObject.putAll(platformEnvironment.fetchUserTenantGroupInfo(
-                    userCode, topUnit));
+        jsonObject = userDetails.toJsonWithoutSensitive();
+        String topUnit = userDetails.getTopUnitCode();
+        if(StringUtils.isNotBlank(topUnit)) {
+            jsonObject.putAll(platformEnvironment.fetchUserTenantGroupInfo(
+                userDetails.getUserCode(), userDetails.getTopUnitCode()));
+        }
+
+        if(StringUtils.isBlank(jsonObject.getString("tenantRole"))) {
+            if( userDetails.checkUserRole("osmember")) {
+                jsonObject.put("tenantRole", "osmember");
+            } else {
+                jsonObject.put("tenantRole", "none");
             }
         }
+
         return jsonObject;
     }
 
