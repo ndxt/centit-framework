@@ -222,12 +222,10 @@ public class HttpReceiveJSON implements ToResponseData {
     }
 
     public static HttpReceiveJSON dataOf(Object json){
-        HttpReceiveJSON recvJson = new HttpReceiveJSON();
-        recvJson.resJSONObject = new JSONObject();
-        recvJson.resObj = JSON.toJSON(json);
-        recvJson.isResponseData = true;
-        recvJson.resJSONObject.put(ResponseData.RES_DATA_FILED, recvJson.resObj);
-        return recvJson;
+        HttpReceiveJSON receiveJson = new HttpReceiveJSON();
+        receiveJson.resObj = JSON.toJSON(json);
+        receiveJson.isResponseData = false;
+        return receiveJson;
     }
 
     public static HttpReceiveJSON valueOfJson(String jsonStr){
