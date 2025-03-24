@@ -189,8 +189,7 @@ public class HttpReceiveJSON implements ToResponseData {
         recvJson.isResponseData = false;
         if (recvJson.resObj instanceof JSONObject) {
             JSONObject resJson = (JSONObject) recvJson.resObj;
-            boolean hasCode = false, hasMessage = false, hasData = false;
-            JSONObject extData = new JSONObject();
+            boolean hasCode = false, hasMessage = false, hasData = false, hasExt = false;
             for(Map.Entry<String, Object> ent : resJson.entrySet()){
                 switch (ent.getKey()) {
                     case ResponseData.RES_CODE_FILED:
@@ -203,31 +202,17 @@ public class HttpReceiveJSON implements ToResponseData {
                         hasData = true;
                         break;
                     default:
-                        extData.put(ent.getKey(), ent.getValue());
+                        hasExt = true;
                         break;
                 }
             }
 
-            recvJson.isResponseData = hasCode && hasMessage;
+            recvJson.isResponseData = hasCode && hasMessage && !hasExt;
             if(recvJson.isResponseData) {
                 recvJson.resJSONObject = new JSONObject();
                 recvJson.resJSONObject.put(ResponseData.RES_CODE_FILED, resJson.get(ResponseData.RES_CODE_FILED));
                 recvJson.resJSONObject.put(ResponseData.RES_MSG_FILED, resJson.get(ResponseData.RES_MSG_FILED));
-                if (!extData.isEmpty()) {
-                    if (hasData) {
-                        Object originalData = resJson.get(ResponseData.RES_DATA_FILED);
-                        if(originalData instanceof JSONObject){
-                            JSONObject jsonData = (JSONObject) originalData;
-                            extData.putAll(jsonData);
-                        } else if(originalData instanceof Map){
-                            Map<String, Object> mapData = (Map<String, Object>) originalData;
-                            extData.putAll(mapData);
-                        } else {
-                            extData.put(ResponseData.RES_DATA_FILED, originalData);
-                        }
-                    }
-                    recvJson.resJSONObject.put(ResponseData.RES_DATA_FILED, extData);
-                } else if (hasData) {
+                if (hasData) {
                     recvJson.resJSONObject.put(ResponseData.RES_DATA_FILED,
                         resJson.get(ResponseData.RES_DATA_FILED));
                 }
