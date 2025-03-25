@@ -57,7 +57,6 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
                 int n = needRole.compareTo(userRole);
                 if(n==0)
                     return; // 匹配成功 完成认证
-
                 if(n<0){
                     if(!needRolesItr.hasNext())
                         break;
@@ -68,6 +67,10 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
                     userRole = userRolesItr.next().getAuthority();
                 }
             }
+        }
+        //匿名角色放行
+        if(configAttributes.contains(new SecurityConfig(SecurityContextUtils.ANONYMOUS_ROLE_CODE))){
+            return;
         }
 
         //没有权限，组织提示信息。
