@@ -190,8 +190,8 @@ public class HttpReceiveJSON implements ToResponseData {
         if (recvJson.resObj instanceof JSONObject) {
             JSONObject resJson = (JSONObject) recvJson.resObj;
             boolean hasCode = false, hasMessage = false, hasData = false, hasExt = false;
-            for(Map.Entry<String, Object> ent : resJson.entrySet()){
-                switch (ent.getKey()) {
+            for(String sKey : resJson.keySet()){
+                switch (sKey) {
                     case ResponseData.RES_CODE_FILED:
                         hasCode = true;
                         break;
