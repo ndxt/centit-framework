@@ -181,6 +181,7 @@ public class HttpReceiveJSON implements ToResponseData {
         return null;
     }
 
+    //自适应解包
     public static HttpReceiveJSON valueOf(Object json){
         if(json==null)
             return null;
