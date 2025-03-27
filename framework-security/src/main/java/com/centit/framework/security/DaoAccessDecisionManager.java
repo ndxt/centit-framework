@@ -107,11 +107,12 @@ public class DaoAccessDecisionManager implements AccessDecisionManager {
     }
 
     @Override
-    public boolean supports(ConfigAttribute arg0) {
+    public boolean supports(ConfigAttribute attribute) {
         return true;
     }
 
-    public boolean supports(Class<?> arg0) {
+    @Override
+    public boolean supports(Class<?> clazz) {
         return true;
     }
 
