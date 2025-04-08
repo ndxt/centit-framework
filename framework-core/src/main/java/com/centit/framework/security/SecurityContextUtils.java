@@ -23,6 +23,16 @@ public abstract class SecurityContextUtils {
     public static String FORBIDDEN_ROLE_CODE = "forbidden";
     public static String DEPLOYER_ROLE_CODE = "deploy";
 
+    public static void setLastLoginInfo(CentitUserDetails ud,
+                                              String loginId, String sessionID,
+                                              PlatformEnvironment platformEnvironment){
+        ud.setLoginIp(loginId);
+        UserInfo userinfo = ud.getUserInfo();
+        userinfo.setLastAccessToken(sessionID);
+        userinfo.setActiveTime(DatetimeOpt.currentUtilDate());
+        platformEnvironment.saveUserLoginInfo(userinfo);
+    }
+
     public static void fetchAndSetLocalParams(CentitUserDetails ud,
                                     HttpServletRequest request, PlatformEnvironment platformEnvironment){
         ud.setLoginIp(WebOptUtils.getRequestAddr(request));
