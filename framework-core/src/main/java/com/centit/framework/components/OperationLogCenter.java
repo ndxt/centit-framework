@@ -18,8 +18,8 @@ public abstract class OperationLogCenter {
 
     private static final Logger logger = LoggerFactory.getLogger(OperationLogCenter.class);
     private static OperationLogWriter logWriter = null;
-    private static ConcurrentLinkedQueue<OperationLog> waitingForWriteLogs = new ConcurrentLinkedQueue<>();
-    private static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(3);
+    private static final ConcurrentLinkedQueue<OperationLog> waitingForWriteLogs = new ConcurrentLinkedQueue<>();
+    private static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(7);
 
     private static Set<String> includeOpts = null;
     private static Set<String> excludeOpts = null;
@@ -27,6 +27,8 @@ public abstract class OperationLogCenter {
      * 异步写入日志
      */
     static {
+        executor.setMaximumPoolSize(50);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
         // 5秒写入一次
         executor.scheduleWithFixedDelay(() ->
         {
