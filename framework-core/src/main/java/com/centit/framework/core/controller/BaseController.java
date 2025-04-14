@@ -146,9 +146,8 @@ public abstract class BaseController {
                     getI18nMessage("error.500.unknown", request));
         if(this.logDebug) {
             responseData.addResponseData("trace", ObjectException.extortExceptionTraceMessage(ex));
-        } else {
-            logger.error(ObjectException.extortExceptionTraceMessage(ex));
         }
+        logger.error("捕获到异常：" +  ObjectException.extortExceptionMessage(ex, 10));
         JsonResultUtils.writeResponseDataAsJson(responseData, response);
     }
 
