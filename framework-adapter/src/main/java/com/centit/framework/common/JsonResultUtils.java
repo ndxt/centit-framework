@@ -7,7 +7,6 @@ import com.alibaba.fastjson2.filter.PropertyPreFilter;
 import com.alibaba.fastjson2.filter.SimplePropertyPreFilter;
 import com.centit.support.algorithm.ReflectionOpt;
 import com.centit.support.algorithm.StringBaseOpt;
-import com.centit.support.common.ObjectException;
 import com.centit.support.file.FileType;
 import com.centit.support.xml.XMLObject;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -243,7 +242,7 @@ public class JsonResultUtils {
             }*/
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-            throw new ObjectException(objValue, ResponseData.HTTP_IO_EXCEPTION, e.getMessage());
+            //throw new ObjectException(objValue, ResponseData.HTTP_IO_EXCEPTION, e.getMessage());
         }
     }
 
