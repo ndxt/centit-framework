@@ -84,26 +84,34 @@ public abstract class CodeRepositoryUtil {
      * @return List 数据字典
      */
     public static List<DataDictionary> getDictionary(String sCatalog) {
-        return CodeRepositoryCache.dictionaryRepo
-            .getCachedValue(sCatalog).getListData();
+        ListAppendMap<DataDictionary> listAppendMap = CodeRepositoryCache.dictionaryRepo
+            .getCachedValue(sCatalog);
+        if(listAppendMap==null) return Collections.emptyList();
+        return listAppendMap.getListData();
     }
 
     public static List<UnitInfo> listAllUnits(String topUnit) {
         topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
-        return CodeRepositoryCache.unitInfoRepo
-            .getCachedValue(topUnit).getListData();
+        ListAppendMap<UnitInfo> listAppendMap = CodeRepositoryCache.unitInfoRepo
+            .getCachedValue(topUnit);
+        if(listAppendMap==null) return Collections.emptyList();
+        return listAppendMap.getListData();
     }
 
     public static Map<String, UnitInfo> getUnitRepo(String topUnit) {
         topUnit = CodeRepositoryUtil.cacheByTopUnit? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
-        return CodeRepositoryCache.unitInfoRepo
-            .getCachedValue(topUnit).getAppendMap();
+        ListAppendMap<UnitInfo> listAppendMap = CodeRepositoryCache.unitInfoRepo
+            .getCachedValue(topUnit);
+        if(listAppendMap==null) return Collections.emptyMap();
+        return listAppendMap.getAppendMap();
     }
 
     public static List<UserInfo> listAllUsers(String topUnit) {
         topUnit = CodeRepositoryUtil.cacheByTopUnit ? topUnit : GlobalConstValue.NO_TENANT_TOP_UNIT;
-        return CodeRepositoryCache.userInfoRepo
-            .getCachedValue(topUnit).getListData();
+        ListAppendMap<UserInfo> listAppendMap = CodeRepositoryCache.userInfoRepo
+            .getCachedValue(topUnit);
+        if(listAppendMap==null) return Collections.emptyList();
+        return listAppendMap.getListData();
     }
 
     public static List<UserUnit> listAllUserUnits(String topUnit) {
