@@ -245,7 +245,7 @@ public abstract class CodeRepositoryUtil {
         HttpServletRequest request = RequestThreadLocal.getLocalThreadWrapperRequest();
         return getValue(sCatalog, sKey,
             request == null ? GlobalConstValue.NO_TENANT_TOP_UNIT : WebOptUtils.getCurrentTopUnit(request),
-            request == null ? "zh_CN" : WebOptUtils.getCurrentLang(request)
+            request == null ? "zh_CN" : WebOptUtils.getCurrentLang(request), sKey
         );
     }
     /**
@@ -256,12 +256,12 @@ public abstract class CodeRepositoryUtil {
      * @param localLang String类型
      * @return 数据字典对应的值
      */
-    public static String getValue(String sCatalog, String sKey, String topUnit, String localLang) {
+    public static String getValue(String sCatalog, String sKey, String topUnit, String localLang, String defaultValue) {
 
         if(sCatalog.startsWith("userInfo.")){
             UserInfo ui= getUserRepo(topUnit).get(sKey);
             if(ui==null)
-                return sKey;
+                return defaultValue;
             return StringBaseOpt.castObjectToString(
                 ReflectionOpt.getFieldValue(ui, sCatalog.substring(9)));
         }
@@ -269,7 +269,7 @@ public abstract class CodeRepositoryUtil {
         if(sCatalog.startsWith("unitInfo.")){
             UnitInfo ui= getUnitRepo(topUnit).get(sKey);
             if(ui==null)
-                return sKey;
+                return defaultValue;
             return StringBaseOpt.castObjectToString(
                 ReflectionOpt.getFieldValue(ui, sCatalog.substring(9)));
         }
@@ -279,7 +279,7 @@ public abstract class CodeRepositoryUtil {
                 case CodeRepositoryUtil.USER_CODE:{
                     UserInfo ui= getUserRepo(topUnit).get(sKey);
                     if(ui==null)
-                        return sKey;
+                        return defaultValue;
                     return ui.getUserName();
                 }
 
@@ -294,76 +294,80 @@ public abstract class CodeRepositoryUtil {
                 case "loginName":{
                     List<UserInfo> userInfos = listAllUsers(topUnit);
                     if(userInfos==null)
-                        return sKey;
+                        return defaultValue;
                     for(UserInfo userInfo:userInfos){
                         if(StringUtils.equals(sKey, userInfo.getLoginName()))
                             return userInfo.getUserName();
                     }
-                    return sKey;
+                    return defaultValue;
                 }
 
                 case CodeRepositoryUtil.UNIT_CODE:{
                     UnitInfo ui=getUnitRepo(topUnit).get(sKey);
                     if(ui==null)
-                        return sKey;
+                        return defaultValue;
                     return ui.getUnitName();
                 }
 
                 case CodeRepositoryUtil.ROLE_CODE: {
                     List<RoleInfo> roleInfos = listAllRole(topUnit);
                     if (roleInfos == null) {
-                        return sKey;
+                        return defaultValue;
                     }
                     for (RoleInfo roleInfo : roleInfos) {
                         if(StringUtils.equals(sKey, roleInfo.getRoleCode())){
                             return roleInfo.getRoleName();
                         }
                     }
-                    return sKey;
+                    return defaultValue;
                 }
 
                 case CodeRepositoryUtil.OPT_ID:{
                     List<OptInfo> optInfos = getOptInfoRepo(topUnit);
                     if (optInfos == null) {
-                        return sKey;
+                        return defaultValue;
                     }
                     for (OptInfo optInfo : optInfos) {
                         if(StringUtils.equals(sKey, optInfo.getOptId())){
                             return optInfo.getLocalOptName();
                         }
                     }
-                    return sKey;
+                    return defaultValue;
                 }
 
                 case CodeRepositoryUtil.OS_ID: {
                     List<OsInfo> osInfos = listOsInfo(topUnit);
                     if(osInfos==null){
-                        return sKey;
+                        return defaultValue;
                     }
                     for (OsInfo osInfo : osInfos){
                         if(StringUtils.equals(sKey, osInfo.getOsId())){
                             return osInfo.getOsName();
                         }
                     }
-                    return sKey;
+                    return defaultValue;
                 }
 
                 default:
                     CachedObject<Map<String, String>> extendRepo = extendedCodeRepo.get(sCatalog);
                     if(extendRepo != null){
                         String svalue = extendRepo.getCachedTarget().get(sKey);
-                        return svalue != null ? svalue : sKey;
+                        return svalue != null ? svalue : defaultValue;
                     }
                     DataDictionary dictPiece = getDataPiece(sCatalog, sKey, topUnit);
                     if (dictPiece == null) {
-                        return sKey;
+                        return defaultValue;
                     }
                     return dictPiece.getLocalDataValue(localLang);
             }
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return sKey;
+            return defaultValue;
         }
+    }
+
+    public static String getValue(String sCatalog, String sKey, String topUnit, String localLang) {
+        return getValue(sCatalog, sKey, topUnit, localLang, sKey);
     }
 
     /**
@@ -405,10 +409,10 @@ public abstract class CodeRepositoryUtil {
         HttpServletRequest request = RequestThreadLocal.getLocalThreadWrapperRequest();
         return getCode(sCatalog, sValue,
             request == null ? GlobalConstValue.NO_TENANT_TOP_UNIT : WebOptUtils.getCurrentTopUnit(request),
-            request == null ? "zh_CN" : WebOptUtils.getCurrentLang(request));
+            request == null ? "zh_CN" : WebOptUtils.getCurrentLang(request), sValue);
     }
 
-    public static String getCode(String sCatalog, String sValue, String topUnit, String localLang) {
+    public static String getCode(String sCatalog, String sValue, String topUnit, String localLang, String defaultValue) {
         if (StringUtils.isBlank(sValue)) {
             logger.info("sValue 为空中空字符串");
             return "";
@@ -416,25 +420,25 @@ public abstract class CodeRepositoryUtil {
         if(sCatalog.startsWith("userInfo.")){
             List<UserInfo> usList= listAllUsers(topUnit);
             if(usList==null)
-                return sValue;
+                return defaultValue;
             for(UserInfo ui : usList){
                 if(StringUtils.equals(sValue, StringBaseOpt.castObjectToString(
                     ReflectionOpt.getFieldValue(ui, sCatalog.substring(9)))))
                     return ui.getUserCode();
             }
-            return sValue;
+            return defaultValue;
         }
 
         if(sCatalog.startsWith("unitInfo.")){
             List<UnitInfo> uuList= listAllUnits(topUnit);
             if(uuList==null)
-                return sValue;
+                return defaultValue;
             for(UnitInfo ui : uuList){
                 if(StringUtils.equals(sValue, StringBaseOpt.castObjectToString(
                     ReflectionOpt.getFieldValue(ui, sCatalog.substring(9)))))
                     return ui.getUnitCode();
             }
-            return sValue;
+            return defaultValue;
         }
 
         try {
@@ -442,22 +446,22 @@ public abstract class CodeRepositoryUtil {
                 case CodeRepositoryUtil.USER_CODE:{
                     List<UserInfo> usList= listAllUsers(topUnit);
                     if(usList==null)
-                        return sValue;
+                        return defaultValue;
                     for(UserInfo ui : usList){
                         if(StringUtils.equals(sValue, ui.getUserName()))
                             return ui.getUserCode();
                     }
-                    return sValue;
+                    return defaultValue;
                 }
                 case CodeRepositoryUtil.UNIT_CODE:{
                     List<UnitInfo> uuList= listAllUnits(topUnit);
                     if(uuList==null)
-                        return sValue;
+                        return defaultValue;
                     for(UnitInfo ui : uuList){
                         if(StringUtils.equals(sValue, ui.getUnitName()))
                             return ui.getUnitCode();
                     }
-                    return sValue;
+                    return defaultValue;
                 }
                 default:
                     CachedObject<Map<String, String>> extendRepo = extendedCodeRepo.get(sCatalog);
@@ -467,27 +471,30 @@ public abstract class CodeRepositoryUtil {
                                 return ent.getKey();
                             }
                         }
-                        return sValue;
+                        return defaultValue;
                     }
                     DataDictionary dictPiece = getDataPieceByValue(sCatalog, sValue, localLang);
                     if (dictPiece == null) {
-                        return sValue;
+                        return defaultValue;
                     }
                     return dictPiece.getDataCode();
             }
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return sValue;
+            return defaultValue;
         }
     }
 
-    /**
-     * 把表达式中的字典代码都 转换为 数据字典值，其他的字符 位置不变，
-     *
-     * @param sCatalog    数据字典代码
-     * @param sExpression 表达式
-     * @return 达式中的字典代码 转换为 数据字典值
-     */
+    public static String getCode(String sCatalog, String sValue, String topUnit, String localLang) {
+        return getCode(sCatalog, sValue, topUnit, localLang, sValue);
+    }
+        /**
+         * 把表达式中的字典代码都 转换为 数据字典值，其他的字符 位置不变，
+         *
+         * @param sCatalog    数据字典代码
+         * @param sExpression 表达式
+         * @return 达式中的字典代码 转换为 数据字典值
+         */
     public static String transExpression(String sCatalog, String sExpression) {
         StringBuilder sb = new StringBuilder();
         Lexer lex = new Lexer();
@@ -513,7 +520,7 @@ public abstract class CodeRepositoryUtil {
             if (StringUtils.isBlank(aWord)) {
                 break;
             }
-            aWord = getValue(sCatalog, aWord, topUnit, localLang);
+            aWord = getValue(sCatalog, aWord, topUnit, localLang, aWord);
             sb.append(aWord);
         }
         return sb.toString();
