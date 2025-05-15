@@ -1093,7 +1093,7 @@ public class MainFrameController extends BaseController {
                             uObj.put("primaryUnitName", unitInfo.getUnitName());
                             uObj.put("userNamePy", StringBaseOpt.getFirstLetter(tempUi.getUserName())
                                 + " " + StringBaseOpt.getPinYin(tempUi.getUserName()));
-                            if(StringUtils.isBlank(userType) ||  (StringUtils.isNotBlank(tempUi.getUserType()) && tempUi.getUserType().equalsIgnoreCase(userType))) {
+                            if(StringUtils.isBlank(userType) || userType.equalsIgnoreCase(tempUi.getUserType())) {
                                 allSubUser.add(uObj);
                             }
                         }
