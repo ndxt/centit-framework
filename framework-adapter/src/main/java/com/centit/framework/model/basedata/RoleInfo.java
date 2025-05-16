@@ -80,6 +80,7 @@ public class RoleInfo implements java.io.Serializable {
 
     @Column(name = "OS_ID")
     @Length(max = 32)
+    @DictionaryMap(fieldName="osIdName", value="osId")
     @ApiModelProperty(value = "角色所属项目", name = "osId")
     private String osId; // 角色所属项目
 
