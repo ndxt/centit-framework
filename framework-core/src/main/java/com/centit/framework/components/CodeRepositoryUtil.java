@@ -870,7 +870,7 @@ public abstract class CodeRepositoryUtil {
 
     public static UserUnit getUserPrimaryUnit(String topUnit, String userCode) {
         List<UserUnit> uus = listUserUnits(topUnit, userCode);
-        if(uus==null || uus.size()<1)
+        if(uus==null || uus.isEmpty())
             return null;
         UserUnit primaryUnit = uus.get(0);
         for (UserUnit uu : uus) {
