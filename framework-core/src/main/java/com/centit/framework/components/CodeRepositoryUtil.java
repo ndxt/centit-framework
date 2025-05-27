@@ -702,10 +702,8 @@ public abstract class CodeRepositoryUtil {
         Set<UserInfo> users = new HashSet<>();
         for (UserUnit uu : uus) {
             UserInfo user = CodeRepositoryUtil.getUserRepo(topUnit).get(uu.getUserCode());
-            if (user != null) {
-                if (CodeRepositoryUtil.T.equals(user.getIsValid())) {
-                    users.add(user);
-                }
+            if (user != null && CodeRepositoryUtil.T.equals(user.getIsValid())) {
+                users.add(user);
             }
         }
         return users;
@@ -814,6 +812,29 @@ public abstract class CodeRepositoryUtil {
      */
     public static UserInfo getUserInfoByCode(String topUnit, String userCode) {
         return getUserRepo(topUnit).get(userCode);
+    }
+
+    private static void addUnitUsersByName(Set<UserInfo> users, String topUnit, String unitCode, String userName) {
+        List<UserUnit> uus = CodeRepositoryUtil.listUnitUsers(unitCode);
+        for (UserUnit uu : uus) {
+            UserInfo user = CodeRepositoryUtil.getUserRepo(topUnit).get(uu.getUserCode());
+            if (user != null && CodeRepositoryUtil.T.equals(user.getIsValid()) &&
+                 StringUtils.equals(user.getUserName(), userName)) {
+                users.add(user);
+            }
+        }
+    }
+
+    public static Set<UserInfo> getUsersByUserName(String topUnit, String unitCode, String userName, boolean includeSubUnits) {
+        Set<UserInfo> users = new HashSet<>();
+        addUnitUsersByName(users, topUnit, unitCode, userName);
+        if(includeSubUnits) {
+            List<UnitInfo> unitInfos = CodeRepositoryUtil.getAllSubUnits(topUnit, unitCode);
+            for (UnitInfo unit : unitInfos) {
+                addUnitUsersByName(users, topUnit, unit.getUnitCode(), userName);
+            }
+        }
+        return users;
     }
 
     /**
@@ -1462,7 +1483,7 @@ public abstract class CodeRepositoryUtil {
             units.add(getUnitInfoByCode(topUnit, unitCode));
         }
         List<UnitInfo> subunits = fetchSubUnits(allunits, unitCode);
-        while( subunits!=null && subunits.size()>0){
+        while( subunits!=null && !subunits.isEmpty()){
             units.addAll(subunits);
             List<UnitInfo> subunits1 = new ArrayList<>();
             for(UnitInfo u1: subunits){
