@@ -1,5 +1,6 @@
 package com.centit.framework.session;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.MapSession;
 import org.springframework.session.Session;
@@ -97,6 +98,17 @@ public class SimpleMapSessionRepository implements FindByIndexNameSessionReposit
     @Override
     public void deleteById(String id) {
         sessionMap.remove(id);
+    }
+
+    @Override
+    public void kickSessionByName(String loginName, String escapeSessionId) {
+        for(Map.Entry<String, MapSession> mapSessionEntry : sessionMap.entrySet()){
+            if(loginName.equals(mapSessionEntry.getValue().getAttribute("username"))){
+                if(!StringUtils.equals(escapeSessionId, mapSessionEntry.getKey())) {
+                    sessionMap.remove(mapSessionEntry.getKey());
+                }
+            }
+        }
     }
 
     @Override
