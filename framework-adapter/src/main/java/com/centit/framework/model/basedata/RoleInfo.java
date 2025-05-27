@@ -62,7 +62,6 @@ public class RoleInfo implements java.io.Serializable {
      */
     @Column(name = "ROLE_TYPE")
     @Length(max = 1)
-    @NotBlank
     @ApiModelProperty(value = "角色的类别 F:系统内置的 G:全局的 P:公用的" +
         " D:部门（机构）特有的角色  S:业务系统角色 " +
         " I:项目角色 （已废弃） W:工作流角色 （已废弃）", name = "roleType", required = true)
@@ -80,6 +79,7 @@ public class RoleInfo implements java.io.Serializable {
 
     @Column(name = "OS_ID")
     @Length(max = 32)
+    @DictionaryMap(fieldName="osIdName", value="osId")
     @ApiModelProperty(value = "角色所属项目", name = "osId")
     private String osId; // 角色所属项目
 
