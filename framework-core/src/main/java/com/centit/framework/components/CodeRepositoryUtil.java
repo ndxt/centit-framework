@@ -1,5 +1,6 @@
 package com.centit.framework.components;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.centit.framework.common.GlobalConstValue;
 import com.centit.framework.common.OptionItem;
@@ -194,6 +195,30 @@ public abstract class CodeRepositoryUtil {
         for(UserUnit un: listUserUnits(topUnit, userCode)){
             if(Objects.equals(un.getUserRank(),rank)){
                 result.add(un);
+            }
+        }
+        return result;
+    }
+
+    public static JSONArray listUserUnitsWithGroup(String topUnit, String userCode, String groupBy){
+        JSONArray result = new JSONArray();
+        Set<String> hasInsert = new HashSet<>();
+        for(UserUnit un: listUserUnits(topUnit, userCode)){
+            String group;
+            if("rank".equals(groupBy)){
+                group = un.getUnitCode() + ":" + un.getUserRank();
+            } else if("station".equals(groupBy)){
+                group = un.getUnitCode() + ":" + un.getUserStation();
+            } else {
+                group = un.getUnitCode();
+            }
+            if("all".equals(groupBy) || !hasInsert.contains(group)){
+                hasInsert.add(group);
+                JSONObject uObj = JSONObject.from(un);
+                uObj.put("unitName", getUnitName(topUnit, un.getUnitCode()));
+                uObj.put("rankName", getValue( topUnit+"-RT", un.getUserRank(), topUnit, "zh_CN"));
+                uObj.put("stationName", getValue( topUnit+"-ST", un.getUserStation(), topUnit, "zh_CN"));
+                result.add(uObj);
             }
         }
         return result;
@@ -1417,7 +1442,6 @@ public abstract class CodeRepositoryUtil {
 
     /**
      * 根据机构代码获取机构名称
-     *
      * @param unitCode unitCode
      * @return 机构名称
      */

@@ -1027,6 +1027,26 @@ public class MainFrameController extends BaseController {
                 CodeRepositoryUtil.listUserUnitsByStation(topUnit, userCode, station)));
     }
 
+    @ApiOperation(value = "获取用户在当前租户下的机构信息", notes = "获取当前用户具有某个行政职务的任职信息")
+    @ApiImplicitParam(
+        name = "view", value = "信息：职务 rank 、岗位 station、全部 all； 默认为all ",
+        required = true, paramType = "query", dataType = "String"
+    )
+    @GetMapping(value = "/userunits")
+    @WrapUpResponseBody
+    public JSONArray listUserUnits(String view, HttpServletRequest request) {
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
+        if (StringUtils.isBlank(userCode)) {
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, getI18nMessage(ResponseData.ERROR_NOT_LOGIN_MSG, request));
+        }
+        if(!StringUtils.equalsAny(view,"rank","station","all")){
+            view = "all";
+        }
+        return  CodeRepositoryUtil.listUserUnitsWithGroup(topUnit, userCode, view);
+    }
+
+
     private JSONArray unitInfosToJsonArray(List<UnitInfo> unitInfos) {
         if(unitInfos==null || unitInfos.isEmpty())
             return null;
