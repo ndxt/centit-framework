@@ -9,6 +9,7 @@ import com.centit.support.database.orm.GeneratorTime;
 import com.centit.support.database.orm.GeneratorType;
 import com.centit.support.database.orm.ValueGenerator;
 import com.centit.support.security.DesensitizeOptUtils;
+import com.centit.support.security.SecurityOptUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
@@ -188,7 +189,7 @@ public class UserInfo implements java.io.Serializable{
     }
 
     public String getRegCellPhone() {
-        return regCellPhone;
+        return SecurityOptUtils.decodeSecurityString(regCellPhone);
     }
 
     public void setRegCellPhone(String regCellPhone) {
