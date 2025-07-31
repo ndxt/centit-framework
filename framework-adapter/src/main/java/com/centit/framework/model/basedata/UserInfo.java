@@ -501,7 +501,8 @@ public class UserInfo implements java.io.Serializable{
         }
         String regCellPhone = jsonObject.getString("regCellPhone");
         if(StringUtils.isNotBlank(regCellPhone)){
-            jsonObject.put("regCellPhone", DesensitizeOptUtils.phone(regCellPhone));
+            jsonObject.put("regCellPhone", DesensitizeOptUtils.phone(
+                SecurityOptUtils.decodeSecurityString(regCellPhone)));
         }
         String regEmail = jsonObject.getString("regEmail");
         if(StringUtils.isNotBlank(regEmail)){
