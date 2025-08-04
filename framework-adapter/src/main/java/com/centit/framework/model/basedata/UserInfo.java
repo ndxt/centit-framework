@@ -189,7 +189,7 @@ public class UserInfo implements java.io.Serializable{
     }
 
     public String getRegCellPhone() {
-        return SecurityOptUtils.decodeSecurityString(regCellPhone);
+        return regCellPhone;
     }
 
     public void setRegCellPhone(String regCellPhone) {
