@@ -674,6 +674,17 @@ public class MainFrameController extends BaseController {
         return jsonObject;
     }
 
+    @ApiOperation(value = "当前登录者信息-精简版", notes = "当前登录者信息，精简版， 不包括用户的权限信息和租户的权限信息")
+    @RequestMapping(value = "/currentuserinfo", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public JSONObject getCurrentUserInfo(HttpServletRequest request) {
+        CentitUserDetails userDetails = WebOptUtils.assertUserDetails(request);
+        JSONObject jsonObject;
+        jsonObject = userDetails.toJsonWithoutSensitive();
+        jsonObject.remove("userOptList");
+        return jsonObject;
+    }
+
     /**
      * 检验是否登录
      *
