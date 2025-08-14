@@ -655,8 +655,7 @@ public class MainFrameController extends BaseController {
     @WrapUpResponseBody
     public JSONObject getCurrentUser(HttpServletRequest request) {
         CentitUserDetails userDetails = WebOptUtils.assertUserDetails(request);
-        JSONObject jsonObject;
-        jsonObject = userDetails.toJsonWithoutSensitive();
+        JSONObject jsonObject = userDetails.toJsonWithoutSensitive();
         String topUnit = userDetails.getTopUnitCode();
         if(StringUtils.isNotBlank(topUnit)) {
             jsonObject.putAll(platformEnvironment.fetchUserTenantGroupInfo(
@@ -679,8 +678,7 @@ public class MainFrameController extends BaseController {
     @WrapUpResponseBody
     public JSONObject getCurrentUserInfo(HttpServletRequest request) {
         CentitUserDetails userDetails = WebOptUtils.assertUserDetails(request);
-        JSONObject jsonObject;
-        jsonObject = userDetails.toJsonWithoutSensitive();
+        JSONObject jsonObject = userDetails.toJsonWithoutSensitive();
         jsonObject.remove("userOptList");
         return jsonObject;
     }
