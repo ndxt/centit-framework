@@ -127,7 +127,7 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
                     return userUnit;
                 }
             }
-            if(uus.size()>0){
+            if(!uus.isEmpty()){
                 return uus.get(0);
             }
         }
@@ -138,7 +138,8 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
         List<UserUnit> uus = this.getUserUnits();
         if (uus != null) {
             for (UserUnit userUnit : uus) {
-                if ("T".equals(userUnit.getRelType())) {
+                if ("T".equals(userUnit.getRelType())
+                    && StringUtils.equals( userUnit.getTopUnit(), this.topUnitCode)) {
                     return userUnit;
                 }
             }
