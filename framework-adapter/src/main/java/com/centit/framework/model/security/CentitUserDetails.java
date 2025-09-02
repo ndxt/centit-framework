@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.framework.model.basedata.*;
 import com.centit.support.algorithm.DatetimeOpt;
+import com.sun.deploy.ref.CodeRef;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -134,6 +135,23 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
         return null;
     }
 
+    public UserUnit fetchBelongUnit(){
+        List<UserUnit> uus = this.getUserUnits();
+        if (uus != null) {
+            for (UserUnit userUnit : uus) {
+                if ("T".equals(userUnit.getRelType())) {
+                    return userUnit;
+                }
+            }
+        }
+        return null;
+    }
+
+    public String getBelongUnitCode() {
+        UserUnit uu = fetchBelongUnit();
+        return uu != null? uu.getUnitCode() : null;
+    }
+
     public void setCurrentStationId(String userUnitId) {
         userInfo.setCurrentStationId(userUnitId);
     }
@@ -141,7 +159,6 @@ public class CentitUserDetails implements Authentication, UserDetails, java.io.S
     public String getCurrentStationId(){
         return userInfo.getCurrentStationId();
     }
-
 
     public String getCurrentUnitCode(){
         UserUnit cs = getCurrentStation();

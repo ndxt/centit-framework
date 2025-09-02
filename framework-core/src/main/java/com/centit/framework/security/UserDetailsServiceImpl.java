@@ -35,7 +35,7 @@ public class UserDetailsServiceImpl implements
             if(userLoginName.length() == 11 && isNum.matches()){
                 ud = loadDetailsByRegCellPhone(userLoginName);
             }else{
-                ud=loadDetailsByLoginName(userLoginName);
+                ud = loadDetailsByLoginName(userLoginName);
             }
         }
         if(ud==null) {

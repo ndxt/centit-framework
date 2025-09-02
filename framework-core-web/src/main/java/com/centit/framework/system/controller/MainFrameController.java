@@ -669,7 +669,8 @@ public class MainFrameController extends BaseController {
                 jsonObject.put("tenantRole", "none");
             }
         }
-
+        jsonObject.put("belongUnitName",
+            CodeRepositoryUtil.getUnitName(topUnit, userDetails.getBelongUnitCode()));
         return jsonObject;
     }
 
@@ -678,8 +679,11 @@ public class MainFrameController extends BaseController {
     @WrapUpResponseBody
     public JSONObject getCurrentUserInfo(HttpServletRequest request) {
         CentitUserDetails userDetails = WebOptUtils.assertUserDetails(request);
+        String topUnit = userDetails.getTopUnitCode();
         JSONObject jsonObject = userDetails.toJsonWithoutSensitive();
         jsonObject.remove("userOptList");
+        jsonObject.put("belongUnitName",
+            CodeRepositoryUtil.getUnitName(topUnit, userDetails.getBelongUnitCode()));
         return jsonObject;
     }
 
