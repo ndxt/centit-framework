@@ -37,7 +37,7 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
     }
 
     public void setRetryLockMinites(int lockMinites) {
-        CheckFailLogs.setLockMinites(lockMinites);
+        CheckFailLogs.setLockMinutes(lockMinites);
     }
 
     public void setRetryCheckTimeTnterval(int checkTimeTnterval) {

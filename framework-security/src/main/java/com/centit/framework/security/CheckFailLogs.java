@@ -9,14 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CheckFailLogs {
-   
+
     private static int checkTimeTnterval = 3;//Minite
     //允许尝试的最大次数
     private static int maxTryTimes = -1;
     //L:loginName H: HostIP
     private static char checkType = 'L';
-    
-    private static int lockMinites = 5 ;
+
+    private static int lockMinutes = 5 ;
 
 
     public static void setMaxTryTimes(int maxTryTimes) {
@@ -26,7 +26,7 @@ public class CheckFailLogs {
     public static int getMaxTryTimes() {
         return CheckFailLogs.maxTryTimes;
     }
-    
+
     public static void setCheckType(String checkType) {
         CheckFailLogs.checkType =
                 ("H".equalsIgnoreCase(checkType) || "hostIp".equalsIgnoreCase(checkType)||
@@ -37,29 +37,29 @@ public class CheckFailLogs {
     public static char getCheckType() {
         return CheckFailLogs.checkType;
     }
-    
-    public static void setLockMinites(int lockMinites) {
+
+    public static void setLockMinutes(int lockMinutes) {
 /*        if(CheckFailLogs.DefaultCheckTimeTnterval
               == CheckFailLogs.checkTimeTnterval)
            CheckFailLogs.setCheckTimeTnterval(lockMinites);*/
-        CheckFailLogs.lockMinites = lockMinites;
+        CheckFailLogs.lockMinutes = lockMinutes;
     }
-    
+
     public static void setCheckTimeTnterval(int checkTimeTnterval) {
         CheckFailLogs.checkTimeTnterval = checkTimeTnterval;
     }
-    
-    private static Map<String ,CheckFailLog> failLogs =
+
+    private static Map<String, CheckFailLog> failLogs =
             new HashMap<>();
-    
+
     public static class CheckFailLog {
         private int tryTimes;
-        
-        private Date lastCheckTime; 
-        
+
+        private Date lastCheckTime;
+
         public CheckFailLog(){
             tryTimes = 1;
-            lastCheckTime = DatetimeOpt.currentUtilDate();                
+            lastCheckTime = DatetimeOpt.currentUtilDate();
         }
 
         public int fetchTryTimes() {
@@ -74,7 +74,7 @@ public class CheckFailLogs {
         public Date getLastCheckTime() {
             return lastCheckTime;
         }
-        
+
         public void plusCheckFail(){
             Date currentDate = DatetimeOpt.currentUtilDate();
             if( DatetimeOpt.addMinutes(lastCheckTime,
@@ -84,10 +84,10 @@ public class CheckFailLogs {
                 tryTimes++;
             lastCheckTime = currentDate;
         }
-        
+
         public boolean isLocked(){
             Date currentDate = DatetimeOpt.currentUtilDate();
-            if( DatetimeOpt.addMinutes(lastCheckTime,lockMinites).before(currentDate))
+            if( DatetimeOpt.addMinutes(lastCheckTime, lockMinutes).before(currentDate))
                 return false;
             return tryTimes >= maxTryTimes;
         }
@@ -101,11 +101,11 @@ public class CheckFailLogs {
             checkKey = request.getRemoteHost() + ":" + request.getRemotePort();
         return checkKey;
     }
-    
+
     public static void removeCheckFail(HttpServletRequest request){
         failLogs.remove(getCheckKey(request));
     }
-    
+
     public static void plusCheckFail(HttpServletRequest request){
         String checkKey = getCheckKey(request);
         CheckFailLog failLog = failLogs.get(checkKey);
