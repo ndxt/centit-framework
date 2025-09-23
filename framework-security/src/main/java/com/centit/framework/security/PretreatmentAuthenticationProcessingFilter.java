@@ -41,7 +41,7 @@ public class PretreatmentAuthenticationProcessingFilter extends UsernamePassword
     }
 
     public void setRetryCheckTimeTnterval(int checkTimeTnterval) {
-        CheckFailLogs.setCheckTimeTnterval(checkTimeTnterval);
+        CheckFailLogs.setCheckTimeInterval(checkTimeTnterval);
     }
 
     protected MessageSource messageSource;

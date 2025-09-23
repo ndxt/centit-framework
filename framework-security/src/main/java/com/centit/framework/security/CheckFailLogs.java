@@ -5,12 +5,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CheckFailLogs {
 
-    private static int checkTimeTnterval = 3;//Minite
+    private static int checkTimeInterval = 3;//Minite
     //允许尝试的最大次数
     private static int maxTryTimes = -1;
     //L:loginName H: HostIP
@@ -45,12 +45,12 @@ public class CheckFailLogs {
         CheckFailLogs.lockMinutes = lockMinutes;
     }
 
-    public static void setCheckTimeTnterval(int checkTimeTnterval) {
-        CheckFailLogs.checkTimeTnterval = checkTimeTnterval;
+    public static void setCheckTimeInterval(int checkTimeInterval) {
+        CheckFailLogs.checkTimeInterval = checkTimeInterval;
     }
 
-    private static Map<String, CheckFailLog> failLogs =
-            new HashMap<>();
+    private final static Map<String, CheckFailLog> failLogs =
+            new ConcurrentHashMap<>();
 
     public static class CheckFailLog {
         private int tryTimes;
@@ -65,7 +65,7 @@ public class CheckFailLogs {
         public int fetchTryTimes() {
             Date currentDate = DatetimeOpt.currentUtilDate();
             if( DatetimeOpt.addMinutes(lastCheckTime,
-                    checkTimeTnterval ).before(currentDate)) {
+                checkTimeInterval).before(currentDate)) {
                 tryTimes = 0;
             }
             return tryTimes;
@@ -78,7 +78,7 @@ public class CheckFailLogs {
         public void plusCheckFail(){
             Date currentDate = DatetimeOpt.currentUtilDate();
             if( DatetimeOpt.addMinutes(lastCheckTime,
-                    checkTimeTnterval ).before(currentDate))
+                checkTimeInterval).before(currentDate))
                 tryTimes=1;
             else
                 tryTimes++;
