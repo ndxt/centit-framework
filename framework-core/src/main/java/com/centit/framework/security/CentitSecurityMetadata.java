@@ -2,7 +2,6 @@ package com.centit.framework.security;
 
 import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.support.common.CachedMap;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +11,8 @@ public abstract class CentitSecurityMetadata {
 
     public static final String ROLE_PREFIX = "R_";
     public static boolean isForbiddenWhenAssigned = false;
-    private static SystemSecurityMetadata systemSecurityMetadata = new SystemSecurityMetadata();
-    private static CachedMap<String, List<ConfigAttribute>> apiSecurityMetadata =
+    private final static SystemSecurityMetadata systemSecurityMetadata = new SystemSecurityMetadata();
+    private final static CachedMap<String, List<ConfigAttribute>> apiSecurityMetadata =
         new CachedMap<>((apiId)->CodeRepositoryCache.getPlatformEnvironment().getRolesWithApiId(apiId),
             CodeRepositoryCache.CACHE_FRESH_PERIOD_SECONDS);
     private static final String DDE_RUN = "/dde/run/";
@@ -37,11 +36,11 @@ public abstract class CentitSecurityMetadata {
     }
 
     public static List<ConfigAttribute> matchUrlToRole(String sUrl, HttpServletRequest request) {
-        String apiId = parseUrlToApi(sUrl);
-        if (StringUtils.isBlank(apiId)) {
+        //String apiId = parseUrlToApi(sUrl);
+        //if (StringUtils.isBlank(apiId)) {
             return systemSecurityMetadata.matchUrlToRole(sUrl, request);
-        }
-        return apiSecurityMetadata.getCachedValue(apiId);
+        //}
+        //return apiSecurityMetadata.getCachedValue(apiId);
     }
 
     public static List<ConfigAttribute> getApiRoleList(String apiId) {
