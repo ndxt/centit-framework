@@ -124,10 +124,10 @@ public class RecordOperationLogAspect {
         String osId = request.getParameter("osId");
         String optId =operationLog.operation();
         if(StringUtils.isBlank(optId)){
-            osId = request.getParameter("optId");
+            optId = request.getParameter("optId");
         }
         if(StringUtils.isBlank(optId)){
-            osId = StringBaseOpt.castObjectToString(
+            optId = StringBaseOpt.castObjectToString(
                 ReflectionOpt.getFieldValue(targetController,"optId"),"UNKNOWN");
         }
 
