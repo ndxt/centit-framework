@@ -82,11 +82,9 @@ public abstract class DictionaryMapUtils {
 
         Class<?> superClass = objType.getSuperclass();
         mergeDictionaryMapColumn(fieldDictionaryMaps, superClass);
-        Class<?> interfaces[] = objType.getInterfaces();
-        if(interfaces !=null) {
-            for (Class<?> intf : interfaces){
-                mergeDictionaryMapColumn(fieldDictionaryMaps, intf);
-            }
+        Class<?> [] interfaces = objType.getInterfaces();
+        for (Class<?> iClazz : interfaces){
+            mergeDictionaryMapColumn(fieldDictionaryMaps, iClazz);
         }
         return fieldDictionaryMaps;
     }
@@ -536,7 +534,7 @@ public abstract class DictionaryMapUtils {
 
     public static JSONArray
         mapJsonArray(JSONArray objs, List<DictionaryMapColumn> fieldDictionaryMaps) {
-        if(fieldDictionaryMaps==null | fieldDictionaryMaps.size()<1)
+        if(fieldDictionaryMaps==null || fieldDictionaryMaps.isEmpty())
             return objs;
         for(Object obj : objs){
             if(obj instanceof Map) {
