@@ -7,13 +7,11 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -24,9 +22,15 @@ import java.util.List;
 public class BaseSpringMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
 
     @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        //configurer.setUseSuffixPatternMatch(false);
+        configurer.setUseSuffixPatternMatch(false);
+    }
+
+    @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(MvcConfigUtil.fastJsonHttpMessageConverter());
-        converters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        converters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
     }
 
     @Override
