@@ -357,9 +357,7 @@ public abstract class SysUserFilterEngine {
         if (!"(".equals(w)) // 语法错误
             return null;
         Set<String> users = calcRolesExp(ecc);
-        if (users == null)// 语法错误
-            return null;
-        while (users.size() == 0) {
+        while (users==null || users.isEmpty()) {
             w = ecc.getAWord();
             if (")".equals(w))
                 return users;
@@ -416,7 +414,7 @@ public abstract class SysUserFilterEngine {
             return null;
         while (true) {
             String w = ecc.getAWord();
-            if (w == null || "".equals(w))
+            if (w == null || w.isEmpty())
                 return users;
 
             if (",".equals(w) || ")".equals(w)) {
