@@ -221,10 +221,10 @@ public class UserUnitFilterGene {
     }
 
     public void addUnits(Set<String> sucs) {
-        if (sucs != null && sucs.size() > 0) {
+        if (sucs != null && !sucs.isEmpty()) {
             units.addAll(sucs);
-            hasUnitFilter = true;
         }
+        hasUnitFilter = true;
     }
 
     public void addUser(String suc) {
@@ -233,7 +233,7 @@ public class UserUnitFilterGene {
     }
 
     public void addUsers(Set<String> sucs) {
-        if (sucs != null && sucs.size() > 0) {
+        if (sucs != null && !sucs.isEmpty()) {
             users.addAll(sucs);
             hasUserFilter = true;
         }

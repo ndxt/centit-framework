@@ -265,9 +265,7 @@ public abstract class InnerUserUnitFilterCompileEngine {
         }
         while(true) {
             Set<String> units = calcSimpleUnitExp(ecc);
-            if (units != null) {
-                gene.addUnits(units);
-            }
+            gene.addUnits(units);
             w = ecc.getAWord();
             if (")".equals(w))
                 return true;

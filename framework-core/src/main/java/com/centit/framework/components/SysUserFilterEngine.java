@@ -158,6 +158,9 @@ public abstract class SysUserFilterEngine {
 
     private static Set<String> getUsersByFilter(UserUnitFilterCalcContext ecc, UserUnitFilterGene rf) {
 
+        if(rf.isHasUnitFilter() && (rf.getUnits() == null || rf.getUnits().isEmpty())){
+            return new HashSet<>();
+        }
         boolean hasUnitFilter = rf.isHasGWFilter() || rf.isHasRankFilter()
             || rf.isHasXZFilter() || rf.isHasUnitFilter() || rf.isHasRelationFilter() ;
 
