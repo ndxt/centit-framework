@@ -22,8 +22,14 @@ public abstract class OperationLogCenter {
     private static final Logger logger = LoggerFactory.getLogger(OperationLogCenter.class);
     private static OperationLogWriter logWriter = null;
     private static final ConcurrentLinkedQueue<OperationLog> waitingForWriteLogs = new ConcurrentLinkedQueue<>();
-    private static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(7);
-
+    private static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
+        1,  // 只需要 1 个线程执行定时任务
+        r -> {
+            Thread t = new Thread(r, "SystemLog-Writer");
+            t.setDaemon(true);  // 设置为守护线程，不阻止 JVM 退出
+            return t;
+        }
+    );
     private static Set<String> includeOpts = null;
     private static Set<String> excludeOpts = null;
     /**
@@ -58,7 +64,7 @@ public abstract class OperationLogCenter {
             } catch (Throwable e) {
                 logger.error("日志写入定时器错误：{}", e.getMessage());
             }
-        }, 29, 11, TimeUnit.SECONDS);
+        }, 11, 3, TimeUnit.SECONDS);
         //默认执行时间间隔为5秒
     }
 
