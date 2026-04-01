@@ -55,8 +55,8 @@ public abstract class OperationLogCenter {
                         logWriter.save(optLogs);
                     }
                 }
-            } catch (Exception e) {
-                logger.error("日志写入定时器错误：" + e.getMessage());
+            } catch (Throwable e) {
+                logger.error("日志写入定时器错误：{}", e.getMessage());
             }
         }, 29, 11, TimeUnit.SECONDS);
         //默认执行时间间隔为5秒
