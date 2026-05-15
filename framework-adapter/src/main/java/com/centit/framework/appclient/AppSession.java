@@ -41,6 +41,20 @@ public class AppSession {
 
         GenericObjectPoolConfig<CloseableHttpClient> config =
             new GenericObjectPoolConfig<>();
+        // 设置连接池最大空闲连接数
+        config.setMaxIdle(10);
+        // 设置连接池最小空闲连接数
+        config.setMinIdle(2);
+        // 设置连接池最大连接数
+        config.setMaxTotal(50);
+        // 设置从连接池获取连接时的最大等待时间（毫秒）
+        config.setMaxWaitMillis(5000);
+        // 设置连接空闲检测时间（毫秒）
+        config.setTimeBetweenEvictionRunsMillis(30000);
+        // 设置连接最小空闲时间（毫秒）
+        config.setMinEvictableIdleTimeMillis(60000);
+        // 启用空闲连接检测
+        config.setTestWhileIdle(true);
 
         httpClientPool =  new GenericObjectPool<>(
             new PooledHttpClientFactory(),
