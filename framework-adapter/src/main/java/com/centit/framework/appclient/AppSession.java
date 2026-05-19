@@ -25,7 +25,7 @@ public class AppSession {
     private String password;
 
     private String accessToken;
-    private Date   tokenCheckTime;
+    private Date tokenCheckTime;
     private String csrfToken;
     private boolean needAuthenticated;
 
@@ -33,7 +33,7 @@ public class AppSession {
     private List<Consumer<HttpExecutorContext>> httpInterceptors;
     private GenericObjectPool<CloseableHttpClient> httpClientPool;
 
-    public AppSession(String appServerUrl,boolean needAuthenticated,String userCode,String password){
+    public AppSession(String appServerUrl, boolean needAuthenticated, String userCode, String password) {
         this.appServerUrl = appServerUrl;
         this.needAuthenticated = needAuthenticated;
         this.userCode = userCode;
@@ -56,40 +56,40 @@ public class AppSession {
         // 启用空闲连接检测
         config.setTestWhileIdle(true);
 
-        httpClientPool =  new GenericObjectPool<>(
+        httpClientPool = new GenericObjectPool<>(
             new PooledHttpClientFactory(),
-                config);
+            config);
     }
 
-    public AppSession(String appServerUrl,String userCode,String password){
-        this(appServerUrl,true,userCode,password);
+    public AppSession(String appServerUrl, String userCode, String password) {
+        this(appServerUrl, true, userCode, password);
     }
 
-    public AppSession(String appServerUrl){
-        this(appServerUrl,false,null,null);
+    public AppSession(String appServerUrl) {
+        this(appServerUrl, false, null, null);
     }
 
-    public AppSession(){
-        this(null,false,null,null);
+    public AppSession() {
+        this(null, false, null, null);
     }
 
-    public void registerInterceptor(Consumer<HttpExecutorContext> httpInterceptor){
-        if(this.httpInterceptors==null){
+    public void registerInterceptor(Consumer<HttpExecutorContext> httpInterceptor) {
+        if (this.httpInterceptors == null) {
             this.httpInterceptors = new ArrayList<>(8);
         }
         //if(!this.httpInterceptors.contains(httpInterceptor)){
-            this.httpInterceptors.add(httpInterceptor);
+        this.httpInterceptors.add(httpInterceptor);
         //}
     }
 
     public boolean checkAccessToken(CloseableHttpClient httpclient)
-            throws ObjectException, IOException{
-        if(!needAuthenticated){
+        throws ObjectException, IOException {
+        if (!needAuthenticated) {
             return true;
         }
-        boolean alive= this.tokenCheckTime != null && DatetimeOpt.currentUtilDate().before(
-                DatetimeOpt.addMinutes(this.tokenCheckTime, 110));
-        if(alive)
+        boolean alive = this.tokenCheckTime != null && DatetimeOpt.currentUtilDate().before(
+            DatetimeOpt.addMinutes(this.tokenCheckTime, 110));
+        if (alive)
             return true;
         askAccessToken(httpclient);
         tokenCheckTime = DatetimeOpt.currentUtilDate();
@@ -97,18 +97,18 @@ public class AppSession {
     }
 
     public void askAccessToken(CloseableHttpClient httpclient)
-            throws IOException,ObjectException{
-        Map<String,String> param = new HashMap<>();
+        throws IOException, ObjectException {
+        Map<String, String> param = new HashMap<>();
         param.put("userCode", userCode);
         param.put("password", password);
         HttpExecutorContext httpContext = createHttpExecutorContext(httpclient);
         String jsonStr = HttpExecutor.formPost(httpContext,
             getAppLoginUrl() + "/mainframe/loginasclient", param);
         HttpReceiveJSON jsonData = HttpReceiveJSON.valueOfJson(jsonStr);
-        if(jsonData==null || jsonData.getCode()!=0){
-            throw new ObjectException(jsonData==null?"访问服务器失败":jsonData.getMessage());
+        if (jsonData == null || jsonData.getCode() != 0) {
+            throw new ObjectException(jsonData == null ? "访问服务器失败" : jsonData.getMessage());
         }
-        if(jsonData.getData() instanceof String){ // data 中只有这个 token
+        if (jsonData.getData() instanceof String) { // data 中只有这个 token
             accessToken = jsonData.getDataAsString();
         } else {
             accessToken = jsonData.getDataAsString(/*SecurityContextUtils.*/SECURITY_CONTEXT_TOKENNAME);
@@ -116,13 +116,13 @@ public class AppSession {
 
         HttpReceiveJSON csrfData = HttpReceiveJSON.valueOfJson(
             HttpExecutor.simpleGet(httpContext, getAppLoginUrl() + "/mainframe/csrf"));
-        if(csrfData!=null){
+        if (csrfData != null) {
             csrfToken = csrfData.getDataAsString("token");
         }
     }
 
-    public String completeQueryUrl(String queryUrl){
-        return queryUrl.indexOf("://") > 0? queryUrl : appServerUrl+queryUrl;
+    public String completeQueryUrl(String queryUrl) {
+        return queryUrl.indexOf("://") > 0 ? queryUrl : appServerUrl + queryUrl;
         /*return needAuthenticated
                 ?baseUrl+
                     (queryUrl.indexOf('?')>=0 ? "&":"?")+
@@ -131,60 +131,61 @@ public class AppSession {
                 :baseUrl;*/
     }
 
-    public CloseableHttpClient allocHttpClient() throws Exception{
+    public CloseableHttpClient allocHttpClient() throws Exception {
         return httpClientPool.borrowObject();
     }
 
     public HttpExecutorContext createHttpExecutorContext(CloseableHttpClient httpClient) {
         HttpExecutorContext httpExecutorContext = HttpExecutorContext.create(httpClient);
-        if(StringUtils.isNotBlank(accessToken)) {
+        if (StringUtils.isNotBlank(accessToken)) {
             httpExecutorContext.header("x-auth-token", accessToken);
         }
-        if(StringUtils.isNotBlank(csrfToken)) {
-          /**class org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository
-                DEFAULT_CSRF_PARAMETER_NAME = "_csrf";
-                DEFAULT_CSRF_HEADER_NAME = "X-CSRF-TOKEN";*/
+        if (StringUtils.isNotBlank(csrfToken)) {
+            /**class org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository
+             DEFAULT_CSRF_PARAMETER_NAME = "_csrf";
+             DEFAULT_CSRF_HEADER_NAME = "X-CSRF-TOKEN";*/
             httpExecutorContext.header("X-CSRF-TOKEN", csrfToken);
         }
 
         httpExecutorContext//.header("X-Requested-With", "XMLHttpRequest")
             .header("accept", "application/json");
-        if(httpInterceptors!=null) {
+        if (httpInterceptors != null) {
             httpInterceptors.forEach(interceptor -> interceptor.accept(httpExecutorContext));
         }
         return httpExecutorContext;
     }
 
-    public void releaseHttpClient(CloseableHttpClient httpClient){
-        httpClientPool.returnObject(httpClient);
+    public void releaseHttpClient(CloseableHttpClient httpClient) {
+        try {
+            httpClientPool.returnObject(httpClient);
+        } catch (IllegalStateException e) {
+            // Object may have been closed, invalidate it
+            try {
+                httpClientPool.invalidateObject(httpClient);
+            } catch (Exception ex) {
+                // ignore
+            }
+        }
+    }
+    
+
+    public String simpleGet(CloseableHttpClient httpClient,
+                            String httpGetUrl, Map<String, Object> queryParam)
+        throws IOException {
+
+        return HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
+            completeQueryUrl(httpGetUrl), queryParam);
     }
 
     public String simpleGet(CloseableHttpClient httpClient,
-                                         String httpGetUrl, Map<String,Object> queryParam)
+                            String httpGetUrl)
         throws IOException {
-
-        return  HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
-                completeQueryUrl(httpGetUrl), queryParam);
-    }
-
-    public String simpleGet(CloseableHttpClient httpClient,
-                                         String httpGetUrl)
-        throws IOException {
-        return  HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
-                completeQueryUrl(httpGetUrl), "");
+        return HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
+            completeQueryUrl(httpGetUrl), "");
     }
 
     public HttpReceiveJSON getResponseData(CloseableHttpClient httpClient,
-                                         String httpGetUrl, String queryParam)
-        throws IOException {
-
-        return HttpReceiveJSON.valueOfJson(
-            HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
-            completeQueryUrl(httpGetUrl), queryParam));
-    }
-
-    public HttpReceiveJSON getResponseData(CloseableHttpClient httpClient,
-                                         String httpGetUrl, Map<String,Object> queryParam)
+                                           String httpGetUrl, String queryParam)
         throws IOException {
 
         return HttpReceiveJSON.valueOfJson(
@@ -193,7 +194,16 @@ public class AppSession {
     }
 
     public HttpReceiveJSON getResponseData(CloseableHttpClient httpClient,
-                                         String httpGetUrl)
+                                           String httpGetUrl, Map<String, Object> queryParam)
+        throws IOException {
+
+        return HttpReceiveJSON.valueOfJson(
+            HttpExecutor.simpleGet(createHttpExecutorContext(httpClient),
+                completeQueryUrl(httpGetUrl), queryParam));
+    }
+
+    public HttpReceiveJSON getResponseData(CloseableHttpClient httpClient,
+                                           String httpGetUrl)
         throws IOException {
 
         return HttpReceiveJSON.valueOfJson(
@@ -202,7 +212,7 @@ public class AppSession {
     }
 
     public String formPost(CloseableHttpClient httpClient, String httpPostUrl,
-                           Object formData , boolean asPut)
+                           Object formData, boolean asPut)
         throws IOException {
         return HttpExecutor.formPost(
             createHttpExecutorContext(httpClient),
@@ -225,7 +235,7 @@ public class AppSession {
     }
 
     public String jsonPost(CloseableHttpClient httpClient, String httpPostUrl,
-                               Object formData , boolean asPut)
+                           Object formData, boolean asPut)
         throws IOException {
         return HttpExecutor.jsonPost(
             createHttpExecutorContext(httpClient),
@@ -233,7 +243,7 @@ public class AppSession {
     }
 
     public String jsonPost(CloseableHttpClient httpClient, String httpPostUrl,
-                               Object formData)
+                           Object formData)
         throws IOException {
         return HttpExecutor.jsonPost(
             createHttpExecutorContext(httpClient),
@@ -243,10 +253,10 @@ public class AppSession {
     public String jsonPut(CloseableHttpClient httpClient, String httpPutUrl, Object formData)
         throws IOException {
         String jsonString = null;
-        if(formData != null){
-            if( formData instanceof String){
+        if (formData != null) {
+            if (formData instanceof String) {
                 jsonString = (String) formData;
-            }else{
+            } else {
                 jsonString = JSON.toJSONString(formData);
             }
         }
@@ -259,10 +269,10 @@ public class AppSession {
         throws IOException {
         return HttpExecutor.simpleDelete(
             createHttpExecutorContext(httpClient),
-            completeQueryUrl(httpDeleteUrl), "" );
+            completeQueryUrl(httpDeleteUrl), "");
     }
 
-    public String doDelete(CloseableHttpClient httpClient, String httpDeleteUrl, Map<String,Object> queryParam)
+    public String doDelete(CloseableHttpClient httpClient, String httpDeleteUrl, Map<String, Object> queryParam)
         throws IOException {
         return HttpExecutor.simpleDelete(
             createHttpExecutorContext(httpClient),
@@ -302,7 +312,7 @@ public class AppSession {
     }
 
     public String getAppLoginUrl() {
-        if(StringUtils.isBlank(appLoginUrl)){
+        if (StringUtils.isBlank(appLoginUrl)) {
             return this.appServerUrl;
         }
         return appLoginUrl;
