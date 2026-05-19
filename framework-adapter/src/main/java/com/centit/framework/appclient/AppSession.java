@@ -167,7 +167,7 @@ public class AppSession {
             }
         }
     }
-    
+
 
     public String simpleGet(CloseableHttpClient httpClient,
                             String httpGetUrl, Map<String, Object> queryParam)
